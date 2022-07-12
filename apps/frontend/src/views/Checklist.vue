@@ -1,123 +1,181 @@
 <template>
-  <Base :show-search="true" :title="curr_title" @changed-files="evalInfo = null">
-  <!-- Topbar content - give it a search bar -->
-  <template #topbar-content>
-    <v-btn :disabled="!can_clear" @click="clear">
-      <span class="d-none d-md-inline pr-2"> Clear </span>
-      <v-icon>mdi-filter-remove</v-icon>
-    </v-btn>
-    <UploadButton />
-    <div class="text-center">
-      <v-menu>
-        <template #activator="{ on, attrs }">
-          <v-btn v-bind="attrs" class="mr-2" v-on="on">
-            <span class="d-none d-md-inline mr-2"> Export </span>
-            <v-icon> mdi-file-export </v-icon>
-          </v-btn>
-        </template>
-        <v-list class="py-0">
-          <v-list-item class="px-0">
-            <ExportCaat :filter="all_filter" />
-          </v-list-item>
-          <v-list-item v-if="is_checklist_view" class="px-0">
-            <ExportNist :filter="all_filter" />
-          </v-list-item>
-          <v-list-item v-if="is_checklist_view" class="px-0">
-            <ExportASFFModal :filter="all_filter" />
-          </v-list-item>
-          <v-list-item v-if="is_checklist_view" class="px-0">
-            <ExportCKLModal :filter="all_filter" />
-          </v-list-item>
-          <v-list-item class="px-0">
-            <ExportCSVModal :filter="all_filter" />
-          </v-list-item>
-          <v-list-item v-if="is_checklist_view" class="px-0">
-            <ExportHTMLModal :filter="all_filter" :file-type="current_route_name" />
-          </v-list-item>
-          <v-list-item v-if="is_checklist_view" class="px-0">
-            <ExportSplunkModal />
-          </v-list-item>
-          <v-list-item class="px-0">
-            <ExportJson />
-          </v-list-item>
-          <v-list-item class="px-0">
-            <ExportXCCDFResults :filter="all_filter" :is-result-view="is_checklist_view" />
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
-  </template>
-  <template #main-content>
-    <v-container fluid grid-list-md pt-0 pa-2 style="height: 90vh">
-      <v-container id="fileCards" mx-0 px-0 fluid>
-        <!-- Evaluation Info -->
-        <v-row no-gutters class="mx-n3 mb-3">
-          <v-col>
-            <v-slide-group v-model="evalInfo" show-arrows>
-              <v-slide-item v-for="(file, i) in activeFiles" :key="i">
-                <v-card width="100%" max-width="100%" class="mx-3" data-cy="profileInfo" @click="toggle_profile(file)">
-                  <EvaluationInfo :file="file" />
-                  <v-card-subtitle class="bottom-right">
-                    File Info ↓
-                  </v-card-subtitle>
-                </v-card>
-              </v-slide-item>
-            </v-slide-group>
+  <Base
+    :show-search="true"
+    :title="curr_title"
+    @changed-files="evalInfo = null"
+  >
+    <!-- Topbar content - give it a search bar -->
+    <template #topbar-content>
+      <v-btn :disabled="!can_clear" @click="clear">
+        <span class="d-none d-md-inline pr-2"> Clear </span>
+        <v-icon>mdi-filter-remove</v-icon>
+      </v-btn>
+      <UploadButton />
+      <div class="text-center">
+        <v-menu>
+          <template #activator="{on, attrs}">
+            <v-btn v-bind="attrs" class="mr-2" v-on="on">
+              <span class="d-none d-md-inline mr-2"> Export </span>
+              <v-icon> mdi-file-export </v-icon>
+            </v-btn>
+          </template>
+          <v-list class="py-0">
+            <v-list-item class="px-0">
+              <ExportCaat :filter="all_filter" />
+            </v-list-item>
+            <v-list-item v-if="is_checklist_view" class="px-0">
+              <ExportNist :filter="all_filter" />
+            </v-list-item>
+            <v-list-item v-if="is_checklist_view" class="px-0">
+              <ExportASFFModal :filter="all_filter" />
+            </v-list-item>
+            <v-list-item v-if="is_checklist_view" class="px-0">
+              <ExportCKLModal :filter="all_filter" />
+            </v-list-item>
+            <v-list-item class="px-0">
+              <ExportCSVModal :filter="all_filter" />
+            </v-list-item>
+            <v-list-item v-if="is_checklist_view" class="px-0">
+              <ExportHTMLModal
+                :filter="all_filter"
+                :file-type="current_route_name"
+              />
+            </v-list-item>
+            <v-list-item v-if="is_checklist_view" class="px-0">
+              <ExportSplunkModal />
+            </v-list-item>
+            <v-list-item class="px-0">
+              <ExportJson />
+            </v-list-item>
+            <v-list-item class="px-0">
+              <ExportXCCDFResults
+                :filter="all_filter"
+                :is-result-view="is_checklist_view"
+              />
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </template>
+    <template #main-content>
+      <v-container fluid grid-list-md pt-0 pa-2>
+        <v-container id="fileCards" mx-0 px-0 fluid>
+          <!-- Evaluation Info -->
+          <v-row no-gutters class="mx-n3 mb-3">
+            <v-col>
+              <v-slide-group v-model="evalInfo" show-arrows>
+                <v-slide-item v-for="(file, i) in activeFiles" :key="i">
+                  <v-card
+                    width="100%"
+                    max-width="100%"
+                    class="mx-3"
+                    data-cy="profileInfo"
+                    @click="toggle_profile(file)"
+                  >
+                    <EvaluationInfo :file="file" />
+                    <v-card-subtitle class="bottom-right">
+                      File Info ↓
+                    </v-card-subtitle>
+                  </v-card>
+                </v-slide-item>
+              </v-slide-group>
+            </v-col>
+          </v-row>
+          <ProfileData
+            v-if="evalInfo != null"
+            class="my-4 mx-2"
+            :file="evalInfo"
+          />
+        </v-container>
+        <!-- Count Cards -->
+        <StatusCardRow
+          :filter="all_filter"
+          :current-status-filter="statusFilter"
+          @show-errors="showErrors"
+          @show-waived="showWaived"
+          @add-filter="addStatusSearch"
+          @remove-filter="removeStatusFilter"
+        />
+        <!-- Compliance Cards -->
+        <v-row id="complianceCards" justify="space-around">
+          <v-col xs="4">
+            <v-card id="statusCounts" class="fill-height">
+              <v-card-title class="justify-center">Status Counts</v-card-title>
+              <v-card-actions class="justify-center">
+                <StatusChart v-model="statusFilter" :filter="all_filter" />
+              </v-card-actions>
+            </v-card>
+          </v-col>
+          <v-col xs="4">
+            <v-card id="severityCounts" class="fill-height">
+              <v-card-title class="justify-center"
+                >Severity Counts</v-card-title
+              >
+              <v-card-actions class="justify-center">
+                <SeverityChart v-model="severityFilter" :filter="all_filter" />
+              </v-card-actions>
+            </v-card>
+          </v-col>
+          <v-col xs="4">
+            <v-card id="complianceLevel" class="fill-height">
+              <v-card-title class="justify-center"
+                >Compliance Level</v-card-title
+              >
+              <v-card-actions class="justify-center">
+                <ComplianceChart :filter="all_filter" />
+              </v-card-actions>
+              <v-card-text style="text-align: center"
+                >[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
+                  v-if="waivedProfilesExist"
+                >
+                  + Waived</span
+                >) * 100]</v-card-text
+              >
+            </v-card>
           </v-col>
         </v-row>
-        <ProfileData v-if="evalInfo != null" class="my-4 mx-2" :file="evalInfo" />
+        <!-- DataTable -->
+        <v-row>
+          <v-col xs="4">
+            <v-card>
+              <v-card-title>Rules</v-card-title>
+              <v-card-text>
+                <v-simple-table dense height="25vh" fixed-header>
+                  <template #default>
+                    <thead>
+                      <tr>
+                        <th>Status</th>
+                        <th>Vuln ID</th>
+                        <th>Rule ID</th>
+                        <th>Rule Name</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
+                        v-for="rule in rulesAndStuff"
+                        :key="rule.ruleId"
+                        @click="showRule(rule)"
+                      >
+                        <td>{{ rule.status }}</td>
+                        <td>{{ rule.vulId }}</td>
+                        <td>{{ rule.ruleId }}</td>
+                        <td>{{ rule.ruleName }}</td>
+                      </tr>
+                    </tbody></template
+                  >
+                </v-simple-table>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col xs="4">
+            <v-card height="60%">
+              <v-card-title>DATA WILL GO HERE</v-card-title>
+              <v-card-subtitle>DATA WILL GO HERE</v-card-subtitle>
+            </v-card>
+          </v-col>
+        </v-row>
       </v-container>
-      <!-- Count Cards -->
-      <StatusCardRow :filter="all_filter" :current-status-filter="statusFilter" @show-errors="showErrors"
-        @show-waived="showWaived" @add-filter="addStatusSearch" @remove-filter="removeStatusFilter" />
-      <!-- Compliance Cards -->
-      <v-row id="complianceCards" justify="space-around">
-        <v-col xs="4">
-          <v-card id="statusCounts" class="fill-height">
-            <v-card-title class="justify-center">Status Counts</v-card-title>
-            <v-card-actions class="justify-center">
-              <StatusChart v-model="statusFilter" :filter="all_filter" />
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col xs="4">
-          <v-card id="severityCounts" class="fill-height">
-            <v-card-title class="justify-center">Severity Counts</v-card-title>
-            <v-card-actions class="justify-center">
-              <SeverityChart v-model="severityFilter" :filter="all_filter" />
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col xs="4">
-          <v-card id="complianceLevel" class="fill-height">
-            <v-card-title class="justify-center">Compliance Level</v-card-title>
-            <v-card-actions class="justify-center">
-              <ComplianceChart :filter="all_filter" />
-            </v-card-actions>
-            <v-card-text style="text-align: center">[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
-                v-if="waivedProfilesExist">
-                + Waived</span>) * 100]</v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-      <!-- DataTable -->
-      <v-row>
-        <v-col xs="4">
-          <v-flex md6 style="overflow:auto">
-            <v-data-table item-key="name" :headers="headers" class="fixed-bottom" :items="rulesAndStuff"
-              :fixed-header="true">
-            </v-data-table>
-          </v-flex>
-        </v-col>
-        <v-col xs="4">
-          <v-card height="60%">
-            <v-card-title>DATA WILL GO HERE</v-card-title>
-            <v-card-subtitle>DATA WILL GO HERE</v-card-subtitle>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
-  </template>
+    </template>
   </Base>
 </template>
 
@@ -125,16 +183,26 @@
 import Base from './Base.vue';
 import Component from 'vue-class-component';
 import RouteMixin from '@/mixins/RouteMixin';
-import { SearchModule } from '@/store/search';
-import { ExtendedControlStatus, Filter, FilteredDataModule } from '@/store/data_filters';
-import { EvaluationFile, FileID, ProfileFile, SourcedContextualizedEvaluation, SourcedContextualizedProfile } from '@/store/report_intake';
-import { capitalize } from 'lodash';
-import { InspecDataModule } from '@/store/data_store';
-import { EvaluationModule } from '@/store/evaluations';
-import { IEvaluation } from '@heimdall/interfaces';
-import { compare_times } from '../utilities/delta_util';
-import { Severity } from 'inspecjs';
-import { StatusCountModule } from '@/store/status_counts';
+import {SearchModule} from '@/store/search';
+import {
+  ExtendedControlStatus,
+  Filter,
+  FilteredDataModule
+} from '@/store/data_filters';
+import {
+  EvaluationFile,
+  FileID,
+  ProfileFile,
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile
+} from '@/store/report_intake';
+import {capitalize} from 'lodash';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationModule} from '@/store/evaluations';
+import {IEvaluation} from '@heimdall/interfaces';
+import {compare_times} from '../utilities/delta_util';
+import {Severity} from 'inspecjs';
+import {StatusCountModule} from '@/store/status_counts';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import ControlTable from '@/components/cards/controltable/ControlTable.vue';
@@ -152,7 +220,6 @@ import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
-
 
 @Component({
   components: {
@@ -187,8 +254,8 @@ export default class Checklist extends RouteMixin {
     | null = null;
 
   /**
- * The current search terms, as modeled by the search bar
- */
+   * The current search terms, as modeled by the search bar
+   */
   get searchTerm(): string {
     return SearchModule.searchTerm;
   }
@@ -293,6 +360,10 @@ export default class Checklist extends RouteMixin {
     }
   }
 
+  showRule(rule: Record<string, unknown>) {
+    console.log(rule);
+  }
+
   /**
    * Returns true if we can currently clear.
    * Essentially, just controls whether the button is available
@@ -329,26 +400,26 @@ export default class Checklist extends RouteMixin {
 
   get headers() {
     return [
-      { text: 'Status', value: 'status', },
-      { text: 'Vul ID', value: 'vulId' },
-      { text: 'Rule ID', value: 'ruleId' },
-      { text: 'Rule Name', value: 'ruleName' }
-    ]
+      {text: 'Status', value: 'status'},
+      {text: 'Vul ID', value: 'vulId'},
+      {text: 'Rule ID', value: 'ruleId'},
+      {text: 'Rule Name', value: 'ruleName'}
+    ];
   }
 
   get rulesAndStuff() {
     return [
-      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
-      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
-      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
-      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
-      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
-      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
-      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
-      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
-      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" },
-      { status: "Hi", vulId: 1, ruleId: 1, ruleName: "dummy" }
-    ]
+      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
+      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
+      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
+      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
+      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
+      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
+      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
+      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
+      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'},
+      {status: 'Hi', vulId: 1, ruleId: 1, ruleName: 'dummy'}
+    ];
   }
 
   /**
