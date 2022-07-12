@@ -194,8 +194,10 @@ function cleanData(control: unknown[]): ExecJSON.Control[] {
 export class NessusResults {
   data: Record<string, unknown>;
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  constructor(nessusXml: string) {
+  withRaw: boolean;
+  constructor(nessusXml: string, withRaw = false) {
     this.data = parseXml(nessusXml);
+    this.withRaw = withRaw;
   }
 
   toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
@@ -223,7 +225,7 @@ export class NessusResults {
     );
     if (Array.isArray(reportHost)) {
       reportHost.forEach((element: Record<string, unknown>) => {
-        const entry = new NessusMapper(element);
+        const entry = new NessusMapper(element, this.withRaw);
         if (this.customMapping !== undefined) {
           entry.setMappings(this.customMapping);
         }
@@ -231,7 +233,10 @@ export class NessusResults {
       });
       return results;
     } else {
-      const result = new NessusMapper(reportHost as Record<string, unknown>);
+      const result = new NessusMapper(
+        reportHost as Record<string, unknown>,
+        this.withRaw
+      );
       if (this.customMapping !== undefined) {
         result.setMappings(this.customMapping);
       }
@@ -241,29 +246,27 @@ export class NessusResults {
 }
 
 export class NessusMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: {path: 'name'}
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: {transformer: getPolicyName},
         version: {transformer: getVersion},
         title: {transformer: getPolicyName},
-        maintainer: null,
         summary: {transformer: getPolicyName},
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -283,6 +286,17 @@ export class NessusMapper extends BaseConverter {
               cvss3_base_score: {path: 'cvss3_base_score'},
               cvss_base_score: {path: 'cvss_base_score'}
             },
+            refs: [
+              {
+                url: {
+                  path: 'see_also'
+                }
+              }
+            ],
+            source_location: {},
+            title: {transformer: getTitle},
+            id: {transformer: getId},
+            desc: {transformer: getDesc},
             descriptions: [
               {
                 data: {transformer: getCheck},
@@ -293,17 +307,6 @@ export class NessusMapper extends BaseConverter {
                 label: 'fix'
               }
             ],
-            refs: [
-              {
-                url: {
-                  path: 'see_also'
-                }
-              }
-            ],
-            source_location: {},
-            id: {transformer: getId},
-            title: {transformer: getTitle},
-            desc: {transformer: getDesc},
             impact: {transformer: getImpact},
             code: {
               transformer: (reportItem: unknown) =>
@@ -322,7 +325,6 @@ export class NessusMapper extends BaseConverter {
                     return String(value);
                   }
                 },
-                run_time: 0.0,
                 start_time: {
                   path: '$.HostProperties.tag',
                   transformer: getStartTime
@@ -333,9 +335,23 @@ export class NessusMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {
+          auxiliary_data: [
+            {
+              name: 'Nessus',
+              data: _.omit(data, ['name', 'ReportItem'])
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    }
   };
-  constructor(nessusJson: Record<string, unknown>) {
+  constructor(nessusJson: Record<string, unknown>, withRaw = false) {
     super(nessusJson);
+    this.withRaw = withRaw;
   }
 }

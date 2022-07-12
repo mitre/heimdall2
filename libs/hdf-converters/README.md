@@ -22,8 +22,9 @@ HDF Converters supplies several methods to convert various types of security too
 15. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
 16. [**splunk-mapper**] - Splunk instance
 17. [**twistlock-mapper**] - Twistlock CLI output file
-18. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
-19. [**zap-mapper**] - OWASP ZAP results JSON
+18. [**veracode-mapper**] - Veracode Scan Results XML file
+19. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+20. [**zap-mapper**] - OWASP ZAP results JSON
 
 ### NOTICE
 

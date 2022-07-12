@@ -47,30 +47,27 @@ function nistTag(text: string): string[] {
 }
 
 export class SarifMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: 'Static Analysis Results Interchange Format'
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         path: 'runs',
         name: 'SARIF',
         version: {path: '$.version'},
         title: 'Static Analysis Results Interchange Format',
-        maintainer: null,
-        summary: '',
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -82,13 +79,12 @@ export class SarifMapper extends BaseConverter {
                 path: 'vulnerabilityClassifications',
                 transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
               },
+              nist: {path: MESSAGE_TEXT, transformer: nistTag},
               cwe: {
                 path: MESSAGE_TEXT,
                 transformer: extractCwe
-              },
-              nist: {path: MESSAGE_TEXT, transformer: nistTag}
+              }
             },
-            descriptions: [],
             refs: [],
             source_location: {
               transformer: (control: unknown) => {
@@ -129,7 +125,10 @@ export class SarifMapper extends BaseConverter {
               }
             },
             impact: {path: 'level', transformer: impactMapping},
-            code: '',
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
@@ -137,7 +136,7 @@ export class SarifMapper extends BaseConverter {
                   path: 'locations[0].physicalLocation',
                   transformer: formatCodeDesc
                 },
-                run_time: 0,
+
                 start_time: ''
               }
             ]
@@ -145,9 +144,32 @@ export class SarifMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        let runsData = _.get(data, 'runs');
+        if (Array.isArray(runsData)) {
+          runsData = runsData.map((run: Record<string, unknown>) =>
+            _.omit(run, ['results'])
+          );
+        }
+        return {
+          auxiliary_data: [
+            {
+              name: 'SARIF',
+              data: {
+                $schema: _.get(data, '$schema'),
+                runs: runsData
+              }
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    }
   };
-  constructor(sarifJson: string) {
+  constructor(sarifJson: string, withRaw = false) {
     super(JSON.parse(sarifJson));
+    this.withRaw = withRaw;
   }
 }

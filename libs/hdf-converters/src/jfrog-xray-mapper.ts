@@ -106,6 +106,8 @@ function nistTag(identifier: Record<string, unknown>): string[] {
 
 // Mappings
 export class JfrogXrayMapper extends BaseConverter {
+  withRaw: boolean;
+
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -171,16 +173,21 @@ export class JfrogXrayMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      raw: {
-        transformer: (
-          data: Record<string, unknown>
-        ): Record<string, unknown> => {
-          return data;
-        }
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {
+          auxiliary_data: [
+            {
+              name: 'JFrog Xray',
+              data: _.pick(data, ['total_count'])
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
       }
     }
   };
-  constructor(xrayJson: string) {
+  constructor(xrayJson: string, withRaw = false) {
     super(JSON.parse(xrayJson), true);
+    this.withRaw = withRaw;
   }
 }
