@@ -31,7 +31,7 @@ export enum SpecialCasing {
   FirewallManager = 'AWS Firewall Manager',
   GuardDuty = 'AWS GuardDuty',
   HDF2ASFF = 'MITRE SAF HDF2ASFF',
-  Inspector = "AWS Inspector",
+  Inspector = 'AWS Inspector',
   Prowler = 'Prowler',
   SecurityHub = 'AWS Security Hub',
   Trivy = 'Aqua Trivy',
@@ -96,7 +96,7 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     )
   ) {
     return SpecialCasing.Trivy;
-  }  else {
+  } else {
     return SpecialCasing.Default;
   }
 }
