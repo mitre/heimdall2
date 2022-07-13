@@ -74,13 +74,13 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     return SpecialCasing.HDF2ASFF;
   } else if (
     productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/inspector$/
     )
   ) {
     return SpecialCasing.Inspector;
   } else if (
     productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/inspector$/
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
     )
   ) {
     return SpecialCasing.Prowler;
