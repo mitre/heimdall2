@@ -10,6 +10,7 @@ import {
 import {getFirewallManager} from './case-firewall-manager';
 import {getGuardDuty} from './case-guardduty';
 import {getHDF2ASFF} from './case-hdf2asff';
+import {getInspector} from './case-inspector';
 import {getProwler} from './case-prowler';
 import {getSecurityHub} from './case-security-hub';
 import {getTrivy} from './case-trivy';
@@ -28,11 +29,12 @@ const COMPLIANCE_STATUS = 'Compliance.Status';
 // Sometimes certain ASFF file types require massaging in order to generate good HDF files.  These are the supported special cases and a catchall 'Default'.  'Default' files and non-special cased methods for otherwise special cased files do the pre-defined default behaviors when generating the HDF file.
 export enum SpecialCasing {
   FirewallManager = 'AWS Firewall Manager',
+  GuardDuty = 'AWS GuardDuty',
+  HDF2ASFF = 'MITRE SAF HDF2ASFF',
+  Inspector = "AWS Inspector",
   Prowler = 'Prowler',
   SecurityHub = 'AWS Security Hub',
   Trivy = 'Aqua Trivy',
-  HDF2ASFF = 'MITRE SAF HDF2ASFF',
-  GuardDuty = 'AWS GuardDuty',
   Default = 'Default'
 }
 
@@ -50,24 +52,6 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     )
   ) {
     return SpecialCasing.GuardDuty;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
-    )
-  ) {
-    return SpecialCasing.Prowler;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/
-    )
-  ) {
-    return SpecialCasing.SecurityHub;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/
-    )
-  ) {
-    return SpecialCasing.Trivy;
   } else if (
     _.some(
       _.get(finding, 'FindingProviderFields.Types') as string[],
@@ -88,7 +72,31 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     )
   ) {
     return SpecialCasing.HDF2ASFF;
-  } else {
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
+    )
+  ) {
+    return SpecialCasing.Inspector;
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/inspector$/
+    )
+  ) {
+    return SpecialCasing.Prowler;
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/
+    )
+  ) {
+    return SpecialCasing.SecurityHub;
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/
+    )
+  ) {
+    return SpecialCasing.Trivy;
+  }  else {
     return SpecialCasing.Default;
   }
 }
@@ -100,10 +108,11 @@ const SPECIAL_CASE_MAPPING: Map<
 > = new Map([
   [SpecialCasing.FirewallManager, getFirewallManager()],
   [SpecialCasing.GuardDuty, getGuardDuty()],
+  [SpecialCasing.HDF2ASFF, getHDF2ASFF()],
+  [SpecialCasing.Inspector, getInspector()],
   [SpecialCasing.Prowler, getProwler()],
   [SpecialCasing.SecurityHub, getSecurityHub()],
-  [SpecialCasing.Trivy, getTrivy()],
-  [SpecialCasing.HDF2ASFF, getHDF2ASFF()]
+  [SpecialCasing.Trivy, getTrivy()]
 ]);
 
 function externalProductHandler<T>(

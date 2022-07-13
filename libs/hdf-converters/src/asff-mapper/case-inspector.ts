@@ -9,7 +9,7 @@ function findingId(finding: Record<string, unknown>): string {
   );
 }
 
-export function getGuardDuty(): Record<string, (...inputs: any) => any> {
+export function getInspector(): Record<string, (...inputs: any) => any> {
   return {
     findingId
   };
