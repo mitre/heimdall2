@@ -156,7 +156,7 @@ export class BurpSuiteMapper extends BaseConverter {
       }
     }
   };
-  constructor(burpsXml: string, withRaw = true) {
+  constructor(burpsXml: string, withRaw = false) {
     super(parseXml(burpsXml));
     this.withRaw = withRaw;
   }

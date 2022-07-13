@@ -182,7 +182,7 @@ export class ZapMapper extends BaseConverter {
       }
     }
   };
-  constructor(zapJson: string, name?: string, withRaw = true) {
+  constructor(zapJson: string, name?: string, withRaw = false) {
     super(
       _.set(
         JSON.parse(zapJson),
