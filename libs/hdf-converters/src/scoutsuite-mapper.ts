@@ -8,6 +8,7 @@ import {
   MappedTransform
 } from './base-converter';
 import {ScoutsuiteNistMapping} from './mappings/ScoutsuiteNistMapping';
+import {getCCIsForNISTTags} from './utils/global';
 
 const INSPEC_INPUTS_MAPPING = {
   string: 'String',
@@ -226,7 +227,11 @@ export class ScoutsuiteMapper extends BaseConverter {
             path: 'services',
             key: 'id',
             tags: {
-              nist: {path: '[0]', transformer: nistTag}
+              nist: {path: '[0]', transformer: nistTag},
+              cci: {
+                path: '[0]',
+                transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
+              }
             },
             refs: [
               {url: {path: '[1].references[0]'}},

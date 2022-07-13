@@ -10,6 +10,12 @@ describe('twistlock_mapper', () => {
         {encoding: 'utf-8'}
       )
     );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/twistlock_mapper/twistlock-twistcli-sample-1-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
