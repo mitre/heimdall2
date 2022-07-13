@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.16",
+    "release": "2.6.29",
     "target_id": "my-fake-host-10.somewhere.cloud"
   },
-  "version": "2.6.16",
+  "version": "2.6.29",
   "statistics": {
     "duration": null
   },
@@ -27,6 +27,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -57,6 +61,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -87,6 +95,10 @@
         {
           "desc": "JasPer 2.0.14 has a memory leak in base/jas_malloc.c in libjasper.a when \\\"--output-format jp2\\\" is used.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -117,6 +129,10 @@
         {
           "desc": "DOCUMENTATION: A NULL pointer dereference flaw was found in Jasper in the way it handled component references in the CDEF box in the JP2 image format decoder. This flaw allows a specially crafted JP2 image file to cause an application using the Jasper library to crash when opened. The highest threat from this vulnerability is system availability.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -147,6 +163,10 @@
         {
           "desc": "A stack-based buffer overflow vulnerability was found in NBD server implementation in qemu before 2.11 allowing a client to request an export name of size up to 4096 bytes, which in fact should be limited to 256 bytes, causing an out-of-bounds stack write in the qemu process. If NBD server requires TLS, the attacker cannot trigger the buffer overflow without first successfully negotiating TLS.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -177,6 +197,10 @@
         {
           "desc": "Samba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  Bug Fix(es):  * Fix username map script regression introduced with CVE-2020-25717 (BZ#2046173)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -205,7 +229,7 @@
           ]
         }
       ],
-      "sha256": "240695d8cf83c388d6dee3d9ff7923762315a8064eb7e9ae08cedfadf88bc274"
+      "sha256": "d75b6060aeb96db0f282fc2d010d9e97b366d3c77c6b5cf0b079610ff02b7ae4"
     }
   ]
 }
