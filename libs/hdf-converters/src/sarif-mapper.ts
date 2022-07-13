@@ -168,7 +168,7 @@ export class SarifMapper extends BaseConverter {
       }
     }
   };
-  constructor(sarifJson: string, withRaw = false) {
+  constructor(sarifJson: string, withRaw = true) {
     super(JSON.parse(sarifJson));
     this.withRaw = withRaw;
   }

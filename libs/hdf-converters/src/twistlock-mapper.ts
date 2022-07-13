@@ -152,7 +152,7 @@ export class TwistlockMapper extends BaseConverter {
       }
     }
   };
-  constructor(twistlockJson: string, withRaw = false) {
+  constructor(twistlockJson: string, withRaw = true) {
     super(JSON.parse(twistlockJson), true);
     this.withRaw = withRaw;
   }

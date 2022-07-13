@@ -186,7 +186,7 @@ export class JfrogXrayMapper extends BaseConverter {
       }
     }
   };
-  constructor(xrayJson: string, withRaw = false) {
+  constructor(xrayJson: string, withRaw = true) {
     super(JSON.parse(xrayJson), true);
     this.withRaw = withRaw;
   }
