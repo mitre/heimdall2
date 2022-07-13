@@ -35,7 +35,7 @@ describe('twistlock_mapper_withraw', () => {
   it('Successfully converts withRaw flagged Twistlock data', () => {
     const mapper = new TwistlockMapper(
       fs.readFileSync(
-        'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json',
+        'sample_jsons/twistlock_mapper/sample_input_report/twistlock-hdf.json',
         {encoding: 'utf-8'}
       ),
       true
