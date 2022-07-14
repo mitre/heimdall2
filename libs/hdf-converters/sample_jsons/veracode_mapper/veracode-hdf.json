@@ -1,7 +1,7 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.27"
+    "release": "2.6.29"
   },
   "passthrough": {
     "auxiliary_data": [
@@ -134,7 +134,7 @@
       }
     ]
   },
-  "version": "2.6.27",
+  "version": "2.6.29",
   "statistics": {},
   "profiles": [
     {
@@ -161,6 +161,9 @@
           "tags": {
             "cweid": "CWE-78: Improper Neutralization of Special Elements used in an OS Command &#x28;&#x27;OS Command Injection&#x27;&#x29;owasp: 1347\nsans: 864\ncertc: 1165\ncertjava: 1134\n",
             "cweDescription": "CWE-78: Improper Neutralization of Special Elements used in an OS Command &#x28;&#x27;OS Command Injection&#x27;&#x29; Description: This call contains a command injection flaw.  The argument to the function is constructed using untrusted input.  If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process.  The level of exposure depends on the effectiveness of input validation routines, if any.; ",
+            "cci": [
+              "CCI-001310"
+            ],
             "nist": [
               "SI-10"
             ]
@@ -198,6 +201,9 @@
           "tags": {
             "cweid": "CWE-89: Improper Neutralization of Special Elements used in an SQL Command &#x28;&#x27;SQL Injection&#x27;&#x29;owasp: 1347\nsans: 864\n",
             "cweDescription": "CWE-89: Improper Neutralization of Special Elements used in an SQL Command &#x28;&#x27;SQL Injection&#x27;&#x29; Description: This database query contains a SQL injection flaw.  The function call constructs a dynamic SQL query using a variable derived from untrusted input.  An attacker could exploit this flaw to execute arbitrary SQL queries against the database.; ",
+            "cci": [
+              "CCI-001310"
+            ],
             "nist": [
               "SI-10"
             ]
@@ -307,6 +313,9 @@
           "tags": {
             "cweid": "CWE-93: Improper Neutralization of CRLF Sequences &#x28;&#x27;CRLF Injection&#x27;&#x29;owasp: 1347\n\nCWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers &#x28;&#x27;HTTP Response Splitting&#x27;&#x29;owasp: 1347\n\nCWE-117: Improper Output Neutralization for Logsowasp: 1355\ncertjava: 1134\n",
             "cweDescription": "CWE-93: Improper Neutralization of CRLF Sequences &#x28;&#x27;CRLF Injection&#x27;&#x29; Description: A function call contains a CRLF Injection flaw.  Writing untrusted input to an interface or external application that treats the CRLF &#x28;carriage return line feed&#x29; sequence as a delimiter to separate lines or records can result in that data being misinterpreted.  FTP and SMTP are examples of protocols that treat CRLF as a delimiter when parsing commands.; \nCWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers &#x28;&#x27;HTTP Response Splitting&#x27;&#x29; Description: A function call contains an HTTP response splitting flaw.  Writing untrusted input into an HTTP header allows an attacker to manipulate the HTTP response rendered by the browser, leading to cache poisoning and cross-site scripting attacks.; \nCWE-117: Improper Output Neutralization for Logs Description: A function call could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker&#x27;s tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible.; ",
+            "cci": [
+              "CCI-001310"
+            ],
             "nist": [
               "SI-10"
             ]
@@ -572,6 +581,10 @@
           "tags": {
             "cweid": "CWE-259: Use of Hard-coded Passwordowasp: 1353\nsans: 798\ncertjava: 1152\n",
             "cweDescription": "CWE-259: Use of Hard-coded Password Description: A method uses a hard-coded password that may compromise system security in a way that cannot be easily remedied.  The use of a hard-coded password significantly increases the possibility that the account being protected will be compromised.  Moreover, the password cannot be changed without patching the software.  If a hard-coded password is compromised in a commercial product, all deployed instances may be vulnerable to attack.; ",
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -610,6 +623,10 @@
           "tags": {
             "cweid": "CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page &#x28;Basic XSS&#x29;owasp: 1347\nsans: 79\n",
             "cweDescription": "CWE-80: Improper Neutralization of Script-Related HTML Tags in a Web Page &#x28;Basic XSS&#x29; Description: This call contains a cross-site scripting &#x28;XSS&#x29; flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim&#x27;s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis.; ",
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -852,6 +869,9 @@
           "tags": {
             "cweid": "CWE-331: Insufficient Entropyowasp: 1346\nsans: 327\ncertc: 1170\n\nCWE-327: Use of a Broken or Risky Cryptographic Algorithmowasp: 1346\nsans: 866\ncertc: 1170\ncertjava: 1152\n",
             "cweDescription": "CWE-331: Insufficient Entropy Description: Standard random number generators do not provide a sufficient amount of entropy when used for security purposes. Attackers can brute force the output of pseudorandom number generators such as rand&#x28;&#x29;.; \nCWE-327: Use of a Broken or Risky Cryptographic Algorithm Description: The use of a broken or risky cryptographic algorithm is an unnecessary risk that may result in the disclosure of sensitive information.; ",
+            "cci": [
+              "CCI-002450"
+            ],
             "nist": [
               "SC-13"
             ]
@@ -931,6 +951,9 @@
           "tags": {
             "cweid": "CWE-73: External Control of File Name or Pathowasp: 1348\nsans: 22\n",
             "cweDescription": "CWE-73: External Control of File Name or Path Description: This call contains a path manipulation flaw.  The argument to the function is a filename constructed using untrusted input.  If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users.  The level of exposure depends on the effectiveness of input validation routines, if any.; ",
+            "cci": [
+              "CCI-001310"
+            ],
             "nist": [
               "SI-10"
             ]
@@ -986,6 +1009,9 @@
           "tags": {
             "cweid": "CWE-502: Deserialization of Untrusted Dataowasp: 1354\ncertjava: 1148\n",
             "cweDescription": "CWE-502: Deserialization of Untrusted Data Description: The application deserializes untrusted data without sufficiently verifying that the resulting data will be valid.; ",
+            "cci": [
+              "CCI-001310"
+            ],
             "nist": [
               "SI-10"
             ]
@@ -1017,6 +1043,9 @@
           "tags": {
             "cweid": "CWE-601: URL Redirection to Untrusted Site &#x28;&#x27;Open Redirect&#x27;&#x29;owasp: 1345\nsans: 864\n\nCWE-470: Use of Externally-Controlled Input to Select Classes or Code &#x28;&#x27;Unsafe Reflection&#x27;&#x29;owasp: 1347\n",
             "cweDescription": "CWE-601: URL Redirection to Untrusted Site &#x28;&#x27;Open Redirect&#x27;&#x29; Description: A web application accepts a untrusted input that specifies a link to an external site, and uses that link to generate a redirect.  This enables phishing attacks.; \nCWE-470: Use of Externally-Controlled Input to Select Classes or Code &#x28;&#x27;Unsafe Reflection&#x27;&#x29; Description: A call uses reflection in an unsafe manner.  An attacker can specify the class name to be instantiated, which may create unexpected control flow paths through the application.  Depending on how reflection is being used, the attack vector may allow the attacker to bypass security checks or otherwise cause the application to behave in an unexpected manner.  Even if the object does not implement the specified interface and a ClassCastException is thrown, the constructor of the untrusted class name will have already executed.; ",
+            "cci": [
+              "CCI-001310"
+            ],
             "nist": [
               "SI-10"
             ]
@@ -1060,6 +1089,10 @@
           "tags": {
             "cweid": "CWE-245: J2EE Bad Practices&#x3a; Direct Management of Connections",
             "cweDescription": "CWE-245: J2EE Bad Practices&#x3a; Direct Management of Connections Description: The J2EE application directly manages connections rather than using the container&#x27;s resource management facilities to obtain connections as specified in the J2EE standard.  Every major web application container provides pooled database connection management as part of its resource management framework. Duplicating this functionality in an application is difficult and error prone, which is part of the reason it is forbidden under the J2EE standard.; ",
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -1188,6 +1221,9 @@
           "tags": {
             "cweid": "CWE-614: Sensitive Cookie in HTTPS Session Without &#x27;Secure&#x27; Attributeowasp: 1349\nsans: 311\n",
             "cweDescription": "CWE-614: Sensitive Cookie in HTTPS Session Without &#x27;Secure&#x27; Attribute Description: Setting the Secure attribute on an HTTP cookie instructs the web browser to send it only over a secure channel, such as a TLS connection.  Issuing a cookie without the Secure attribute allows the browser to transmit it over unencrypted connections, which are susceptible to eavesdropping.  It is particularly important to set the Secure attribute on any cookies containing sensitive data, such as authentication information &#x28;e.g. &#x22;remember me&#x22; style functionality&#x29;.; ",
+            "cci": [
+              "CCI-002418"
+            ],
             "nist": [
               "SC-8"
             ]
@@ -1219,6 +1255,10 @@
           "tags": {
             "cweid": "CWE-209: Generation of Error Message Containing Sensitive Informationowasp: 1348\n\nCWE-201: Insertion of Sensitive Information Into Sent Dataowasp: 1345\n",
             "cweDescription": "CWE-209: Generation of Error Message Containing Sensitive Information Description: The software generates an error message that includes sensitive information about its environment, users, or associated data.  The sensitive information may be valuable information on its own &#x28;such as a password&#x29;, or it may be useful for launching other, more deadly attacks. If an attack fails, an attacker may use error information provided by the server to launch another more focused attack.  For example, file locations disclosed by an exception stack trace may be leveraged by an attacker to exploit a path traversal issue elsewhere in the application.; \nCWE-201: Insertion of Sensitive Information Into Sent Data Description: Sensitive information may be exposed as a result of outbound network connections made by the application.; ",
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -1509,6 +1549,10 @@
           "tags": {
             "cweid": "CWE-404: Improper Resource Shutdown or Releasecertc: 1162\ncertjava: 1147\n",
             "cweDescription": "CWE-404: Improper Resource Shutdown or Release Description: The application fails to release &#x28;or incorrectly releases&#x29; a system resource before it is made available for re-use.  This condition often occurs with resources such as database connections or file handles.  Most unreleased resource issues result in general software reliability problems, but if an attacker can intentionally trigger a resource leak, it may be possible to launch a denial of service attack by depleting the resource pool.; ",
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -1643,6 +1687,10 @@
           "tags": {
             "cweid": "CWE-454: External Initialization of Trusted Variables or Data Stores",
             "cweDescription": "CWE-454: External Initialization of Trusted Variables or Data Stores Description: A function is used to process options passed into a command line application.  The optarg variable is used to store any additional arguments that an option requires.  If optarg is used in an unbounded string copy, an attacker can specify overly long command line arguments and overflow the destination buffer, potentially resulting in execution of arbitrary code.; ",
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -2613,7 +2661,7 @@
           ]
         }
       ],
-      "sha256": "5d650a4b38447e64a5c5de3aa6af5d00425fd4d18984ce5b7487118ebe333dc0"
+      "sha256": "a7d7cb22649bd295cf929d2bebfaa306a900b2ad187a064346de158160281eff"
     }
   ]
 }

@@ -8,12 +8,15 @@ import {
   parseHtml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  getCCIsForNISTTags
+} from './utils/global';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 
 function filterSite<T>(input: Array<T>, name?: string) {
-  // Choose the site passed if provided
+  // Choose passed site if provided
   if (name) {
     return input.find((element) => _.get(element, '@name') === name);
   }
@@ -88,16 +91,18 @@ function deduplicateId(input: unknown[]): ExecJSON.Control[] {
 }
 
 export class ZapMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: ''
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: 'OWASP ZAP Scan',
@@ -108,48 +113,53 @@ export class ZapMapper extends BaseConverter {
             return `OWASP ZAP Scan of Host: ${input}`;
           }
         },
-        maintainer: null,
         summary: {
           path: 'site.@host',
           transformer: (input: unknown): string => {
             return `OWASP ZAP Scan of Host: ${input}`;
           }
         },
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
           {
             path: 'site.alerts',
             arrayTransformer: deduplicateId,
-            id: {path: 'pluginid'},
-            title: {path: 'name'},
-            desc: {path: 'desc', transformer: parseHtml},
-            impact: {path: 'riskcode', transformer: impactMapping},
             tags: {
+              cci: {
+                path: 'cweid',
+                transformer: (cwe: string) => getCCIsForNISTTags(nistTag(cwe))
+              },
               nist: {path: 'cweid', transformer: nistTag},
               cweid: {path: 'cweid'},
               wascid: {path: 'wascid'},
               sourceid: {path: 'sourceid'},
               confidence: {path: 'confidence'},
-              riskdesc: {path: 'riskdesc'},
-              check: {transformer: checkText}
+              riskdesc: {path: 'riskdesc'}
             },
-            descriptions: [],
             refs: [],
             source_location: {},
-            code: '',
+            title: {path: 'name'},
+            id: {path: 'pluginid'},
+            desc: {path: 'desc', transformer: parseHtml},
+            descriptions: [
+              {
+                data: {transformer: checkText},
+                label: 'check'
+              }
+            ],
+            impact: {path: 'riskcode', transformer: impactMapping},
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
+            },
             results: [
               {
                 path: 'instances',
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: formatCodeDesc},
-                run_time: 0,
                 start_time: {path: '$.@generated'}
               }
             ]
@@ -157,9 +167,22 @@ export class ZapMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {
+          auxiliary_data: [
+            {
+              name: 'OWASP ZAP',
+              data: _.pick(data, ['site.@port', 'site.@ssl'])
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    }
   };
-  constructor(zapJson: string, name?: string) {
+  constructor(zapJson: string, name?: string, withRaw = false) {
     super(
       _.set(
         JSON.parse(zapJson),
@@ -168,6 +191,7 @@ export class ZapMapper extends BaseConverter {
       ),
       false
     );
+    this.withRaw = withRaw;
   }
 
   toHdf(): ExecJSON.Execution {

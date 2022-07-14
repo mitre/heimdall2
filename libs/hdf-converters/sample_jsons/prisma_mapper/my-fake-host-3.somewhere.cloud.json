@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.16",
+    "release": "2.6.29",
     "target_id": "my-fake-host-3.somewhere.cloud"
   },
-  "version": "2.6.16",
+  "version": "2.6.29",
   "statistics": {
     "duration": null
   },
@@ -27,6 +27,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -57,6 +61,10 @@
         {
           "desc": "STATEMENT: As per upstream \\\"Prior to Samba 4.15.0 patches for this are not possible, due to the prior design of the Samba VFS layer which used pathname-based calls for most meta-data operations. A two and a half year effort was undertaken to completely re-write the Samba VFS layer to stop use of pathname-based calls in all cases involving reading and writing of metadata returned to the client. This work has finally been completed in Samba 4.15.0.\\\"             MITIGATION: Do not enable SMB1 (please note SMB1 is disabled by default in Samba from version 4.11.0 and onwards). This prevents the creation of symbolic links via SMB1. If SMB1 must be enabled for backwards compatibility then add the parameter:  unix extensions = no  to the [global] section of your smb.conf and restart smbd. This prevents SMB1 clients from creating symlinks on the exported file system.  However, if the same region of the file system is also exported using NFS, NFS clients can create symlinks that potentially can also hit the race condition. For non-patched versions of Samba we recommend only exporting areas of the file system by either SMB2 or NFS, not both.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -87,6 +95,10 @@
         {
           "desc": "All versions of Samba prior to 4.13.16 are vulnerable to a malicious client using an SMB1 or NFS race to allow a directory to be created in an area of the server file system not exported under the share definition. Note that SMB1 has to be enabled, or the share also available via NFS in order for this attack to succeed.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -117,6 +129,10 @@
         {
           "desc": "Samba is an open-source implementation of the Server Message Block (SMB) protocol and the related Common Internet File System (CIFS) protocol, which allow PC-compatible machines to share files, printers, and various information.  Security Fix(es):  * samba: Out-of-bounds heap read/write vulnerability in VFS module vfs_fruit allows code execution (CVE-2021-44142)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -147,6 +163,10 @@
         {
           "desc": "DOCUMENTATION: A flaw was found in golang. Extraneous zero characters at the beginning of an IP address octet are not properly considered which could allow an attacker to bypass IP-based access controls. The highest threat from this vulnerability is to data confidentiality and integrity as well as system availability.             STATEMENT: This vulnerability potentially affects any component written in Go that uses the net standard library and ParseIP / ParseCIDR functions. There are components which might not use these functions or might use them to parse IP addresses and not manage them in any way (only store information about the ip address) . This reducing the severity of this vulnerability to Low for the following components: * OpenShift distributed tracing (formerly OpenShift Jaeger) * OpenShift Migration Toolkit for Containers * OpenShift Container Platform             MITIGATION: Mitigation for this issue is either not available or the currently available options do not meet the Red Hat Product Security criteria comprising ease of use and deployment, applicability to widespread installation base or stability.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -175,7 +195,7 @@
           ]
         }
       ],
-      "sha256": "37e1cf406624a79c136ea6d2e512c4580ea770db7de7ce042e7fdb175b481e32"
+      "sha256": "5500dc99a18e0f1db9eb45c2b8cd4310cbba5ac82a9b5a1cf030664f51098585"
     }
   ]
 }
