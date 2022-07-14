@@ -19,12 +19,9 @@ describe('twistlock_mapper', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/twistlock_mapper/twistlock-hdf.json',
-            {
+          fs.readFileSync('sample_jsons/twistlock_mapper/twistlock-hdf.json', {
               encoding: 'utf-8'
-            }
-          )
+          })
         )
       )
     );
