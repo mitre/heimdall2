@@ -20,7 +20,7 @@ describe('twistlock_mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync('sample_jsons/twistlock_mapper/twistlock-hdf.json', {
-              encoding: 'utf-8'
+            encoding: 'utf-8'
           })
         )
       )
