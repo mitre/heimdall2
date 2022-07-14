@@ -105,7 +105,6 @@ describe('xccdf_mapper', () => {
   });
 });
 
-
 describe('xccdf_mapper_withraw', () => {
   describe('SCC using withRaw flag', () => {
     it('rhel7', () => {
