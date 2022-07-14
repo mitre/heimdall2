@@ -506,7 +506,7 @@ export class XCCDFResultsMapper extends BaseConverter {
       }
     }
   };
-  constructor(scapXml: string, withRaw = false) {
+  constructor(scapXml: string, withRaw = true) {
     super(parseXml(scapXml));
     this.withRaw = withRaw;
   }
