@@ -8,7 +8,10 @@ import {
   MappedTransform
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  getCCIsForNISTTags
+} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -16,6 +19,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3]
 ]);
 const CWE_NIST_MAPPING = new CweNistMapping();
+
+const CWE_PATH = 'identifiers.CWE';
 
 function parseIdentifier(identifiers: unknown[] | unknown): string[] {
   const output: string[] = [];
@@ -110,8 +115,13 @@ export class SnykMapper extends BaseConverter {
             path: 'vulnerabilities',
             key: 'id',
             tags: {
-              nist: {path: 'identifiers.CWE', transformer: nistTag},
-              cweid: {path: 'identifiers.CWE', transformer: parseIdentifier},
+              cci: {
+                path: CWE_PATH,
+                transformer: (cwe: unknown[]) =>
+                  getCCIsForNISTTags(nistTag(cwe))
+              },
+              nist: {path: CWE_PATH, transformer: nistTag},
+              cweid: {path: CWE_PATH, transformer: parseIdentifier},
               cveid: {path: 'identifiers.CVE', transformer: parseIdentifier},
               ghsaid: {path: 'identifiers.GHSA', transformer: parseIdentifier}
             },

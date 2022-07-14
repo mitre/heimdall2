@@ -8,6 +8,7 @@ import {
   parseHtml,
   parseXml
 } from './base-converter';
+import {getCCIsForNISTTags} from './utils/global';
 
 const NIST_REFERENCE_NAME =
   'Standards Mapping - NIST Special Publication 800-53 Revision 4';
@@ -152,7 +153,11 @@ export class FortifyMapper extends BaseConverter {
             desc: {path: 'Explanation', transformer: parseHtml},
             impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},
             tags: {
-              nist: {transformer: nistTag}
+              nist: {transformer: nistTag},
+              cci: {
+                transformer: (data: Record<string, unknown>) =>
+                  getCCIsForNISTTags(nistTag(data))
+              }
             },
             descriptions: [],
             refs: [],

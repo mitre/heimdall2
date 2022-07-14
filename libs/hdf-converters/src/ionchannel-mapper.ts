@@ -11,7 +11,10 @@ import {
 import {Project} from '../types/ionchannelProjects';
 import {Team} from '../types/ionchannelTeams';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
-import {DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS} from './utils/global';
+import {
+  DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS,
+  getCCIsForNISTTags
+} from './utils/global';
 
 // Extracts all levels of dependencies from any dependency (including sub-dependencies)
 function extractAllDependencies(
@@ -264,13 +267,19 @@ export class IonChannelMapper extends BaseConverter {
                   ? {
                       ..._.omit(dependency, 'dependencies'),
                       nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS,
+                      cci: getCCIsForNISTTags(
+                        DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS
+                      ),
                       dependencies: dependency.dependencies.map(
                         (subDependency) => `${subDependency.name}`
                       )
                     }
                   : {
                       ..._.omit(dependency, 'dependencies'),
-                      nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS
+                      nist: DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS,
+                      cci: getCCIsForNISTTags(
+                        DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS
+                      )
                     };
               }
             },
