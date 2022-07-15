@@ -9,7 +9,7 @@ function findingId(finding: Record<string, unknown>): string {
     )
   );
 }
-//ghost
+
 export function getGuardDuty(): Record<string, (...inputs: any) => any> {
   return {
     findingId
