@@ -17,27 +17,34 @@
       />
       <v-text-field
         :value="region"
-        label="Bucket Region"
+        label="Bucket Region (Default: us-east-1)"
         type="text"
         @input="change_region"
       />
     </v-form>
-    <v-btn
-      color="primary"
-      :disabled="!valid"
-      class="my-2 mr-3"
-      @click="$emit('auth-basic')"
-    >
-      Basic Login
-    </v-btn>
-    <v-btn
-      color="green"
-      :disabled="!valid"
-      class="my-2 mr-3"
-      @click="$emit('goto-mfa')"
-    >
-      MFA Login
-    </v-btn>
+    <v-row class="mx-1 mb-2">
+      <v-btn
+        color="primary"
+        :disabled="!valid"
+        class="my-2 mr-3"
+        @click="$emit('auth-basic')"
+      >
+        Basic Login
+      </v-btn>
+      <v-btn
+        color="green"
+        :disabled="!valid"
+        class="my-2"
+        @click="$emit('goto-mfa')"
+      >
+        MFA Login
+      </v-btn>
+      <v-spacer />
+      <v-btn @click="$emit('show-help')">
+        Help
+        <v-icon class="ml-2"> mdi-help-circle </v-icon>
+      </v-btn>
+    </v-row>
   </v-stepper-content>
 </template>
 
