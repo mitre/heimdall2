@@ -189,7 +189,10 @@ export default class S3Reader extends Vue {
    * Basically just wraps fetch_files with error handling
    */
   async load_bucket(name: string) {
-    const s3 = new S3(this.assumedRole!.creds);
+    const s3 = new S3({
+      ...this.assumedRole!.creds,
+      region: this.assumedRole.region || 'us-east-1'
+    });
     await s3
       .listObjectsV2({
         Bucket: name,
