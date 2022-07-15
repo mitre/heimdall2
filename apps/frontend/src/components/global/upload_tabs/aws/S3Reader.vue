@@ -7,6 +7,7 @@
     <AuthStepBasic
       :access-token.sync="accessToken"
       :secret-token.sync="secretToken"
+      :region.sync="region"
       @auth-basic="handle_basic"
       @goto-mfa="handle_goto_mfa"
     />
@@ -78,6 +79,7 @@ export default class S3Reader extends Vue {
   /** State of all globally relevant fields */
   accessToken = '';
   secretToken = '';
+  region = '';
   mfaSerial = '';
   mfaToken = '';
 
@@ -96,7 +98,12 @@ export default class S3Reader extends Vue {
    */
   handle_basic() {
     // Attempt to assume role based on if we've determined 2fa necessary
-    get_session_token(this.accessToken, this.secretToken, AUTH_DURATION).then(
+    get_session_token(
+      this.accessToken,
+      this.secretToken,
+      this.region,
+      AUTH_DURATION
+    ).then(
       // Success of get session token - now need to determine if MFA necessary
       (success) => {
         this.assumedRole = success;
@@ -114,7 +121,7 @@ export default class S3Reader extends Vue {
   handle_goto_mfa() {
     // Attempt to assume role based on if we've determined 2fa necessary
     // Don't need the duration to be very long
-    get_session_token(this.accessToken, this.secretToken, 10).then(
+    get_session_token(this.accessToken, this.secretToken, this.region, 10).then(
       // Success of get session token - now need to determine if MFA necessary
       () => {
         this.step = 2;
@@ -154,6 +161,7 @@ export default class S3Reader extends Vue {
     get_session_token(
       this.accessToken,
       this.secretToken,
+      this.region,
       AUTH_DURATION,
       mfa
     ).then(

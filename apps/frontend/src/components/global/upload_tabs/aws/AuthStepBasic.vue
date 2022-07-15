@@ -15,6 +15,12 @@
         :rules="[reqRule]"
         @input="change_secret_token"
       />
+      <v-text-field
+        :value="region"
+        label="Bucket Region"
+        type="text"
+        @input="change_region"
+      />
     </v-form>
     <v-btn
       color="primary"
@@ -45,6 +51,7 @@ import {Prop} from 'vue-property-decorator';
 /** Localstorage keys */
 const localAccessToken = new LocalStorageVal<string>('aws_s3_access_token');
 const localSecretToken = new LocalStorageVal<string>('aws_s3_secret_token');
+const localRegion = new LocalStorageVal<string>('aws_s3_region');
 
 /**
  * File reader component for taking in inspec JSON data.
@@ -59,6 +66,7 @@ const localSecretToken = new LocalStorageVal<string>('aws_s3_secret_token');
 export default class S3Reader extends Vue {
   @Prop({type: String}) readonly accessToken!: string;
   @Prop({type: String}) readonly secretToken!: string;
+  @Prop({type: String}) readonly region!: string;
 
   /** Models if currently displayed form is valid.
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
@@ -81,11 +89,17 @@ export default class S3Reader extends Vue {
     this.$emit('update:secretToken', token);
   }
 
+  change_region(region: string) {
+    localRegion.set(region);
+    this.$emit('update:region', region);
+  }
+
   /** On mount, try to look up stored auth info */
   mounted() {
     // Load our credentials
     this.change_access_token(localAccessToken.get_default(''));
     this.change_secret_token(localSecretToken.get_default(''));
+    this.change_region(localRegion.get_default(''));
   }
 }
 </script>
