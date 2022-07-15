@@ -191,7 +191,7 @@ export default class S3Reader extends Vue {
   async load_bucket(name: string) {
     const s3 = new S3({
       ...this.assumedRole!.creds,
-      region: this.assumedRole.region || 'us-east-1'
+      region: this.assumedRole!.region || 'us-east-1'
     });
     await s3
       .listObjectsV2({
