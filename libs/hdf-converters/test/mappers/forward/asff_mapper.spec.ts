@@ -4,7 +4,7 @@ import {ASFFResults as Mapper} from '../../../src/asff-mapper/asff-mapper';
 import {omitVersions} from '../../utils';
 
 describe('ASFF Mapper', () => {
-  it('Successfully converts Native ASFF', () => {
+  it('Successfully converts SecurityHub benchmark ASFFs', () => {
     const mapper = new Mapper(
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/asff_sample.json',
