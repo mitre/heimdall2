@@ -45,7 +45,10 @@ describe('jfrog_xray_mapper_withraw', () => {
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
-        JSON.parse(fs.readFileSync('sample_jsons/jfrog_xray_mapper/jfrog-hdf-withraw.json', {
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/jfrog_xray_mapper/jfrog-hdf-withraw.json',
+            {
               encoding: 'utf-8'
             }
           )
