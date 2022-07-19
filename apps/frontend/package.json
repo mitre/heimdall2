@@ -91,6 +91,7 @@
     "html-loader": "^3.0.0",
     "inspecjs": "^2.6.28",
     "jquery": "^3.6.0",
+    "jsonix": "^3.0.0",
     "lodash": "4.17.21",
     "lru-cache": "^6.0.0",
     "luxon": "^2.0.1",
