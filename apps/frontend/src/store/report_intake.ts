@@ -45,7 +45,7 @@ import { v4 as uuid } from 'uuid';
 import { Action, getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
 import { FilteredDataModule } from './data_filters';
 import { SnackbarModule } from './snackbar';
-import { ChecklistFile, ChecklistHeader, ChecklistVuln } from '@/types/checklist/control';
+import { ChecklistFile, ChecklistHeader, ChecklistVuln, Stig } from '@/types/checklist/control';
 import router from '@/router';
 
 /** Each FileID corresponds to a unique File in this store */
@@ -834,69 +834,76 @@ export class InspecIntake extends VuexModule {
 
     const raw = unmarshaller.unmarshalString(options.text)
 
-    const stigInfo = _.get(raw, 'value.stigs.istig[0].stiginfo')
-    const header: ChecklistHeader = {
-      version: getSiData(stigInfo, 'version'),
-      classification: getSiData(stigInfo, 'classification'),
-      customname: getSiData(stigInfo, 'customname'),
-      stigid: getSiData(stigInfo, 'stigid'),
-      description: getSiData(stigInfo, 'description'),
-      filename: getSiData(stigInfo, 'filename'),
-      releaseinfo: getSiData(stigInfo, 'releaseinfo'),
-      title: getSiData(stigInfo, 'title'),
-      uuid: getSiData(stigInfo, 'uuid'),
-      notice: getSiData(stigInfo, 'notice'),
-      source: getSiData(stigInfo, 'source')
-    }
-    const checklistVulns: ChecklistVuln[] = [];
+    const rawStigs: unknown[] = _.get(raw, 'value.stigs.istig')
+    const stigs: Stig[] = [];
 
-
-
-    const vulns: unknown[] = _.get(raw, 'value.stigs.istig[0].vuln')
-    vulns.forEach((vuln: unknown) => {
-      const stigdata: unknown[] = _.get(vuln, 'stigdata')
-      const checklistVuln: ChecklistVuln = {
-        status: _.get(vuln, 'status'),
-        findingDetails: _.get(vuln, 'findingdetails'),
-        comments: _.get(vuln, 'comments'),
-        severityOverride: _.get(vuln, 'severityoverride'),
-        severityJustification: _.get(vuln, 'severityjustification'),
-        vulnNum: getAttributeData(stigdata, 'Vuln_Num'),
-        severity: getAttributeData(stigdata, 'Severity'),
-        groupTitle: getAttributeData(stigdata, 'Group_Title'),
-        ruleId: getAttributeData(stigdata, 'Rule_ID'),
-        ruleVersion: getAttributeData(stigdata, 'Rule_Ver'),
-        ruleTitle: getAttributeData(stigdata, 'Rule_Title'),
-        vulnDiscuss: getAttributeData(stigdata, 'Vuln_Discuss'),
-        iaControls: getAttributeData(stigdata, 'IA_Controls'),
-        checkContent: getAttributeData(stigdata, 'Check_Content'),
-        fixText: getAttributeData(stigdata, 'Fix_Text'),
-        falsePositives: getAttributeData(stigdata, 'False_Positives'),
-        falseNegatives: getAttributeData(stigdata, 'False_Negatives'),
-        documentable: getAttributeData(stigdata, 'Documentable'),
-        mitigations: getAttributeData(stigdata, 'Mitigations'),
-        potentialImpact: getAttributeData(stigdata, 'Potential_Impact'),
-        thirdPartyTools: getAttributeData(stigdata, 'Third_Party_Tools'),
-        mitigationControl: getAttributeData(stigdata, 'Mitigation_Control'),
-        responsibility: getAttributeData(stigdata, 'Responsibility'),
-        securityOverrideGuidance: getAttributeData(stigdata, 'Security_Override_Guidance'),
-        checkContentRef: getAttributeData(stigdata, 'Check_Content_Ref'),
-        weight: getAttributeData(stigdata, 'Weight'),
-        class: getAttributeData(stigdata, 'Class'),
-        stigRef: getAttributeData(stigdata, 'STIGRef'),
-        targetKey: getAttributeData(stigdata, 'TargetKey'),
-        stigUuid: getAttributeData(stigdata, 'STIG_UUID'),
-        legacyId: getAttributeData(stigdata, 'LEGACY_ID'),
-        cciRef: getAttributeData(stigdata, 'CCI_REF')
+    rawStigs.forEach((stig: unknown) => {
+      const stigInfo = _.get(stig, 'stiginfo')
+      const header: ChecklistHeader = {
+        version: getSiData(stigInfo, 'version'),
+        classification: getSiData(stigInfo, 'classification'),
+        customname: getSiData(stigInfo, 'customname'),
+        stigid: getSiData(stigInfo, 'stigid'),
+        description: getSiData(stigInfo, 'description'),
+        filename: getSiData(stigInfo, 'filename'),
+        releaseinfo: getSiData(stigInfo, 'releaseinfo'),
+        title: getSiData(stigInfo, 'title'),
+        uuid: getSiData(stigInfo, 'uuid'),
+        notice: getSiData(stigInfo, 'notice'),
+        source: getSiData(stigInfo, 'source')
       }
-      checklistVulns.push(checklistVuln)
+
+      const checklistVulns: ChecklistVuln[] = [];
+      const vulns: unknown[] = _.get(raw, 'vuln')
+      vulns.forEach((vuln: unknown) => {
+        const stigdata: unknown[] = _.get(vuln, 'stigdata')
+        const checklistVuln: ChecklistVuln = {
+          status: _.get(vuln, 'status'),
+          findingDetails: _.get(vuln, 'findingdetails'),
+          comments: _.get(vuln, 'comments'),
+          severityOverride: _.get(vuln, 'severityoverride'),
+          severityJustification: _.get(vuln, 'severityjustification'),
+          vulnNum: getAttributeData(stigdata, 'Vuln_Num'),
+          severity: getAttributeData(stigdata, 'Severity'),
+          groupTitle: getAttributeData(stigdata, 'Group_Title'),
+          ruleId: getAttributeData(stigdata, 'Rule_ID'),
+          ruleVersion: getAttributeData(stigdata, 'Rule_Ver'),
+          ruleTitle: getAttributeData(stigdata, 'Rule_Title'),
+          vulnDiscuss: getAttributeData(stigdata, 'Vuln_Discuss'),
+          iaControls: getAttributeData(stigdata, 'IA_Controls'),
+          checkContent: getAttributeData(stigdata, 'Check_Content'),
+          fixText: getAttributeData(stigdata, 'Fix_Text'),
+          falsePositives: getAttributeData(stigdata, 'False_Positives'),
+          falseNegatives: getAttributeData(stigdata, 'False_Negatives'),
+          documentable: getAttributeData(stigdata, 'Documentable'),
+          mitigations: getAttributeData(stigdata, 'Mitigations'),
+          potentialImpact: getAttributeData(stigdata, 'Potential_Impact'),
+          thirdPartyTools: getAttributeData(stigdata, 'Third_Party_Tools'),
+          mitigationControl: getAttributeData(stigdata, 'Mitigation_Control'),
+          responsibility: getAttributeData(stigdata, 'Responsibility'),
+          securityOverrideGuidance: getAttributeData(stigdata, 'Security_Override_Guidance'),
+          checkContentRef: getAttributeData(stigdata, 'Check_Content_Ref'),
+          weight: getAttributeData(stigdata, 'Weight'),
+          class: getAttributeData(stigdata, 'Class'),
+          stigRef: getAttributeData(stigdata, 'STIGRef'),
+          targetKey: getAttributeData(stigdata, 'TargetKey'),
+          stigUuid: getAttributeData(stigdata, 'STIG_UUID'),
+          legacyId: getAttributeData(stigdata, 'LEGACY_ID'),
+          cciRef: getAttributeData(stigdata, 'CCI_REF')
+        }
+        checklistVulns.push(checklistVuln)
+
+        rawStigs.push({
+          header: header,
+          checklistVulns: checklistVulns
+        })
+      })
     })
 
     const newChecklist: ChecklistFile = {
       uniqueId: fileID,
       filename: options.filename,
-      header: header,
-      vulns: checklistVulns,
+      stigs: stigs,
       raw: raw
     }
     InspecDataModule.addChecklist(newChecklist);
