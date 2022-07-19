@@ -12,10 +12,14 @@ export type ChecklistFile = {
   /** The filename that this file was uploaded under. */
   filename: string;
 
-  header: ChecklistHeader;
-  vulns: ChecklistVuln[];
+  stigs: Stig[];
   raw: unknown;
 };
+
+export type Stig = {
+  header: ChecklistHeader;
+  vulns: ChecklistVuln[];
+}
 
 export type ChecklistHeader = {
   version: string;
