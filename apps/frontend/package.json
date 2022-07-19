@@ -76,6 +76,8 @@
     "highlight.js": "^11.0.0",
     "html-loader": "^4.1.0",
     "inspecjs": "^2.8.1",
+    "jquery": "^3.6.0",
+    "jsonix": "^3.0.0",
     "lodash": "4.17.21",
     "lru-cache": "^7.17.0",
     "luxon": "^3.0.1",

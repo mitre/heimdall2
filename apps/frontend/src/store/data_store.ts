@@ -10,6 +10,7 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
+import { ChecklistFile } from '@/types/checklist/control';
 import {
   Action,
   getModule,
@@ -37,6 +38,9 @@ export class InspecData extends VuexModule {
   /** State var containing all profile files that have been added */
   profileFiles: ProfileFile[] = [];
 
+  /** State var containing all checklist files that have been added */
+  checklistFiles: ChecklistFile[] = [];
+
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
     const result: (EvaluationFile | ProfileFile)[] = [];
@@ -53,6 +57,11 @@ export class InspecData extends VuexModule {
   /* Return all profile files only */
   get allProfileFiles(): ProfileFile[] {
     return this.profileFiles;
+  }
+
+  /** Return all checklist files only */
+  get allchecklistFiles(): ChecklistFile[] {
+    return this.checklistFiles;
   }
 
   /**
@@ -114,6 +123,15 @@ export class InspecData extends VuexModule {
   }
 
   /**
+   * Adds a checklist file to the store.
+   * @param newChecklist The checklist to add
+   */
+  @Mutation
+  addChecklist(newChecklist: ChecklistFile) {
+    this.checklistFiles.push(newChecklist);
+  }
+
+  /**
    * Unloads the file with the given id
    */
   @Action
@@ -121,6 +139,7 @@ export class InspecData extends VuexModule {
     FilteredDataModule.clear_file(fileId);
     this.context.commit('REMOVE_PROFILE', fileId);
     this.context.commit('REMOVE_RESULT', fileId);
+    this.context.commit('REMOVE_CHECKLIST', fileId)
   }
 
   @Mutation
@@ -137,6 +156,13 @@ export class InspecData extends VuexModule {
     );
   }
 
+  @Mutation
+  REMOVE_CHECKLIST(fileId: FileID) {
+    this.checklistFiles = this.checklistFiles.filter(
+      (cf) => cf.uniqueId !== fileId
+    )
+  }
+
   /**
    * Clear all stored data.
    */
@@ -144,6 +170,7 @@ export class InspecData extends VuexModule {
   reset() {
     this.profileFiles = [];
     this.executionFiles = [];
+    this.checklistFiles = [];
   }
 }
 
