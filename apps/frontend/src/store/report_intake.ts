@@ -43,7 +43,7 @@ import { FilteredDataModule } from './data_filters';
 import { SnackbarModule } from './snackbar';
 import { ChecklistFile, ChecklistHeader, ChecklistVuln, Stig } from '@/types/checklist/control';
 import router from '@/router';
-import { Jsonix } from 'jsonix'
+import Jsonix from 'jsonix'
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -418,7 +418,6 @@ export class InspecIntake extends VuexModule {
       router.push('/checklist');
 
     const fileID: FileID = uuid();
-    new Jsonix.Context([])
     const mapping = {
       name: 'Checklist',
       typeInfos: [{
@@ -802,7 +801,8 @@ export class InspecIntake extends VuexModule {
     }
     console.log('mapping defined')
     console.log(Jsonix)
-    const context = new Jsonix.Context([mapping])
+    // const context = new Jsonix.Context([mapping])
+    const context = {} as any
     const unmarshaller = context.createUnmarshaller()
 
     function getAttributeData(stigdata: unknown[], tag: string): string {
