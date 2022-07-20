@@ -8,6 +8,10 @@ import {
   MappedTransform,
   parseXml
 } from './base-converter';
+import {
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  getCCIsForNISTTags
+} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -98,19 +102,6 @@ function idToString(id: unknown): string {
   }
 }
 
-function handleResultStatus(controls: unknown): ExecJSON.ControlResult[] {
-  if (Array.isArray(controls)) {
-    controls = controls.map((result) => {
-      if (!_.has(result, 'Result Status')) {
-        result = _.extend(result, {'Result Status': _.get(result, 'Risk DV')})
-        result = _.omit(result, 'Risk DV')
-      }
-      return result
-    })
-  }
-  return controls as ExecJSON.ControlResult[];
-}
-
 export class DBProtectMapper extends BaseConverter {
   withRaw: boolean;
 
@@ -137,7 +128,10 @@ export class DBProtectMapper extends BaseConverter {
           {
             path: 'data',
             key: 'id',
-            tags: {},
+            tags: {
+              nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+              cci: getCCIsForNISTTags(DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS)
+            },
             refs: [],
             source_location: {},
             title: {path: 'Check'},
@@ -153,8 +147,7 @@ export class DBProtectMapper extends BaseConverter {
             },
             results: [
               {
-                //arrayTransformer: handleBacktrace,
-                arrayTransformer: handleResultStatus,
+                arrayTransformer: handleBacktrace,
                 status: {path: 'Result Status', transformer: getStatus},
                 code_desc: {path: 'Details'},
                 start_time: {path: 'Date'},
