@@ -43,6 +43,7 @@ import { FilteredDataModule } from './data_filters';
 import { SnackbarModule } from './snackbar';
 import { ChecklistFile, ChecklistHeader, ChecklistVuln, Stig } from '@/types/checklist/control';
 import router from '@/router';
+import { Jsonix } from 'jsonix'
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -413,8 +414,11 @@ export class InspecIntake extends VuexModule {
 
   @Action
   async loadChecklist(options: ChecklistLoadOptions) {
-    const fileID: FileID = uuid();
+    if (router.currentRoute.path.split('/')[1] !== 'checklist')
+      router.push('/checklist');
 
+    const fileID: FileID = uuid();
+    new Jsonix.Context([])
     const mapping = {
       name: 'Checklist',
       typeInfos: [{
@@ -796,7 +800,8 @@ export class InspecIntake extends VuexModule {
         }
       }]
     }
-    const Jsonix = require('jsonix').Jsonix
+    console.log('mapping defined')
+    console.log(Jsonix)
     const context = new Jsonix.Context([mapping])
     const unmarshaller = context.createUnmarshaller()
 
@@ -892,8 +897,9 @@ export class InspecIntake extends VuexModule {
       stigs: stigs,
       raw: raw
     }
+
+    console.log('Storing file complete')
     InspecDataModule.addChecklist(newChecklist);
-    router.push('/checklist');
     return fileID;
   }
 }

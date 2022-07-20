@@ -60,7 +60,7 @@ export class InspecData extends VuexModule {
   }
 
   /** Return all checklist files only */
-  get allchecklistFiles(): ChecklistFile[] {
+  get allChecklistFiles(): ChecklistFile[] {
     return this.checklistFiles;
   }
 
