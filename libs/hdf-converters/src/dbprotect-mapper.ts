@@ -98,6 +98,19 @@ function idToString(id: unknown): string {
   }
 }
 
+function getResultStatus(controls: unknown): ExecJSON.ControlResult[] {
+  if (Array.isArray(controls)) {
+    controls = controls.map((result) => {
+      if (!_.has(result, 'Result Status') && _.get(result, 'Risk DV') instanceof String) {
+        result = _.extend(result, {'Result Status': _.get(result, 'Risk DV')})
+        result = _.omit(result, 'Risk DV')
+      }
+      return result
+    })
+  }
+  return controls as ExecJSON.ControlResult[];
+}
+
 export class DBProtectMapper extends BaseConverter {
   withRaw: boolean;
 
@@ -141,10 +154,10 @@ export class DBProtectMapper extends BaseConverter {
             results: [
               {
                 arrayTransformer: handleBacktrace,
-                status: {path: ['Result Status', 'Risk DV'], transformer: getStatus},
+                status: {path: 'Result Status', transformer: getStatus},
                 code_desc: {path: 'Details'},
                 start_time: {path: 'Date'},
-                backtrace: [{path: ['Result Status', 'Risk DV'], transformer: getBacktrace}]
+                backtrace: [{path: 'Result Status', transformer: getBacktrace}]
               }
             ]
           }
