@@ -101,7 +101,7 @@ function idToString(id: unknown): string {
 function handleResultStatus(controls: unknown): ExecJSON.ControlResult[] {
   if (Array.isArray(controls)) {
     controls = controls.map((result) => {
-      if (!_.has(result, 'Result Status') && _.get(result, 'Risk DV') instanceof String) {
+      if (!_.has(result, 'Result Status')) {
         result = _.extend(result, {'Result Status': _.get(result, 'Risk DV')})
         result = _.omit(result, 'Risk DV')
       }
