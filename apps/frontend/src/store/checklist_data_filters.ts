@@ -7,6 +7,7 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import { ChecklistFile, ChecklistVuln } from '../types/checklist/control';
+import { InspecDataModule } from './data_store';
 import { FileID } from './report_intake';
 
 @Module({
@@ -23,6 +24,10 @@ export class ChecklistFilteredData extends VuexModule {
   @Action
   public selectRule(ruleId: string): void {
     this.context.commit('SELECT_RULE', { ruleId });
+  }
+
+  get allFiles() {
+    return InspecDataModule.allChecklistFiles
   }
 
   // @Mutation

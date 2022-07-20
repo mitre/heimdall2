@@ -156,9 +156,7 @@ import {
 } from '@/store/data_filters';
 import { FilteredChecklistDataModule } from '@/store/checklist_data_filters';
 import {
-  EvaluationFile,
   FileID,
-  ProfileFile,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
@@ -184,6 +182,8 @@ import ExportNist from '@/components/global/ExportNist.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import { ChecklistVuln } from '../types/checklist/control';
+import { InspecDataModule } from '@/store/data_store';
+
 
 @Component({
   components: {
@@ -371,8 +371,9 @@ export default class Checklist extends RouteMixin {
 
   get rules() {
     const rulesList: ChecklistVuln[] = [];
-    Object.entries(FilteredChecklistDataModule.loadedChecklists)
-      .map(([_fileId, checklist]) => checklist.vulns)
+    Object.entries(InspecDataModule.allChecklistFiles)
+      .map(([_fileId, checklist]) => checklist.stigs).flat()
+      .map((stig) => stig.vulns)
       .forEach((rulesItems) => {
         rulesList.push(...rulesItems);
       });
@@ -387,7 +388,7 @@ export default class Checklist extends RouteMixin {
     if (this.file_filter.length === 1) {
       const file = this.getChecklist(this.file_filter[0]);
       if (file) {
-        returnText += ` (${file.header.filename} selected)`;
+        returnText += ` (${file.filename} selected)`;
       }
     } else {
       returnText += ` (${this.file_filter.length} ${this.current_route_name}s selected)`;
