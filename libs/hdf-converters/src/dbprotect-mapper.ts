@@ -141,10 +141,10 @@ export class DBProtectMapper extends BaseConverter {
             results: [
               {
                 arrayTransformer: handleBacktrace,
-                status: {path: 'Result Status', transformer: getStatus},
+                status: {path: ['Result Status', 'Risk DV'], transformer: getStatus},
                 code_desc: {path: 'Details'},
                 start_time: {path: 'Date'},
-                backtrace: [{path: 'Result Status', transformer: getBacktrace}]
+                backtrace: [{path: ['Result Status', 'Risk DV'], transformer: getBacktrace}]
               }
             ]
           }
