@@ -432,7 +432,7 @@ function createProfileInfoFindingFields(
     `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
     `File/Input/${getFilename(options)}`
   ];
-  const executionTargets = ['platform', 'statistics', 'version', 'passthrough'];
+  const executionTargets = ['platform', 'statistics', 'version'];
   executionTargets.forEach((target) => {
     const value = _.get(hdf, target);
     if (typeof value === 'string' && value.trim()) {
