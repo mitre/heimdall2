@@ -83,10 +83,11 @@ function filter_overlays(
 }
 
 function getPassthrough(hdf: ExecJSON.Execution): object {
+  let passthrough = {}
   let passThroughObj = _.get(hdf, 'passthrough');
   if (passThroughObj instanceof Object) {
     if (JSON.stringify(passThroughObj).length <= 131072) {
-      passThroughObj = {};
+      passThroughObj = passThroughObj;
     }
   }
   return {passthrough: passThroughObj};
