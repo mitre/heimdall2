@@ -45,7 +45,6 @@ module.exports = {
   outputDir: '../../dist/frontend',
   configureWebpack: {
     module: {
-      noParse: /node_modules\/jsonix\/jsonix\.js/,
       rules: [
         {
           test: /\.m?js$/,
