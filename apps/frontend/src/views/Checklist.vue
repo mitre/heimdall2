@@ -121,7 +121,7 @@
                       <td>{{ rule.status }}</td>
                       <td>{{ rule.vulnNum }}</td>
                       <td>{{ rule.ruleId }}</td>
-                      <td>{{ rule.ruleTitle }}</td>
+                      <td>{{ rule.groupTitle }}</td>
                     </tr>
                   </tbody>
                 </template>
