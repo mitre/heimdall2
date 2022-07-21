@@ -183,11 +183,15 @@ export class FortifyMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        const auxData = _.get(data, 'FVDL')
+        if (auxData instanceof Object) {
+          _.omit(auxData, ['CreatedTS', 'UUID', 'Description', 'Snippets'])
+        }
         return {
           auxiliary_data: [
             {
               name: 'Fortify',
-              data: {}
+              data: {'FVDL': auxData}
             }
           ],
           ...(this.withRaw && {raw: data})
@@ -195,7 +199,7 @@ export class FortifyMapper extends BaseConverter {
       }
     }
   };
-  constructor(fvdl: string, withRaw = true) {
+  constructor(fvdl: string, withRaw = false) {
     super(parseXml(fvdl));
     this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(
       this.data,
