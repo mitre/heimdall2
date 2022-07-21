@@ -84,8 +84,10 @@ function filter_overlays(
 
 function getPassthrough(hdf: ExecJSON.Execution): object {
   let passThroughObj = _.get(hdf, 'passthrough');
-  if (JSON.stringify(passThroughObj).length <= 131072) {
-    passThroughObj = {};
+  if (passThroughObj instanceof Object) {
+    if (JSON.stringify(passThroughObj).length <= 131072) {
+      passThroughObj = {};
+    }
   }
   return {passthrough: passThroughObj};
 }
@@ -654,4 +656,3 @@ export function setupControlStatus(control: SegmentedControl) {
   }
   return status;
 }
-
