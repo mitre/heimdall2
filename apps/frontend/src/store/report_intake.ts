@@ -6,7 +6,6 @@ import { InspecDataModule } from '@/store/data_store';
 import Store from '@/store/store';
 import { Tag } from '@/types/models';
 import { read_file_async } from '@/utilities/async_util';
-import fs from 'fs'
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
@@ -44,6 +43,7 @@ import { FilteredDataModule } from './data_filters';
 import { SnackbarModule } from './snackbar';
 import { ChecklistFile, ChecklistHeader, ChecklistVuln, Stig } from '@/types/checklist/control';
 import router from '@/router';
+import { Jsonix } from 'jsonix';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -904,7 +904,6 @@ function convertChecklist(text: string): unknown {
     }]
   }
 
-  const Jsonix = require('jsonix').Jsonix
   const context = new Jsonix.Context([mapping])
   const unmarshaller = context.createUnmarshaller()
 
