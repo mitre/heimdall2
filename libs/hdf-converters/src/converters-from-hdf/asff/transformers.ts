@@ -82,6 +82,10 @@ function filter_overlays(
   return Array.from(Object.values(idHash));
 }
 
+function getPassthrough(hdf: ExecJSON.Execution): object {
+  return _.get(hdf, 'passthrough');
+}
+
 export function createProfileInfoFinding(
   hdf: ExecJSON.Execution,
   options: IOptions
@@ -123,7 +127,8 @@ export function createProfileInfoFinding(
         Type: 'AwsAccount',
         Id: `AWS::::Account:${options.awsAccountId}`,
         Partition: 'aws',
-        Region: options.region
+        Region: options.region,
+        Details: {AwsIamRole: {AssumeRolePolicyDocument: getPassthrough(hdf)}}
       }
     ]
   };
@@ -645,3 +650,4 @@ export function setupControlStatus(control: SegmentedControl) {
   }
   return status;
 }
+
