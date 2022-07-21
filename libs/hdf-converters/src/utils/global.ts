@@ -63,8 +63,12 @@ export function getCCIsForNISTTags(nistTags: string[]): string[] {
   const cciTags: string[] = [];
   for (const nistTag of nistTags) {
     const baseTag = /\w\w-\d\d?\d?/g.exec(nistTag);
-    if (baseTag && baseTag[0] in NistCciMappingData) {
-      cciTags.push(...NistCciMappingData[nistTag]);
+    if (
+      Array.isArray(baseTag) &&
+      baseTag.length > 0 &&
+      baseTag[0] in NistCciMappingData
+    ) {
+      cciTags.push(...NistCciMappingData[baseTag[0]]);
     }
   }
   return cciTags;
