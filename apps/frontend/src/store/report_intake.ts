@@ -523,6 +523,7 @@ export class InspecIntake extends VuexModule {
     const newChecklist: ChecklistFile = {
       uniqueId: fileID,
       filename: options.filename,
+      database_id: options.database_id,
       stigs: stigs,
       raw: raw
     }

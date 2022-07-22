@@ -134,6 +134,7 @@
             <v-card-title>Vulnerabilities</v-card-title>
             <v-card-subtitle>{{ 'Checklist File Name' }}</v-card-subtitle>
             <pre>
+<!-- {{ selectedRule?.ruleId }} -->
 {{ 'something' }} <br />{{ 'something Else' }}
               </pre>
           </v-card>
@@ -244,16 +245,16 @@ export default class Checklist extends RouteMixin {
     SearchModule.setStatusFilter(status);
   }
 
+  get selectedRule() {
+    return FilteredChecklistDataModule.getSelectedRule()
+  }
+
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
    */
   get file_filter(): FileID[] {
-    if (this.is_checklist_view) {
-      return FilteredDataModule.selectedEvaluationIds;
-    } else {
-      return FilteredDataModule.selectedProfileIds;
-    }
+    return FilteredChecklistDataModule.selectedChecklistIds;
   }
 
   get evaluationFiles(): SourcedContextualizedEvaluation[] {
@@ -434,5 +435,7 @@ export default class Checklist extends RouteMixin {
       previousValues: this.statusFilter
     });
   }
+
+
 }
 </script>

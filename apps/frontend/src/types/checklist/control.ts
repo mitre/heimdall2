@@ -12,6 +12,8 @@ export type ChecklistFile = {
   /** The filename that this file was uploaded under. */
   filename: string;
 
+  database_id?: string;
+
   stigs: Stig[];
   raw: unknown;
 };
