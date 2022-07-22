@@ -42,12 +42,12 @@ import {
 } from 'inspecjs';
 import _ from 'lodash';
 import { v4 as uuid } from 'uuid';
-import { Action, getModule, Module, Mutation, VuexModule } from 'vuex-module-decorators';
+import { Action, getModule, Module, VuexModule } from 'vuex-module-decorators';
 import { FilteredDataModule } from './data_filters';
 import { SnackbarModule } from './snackbar';
 import { ChecklistFile, ChecklistHeader, ChecklistVuln, Stig } from '@/types/checklist/control';
 import router from '@/router';
-import { Jsonix } from 'jsonix';
+import { Jsonix } from '@mitre/jsonix';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;

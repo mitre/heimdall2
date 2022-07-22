@@ -3069,10 +3069,31 @@
   resolved "https://registry.yarnpkg.com/@mdi/font/-/font-7.3.67.tgz#faa344a04c9d02f608c891a01134084febeb42db"
   integrity sha512-SWxvzRbUQRfewlIV+OF4/YF4DkeTjMWoT8Hh9yeU/5UBVdJZj9Uf4a9+cXjknSIhIaMxZ/4N1O/s7ojApOOGjg==
 
+<<<<<<< HEAD
 "@mdi/js@^7.0.96":
   version "7.3.67"
   resolved "https://registry.yarnpkg.com/@mdi/js/-/js-7.3.67.tgz#23bfca863b87a9433815717dcaa6ae43eac7db58"
   integrity sha512-MnRjknFqpTC6FifhGHjZ0+QYq2bAkZFQqIj8JA2AdPZbBxUvr8QSgB2yPAJ8/ob/XkR41xlg5majDR3c1JP1hw==
+=======
+"@mitre/jsonix@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@mitre/jsonix/-/jsonix-3.0.2.tgz#e7fd81dce6edf88905e9a4ddac46dde3afc6d805"
+  integrity sha512-avHlejYuBSr6frdaDEcjId8I7aQ6lgplyCFLOaPRY9SOWeMhXV8/QivAn3rZ6LALslwnFUvAEJcwtbxNVUviMA==
+  dependencies:
+    amdefine "^0.0.4"
+    xmldom "^0.6.0"
+    xmlhttprequest "^1.8.0"
+
+"@mitre/splunk-sdk-no-env@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@mitre/splunk-sdk-no-env/-/splunk-sdk-no-env-1.10.0.tgz#e78a39025d27b3d558161ed7c9c14309909f2694"
+  integrity sha512-RWpyZcPhNQ5dFupq/ZQU3GReRD/BPMnhPzKjo3lWWzdE06Chyd4nD7fKdoyR5HTKURapcSrHBP7j65kMFu51jg==
+  dependencies:
+    cookie "0.4.1"
+    dotenv "^10.0.0"
+    elementtree "0.1.7"
+    needle "2.6.0"
+>>>>>>> Configured to use @mitre/jsonix
 
 "@mitre/jsonix@^3.0.7":
   version "3.0.7"
@@ -5918,10 +5939,22 @@ ajv@^6.12.2, ajv@^6.12.3, ajv@^6.12.4, ajv@^6.12.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
+<<<<<<< HEAD
 amdefine@0.x.x:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-0.1.1.tgz#b5c75c532052dccd6a39c0064c772c8d57a06cd2"
   integrity sha512-cE/769sItEDt5sSdqmrWMsat+XaA5FJiEou+ZwlY7ef/Jf/517k6nYyUIRPR2o/QbpBg4FiYXj9GyRGNg5f/bg==
+=======
+alphanum-sort@^1.0.0:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
+  integrity sha1-l6ERlkmyEa0zaR2fn0hqjsn74KM=
+
+amdefine@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-0.0.4.tgz#510e24a0f231314e1105b9c747e79aaed694a0e9"
+  integrity sha512-+9uNlaqm8kZ0bYDuhFt1mqNoLM2I4AsSeB+6dddNiSfmRlJRq38IUuNtUD4+xOzOoPltOHzSvnlSgscMfpnDDg==
+>>>>>>> Configured to use @mitre/jsonix
 
 amdefine@^0.0.4:
   version "0.0.4"
@@ -13717,15 +13750,6 @@ jsonify@^0.0.1:
   resolved "https://registry.yarnpkg.com/jsonify/-/jsonify-0.0.1.tgz#2aa3111dae3d34a0f151c63f3a45d995d9420978"
   integrity sha512-2/Ki0GcmuqSrgFyelQq9M05y7PS0mEwuIzrf3f1fPqkVDVRvZrPZtVSMHxdgo8Aq0sxAOb/cr2aqqA3LeWHVPg==
 
-jsonix@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/jsonix/-/jsonix-3.0.0.tgz#6752e86e03239d37f403e424cb56252e1976fe3a"
-  integrity sha512-3I3CwAR5YRLGEApVjTYIDVzjryfvQq1sdEu8FLLCirGYBA9j0qDhIFHjtxEEyV0UApRgdAG8l4Za0VllZENHyA==
-  dependencies:
-    amdefine "0.x.x"
-    xmldom ">=0.1.21"
-    xmlhttprequest "1.x.x"
-
 jsonparse@^1.2.0, jsonparse@^1.3.1:
   version "1.3.1"
   resolved "https://registry.yarnpkg.com/jsonparse/-/jsonparse-1.3.1.tgz#3f4dae4a91fac315f71062f8521cc239f1366280"
@@ -20926,12 +20950,16 @@ xmlchars@^2.2.0:
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
 
-xmldom@>=0.1.21:
+xmldom@^0.6.0:
   version "0.6.0"
   resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.6.0.tgz#43a96ecb8beece991cef382c08397d82d4d0c46f"
   integrity sha512-iAcin401y58LckRZ0TkI4k0VSM1Qg0KGSc3i8rU+xrxe19A/BN1zHyVSJY7uoutVlaTSzYyk/v5AmkewAP7jtg==
 
+<<<<<<< HEAD
 xmlhttprequest@1.x.x, xmlhttprequest@^1.8.0:
+=======
+xmlhttprequest@^1.8.0:
+>>>>>>> Configured to use @mitre/jsonix
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
   integrity sha512-58Im/U0mlVBLM38NdZjHyhuMtCqa61469k2YP/AaPbvCoV9aQGUpbJBj1QRm2ytRiVQBD/fsw7L2bJGDVQswBA==
