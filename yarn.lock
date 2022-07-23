@@ -3723,9 +3723,9 @@
     "@types/node" "*"
 
 "@types/bootstrap@^5.0.15":
-  version "5.1.13"
-  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.1.13.tgz#249acdef3580b09c8a6ed1f878f4f1771a8c6fca"
-  integrity sha512-1hIIOgfkMlyQCQz/3ae53xr6ZN2d6EDj/n3G+Sh/LBsBUVigyDmnCbLwsaXJJ1GBGlkjgfXVoyIvEPowQw25xQ==
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@types/bootstrap/-/bootstrap-5.2.0.tgz#e619da0357f243b1252bd82eb236389ea1fd811d"
+  integrity sha512-zncxyEdbShnbOkY1zGBNqvpdVuIGDEA3rxcANJ4v9b3yaMxp+xDCNSwrXK5+uM7Wz7cb1RoIoRUQ0Q5JyfjyfA==
   dependencies:
     "@popperjs/core" "^2.9.2"
 
