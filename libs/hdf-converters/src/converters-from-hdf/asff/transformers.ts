@@ -88,7 +88,7 @@ function getPassthrough(hdf: ExecJSON.Execution): object {
   let isAuxAltered = false;
   let isRawAltered = false;
   if (passThroughObj instanceof Object) {
-    while (JSON.stringify(passThroughObj).length >= 13000) {
+    while (JSON.stringify(passThroughObj).length >= 130000) {
       if (_.has(passThroughObj, 'raw')) {
         passThroughObj = _.omit(passThroughObj, 'raw');
         isRawAltered = true;
