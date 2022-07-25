@@ -83,12 +83,19 @@ function filter_overlays(
 }
 
 function getPassthrough(hdf: ExecJSON.Execution): object {
-  let passthrough = {}
+  let passthrough = {};
   let passThroughObj = _.get(hdf, 'passthrough');
   if (passThroughObj instanceof Object) {
     while (JSON.stringify(passThroughObj).length >= 131072) {
-      if (_.has(passThroughObj, 'raw')) {
-        passThroughObj = _.omit(passThroughObj, 'raw');
+      //if (_.has(passThroughObj, 'raw')) {
+      //  passThroughObj = _.omit(passThroughObj, 'raw');
+      //  continue;
+      //}
+      if (_.has(passThroughObj, 'auxiliary_data')) {
+        passThroughObj = _.omit(
+          passThroughObj,
+          `${_.keys(passThroughObj.auxiliary_data.reverse()[0])}`
+        );
         continue;
       }
     }
