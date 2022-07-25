@@ -80,7 +80,7 @@
             </v-card-actions>
           </v-card>
         </v-col>
-        <v-col xs="4">
+        <!-- <v-col xs="4">
           <v-card id="severityCounts" class="fill-height">
             <v-card-title class="justify-center">Severity Counts</v-card-title>
             <v-card-actions class="justify-center">
@@ -98,7 +98,7 @@
                 v-if="waivedProfilesExist">
                 + Waived</span>) * 100]</v-card-text>
           </v-card>
-        </v-col>
+        </v-col> -->
       </v-row>
       <!-- DataTable -->
       <v-row>
@@ -129,12 +129,12 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col xs="4">
+        <v-col xs="4" v-if="selectedRule">
           <v-card height="60%">
             <v-card-title>Vulnerabilities</v-card-title>
             <v-card-subtitle>{{ 'Checklist File Name' }}</v-card-subtitle>
             <pre>
-<!-- {{ selectedRule?.ruleId }} -->
+{{ selectedRule.ruleId }}
 {{ 'something' }} <br />{{ 'something Else' }}
               </pre>
           </v-card>
@@ -184,7 +184,6 @@ import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import { ChecklistVuln } from '../types/checklist/control';
 import { InspecDataModule } from '@/store/data_store';
-
 
 @Component({
   components: {
@@ -246,7 +245,7 @@ export default class Checklist extends RouteMixin {
   }
 
   get selectedRule() {
-    return FilteredChecklistDataModule.getSelectedRule()
+    return FilteredChecklistDataModule.selectedRule;
   }
 
   /**
@@ -275,7 +274,9 @@ export default class Checklist extends RouteMixin {
   }
 
   getChecklist(fileID: FileID) {
-    return FilteredChecklistDataModule.allFiles.find((f) => f.uniqueId === fileID)
+    return FilteredChecklistDataModule.allFiles.find(
+      (f) => f.uniqueId === fileID
+    );
   }
 
   /**
@@ -323,8 +324,8 @@ export default class Checklist extends RouteMixin {
 
   showRule(rule: ChecklistVuln) {
     // Run selectRule from Checklist store
-    FilteredChecklistDataModule.selectRule(rule.ruleId)
-    console.log(rule);
+    InspecDataModule.setSelectedRule(rule);
+    setTimeout(() => { console.log(InspecDataModule.selectedRule) }, 1000)
   }
 
   /**
@@ -373,7 +374,8 @@ export default class Checklist extends RouteMixin {
   get rules() {
     const rulesList: ChecklistVuln[] = [];
     Object.entries(InspecDataModule.allChecklistFiles)
-      .map(([_fileId, checklist]) => checklist.stigs).flat()
+      .map(([_fileId, checklist]) => checklist.stigs)
+      .flat()
       .map((stig) => stig.vulns)
       .forEach((rulesItems) => {
         rulesList.push(...rulesItems);
@@ -435,7 +437,5 @@ export default class Checklist extends RouteMixin {
       previousValues: this.statusFilter
     });
   }
-
-
 }
 </script>

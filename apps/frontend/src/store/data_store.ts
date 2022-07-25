@@ -10,7 +10,7 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import { ChecklistFile } from '@/types/checklist/control';
+import { ChecklistFile, ChecklistVuln } from '@/types/checklist/control';
 import {
   Action,
   getModule,
@@ -40,6 +40,7 @@ export class InspecData extends VuexModule {
 
   /** State var containing all checklist files that have been added */
   checklistFiles: ChecklistFile[] = [];
+  selectedRule?: ChecklistVuln;
 
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
@@ -132,6 +133,21 @@ export class InspecData extends VuexModule {
   }
 
   /**
+   * Selects rule for viewing in checklist viewer
+   */
+  @Action
+  setSelectedRule(rule: ChecklistVuln) {
+    this.context.commit('SELECT_RULE', { rule: rule })
+  }
+
+  @Mutation
+  SELECT_RULE(options: { rule: ChecklistVuln }) {
+    this.selectedRule = options.rule;
+    console.log(options.rule)
+    console.log(this.selectedRule)
+  }
+
+  /**
    * Unloads the file with the given id
    */
   @Action
@@ -139,7 +155,7 @@ export class InspecData extends VuexModule {
     FilteredDataModule.clear_file(fileId);
     this.context.commit('REMOVE_PROFILE', fileId);
     this.context.commit('REMOVE_RESULT', fileId);
-    this.context.commit('REMOVE_CHECKLIST', fileId)
+    this.context.commit('REMOVE_CHECKLIST', fileId);
   }
 
   @Mutation
@@ -160,7 +176,7 @@ export class InspecData extends VuexModule {
   REMOVE_CHECKLIST(fileId: FileID) {
     this.checklistFiles = this.checklistFiles.filter(
       (cf) => cf.uniqueId !== fileId
-    )
+    );
   }
 
   /**

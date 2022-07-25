@@ -19,20 +19,13 @@ import { FileID } from './report_intake';
 })
 export class ChecklistFilteredData extends VuexModule {
   selectedChecklistIds: FileID[] = [];
-  selectedRule?: ChecklistVuln;
 
-  @Action
-  public selectRule(ruleId: string): void {
-    this.context.commit('SELECT_RULE', { ruleId });
-  }
-
-  @Action
-  public getSelectedRule(): ChecklistVuln | undefined {
-    return this.selectedRule
+  get selectedRule() {
+    return InspecDataModule.selectedRule;
   }
 
   get allFiles() {
-    return InspecDataModule.allChecklistFiles
+    return InspecDataModule.allChecklistFiles;
   }
 
   @Mutation
@@ -46,7 +39,7 @@ export class ChecklistFilteredData extends VuexModule {
   CLEAR_CHECKLIST(removeId: FileID): void {
     this.selectedChecklistIds = this.selectedChecklistIds.filter(
       (ids) => ids !== removeId
-    )
+    );
   }
 
   @Mutation
@@ -80,7 +73,7 @@ export class ChecklistFilteredData extends VuexModule {
   }
 
   public clear_file(fileID: FileID): void {
-    this.CLEAR_CHECKLIST(fileID)
+    this.CLEAR_CHECKLIST(fileID);
   }
 
   /**
@@ -106,29 +99,6 @@ export class ChecklistFilteredData extends VuexModule {
         return Trinary.Mixed;
     }
   }
-
-  @Mutation
-  SELECT_RULE(options: { ruleId: string }) {
-    const rulesList: ChecklistVuln[] = [];
-    Object.entries(InspecDataModule.allChecklistFiles)
-      .map(([_fileId, checklist]) => checklist.stigs)
-      .forEach((stigs) => {
-        stigs.forEach((stig) => {
-          stig.vulns.forEach(vuln => {
-            rulesList.push(vuln);
-          })
-        })
-      });
-    const foundControl = rulesList?.find(
-      (vuln) => vuln.ruleId === options.ruleId
-    );
-    if (foundControl) {
-      this.selectedRule = foundControl;
-    } else {
-      throw new Error(`Invalid Vulnerability - Rule ID: ${options.ruleId}`);
-    }
-  }
-
 }
 
 export const FilteredChecklistDataModule = getModule(ChecklistFilteredData);

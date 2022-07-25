@@ -2,8 +2,10 @@
  * Reads and parses inspec files
  */
 
+import router from '@/router';
 import { InspecDataModule } from '@/store/data_store';
 import Store from '@/store/store';
+import { ChecklistFile, ChecklistHeader, ChecklistVuln, Stig } from '@/types/checklist/control';
 import { Tag } from '@/types/models';
 import { read_file_async } from '@/utilities/async_util';
 import {
@@ -30,6 +32,7 @@ import {
   XCCDFResultsMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
+import { Jsonix } from '@mitre/jsonix';
 import axios from 'axios';
 import {
   ContextualizedEvaluation,
@@ -45,9 +48,6 @@ import { v4 as uuid } from 'uuid';
 import { Action, getModule, Module, VuexModule } from 'vuex-module-decorators';
 import { FilteredDataModule } from './data_filters';
 import { SnackbarModule } from './snackbar';
-import { ChecklistFile, ChecklistHeader, ChecklistVuln, Stig } from '@/types/checklist/control';
-import router from '@/router';
-import { Jsonix } from '@mitre/jsonix';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -129,7 +129,7 @@ export type ChecklistLoadOptions = {
   updatedAt?: Date;
   tags?: Tag[];
   text: string;
-}
+};
 
 @Module({
   namespaced: true,
@@ -433,32 +433,39 @@ export class InspecIntake extends VuexModule {
 
     const fileID: FileID = uuid();
 
-
     function getAttributeData(stigdata: unknown[], tag: string): string {
-      const results = stigdata.filter((attribute: unknown) => { return _.get(attribute, 'vulnattribute') === tag })
+      const results = stigdata.filter((attribute: unknown) => {
+        return _.get(attribute, 'vulnattribute') === tag;
+      });
       if (results.length === 1) {
-        return _.get(results[0], 'attributedata')
+        return _.get(results[0], 'attributedata');
       } else {
-        return results.map((result: unknown) => _.get(result, 'attributedata')).join('; ')
+        return results
+          .map((result: unknown) => _.get(result, 'attributedata'))
+          .join('; ');
       }
     }
 
     function getSiData(stiginfo: unknown[], tag: string): string {
-      const results = stiginfo.filter((attribute: unknown) => { return _.get(attribute, 'sidname') === tag })
+      const results = stiginfo.filter((attribute: unknown) => {
+        return _.get(attribute, 'sidname') === tag;
+      });
       if (results.length === 1) {
-        return _.get(results[0], 'siddata')
+        return _.get(results[0], 'siddata');
       } else {
-        return results.map((result: unknown) => _.get(result, 'siddata')).join('; ')
+        return results
+          .map((result: unknown) => _.get(result, 'siddata'))
+          .join('; ');
       }
     }
 
-    const raw = convertChecklist(options.text)
+    const raw = convertChecklist(options.text);
 
-    const rawStigs: unknown[] = _.get(raw, 'value.stigs.istig')
+    const rawStigs: unknown[] = _.get(raw, 'value.stigs.istig');
     const stigs: Stig[] = [];
 
     rawStigs.forEach((stig: unknown) => {
-      const stigInfo = _.get(stig, 'stiginfo.sidata')
+      const stigInfo = _.get(stig, 'stiginfo.sidata');
       const header: ChecklistHeader = {
         version: getSiData(stigInfo, 'version'),
         classification: getSiData(stigInfo, 'classification'),
@@ -471,12 +478,12 @@ export class InspecIntake extends VuexModule {
         uuid: getSiData(stigInfo, 'uuid'),
         notice: getSiData(stigInfo, 'notice'),
         source: getSiData(stigInfo, 'source')
-      }
+      };
 
       const checklistVulns: ChecklistVuln[] = [];
-      const vulns: unknown[] = _.get(stig, 'vuln')
+      const vulns: unknown[] = _.get(stig, 'vuln');
       vulns.forEach((vuln: unknown) => {
-        const stigdata: unknown[] = _.get(vuln, 'stigdata')
+        const stigdata: unknown[] = _.get(vuln, 'stigdata');
         const checklistVuln: ChecklistVuln = {
           status: _.get(vuln, 'status'),
           findingDetails: _.get(vuln, 'findingdetails'),
@@ -501,7 +508,10 @@ export class InspecIntake extends VuexModule {
           thirdPartyTools: getAttributeData(stigdata, 'Third_Party_Tools'),
           mitigationControl: getAttributeData(stigdata, 'Mitigation_Control'),
           responsibility: getAttributeData(stigdata, 'Responsibility'),
-          securityOverrideGuidance: getAttributeData(stigdata, 'Security_Override_Guidance'),
+          securityOverrideGuidance: getAttributeData(
+            stigdata,
+            'Security_Override_Guidance'
+          ),
           checkContentRef: getAttributeData(stigdata, 'Check_Content_Ref'),
           weight: getAttributeData(stigdata, 'Weight'),
           class: getAttributeData(stigdata, 'Class'),
@@ -510,15 +520,15 @@ export class InspecIntake extends VuexModule {
           stigUuid: getAttributeData(stigdata, 'STIG_UUID'),
           legacyId: getAttributeData(stigdata, 'LEGACY_ID'),
           cciRef: getAttributeData(stigdata, 'CCI_REF')
-        }
-        checklistVulns.push(checklistVuln)
-      })
+        };
+        checklistVulns.push(checklistVuln);
+      });
 
       stigs.push({
         header: header,
         vulns: checklistVulns
-      })
-    })
+      });
+    });
 
     const newChecklist: ChecklistFile = {
       uniqueId: fileID,
@@ -526,7 +536,7 @@ export class InspecIntake extends VuexModule {
       database_id: options.database_id,
       stigs: stigs,
       raw: raw
-    }
+    };
 
     InspecDataModule.addChecklist(newChecklist);
     return fileID;
@@ -536,393 +546,599 @@ export class InspecIntake extends VuexModule {
 function convertChecklist(text: string): unknown {
   /** Mapping from checklist XSD schema to JS object
    *  (Generated by jsonix-schema-compiler)
-  */
+   */
   const mapping = {
     name: 'mapping',
-    typeInfos: [{
-      localName: 'STIGDATA',
-      typeName: null,
-      propertyInfos: [{
-        name: 'vulnattribute',
-        required: true,
-        elementName: {
-          localPart: 'VULN_ATTRIBUTE'
-        },
-        values: ['CCI_REF', 'Check_Content', 'Check_Content_Ref', 'Class', 'Documentable', 'False_Negatives', 'False_Positives', 'Fix_Text', 'Group_Title', 'IA_Controls', 'Mitigation_Control', 'Mitigations', 'Potential_Impact', 'Responsibility', 'Rule_ID', 'Rule_Title', 'Rule_Ver', 'STIGRef', 'Security_Override_Guidance', 'Severity', 'Third_Party_Tools', 'Vuln_Discuss', 'Vuln_Num', 'Weight', 'TargetKey', 'STIG_UUID', 'LEGACY_ID']
-      }, {
-        name: 'attributedata',
-        required: true,
-        elementName: {
-          localPart: 'ATTRIBUTE_DATA'
-        }
-      }]
-    }, {
-      localName: 'ASSET',
-      typeName: null,
-      propertyInfos: [{
-        name: 'role',
-        required: true,
-        elementName: {
-          localPart: 'ROLE'
-        },
-        values: ['None', 'Workstation', 'Member Server', 'Domain Controller']
-      }, {
-        name: 'assettype',
-        required: true,
-        elementName: {
-          localPart: 'ASSET_TYPE'
-        },
-        values: ['Computing', 'Non-Computing']
-      }, {
-        name: 'marking',
-        elementName: {
-          localPart: 'MARKING'
-        }
-      }, {
-        name: 'hostname',
-        required: true,
-        elementName: {
-          localPart: 'HOST_NAME'
-        }
-      }, {
-        name: 'hostip',
-        required: true,
-        elementName: {
-          localPart: 'HOST_IP'
-        }
-      }, {
-        name: 'hostmac',
-        required: true,
-        elementName: {
-          localPart: 'HOST_MAC'
-        }
-      }, {
-        name: 'hostguid',
-        elementName: {
-          localPart: 'HOST_GUID'
-        }
-      }, {
-        name: 'hostfqdn',
-        required: true,
-        elementName: {
-          localPart: 'HOST_FQDN'
-        }
-      }, {
-        name: 'targetcomment',
-        elementName: {
-          localPart: 'TARGET_COMMENT'
-        }
-      }, {
-        name: 'techarea',
-        required: true,
-        elementName: {
-          localPart: 'TECH_AREA'
-        },
-        values: ['', 'Application Review', 'Boundary Security', 'CDS Admin Review', 'CDS Technical Review', 'Database Review', 'Domain Name System (DNS)', 'Exchange Server', 'Host Based System Security (HBSS)', 'Internal Network', 'Mobility', 'Releasable Networks (REL)', 'Releaseable Networks (REL)', 'Traditional Security', 'UNIX OS', 'VVOIP Review', 'Web Review', 'Windows OS', 'Other Review']
-      }, {
-        name: 'targetkey',
-        required: true,
-        elementName: {
-          localPart: 'TARGET_KEY'
-        }
-      }, {
-        name: 'stigguid',
-        elementName: {
-          localPart: 'STIG_GUID'
-        }
-      }, {
-        name: 'webordatabase',
-        required: true,
-        elementName: {
-          localPart: 'WEB_OR_DATABASE'
-        },
-        typeInfo: 'Boolean'
-      }, {
-        name: 'webdbsite',
-        required: true,
-        elementName: {
-          localPart: 'WEB_DB_SITE'
-        }
-      }, {
-        name: 'webdbinstance',
-        required: true,
+    typeInfos: [
+      {
+        localName: 'STIGDATA',
+        typeName: null,
+        propertyInfos: [
+          {
+            name: 'vulnattribute',
+            required: true,
+            elementName: {
+              localPart: 'VULN_ATTRIBUTE'
+            },
+            values: [
+              'CCI_REF',
+              'Check_Content',
+              'Check_Content_Ref',
+              'Class',
+              'Documentable',
+              'False_Negatives',
+              'False_Positives',
+              'Fix_Text',
+              'Group_Title',
+              'IA_Controls',
+              'Mitigation_Control',
+              'Mitigations',
+              'Potential_Impact',
+              'Responsibility',
+              'Rule_ID',
+              'Rule_Title',
+              'Rule_Ver',
+              'STIGRef',
+              'Security_Override_Guidance',
+              'Severity',
+              'Third_Party_Tools',
+              'Vuln_Discuss',
+              'Vuln_Num',
+              'Weight',
+              'TargetKey',
+              'STIG_UUID',
+              'LEGACY_ID'
+            ]
+          },
+          {
+            name: 'attributedata',
+            required: true,
+            elementName: {
+              localPart: 'ATTRIBUTE_DATA'
+            }
+          }
+        ]
+      },
+      {
+        localName: 'ASSET',
+        typeName: null,
+        propertyInfos: [
+          {
+            name: 'role',
+            required: true,
+            elementName: {
+              localPart: 'ROLE'
+            },
+            values: [
+              'None',
+              'Workstation',
+              'Member Server',
+              'Domain Controller'
+            ]
+          },
+          {
+            name: 'assettype',
+            required: true,
+            elementName: {
+              localPart: 'ASSET_TYPE'
+            },
+            values: ['Computing', 'Non-Computing']
+          },
+          {
+            name: 'marking',
+            elementName: {
+              localPart: 'MARKING'
+            }
+          },
+          {
+            name: 'hostname',
+            required: true,
+            elementName: {
+              localPart: 'HOST_NAME'
+            }
+          },
+          {
+            name: 'hostip',
+            required: true,
+            elementName: {
+              localPart: 'HOST_IP'
+            }
+          },
+          {
+            name: 'hostmac',
+            required: true,
+            elementName: {
+              localPart: 'HOST_MAC'
+            }
+          },
+          {
+            name: 'hostguid',
+            elementName: {
+              localPart: 'HOST_GUID'
+            }
+          },
+          {
+            name: 'hostfqdn',
+            required: true,
+            elementName: {
+              localPart: 'HOST_FQDN'
+            }
+          },
+          {
+            name: 'targetcomment',
+            elementName: {
+              localPart: 'TARGET_COMMENT'
+            }
+          },
+          {
+            name: 'techarea',
+            required: true,
+            elementName: {
+              localPart: 'TECH_AREA'
+            },
+            values: [
+              '',
+              'Application Review',
+              'Boundary Security',
+              'CDS Admin Review',
+              'CDS Technical Review',
+              'Database Review',
+              'Domain Name System (DNS)',
+              'Exchange Server',
+              'Host Based System Security (HBSS)',
+              'Internal Network',
+              'Mobility',
+              'Releasable Networks (REL)',
+              'Releaseable Networks (REL)',
+              'Traditional Security',
+              'UNIX OS',
+              'VVOIP Review',
+              'Web Review',
+              'Windows OS',
+              'Other Review'
+            ]
+          },
+          {
+            name: 'targetkey',
+            required: true,
+            elementName: {
+              localPart: 'TARGET_KEY'
+            }
+          },
+          {
+            name: 'stigguid',
+            elementName: {
+              localPart: 'STIG_GUID'
+            }
+          },
+          {
+            name: 'webordatabase',
+            required: true,
+            elementName: {
+              localPart: 'WEB_OR_DATABASE'
+            },
+            typeInfo: 'Boolean'
+          },
+          {
+            name: 'webdbsite',
+            required: true,
+            elementName: {
+              localPart: 'WEB_DB_SITE'
+            }
+          },
+          {
+            name: 'webdbinstance',
+            required: true,
+            elementName: {
+              localPart: 'WEB_DB_INSTANCE'
+            }
+          }
+        ]
+      },
+      {
+        localName: 'SIDATA',
+        typeName: null,
+        propertyInfos: [
+          {
+            name: 'sidname',
+            required: true,
+            elementName: {
+              localPart: 'SID_NAME'
+            },
+            values: [
+              'classification',
+              'customname',
+              'description',
+              'filename',
+              'notice',
+              'releaseinfo',
+              'source',
+              'stigid',
+              'title',
+              'uuid',
+              'version'
+            ]
+          },
+          {
+            name: 'siddata',
+            elementName: {
+              localPart: 'SID_DATA'
+            }
+          }
+        ]
+      },
+      {
+        localName: 'STIGS',
+        typeName: null,
+        propertyInfos: [
+          {
+            name: 'istig',
+            required: true,
+            collection: true,
+            elementName: {
+              localPart: 'iSTIG'
+            },
+            typeInfo: '.ISTIG'
+          }
+        ]
+      },
+      {
+        localName: 'STIGINFO',
+        typeName: null,
+        propertyInfos: [
+          {
+            name: 'sidata',
+            required: true,
+            collection: true,
+            elementName: {
+              localPart: 'SI_DATA'
+            },
+            typeInfo: '.SIDATA'
+          }
+        ]
+      },
+      {
+        localName: 'CHECKLIST',
+        typeName: null,
+        propertyInfos: [
+          {
+            name: 'asset',
+            required: true,
+            elementName: {
+              localPart: 'ASSET'
+            },
+            typeInfo: '.ASSET'
+          },
+          {
+            name: 'stigs',
+            required: true,
+            elementName: {
+              localPart: 'STIGS'
+            },
+            typeInfo: '.STIGS'
+          }
+        ]
+      },
+      {
+        localName: 'VULN',
+        typeName: null,
+        propertyInfos: [
+          {
+            name: 'stigdata',
+            required: true,
+            collection: true,
+            elementName: {
+              localPart: 'STIG_DATA'
+            },
+            typeInfo: '.STIGDATA'
+          },
+          {
+            name: 'status',
+            required: true,
+            elementName: {
+              localPart: 'STATUS'
+            },
+            values: ['NotAFinding', 'Open', 'Not_Applicable', 'Not_Reviewed']
+          },
+          {
+            name: 'findingdetails',
+            required: true,
+            elementName: {
+              localPart: 'FINDING_DETAILS'
+            }
+          },
+          {
+            name: 'comments',
+            required: true,
+            elementName: {
+              localPart: 'COMMENTS'
+            }
+          },
+          {
+            name: 'severityoverride',
+            required: true,
+            elementName: {
+              localPart: 'SEVERITY_OVERRIDE'
+            },
+            values: ['', 'low', 'medium', 'high']
+          },
+          {
+            name: 'severityjustification',
+            required: true,
+            elementName: {
+              localPart: 'SEVERITY_JUSTIFICATION'
+            }
+          }
+        ]
+      },
+      {
+        localName: 'ISTIG',
+        typeName: null,
+        propertyInfos: [
+          {
+            name: 'stiginfo',
+            required: true,
+            elementName: {
+              localPart: 'STIG_INFO'
+            },
+            typeInfo: '.STIGINFO'
+          },
+          {
+            name: 'vuln',
+            required: true,
+            collection: true,
+            elementName: {
+              localPart: 'VULN'
+            },
+            typeInfo: '.VULN'
+          }
+        ]
+      }
+    ],
+    elementInfos: [
+      {
         elementName: {
           localPart: 'WEB_DB_INSTANCE'
         }
-      }]
-    }, {
-      localName: 'SIDATA',
-      typeName: null,
-      propertyInfos: [{
-        name: 'sidname',
-        required: true,
+      },
+      {
+        elementName: {
+          localPart: 'TARGET_KEY'
+        }
+      },
+      {
+        values: ['None', 'Workstation', 'Member Server', 'Domain Controller'],
+        elementName: {
+          localPart: 'ROLE'
+        }
+      },
+      {
+        elementName: {
+          localPart: 'MARKING'
+        }
+      },
+      {
+        values: [
+          'classification',
+          'customname',
+          'description',
+          'filename',
+          'notice',
+          'releaseinfo',
+          'source',
+          'stigid',
+          'title',
+          'uuid',
+          'version'
+        ],
         elementName: {
           localPart: 'SID_NAME'
-        },
-        values: ['classification', 'customname', 'description', 'filename', 'notice', 'releaseinfo', 'source', 'stigid', 'title', 'uuid', 'version']
-      }, {
-        name: 'siddata',
-        elementName: {
-          localPart: 'SID_DATA'
         }
-      }]
-    }, {
-      localName: 'STIGS',
-      typeName: null,
-      propertyInfos: [{
-        name: 'istig',
-        required: true,
-        collection: true,
+      },
+      {
         elementName: {
-          localPart: 'iSTIG'
-        },
-        typeInfo: '.ISTIG'
-      }]
-    }, {
-      localName: 'STIGINFO',
-      typeName: null,
-      propertyInfos: [{
-        name: 'sidata',
-        required: true,
-        collection: true,
+          localPart: 'HOST_NAME'
+        }
+      },
+      {
+        values: ['', 'low', 'medium', 'high'],
         elementName: {
-          localPart: 'SI_DATA'
-        },
-        typeInfo: '.SIDATA'
-      }]
-    }, {
-      localName: 'CHECKLIST',
-      typeName: null,
-      propertyInfos: [{
-        name: 'asset',
-        required: true,
+          localPart: 'SEVERITY_OVERRIDE'
+        }
+      },
+      {
         elementName: {
-          localPart: 'ASSET'
-        },
-        typeInfo: '.ASSET'
-      }, {
-        name: 'stigs',
-        required: true,
-        elementName: {
-          localPart: 'STIGS'
-        },
-        typeInfo: '.STIGS'
-      }]
-    }, {
-      localName: 'VULN',
-      typeName: null,
-      propertyInfos: [{
-        name: 'stigdata',
-        required: true,
-        collection: true,
-        elementName: {
-          localPart: 'STIG_DATA'
-        },
-        typeInfo: '.STIGDATA'
-      }, {
-        name: 'status',
-        required: true,
-        elementName: {
-          localPart: 'STATUS'
-        },
-        values: ['NotAFinding', 'Open', 'Not_Applicable', 'Not_Reviewed']
-      }, {
-        name: 'findingdetails',
-        required: true,
+          localPart: 'HOST_FQDN'
+        }
+      },
+      {
         elementName: {
           localPart: 'FINDING_DETAILS'
         }
-      }, {
-        name: 'comments',
-        required: true,
-        elementName: {
-          localPart: 'COMMENTS'
-        }
-      }, {
-        name: 'severityoverride',
-        required: true,
-        elementName: {
-          localPart: 'SEVERITY_OVERRIDE'
-        },
-        values: ['', 'low', 'medium', 'high']
-      }, {
-        name: 'severityjustification',
-        required: true,
+      },
+      {
         elementName: {
           localPart: 'SEVERITY_JUSTIFICATION'
         }
-      }]
-    }, {
-      localName: 'ISTIG',
-      typeName: null,
-      propertyInfos: [{
-        name: 'stiginfo',
-        required: true,
+      },
+      {
+        typeInfo: '.STIGDATA',
         elementName: {
-          localPart: 'STIG_INFO'
-        },
-        typeInfo: '.STIGINFO'
-      }, {
-        name: 'vuln',
-        required: true,
-        collection: true,
+          localPart: 'STIG_DATA'
+        }
+      },
+      {
+        elementName: {
+          localPart: 'HOST_MAC'
+        }
+      },
+      {
+        elementName: {
+          localPart: 'HOST_GUID'
+        }
+      },
+      {
+        values: ['NotAFinding', 'Open', 'Not_Applicable', 'Not_Reviewed'],
+        elementName: {
+          localPart: 'STATUS'
+        }
+      },
+      {
+        elementName: {
+          localPart: 'COMMENTS'
+        }
+      },
+      {
+        typeInfo: '.VULN',
         elementName: {
           localPart: 'VULN'
-        },
-        typeInfo: '.VULN'
-      }]
-    }],
-    elementInfos: [{
-      elementName: {
-        localPart: 'WEB_DB_INSTANCE'
+        }
+      },
+      {
+        typeInfo: '.STIGINFO',
+        elementName: {
+          localPart: 'STIG_INFO'
+        }
+      },
+      {
+        typeInfo: '.ASSET',
+        elementName: {
+          localPart: 'ASSET'
+        }
+      },
+      {
+        typeInfo: '.CHECKLIST',
+        elementName: {
+          localPart: 'CHECKLIST'
+        }
+      },
+      {
+        typeInfo: '.ISTIG',
+        elementName: {
+          localPart: 'iSTIG'
+        }
+      },
+      {
+        elementName: {
+          localPart: 'HOST_IP'
+        }
+      },
+      {
+        elementName: {
+          localPart: 'STIG_GUID'
+        }
+      },
+      {
+        typeInfo: 'Boolean',
+        elementName: {
+          localPart: 'WEB_OR_DATABASE'
+        }
+      },
+      {
+        elementName: {
+          localPart: 'SID_DATA'
+        }
+      },
+      {
+        values: [
+          '',
+          'Application Review',
+          'Boundary Security',
+          'CDS Admin Review',
+          'CDS Technical Review',
+          'Database Review',
+          'Domain Name System (DNS)',
+          'Exchange Server',
+          'Host Based System Security (HBSS)',
+          'Internal Network',
+          'Mobility',
+          'Releasable Networks (REL)',
+          'Releaseable Networks (REL)',
+          'Traditional Security',
+          'UNIX OS',
+          'VVOIP Review',
+          'Web Review',
+          'Windows OS',
+          'Other Review'
+        ],
+        elementName: {
+          localPart: 'TECH_AREA'
+        }
+      },
+      {
+        elementName: {
+          localPart: 'ATTRIBUTE_DATA'
+        }
+      },
+      {
+        values: ['Computing', 'Non-Computing'],
+        elementName: {
+          localPart: 'ASSET_TYPE'
+        }
+      },
+      {
+        values: [
+          'CCI_REF',
+          'Check_Content',
+          'Check_Content_Ref',
+          'Class',
+          'Documentable',
+          'False_Negatives',
+          'False_Positives',
+          'Fix_Text',
+          'Group_Title',
+          'IA_Controls',
+          'Mitigation_Control',
+          'Mitigations',
+          'Potential_Impact',
+          'Responsibility',
+          'Rule_ID',
+          'Rule_Title',
+          'Rule_Ver',
+          'STIGRef',
+          'Security_Override_Guidance',
+          'Severity',
+          'Third_Party_Tools',
+          'Vuln_Discuss',
+          'Vuln_Num',
+          'Weight',
+          'TargetKey',
+          'STIG_UUID',
+          'LEGACY_ID'
+        ],
+        elementName: {
+          localPart: 'VULN_ATTRIBUTE'
+        }
+      },
+      {
+        elementName: {
+          localPart: 'TARGET_COMMENT'
+        }
+      },
+      {
+        typeInfo: '.SIDATA',
+        elementName: {
+          localPart: 'SI_DATA'
+        }
+      },
+      {
+        elementName: {
+          localPart: 'WEB_DB_SITE'
+        }
+      },
+      {
+        typeInfo: '.STIGS',
+        elementName: {
+          localPart: 'STIGS'
+        }
       }
-    }, {
-      elementName: {
-        localPart: 'TARGET_KEY'
-      }
-    }, {
-      values: ['None', 'Workstation', 'Member Server', 'Domain Controller'],
-      elementName: {
-        localPart: 'ROLE'
-      }
-    }, {
-      elementName: {
-        localPart: 'MARKING'
-      }
-    }, {
-      values: ['classification', 'customname', 'description', 'filename', 'notice', 'releaseinfo', 'source', 'stigid', 'title', 'uuid', 'version'],
-      elementName: {
-        localPart: 'SID_NAME'
-      }
-    }, {
-      elementName: {
-        localPart: 'HOST_NAME'
-      }
-    }, {
-      values: ['', 'low', 'medium', 'high'],
-      elementName: {
-        localPart: 'SEVERITY_OVERRIDE'
-      }
-    }, {
-      elementName: {
-        localPart: 'HOST_FQDN'
-      }
-    }, {
-      elementName: {
-        localPart: 'FINDING_DETAILS'
-      }
-    }, {
-      elementName: {
-        localPart: 'SEVERITY_JUSTIFICATION'
-      }
-    }, {
-      typeInfo: '.STIGDATA',
-      elementName: {
-        localPart: 'STIG_DATA'
-      }
-    }, {
-      elementName: {
-        localPart: 'HOST_MAC'
-      }
-    }, {
-      elementName: {
-        localPart: 'HOST_GUID'
-      }
-    }, {
-      values: ['NotAFinding', 'Open', 'Not_Applicable', 'Not_Reviewed'],
-      elementName: {
-        localPart: 'STATUS'
-      }
-    }, {
-      elementName: {
-        localPart: 'COMMENTS'
-      }
-    }, {
-      typeInfo: '.VULN',
-      elementName: {
-        localPart: 'VULN'
-      }
-    }, {
-      typeInfo: '.STIGINFO',
-      elementName: {
-        localPart: 'STIG_INFO'
-      }
-    }, {
-      typeInfo: '.ASSET',
-      elementName: {
-        localPart: 'ASSET'
-      }
-    }, {
-      typeInfo: '.CHECKLIST',
-      elementName: {
-        localPart: 'CHECKLIST'
-      }
-    }, {
-      typeInfo: '.ISTIG',
-      elementName: {
-        localPart: 'iSTIG'
-      }
-    }, {
-      elementName: {
-        localPart: 'HOST_IP'
-      }
-    }, {
-      elementName: {
-        localPart: 'STIG_GUID'
-      }
-    }, {
-      typeInfo: 'Boolean',
-      elementName: {
-        localPart: 'WEB_OR_DATABASE'
-      }
-    }, {
-      elementName: {
-        localPart: 'SID_DATA'
-      }
-    }, {
-      values: ['', 'Application Review', 'Boundary Security', 'CDS Admin Review', 'CDS Technical Review', 'Database Review', 'Domain Name System (DNS)', 'Exchange Server', 'Host Based System Security (HBSS)', 'Internal Network', 'Mobility', 'Releasable Networks (REL)', 'Releaseable Networks (REL)', 'Traditional Security', 'UNIX OS', 'VVOIP Review', 'Web Review', 'Windows OS', 'Other Review'],
-      elementName: {
-        localPart: 'TECH_AREA'
-      }
-    }, {
-      elementName: {
-        localPart: 'ATTRIBUTE_DATA'
-      }
-    }, {
-      values: ['Computing', 'Non-Computing'],
-      elementName: {
-        localPart: 'ASSET_TYPE'
-      }
-    }, {
-      values: ['CCI_REF', 'Check_Content', 'Check_Content_Ref', 'Class', 'Documentable', 'False_Negatives', 'False_Positives', 'Fix_Text', 'Group_Title', 'IA_Controls', 'Mitigation_Control', 'Mitigations', 'Potential_Impact', 'Responsibility', 'Rule_ID', 'Rule_Title', 'Rule_Ver', 'STIGRef', 'Security_Override_Guidance', 'Severity', 'Third_Party_Tools', 'Vuln_Discuss', 'Vuln_Num', 'Weight', 'TargetKey', 'STIG_UUID', 'LEGACY_ID'],
-      elementName: {
-        localPart: 'VULN_ATTRIBUTE'
-      }
-    }, {
-      elementName: {
-        localPart: 'TARGET_COMMENT'
-      }
-    }, {
-      typeInfo: '.SIDATA',
-      elementName: {
-        localPart: 'SI_DATA'
-      }
-    }, {
-      elementName: {
-        localPart: 'WEB_DB_SITE'
-      }
-    }, {
-      typeInfo: '.STIGS',
-      elementName: {
-        localPart: 'STIGS'
-      }
-    }]
-  }
+    ]
+  };
 
-  const context = new Jsonix.Context([mapping])
-  const unmarshaller = context.createUnmarshaller()
+  const context = new Jsonix.Context([mapping]);
+  const unmarshaller = context.createUnmarshaller();
 
-  return unmarshaller.unmarshalString(text)
+  return unmarshaller.unmarshalString(text);
 }
 
 export const InspecIntakeModule = getModule(InspecIntake);
