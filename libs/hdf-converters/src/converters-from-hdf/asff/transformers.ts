@@ -85,12 +85,15 @@ function filter_overlays(
 function getPassthrough(hdf: ExecJSON.Execution): object {
   let passthrough = {};
   let passThroughObj = _.get(hdf, 'passthrough');
+  let isAuxAltered = false;
+  let isRawAltered = false;
   if (passThroughObj instanceof Object) {
-    while (JSON.stringify(passThroughObj).length >= 13100) {
-      //if (_.has(passThroughObj, 'raw')) {
-      //  passThroughObj = _.omit(passThroughObj, 'raw');
-      //  continue;
-      //}
+    while (JSON.stringify(passThroughObj).length >= 13000) {
+      if (_.has(passThroughObj, 'raw')) {
+        passThroughObj = _.omit(passThroughObj, 'raw');
+        isRawAltered = true;
+        continue;
+      }
       if (
         _.has(passThroughObj, 'auxiliary_data[0].data') &&
         _.size(passThroughObj.auxiliary_data[0].data) > 0
@@ -101,12 +104,16 @@ function getPassthrough(hdf: ExecJSON.Execution): object {
           passThroughObj.auxiliary_data[0].data,
           passKeys
         );
+        isAuxAltered = true;
         continue;
       }
     }
     passthrough = passThroughObj;
   }
-  return {passthrough: passthrough};
+  return {
+    isAltered: {auxiliary_data: isAuxAltered, raw: isRawAltered},
+    passthrough: passthrough
+  };
 }
 
 export function createProfileInfoFinding(
