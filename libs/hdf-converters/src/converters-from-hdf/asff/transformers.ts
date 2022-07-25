@@ -86,7 +86,7 @@ function getPassthrough(hdf: ExecJSON.Execution): object {
   let passthrough = {};
   let passThroughObj = _.get(hdf, 'passthrough');
   if (passThroughObj instanceof Object) {
-    while (JSON.stringify(passThroughObj).length >= 131072) {
+    while (JSON.stringify(passThroughObj).length >= 50000) {
       //if (_.has(passThroughObj, 'raw')) {
       //  passThroughObj = _.omit(passThroughObj, 'raw');
       //  continue;
