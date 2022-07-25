@@ -1,4 +1,4 @@
-import { FileID } from "@/store/report_intake";
+import {FileID} from '@/store/report_intake';
 
 export type ChecklistFile = {
   /**
@@ -21,7 +21,7 @@ export type ChecklistFile = {
 export type Stig = {
   header: ChecklistHeader;
   vulns: ChecklistVuln[];
-}
+};
 
 export type ChecklistHeader = {
   version: string;
