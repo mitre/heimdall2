@@ -20,10 +20,6 @@ import { FileID } from './report_intake';
 export class ChecklistFilteredData extends VuexModule {
   selectedChecklistIds: FileID[] = [];
 
-  get selectedRule() {
-    return InspecDataModule.selectedRule;
-  }
-
   get allFiles() {
     return InspecDataModule.allChecklistFiles;
   }

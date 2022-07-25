@@ -129,12 +129,12 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col xs="4" v-if="selectedRule">
+        <v-col xs="4">
           <v-card height="60%">
-            <v-card-title>Vulnerabilities</v-card-title>
+            <v-card-title>Selected Rule</v-card-title>
             <v-card-subtitle>{{ 'Checklist File Name' }}</v-card-subtitle>
             <pre>
-{{ selectedRule.ruleId }}
+{{ selectedRule }}
 {{ 'something' }} <br />{{ 'something Else' }}
               </pre>
           </v-card>
@@ -184,6 +184,7 @@ import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import { ChecklistVuln } from '../types/checklist/control';
 import { InspecDataModule } from '@/store/data_store';
+import { Prop, PropSync } from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -245,7 +246,8 @@ export default class Checklist extends RouteMixin {
   }
 
   get selectedRule() {
-    return FilteredChecklistDataModule.selectedRule;
+    console.log(InspecDataModule.selectedRule)
+    return InspecDataModule.selectedRule;
   }
 
   /**
@@ -325,7 +327,7 @@ export default class Checklist extends RouteMixin {
   showRule(rule: ChecklistVuln) {
     // Run selectRule from Checklist store
     InspecDataModule.setSelectedRule(rule);
-    setTimeout(() => { console.log(InspecDataModule.selectedRule) }, 1000)
+    console.log(InspecDataModule.selectedRule)
   }
 
   /**
