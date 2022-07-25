@@ -91,7 +91,7 @@ function getPassthrough(hdf: ExecJSON.Execution): object {
       //  passThroughObj = _.omit(passThroughObj, 'raw');
       //  continue;
       //}
-      if (_.has(passThroughObj, 'auxiliary_data')) {
+      if (_.has(passThroughObj, 'auxiliary_data') && _.size(passThroughObj.auxiliary_data.data) > 0) {
         let passKeys = _.keys(passThroughObj.auxiliary_data.data);
         passKeys.pop();
         passThroughObj.auxiliary_data.data = _.pick(
