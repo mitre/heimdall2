@@ -134,7 +134,7 @@
             <v-card-title>Selected Rule</v-card-title>
             <v-card-subtitle>{{ 'Checklist File Name' }}</v-card-subtitle>
             <div>
-              <strong>{{ selectedRule }}</strong>
+              <strong>{{ getSelectedRule().vulnNum }}</strong>
             </div>
             {{ 'something' }} <br />{{ 'something Else' }}
           </v-card>
@@ -212,6 +212,41 @@ export default class Checklist extends RouteMixin {
   filterSnackbar = false;
   controlSelection: string | null = null;
 
+  selectedRule: ChecklistVuln = {
+    status: '',
+    findingDetails: '',
+    comments: '',
+    severityOverride: '',
+    severityJustification: '',
+    vulnNum: '',
+    severity: '',
+    groupTitle: '',
+    ruleId: '',
+    ruleVersion: '',
+    ruleTitle: '',
+    vulnDiscuss: '',
+    iaControls: '',
+    checkContent: '',
+    fixText: '',
+    falsePositives: '',
+    falseNegatives: '',
+    documentable: '',
+    mitigations: '',
+    potentialImpact: '',
+    thirdPartyTools: '',
+    mitigationControl: '',
+    responsibility: '',
+    securityOverrideGuidance: '',
+    checkContentRef: '',
+    weight: '',
+    class: '',
+    stigRef: '',
+    targetKey: '',
+    stigUuid: '',
+    legacyId: '',
+    cciRef: ''
+  };
+
   evalInfo:
     | SourcedContextualizedEvaluation
     | SourcedContextualizedProfile
@@ -244,8 +279,11 @@ export default class Checklist extends RouteMixin {
     SearchModule.setStatusFilter(status);
   }
 
-  get selectedRule() {
-    return InspecDataModule.selectedRule;
+  getSelectedRule(): ChecklistVuln {
+    return this.selectedRule
+  }
+  setSelectedRule(rule: ChecklistVuln): void {
+    this.selectedRule = rule
   }
   /**
    * The currently selected file, if one exists.
@@ -323,8 +361,7 @@ export default class Checklist extends RouteMixin {
 
   showRule(rule: ChecklistVuln) {
     // Run selectRule from Checklist store
-    InspecDataModule.setSelectedRule(rule);
-    console.log(InspecDataModule.selectedRule)
+    this.setSelectedRule(rule)
     console.log(this.selectedRule)
   }
 

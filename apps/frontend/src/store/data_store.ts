@@ -40,7 +40,6 @@ export class InspecData extends VuexModule {
 
   /** State var containing all checklist files that have been added */
   checklistFiles: ChecklistFile[] = [];
-  selectedRule!: ChecklistVuln;
 
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
@@ -130,14 +129,6 @@ export class InspecData extends VuexModule {
   @Mutation
   addChecklist(newChecklist: ChecklistFile) {
     this.checklistFiles.push(newChecklist);
-  }
-
-  /**
-   * Selects rule for viewing in checklist viewer
-   */
-  @Action
-  setSelectedRule(rule: ChecklistVuln) {
-    this.selectedRule = rule;
   }
 
   /**
