@@ -117,7 +117,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="rule in rules" :key="rule.ruleId" @click="showRule(rule)">
+                    <tr v-for="rule in rules" :key="rule.vulnNum" @click="showRule(rule)">
                       <td>{{ rule.status }}</td>
                       <td>{{ rule.vulnNum }}</td>
                       <td>{{ rule.ruleId }}</td>
@@ -133,10 +133,10 @@
           <v-card height="60%">
             <v-card-title>Selected Rule</v-card-title>
             <v-card-subtitle>{{ 'Checklist File Name' }}</v-card-subtitle>
-            <pre>
-{{ selectedRule }}
-{{ 'something' }} <br />{{ 'something Else' }}
-              </pre>
+            <div>
+              <strong>{{ selectedRule }}</strong>
+            </div>
+            {{ 'something' }} <br />{{ 'something Else' }}
           </v-card>
         </v-col>
       </v-row>
@@ -184,7 +184,6 @@ import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import { ChecklistVuln } from '../types/checklist/control';
 import { InspecDataModule } from '@/store/data_store';
-import { Prop, PropSync } from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -246,10 +245,8 @@ export default class Checklist extends RouteMixin {
   }
 
   get selectedRule() {
-    console.log(InspecDataModule.selectedRule)
     return InspecDataModule.selectedRule;
   }
-
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -328,6 +325,7 @@ export default class Checklist extends RouteMixin {
     // Run selectRule from Checklist store
     InspecDataModule.setSelectedRule(rule);
     console.log(InspecDataModule.selectedRule)
+    console.log(this.selectedRule)
   }
 
   /**

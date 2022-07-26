@@ -428,9 +428,6 @@ export class InspecIntake extends VuexModule {
 
   @Action
   async loadChecklist(options: ChecklistLoadOptions) {
-    if (router.currentRoute.path.split('/')[1] !== 'checklist')
-      router.push('/checklist');
-
     const fileID: FileID = uuid();
 
     function getAttributeData(stigdata: unknown[], tag: string): string {

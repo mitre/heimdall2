@@ -10,8 +10,7 @@
         {{ warning_banner }}
       </v-banner>
       <v-tabs
-        vertical
-        class="left-justify-tabs"
+        :vertical="$vuetify.breakpoint.mdAndUp"
         :value="activeTab"
         color="primary-visible"
         show-arrows
@@ -80,6 +79,7 @@ import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vu
 import TenableReader from '@/components/global/upload_tabs/tenable/TenableReader.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
+import {FilteredChecklistDataModule} from '@/store/checklist_data_filters';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {FileID} from '@/store/report_intake';
@@ -108,7 +108,7 @@ const localTab = new LocalStorageVal<string>('nexus_curr_tab');
 export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: true}) readonly visible!: boolean;
   @Prop({default: false}) readonly persistent!: boolean;
-  activeTab: string = localTab.getDefault('uploadtab-local');
+  activeTab: string = localTab.get_default('uploadtab-local');
 
   get fullscreen() {
     return (
@@ -138,17 +138,26 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     const numProfiles = FilteredDataModule.selectedProfileIds.filter((prof) =>
       files.includes(prof)
     ).length;
+    const numChecklists = InspecDataModule.allChecklistFiles.filter((ckl) =>
+      files.includes(ckl.uniqueId)
+    ).length;
+    console.log(numChecklists);
     const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
-    if (numEvaluations >= numProfiles) {
-      // Only navigate the user to the results page if they are not
-      // already on the compare page.
-      if (this.current_route === 'compare') {
-        this.navigateWithNoErrors(`/compare/${loadedDatabaseIds}`);
-      } else {
-        this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
-      }
+    if (numChecklists > numProfiles && numChecklists > numEvaluations) {
+      if (this.current_route !== 'checklists')
+        this.navigateWithNoErrors(`/checklists`);
     } else {
-      this.navigateWithNoErrors(`/profiles/${loadedDatabaseIds}`);
+      if (numEvaluations >= numProfiles) {
+        // Only navigate the user to the results page if they are not
+        // already on the compare page.
+        if (this.current_route === 'compare') {
+          this.navigateWithNoErrors(`/compare/${loadedDatabaseIds}`);
+        } else {
+          this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
+        }
+      } else {
+        this.navigateWithNoErrors(`/profiles/${loadedDatabaseIds}`);
+      }
     }
   }
 }
