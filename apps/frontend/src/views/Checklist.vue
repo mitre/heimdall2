@@ -55,7 +55,7 @@
           @show-waived="showWaived" @add-filter="addStatusSearch" @remove-filter="removeStatusFilter" />
       </v-container>
       <v-row>
-        <v-col xs="4">
+        <v-col xs="4" :cols="5">
           <!-- Status Count Chart -->
           <v-card id="statusCounts">
             <v-card-title class="justify-center">Status Counts</v-card-title>
