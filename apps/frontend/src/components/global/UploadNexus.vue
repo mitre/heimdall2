@@ -1,30 +1,15 @@
 <template>
-  <Modal
-    :visible="visible"
-    :persistent="persistent"
-    :fullscreen="fullscreen"
-    @close-modal="$emit('close-modal')"
-  >
+  <Modal :visible="visible" :persistent="persistent" :fullscreen="fullscreen" @close-modal="$emit('close-modal')">
     <div class="elevation-24">
       <v-banner v-if="warning_banner" icon="mdi-alert" color="warning">
         {{ warning_banner }}
       </v-banner>
-      <v-tabs
-        :vertical="$vuetify.breakpoint.mdAndUp"
-        :value="activeTab"
-        color="primary-visible"
-        show-arrows
-        @change="selected_tab"
-      >
+      <v-tabs :vertical="$vuetify.breakpoint.mdAndUp" :value="activeTab" color="primary-visible" show-arrows
+        @change="selected_tab">
         <!-- Define our tabs -->
         <v-tab id="select-tab-local" href="#uploadtab-local">Local Files</v-tab>
 
-        <v-tab
-          v-if="serverMode"
-          id="select-tab-database"
-          href="#uploadtab-database"
-          >Database</v-tab
-        >
+        <v-tab v-if="serverMode" id="select-tab-database" href="#uploadtab-database">Database</v-tab>
 
         <v-tab id="select-tab-s3" href="#uploadtab-s3">S3 Bucket</v-tab>
 
@@ -70,14 +55,15 @@ import SampleList from '@/components/global/upload_tabs/SampleList.vue';
 import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
-import {FilteredDataModule} from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
-import {FileID} from '@/store/report_intake';
-import {ServerModule} from '@/store/server';
-import {SnackbarModule} from '@/store/snackbar';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import Component, {mixins} from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { FilteredChecklistDataModule } from '@/store/checklist_data_filters';
+import { FilteredDataModule } from '@/store/data_filters';
+import { InspecDataModule } from '@/store/data_store';
+import { FileID } from '@/store/report_intake';
+import { ServerModule } from '@/store/server';
+import { SnackbarModule } from '@/store/snackbar';
+import { LocalStorageVal } from '@/utilities/helper_util';
+import Component, { mixins } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
 const localTab = new LocalStorageVal<string>('nexus_curr_tab');
 /**
  * Multiplexes all of our file upload components
@@ -95,8 +81,8 @@ const localTab = new LocalStorageVal<string>('nexus_curr_tab');
   }
 })
 export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
-  @Prop({default: true}) readonly visible!: boolean;
-  @Prop({default: false}) readonly persistent!: boolean;
+  @Prop({ default: true }) readonly visible!: boolean;
+  @Prop({ default: false }) readonly persistent!: boolean;
   activeTab: string = localTab.get_default('uploadtab-local');
 
   get fullscreen() {
@@ -127,17 +113,26 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     const numProfiles = FilteredDataModule.selectedProfileIds.filter((prof) =>
       files.includes(prof)
     ).length;
+    const numChecklists = InspecDataModule.allChecklistFiles.filter((ckl) =>
+      files.includes(ckl.uniqueId)
+    ).length;
+    console.log(numChecklists)
     const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
-    if (numEvaluations >= numProfiles) {
-      // Only navigate the user to the results page if they are not
-      // already on the compare page.
-      if (this.current_route === 'compare') {
-        this.navigateWithNoErrors(`/compare/${loadedDatabaseIds}`);
-      } else {
-        this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
-      }
+    if (numChecklists > numProfiles && numChecklists > numEvaluations) {
+      if (this.current_route !== 'checklists')
+        this.navigateWithNoErrors(`/checklists`)
     } else {
-      this.navigateWithNoErrors(`/profiles/${loadedDatabaseIds}`);
+      if (numEvaluations >= numProfiles) {
+        // Only navigate the user to the results page if they are not
+        // already on the compare page.
+        if (this.current_route === 'compare') {
+          this.navigateWithNoErrors(`/compare/${loadedDatabaseIds}`);
+        } else {
+          this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
+        }
+      } else {
+        this.navigateWithNoErrors(`/profiles/${loadedDatabaseIds}`);
+      }
     }
   }
 }
