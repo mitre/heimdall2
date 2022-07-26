@@ -49,64 +49,25 @@
   </template>
   <template #main-content>
     <v-container fluid grid-list-md pt-0 pa-2>
-      <v-container id="fileCards" mx-0 px-0 fluid>
-        <!-- Evaluation Info -->
-        <v-row no-gutters class="mx-n3 mb-3">
-          <v-col>
-            <v-slide-group v-model="evalInfo" show-arrows>
-              <v-slide-item v-for="(file, i) in activeFiles" :key="i">
-                <v-card width="100%" max-width="100%" class="mx-3" data-cy="profileInfo" @click="toggle_profile(file)">
-                  <EvaluationInfo :file="file" />
-                  <v-card-subtitle class="bottom-right">
-                    File Info ↓
-                  </v-card-subtitle>
-                </v-card>
-              </v-slide-item>
-            </v-slide-group>
-          </v-col>
-        </v-row>
-        <ProfileData v-if="evalInfo != null" class="my-4 mx-2" :file="evalInfo" />
-      </v-container>
       <!-- Count Cards -->
-      <StatusCardRow :filter="all_filter" :current-status-filter="statusFilter" @show-errors="showErrors"
-        @show-waived="showWaived" @add-filter="addStatusSearch" @remove-filter="removeStatusFilter" />
-      <!-- Compliance Cards -->
-      <v-row id="complianceCards" justify="space-around">
+      <v-container id="fileCards" mx-0 px-0 fluid>
+        <StatusCardRow :filter="all_filter" :current-status-filter="statusFilter" @show-errors="showErrors"
+          @show-waived="showWaived" @add-filter="addStatusSearch" @remove-filter="removeStatusFilter" />
+      </v-container>
+      <v-row>
         <v-col xs="4">
-          <v-card id="statusCounts" class="fill-height">
+          <!-- Status Count Chart -->
+          <v-card id="statusCounts">
             <v-card-title class="justify-center">Status Counts</v-card-title>
             <v-card-actions class="justify-center">
               <StatusChart v-model="statusFilter" :filter="all_filter" />
             </v-card-actions>
           </v-card>
-        </v-col>
-        <v-col xs="4">
-          <v-card id="severityCounts" class="fill-height">
-            <v-card-title class="justify-center">Severity Counts</v-card-title>
-            <v-card-actions class="justify-center">
-              <SeverityChart v-model="severityFilter" :filter="all_filter" />
-            </v-card-actions>
-          </v-card>
-        </v-col>
-        <v-col xs="4">
-          <v-card id="complianceLevel" class="fill-height">
-            <v-card-title class="justify-center">Compliance Level</v-card-title>
-            <v-card-actions class="justify-center">
-              <ComplianceChart :filter="all_filter" />
-            </v-card-actions>
-            <v-card-text style="text-align: center">[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
-                v-if="waivedProfilesExist">
-                + Waived</span>) * 100]</v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-      <!-- DataTable -->
-      <v-row>
-        <v-col xs="4">
+          <!-- Data Table -->
           <v-card>
             <v-card-title>Rules</v-card-title>
             <v-card-text>
-              <v-simple-table dense height="25vh" fixed-header>
+              <v-simple-table dense height="40vh" fixed-header>
                 <template #default>
                   <thead>
                     <tr>
@@ -129,8 +90,9 @@
             </v-card-text>
           </v-card>
         </v-col>
+        <!-- Rule Data -->
         <v-col xs="4">
-          <v-card height="60%">
+          <v-card class="fill-height">
             <v-card-title>Selected Rule</v-card-title>
             <v-card-text>
               <strong>{{ getSelectedRule().vulnNum }}</strong>
