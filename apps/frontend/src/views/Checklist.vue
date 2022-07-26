@@ -80,7 +80,7 @@
             </v-card-actions>
           </v-card>
         </v-col>
-        <!-- <v-col xs="4">
+        <v-col xs="4">
           <v-card id="severityCounts" class="fill-height">
             <v-card-title class="justify-center">Severity Counts</v-card-title>
             <v-card-actions class="justify-center">
@@ -98,7 +98,7 @@
                 v-if="waivedProfilesExist">
                 + Waived</span>) * 100]</v-card-text>
           </v-card>
-        </v-col> -->
+        </v-col>
       </v-row>
       <!-- DataTable -->
       <v-row>
@@ -132,11 +132,9 @@
         <v-col xs="4">
           <v-card height="60%">
             <v-card-title>Selected Rule</v-card-title>
-            <v-card-subtitle>{{ 'Checklist File Name' }}</v-card-subtitle>
-            <div>
+            <v-card-text>
               <strong>{{ getSelectedRule().vulnNum }}</strong>
-            </div>
-            {{ 'something' }} <br />{{ 'something Else' }}
+            </v-card-text>
           </v-card>
         </v-col>
       </v-row>
@@ -431,7 +429,7 @@ export default class Checklist extends RouteMixin {
         returnText += ` (${file.filename} selected)`;
       }
     } else {
-      returnText += ` (${this.file_filter.length} ${this.current_route_name}s selected)`;
+      returnText += ` (${this.file_filter.length} ${this.current_route_name} selected)`;
     }
     return returnText;
   }
