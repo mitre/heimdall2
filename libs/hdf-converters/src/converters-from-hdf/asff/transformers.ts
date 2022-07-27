@@ -122,9 +122,9 @@ function getPassthrough(hdf: ExecJSON.Execution): object {
       }
       //Emergency escape; future proofing if more data fields are added to passthrough
       //Change behaviour to account for new fields if needed
-      const passKeys = _.keys(passThroughObj);
-      passKeys.pop();
-      passThroughObj = _.pick(passThroughObj, passKeys);
+      const objKeys = _.keys(passThroughObj);
+      objKeys.pop();
+      passThroughObj = _.pick(passThroughObj, objKeys);
       isAuxAltered = true;
     }
   }
@@ -176,7 +176,11 @@ export function createProfileInfoFinding(
         Id: `AWS::::Account:${options.awsAccountId}`,
         Partition: 'aws',
         Region: options.region,
-        Details: {AwsIamRole: {AssumeRolePolicyDocument: JSON.stringify(getPassthrough(hdf))}}
+        Details: {
+          AwsIamRole: {
+            AssumeRolePolicyDocument: JSON.stringify(getPassthrough(hdf))
+          }
+        }
       }
     ]
   };
