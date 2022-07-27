@@ -488,7 +488,7 @@ function createProfileInfoFindingFields(
     });
   });
   const charLimit = 32700;
-  let passThroughObj = _.get(hdf, 'passthrough');
+  const passThroughObj = _.get(hdf, 'passthrough');
   if (passThroughObj instanceof Object) {
     let passThroughStr = JSON.stringify(escapeForwardSlashes(passThroughObj));
     const cntMax = Math.ceil(passThroughStr.length / charLimit);
