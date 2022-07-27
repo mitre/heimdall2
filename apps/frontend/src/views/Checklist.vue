@@ -92,7 +92,7 @@
         </v-col>
         <!-- Rule Data -->
         <v-col xs="4">
-          <v-card height="60vh" overflow-y="scroll">
+          <v-card class="overflow-auto" height="60vh">
             <v-card-title>Selected Rule</v-card-title>
             <v-card-text>
               <strong>Rule Title: </strong><br />
