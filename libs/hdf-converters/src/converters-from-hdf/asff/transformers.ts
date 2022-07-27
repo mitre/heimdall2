@@ -82,58 +82,6 @@ function filter_overlays(
   return Array.from(Object.values(idHash));
 }
 
-function getPassthrough(hdf: ExecJSON.Execution): object {
-  let passThroughObj = _.get(hdf, 'passthrough') || {};
-  let isAuxAltered = false;
-  let isRawAltered = false;
-  if (passThroughObj instanceof Object) {
-    while (JSON.stringify(passThroughObj).length >= 32000) {
-      if (_.has(passThroughObj, 'raw')) {
-        passThroughObj = _.omit(passThroughObj, 'raw');
-        isRawAltered = true;
-        continue;
-      }
-      if (
-        _.has(passThroughObj, 'auxiliary_data[0].data') &&
-        _.size(passThroughObj.auxiliary_data[0].data) > 0
-      ) {
-        const passKeys = _.keys(passThroughObj.auxiliary_data[0].data);
-        passKeys.pop();
-        passThroughObj.auxiliary_data[0].data = _.pick(
-          passThroughObj.auxiliary_data[0].data,
-          passKeys
-        );
-        isAuxAltered = true;
-        continue;
-      }
-      //Snyk file handling; change once Snyk mapper is standardised to new format
-      if (
-        _.has(passThroughObj, 'snyk_metadata') &&
-        _.size(passThroughObj.snyk_metadata) > 0
-      ) {
-        const passKeys = _.keys(passThroughObj.snyk_metadata);
-        passKeys.pop();
-        passThroughObj.snyk_metadata = _.pick(
-          passThroughObj.snyk_metadata,
-          passKeys
-        );
-        isAuxAltered = true;
-        continue;
-      }
-      //Emergency escape; future proofing if more data fields are added to passthrough
-      //Change behaviour to account for new fields if needed
-      const objKeys = _.keys(passThroughObj);
-      objKeys.pop();
-      passThroughObj = _.pick(passThroughObj, objKeys);
-      isAuxAltered = true;
-    }
-  }
-  return {
-    isAltered: {auxiliary_data: isAuxAltered, raw: isRawAltered},
-    passthrough: passThroughObj
-  };
-}
-
 export function createProfileInfoFinding(
   hdf: ExecJSON.Execution,
   options: IOptions
@@ -175,12 +123,7 @@ export function createProfileInfoFinding(
         Type: 'AwsAccount',
         Id: `AWS::::Account:${options.awsAccountId}`,
         Partition: 'aws',
-        Region: options.region,
-        Details: {
-          AwsIamRole: {
-            AssumeRolePolicyDocument: JSON.stringify(getPassthrough(hdf))
-          }
-        }
+        Region: options.region
       }
     ]
   };
@@ -544,6 +487,26 @@ function createProfileInfoFindingFields(
       }
     });
   });
+  const charLimit = 32700;
+  let passThroughObj = _.get(hdf, 'passthrough');
+  if (passThroughObj instanceof Object) {
+    let passThroughStr = JSON.stringify(escapeForwardSlashes(passThroughObj));
+    const cntMax = Math.ceil(passThroughStr.length / charLimit);
+    let cntMin = 1;
+    while (passThroughStr.length > charLimit) {
+      typesArr.push(
+        `Execution/passthrough${cntMin}of${cntMax}/${passThroughStr.slice(
+          0,
+          charLimit
+        )}`
+      );
+      passThroughStr = passThroughStr.slice(charLimit);
+      cntMin++;
+    }
+    typesArr.push(
+      `Execution/passthrough${cntMin}of${cntMax}/${passThroughStr}`
+    );
+  }
   typesArr = typesArr.slice(0, 50);
   return typesArr;
 }

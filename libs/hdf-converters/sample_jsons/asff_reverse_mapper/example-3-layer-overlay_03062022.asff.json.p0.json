@@ -6,8 +6,8 @@
     "GeneratorId": "arn:aws:securityhub:us-east-2:12345678910:ruleset/set/second-layer-example-inspec-overlay-profile-against-1st-layer-example-inspec-overlay-profile",
     "AwsAccountId": "12345678910",
     "CreatedAt": "2022-03-06T22:06:10.000Z",
-    "UpdatedAt": "2022-07-27T12:38:30.723Z",
-    "Title": "reverse-proxy | second-layer-example-inspec-overlay-profile-against-1st-layer-example-inspec-overlay-profile | 2022-07-27 08:38:30 GMT-0400",
+    "UpdatedAt": "2022-07-27T19:06:57.589Z",
+    "Title": "reverse-proxy | second-layer-example-inspec-overlay-profile-against-1st-layer-example-inspec-overlay-profile | 2022-07-27 03:06:57 GMT-0400",
     "Description": "Passed: 73 (126 individual checks passed) --- Failed: 138 (101 individual checks failed out of 496 total checks) --- Not Applicable: 27 (System exception or absent component) --- Not Reviewed: 9 (Can only be tested manually at this time)",
     "Severity": {
       "Label": "INFORMATIONAL"
@@ -67,12 +67,7 @@
         "Type": "AwsAccount",
         "Id": "AWS::::Account:12345678910",
         "Partition": "aws",
-        "Region": "us-east-2",
-        "Details": {
-          "AwsIamRole": {
-            "AssumeRolePolicyDocument": "{\"isAltered\":{\"auxiliary_data\":false,\"raw\":false},\"passthrough\":{}}"
-          }
-        }
+        "Region": "us-east-2"
       }
     ]
   }

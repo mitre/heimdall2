@@ -21,6 +21,15 @@ describe('ASFF Reverse Mapper', () => {
 
     const profileInformation = [converted[converted.length - 1] || {}];
 
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
+    //   JSON.stringify(converted, null, 2)
+    // );
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json.p0.json',
+    //   JSON.stringify(profileInformation, null, 2)
+    // );
+
     const expectedJSON = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
@@ -63,6 +72,15 @@ describe('ASFF Reverse Mapper', () => {
 
     const profileInformation = [converted[converted.length - 1] || {}];
 
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json',
+    //   JSON.stringify(converted, null, 2)
+    // );
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json.p0.json',
+    //   JSON.stringify(profileInformation, null, 2)
+    // );
+
     const expectedJSON = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json',
@@ -101,6 +119,11 @@ describe('ASFF Reverse Mapper', () => {
       target: 'storybook-link',
       region: 'us-east-2'
     }).toAsff();
+
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/snyk-no-results.asff.json',
+    //   JSON.stringify(converted, null, 2)
+    // );
 
     const expectedJSON = JSON.parse(
       fs.readFileSync(
