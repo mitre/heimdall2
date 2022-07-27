@@ -112,9 +112,11 @@
           <v-card height="20vh">
             <v-card-text>
               <strong>Finding Details: </strong><br />
-              <v-textarea solo outlined dense height="5vh"></v-textarea>
+              <v-textarea solo outlined dense no-resize height="5vh" v-model="getSelectedRule().findingDetails">
+              </v-textarea>
               <strong>Comments: </strong>
-              <v-textarea solo outlined dense height="5vh"></v-textarea>
+              <v-textarea solo outlined dense no-resize height="5vh" v-model="getSelectedRule().comments">
+              </v-textarea>
             </v-card-text>
           </v-card>
         </v-col>
