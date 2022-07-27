@@ -147,11 +147,6 @@ import { compare_times } from '../utilities/delta_util';
 import { Severity } from 'inspecjs';
 import { StatusCountModule } from '@/store/status_counts';
 import UploadButton from '@/components/generic/UploadButton.vue';
-import ComplianceChart from '@/components/cards/ComplianceChart.vue';
-import ControlTable from '@/components/cards/controltable/ControlTable.vue';
-import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
-import ProfileData from '@/components/cards/ProfileData.vue';
-import SeverityChart from '@/components/cards/SeverityChart.vue';
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import ExportASFFModal from '@/components/global/ExportASFFModal.vue';
@@ -170,10 +165,7 @@ import { InspecDataModule } from '@/store/data_store';
   components: {
     Base,
     StatusCardRow,
-    ControlTable,
     StatusChart,
-    SeverityChart,
-    ComplianceChart,
     ExportASFFModal,
     ExportCaat,
     ExportCSVModal,
@@ -182,9 +174,7 @@ import { InspecDataModule } from '@/store/data_store';
     ExportXCCDFResults,
     ExportCKLModal,
     ExportHTMLModal,
-    EvaluationInfo,
     ExportSplunkModal,
-    ProfileData,
     UploadButton
   }
 })
