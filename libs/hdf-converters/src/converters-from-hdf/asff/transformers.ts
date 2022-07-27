@@ -83,12 +83,11 @@ function filter_overlays(
 }
 
 function getPassthrough(hdf: ExecJSON.Execution): object {
-  let passthrough = {};
-  let passThroughObj = _.get(hdf, 'passthrough');
+  let passThroughObj = _.get(hdf, 'passthrough') || {};
   let isAuxAltered = false;
   let isRawAltered = false;
   if (passThroughObj instanceof Object) {
-    while (JSON.stringify(passThroughObj).length >= 130000) {
+    while (JSON.stringify(passThroughObj).length >= 32000) {
       if (_.has(passThroughObj, 'raw')) {
         passThroughObj = _.omit(passThroughObj, 'raw');
         isRawAltered = true;
@@ -98,7 +97,7 @@ function getPassthrough(hdf: ExecJSON.Execution): object {
         _.has(passThroughObj, 'auxiliary_data[0].data') &&
         _.size(passThroughObj.auxiliary_data[0].data) > 0
       ) {
-        let passKeys = _.keys(passThroughObj.auxiliary_data[0].data);
+        const passKeys = _.keys(passThroughObj.auxiliary_data[0].data);
         passKeys.pop();
         passThroughObj.auxiliary_data[0].data = _.pick(
           passThroughObj.auxiliary_data[0].data,
@@ -107,12 +106,33 @@ function getPassthrough(hdf: ExecJSON.Execution): object {
         isAuxAltered = true;
         continue;
       }
+      //Snyk file handling; change once Snyk mapper is standardised to new format
+      if (
+        _.has(passThroughObj, 'snyk_metadata') &&
+        _.size(passThroughObj.snyk_metadata) > 0
+      ) {
+        const passKeys = _.keys(passThroughObj.snyk_metadata);
+        passKeys.pop();
+        passThroughObj.snyk_metadata = _.pick(
+          passThroughObj.snyk_metadata,
+          passKeys
+        );
+        isAuxAltered = true;
+        continue;
+      }
+      //Emergency escape; future proofing if more data fields are added to passthrough
+      //Change behaviour to account for new fields if needed
+      if (_.size(passThroughObj) > 0) {
+        const passKeys = _.keys(passThroughObj);
+        passKeys.pop();
+        passThroughObj = _.pick(passThroughObj, passKeys);
+        isAuxAltered = true;
+      }
     }
-    passthrough = passThroughObj;
   }
   return {
     isAltered: {auxiliary_data: isAuxAltered, raw: isRawAltered},
-    passthrough: passthrough
+    passthrough: passThroughObj
   };
 }
 
