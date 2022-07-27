@@ -94,20 +94,22 @@
         <v-col xs="4">
           <v-card class="overflow-auto" height="60vh">
             <v-card-title>Selected Rule</v-card-title>
-            <v-card-text>
-              <strong>Rule Title: </strong><br />
-              {{ getSelectedRule().ruleTitle }}<br /><br />
-              <strong>Discussion: </strong><br />
-              {{ getSelectedRule().vulnDiscuss }}<br /><br />
-              <strong>Check Text: </strong><br />
-              {{ getSelectedRule().checkContent }}<br /><br />
-              <strong>Fix Text: </strong><br />
-              {{ getSelectedRule().fixText }}<br />
-            </v-card-text>
-            <v-card-subtitle class="text-center">References</v-card-subtitle>
-            <v-card-text>
-              <strong>CCI: </strong>{{ getSelectedRule().cciRef }}<br /><br />
-            </v-card-text>
+            <div v-if="getSelectedRule().vulnNum !== ''">
+              <v-card-text>
+                <strong>Rule Title: </strong><br />
+                {{ getSelectedRule().ruleTitle }}<br /><br />
+                <strong>Discussion: </strong><br />
+                {{ getSelectedRule().vulnDiscuss }}<br /><br />
+                <strong>Check Text: </strong><br />
+                {{ getSelectedRule().checkContent }}<br /><br />
+                <strong>Fix Text: </strong><br />
+                {{ getSelectedRule().fixText }}<br /><br />
+              </v-card-text>
+              <v-card-subtitle class="text-center">References</v-card-subtitle>
+              <v-card-text>
+                <strong>CCI: </strong>{{ getSelectedRule().cciRef }}<br /><br />
+              </v-card-text>
+            </div>
           </v-card>
           <v-card height="20vh">
             <v-card-text>
