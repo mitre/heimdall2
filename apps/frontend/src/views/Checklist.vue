@@ -92,10 +92,29 @@
         </v-col>
         <!-- Rule Data -->
         <v-col xs="4">
-          <v-card class="fill-height">
+          <v-card height="60vh" overflow-y="scroll">
             <v-card-title>Selected Rule</v-card-title>
             <v-card-text>
-              <strong>{{ getSelectedRule().vulnNum }}</strong>
+              <strong>Rule Title: </strong><br />
+              {{ getSelectedRule().ruleTitle }}<br /><br />
+              <strong>Discussion: </strong><br />
+              {{ getSelectedRule().vulnDiscuss }}<br /><br />
+              <strong>Check Text: </strong><br />
+              {{ getSelectedRule().checkContent }}<br /><br />
+              <strong>Fix Text: </strong><br />
+              {{ getSelectedRule().fixText }}<br />
+            </v-card-text>
+            <v-card-subtitle class="text-center">References</v-card-subtitle>
+            <v-card-text>
+              <strong>CCI: </strong>{{ getSelectedRule().cciRef }}<br /><br />
+            </v-card-text>
+          </v-card>
+          <v-card height="20vh">
+            <v-card-text>
+              <strong>Finding Details: </strong><br />
+              <v-textarea solo outlined dense height="5vh"></v-textarea>
+              <strong>Comments: </strong>
+              <v-textarea solo outlined dense height="5vh"></v-textarea>
             </v-card-text>
           </v-card>
         </v-col>
