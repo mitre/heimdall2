@@ -487,10 +487,11 @@ function createProfileInfoFindingFields(
       }
     });
   });
-  const charLimit = 32700;
+  let charLimit = 32700;
   const passThroughObj = _.get(hdf, 'passthrough');
   if (passThroughObj instanceof Object) {
     let passThroughStr = escapeForwardSlashes(JSON.stringify((passThroughObj)));
+    charLimit -= (passThroughStr.match(/\\/g) || []).length;
     const cntMax = Math.ceil(passThroughStr.length / charLimit);
     let cntMin = 1;
     while (passThroughStr.length > charLimit) {
