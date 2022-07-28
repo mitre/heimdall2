@@ -47,28 +47,23 @@
       </v-menu>
     </div>
   </template>
-  <template #main-content height="90vh">
-    <v-container height="90vh" fluid grid-list-md pt-0 pa-2>
-      <!-- Count Cards -->
-      <v-container id="fileCards" mx-0 px-0 fluid>
-        <StatusCardRow :filter="all_filter" :current-status-filter="statusFilter" @show-errors="showErrors"
-          @show-waived="showWaived" @add-filter="addStatusSearch" @remove-filter="removeStatusFilter" />
-      </v-container>
+  <template #main-content>
+    <v-container fluid grid-list-md pt-0 pa-2>
       <v-row>
         <v-col xs="4" :cols="5">
           <!-- Data Table -->
-          <v-card height="90vh">
+          <v-card>
             <v-card-title>Rules</v-card-title>
             <v-card-text>
               <v-data-table disable-pagination dense fixed-header :items="rules" :headers="headers" hide-default-footer
-                @click:row="showRule">
+                class="overflow-y-auto" height="70vh" @click:row="showRule">
               </v-data-table>
             </v-card-text>
           </v-card>
         </v-col>
         <!-- Rule Data -->
         <v-col xs="4">
-          <v-card class="overflow-auto">
+          <v-card class="overflow-auto" height="50vh">
             <v-card-title>Selected Rule</v-card-title>
             <div v-if="getSelectedRule().vulnNum !== ''">
               <v-card-text>
