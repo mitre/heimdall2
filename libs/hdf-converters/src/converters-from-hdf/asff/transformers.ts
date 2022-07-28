@@ -424,6 +424,36 @@ function getFilename(options?: IOptions): string {
   return slashSplit?.split('/')[slashSplit.split('/').length - 1] ?? '';
 }
 
+//Split and push a string that is above attribute character limit
+function pushSplitString(
+  pushedStr: string,
+  charLimit: number,
+  arrToPush: string[],
+  fieldName: string
+) {
+  //Account for common escape characters in upper characer limit
+  charLimit -= (pushedStr.match(/\"/g) || []).length;
+  charLimit -= (pushedStr.match(/\'/g) || []).length;
+  charLimit -= (pushedStr.match(/\n/g) || []).length;
+  charLimit -= (pushedStr.match(/\t/g) || []).length;
+  charLimit -= (pushedStr.match(/\r/g) || []).length;
+  const cntMax = Math.ceil(pushedStr.length / charLimit);
+  let cntMin = 1;
+  while (pushedStr.length > charLimit) {
+    arrToPush.push(
+      `${fieldName}${cntMin}of${cntMax}/${pushedStr.slice(
+        0,
+        charLimit
+      )}`
+    );
+    pushedStr = pushedStr.slice(charLimit);
+    cntMin++;
+  }
+  arrToPush.push(
+    `${fieldName}${cntMin}of${cntMax}/${pushedStr}`
+  );
+}
+
 function createProfileInfoFindingFields(
   hdf: ExecJSON.Execution,
   options: IOptions
@@ -487,30 +517,11 @@ function createProfileInfoFindingFields(
       }
     });
   });
-  let charLimit = 30000;
+  const charLimit = 30000;
   const passThroughObj = _.get(hdf, 'passthrough');
   if (passThroughObj instanceof Object) {
     let passThroughStr = escapeForwardSlashes(JSON.stringify(passThroughObj));
-    charLimit -= (passThroughStr.match(/\"/g) || []).length;
-    charLimit -= (passThroughStr.match(/\'/g) || []).length;
-    charLimit -= (passThroughStr.match(/\n/g) || []).length;
-    charLimit -= (passThroughStr.match(/\t/g) || []).length;
-    charLimit -= (passThroughStr.match(/\r/g) || []).length;
-    const cntMax = Math.ceil(passThroughStr.length / charLimit);
-    let cntMin = 1;
-    while (passThroughStr.length > charLimit) {
-      typesArr.push(
-        `Execution/passthrough${cntMin}of${cntMax}/${passThroughStr.slice(
-          0,
-          charLimit
-        )}`
-      );
-      passThroughStr = passThroughStr.slice(charLimit);
-      cntMin++;
-    }
-    typesArr.push(
-      `Execution/passthrough${cntMin}of${cntMax}/${passThroughStr}`
-    );
+    pushSplitString(passThroughStr, charLimit, typesArr, 'Execution/passthrough/');
   }
   typesArr = typesArr.slice(0, 50);
   return typesArr;
