@@ -63,7 +63,21 @@
             <v-card-title>Rules</v-card-title>
             <v-card-text>
               <v-data-table disable-pagination dense fixed-header :items="rules" :headers="headers" hide-default-footer
-                class="overflow-y-auto" height="70vh" @click:row="showRule" />
+                class="overflow-y-auto" height="70vh" @click:row="showRule">
+                <template #[`item.ruleVersion`]="{ item }">
+                  {{ truncate(shortStigId(item.ruleVersion), 20) }}
+                </template>
+                <template #[`item.ruleId`]="{ item }">
+                  {{ truncate(shortRuleId(item.ruleId), 20) }}
+                </template>
+                <template #[`item.vulnNum`]="{ item }">
+                  {{ truncate(item.vulnNum, 20) }}
+                </template>
+                <template #[`item.groupTitle`]="{ item }">
+                  {{ truncate(item.groupTitle, 20) }}
+                </template>
+
+              </v-data-table>
             </v-card-text>
           </v-card>
         </v-col>
@@ -160,6 +174,7 @@ import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import { ChecklistVuln } from '../types/checklist/control';
 import { InspecDataModule } from '@/store/data_store';
+import _ from 'lodash';
 // import SwitchTable from '@/components/cards/SwitchTable.vue';
 
 @Component({
@@ -224,6 +239,16 @@ export default class Checklist extends RouteMixin {
     | SourcedContextualizedEvaluation
     | SourcedContextualizedProfile
     | null = null;
+
+  truncate(value: string, length: number) {
+    return _.truncate(value, { omission: '...', length: length })
+  }
+  shortRuleId(ruleId: string) {
+    return ruleId.split('r')[0] || ruleId
+  }
+  shortStigId(stigId: string) {
+    return stigId.split('-').slice(0, 2).join('-')
+  }
 
   /**
    * The current search terms, as modeled by the search bar
@@ -367,11 +392,11 @@ export default class Checklist extends RouteMixin {
 
   get headers() {
     return [
-      { text: 'Status', value: 'status' },
-      { text: 'STIG ID', value: 'ruleVersion' },
-      { text: 'Rule ID', value: 'ruleId' },
-      { text: 'Vul ID', value: 'vulnNum' },
-      { text: 'Rule Name', value: 'groupTitle' }
+      { text: 'Status', value: 'status', width: "100px", align: ' d-none' },
+      { text: 'STIG ID', value: 'ruleVersion', width: "100px", align: ' d-none' },
+      { text: 'Rule ID', value: 'ruleId', width: "100px", align: ' d-none' },
+      { text: 'Vul ID', value: 'vulnNum', width: "100px", align: ' d-none' },
+      { text: 'Rule Name', value: 'groupTitle', width: "100px", align: ' d-none' }
     ];
   }
 
