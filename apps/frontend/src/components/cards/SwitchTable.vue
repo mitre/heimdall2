@@ -1,13 +1,9 @@
 <template>
-  <!-- <div>
-
-  </div> -->
+  <p>aaaa</p>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+import Vue from 'vue';
 
-export default class SwitchTable extends Vue {
-
-}
+export default class SwitchTable extends Vue {}
 </script>

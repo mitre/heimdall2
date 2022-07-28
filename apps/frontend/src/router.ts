@@ -1,7 +1,7 @@
-import { AppInfoModule } from '@/store/app_info';
-import { InspecDataModule } from '@/store/data_store';
-import { EvaluationModule } from '@/store/evaluations';
-import { ServerModule } from '@/store/server';
+import {AppInfoModule} from '@/store/app_info';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationModule} from '@/store/evaluations';
+import {ServerModule} from '@/store/server';
 import Admin from '@/views/Admin.vue';
 import Checklist from '@/views/Checklist.vue';
 import Compare from '@/views/Compare.vue';
@@ -23,12 +23,12 @@ const router = new Router({
       name: 'results',
       component: Results,
       alias: '/profiles',
-      meta: { requiresAuth: true, hasIdParams: true },
+      meta: {requiresAuth: true, hasIdParams: true},
       children: [
         {
           path: ':id',
           component: Results,
-          meta: { requiresAuth: true, hasIdParams: true }
+          meta: {requiresAuth: true, hasIdParams: true}
         }
       ]
     },
@@ -36,12 +36,12 @@ const router = new Router({
       path: '/compare',
       name: 'compare',
       component: Compare,
-      meta: { requiresAuth: true, hasIdParams: true },
+      meta: {requiresAuth: true, hasIdParams: true},
       children: [
         {
           path: ':id',
           component: Compare,
-          meta: { requiresAuth: true, hasIdParams: true }
+          meta: {requiresAuth: true, hasIdParams: true}
         }
       ]
     },
@@ -49,19 +49,19 @@ const router = new Router({
       path: '/checklists',
       name: 'checklists',
       component: Checklist,
-      meta: { requiresAuth: true, hasIdParams: false }
+      meta: {requiresAuth: true, hasIdParams: false}
     },
     {
       path: '/',
       name: 'home',
       component: Landing,
-      meta: { requiresAuth: true }
+      meta: {requiresAuth: true}
     },
     {
       path: '/manage-groups',
       name: 'groups',
       component: Groups,
-      meta: { requiresAuth: true }
+      meta: {requiresAuth: true}
     },
     {
       path: '/login',
@@ -77,12 +77,12 @@ const router = new Router({
       path: '/admin',
       name: 'admin',
       component: Admin,
-      meta: { requiresAuth: true, requiresAdmin: true }
+      meta: {requiresAuth: true, requiresAdmin: true}
     },
     {
       path: '*',
       redirect: '/',
-      meta: { requiresAuth: true }
+      meta: {requiresAuth: true}
     }
   ]
 });

@@ -1,4 +1,4 @@
-import { Trinary } from '@/enums/Trinary';
+import {Trinary} from '@/enums/Trinary';
 import Store from '@/store/store';
 import {
   Action,
@@ -7,9 +7,9 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import { ChecklistFile, ChecklistVuln } from '../types/checklist/control';
-import { InspecDataModule } from './data_store';
-import { FileID } from './report_intake';
+import {ChecklistFile} from '../types/checklist/control';
+import {InspecDataModule} from './data_store';
+import {FileID} from './report_intake';
 
 @Module({
   namespaced: true,
