@@ -424,14 +424,14 @@ function getFilename(options?: IOptions): string {
   return slashSplit?.split('/')[slashSplit.split('/').length - 1] ?? '';
 }
 
-//Split and push a string that is above attribute character limit
+//Split and push a string that is above ASFF attribute character limit
 function pushSplitString(
   pushedStr: string,
   charLimit: number,
   arrToPush: string[],
   fieldName: string
 ) {
-  //Account for common escape characters in upper characer limit
+  //Account for common escape characters in upper character limit
   charLimit -= (pushedStr.match(/\"/g) || []).length;
   charLimit -= (pushedStr.match(/\'/g) || []).length;
   charLimit -= (pushedStr.match(/\n/g) || []).length;
@@ -441,17 +441,12 @@ function pushSplitString(
   let cntMin = 1;
   while (pushedStr.length > charLimit) {
     arrToPush.push(
-      `${fieldName}${cntMin}of${cntMax}/${pushedStr.slice(
-        0,
-        charLimit
-      )}`
+      `${fieldName}${cntMin}of${cntMax}/${pushedStr.slice(0, charLimit)}`
     );
     pushedStr = pushedStr.slice(charLimit);
     cntMin++;
   }
-  arrToPush.push(
-    `${fieldName}${cntMin}of${cntMax}/${pushedStr}`
-  );
+  arrToPush.push(`${fieldName}${cntMin}of${cntMax}/${pushedStr}`);
 }
 
 function createProfileInfoFindingFields(
@@ -520,8 +515,12 @@ function createProfileInfoFindingFields(
   const charLimit = 30000;
   const passThroughObj = _.get(hdf, 'passthrough');
   if (passThroughObj instanceof Object) {
-    let passThroughStr = escapeForwardSlashes(JSON.stringify(passThroughObj));
-    pushSplitString(passThroughStr, charLimit, typesArr, 'Execution/passthrough/');
+    pushSplitString(
+      escapeForwardSlashes(JSON.stringify(passThroughObj)),
+      charLimit,
+      typesArr,
+      'Execution/passthrough'
+    );
   }
   typesArr = typesArr.slice(0, 50);
   return typesArr;
