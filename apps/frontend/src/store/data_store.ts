@@ -10,7 +10,7 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import { ChecklistFile, ChecklistVuln } from '@/types/checklist/control';
+import {ChecklistFile} from '@/types/checklist/control';
 import {
   Action,
   getModule,
@@ -18,7 +18,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import { FilteredDataModule } from './data_filters';
+import {FilteredDataModule} from './data_filters';
 
 /** We make some new variant types of the Contextual types, to include their files*/
 export function isFromProfileFile(p: SourcedContextualizedProfile) {
