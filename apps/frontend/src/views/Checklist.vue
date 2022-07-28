@@ -47,8 +47,8 @@
       </v-menu>
     </div>
   </template>
-  <template #main-content>
-    <v-container fluid grid-list-md pt-0 pa-2>
+  <template #main-content height="90vh">
+    <v-container height="90vh" fluid grid-list-md pt-0 pa-2>
       <!-- Count Cards -->
       <v-container id="fileCards" mx-0 px-0 fluid>
         <StatusCardRow :filter="all_filter" :current-status-filter="statusFilter" @show-errors="showErrors"
@@ -56,43 +56,19 @@
       </v-container>
       <v-row>
         <v-col xs="4" :cols="5">
-          <!-- Status Count Chart -->
-          <v-card id="statusCounts">
-            <v-card-title class="justify-center">Status Counts</v-card-title>
-            <v-card-actions class="justify-center">
-              <StatusChart v-model="statusFilter" :filter="all_filter" />
-            </v-card-actions>
-          </v-card>
           <!-- Data Table -->
-          <v-card>
+          <v-card height="90vh">
             <v-card-title>Rules</v-card-title>
             <v-card-text>
-              <v-simple-table dense height="40vh" fixed-header>
-                <template #default>
-                  <thead>
-                    <tr>
-                      <th>Status</th>
-                      <th>Vuln ID</th>
-                      <th>Rule ID</th>
-                      <th>Rule Name</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="rule in rules" :key="rule.vulnNum" @click="showRule(rule)">
-                      <td>{{ rule.status }}</td>
-                      <td>{{ rule.vulnNum }}</td>
-                      <td>{{ rule.ruleId }}</td>
-                      <td>{{ rule.groupTitle }}</td>
-                    </tr>
-                  </tbody>
-                </template>
-              </v-simple-table>
+              <v-data-table disable-pagination dense fixed-header :items="rules" :headers="headers" hide-default-footer
+                @click:row="showRule">
+              </v-data-table>
             </v-card-text>
           </v-card>
         </v-col>
         <!-- Rule Data -->
         <v-col xs="4">
-          <v-card class="overflow-auto" height="60vh">
+          <v-card class="overflow-auto">
             <v-card-title>Selected Rule</v-card-title>
             <div v-if="getSelectedRule().vulnNum !== ''">
               <v-card-text>
@@ -109,6 +85,9 @@
               <v-card-text>
                 <strong>CCI: </strong>{{ getSelectedRule().cciRef }}<br /><br />
               </v-card-text>
+            </div>
+            <div v-else>
+              <v-card-text>No rule selected.</v-card-text>
             </div>
           </v-card>
           <v-card height="20vh">
@@ -375,9 +354,10 @@ export default class Checklist extends RouteMixin {
   get headers() {
     return [
       { text: 'Status', value: 'status' },
-      { text: 'Vul ID', value: 'vulId' },
+      { text: 'STIG ID', value: 'ruleVersion' },
       { text: 'Rule ID', value: 'ruleId' },
-      { text: 'Rule Name', value: 'ruleName' }
+      { text: 'Vul ID', value: 'vulnNum' },
+      { text: 'Rule Name', value: 'groupTitle' }
     ];
   }
 
