@@ -111,7 +111,7 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
    - ```bash
-     ./setup-docker-secrets.sh
+     ./setup-docker-env.sh
      # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
      docker-compose up -d
      ```
@@ -231,12 +231,26 @@ curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evalua
 
 ### How to Install
 
-If you would like to change Heimdall to your needs, Heimdall has 'Development Mode' you can use, where if you make changes to the code, the app will automattically rebuild itself and use those changes. Please note that you should *not* run development mode when deploying Heimdall for general usage. To get started on a Debian-based distribution, follow these steps:
+If you would like to change Heimdall to your needs, you can use Heimdall's 'Development Mode' to ease the development process. The benefit to using this mode is that it will automatically rebuild itself and use those changes as soon as you make them. Please note that you should not run development mode when deploying Heimdall for general usage.
 
-1. Install system dependencies:
+1. Install system dependencies with your system's package manager.
+
+   Ubuntu:
 
    - ```bash
+     # grab nodesource for recent version of nodejs
+     sudo curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh
+     sudo /tmp/nodesource_setup.sh
+
+     # use apt to install dependencies
      sudo apt install postgresql nodejs nano git
+     sudo npm install -g yarn
+     ```
+     
+   OSX:
+   
+   - ```bash
+     brew install postgresql nodejs@16 nano git
      sudo npm install -g yarn
      ```
 
@@ -249,13 +263,19 @@ If you would like to change Heimdall to your needs, Heimdall has 'Development Mo
 3. Create the Postgres role:
 
    - ```sql
+     # Switch to the OS postgres user
+     sudo -u postgres -i
+
      # Start the Postgres terminal
      psql postgres
   
-     # Create the user
+     # Create the database user
      CREATE USER <username> with encrypted password '<password>';
      ALTER USER <username> CREATEDB;
      \q
+
+     # Switch back to your original OS user
+     exit
      ```
 
 4. Install project dependencies:
@@ -265,12 +285,13 @@ If you would like to change Heimdall to your needs, Heimdall has 'Development Mo
      yarn install
      ```
 
-5. Edit your .env file and create the database. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration):
+5. Edit your apps/backend/.env file using the provided `start-dev-env.sh` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
+
+You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
+
+6. Create the database:
 
    - ```bash
-     nano apps/backend/.env-example
-     # Replace the comments with your values, if you want the default value, you can delete the line.
-     mv apps/backend/.env-example apps/backend/.env
      yarn backend sequelize-cli db:create
      yarn backend sequelize-cli db:migrate
      yarn backend sequelize-cli db:seed:all

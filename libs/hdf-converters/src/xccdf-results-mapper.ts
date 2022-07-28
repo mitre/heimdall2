@@ -204,7 +204,12 @@ function nistTag(input: IIdent | IIdent[]): string[] {
 }
 
 export class XCCDFResultsMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
@@ -213,9 +218,7 @@ export class XCCDFResultsMapper extends BaseConverter {
       }
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: 0
-    },
+    statistics: {},
     profiles: [
       {
         name: {path: ['cdf:Benchmark.id', 'Benchmark.id']},
@@ -294,73 +297,12 @@ export class XCCDFResultsMapper extends BaseConverter {
         copyright_email: 'disa.stig_spt@mail.mil',
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
           {
             path: ['cdf:Benchmark.cdf:Group', 'Benchmark.Group'],
             key: 'id',
-            id: {
-              path: ['cdf:Rule', 'Rule'],
-              transformer: (input: Record<string, unknown>): string => {
-                const valueIdPaths = [
-                  'cdf:check.cdf:check-export.value-id',
-                  'check.check-export.value-id'
-                ];
-                let setValueIdTracker = false;
-                for (const path of valueIdPaths) {
-                  const valueId = _.get(input, path);
-                  if (valueId !== undefined) {
-                    valueIdTracker = valueId as string; // NOTE: global variable
-                    setValueIdTracker = true;
-                  }
-                }
-                if (!setValueIdTracker) {
-                  valueIdTracker = undefined;
-                }
-
-                const id = _.get(input, 'id');
-                if (typeof id === 'string') {
-                  idTracker = id; // NOTE: global variable
-                  return id.split('_S')[1].split('r')[0];
-                } else {
-                  return '';
-                }
-              }
-            },
-            title: {path: ['cdf:Rule.cdf:title', 'Rule.title.text']},
-            desc: {
-              path: ['cdf:Rule.cdf:description', 'Rule.description.text'],
-              transformer: (description: string): string => {
-                const descTextJson = convertEncodedXmlIntoJson(description);
-                return _.get(descTextJson, 'VulnDiscussion', '') as string;
-              }
-            },
-            descriptions: [
-              {
-                data: {
-                  path: [
-                    'cdf:Rule.cdf:check.cdf:check-content-ref.name',
-                    'Rule.check.check-content-ref.name'
-                  ],
-                  transformer: parseHtml
-                },
-                label: 'check'
-              },
-              {
-                data: {
-                  path: ['cdf:Rule.cdf:fixtext.text', 'Rule.fixtext.text'],
-                  transformer: parseHtml
-                },
-                label: 'fix'
-              }
-            ],
-            impact: {
-              path: ['cdf:Rule.severity', 'Rule.severity'],
-              transformer: impactMapping(IMPACT_MAPPING)
-            },
-            refs: [],
             tags: {
               cci: {
                 path: ['cdf:Rule.cdf:ident', 'Rule.ident'],
@@ -430,8 +372,70 @@ export class XCCDFResultsMapper extends BaseConverter {
                 }
               }
             },
-            code: '',
+            refs: [],
             source_location: {},
+            title: {path: ['cdf:Rule.cdf:title', 'Rule.title.text']},
+            id: {
+              path: ['cdf:Rule', 'Rule'],
+              transformer: (input: Record<string, unknown>): string => {
+                const valueIdPaths = [
+                  'cdf:check.cdf:check-export.value-id',
+                  'check.check-export.value-id'
+                ];
+                let setValueIdTracker = false;
+                for (const path of valueIdPaths) {
+                  const valueId = _.get(input, path);
+                  if (valueId !== undefined) {
+                    valueIdTracker = valueId as string; // NOTE: global variable
+                    setValueIdTracker = true;
+                  }
+                }
+                if (!setValueIdTracker) {
+                  valueIdTracker = undefined;
+                }
+                const id = _.get(input, 'id');
+                if (typeof id === 'string') {
+                  idTracker = id; // NOTE: global variable
+                  return id.split('_S')[1].split('r')[0];
+                } else {
+                  return '';
+                }
+              }
+            },
+            desc: {
+              path: ['cdf:Rule.cdf:description', 'Rule.description.text'],
+              transformer: (description: string): string => {
+                const descTextJson = convertEncodedXmlIntoJson(description);
+                return _.get(descTextJson, 'VulnDiscussion', '') as string;
+              }
+            },
+            descriptions: [
+              {
+                data: {
+                  path: [
+                    'cdf:Rule.cdf:check.cdf:check-content-ref.name',
+                    'Rule.check.check-content-ref.name'
+                  ],
+                  transformer: parseHtml
+                },
+                label: 'check'
+              },
+              {
+                data: {
+                  path: ['cdf:Rule.cdf:fixtext.text', 'Rule.fixtext.text'],
+                  transformer: parseHtml
+                },
+                label: 'fix'
+              }
+            ],
+            impact: {
+              path: ['cdf:Rule.severity', 'Rule.severity'],
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
+            },
             results: [
               {
                 status: {
@@ -442,25 +446,68 @@ export class XCCDFResultsMapper extends BaseConverter {
                   transformer: getStatus
                 },
                 code_desc: '',
-                run_time: 0,
                 start_time: {
                   path: [
                     '$.cdf:Benchmark.cdf:TestResult',
                     '$.Benchmark.TestResult'
                   ],
                   transformer: getStartTime
-                },
-                message: '',
-                resource: ''
+                }
               }
             ]
           }
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        let auxData = _.has(data, 'Benchmark')
+          ? _.get(data, 'Benchmark')
+          : _.get(data, 'cdf:Benchmark');
+        if (auxData instanceof Object) {
+          auxData = _.omit(auxData, [
+            'id',
+            'xml:lang',
+            'style',
+            'title',
+            'cdf:title',
+            'description',
+            'cdf:description',
+            'notice',
+            'cdf:notice',
+            'front-matter',
+            'cdf:front-matter',
+            'reference',
+            'cdf:reference',
+            'platform',
+            'cdf:platform',
+            'version',
+            'cdf:version',
+            'model',
+            'Group',
+            'cdf:Group',
+            'TestResult',
+            'cdf:TestResult'
+          ]);
+        }
+        auxData = _.has(data, 'Benchmark')
+          ? {Benchmark: auxData}
+          : {'cdf:Benchmark': auxData};
+        return {
+          auxiliary_data: [
+            {
+              name: 'XCCDF',
+              data: auxData
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    }
   };
-  constructor(scapXml: string) {
+  constructor(scapXml: string, withRaw = false) {
     super(parseXml(scapXml));
+    this.withRaw = withRaw;
   }
 }
