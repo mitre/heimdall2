@@ -491,6 +491,8 @@ function createProfileInfoFindingFields(
   const passThroughObj = _.get(hdf, 'passthrough');
   if (passThroughObj instanceof Object) {
     let passThroughStr = escapeForwardSlashes(JSON.stringify(passThroughObj));
+    charLimit -= (passThroughStr.match(/\"/g) || []).length;
+    charLimit -= (passThroughStr.match(/\n/g) || []).length;
     const cntMax = Math.ceil(passThroughStr.length / charLimit);
     let cntMin = 1;
     while (passThroughStr.length > charLimit) {
