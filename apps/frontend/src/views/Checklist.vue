@@ -49,6 +49,13 @@
   </template>
   <template #main-content>
     <v-container fluid grid-list-md pt-0 pa-2>
+      <v-container fluid>
+        <v-row class="mb-6">
+          <v-col v-for="n in 4" :cols="1">
+            <v-switch inset label="red" color="red" value="red" hide-details></v-switch>
+          </v-col>
+        </v-row>
+      </v-container>
       <v-row>
         <v-col xs="4" :cols="5">
           <!-- Data Table -->
@@ -136,6 +143,7 @@ import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import { ChecklistVuln } from '../types/checklist/control';
 import { InspecDataModule } from '@/store/data_store';
+import SwitchTable from '@/components/cards/SwitchTable.vue';
 
 @Component({
   components: {
@@ -151,7 +159,8 @@ import { InspecDataModule } from '@/store/data_store';
     ExportCKLModal,
     ExportHTMLModal,
     ExportSplunkModal,
-    UploadButton
+    UploadButton,
+    SwitchTable
   }
 })
 export default class Checklist extends RouteMixin {
