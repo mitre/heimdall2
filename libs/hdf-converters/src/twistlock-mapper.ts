@@ -48,7 +48,7 @@ export class TwistlockMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: {path: 'results[0].name'}
+      target_id: {path: ['results[0].name', 'repository']}
     },
     version: HeimdallToolsVersion,
     statistics: {},
@@ -58,9 +58,13 @@ export class TwistlockMapper extends BaseConverter {
         name: 'Twistlock Scan',
         title: {
           transformer: (data: Record<string, unknown>): string => {
-            const projectArr = _.has(data, 'collections')
-              ? _.get(data, 'collections')
-              : 'N/A';
+            let projectArr: unknown = 'N/A';
+            if (_.has(data, 'collections')) {
+              projectArr = _.get(data, 'collections');
+            }
+            if (_.has(data, 'repository')) {
+              projectArr = _.get(data, 'repository');
+            }
             const projectName = Array.isArray(projectArr)
               ? projectArr.join(' / ')
               : projectArr;
