@@ -7,6 +7,7 @@ import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   getCCIsForNISTTags
 } from '../utils/global';
+import {getCMSInSpec} from './case-cms-inspec';
 import {getFirewallManager} from './case-firewall-manager';
 import {getGuardDuty} from './case-guardduty';
 import {getHDF2ASFF} from './case-hdf2asff';
@@ -28,6 +29,7 @@ const COMPLIANCE_STATUS = 'Compliance.Status';
 
 // Sometimes certain ASFF file types require massaging in order to generate good HDF files.  These are the supported special cases and a catchall 'Default'.  'Default' files and non-special cased methods for otherwise special cased files do the pre-defined default behaviors when generating the HDF file.
 export enum SpecialCasing {
+  CMSInSpec = 'CMS Chef InSpec',
   FirewallManager = 'AWS Firewall Manager',
   GuardDuty = 'AWS GuardDuty',
   HDF2ASFF = 'MITRE SAF HDF2ASFF',
@@ -41,6 +43,11 @@ export enum SpecialCasing {
 function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   const productArn = _.get(finding, 'ProductArn') as string;
   if (
+    _.get(finding, 'ProductName') === 'Default' &&
+    _.get(finding, 'GeneratorId') === 'cms.Chef Inspec'
+  ) {
+    return SpecialCasing.CMSInSpec;
+  } else if (
     productArn.match(
       /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/firewall-manager$/
     )
@@ -106,6 +113,7 @@ const SPECIAL_CASE_MAPPING: Map<
   // eslint-disable-next-line @typescript-eslint/ban-types
   Record<string, Function>
 > = new Map([
+  [SpecialCasing.CMSInSpec, getCMSInSpec()],
   [SpecialCasing.FirewallManager, getFirewallManager()],
   [SpecialCasing.GuardDuty, getGuardDuty()],
   [SpecialCasing.HDF2ASFF, getHDF2ASFF()],
