@@ -48,16 +48,7 @@ export class TwistlockMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: {
-        transformer: (data: Record<string, unknown>): unknown => {
-          if (_.has(data, 'results[0].name')) {
-            return _.get(data, 'results[0].name');
-          }
-          if (_.has(data, 'repository')) {
-            return _.get(data, 'repository');
-          }
-        }
-      }
+      target_id: {path: ['results[0].name', 'results[0].repository']}
     },
     version: HeimdallToolsVersion,
     statistics: {},
