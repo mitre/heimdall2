@@ -88,9 +88,6 @@
                 <template #[`item.groupTitle`]="{ item }">
                   {{ truncate(item.groupTitle, 20) }}
                 </template>
-                <template #[`item.ruleTitle`]="{ item }">
-                  {{ truncate(item.ruleTitle, 100) }}
-                </template>
                 <template #[`item.cciRef`]="{ item }">
                   {{ truncate(item.cciRef, 13) }}
                 </template>
@@ -267,13 +264,32 @@ export default class Checklist extends RouteMixin {
     { text: 'Rule ID', value: 'ruleId', width: '100px' },
     { text: 'Vul ID', value: 'vulnNum', width: '100px' },
     { text: 'Group Name', value: 'groupTitle', width: '110px' },
-    { text: 'Rule Title', value: 'ruleTitle', width: '500px' },
     { text: 'CCIs', value: 'cciRef', width: '110px' }
   ];
 
   hiddenRows = [
-    { value: 'groupTitle', align: ' d-none' },
-    { value: 'ruleTitle', align: ' d-none' }
+    { value: 'severity', align: ' d-none' },
+    { value: 'ruleTitle', align: ' d-none' },
+    { value: 'vulnDiscuss', align: ' d-none' },
+    { value: 'iaControls', align: ' d-none' },
+    { value: 'checkContent', align: ' d-none' },
+    { value: 'fixText', align: ' d-none' },
+    { value: 'falsePositives', align: ' d-none' },
+    { value: 'falseNegatives', align: ' d-none' },
+    { value: 'documentable', align: ' d-none' },
+    { value: 'mitigations', align: ' d-none' },
+    { value: 'potentialImpact', align: ' d-none' },
+    { value: 'thirdPartyTools', align: ' d-none' },
+    { value: 'mitigationControl', align: ' d-none' },
+    { value: 'responsibility', align: ' d-none' },
+    { value: 'securityOverrideGuidance', align: ' d-none' },
+    { value: 'checkContentRef', align: ' d-none' },
+    { value: 'weight', align: ' d-none' },
+    { value: 'class', align: ' d-none' },
+    { value: 'stigRef', align: ' d-none' },
+    { value: 'targetKey', align: ' d-none' },
+    { value: 'stigUuid', align: ' d-none' },
+    { value: 'legacyId', align: ' d-none' },
   ];
 
   evalInfo:
