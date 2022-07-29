@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.16",
+    "release": "2.6.29",
     "target_id": "my-fake-host-12.somewhere.cloud"
   },
-  "version": "2.6.16",
+  "version": "2.6.29",
   "statistics": {
     "duration": null
   },
@@ -27,6 +27,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 4.1.19) Ensure the audit configuration is immutable",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -57,6 +61,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -87,6 +95,10 @@
         {
           "desc": "grub2: Incorrect permission in grub.cfg allow unprivileged user to read the file content",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -117,6 +129,10 @@
         {
           "desc": "no description is available for this cve.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -147,6 +163,10 @@
         {
           "desc": "This is a kernel live patch module which is automatically loaded by the RPM post-install script to modify the code of a running kernel.  Security Fix(es):  * kernel: xfs: raw block device data leak in XFS_IOC_ALLOCSP IOCTL (CVE-2021-4155)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -177,6 +197,10 @@
         {
           "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2020-28362.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -205,7 +229,7 @@
           ]
         }
       ],
-      "sha256": "05ed1936ffa45448f0433da7a3d90ca62080a05eab0468e00df92a9f9c7098a9"
+      "sha256": "ae5153fefbd693da7e9ccd3f0699ab5d99a9f463252b536372ec3882a47aed01"
     }
   ]
 }

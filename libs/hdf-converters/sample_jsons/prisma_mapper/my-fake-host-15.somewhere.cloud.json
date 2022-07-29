@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.16",
+    "release": "2.6.29",
     "target_id": "my-fake-host-15.somewhere.cloud"
   },
-  "version": "2.6.16",
+  "version": "2.6.29",
   "statistics": {
     "duration": null
   },
@@ -27,6 +27,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 1.4.1) Ensure permissions on bootloader config are configured",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -57,6 +61,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -87,6 +95,10 @@
         {
           "desc": "hostapd 0.6.7 through 2.5 and wpa_supplicant 0.6.7 through 2.5 do not reject \\n and \\r characters in passphrase parameters, which allows remote attackers to cause a denial of service (daemon outage) via a crafted WPS operation.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -117,6 +129,10 @@
         {
           "desc": "The implementations of EAP-pwd in hostapd before 2.10 and wpa_supplicant before 2.10 are vulnerable to side-channel attacks as a result of cache access patterns. NOTE: this issue exists because of an incomplete fix for CVE-2019-9495.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -147,6 +163,10 @@
         {
           "desc": "DOCUMENTATION: A vulnerability was found in archive/zip of the Go standard library. Applications written in Go where Reader.Open (the API implementing io/fs.FS introduced in Go 1.16) can panic when parsing a crafted ZIP archive containing completely invalid names or an empty filename argument.             STATEMENT: * In OpenShift Container Platform multiple components are written in Go and use archive/zip from the standard library. However, all such components are short lived client side tools, not long lived server side executables. As the maximum impact of this vulnerability is a denial of service in client utilities, this vulnerability is rated Low for OpenShift Container Plaform.  * Because Service Telemetry Framework1.2 will be retiring soon and the flaw\\'s impact is lower, no update will be provided at this time for STF1.2\\'s sg-core-container.  * Because Red Hat Ceph Storage only uses Go\\'s archive/zip for the Grafana CLI and thus is not directly exploitable, the vulnerability has been rated low for Red Hat Ceph Storage.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -177,6 +197,10 @@
         {
           "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -207,6 +231,10 @@
         {
           "desc": "A flaw was found in the crypto subsystem of the Linux kernel before version kernel-4.15-rc4. The \\\"null skcipher\\\" was being dropped when each af_alg_ctx was freed instead of when the aead_tfm was freed. This can cause the null skcipher to be freed while it is still in use leading to a local user being able to crash the system or possibly escalate privileges.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -235,7 +263,7 @@
           ]
         }
       ],
-      "sha256": "5da87942951d832ef43974bac1ff4869b2e54284d5fabc28bdf3c0a29b5c73a4"
+      "sha256": "459562b93f86bf750fc51b834608640e6ecf8c8f24236599db431d18a94e41b8"
     }
   ]
 }

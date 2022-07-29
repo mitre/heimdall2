@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.16",
+    "release": "2.6.29",
     "target_id": "my-fake-host-7.somewhere.cloud"
   },
-  "version": "2.6.16",
+  "version": "2.6.29",
   "statistics": {
     "duration": null
   },
@@ -27,6 +27,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 5.1.8) Ensure at/cron is restricted to authorized users",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -57,6 +61,10 @@
         {
           "desc": "Red Hat OpenShift Container Platform is Red Hat\\'s cloud computing Kubernetes application platform solution designed for on-premise or private cloud deployments.  This advisory contains the RPM packages for Red Hat OpenShift Container Platform 4.8.9. See the following advisory for the container images for this release:  http://somewhere.cloud/errata/RHBA-2021:3247  Security Fix(es):  * golang: net/http: panic in ReadRequest and ReadResponse when reading a very large header (CVE-2021-31525)  * golang: net: lookup functions may return invalid host names (CVE-2021-33195)  * golang: net/http/httputil: ReverseProxy forwards connection headers if first one is empty (CVE-2021-33197)  * golang: math/big.Rat: may cause a panic or an unrecoverable fatal error if passed inputs with very large exponents (CVE-2021-33198)  * golang: crypto/tls: certificate of wrong type is causing TLS client to panic (CVE-2021-34558)  For more details about the security issue(s), including the impact, a CVSS score, acknowledgments, and other related information, refer to the CVE page(s) listed in the References section.  All OpenShift Container Platform 4.8 users are advised to upgrade to these updated packages and images when they are available in the appropriate release channel. To check for available updates, use the OpenShift Console or the CLI oc command. Instructions for upgrading a cluster are avail",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -86,6 +94,10 @@
         {
           "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -116,6 +128,10 @@
         {
           "desc": "net/http in Go before 1.16.12 and 1.17.x before 1.17.5 allows uncontrolled memory consumption in the header canonicalization cache via HTTP/2 requests.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -146,6 +162,10 @@
         {
           "desc": "The ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -174,7 +194,7 @@
           ]
         }
       ],
-      "sha256": "2146c551bc1da34e3fa5ef752ef1024201dc95823d12a89f2dd6c9fbb7ce3c96"
+      "sha256": "7364bc55ee685652f941b6dc0e57c0fc10718f5d4f21b4a53171d2351e62f86b"
     }
   ]
 }

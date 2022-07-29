@@ -8,7 +8,10 @@ import {
   parseHtml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  getCCIsForNISTTags
+} from './utils/global';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 
@@ -125,6 +128,10 @@ export class ZapMapper extends BaseConverter {
             path: 'site.alerts',
             arrayTransformer: deduplicateId,
             tags: {
+              cci: {
+                path: 'cweid',
+                transformer: (cwe: string) => getCCIsForNISTTags(nistTag(cwe))
+              },
               nist: {path: 'cweid', transformer: nistTag},
               cweid: {path: 'cweid'},
               wascid: {path: 'wascid'},
