@@ -21,6 +21,23 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3]
 ]);
 
+export class TwistlockResults {
+  data: Record<string, unknown>;
+  customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
+  withRaw: boolean;
+  constructor(twistlockJson: string, withRaw = false) {
+    this.data = JSON.parse(twistlockJson);
+    this.withRaw = withRaw;
+  }
+
+  toHdf(): ExecJSON.Execution {
+    if (!_.has(this.data, 'results')) {
+      this.data = {results: [this.data]};
+    }
+    return new TwistlockMapper(this.data, this.withRaw).toHdf();
+  }
+}
+
 export class TwistlockMapper extends BaseConverter {
   withRaw: boolean;
 
@@ -152,8 +169,8 @@ export class TwistlockMapper extends BaseConverter {
       }
     }
   };
-  constructor(twistlockJson: string, withRaw = false) {
-    super(JSON.parse(twistlockJson), true);
+  constructor(twistlockJson: Record<string, unknown>, withRaw = false) {
+    super(twistlockJson, true);
     this.withRaw = withRaw;
   }
 }
