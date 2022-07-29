@@ -48,16 +48,43 @@
     </div>
   </template>
   <template #main-content>
-    <v-container fluid grid-list-md pt-0 pa-2>
-      <v-container fluid>
-        <v-row class="mb-2">
-          <v-col v-for="n in 4" :v-bind="n" :cols="1">
-            <v-switch inset label="red" color="red" value="red" hide-details />
-          </v-col>
-        </v-row>
-      </v-container>
+    <v-container fluid grid-list-md pt-0 pa-2 mt-6>
       <v-row>
         <v-col xs="4" :cols="4" height="100%">
+          <v-card grid-list-md class="mb-6 pa-4">
+            <v-row>
+              <v-col :cols="3">
+                <v-text>Not A Finding</v-text>
+                <v-switch justify="center" inset color="statusPassed" v-model="notAFinding" hide-details />
+              </v-col>
+              <v-col :cols="3">
+                <v-text>Open</v-text>
+                <v-switch justify="center" inset color="statusFailed" v-model="open" hide-details />
+              </v-col>
+              <v-col :cols="3">
+                <v-text>Not Applicable</v-text>
+                <v-switch justify="center" inset color="statusNotApplicable" v-model="notApplicable" hide-details />
+              </v-col>
+              <v-col :cols="3">
+                <v-text>Not Reviewed</v-text>
+                <v-switch justify="center" inset color="statusNotReviewed" v-model="notReviewed" hide-details />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col :cols="3">
+                <v-text>CAT I</v-text>
+                <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat1" hide-details />
+              </v-col>
+              <v-col :cols="3">
+                <v-text>CAT II</v-text>
+                <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat2" hide-details />
+              </v-col>
+              <v-col :cols="3">
+                <v-text>CAT III</v-text>
+                <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat3" hide-details />
+              </v-col>
+            </v-row>
+          </v-card>
           <!-- Data Table -->
           <v-card>
             <v-card-title class="mt-0 pt-0">
@@ -75,7 +102,7 @@
             </v-card-title>
             <v-card-text>
               <v-data-table disable-pagination dense fixed-header :items="rules" :headers="headers"
-                :search="searchValue" hide-default-footer class="overflow-y-auto" height="70vh" @click:row="showRule">
+                :search="searchValue" hide-default-footer class="overflow-y-auto" height="55vh" @click:row="showRule">
                 <template #[`item.ruleVersion`]="{ item }">
                   {{ truncate(shortStigId(item.ruleVersion), 20) }}
                 </template>
@@ -97,7 +124,7 @@
         </v-col>
         <!-- Rule Data -->
         <v-col xs="4" :cols="8">
-          <v-card height="40%" class="mt-n16 mb-2">
+          <v-card height="35%" class="mb-2">
             <v-card-text>
               <v-row>
                 <v-col :cols="2">
@@ -107,8 +134,8 @@
                     'NotAFinding',
                     'Not_Applicable'
                   ]" />
-                  <v-select v-model="selectedRule.severityOverride" label="Severity Override"
-                    :items="['CAT I', 'CAT II', 'CAT III']" />
+                  <v-select v-on:change="promptSeverityJustification" v-model="selectedRule.severityOverride"
+                    label="Severity Override" :items="['CAT I', 'CAT II', 'CAT III']" />
                 </v-col>
                 <v-col :cols="10">
                   <strong>Finding Details: </strong><br />
@@ -117,7 +144,7 @@
               </v-row>
               <v-row>
                 <v-col>
-                  <v-card class="mt-n12" color="transparent">
+                  <v-card class="mt-n12" color="transparent" height="12vh">
                     <strong>Comments: </strong>
                     <v-textarea v-model="selectedRule.comments" solo outlined dense no-resize height="12vh" />
                   </v-card>
@@ -125,7 +152,7 @@
               </v-row>
             </v-card-text>
           </v-card>
-          <v-card height="50.5vh" class="overflow-auto">
+          <v-card height="56.1vh" class="overflow-auto">
             <v-card-title>Selected Rule</v-card-title>
             <div v-if="selectedRule.vulnNum !== ''">
               <v-card-text>
@@ -214,6 +241,17 @@ export default class Checklist extends RouteMixin {
   filterSnackbar = false;
   controlSelection: string | null = null;
 
+  /** State variables for status filter */
+  notApplicable = true;
+  open = true;
+  notAFinding = true;
+  notReviewed = true;
+
+  /** State variables for severity filter */
+  cat1 = true;
+  cat2 = true;
+  cat3 = true;
+
   selectedRule: ChecklistVuln = {
     status: '',
     findingDetails: '',
@@ -254,7 +292,7 @@ export default class Checklist extends RouteMixin {
     { text: 'STIG ID', value: 'ruleVersion', width: '100px' },
     { text: 'Rule ID', value: 'ruleId', width: '100px' },
     { text: 'Vul ID', value: 'vulnNum', width: '100px' },
-    { text: 'Group Name', value: 'groupTitle', width: '110px' },
+    { text: 'Group Name', value: 'groupTitle', width: '150px' },
     { text: 'CCIs', value: 'cciRef', width: '110px' }
   ];
 
@@ -263,7 +301,7 @@ export default class Checklist extends RouteMixin {
     { text: 'STIG ID', value: 'ruleVersion', width: '100px' },
     { text: 'Rule ID', value: 'ruleId', width: '100px' },
     { text: 'Vul ID', value: 'vulnNum', width: '100px' },
-    { text: 'Group Name', value: 'groupTitle', width: '110px' },
+    { text: 'Group Name', value: 'groupTitle', width: '150px' },
     { text: 'CCIs', value: 'cciRef', width: '110px' }
   ];
 
@@ -348,6 +386,13 @@ export default class Checklist extends RouteMixin {
     return FilteredChecklistDataModule.allFiles.find(
       (f) => f.uniqueId === fileID
     );
+  }
+
+  promptSeverityJustification() {
+    console.log('IT RAN')
+    // Pop up modal to prompt for severity override justification
+    // this.selectedRule.severityOverride = 'INSERT SEVERITY OVERRIDE HERE'
+    // this.selectedRule.severityJustification = 'Get value from modal'
   }
 
   get searchValue(): string {
