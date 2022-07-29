@@ -26,6 +26,7 @@ export interface Auth {
   creds: AuthCreds;
   info: AuthInfo;
   from_mfa: boolean;
+  region: string;
 }
 
 /** Fetches the described S3 file using the given creds.
@@ -87,13 +88,15 @@ export function derive_mfa_serial(userAccessToken: string): string | null {
 export async function get_session_token(
   accessToken: string,
   secretKey: string,
+  region: string,
   duration: number,
   mfaInfo?: MFAInfo
 ): Promise<Auth | null> {
   // Instanciate STS with our base and secret token
   const sts = new STS({
     accessKeyId: accessToken,
-    secretAccessKey: secretKey
+    secretAccessKey: secretKey,
+    region: region
   });
 
   // Get the user info
@@ -144,7 +147,8 @@ export async function get_session_token(
       return {
         creds,
         info,
-        from_mfa: !!mfaInfo
+        from_mfa: !!mfaInfo,
+        region: region
       };
     } else {
       return null;

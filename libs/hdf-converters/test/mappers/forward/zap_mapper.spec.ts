@@ -53,3 +53,60 @@ describe('zap_mapper', () => {
     );
   });
 });
+
+describe('zap_mapper', () => {
+  it('Successfully converts webgoat.json using withRaw flag', () => {
+    const mapper = new ZapMapper(
+      fs.readFileSync(
+        'sample_jsons/zap_mapper/sample_input_report/webgoat.json',
+        {encoding: 'utf-8'}
+      ),
+      'http://mymac.com:8191',
+      true
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/zap_mapper/zap-webgoat-hdf-withraw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/zap_mapper/zap-webgoat-hdf-withraw.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+  });
+  it('Successfully converts zero.webappsecurity.json using withRaw flag', () => {
+    const mapper = new ZapMapper(
+      fs.readFileSync(
+        'sample_jsons/zap_mapper/sample_input_report/zero.webappsecurity.json',
+        {encoding: 'utf-8'}
+      ),
+      'http://zero.webappsecurity.com',
+      true
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/zap_mapper/zap-webappsecurity-hdf-withraw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/zap_mapper/zap-webappsecurity-hdf-withraw.json',
+            {encoding: 'utf-8'}
+          )
+        )
+      )
+    );
+  });
+});
