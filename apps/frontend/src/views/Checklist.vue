@@ -54,33 +54,33 @@
           <v-card grid-list-md class="mb-6 pa-4">
             <v-row>
               <v-col :cols="3">
-                <v-text>Not A Finding</v-text>
+                Not A Finding
                 <v-switch justify="center" inset color="statusPassed" v-model="notAFinding" hide-details />
               </v-col>
               <v-col :cols="3">
-                <v-text>Open</v-text>
+                Open
                 <v-switch justify="center" inset color="statusFailed" v-model="open" hide-details />
               </v-col>
               <v-col :cols="3">
-                <v-text>Not Applicable</v-text>
+                Not Applicable
                 <v-switch justify="center" inset color="statusNotApplicable" v-model="notApplicable" hide-details />
               </v-col>
               <v-col :cols="3">
-                <v-text>Not Reviewed</v-text>
+                Not Reviewed
                 <v-switch justify="center" inset color="statusNotReviewed" v-model="notReviewed" hide-details />
               </v-col>
             </v-row>
             <v-row>
               <v-col :cols="3">
-                <v-text>CAT I</v-text>
+                CAT I
                 <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat1" hide-details />
               </v-col>
               <v-col :cols="3">
-                <v-text>CAT II</v-text>
+                CAT II
                 <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat2" hide-details />
               </v-col>
               <v-col :cols="3">
-                <v-text>CAT III</v-text>
+                CAT III
                 <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat3" hide-details />
               </v-col>
             </v-row>
@@ -498,7 +498,41 @@ export default class Checklist extends RouteMixin {
       .forEach((rulesItems) => {
         rulesList.push(...rulesItems);
       });
-    return rulesList;
+    return rulesList.filter((rule) => {
+      console.log(rule.status)
+      console.log(rule.severity)
+      const includedStatuses: string[] = []
+      if (this.notAFinding) {
+        includedStatuses.push('NotAFinding')
+      }
+      if (this.open) {
+        includedStatuses.push('Open')
+      }
+      if (this.notApplicable) {
+        includedStatuses.push('Not_Applicable')
+      }
+      if (this.notReviewed) {
+        includedStatuses.push('Not_Reviewed')
+      }
+      console.log(includedStatuses)
+
+      const includedSeverities: string[] = []
+      if (this.cat1) {
+        includedSeverities.push('high')
+      }
+      if (this.cat2) {
+        includedSeverities.push('medium')
+      }
+      if (this.cat3) {
+        includedSeverities.push('low')
+      }
+      console.log(includedSeverities)
+
+      if (includedStatuses.includes(rule.status) && (includedSeverities.includes(rule.severity) || includedSeverities.includes(rule.severityOverride))) {
+        return true
+      }
+      return false
+    });
   }
 
   /**
