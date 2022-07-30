@@ -55,32 +55,50 @@
             <v-row>
               <v-col :cols="3">
                 Not A Finding
-                <v-switch justify="center" inset color="statusPassed" v-model="notAFinding" hide-details />
               </v-col>
               <v-col :cols="3">
                 Open
-                <v-switch justify="center" inset color="statusFailed" v-model="open" hide-details />
               </v-col>
               <v-col :cols="3">
                 Not Applicable
-                <v-switch justify="center" inset color="statusNotApplicable" v-model="notApplicable" hide-details />
               </v-col>
               <v-col :cols="3">
                 Not Reviewed
+              </v-col>
+            </v-row>
+            <v-row class="mt-n10">
+              <v-col :cols="3">
+                <v-switch justify="center" inset color="statusPassed" v-model="notAFinding" hide-details />
+              </v-col>
+              <v-col :cols="3">
+                <v-switch justify="center" inset color="statusFailed" v-model="open" hide-details />
+              </v-col>
+              <v-col :cols="3">
+                <v-switch justify="center" inset color="statusNotApplicable" v-model="notApplicable" hide-details />
+              </v-col>
+              <v-col :cols="3">
                 <v-switch justify="center" inset color="statusNotReviewed" v-model="notReviewed" hide-details />
               </v-col>
             </v-row>
             <v-row>
               <v-col :cols="3">
                 CAT I
-                <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat1" hide-details />
               </v-col>
               <v-col :cols="3">
                 CAT II
-                <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat2" hide-details />
               </v-col>
               <v-col :cols="3">
                 CAT III
+              </v-col>
+            </v-row>
+            <v-row class="mt-n10">
+              <v-col :cols="3">
+                <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat1" hide-details />
+              </v-col>
+              <v-col :cols="3">
+                <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat2" hide-details />
+              </v-col>
+              <v-col :cols="3">
                 <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat3" hide-details />
               </v-col>
             </v-row>
