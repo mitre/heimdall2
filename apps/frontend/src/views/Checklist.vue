@@ -499,8 +499,6 @@ export default class Checklist extends RouteMixin {
         rulesList.push(...rulesItems);
       });
     return rulesList.filter((rule) => {
-      console.log(rule.status)
-      console.log(rule.severity)
       const includedStatuses: string[] = []
       if (this.notAFinding) {
         includedStatuses.push('NotAFinding')
@@ -514,7 +512,6 @@ export default class Checklist extends RouteMixin {
       if (this.notReviewed) {
         includedStatuses.push('Not_Reviewed')
       }
-      console.log(includedStatuses)
 
       const includedSeverities: string[] = []
       if (this.cat1) {
@@ -526,7 +523,6 @@ export default class Checklist extends RouteMixin {
       if (this.cat3) {
         includedSeverities.push('low')
       }
-      console.log(includedSeverities)
 
       if (includedStatuses.includes(rule.status) && (includedSeverities.includes(rule.severity) || includedSeverities.includes(rule.severityOverride))) {
         return true
