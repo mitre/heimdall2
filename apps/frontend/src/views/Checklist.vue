@@ -107,6 +107,9 @@
                   <v-col :cols="3">
                     CAT III
                   </v-col>
+                  <v-col :cols="3">
+                    Short IDs
+                  </v-col>
                 </v-row>
                 <v-row class="mt-n10">
                   <v-col :cols="3">
@@ -118,25 +121,30 @@
                   <v-col :cols="3">
                     <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat3" hide-details />
                   </v-col>
+                  <v-col :cols="3">
+                    <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="shortId" hide-details />
+                  </v-col>
                 </v-row>
               </v-tab-item>
               <!-- Target Data -->
               <v-tab-item class="pa-4">
-                <v-select :items="[
+                <v-select outlined dense :items="[
                   'Computing',
                   'Non-Computing'
                 ]" />
-                <v-text-field label="Marking"></v-text-field>
-                <v-text-field label="Host Name"></v-text-field>
-                <v-text-field label="IP Address"></v-text-field>
-                <v-text-field label="MAC Address"></v-text-field>
-                <v-text-field label="Fully Qualified Domain Name"></v-text-field>
-                <v-text-field label="Target Comments"></v-text-field>
+                <v-text-field dense label="Marking"></v-text-field>
+                <v-text-field dense label="Host Name"></v-text-field>
+                <v-text-field dense label="IP Address"></v-text-field>
+                <v-text-field dense label="MAC Address"></v-text-field>
+                <v-text-field dense label="Fully Qualified Domain Name"></v-text-field>
+                <v-text-field dense label="Target Comments"></v-text-field>
+                <br />
+                <strong>Role</strong>
                 <v-radio-group>
-                  <v-radio :label="'None'"></v-radio>
-                  <v-radio :label="'Workstation'"></v-radio>
-                  <v-radio :label="'Member Server'"></v-radio>
-                  <v-radio :label="'Domain Controller'"></v-radio>
+                  <v-radio label="None" value="none"></v-radio>
+                  <v-radio label="Workstation" value="workstation"></v-radio>
+                  <v-radio label="Member Server" value="memberServer"></v-radio>
+                  <v-radio label="Domain Controller" value="domainController"></v-radio>
                 </v-radio-group>
                 <v-checkbox v-model="webOrDatabase" label="Website or Database STIG" hide-details></v-checkbox>
                 <v-text-field v-if="webOrDatabase" label="Site"></v-text-field>
@@ -178,15 +186,6 @@
                 <template #[`item.ruleId`]="{ item }">
                   {{ truncate(shortRuleId(item.ruleId), 20) }}
                 </template>
-                <template #[`item.vulnNum`]="{ item }">
-                  {{ truncate(item.vulnNum, 20) }}
-                </template>
-                <template #[`item.groupTitle`]="{ item }">
-                  {{ truncate(item.groupTitle, 20) }}
-                </template>
-                <template #[`item.cciRef`]="{ item }">
-                  {{ truncate(item.cciRef, 13) }}
-                </template>
               </v-data-table>
             </v-card-text>
           </v-card>
@@ -223,11 +222,25 @@
               </v-row>
             </v-card-text>
           </v-card>
-          <v-card class="mt-4">
-            <v-card-text>Test</v-card-text>
+          <v-card class="mt-4" v-if="selectedRule.ruleId !== ''">
+            <v-card-text class="text-center">
+              <strong>{{ selectedRule.stigRef }}</strong>
+              <v-row dense class="mt-2">
+                <v-col><strong>Vul ID: </strong>{{ selectedRule.vulnNum }}</v-col>
+                <v-col><strong>Rule ID: </strong>{{ shortRuleId(selectedRule.ruleId) }}</v-col>
+                <v-col><strong>STIG ID: </strong>{{ shortStigId(selectedRule.ruleVersion) }}</v-col>
+              </v-row>
+              <v-row dense class="pa-0">
+                <v-col><strong>Severity: </strong>{{ severityMap(selectedRule.severity) }}</v-col>
+                <v-col><strong>Classification: </strong>{{ selectedRule.class }}</v-col>
+                <v-col><strong>Legacy IDs: </strong>{{ selectedRule.legacyId }}</v-col>
+              </v-row>
+            </v-card-text>
+
+
           </v-card>
-          <v-card height="56.1vh" class="overflow-auto">
-            <div v-if="selectedRule.vulnNum !== ''">
+          <v-card height="50vh" class="overflow-auto mt-4">
+            <div v-if="selectedRule.ruleId !== ''">
               <v-card-text>
                 <strong>Rule Title: </strong><br />
                 {{ selectedRule.ruleTitle }}<br /><br />
@@ -325,6 +338,10 @@ export default class Checklist extends RouteMixin {
   cat2 = true;
   cat3 = true;
 
+  /** State variable for whether short or long IDs are requested */
+  shortId = true;
+
+  //** Variable for selected tab */
   tab = null;
   webOrDatabase = false; // Needs to be replaced for selected checklist
 
@@ -365,8 +382,8 @@ export default class Checklist extends RouteMixin {
 
   selectedHeaders: { text: string; value: string; width: string }[] = [
     { text: 'Status', value: 'status', width: '100px' },
-    { text: 'STIG ID', value: 'ruleVersion', width: '100px' },
-    { text: 'Rule ID', value: 'ruleId', width: '100px' },
+    { text: 'STIG ID', value: 'ruleVersion', width: '130px' },
+    { text: 'Rule ID', value: 'ruleId', width: '160px' },
     { text: 'Vul ID', value: 'vulnNum', width: '100px' },
     { text: 'Group Name', value: 'groupTitle', width: '150px' },
     { text: 'CCIs', value: 'cciRef', width: '110px' }
@@ -374,8 +391,8 @@ export default class Checklist extends RouteMixin {
 
   headersList = [
     { text: 'Status', value: 'status', width: '100px' },
-    { text: 'STIG ID', value: 'ruleVersion', width: '100px' },
-    { text: 'Rule ID', value: 'ruleId', width: '100px' },
+    { text: 'STIG ID', value: 'ruleVersion', width: '130px' },
+    { text: 'Rule ID', value: 'ruleId', width: '160px' },
     { text: 'Vul ID', value: 'vulnNum', width: '100px' },
     { text: 'Group Name', value: 'groupTitle', width: '150px' },
     { text: 'CCIs', value: 'cciRef', width: '110px' }
@@ -436,11 +453,28 @@ export default class Checklist extends RouteMixin {
   }
 
   shortRuleId(ruleId: string) {
-    return ruleId.split('r')[0] || ruleId;
+    if (this.shortId)
+      return ruleId.split('r')[0] || ruleId;
+    else
+      return ruleId
   }
 
   shortStigId(stigId: string) {
-    return stigId.split('-').slice(0, 2).join('-');
+    if (this.shortId)
+      return stigId.split('-').slice(0, 2).join('-');
+    else
+      return stigId
+  }
+
+  severityMap(severity: string) {
+    switch (severity.toLowerCase()) {
+      case 'low':
+        return 'CAT III'
+      case 'medium':
+        return 'CAT II'
+      case 'high':
+        return 'CAT I'
+    }
   }
 
   /**
