@@ -1,4 +1,4 @@
-import {FileID} from '@/store/report_intake';
+import { FileID } from '@/store/report_intake';
 
 export type ChecklistFile = {
   /**
@@ -14,11 +14,27 @@ export type ChecklistFile = {
 
   database_id?: string;
 
-  stigs: Stig[];
+  asset: ChecklistAsset;
+  stigs: ChecklistStig[];
   raw: unknown;
 };
 
-export type Stig = {
+export type ChecklistAsset = {
+  role: string;
+  assettype: string;
+  hostname: string;
+  hostip: string;
+  hostmac: string;
+  hostfqdn: string;
+  targetcomment: string;
+  techarea: string;
+  targetkey: string;
+  webordatabase: boolean;
+  webdbsite: string;
+  webdbinstance: string;
+}
+
+export type ChecklistStig = {
   header: ChecklistHeader;
   vulns: ChecklistVuln[];
 };
