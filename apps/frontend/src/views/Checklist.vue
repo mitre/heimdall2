@@ -52,7 +52,7 @@
       <v-row>
         <v-col xs="4" :cols="4" height="100%">
           <v-card>
-            <v-tabs v-model="tab">
+            <v-tabs v-model="tab" show-arrows center-active grow>
               <v-tab>
                 <v-text>Filters</v-text>
               </v-tab>
@@ -155,11 +155,11 @@
 
           <!-- Data Table -->
           <v-card>
-            <v-card-title class="mt-4 pt-0">
-              <div class="mt-n4 pt-n6">Rules ({{ numItems }} shown)</div>
+            <v-card-title class="mt-4 pt-2">
+              <div>Rules ({{ numItems }} shown)</div>
               <v-spacer class="mt-0 pt-0" />
               <v-select v-model="selectedHeaders" :items="headersList" label="Select Columns" class="mt-4 pt-0" multiple
-                outlined return-object :style="{ width: '300px' }" dense>
+                outlined return-object :style="{ width: '300px' }">
                 <template #selection="{ item, index }">
                   <v-chip v-if="index < 3" small>
                     <span>{{ item.text }}</span>
@@ -193,31 +193,38 @@
         </v-col>
         <!-- Rule Data -->
         <v-col xs="4" :cols="8">
-          <v-card height="35%" class="mb-2">
+          <v-card class="pt-4">
             <v-card-text>
               <v-row>
-                <v-col :cols="2">
+                <v-col>
                   <v-select dense v-model="selectedRule.status" label="Status" :items="[
                     'Not_Reviewed',
                     'Open',
                     'NotAFinding',
                     'Not_Applicable'
                   ]" />
+                </v-col>
+                <v-col>
                   <v-select dense v-on:change="promptSeverityJustification" v-model="selectedRule.severityOverride"
                     label="Severity Override" :items="['CAT I', 'CAT II', 'CAT III']" />
                 </v-col>
-                <v-col :cols="10">
+              </v-row>
+              <v-row class="mt-n8">
+                <v-col>
                   <strong>Finding Details: </strong><br />
                   <v-textarea v-model="selectedRule.findingDetails" solo outlined dense no-resize height="12vh" />
                 </v-col>
               </v-row>
-              <v-row>
-                <v-col class="mt-n12">
+              <v-row class="mt-n10">
+                <v-col>
                   <strong>Comments: </strong>
-                  <v-textarea v-model="selectedRule.comments" solo outlined dense no-resize height="12vh" />
+                  <v-textarea v-model="selectedRule.comments" solo outlined dense no-resize height="8vh" />
                 </v-col>
               </v-row>
             </v-card-text>
+          </v-card>
+          <v-card class="mt-4">
+            <v-card-text>Test</v-card-text>
           </v-card>
           <v-card height="56.1vh" class="overflow-auto">
             <div v-if="selectedRule.vulnNum !== ''">
