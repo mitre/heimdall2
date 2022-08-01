@@ -51,62 +51,112 @@
     <v-container fluid grid-list-md pt-0 pa-2 mt-6>
       <v-row>
         <v-col xs="4" :cols="4" height="100%">
-          <v-card grid-list-md class="mb-6 pa-4">
-            <v-row>
-              <v-col :cols="3">
-                Not A Finding
-              </v-col>
-              <v-col :cols="3">
-                Open
-              </v-col>
-              <v-col :cols="3">
-                Not Applicable
-              </v-col>
-              <v-col :cols="3">
-                Not Reviewed
-              </v-col>
-            </v-row>
-            <v-row class="mt-n10">
-              <v-col :cols="3">
-                <v-switch justify="center" inset color="statusPassed" v-model="notAFinding" hide-details />
-              </v-col>
-              <v-col :cols="3">
-                <v-switch justify="center" inset color="statusFailed" v-model="open" hide-details />
-              </v-col>
-              <v-col :cols="3">
-                <v-switch justify="center" inset color="statusNotApplicable" v-model="notApplicable" hide-details />
-              </v-col>
-              <v-col :cols="3">
-                <v-switch justify="center" inset color="statusNotReviewed" v-model="notReviewed" hide-details />
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col :cols="3">
-                CAT I
-              </v-col>
-              <v-col :cols="3">
-                CAT II
-              </v-col>
-              <v-col :cols="3">
-                CAT III
-              </v-col>
-            </v-row>
-            <v-row class="mt-n10">
-              <v-col :cols="3">
-                <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat1" hide-details />
-              </v-col>
-              <v-col :cols="3">
-                <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat2" hide-details />
-              </v-col>
-              <v-col :cols="3">
-                <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat3" hide-details />
-              </v-col>
-            </v-row>
+          <v-card>
+            <v-tabs v-model="tab">
+              <v-tab>
+                <v-text>Filters</v-text>
+              </v-tab>
+              <v-tab>
+                <v-text>Target Data</v-text>
+              </v-tab>
+              <v-tab>
+                <v-text>STIGs</v-text>
+              </v-tab>
+              <v-tab>
+                <v-text>Technology Area</v-text>
+              </v-tab>
+            </v-tabs>
+            <v-tabs-items v-model="tab">
+              <!-- Filters -->
+              <v-tab-item grid-list-md class="pa-4">
+                <v-row>
+                  <v-col :cols="3">
+                    Not A Finding
+                  </v-col>
+                  <v-col :cols="3">
+                    Open
+                  </v-col>
+                  <v-col :cols="3">
+                    Not Applicable
+                  </v-col>
+                  <v-col :cols="3">
+                    Not Reviewed
+                  </v-col>
+                </v-row>
+                <v-row class="mt-n10">
+                  <v-col :cols="3">
+                    <v-switch justify="center" inset color="statusPassed" v-model="notAFinding" hide-details />
+                  </v-col>
+                  <v-col :cols="3">
+                    <v-switch justify="center" inset color="statusFailed" v-model="open" hide-details />
+                  </v-col>
+                  <v-col :cols="3">
+                    <v-switch justify="center" inset color="statusNotApplicable" v-model="notApplicable" hide-details />
+                  </v-col>
+                  <v-col :cols="3">
+                    <v-switch justify="center" inset color="statusNotReviewed" v-model="notReviewed" hide-details />
+                  </v-col>
+                </v-row>
+                <v-row>
+                  <v-col :cols="3">
+                    CAT I
+                  </v-col>
+                  <v-col :cols="3">
+                    CAT II
+                  </v-col>
+                  <v-col :cols="3">
+                    CAT III
+                  </v-col>
+                </v-row>
+                <v-row class="mt-n10">
+                  <v-col :cols="3">
+                    <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat1" hide-details />
+                  </v-col>
+                  <v-col :cols="3">
+                    <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat2" hide-details />
+                  </v-col>
+                  <v-col :cols="3">
+                    <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat3" hide-details />
+                  </v-col>
+                </v-row>
+              </v-tab-item>
+              <!-- Target Data -->
+              <v-tab-item class="pa-4">
+                <v-select :items="[
+                  'Computing',
+                  'Non-Computing'
+                ]" />
+                <v-text-field label="Marking"></v-text-field>
+                <v-text-field label="Host Name"></v-text-field>
+                <v-text-field label="IP Address"></v-text-field>
+                <v-text-field label="MAC Address"></v-text-field>
+                <v-text-field label="Fully Qualified Domain Name"></v-text-field>
+                <v-text-field label="Target Comments"></v-text-field>
+                <v-radio-group>
+                  <v-radio :label="'None'"></v-radio>
+                  <v-radio :label="'Workstation'"></v-radio>
+                  <v-radio :label="'Member Server'"></v-radio>
+                  <v-radio :label="'Domain Controller'"></v-radio>
+                </v-radio-group>
+                <v-checkbox v-model="webOrDatabase" label="Website or Database STIG" hide-details></v-checkbox>
+                <v-text-field v-if="webOrDatabase" label="Site"></v-text-field>
+                <v-text-field v-if="webOrDatabase" label="Instance"></v-text-field>
+              </v-tab-item>
+              <!-- STIGs -->
+              <v-tab-item>
+
+              </v-tab-item>
+              <!-- Technology Area -->
+              <v-tab-item class="pa-4">
+                <v-select dense outlined :items="techAreaLabels" justify="center" />
+              </v-tab-item>
+            </v-tabs-items>
           </v-card>
+
           <!-- Data Table -->
           <v-card>
-            <v-card-title class="mt-0 pt-0">
-              <div class="mt-n4 pt-n6">Rules</div>
+            <v-card-title class="mt-4 pt-0">
+              <div class="mt-n4 pt-n6">Rules ({{ numItems }} shown)</div>
               <v-spacer class="mt-0 pt-0" />
               <v-select v-model="selectedHeaders" :items="headersList" label="Select Columns" class="mt-4 pt-0" multiple
                 outlined return-object :style="{ width: '300px' }" dense>
@@ -119,8 +169,9 @@
               </v-select>
             </v-card-title>
             <v-card-text>
-              <v-data-table disable-pagination dense fixed-header :items="rules" :headers="headers"
-                :search="searchValue" hide-default-footer class="overflow-y-auto" height="55vh" @click:row="showRule">
+              <v-data-table ref="dataTable" disable-pagination dense fixed-header :items="rules" :headers="headers"
+                :search="searchValue" hide-default-footer class="overflow-y-auto" height="55vh" @click:row="showRule"
+                @pagination="setNumItems">
                 <template #[`item.ruleVersion`]="{ item }">
                   {{ truncate(shortStigId(item.ruleVersion), 20) }}
                 </template>
@@ -146,13 +197,13 @@
             <v-card-text>
               <v-row>
                 <v-col :cols="2">
-                  <v-select v-model="selectedRule.status" label="Status" :items="[
+                  <v-select dense v-model="selectedRule.status" label="Status" :items="[
                     'Not_Reviewed',
                     'Open',
                     'NotAFinding',
                     'Not_Applicable'
                   ]" />
-                  <v-select v-on:change="promptSeverityJustification" v-model="selectedRule.severityOverride"
+                  <v-select dense v-on:change="promptSeverityJustification" v-model="selectedRule.severityOverride"
                     label="Severity Override" :items="['CAT I', 'CAT II', 'CAT III']" />
                 </v-col>
                 <v-col :cols="10">
@@ -161,17 +212,14 @@
                 </v-col>
               </v-row>
               <v-row>
-                <v-col>
-                  <v-card class="mt-n12" color="transparent" height="12vh">
-                    <strong>Comments: </strong>
-                    <v-textarea v-model="selectedRule.comments" solo outlined dense no-resize height="12vh" />
-                  </v-card>
+                <v-col class="mt-n12">
+                  <strong>Comments: </strong>
+                  <v-textarea v-model="selectedRule.comments" solo outlined dense no-resize height="12vh" />
                 </v-col>
               </v-row>
             </v-card-text>
           </v-card>
           <v-card height="56.1vh" class="overflow-auto">
-            <v-card-title>Selected Rule</v-card-title>
             <div v-if="selectedRule.vulnNum !== ''">
               <v-card-text>
                 <strong>Rule Title: </strong><br />
@@ -270,6 +318,9 @@ export default class Checklist extends RouteMixin {
   cat2 = true;
   cat3 = true;
 
+  tab = null;
+  webOrDatabase = false; // Needs to be replaced for selected checklist
+
   selectedRule: ChecklistVuln = {
     status: '',
     findingDetails: '',
@@ -348,6 +399,26 @@ export default class Checklist extends RouteMixin {
     { value: 'legacyId', align: ' d-none' },
   ];
 
+  techAreaLabels: string[] = [
+    'Application Review',
+    'Boundary Security',
+    'CDS Admin Review',
+    'CDS Technical Review',
+    'Database Review',
+    'Domain Name System (DNS)',
+    'Exchange Server',
+    'Host Based System Security (HBSS)',
+    'Internal Network',
+    'Mobility',
+    'Releasable Networks (REL)',
+    'Traditional Security',
+    'UNIX OS',
+    'VVOIP Review',
+    'Web Review',
+    'Windows OS',
+    'Other Review'
+  ]
+
   evalInfo:
     | SourcedContextualizedEvaluation
     | SourcedContextualizedProfile
@@ -374,6 +445,12 @@ export default class Checklist extends RouteMixin {
 
   set searchTerm(term: string) {
     SearchModule.updateSearch(term);
+  }
+
+  numItems = 0;
+
+  setNumItems(pagination: Record<string, number>) {
+    this.numItems = pagination.itemsLength
   }
 
   get severityFilter(): Severity[] {
