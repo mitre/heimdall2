@@ -1,15 +1,13 @@
 import fs from 'fs';
-import {TwistlockMapper} from '../../../src/twistlock-mapper';
+import {TwistlockResults} from '../../../src/twistlock-mapper';
 import {omitVersions} from '../../utils';
 
 describe('twistlock_mapper', () => {
   it('Successfully converts Twistlock targeted at a local/cloned repository data', () => {
-    const mapper = new TwistlockMapper(
-      JSON.parse(
-        fs.readFileSync(
-          'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json',
-          {encoding: 'utf-8'}
-        )
+    const mapper = new TwistlockResults(
+      fs.readFileSync(
+        'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json',
+        {encoding: 'utf-8'}
       )
     );
 
@@ -32,12 +30,10 @@ describe('twistlock_mapper', () => {
 
 describe('twistlock_mapper_withraw', () => {
   it('Successfully converts withRaw flagged Twistlock data', () => {
-    const mapper = new TwistlockMapper(
-      JSON.parse(
-        fs.readFileSync(
-          'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json',
-          {encoding: 'utf-8'}
-        )
+    const mapper = new TwistlockResults(
+      fs.readFileSync(
+        'sample_jsons/twistlock_mapper/sample_input_report/twistlock-twistcli-sample-1.json',
+        {encoding: 'utf-8'}
       ),
       true
     );
