@@ -9,7 +9,9 @@ import {
   ChecklistHeader,
   ChecklistVuln,
   ChecklistStig,
-  ChecklistAsset
+  ChecklistAsset,
+  mapStatus,
+  mapSeverity
 } from '@/types/checklist/control';
 import { Tag } from '@/types/models';
 import { read_file_async } from '@/utilities/async_util';
@@ -502,10 +504,10 @@ export class InspecIntake extends VuexModule {
       vulns.forEach((vuln: unknown) => {
         const stigdata: unknown[] = _.get(vuln, 'stigdata');
         const checklistVuln: ChecklistVuln = {
-          status: _.get(vuln, 'status'),
+          status: mapStatus(_.get(vuln, 'status')),
           findingDetails: _.get(vuln, 'findingdetails'),
           comments: _.get(vuln, 'comments'),
-          severityOverride: _.get(vuln, 'severityoverride'),
+          severityOverride: mapSeverity(_.get(vuln, 'severityoverride')),
           severityJustification: _.get(vuln, 'severityjustification'),
           vulnNum: getAttributeData(stigdata, 'Vuln_Num'),
           severity: getAttributeData(stigdata, 'Severity'),

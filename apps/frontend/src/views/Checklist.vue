@@ -51,7 +51,7 @@
     <v-container fluid grid-list-md pt-0 pa-2 mt-6>
       <v-row>
         <v-col xs="4" :cols="4">
-          <v-card>
+          <v-card height="25vh">
             <v-tabs v-model="tab" show-arrows center-active grow>
               <v-tab>
                 Benchmarks
@@ -78,7 +78,8 @@
                 </v-row>
                 <v-row class="mt-n10">
                   <v-col v-for="item in controlStatusSwitches" :cols="3">
-                    <v-switch justify="center" inset :color="item.color" v-model="item.enabled" hide-details />
+                    <v-switch dense justify="center" inset :color="item.color" v-model="item.enabled"
+                      :label="numStatus(item.name)" hide-details />
                   </v-col>
                 </v-row>
                 <v-row>
@@ -86,7 +87,8 @@
                 </v-row>
                 <v-row class="mt-n10">
                   <v-col v-for="item in severitySwitches" :cols="3">
-                    <v-switch justify="center" inset :color="item.color" v-model="item.enabled" hide-details />
+                    <v-switch dense justify="center" inset :color="item.color" v-model="item.enabled"
+                      :label="numSeverity(item.name)" hide-details />
                   </v-col>
                 </v-row>
               </v-tab-item>
@@ -121,8 +123,8 @@
             </v-tabs-items>
           </v-card>
           <!-- Data Table -->
-          <v-card>
-            <v-card-title class="mt-4 pt-2">
+          <v-card class="mt-4">
+            <v-card-title class="pt-2">
               <div>Rules ({{ numItems }} shown)</div>
               <v-spacer class="mt-0 pt-0" />
               <v-select v-model="selectedHeaders" :items="headersList" label="Select Columns" class="mt-4 pt-0" multiple
@@ -138,12 +140,15 @@
             <v-card-text>
               <v-data-table ref="dataTable" disable-pagination dense fixed-header :items="rules" :headers="headers"
                 :search="searchValue" hide-default-footer class="overflow-y-auto" height="55vh" @click:row="showRule"
-                @pagination="setNumItems">
+                @current-items="getFiltered" @pagination="setNumItems">
                 <template #[`item.ruleVersion`]="{ item }">
                   {{ truncate(shortStigId(item.ruleVersion), 20) }}
                 </template>
                 <template #[`item.ruleId`]="{ item }">
                   {{ truncate(shortRuleId(item.ruleId), 20) }}
+                </template>
+                <template #[`item.cciRef`]="{ item }">
+                  {{ truncate(shortRuleId(item.cciRef), 15) }}
                 </template>
               </v-data-table>
             </v-card-text>
@@ -284,17 +289,6 @@ export default class Checklist extends RouteMixin {
   filterSnackbar = false;
   controlSelection: string | null = null;
 
-  /** State variables for status filter */
-  notApplicable = true;
-  open = true;
-  notAFinding = true;
-  notReviewed = true;
-
-  /** State variables for severity filter */
-  cat1 = true;
-  cat2 = true;
-  cat3 = true;
-
   /** State variable for whether short or long IDs are requested */
   shortId = true;
 
@@ -343,7 +337,7 @@ export default class Checklist extends RouteMixin {
     { text: 'Rule ID', value: 'ruleId', width: '160px' },
     { text: 'Vul ID', value: 'vulnNum', width: '100px' },
     { text: 'Group Name', value: 'groupTitle', width: '150px' },
-    { text: 'CCIs', value: 'cciRef', width: '110px' }
+    { text: 'CCIs', value: 'cciRef', width: '120px' }
   ];
 
   headersList = [
@@ -352,7 +346,7 @@ export default class Checklist extends RouteMixin {
     { text: 'Rule ID', value: 'ruleId', width: '160px' },
     { text: 'Vul ID', value: 'vulnNum', width: '100px' },
     { text: 'Group Name', value: 'groupTitle', width: '150px' },
-    { text: 'CCIs', value: 'cciRef', width: '110px' }
+    { text: 'CCIs', value: 'cciRef', width: '120px' }
   ];
 
   hiddenRows = [
@@ -469,6 +463,14 @@ export default class Checklist extends RouteMixin {
       return stigId
   }
 
+  numStatus(status: string): string {
+    return this.tableItems.filter(item => item.status === status).length.toString()
+  }
+  numSeverity(severity: string): string {
+    if (severity === 'Short ID') return ''
+    return this.tableItems.filter(item => item.severity === severity).length.toString()
+  }
+
   /**
    * The current search terms, as modeled by the search bar
    */
@@ -514,6 +516,12 @@ export default class Checklist extends RouteMixin {
     return FilteredChecklistDataModule.allFiles.find(
       (f) => f.uniqueId === fileID
     );
+  }
+
+  tableItems: ChecklistVuln[] = []
+  getFiltered(rules: ChecklistVuln[]) {
+    this.tableItems = rules
+    console.log(rules)
   }
 
   promptSeverityJustification() {
@@ -583,7 +591,6 @@ export default class Checklist extends RouteMixin {
   }
 
   showRule(rule: ChecklistVuln) {
-    // Run selectRule from Checklist store
     this.selectedRule = rule;
   }
 
@@ -626,29 +633,39 @@ export default class Checklist extends RouteMixin {
       .forEach((rulesItems) => {
         rulesList.push(...rulesItems);
       });
-    return rulesList.filter((rule) => {
+
+    const passed = this.controlStatusSwitches.find(item => item.name === 'Passed')?.enabled
+    const failed = this.controlStatusSwitches.find(item => item.name === 'Failed')?.enabled
+    const notApplicable = this.controlStatusSwitches.find(item => item.name === 'Not Applicable')?.enabled
+    const notReviewed = this.controlStatusSwitches.find(item => item.name === 'Not Reviewed')?.enabled
+
+    const high = this.severitySwitches.find(item => item.name === 'High')?.enabled
+    const medium = this.severitySwitches.find(item => item.name === 'Medium')?.enabled
+    const low = this.severitySwitches.find(item => item.name === 'Low')?.enabled
+
+    const filteredRulesList = rulesList.filter((rule) => {
       const includedStatuses: string[] = []
-      if (this.notAFinding) {
-        includedStatuses.push('NotAFinding')
+      if (passed) {
+        includedStatuses.push('Passed')
       }
-      if (this.open) {
-        includedStatuses.push('Open')
+      if (failed) {
+        includedStatuses.push('Failed')
       }
-      if (this.notApplicable) {
-        includedStatuses.push('Not_Applicable')
+      if (notApplicable) {
+        includedStatuses.push('Not Applicable')
       }
-      if (this.notReviewed) {
-        includedStatuses.push('Not_Reviewed')
+      if (notReviewed) {
+        includedStatuses.push('Not Reviewed')
       }
 
       const includedSeverities: string[] = []
-      if (this.cat1) {
+      if (high) {
         includedSeverities.push('high')
       }
-      if (this.cat2) {
+      if (medium) {
         includedSeverities.push('medium')
       }
-      if (this.cat3) {
+      if (low) {
         includedSeverities.push('low')
       }
 
@@ -657,6 +674,10 @@ export default class Checklist extends RouteMixin {
       }
       return false
     });
+    if (this.selectedRule.ruleId === '' && filteredRulesList[0] !== undefined) {
+      this.selectedRule = filteredRulesList[0]
+    }
+    return filteredRulesList
   }
 
   /**
