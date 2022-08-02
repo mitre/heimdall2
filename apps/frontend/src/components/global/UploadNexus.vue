@@ -64,7 +64,6 @@ import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vu
 import TenableReader from '@/components/global/upload_tabs/tenable/TenableReader.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
-import { FilteredChecklistDataModule } from '@/store/checklist_data_filters';
 import { FilteredDataModule } from '@/store/data_filters';
 import { InspecDataModule } from '@/store/data_store';
 import { FileID } from '@/store/report_intake';

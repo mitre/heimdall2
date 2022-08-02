@@ -2,14 +2,15 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
-import {Trinary} from '@/enums/Trinary';
-import {InspecDataModule} from '@/store/data_store';
+import { Trinary } from '@/enums/Trinary';
+import { InspecDataModule } from '@/store/data_store';
 import {
   FileID,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
+import { ChecklistFile, ChecklistVuln } from '@/types/checklist/control';
 import {
   ContextualizedControl,
   ContextualizedProfile,
@@ -114,6 +115,44 @@ function contains_term(
 export class FilteredData extends VuexModule {
   selectedEvaluationIds: FileID[] = [];
   selectedProfileIds: FileID[] = [];
+  selectedChecklistIds: FileID[] = [];
+
+  /** For Checklist Viewer */
+  readonly emptyRule: ChecklistVuln = {
+    status: '',
+    findingDetails: '',
+    comments: '',
+    severityOverride: '',
+    severityJustification: '',
+    vulnNum: '',
+    severity: '',
+    groupTitle: '',
+    ruleId: '',
+    ruleVersion: '',
+    ruleTitle: '',
+    vulnDiscuss: '',
+    iaControls: '',
+    checkContent: '',
+    fixText: '',
+    falsePositives: '',
+    falseNegatives: '',
+    documentable: '',
+    mitigations: '',
+    potentialImpact: '',
+    thirdPartyTools: '',
+    mitigationControl: '',
+    responsibility: '',
+    securityOverrideGuidance: '',
+    checkContentRef: '',
+    weight: '',
+    class: '',
+    stigRef: '',
+    targetKey: '',
+    stigUuid: '',
+    legacyId: '',
+    cciRef: ''
+  }
+  selectedRule: ChecklistVuln = this.emptyRule
 
   @Mutation
   SELECT_EVALUATIONS(files: FileID[]): void {
@@ -127,6 +166,16 @@ export class FilteredData extends VuexModule {
     this.selectedProfileIds = [
       ...new Set([...files, ...this.selectedProfileIds])
     ];
+  }
+
+  @Mutation
+  SELECT_CHECKLIST(file: FileID): void {
+    this.selectedChecklistIds = [file];
+  }
+
+  @Mutation
+  SELECT_RULE(rule: ChecklistVuln): void {
+    this.selectedRule = rule;
   }
 
   @Mutation
@@ -144,6 +193,13 @@ export class FilteredData extends VuexModule {
   }
 
   @Mutation
+  CLEAR_CHECKLIST(removeId: FileID): void {
+    this.selectedChecklistIds = this.selectedChecklistIds.filter(
+      (ids) => ids !== removeId
+    );
+  }
+
+  @Mutation
   CLEAR_ALL_EVALUATIONS(): void {
     this.selectedEvaluationIds = [];
   }
@@ -151,6 +207,11 @@ export class FilteredData extends VuexModule {
   @Mutation
   CLEAR_ALL_PROFILES(): void {
     this.selectedProfileIds = [];
+  }
+
+  @Mutation
+  CLEAR_ALL_CHECKLISTS(): void {
+    this.selectedChecklistIds = [];
   }
 
   @Action
@@ -188,6 +249,11 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
+  public selectRule(rule: ChecklistVuln): void {
+    this.SELECT_RULE(rule);
+  }
+
+  @Action
   public toggle_evaluation(fileID: FileID): void {
     if (this.selectedEvaluationIds.includes(fileID)) {
       this.CLEAR_EVALUATION(fileID);
@@ -206,9 +272,20 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
+  public toggle_checklist(fileID: FileID): void {
+    if (this.selectedChecklistIds.includes(fileID)) {
+      this.CLEAR_CHECKLIST(fileID)
+      this.SELECT_RULE(this.emptyRule)
+    } else {
+      this.SELECT_CHECKLIST(fileID)
+    }
+  }
+
+  @Action
   public clear_file(fileID: FileID): void {
     this.CLEAR_EVALUATION(fileID);
     this.CLEAR_PROFILE(fileID);
+    this.CLEAR_CHECKLIST(fileID)
   }
 
   /**
@@ -248,8 +325,14 @@ export class FilteredData extends VuexModule {
     };
   }
 
+  get checklists(): (file: FileID) => ChecklistFile[] {
+    return (file: FileID) => {
+      return InspecDataModule.allChecklistFiles.filter(e => e.uniqueId === file);
+    }
+  }
+
   get selected_file_ids(): FileID[] {
-    return [...this.selectedEvaluationIds, ...this.selectedProfileIds];
+    return [...this.selectedEvaluationIds, ...this.selectedProfileIds, ...this.selectedChecklistIds];
   }
 
   // check to see if all profiles are selected
@@ -274,6 +357,13 @@ export class FilteredData extends VuexModule {
       default:
         return Trinary.Mixed;
     }
+  }
+
+  get checklist_selected(): Trinary {
+    if (this.selectedChecklistIds.length === 1)
+      return Trinary.On
+    else
+      return Trinary.Off
   }
 
   /**

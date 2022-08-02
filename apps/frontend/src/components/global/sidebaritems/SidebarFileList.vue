@@ -40,13 +40,17 @@ import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
 import axios from 'axios';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
+import {ChecklistFile} from '@/types/checklist/control';
 import {Prop} from 'vue-property-decorator';
 
 @Component
 export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
-  @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
+  @Prop({type: Object}) readonly file!:
+    | EvaluationFile
+    | ProfileFile
+    | ChecklistFile;
 
   saving = false;
 
@@ -55,6 +59,8 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
       FilteredDataModule.toggle_evaluation(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.toggle_profile(this.file.uniqueId);
+    } else if (this.file.hasOwnProperty('asset')) {
+      FilteredDataModule.toggle_checklist(this.file.uniqueId);
     }
   }
 
@@ -63,6 +69,8 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
       FilteredDataModule.select_exclusive_evaluation(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.select_exclusive_profile(this.file.uniqueId);
+    } else if (this.file.hasOwnProperty('stigs')) {
+      FilteredDataModule.toggle_checklist(this.file.uniqueId);
     }
   }
 
@@ -94,7 +102,8 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     return typeof this.file?.database_id !== 'undefined' || this.saving;
   }
 
-  save_to_database(file: EvaluationFile | ProfileFile) {
+  save_to_database(file: EvaluationFile | ProfileFile | ChecklistFile) {
+    // TODO: handle the case of a checklist file
     this.saving = true;
 
     const createEvaluationDto: ICreateEvaluation = {
