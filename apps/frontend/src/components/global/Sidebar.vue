@@ -1,58 +1,30 @@
 <template>
-  <v-navigation-drawer
-    :value="value"
-    :clipped="$vuetify.breakpoint.lgAndUp"
-    app
-    :style="{'margin-top': classification ? '5em' : '3.5em', 'z-index': 11}"
-    disable-resize-watcher
-    disable-route-watcher
-    fixed
-    temporary
-    width="600px"
-    @input="$emit('input', $event)"
-    @blur="value = false"
-  >
+  <v-navigation-drawer :value="value" :clipped="$vuetify.breakpoint.lgAndUp" app
+    :style="{ 'margin-top': classification ? '5em' : '3.5em', 'z-index': 11 }" disable-resize-watcher
+    disable-route-watcher fixed temporary width="600px" @input="$emit('input', $event)" @blur="value = false">
     <v-expansion-panels v-model="active_path" accordion>
-      <DropdownContent
-        header-text="Results"
-        :files="visible_evaluation_files"
-        :all-selected="all_evaluations_selected"
-        :enable-compare-view="true"
-        :compare-view-active="compareViewActive"
-        @toggle-all="toggle_all_evaluations"
-        @toggle-compare-view="compareView"
-        @changed-files="$emit('changed-files')"
-      />
-      <DropdownContent
-        header-text="Profiles"
-        :files="visible_profile_files"
-        :all-selected="all_profiles_selected"
-        @toggle-all="toggle_all_profiles"
-        @changed-files="$emit('changed-files')"
-      />
-      <DropdownContent
-        header-text="Checklists"
-        :files="visible_checklist_files"
-        :all-selected="all_checklists_selected"
-        @toggle-all="toggle_all_checklists"
-        @changed-files="$emit('changed-files')"
-      />
+      <DropdownContent header-text="Results" :files="visible_evaluation_files" :all-selected="all_evaluations_selected"
+        :enable-compare-view="true" :compare-view-active="compareViewActive" @toggle-all="toggle_all_evaluations"
+        @toggle-compare-view="compareView" @changed-files="$emit('changed-files')" />
+      <DropdownContent header-text="Profiles" :files="visible_profile_files" :all-selected="all_profiles_selected"
+        @toggle-all="toggle_all_profiles" @changed-files="$emit('changed-files')" />
+      <DropdownContent header-text="Checklists" :files="visible_checklist_files" :all-selected="all_checklists_selected"
+        @toggle-all="toggle_all_checklists" @changed-files="$emit('changed-files')" />
     </v-expansion-panels>
   </v-navigation-drawer>
 </template>
 
 <script lang="ts">
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
-import {Trinary} from '@/enums/Trinary';
+import { Trinary } from '@/enums/Trinary';
 import RouteMixin from '@/mixins/RouteMixin';
-import {FilteredChecklistDataModule} from '@/store/checklist_data_filters';
-import {FilteredDataModule} from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {ChecklistFile} from '@/types/checklist/control';
-import Component, {mixins} from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {ServerModule} from '../../store/server';
+import { FilteredDataModule } from '@/store/data_filters';
+import { InspecDataModule } from '@/store/data_store';
+import { EvaluationFile, ProfileFile } from '@/store/report_intake';
+import { ChecklistFile } from '@/types/checklist/control';
+import Component, { mixins } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
+import { ServerModule } from '../../store/server';
 
 @Component({
   components: {
@@ -60,7 +32,7 @@ import {ServerModule} from '../../store/server';
   }
 })
 export default class Sidebar extends mixins(RouteMixin) {
-  @Prop({type: Boolean}) readonly value!: boolean;
+  @Prop({ type: Boolean }) readonly value!: boolean;
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
@@ -119,7 +91,11 @@ export default class Sidebar extends mixins(RouteMixin) {
   }
 
   get all_checklists_selected(): Trinary {
-    return FilteredChecklistDataModule.all_checklists_selected;
+    return Trinary.Mixed;
+  }
+
+  get checklist_selected(): Trinary {
+    return FilteredDataModule.checklist_selected;
   }
 
   get compareViewActive(): boolean {
@@ -140,9 +116,8 @@ export default class Sidebar extends mixins(RouteMixin) {
     FilteredDataModule.toggle_all_evaluations();
   }
 
-  // toggle the "select all" for checklists
   toggle_all_checklists(): void {
-    FilteredChecklistDataModule.toggle_all_checklists();
+    // Meaningless function
   }
 
   // toggle between the comparison view and the results view

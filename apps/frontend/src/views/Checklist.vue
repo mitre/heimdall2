@@ -51,7 +51,7 @@
     <v-container fluid grid-list-md pt-0 pa-2 mt-6>
       <v-row>
         <v-col xs="4" :cols="4">
-          <v-card height="25vh">
+          <v-card height="25vh" class="overflow-auto">
             <v-tabs v-model="tab" show-arrows center-active grow>
               <v-tab>
                 Benchmarks
@@ -125,22 +125,22 @@
           <!-- Data Table -->
           <v-card class="mt-4">
             <v-card-title class="pt-2">
-              <div>Rules ({{ numItems }} shown)</div>
+              <div>Rules ({{ numItems }} shown, {{ loadedRules.length - numItems }} hidden)</div>
               <v-spacer class="mt-0 pt-0" />
               <v-select v-model="selectedHeaders" :items="headersList" label="Select Columns" class="mt-4 pt-0" multiple
                 outlined return-object :style="{ width: '300px' }">
                 <template #selection="{ item, index }">
-                  <v-chip v-if="index < 3" small>
+                  <v-chip v-if="index < 4" small>
                     <span>{{ item.text }}</span>
                   </v-chip>
-                  <span v-if="index === 3" class="grey--text caption">(+{{ selectedHeaders.length - 2 }} others)</span>
+                  <span v-if="index === 4" class="grey--text caption">(+{{ selectedHeaders.length - 4 }} others)</span>
                 </template>
               </v-select>
             </v-card-title>
             <v-card-text>
               <v-data-table ref="dataTable" disable-pagination dense fixed-header :items="rules" :headers="headers"
                 :search="searchValue" hide-default-footer class="overflow-y-auto" height="55vh" @click:row="showRule"
-                @current-items="getFiltered" @pagination="setNumItems">
+                @current-items="getFiltered">
                 <template #[`item.ruleVersion`]="{ item }">
                   {{ truncate(shortStigId(item.ruleVersion), 20) }}
                 </template>
@@ -239,7 +239,6 @@ import {
   Filter,
   FilteredDataModule
 } from '@/store/data_filters';
-import { FilteredChecklistDataModule } from '@/store/checklist_data_filters';
 import {
   FileID,
   SourcedContextualizedEvaluation,
@@ -296,41 +295,6 @@ export default class Checklist extends RouteMixin {
   tab = null;
   webOrDatabase = false; // Needs to be replaced for selected checklist
 
-  selectedRule: ChecklistVuln = {
-    status: '',
-    findingDetails: '',
-    comments: '',
-    severityOverride: '',
-    severityJustification: '',
-    vulnNum: '',
-    severity: '',
-    groupTitle: '',
-    ruleId: '',
-    ruleVersion: '',
-    ruleTitle: '',
-    vulnDiscuss: '',
-    iaControls: '',
-    checkContent: '',
-    fixText: '',
-    falsePositives: '',
-    falseNegatives: '',
-    documentable: '',
-    mitigations: '',
-    potentialImpact: '',
-    thirdPartyTools: '',
-    mitigationControl: '',
-    responsibility: '',
-    securityOverrideGuidance: '',
-    checkContentRef: '',
-    weight: '',
-    class: '',
-    stigRef: '',
-    targetKey: '',
-    stigUuid: '',
-    legacyId: '',
-    cciRef: ''
-  };
-
   selectedHeaders: { text: string; value: string; width: string }[] = [
     { text: 'Status', value: 'status', width: '100px' },
     { text: 'STIG ID', value: 'ruleVersion', width: '130px' },
@@ -349,6 +313,7 @@ export default class Checklist extends RouteMixin {
     { text: 'CCIs', value: 'cciRef', width: '120px' }
   ];
 
+  /** Kept so we can filter by these values even though they are hidden */
   hiddenRows = [
     { value: 'severity', align: ' d-none' },
     { value: 'ruleTitle', align: ' d-none' },
@@ -394,6 +359,7 @@ export default class Checklist extends RouteMixin {
     'Other Review'
   ]
 
+  /** List of switches for each control Status */
   controlStatusSwitches = [
     {
       name: 'Passed',
@@ -417,6 +383,7 @@ export default class Checklist extends RouteMixin {
     }
   ]
 
+  /** List of switches for each severity (includes Short ID) */
   severitySwitches = [
     {
       name: 'High',
@@ -466,9 +433,14 @@ export default class Checklist extends RouteMixin {
   numStatus(status: string): string {
     return this.tableItems.filter(item => item.status === status).length.toString()
   }
+
   numSeverity(severity: string): string {
     if (severity === 'Short ID') return ''
-    return this.tableItems.filter(item => item.severity === severity).length.toString()
+    return this.tableItems.filter(item => item.severity === severity.toLowerCase()).length.toString()
+  }
+
+  get selectedRule() {
+    return FilteredDataModule.selectedRule
   }
 
   /**
@@ -480,12 +452,6 @@ export default class Checklist extends RouteMixin {
 
   set searchTerm(term: string) {
     SearchModule.updateSearch(term);
-  }
-
-  numItems = 0;
-
-  setNumItems(pagination: Record<string, number>) {
-    this.numItems = pagination.itemsLength
   }
 
   get severityFilter(): Severity[] {
@@ -509,19 +475,18 @@ export default class Checklist extends RouteMixin {
    * Controlled by router.
    */
   get file_filter(): FileID[] {
-    return FilteredChecklistDataModule.selectedChecklistIds;
+    return FilteredDataModule.selectedChecklistIds
   }
 
-  getChecklist(fileID: FileID) {
-    return FilteredChecklistDataModule.allFiles.find(
-      (f) => f.uniqueId === fileID
-    );
+  getChecklist(fileID: FileID[]) {
+    return InspecDataModule.allChecklistFiles.find((f) => f.uniqueId === fileID[0])
   }
 
   tableItems: ChecklistVuln[] = []
+  numItems = 0;
   getFiltered(rules: ChecklistVuln[]) {
     this.tableItems = rules
-    console.log(rules)
+    this.numItems = this.tableItems.length
   }
 
   promptSeverityJustification() {
@@ -556,7 +521,7 @@ export default class Checklist extends RouteMixin {
 
   // Returns true if no files are uploaded
   get no_files(): boolean {
-    return FilteredChecklistDataModule.allFiles.length === 0;
+    return FilteredDataModule.selectedChecklistIds.length === 0;
   }
 
   /**
@@ -591,7 +556,7 @@ export default class Checklist extends RouteMixin {
   }
 
   showRule(rule: ChecklistVuln) {
-    this.selectedRule = rule;
+    FilteredDataModule.selectRule(rule)
   }
 
   /**
@@ -624,15 +589,14 @@ export default class Checklist extends RouteMixin {
     return result;
   }
 
+  loadedRules: ChecklistVuln[] = [];
   get rules() {
     const rulesList: ChecklistVuln[] = [];
-    Object.entries(InspecDataModule.allChecklistFiles)
-      .map(([_fileId, checklist]) => checklist.stigs)
-      .flat()
-      .map((stig) => stig.vulns)
-      .forEach((rulesItems) => {
-        rulesList.push(...rulesItems);
-      });
+    this.getChecklist(this.file_filter)?.stigs.map((stig) => stig.vulns).forEach((rulesItems) => {
+      rulesList.push(...rulesItems);
+    })
+
+    this.loadedRules = rulesList
 
     const passed = this.controlStatusSwitches.find(item => item.name === 'Passed')?.enabled
     const failed = this.controlStatusSwitches.find(item => item.name === 'Failed')?.enabled
@@ -674,8 +638,12 @@ export default class Checklist extends RouteMixin {
       }
       return false
     });
-    if (this.selectedRule.ruleId === '' && filteredRulesList[0] !== undefined) {
-      this.selectedRule = filteredRulesList[0]
+    if (filteredRulesList.length === 0) {
+      FilteredDataModule.selectRule(FilteredDataModule.emptyRule)
+    } else {
+      if (!filteredRulesList.includes(FilteredDataModule.selectedRule)) {
+        FilteredDataModule.selectRule(filteredRulesList[0])
+      }
     }
     return filteredRulesList
   }
@@ -686,7 +654,7 @@ export default class Checklist extends RouteMixin {
   get curr_title(): string {
     let returnText = `${capitalize(this.current_route_name)} View`;
     if (this.file_filter.length === 1) {
-      const file = this.getChecklist(this.file_filter[0]);
+      const file = this.getChecklist(this.file_filter);
       if (file) {
         returnText += ` (${file.filename} selected)`;
       }
