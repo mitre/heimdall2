@@ -138,9 +138,9 @@
               </v-select>
             </v-card-title>
             <v-card-text>
-              <v-data-table ref="dataTable" disable-pagination dense fixed-header :items="rules" :headers="headers"
-                :search="searchValue" hide-default-footer class="overflow-y-auto" height="55vh" @click:row="showRule"
-                @current-items="getFiltered">
+              <v-data-table ref="dataTable" :single-select="true" disable-pagination dense fixed-header :items="rules"
+                :item-class="checkSelected" :headers="headers" :search="searchValue" hide-default-footer
+                class="overflow-y-auto" height="55vh" @click:row="showRule" @current-items="getFiltered">
                 <template #[`item.ruleVersion`]="{ item }">
                   {{ truncate(shortStigId(item.ruleVersion), 20) }}
                 </template>
@@ -439,6 +439,11 @@ export default class Checklist extends RouteMixin {
     return this.tableItems.filter(item => item.severity === severity.toLowerCase()).length.toString()
   }
 
+  checkSelected(rule: ChecklistVuln) {
+    if (rule.ruleId === FilteredDataModule.selectedRule.ruleId)
+      return 'selectedRow'
+  }
+
   get selectedRule() {
     return FilteredDataModule.selectedRule
   }
@@ -669,3 +674,13 @@ export default class Checklist extends RouteMixin {
   }
 }
 </script>
+
+<style>
+tbody tr:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, .1);
+}
+
+.selectedRow {
+  background-color: #616161 !important;
+}
+</style>
