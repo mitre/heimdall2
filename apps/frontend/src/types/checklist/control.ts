@@ -19,6 +19,54 @@ export type ChecklistFile = {
   raw: unknown;
 };
 
+export function mapStatus(status: string) {
+  switch (status) {
+    // Mapping from checklist to Heimdall's conventions
+    case 'Not_Reviewed':
+      return 'Not Reviewed'
+    case 'Open':
+      return 'Failed'
+    case 'NotAFinding':
+      return 'Passed'
+    case 'Not_Applicable':
+      return 'Not Applicable'
+
+    //Mapping from Heimdall's conventions back to checklist
+    case 'Not Reviewed':
+      return 'Not_Reviewed'
+    case 'Failed':
+      return 'Open'
+    case 'Passed':
+      return 'NotAFinding'
+    case 'Not Applicable':
+      return 'Not_Applicable'
+    default:
+      return status
+  }
+}
+
+export function mapSeverity(severity: string) {
+  switch (severity) {
+    // Mapping from checklist to Heimdall's conventions
+    case 'CAT I':
+      return 'high'
+    case 'CAT II':
+      return 'medium'
+    case 'CAT III':
+      return 'low'
+
+    //Mapping from Heimdall's conventions back to checklist
+    case 'high':
+      return 'CAT I'
+    case 'medium':
+      return 'CAT II'
+    case 'low':
+      return 'CAT III'
+    default:
+      return severity
+  }
+}
+
 export type ChecklistAsset = {
   role: string;
   assettype: string;
