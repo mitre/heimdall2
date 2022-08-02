@@ -54,19 +54,23 @@
           <v-card>
             <v-tabs v-model="tab" show-arrows center-active grow>
               <v-tab>
+                <v-text>Benchmarks</v-text>
+              </v-tab>
+              <v-tab>
                 <v-text>Filters</v-text>
               </v-tab>
               <v-tab>
                 <v-text>Target Data</v-text>
               </v-tab>
               <v-tab>
-                <v-text>STIGs</v-text>
-              </v-tab>
-              <v-tab>
                 <v-text>Technology Area</v-text>
               </v-tab>
             </v-tabs>
             <v-tabs-items v-model="tab">
+              <!-- Benchmarks -->
+              <v-tab-item>
+
+              </v-tab-item>
               <!-- Filters -->
               <v-tab-item grid-list-md class="pa-4">
                 <v-row>
@@ -112,17 +116,8 @@
                   </v-col>
                 </v-row>
                 <v-row class="mt-n10">
-                  <v-col :cols="3">
-                    <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat1" hide-details />
-                  </v-col>
-                  <v-col :cols="3">
-                    <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat2" hide-details />
-                  </v-col>
-                  <v-col :cols="3">
-                    <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="cat3" hide-details />
-                  </v-col>
-                  <v-col :cols="3">
-                    <v-switch justify="center" inset color="mitreSecondaryGrey" v-model="shortId" hide-details />
+                  <v-col v-for="item in severitySwitches" :cols="3">
+                    <v-switch justify="center" inset color="teal" v-model="item.enabled" hide-details />
                   </v-col>
                 </v-row>
               </v-tab-item>
@@ -150,17 +145,12 @@
                 <v-text-field v-if="webOrDatabase" label="Site"></v-text-field>
                 <v-text-field v-if="webOrDatabase" label="Instance"></v-text-field>
               </v-tab-item>
-              <!-- STIGs -->
-              <v-tab-item>
-
-              </v-tab-item>
               <!-- Technology Area -->
               <v-tab-item class="pa-4">
                 <v-select dense outlined :items="techAreaLabels" justify="center" />
               </v-tab-item>
             </v-tabs-items>
           </v-card>
-
           <!-- Data Table -->
           <v-card>
             <v-card-title class="mt-4 pt-2">
@@ -192,7 +182,43 @@
         </v-col>
         <!-- Rule Data -->
         <v-col xs="4" :cols="8">
-          <v-card class="pt-4">
+          <v-card>
+            <v-card-text class="text-center">
+              <strong>{{ selectedRule.stigRef }}</strong>
+              <v-row dense class="mt-2">
+                <v-col><strong>Vul ID: </strong>{{ selectedRule.vulnNum }}</v-col>
+                <v-col><strong>Rule ID: </strong>{{ shortRuleId(selectedRule.ruleId) }}</v-col>
+                <v-col><strong>STIG ID: </strong>{{ shortStigId(selectedRule.ruleVersion) }}</v-col>
+              </v-row>
+              <v-row dense class="pa-0">
+                <v-col><strong>Severity: </strong>{{ severityMap(selectedRule.severity) }}</v-col>
+                <v-col><strong>Classification: </strong>{{ selectedRule.class }}</v-col>
+                <v-col><strong>Legacy IDs: </strong>{{ selectedRule.legacyId }}</v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+          <v-card height="40vh" class="overflow-auto mt-4">
+            <div v-if="selectedRule.ruleId !== ''">
+              <v-card-text>
+                <strong>Rule Title: </strong><br />
+                {{ selectedRule.ruleTitle }}<br /><br />
+                <strong>Discussion: </strong><br />
+                {{ selectedRule.vulnDiscuss }}<br /><br />
+                <strong>Check Text: </strong><br />
+                {{ selectedRule.checkContent }}<br /><br />
+                <strong>Fix Text: </strong><br />
+                {{ selectedRule.fixText }}<br /><br />
+              </v-card-text>
+              <v-card-subtitle class="text-center">References</v-card-subtitle>
+              <v-card-text>
+                <strong>CCI: </strong>{{ selectedRule.cciRef }}<br /><br />
+              </v-card-text>
+            </div>
+            <div v-else>
+              <v-card-text>No rule selected.</v-card-text>
+            </div>
+          </v-card>
+          <v-card class="mt-4 pt-4">
             <v-card-text>
               <v-row>
                 <v-col>
@@ -221,44 +247,6 @@
                 </v-col>
               </v-row>
             </v-card-text>
-          </v-card>
-          <v-card class="mt-4" v-if="selectedRule.ruleId !== ''">
-            <v-card-text class="text-center">
-              <strong>{{ selectedRule.stigRef }}</strong>
-              <v-row dense class="mt-2">
-                <v-col><strong>Vul ID: </strong>{{ selectedRule.vulnNum }}</v-col>
-                <v-col><strong>Rule ID: </strong>{{ shortRuleId(selectedRule.ruleId) }}</v-col>
-                <v-col><strong>STIG ID: </strong>{{ shortStigId(selectedRule.ruleVersion) }}</v-col>
-              </v-row>
-              <v-row dense class="pa-0">
-                <v-col><strong>Severity: </strong>{{ severityMap(selectedRule.severity) }}</v-col>
-                <v-col><strong>Classification: </strong>{{ selectedRule.class }}</v-col>
-                <v-col><strong>Legacy IDs: </strong>{{ selectedRule.legacyId }}</v-col>
-              </v-row>
-            </v-card-text>
-
-
-          </v-card>
-          <v-card height="50vh" class="overflow-auto mt-4">
-            <div v-if="selectedRule.ruleId !== ''">
-              <v-card-text>
-                <strong>Rule Title: </strong><br />
-                {{ selectedRule.ruleTitle }}<br /><br />
-                <strong>Discussion: </strong><br />
-                {{ selectedRule.vulnDiscuss }}<br /><br />
-                <strong>Check Text: </strong><br />
-                {{ selectedRule.checkContent }}<br /><br />
-                <strong>Fix Text: </strong><br />
-                {{ selectedRule.fixText }}<br /><br />
-              </v-card-text>
-              <v-card-subtitle class="text-center">References</v-card-subtitle>
-              <v-card-text>
-                <strong>CCI: </strong>{{ selectedRule.cciRef }}<br /><br />
-              </v-card-text>
-            </div>
-            <div v-else>
-              <v-card-text>No rule selected.</v-card-text>
-            </div>
           </v-card>
         </v-col>
       </v-row>
@@ -441,6 +429,52 @@ export default class Checklist extends RouteMixin {
     'Web Review',
     'Windows OS',
     'Other Review'
+  ]
+
+  controlStatusSwitches = [
+    {
+      name: 'Passed',
+      enabled: true,
+      color: 'statusPassed'
+    },
+    {
+      name: 'Failed',
+      enabled: true,
+      color: 'statusFailed'
+    },
+    {
+      name: 'Not Applicable',
+      enabled: true,
+      color: 'statusNotApplicable'
+    },
+    {
+      name: 'Not Reviewed',
+      enabled: true,
+      color: 'statusNotReviewed'
+    }
+  ]
+
+  severitySwitches = [
+    {
+      name: 'High',
+      enabled: true,
+      color: "teal"
+    },
+    {
+      name: 'Medium',
+      enabled: true,
+      color: "teal"
+    },
+    {
+      name: 'Low',
+      enabled: true,
+      color: "teal"
+    },
+    {
+      name: 'Short ID',
+      enabled: true,
+      color: "teal"
+    },
   ]
 
   evalInfo:
@@ -688,11 +722,3 @@ export default class Checklist extends RouteMixin {
   }
 }
 </script>
-
-<style scoped>
-/* .forceup {
-  position: absolute;
-  top: 10vh;
-  right: 0;
-} */
-</style>
