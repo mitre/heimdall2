@@ -50,20 +50,20 @@
   <template #main-content>
     <v-container fluid grid-list-md pt-0 pa-2 mt-6>
       <v-row>
-        <v-col xs="4" :cols="4" height="100%">
+        <v-col xs="4" :cols="4">
           <v-card>
             <v-tabs v-model="tab" show-arrows center-active grow>
               <v-tab>
-                <v-text>Benchmarks</v-text>
+                Benchmarks
               </v-tab>
               <v-tab>
-                <v-text>Filters</v-text>
+                Filters
               </v-tab>
               <v-tab>
-                <v-text>Target Data</v-text>
+                Target Data
               </v-tab>
               <v-tab>
-                <v-text>Technology Area</v-text>
+                Technology Area
               </v-tab>
             </v-tabs>
             <v-tabs-items v-model="tab">
@@ -74,50 +74,19 @@
               <!-- Filters -->
               <v-tab-item grid-list-md class="pa-4">
                 <v-row>
-                  <v-col :cols="3">
-                    Not A Finding
-                  </v-col>
-                  <v-col :cols="3">
-                    Open
-                  </v-col>
-                  <v-col :cols="3">
-                    Not Applicable
-                  </v-col>
-                  <v-col :cols="3">
-                    Not Reviewed
-                  </v-col>
+                  <v-col v-for="item in controlStatusSwitches" :cols="3">{{ item.name }}</v-col>
                 </v-row>
                 <v-row class="mt-n10">
-                  <v-col :cols="3">
-                    <v-switch justify="center" inset color="statusPassed" v-model="notAFinding" hide-details />
-                  </v-col>
-                  <v-col :cols="3">
-                    <v-switch justify="center" inset color="statusFailed" v-model="open" hide-details />
-                  </v-col>
-                  <v-col :cols="3">
-                    <v-switch justify="center" inset color="statusNotApplicable" v-model="notApplicable" hide-details />
-                  </v-col>
-                  <v-col :cols="3">
-                    <v-switch justify="center" inset color="statusNotReviewed" v-model="notReviewed" hide-details />
+                  <v-col v-for="item in controlStatusSwitches" :cols="3">
+                    <v-switch justify="center" inset :color="item.color" v-model="item.enabled" hide-details />
                   </v-col>
                 </v-row>
                 <v-row>
-                  <v-col :cols="3">
-                    CAT I
-                  </v-col>
-                  <v-col :cols="3">
-                    CAT II
-                  </v-col>
-                  <v-col :cols="3">
-                    CAT III
-                  </v-col>
-                  <v-col :cols="3">
-                    Short IDs
-                  </v-col>
+                  <v-col v-for="item in severitySwitches" :cols="3">{{ item.name }}</v-col>
                 </v-row>
                 <v-row class="mt-n10">
                   <v-col v-for="item in severitySwitches" :cols="3">
-                    <v-switch justify="center" inset color="teal" v-model="item.enabled" hide-details />
+                    <v-switch justify="center" inset :color="item.color" v-model="item.enabled" hide-details />
                   </v-col>
                 </v-row>
               </v-tab-item>
@@ -191,7 +160,7 @@
                 <v-col><strong>STIG ID: </strong>{{ shortStigId(selectedRule.ruleVersion) }}</v-col>
               </v-row>
               <v-row dense class="pa-0">
-                <v-col><strong>Severity: </strong>{{ severityMap(selectedRule.severity) }}</v-col>
+                <v-col><strong>Severity: </strong>{{ selectedRule.severity }}</v-col>
                 <v-col><strong>Classification: </strong>{{ selectedRule.class }}</v-col>
                 <v-col><strong>Legacy IDs: </strong>{{ selectedRule.legacyId }}</v-col>
               </v-row>
@@ -223,15 +192,15 @@
               <v-row>
                 <v-col>
                   <v-select dense v-model="selectedRule.status" label="Status" :items="[
-                    'Not_Reviewed',
-                    'Open',
-                    'NotAFinding',
-                    'Not_Applicable'
+                    'Passed',
+                    'Failed',
+                    'Not Applicable',
+                    'Not Reviewed'
                   ]" />
                 </v-col>
                 <v-col>
                   <v-select dense v-on:change="promptSeverityJustification" v-model="selectedRule.severityOverride"
-                    label="Severity Override" :items="['CAT I', 'CAT II', 'CAT III']" />
+                    label="Severity Override" :items="['high', 'medium', 'low']" />
                 </v-col>
               </v-row>
               <v-row class="mt-n8">
@@ -498,17 +467,6 @@ export default class Checklist extends RouteMixin {
       return stigId.split('-').slice(0, 2).join('-');
     else
       return stigId
-  }
-
-  severityMap(severity: string) {
-    switch (severity.toLowerCase()) {
-      case 'low':
-        return 'CAT III'
-      case 'medium':
-        return 'CAT II'
-      case 'high':
-        return 'CAT I'
-    }
   }
 
   /**
