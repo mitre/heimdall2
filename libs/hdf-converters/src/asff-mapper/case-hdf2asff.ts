@@ -164,7 +164,6 @@ function getPassthrough(execTypes: Record<string, unknown>) {
     return _.get(execTypes, 'Execution.passthrough1of1');
   }
   //Behavior for passthrough object reconstitution from divided strings
-  let passValue = 'No valid passthrough found';
   const keysArr = [];
   const strArr = [];
   for (const key of _.keys(execTypes.Execution)) {
@@ -174,18 +173,18 @@ function getPassthrough(execTypes: Record<string, unknown>) {
   }
   const cntMax = keysArr.length;
   let cntMin = 1;
-  if (cntMax > 0) {
-    while (cntMin <= cntMax) {
-      for (const obj of keysArr) {
-        if ((_.keys(obj)[0].match(/\d+/) || '')[0] === String(cntMin)) {
-          strArr.push(_.values(obj)[0]);
-        }
-        cntMin++;
-      }
-    }
-    passValue = JSON.parse(strArr.join(''));
+  if (cntMax <= 1) {
+    return {};
   }
-  return passValue;
+  while (cntMin <= cntMax) {
+    for (const obj of keysArr) {
+      if ((_.keys(obj)[0].match(/\d+/) || '')[0] === String(cntMin)) {
+        strArr.push(_.values(obj)[0]);
+      }
+      cntMin++;
+    }
+  }
+  return JSON.parse(strArr.join(''));
 }
 
 function mapping(
