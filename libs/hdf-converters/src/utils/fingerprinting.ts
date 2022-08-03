@@ -45,7 +45,10 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
     'results[0].complianceDistribution',
     'results[0].vulnerabilityDistribution',
     'results[0].collections',
-    'results[0].digest'
+    'results[0].digest',
+    'packages',
+    'complianceDistribution',
+    'vulnerabilityDistribution'
   ],
   [INPUT_TYPES.ZAP]: ['@generated', '@version', 'site'],
 
