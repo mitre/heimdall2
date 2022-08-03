@@ -1,345 +1,221 @@
 <template>
-  <Base
-    :show-search="true"
-    :title="curr_title"
-    @changed-files="evalInfo = null"
-  >
-    <!-- Topbar content - give it a search bar -->
-    <template #topbar-content>
-      <v-btn :disabled="!can_clear" @click="clear">
-        <span class="d-none d-md-inline pr-2"> Clear </span>
-        <v-icon>mdi-filter-remove</v-icon>
-      </v-btn>
-      <UploadButton />
-      <div class="text-center">
-        <v-menu>
-          <template #activator="{on, attrs}">
-            <v-btn v-bind="attrs" class="mr-2" v-on="on">
-              <span class="d-none d-md-inline mr-2"> Export </span>
-              <v-icon> mdi-file-export </v-icon>
-            </v-btn>
-          </template>
-          <v-list class="py-0">
-            <v-list-item class="px-0">
-              <ExportCaat :filter="all_filter" />
-            </v-list-item>
-            <v-list-item v-if="is_checklist_view" class="px-0">
-              <ExportNist :filter="all_filter" />
-            </v-list-item>
-            <v-list-item v-if="is_checklist_view" class="px-0">
-              <ExportASFFModal :filter="all_filter" />
-            </v-list-item>
-            <v-list-item v-if="is_checklist_view" class="px-0">
-              <ExportCKLModal :filter="all_filter" />
-            </v-list-item>
-            <v-list-item class="px-0">
-              <ExportCSVModal :filter="all_filter" />
-            </v-list-item>
-            <v-list-item v-if="is_checklist_view" class="px-0">
-              <ExportHTMLModal
-                :filter="all_filter"
-                :file-type="current_route_name"
-              />
-            </v-list-item>
-            <v-list-item v-if="is_checklist_view" class="px-0">
-              <ExportSplunkModal />
-            </v-list-item>
-            <v-list-item class="px-0">
-              <ExportJson />
-            </v-list-item>
-            <v-list-item class="px-0">
-              <ExportXCCDFResults
-                :filter="all_filter"
-                :is-result-view="is_checklist_view"
-              />
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </template>
-    <template #main-content>
-      <v-container fluid grid-list-md pt-0 pa-2 mt-6>
-        <v-row>
-          <v-col xs="4" :cols="4">
-            <v-card height="25vh" class="overflow-auto">
-              <v-tabs v-model="tab" show-arrows center-active grow>
-                <v-tab> Benchmarks </v-tab>
-                <v-tab> Filters </v-tab>
-                <v-tab> Target Data </v-tab>
-                <v-tab> Technology Area </v-tab>
-              </v-tabs>
-              <v-tabs-items v-model="tab">
-                <!-- Benchmarks -->
-                <v-tab-item />
-                <!-- Filters -->
-                <v-tab-item grid-list-md class="pa-4">
-                  <v-row>
-                    <v-col
-                      v-for="item in controlStatusSwitches"
-                      :key="item.name"
-                      :cols="3"
-                      >{{ item.name }}</v-col
-                    >
-                  </v-row>
-                  <v-row class="mt-n10">
-                    <v-col
-                      v-for="item in controlStatusSwitches"
-                      :key="item.name"
-                      :cols="3"
-                    >
-                      <v-switch
-                        v-model="item.enabled"
-                        dense
-                        justify="center"
-                        inset
-                        :color="item.color"
-                        :label="numStatus(item.name)"
-                        hide-details
-                      />
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col
-                      v-for="item in severitySwitches"
-                      :key="item.name"
-                      :cols="3"
-                      >{{ item.name }}</v-col
-                    >
-                  </v-row>
-                  <v-row class="mt-n10">
-                    <v-col
-                      v-for="item in severitySwitches"
-                      :key="item.name"
-                      :cols="3"
-                    >
-                      <v-switch
-                        v-model="item.enabled"
-                        dense
-                        justify="center"
-                        inset
-                        :color="item.color"
-                        :label="numSeverity(item.name)"
-                        hide-details
-                      />
-                    </v-col>
-                  </v-row>
-                </v-tab-item>
-                <!-- Target Data -->
-                <v-tab-item class="pa-4">
-                  <v-select
-                    outlined
-                    dense
-                    :items="['Computing', 'Non-Computing']"
-                  />
-                  <v-text-field dense label="Marking" />
-                  <v-text-field dense label="Host Name" />
-                  <v-text-field dense label="IP Address" />
-                  <v-text-field dense label="MAC Address" />
-                  <v-text-field dense label="Fully Qualified Domain Name" />
-                  <v-text-field dense label="Target Comments" />
-                  <br />
-                  <strong>Role</strong>
-                  <v-radio-group>
-                    <v-radio label="None" value="none" />
-                    <v-radio label="Workstation" value="workstation" />
-                    <v-radio label="Member Server" value="memberServer" />
-                    <v-radio
-                      label="Domain Controller"
-                      value="domainController"
-                    />
-                  </v-radio-group>
-                  <v-checkbox
-                    v-model="webOrDatabase"
-                    label="Website or Database STIG"
-                    hide-details
-                  />
-                  <v-text-field v-if="webOrDatabase" label="Site" />
-                  <v-text-field v-if="webOrDatabase" label="Instance" />
-                </v-tab-item>
-                <!-- Technology Area -->
-                <v-tab-item class="pa-4">
-                  <v-select
-                    dense
-                    outlined
-                    :items="techAreaLabels"
-                    justify="center"
-                  />
-                </v-tab-item>
-              </v-tabs-items>
-            </v-card>
-            <!-- Data Table -->
-            <v-card class="mt-4">
-              <v-card-title class="pt-2">
-                <div>
-                  Rules ({{ numItems }} shown,
-                  {{ loadedRules.length - numItems }} hidden)
-                </div>
-                <v-spacer class="mt-0 pt-0" />
-                <v-select
-                  v-model="selectedHeaders"
-                  :items="headersList"
-                  label="Select Columns"
-                  class="mt-4 pt-0"
-                  multiple
-                  outlined
-                  return-object
-                  :style="{width: '300px'}"
-                >
-                  <template #selection="{item, index}">
-                    <v-chip v-if="index < 4" small>
-                      <span>{{ item.text }}</span>
-                    </v-chip>
-                    <span v-if="index === 4" class="grey--text caption"
-                      >(+{{ selectedHeaders.length - 4 }} others)</span
-                    >
-                  </template>
-                </v-select>
-              </v-card-title>
-              <v-card-text>
-                <v-data-table
-                  ref="dataTable"
-                  :single-select="true"
-                  disable-pagination
-                  dense
-                  fixed-header
-                  :items="rules"
-                  :item-class="checkSelected"
-                  :headers="headers"
-                  :search="searchValue"
-                  hide-default-footer
-                  class="overflow-y-auto"
-                  height="55vh"
-                  @click:row="showRule"
-                  @current-items="getFiltered"
-                >
-                  <template #[`item.ruleVersion`]="{item}">
-                    {{ truncate(shortStigId(item.ruleVersion), 20) }}
-                  </template>
-                  <template #[`item.ruleId`]="{item}">
-                    {{ truncate(shortRuleId(item.ruleId), 20) }}
-                  </template>
-                  <template #[`item.cciRef`]="{item}">
-                    {{ truncate(shortRuleId(item.cciRef), 15) }}
-                  </template>
-                </v-data-table>
-              </v-card-text>
-            </v-card>
-          </v-col>
-          <!-- Rule Data -->
-          <v-col xs="4" :cols="8">
-            <v-card>
-              <v-card-text class="text-center">
-                <strong>{{ selectedRule.stigRef }}</strong>
-                <v-row dense class="mt-2">
-                  <v-col
-                    ><strong>Vul ID: </strong>{{ selectedRule.vulnNum }}</v-col
-                  >
-                  <v-col
-                    ><strong>Rule ID: </strong
-                    >{{ shortRuleId(selectedRule.ruleId) }}</v-col
-                  >
-                  <v-col
-                    ><strong>STIG ID: </strong
-                    >{{ shortStigId(selectedRule.ruleVersion) }}</v-col
-                  >
-                </v-row>
-                <v-row dense class="pa-0">
-                  <v-col
-                    ><strong>Severity: </strong
-                    >{{ selectedRule.severity }}</v-col
-                  >
-                  <v-col
-                    ><strong>Classification: </strong
-                    >{{ selectedRule.class }}</v-col
-                  >
-                  <v-col
-                    ><strong>Legacy IDs: </strong
-                    >{{ selectedRule.legacyId }}</v-col
-                  >
-                </v-row>
-              </v-card-text>
-            </v-card>
-            <v-card height="40vh" class="overflow-auto mt-4">
-              <div v-if="selectedRule.ruleId !== ''">
-                <v-card-text>
-                  <strong>Rule Title: </strong><br />
-                  {{ selectedRule.ruleTitle }}<br /><br />
-                  <strong>Discussion: </strong><br />
-                  {{ selectedRule.vulnDiscuss }}<br /><br />
-                  <strong>Check Text: </strong><br />
-                  {{ selectedRule.checkContent }}<br /><br />
-                  <strong>Fix Text: </strong><br />
-                  {{ selectedRule.fixText }}<br /><br />
-                </v-card-text>
-                <v-card-subtitle class="text-center"
-                  >References</v-card-subtitle
-                >
-                <v-card-text>
-                  <strong>CCI: </strong>{{ selectedRule.cciRef }}<br /><br />
-                </v-card-text>
-              </div>
-              <div v-else>
-                <v-card-text>No rule selected.</v-card-text>
-              </div>
-            </v-card>
-            <v-card class="mt-4 pt-4">
-              <v-card-text>
+  <Base :show-search="true" :title="curr_title" @changed-files="evalInfo = null">
+  <!-- Topbar content - give it a search bar -->
+  <template #topbar-content>
+    <v-btn :disabled="!can_clear" @click="clear">
+      <span class="d-none d-md-inline pr-2"> Clear </span>
+      <v-icon>mdi-filter-remove</v-icon>
+    </v-btn>
+    <UploadButton />
+    <div class="text-center">
+      <v-menu>
+        <template #activator="{ on, attrs }">
+          <v-btn v-bind="attrs" class="mr-2" v-on="on">
+            <span class="d-none d-md-inline mr-2"> Export </span>
+            <v-icon> mdi-file-export </v-icon>
+          </v-btn>
+        </template>
+        <v-list class="py-0">
+          <v-list-item class="px-0">
+            <ExportCaat :filter="all_filter" />
+          </v-list-item>
+          <v-list-item v-if="is_checklist_view" class="px-0">
+            <ExportNist :filter="all_filter" />
+          </v-list-item>
+          <v-list-item v-if="is_checklist_view" class="px-0">
+            <ExportASFFModal :filter="all_filter" />
+          </v-list-item>
+          <v-list-item v-if="is_checklist_view" class="px-0">
+            <ExportCKLModal :filter="all_filter" />
+          </v-list-item>
+          <v-list-item class="px-0">
+            <ExportCSVModal :filter="all_filter" />
+          </v-list-item>
+          <v-list-item v-if="is_checklist_view" class="px-0">
+            <ExportHTMLModal :filter="all_filter" :file-type="current_route_name" />
+          </v-list-item>
+          <v-list-item v-if="is_checklist_view" class="px-0">
+            <ExportSplunkModal />
+          </v-list-item>
+          <v-list-item class="px-0">
+            <ExportJson />
+          </v-list-item>
+          <v-list-item class="px-0">
+            <ExportXCCDFResults :filter="all_filter" :is-result-view="is_checklist_view" />
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+  </template>
+  <template #main-content>
+    <v-container fluid grid-list-md pt-0 mt-4 mx-1>
+      <v-row>
+        <v-col xs="4" :cols="4">
+          <v-card height="25vh" class="overflow-auto">
+            <v-tabs v-model="tab" show-arrows center-active grow>
+              <v-tab> Benchmarks </v-tab>
+              <v-tab> Filters </v-tab>
+              <v-tab> Target Data </v-tab>
+              <v-tab> Technology Area </v-tab>
+            </v-tabs>
+            <v-tabs-items v-model="tab">
+              <!-- Benchmarks -->
+              <v-tab-item />
+              <!-- Filters -->
+              <v-tab-item grid-list-md class="pa-4">
                 <v-row>
-                  <v-col>
-                    <v-select
-                      v-model="selectedRule.status"
-                      dense
-                      label="Status"
-                      :items="[
-                        'Passed',
-                        'Failed',
-                        'Not Applicable',
-                        'Not Reviewed'
-                      ]"
-                    />
-                  </v-col>
-                  <v-col>
-                    <v-select
-                      v-model="selectedRule.severityOverride"
-                      dense
-                      label="Severity Override"
-                      :items="['high', 'medium', 'low']"
-                      @change="promptSeverityJustification"
-                    />
-                  </v-col>
-                </v-row>
-                <v-row class="mt-n8">
-                  <v-col>
-                    <strong>Finding Details: </strong><br />
-                    <v-textarea
-                      v-model="selectedRule.findingDetails"
-                      solo
-                      outlined
-                      dense
-                      no-resize
-                      height="12vh"
-                    />
-                  </v-col>
+                  <v-col v-for="item in controlStatusSwitches" :key="item.name" :cols="3">{{ item.name }}</v-col>
                 </v-row>
                 <v-row class="mt-n10">
-                  <v-col>
-                    <strong>Comments: </strong>
-                    <v-textarea
-                      v-model="selectedRule.comments"
-                      solo
-                      outlined
-                      dense
-                      no-resize
-                      height="8vh"
-                    />
+                  <v-col v-for="item in controlStatusSwitches" :key="item.name" :cols="3">
+                    <v-switch v-model="item.enabled" dense justify="center" inset :color="item.color"
+                      :label="numStatus(item.name)" hide-details />
                   </v-col>
                 </v-row>
+                <v-row>
+                  <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">{{ item.name }}</v-col>
+                </v-row>
+                <v-row class="mt-n10">
+                  <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
+                    <v-switch v-model="item.enabled" dense justify="center" inset :color="item.color"
+                      :label="numSeverity(item.name)" hide-details />
+                  </v-col>
+                </v-row>
+              </v-tab-item>
+              <!-- Target Data -->
+              <v-tab-item class="pa-4">
+                <v-select outlined dense :items="['Computing', 'Non-Computing']" />
+                <v-text-field dense label="Marking" />
+                <v-text-field dense label="Host Name" />
+                <v-text-field dense label="IP Address" />
+                <v-text-field dense label="MAC Address" />
+                <v-text-field dense label="Fully Qualified Domain Name" />
+                <v-text-field dense label="Target Comments" />
+                <br />
+                <strong>Role</strong>
+                <v-radio-group>
+                  <v-radio label="None" value="none" />
+                  <v-radio label="Workstation" value="workstation" />
+                  <v-radio label="Member Server" value="memberServer" />
+                  <v-radio label="Domain Controller" value="domainController" />
+                </v-radio-group>
+                <v-checkbox v-model="webOrDatabase" label="Website or Database STIG" hide-details />
+                <v-text-field v-if="webOrDatabase" label="Site" />
+                <v-text-field v-if="webOrDatabase" label="Instance" />
+              </v-tab-item>
+              <!-- Technology Area -->
+              <v-tab-item class="pa-4">
+                <v-select dense outlined :items="techAreaLabels" justify="center" />
+              </v-tab-item>
+            </v-tabs-items>
+          </v-card>
+          <!-- Data Table -->
+          <v-card class="mt-4" height="62vh" overflow-auto>
+            <v-card-title class="pt-2">
+              <div>
+                Rules ({{ numItems }} shown,
+                {{ loadedRules.length - numItems }} hidden)
+              </div>
+              <v-spacer class="mt-0 pt-0" />
+              <v-select v-model="selectedHeaders" :items="headersList" label="Select Columns" class="mt-4 pt-0" multiple
+                outlined return-object height="5vh">
+                <template #selection="{ item, index }">
+                  <v-chip v-if="index < 4" small>
+                    <span>{{ item.text }}</span>
+                  </v-chip>
+                  <span v-if="index === 4" class="grey--text caption">(+{{ selectedHeaders.length - 4 }} others)</span>
+                </template>
+              </v-select>
+            </v-card-title>
+            <v-card-text>
+              <v-data-table ref="dataTable" :single-select="true" disable-pagination dense fixed-header :items="rules"
+                :item-class="checkSelected" :headers="headers" :search="searchValue" hide-default-footer
+                class="overflow-y-auto" height="42vh" @click:row="showRule" @current-items="getFiltered">
+                <template #[`item.ruleVersion`]="{ item }">
+                  {{ truncate(shortStigId(item.ruleVersion), 20) }}
+                </template>
+                <template #[`item.ruleId`]="{ item }">
+                  {{ truncate(shortRuleId(item.ruleId), 20) }}
+                </template>
+                <template #[`item.cciRef`]="{ item }">
+                  {{ truncate(shortRuleId(item.cciRef), 15) }}
+                </template>
+              </v-data-table>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <!-- Rule Data -->
+        <v-col xs="4" :cols="8">
+          <v-card height="10vh" class="overflow-y-auto">
+            <v-card-text class="text-center">
+              <strong>{{ selectedRule.stigRef }}</strong>
+              <v-row dense class="mt-2">
+                <v-col><strong>Vul ID: </strong>{{ selectedRule.vulnNum }}</v-col>
+                <v-col><strong>Rule ID: </strong>{{ shortRuleId(selectedRule.ruleId) }}</v-col>
+                <v-col><strong>STIG ID: </strong>{{ shortStigId(selectedRule.ruleVersion) }}</v-col>
+              </v-row>
+              <v-row dense class="pa-0">
+                <v-col><strong>Severity: </strong>{{ selectedRule.severity }}</v-col>
+                <v-col><strong>Classification: </strong>{{ selectedRule.class }}</v-col>
+                <v-col><strong>Legacy IDs: </strong>{{ selectedRule.legacyId }}</v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+          <v-card height="40vh" class="overflow-auto mt-4">
+            <div v-if="selectedRule.ruleId !== ''">
+              <v-card-text>
+                <strong>Rule Title: </strong><br />
+                {{ selectedRule.ruleTitle }}<br /><br />
+                <strong>Discussion: </strong><br />
+                {{ selectedRule.vulnDiscuss }}<br /><br />
+                <strong>Check Text: </strong><br />
+                {{ selectedRule.checkContent }}<br /><br />
+                <strong>Fix Text: </strong><br />
+                {{ selectedRule.fixText }}<br /><br />
               </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-container>
-    </template>
+              <v-card-subtitle class="text-center">References</v-card-subtitle>
+              <v-card-text>
+                <strong>CCI: </strong>{{ selectedRule.cciRef }}<br /><br />
+              </v-card-text>
+            </div>
+            <div v-else>
+              <v-card-text>No rule selected.</v-card-text>
+            </div>
+          </v-card>
+          <v-card class="mt-4 pt-4">
+            <v-card-text>
+              <v-row>
+                <v-col>
+                  <v-select v-model="selectedRule.status" dense label="Status" :items="[
+                    'Passed',
+                    'Failed',
+                    'Not Applicable',
+                    'Not Reviewed'
+                  ]" />
+                </v-col>
+                <v-col>
+                  <v-select v-model="selectedRule.severityOverride" dense label="Severity Override"
+                    :items="['high', 'medium', 'low']" @change="promptSeverityJustification" />
+                </v-col>
+              </v-row>
+              <v-row class="mt-n8">
+                <v-col>
+                  <strong>Finding Details: </strong><br />
+                  <v-textarea v-model="selectedRule.findingDetails" solo outlined dense no-resize height="12vh" />
+                </v-col>
+              </v-row>
+              <v-row class="mt-n10">
+                <v-col>
+                  <strong>Comments: </strong>
+                  <v-textarea v-model="selectedRule.comments" solo outlined dense no-resize height="8vh" />
+                </v-col>
+              </v-row>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </template>
   </Base>
 </template>
 
@@ -347,7 +223,7 @@
 import Base from './Base.vue';
 import Component from 'vue-class-component';
 import RouteMixin from '@/mixins/RouteMixin';
-import {SearchModule} from '@/store/search';
+import { SearchModule } from '@/store/search';
 import {
   ExtendedControlStatus,
   Filter,
@@ -358,8 +234,8 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
-import {capitalize} from 'lodash';
-import {Severity} from 'inspecjs';
+import { capitalize } from 'lodash';
+import { Severity } from 'inspecjs';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
@@ -372,8 +248,8 @@ import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
-import {ChecklistVuln} from '../types/checklist/control';
-import {InspecDataModule} from '@/store/data_store';
+import { ChecklistVuln } from '../types/checklist/control';
+import { InspecDataModule } from '@/store/data_store';
 import _ from 'lodash';
 // import SwitchTable from '@/components/cards/SwitchTable.vue';
 
@@ -407,48 +283,48 @@ export default class Checklist extends RouteMixin {
   tab = null;
   webOrDatabase = false; // Needs to be replaced for selected checklist
 
-  selectedHeaders: {text: string; value: string; width: string}[] = [
-    {text: 'Status', value: 'status', width: '100px'},
-    {text: 'STIG ID', value: 'ruleVersion', width: '130px'},
-    {text: 'Rule ID', value: 'ruleId', width: '160px'},
-    {text: 'Vul ID', value: 'vulnNum', width: '100px'},
-    {text: 'Group Name', value: 'groupTitle', width: '150px'},
-    {text: 'CCIs', value: 'cciRef', width: '120px'}
+  selectedHeaders: { text: string; value: string; width: string }[] = [
+    { text: 'Status', value: 'status', width: '100px' },
+    { text: 'STIG ID', value: 'ruleVersion', width: '130px' },
+    { text: 'Rule ID', value: 'ruleId', width: '160px' },
+    { text: 'Vul ID', value: 'vulnNum', width: '100px' },
+    { text: 'Group Name', value: 'groupTitle', width: '150px' },
+    { text: 'CCIs', value: 'cciRef', width: '120px' }
   ];
 
   headersList = [
-    {text: 'Status', value: 'status', width: '100px'},
-    {text: 'STIG ID', value: 'ruleVersion', width: '130px'},
-    {text: 'Rule ID', value: 'ruleId', width: '160px'},
-    {text: 'Vul ID', value: 'vulnNum', width: '100px'},
-    {text: 'Group Name', value: 'groupTitle', width: '150px'},
-    {text: 'CCIs', value: 'cciRef', width: '120px'}
+    { text: 'Status', value: 'status', width: '100px' },
+    { text: 'STIG ID', value: 'ruleVersion', width: '130px' },
+    { text: 'Rule ID', value: 'ruleId', width: '160px' },
+    { text: 'Vul ID', value: 'vulnNum', width: '100px' },
+    { text: 'Group Name', value: 'groupTitle', width: '150px' },
+    { text: 'CCIs', value: 'cciRef', width: '120px' }
   ];
 
   /** Kept so we can filter by these values even though they are hidden */
   hiddenRows = [
-    {value: 'severity', align: ' d-none'},
-    {value: 'ruleTitle', align: ' d-none'},
-    {value: 'vulnDiscuss', align: ' d-none'},
-    {value: 'iaControls', align: ' d-none'},
-    {value: 'checkContent', align: ' d-none'},
-    {value: 'fixText', align: ' d-none'},
-    {value: 'falsePositives', align: ' d-none'},
-    {value: 'falseNegatives', align: ' d-none'},
-    {value: 'documentable', align: ' d-none'},
-    {value: 'mitigations', align: ' d-none'},
-    {value: 'potentialImpact', align: ' d-none'},
-    {value: 'thirdPartyTools', align: ' d-none'},
-    {value: 'mitigationControl', align: ' d-none'},
-    {value: 'responsibility', align: ' d-none'},
-    {value: 'securityOverrideGuidance', align: ' d-none'},
-    {value: 'checkContentRef', align: ' d-none'},
-    {value: 'weight', align: ' d-none'},
-    {value: 'class', align: ' d-none'},
-    {value: 'stigRef', align: ' d-none'},
-    {value: 'targetKey', align: ' d-none'},
-    {value: 'stigUuid', align: ' d-none'},
-    {value: 'legacyId', align: ' d-none'}
+    { value: 'severity', align: ' d-none' },
+    { value: 'ruleTitle', align: ' d-none' },
+    { value: 'vulnDiscuss', align: ' d-none' },
+    { value: 'iaControls', align: ' d-none' },
+    { value: 'checkContent', align: ' d-none' },
+    { value: 'fixText', align: ' d-none' },
+    { value: 'falsePositives', align: ' d-none' },
+    { value: 'falseNegatives', align: ' d-none' },
+    { value: 'documentable', align: ' d-none' },
+    { value: 'mitigations', align: ' d-none' },
+    { value: 'potentialImpact', align: ' d-none' },
+    { value: 'thirdPartyTools', align: ' d-none' },
+    { value: 'mitigationControl', align: ' d-none' },
+    { value: 'responsibility', align: ' d-none' },
+    { value: 'securityOverrideGuidance', align: ' d-none' },
+    { value: 'checkContentRef', align: ' d-none' },
+    { value: 'weight', align: ' d-none' },
+    { value: 'class', align: ' d-none' },
+    { value: 'stigRef', align: ' d-none' },
+    { value: 'targetKey', align: ' d-none' },
+    { value: 'stigUuid', align: ' d-none' },
+    { value: 'legacyId', align: ' d-none' }
   ];
 
   techAreaLabels: string[] = [
@@ -525,7 +401,7 @@ export default class Checklist extends RouteMixin {
     | null = null;
 
   truncate(value: string, length: number, omission = '...') {
-    return _.truncate(value, {omission: omission, length: length});
+    return _.truncate(value, { omission: omission, length: length });
   }
 
   shortRuleId(ruleId: string) {
