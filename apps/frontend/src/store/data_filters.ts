@@ -2,15 +2,15 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
-import { Trinary } from '@/enums/Trinary';
-import { InspecDataModule } from '@/store/data_store';
+import {Trinary} from '@/enums/Trinary';
+import {InspecDataModule} from '@/store/data_store';
 import {
   FileID,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import { ChecklistFile, ChecklistVuln } from '@/types/checklist/control';
+import {ChecklistFile, ChecklistVuln} from '@/types/checklist/control';
 import {
   ContextualizedControl,
   ContextualizedProfile,
@@ -152,8 +152,9 @@ export class FilteredData extends VuexModule {
     stigUuid: '',
     legacyId: '',
     cciRef: ''
-  }
-  selectedRule: ChecklistVuln = this.emptyRule
+  };
+
+  selectedRule: ChecklistVuln = this.emptyRule;
 
   @Mutation
   SELECT_EVALUATIONS(files: FileID[]): void {
@@ -275,10 +276,10 @@ export class FilteredData extends VuexModule {
   @Action
   public toggle_checklist(fileID: FileID): void {
     if (this.selectedChecklistIds.includes(fileID)) {
-      this.CLEAR_CHECKLIST(fileID)
-      this.SELECT_RULE(this.emptyRule)
+      this.CLEAR_CHECKLIST(fileID);
+      this.SELECT_RULE(this.emptyRule);
     } else {
-      this.SELECT_CHECKLIST(fileID)
+      this.SELECT_CHECKLIST(fileID);
     }
   }
 
@@ -286,7 +287,7 @@ export class FilteredData extends VuexModule {
   public clear_file(fileID: FileID): void {
     this.CLEAR_EVALUATION(fileID);
     this.CLEAR_PROFILE(fileID);
-    this.CLEAR_CHECKLIST(fileID)
+    this.CLEAR_CHECKLIST(fileID);
   }
 
   /**
@@ -328,12 +329,18 @@ export class FilteredData extends VuexModule {
 
   get checklists(): (file: FileID) => ChecklistFile[] {
     return (file: FileID) => {
-      return InspecDataModule.allChecklistFiles.filter(e => e.uniqueId === file);
-    }
+      return InspecDataModule.allChecklistFiles.filter(
+        (e) => e.uniqueId === file
+      );
+    };
   }
 
   get selected_file_ids(): FileID[] {
-    return [...this.selectedEvaluationIds, ...this.selectedProfileIds, ...this.selectedChecklistIds];
+    return [
+      ...this.selectedEvaluationIds,
+      ...this.selectedProfileIds,
+      ...this.selectedChecklistIds
+    ];
   }
 
   // check to see if all profiles are selected
@@ -361,10 +368,8 @@ export class FilteredData extends VuexModule {
   }
 
   get checklist_selected(): Trinary {
-    if (this.selectedChecklistIds.length === 1)
-      return Trinary.On
-    else
-      return Trinary.Off
+    if (this.selectedChecklistIds.length === 1) return Trinary.On;
+    else return Trinary.Off;
   }
 
   /**

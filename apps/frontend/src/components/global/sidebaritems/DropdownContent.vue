@@ -12,7 +12,10 @@
           @changed-files="$emit('changed-files')"
         />
 
+        <v-divider v-if="!inChecklistView()" />
+
         <v-list-item
+          v-if="!inChecklistView()"
           :title="`${selectAllText} all ${headerText.toLowerCase()}`"
           @change="$emit('changed-files')"
           @click.stop="$emit('toggle-all')"
@@ -93,6 +96,11 @@ export default class DropdownContent extends Vue {
 
   get selectAllText(): string {
     return this.allSelected === Trinary.On ? 'Deselect' : 'Select';
+  }
+
+  inChecklistView(): boolean {
+    console.log(this.$router.currentRoute.path);
+    return this.$router.currentRoute.path.split('/')[1] === 'checklists';
   }
 }
 </script>

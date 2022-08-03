@@ -1,4 +1,4 @@
-import { FileID } from '@/store/report_intake';
+import {FileID} from '@/store/report_intake';
 
 export type ChecklistFile = {
   /**
@@ -23,25 +23,25 @@ export function mapStatus(status: string) {
   switch (status) {
     // Mapping from checklist to Heimdall's conventions
     case 'Not_Reviewed':
-      return 'Not Reviewed'
+      return 'Not Reviewed';
     case 'Open':
-      return 'Failed'
+      return 'Failed';
     case 'NotAFinding':
-      return 'Passed'
+      return 'Passed';
     case 'Not_Applicable':
-      return 'Not Applicable'
+      return 'Not Applicable';
 
     //Mapping from Heimdall's conventions back to checklist
     case 'Not Reviewed':
-      return 'Not_Reviewed'
+      return 'Not_Reviewed';
     case 'Failed':
-      return 'Open'
+      return 'Open';
     case 'Passed':
-      return 'NotAFinding'
+      return 'NotAFinding';
     case 'Not Applicable':
-      return 'Not_Applicable'
+      return 'Not_Applicable';
     default:
-      return status
+      return status;
   }
 }
 
@@ -49,21 +49,21 @@ export function mapSeverity(severity: string) {
   switch (severity) {
     // Mapping from checklist to Heimdall's conventions
     case 'CAT I':
-      return 'high'
+      return 'high';
     case 'CAT II':
-      return 'medium'
+      return 'medium';
     case 'CAT III':
-      return 'low'
+      return 'low';
 
     //Mapping from Heimdall's conventions back to checklist
     case 'high':
-      return 'CAT I'
+      return 'CAT I';
     case 'medium':
-      return 'CAT II'
+      return 'CAT II';
     case 'low':
-      return 'CAT III'
+      return 'CAT III';
     default:
-      return severity
+      return severity;
   }
 }
 
@@ -80,7 +80,7 @@ export type ChecklistAsset = {
   webordatabase: boolean;
   webdbsite: string;
   webdbinstance: string;
-}
+};
 
 export type ChecklistStig = {
   header: ChecklistHeader;

@@ -1,5 +1,9 @@
 <template>
-  <v-list-item :title="file.filename" @change="$emit('changed-files')" @click.stop="select_file_exclusive">
+  <v-list-item
+    :title="file.filename"
+    @change="$emit('changed-files')"
+    @click.stop="select_file_exclusive"
+  >
     <v-list-item-action @click.stop="select_file">
       <v-checkbox :input-value="selected" color="blue" />
     </v-list-item-action>
@@ -29,21 +33,24 @@
 <script lang="ts">
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
-import { FilteredDataModule } from '@/store/data_filters';
-import { InspecDataModule } from '@/store/data_store';
-import { EvaluationModule } from '@/store/evaluations';
-import { EvaluationFile, ProfileFile } from '@/store/report_intake';
-import { SnackbarModule } from '@/store/snackbar';
-import { ICreateEvaluation, IEvaluation } from '@heimdall/interfaces';
+import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationModule} from '@/store/evaluations';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
+import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
 import axios from 'axios';
 import _ from 'lodash';
-import Component, { mixins } from 'vue-class-component';
-import { ChecklistFile } from '@/types/checklist/control';
-import { Prop } from 'vue-property-decorator';
+import Component, {mixins} from 'vue-class-component';
+import {ChecklistFile} from '@/types/checklist/control';
+import {Prop} from 'vue-property-decorator';
 
 @Component
 export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
-  @Prop({ type: Object }) readonly file!: EvaluationFile | ProfileFile | ChecklistFile;
+  @Prop({type: Object}) readonly file!:
+    | EvaluationFile
+    | ProfileFile
+    | ChecklistFile;
 
   saving = false;
 
@@ -53,7 +60,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.toggle_profile(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('asset')) {
-      FilteredDataModule.toggle_checklist(this.file.uniqueId)
+      FilteredDataModule.toggle_checklist(this.file.uniqueId);
     }
   }
 
@@ -63,7 +70,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.select_exclusive_profile(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('stigs')) {
-      FilteredDataModule.toggle_checklist(this.file.uniqueId)
+      FilteredDataModule.toggle_checklist(this.file.uniqueId);
     }
   }
 
