@@ -159,27 +159,33 @@ function getPassthrough(execTypes: Record<string, unknown>) {
   if (_.has(execTypes, 'Execution.passthrough')) {
     return _.get(execTypes, 'Execution.passthrough');
   }
+  //If only one field exists, then is already an object
+  if (_.has(execTypes, 'Execution.passthrough1of1')) {
+    return _.get(execTypes, 'Execution.passthrough1of1');
+  }
   //Behavior for passthrough object reconstitution from divided strings
+  let passValue = 'No valid passthrough found';
   const keysArr = [];
   const strArr = [];
-  const regex = /passthrough+.*of+/i;
-  for (const key in _.keys(execTypes.Execution)) {
-    if (regex.test(key)) {
+  for (const key of _.keys(execTypes.Execution)) {
+    if (/passthrough.*of/.test(key)) {
       keysArr.push(_.pick(execTypes.Execution, key));
     }
   }
   const cntMax = keysArr.length;
   let cntMin = 1;
-  const regex2 = /\d+/;
-  while (cntMin <= cntMax) {
-    for (const obj of keysArr) {
-      if (_.keys(obj)[0].match(regex2)![0] === String(cntMin)) {
-        strArr.push(_.values(obj)[0]);
+  if (cntMax > 0) {
+    while (cntMin <= cntMax) {
+      for (const obj of keysArr) {
+        if (_.keys(obj)[0].match(/\d+/)![0] === String(cntMin)) {
+          strArr.push(_.values(obj)[0]);
+        }
+        cntMin++;
       }
-      cntMin++;
     }
+    passValue = JSON.parse(strArr.join(''));
   }
-  return strArr.join('');
+  return passValue;
 }
 
 function mapping(
@@ -197,7 +203,6 @@ function mapping(
   );
   return {
     shortcircuit: true,
-    passthrough: getPassthrough(executionTypes),
     platform: {
       ...(_.get(executionTypes, 'Execution.platform') as ExecJSON.Platform),
       target_id: (
@@ -312,7 +317,8 @@ function mapping(
         ),
         sha256: _.get(executionTypes, `${profileName}.sha256`)
       } as ExecJSON.Profile;
-    })
+    }),
+    passthrough: getPassthrough(executionTypes)
   } as MappedTransform<ExecJSON.Execution, ILookupPath>;
 }
 
