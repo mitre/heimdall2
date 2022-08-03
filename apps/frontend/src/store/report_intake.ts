@@ -2,19 +2,17 @@
  * Reads and parses inspec files
  */
 
-import {InspecDataModule} from '@/store/data_store';
+import { InspecDataModule } from '@/store/data_store';
 import Store from '@/store/store';
 import {
   ChecklistAsset,
   ChecklistFile,
   ChecklistHeader,
   ChecklistStig,
-  ChecklistVuln,
-  mapSeverity,
-  mapStatus
+  ChecklistVuln
 } from '@/types/checklist/control';
-import {Tag} from '@/types/models';
-import {read_file_async} from '@/utilities/async_util';
+import { Tag } from '@/types/models';
+import { read_file_async } from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
@@ -39,7 +37,7 @@ import {
   XCCDFResultsMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
-import {Jsonix} from '@mitre/jsonix';
+import { Jsonix } from '@mitre/jsonix';
 import axios from 'axios';
 import {
   ContextualizedEvaluation,
@@ -51,10 +49,10 @@ import {
   ExecJSON
 } from 'inspecjs';
 import _ from 'lodash';
-import {v4 as uuid} from 'uuid';
-import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
-import {FilteredDataModule} from './data_filters';
-import {SnackbarModule} from './snackbar';
+import { v4 as uuid } from 'uuid';
+import { Action, getModule, Module, VuexModule } from 'vuex-module-decorators';
+import { FilteredDataModule } from './data_filters';
+import { SnackbarModule } from './snackbar';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -189,9 +187,9 @@ export class InspecIntake extends VuexModule {
               filename: `${filename
                 .replace(/.json/gi, '')
                 .replace(/.nessus/gi, '')}-${_.get(
-                evaluation,
-                'platform.target_id'
-              )}.${originalFileType}`
+                  evaluation,
+                  'platform.target_id'
+                )}.${originalFileType}`
             });
           })
         );
@@ -327,8 +325,8 @@ export class InspecIntake extends VuexModule {
             Accept: 'application/json'
           }
         })
-        .then(async ({data}) => {
-          data.forEach(async (file: {filename: string; data: string}) => {
+        .then(async ({ data }) => {
+          data.forEach(async (file: { filename: string; data: string }) => {
             InspecIntakeModule.loadFile({
               file: new File([new Blob([file.data])], file.filename)
             });
@@ -472,6 +470,7 @@ export class InspecIntake extends VuexModule {
       hostip: _.get(raw, 'value.asset.hostip'),
       hostmac: _.get(raw, 'value.asset.hostmac'),
       hostfqdn: _.get(raw, 'value.asset.hostfqdn'),
+      marking: _.get(raw, 'value.asset.marking'),
       targetcomment: _.get(raw, 'value.asset.targetcomment'),
       techarea: _.get(raw, 'value.asset.techarea'),
       targetkey: _.get(raw, 'value.asset.targetkey'),
@@ -504,10 +503,10 @@ export class InspecIntake extends VuexModule {
       vulns.forEach((vuln: unknown) => {
         const stigdata: unknown[] = _.get(vuln, 'stigdata');
         const checklistVuln: ChecklistVuln = {
-          status: mapStatus(_.get(vuln, 'status')),
+          status: _.get(vuln, 'status'),
           findingDetails: _.get(vuln, 'findingdetails'),
           comments: _.get(vuln, 'comments'),
-          severityOverride: mapSeverity(_.get(vuln, 'severityoverride')),
+          severityOverride: _.get(vuln, 'severityoverride'),
           severityJustification: _.get(vuln, 'severityjustification'),
           vulnNum: getAttributeData(stigdata, 'Vuln_Num'),
           severity: getAttributeData(stigdata, 'Severity'),

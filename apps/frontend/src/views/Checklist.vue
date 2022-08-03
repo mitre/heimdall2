@@ -69,7 +69,7 @@
                 <v-row class="mt-n10">
                   <v-col v-for="item in controlStatusSwitches" :key="item.name" :cols="3">
                     <v-switch v-model="item.enabled" dense justify="center" inset :color="item.color"
-                      :label="numStatus(item.name)" hide-details />
+                      :label="numStatus(item.value)" hide-details />
                   </v-col>
                 </v-row>
                 <v-row>
@@ -78,34 +78,39 @@
                 <v-row class="mt-n10">
                   <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
                     <v-switch v-model="item.enabled" dense justify="center" inset :color="item.color"
-                      :label="numSeverity(item.name)" hide-details />
+                      :label="numSeverity(item.value)" hide-details />
                   </v-col>
                 </v-row>
               </v-tab-item>
               <!-- Target Data -->
               <v-tab-item class="pa-4">
-                <v-select outlined dense :items="['Computing', 'Non-Computing']" />
-                <v-text-field dense label="Marking" />
-                <v-text-field dense label="Host Name" />
-                <v-text-field dense label="IP Address" />
-                <v-text-field dense label="MAC Address" />
-                <v-text-field dense label="Fully Qualified Domain Name" />
-                <v-text-field dense label="Target Comments" />
+                <v-select outlined dense :items="['Computing', 'Non-Computing']"
+                  v-model="selectedChecklistAsset.assettype" />
+                <v-text-field dense label="Marking" v-model="selectedChecklistAsset.marking" />
+                <v-text-field dense label="Host Name" v-model="selectedChecklistAsset.hostname" />
+                <v-text-field dense label="IP Address" v-model="selectedChecklistAsset.hostip" />
+                <v-text-field dense label="MAC Address" v-model="selectedChecklistAsset.hostmac" />
+                <v-text-field dense label="Fully Qualified Domain Name" v-model="selectedChecklistAsset.hostfqdn" />
+                <v-text-field dense label="Target Comments" v-model="selectedChecklistAsset.targetcomment" />
                 <br />
                 <strong>Role</strong>
-                <v-radio-group>
-                  <v-radio label="None" value="none" />
-                  <v-radio label="Workstation" value="workstation" />
-                  <v-radio label="Member Server" value="memberServer" />
-                  <v-radio label="Domain Controller" value="domainController" />
+                <v-radio-group v-model="selectedChecklistAsset.role">
+                  <v-radio label="None" value="None" />
+                  <v-radio label="Workstation" value="Workstation" />
+                  <v-radio label="Member Server" value="Member Server" />
+                  <v-radio label="Domain Controller" value="Domain Controller" />
                 </v-radio-group>
-                <v-checkbox v-model="webOrDatabase" label="Website or Database STIG" hide-details />
-                <v-text-field v-if="webOrDatabase" label="Site" />
-                <v-text-field v-if="webOrDatabase" label="Instance" />
+                <v-checkbox v-model="selectedChecklistAsset.webordatabase" label="Website or Database STIG"
+                  hide-details />
+                <v-text-field v-if="selectedChecklistAsset.webordatabase" label="Site"
+                  v-model="selectedChecklistAsset.webdbsite" />
+                <v-text-field v-if="selectedChecklistAsset.webordatabase" label="Instance"
+                  v-model="selectedChecklistAsset.webdbinstance" />
               </v-tab-item>
               <!-- Technology Area -->
               <v-tab-item class="pa-4">
-                <v-select dense outlined :items="techAreaLabels" justify="center" />
+                <v-select dense outlined :items="techAreaLabels" justify="center"
+                  v-model="selectedChecklistAsset.techarea" />
               </v-tab-item>
             </v-tabs-items>
           </v-card>
@@ -131,6 +136,9 @@
               <v-data-table ref="dataTable" :single-select="true" disable-pagination dense fixed-header :items="rules"
                 :item-class="checkSelected" :headers="headers" :search="searchValue" hide-default-footer
                 class="overflow-y-auto" height="42vh" @click:row="showRule" @current-items="getFiltered">
+                <template #[`item.status`]="{ item }">
+                  {{ shortStatus(mapStatus(item.status)) }}
+                </template>
                 <template #[`item.ruleVersion`]="{ item }">
                   {{ truncate(shortStigId(item.ruleVersion), 20) }}
                 </template>
@@ -186,16 +194,12 @@
             <v-card-text>
               <v-row>
                 <v-col>
-                  <v-select v-model="selectedRule.status" dense label="Status" :items="[
-                    'Passed',
-                    'Failed',
-                    'Not Applicable',
-                    'Not Reviewed'
-                  ]" />
+                  <v-select v-model="selectedRule.status" dense label="Status" :items="statusItems" item-text="name"
+                    item-value="value" />
                 </v-col>
                 <v-col>
-                  <v-select v-model="selectedRule.severityOverride" dense label="Severity Override"
-                    :items="['high', 'medium', 'low']" @change="promptSeverityJustification" />
+                  <v-select v-model="selectedRule.severityOverride" dense label="Severity Override" item-text="name"
+                    item-value="value" :items="severityOverrideItems" @change="promptSeverityJustification" />
                 </v-col>
               </v-row>
               <v-row class="mt-n8">
@@ -276,9 +280,6 @@ export default class Checklist extends RouteMixin {
   filterSnackbar = false;
   controlSelection: string | null = null;
 
-  /** State variable for whether short or long IDs are requested */
-  shortId = true;
-
   //** Variable for selected tab */
   tab = null;
   webOrDatabase = false; // Needs to be replaced for selected checklist
@@ -349,51 +350,31 @@ export default class Checklist extends RouteMixin {
 
   /** List of switches for each control Status */
   controlStatusSwitches = [
-    {
-      name: 'Passed',
-      enabled: true,
-      color: 'statusPassed'
-    },
-    {
-      name: 'Failed',
-      enabled: true,
-      color: 'statusFailed'
-    },
-    {
-      name: 'Not Applicable',
-      enabled: true,
-      color: 'statusNotApplicable'
-    },
-    {
-      name: 'Not Reviewed',
-      enabled: true,
-      color: 'statusNotReviewed'
-    }
+    { name: 'Passed', value: 'NotAFinding', enabled: true, color: 'statusPassed' },
+    { name: 'Failed', value: 'Open', enabled: true, color: 'statusFailed' },
+    { name: 'Not Applicable', value: 'Not_Applicable', enabled: true, color: 'statusNotApplicable' },
+    { name: 'Not Reviewed', value: 'Not_Reviewed', enabled: true, color: 'statusNotReviewed' }
   ];
 
   /** List of switches for each severity (includes Short ID) */
   severitySwitches = [
-    {
-      name: 'High',
-      enabled: true,
-      color: 'teal'
-    },
-    {
-      name: 'Medium',
-      enabled: true,
-      color: 'teal'
-    },
-    {
-      name: 'Low',
-      enabled: true,
-      color: 'teal'
-    },
-    {
-      name: 'Short ID',
-      enabled: true,
-      color: 'teal'
-    }
+    { name: 'High', value: 'high', enabled: true, color: 'teal' },
+    { name: 'Medium', value: 'medium', enabled: true, color: 'teal' },
+    { name: 'Low', value: 'low', enabled: true, color: 'teal' },
+    { name: 'Short ID', value: 'Short ID', enabled: true, color: 'teal' }
   ];
+
+  statusItems = [
+    { name: 'Passed', value: 'NotAFinding' },
+    { name: 'Failed', value: 'Open' },
+    { name: 'Not Applicable', value: 'Not_Applicable' },
+    { name: 'Not Reviewed', value: 'Not_Reviewed', }
+  ]
+  severityOverrideItems = [
+    { name: 'High', value: 'CAT I' },
+    { name: 'Medium', value: 'CAT II' },
+    { name: 'Low', value: 'CAT III' }
+  ]
 
   evalInfo:
     | SourcedContextualizedEvaluation
@@ -404,14 +385,56 @@ export default class Checklist extends RouteMixin {
     return _.truncate(value, { omission: omission, length: length });
   }
 
+  shortStatus(status: string) {
+    if (this.severitySwitches.find(item => item.name === 'Short ID')?.enabled) {
+      switch (status) {
+        case 'Not Reviewed':
+          return 'NR'
+        case 'Failed':
+          return 'F'
+        case 'Passed':
+          return 'P'
+        case 'Not Applicable':
+          return 'NA'
+      }
+    }
+    return status
+  }
+
   shortRuleId(ruleId: string) {
-    if (this.shortId) return ruleId.split('r')[0] || ruleId;
+    if (this.severitySwitches.find(item => item.name === 'Short ID')?.enabled) return ruleId.split('r')[0] || ruleId;
     else return ruleId;
   }
 
   shortStigId(stigId: string) {
-    if (this.shortId) return stigId.split('-').slice(0, 2).join('-');
+    if (this.severitySwitches.find(item => item.name === 'Short ID')?.enabled) return stigId.split('-').slice(0, 2).join('-');
     else return stigId;
+  }
+
+  mapStatus(status: string) {
+    switch (status) {
+      // Mapping from checklist to Heimdall's conventions
+      case 'Not_Reviewed':
+        return 'Not Reviewed';
+      case 'Open':
+        return 'Failed';
+      case 'NotAFinding':
+        return 'Passed';
+      case 'Not_Applicable':
+        return 'Not Applicable';
+
+      //Mapping from Heimdall's conventions back to checklist
+      case 'Not Reviewed':
+        return 'Not_Reviewed';
+      case 'Failed':
+        return 'Open';
+      case 'Passed':
+        return 'NotAFinding';
+      case 'Not Applicable':
+        return 'Not_Applicable';
+      default:
+        return status;
+    }
   }
 
   numStatus(status: string): string {
@@ -434,6 +457,15 @@ export default class Checklist extends RouteMixin {
 
   get selectedRule() {
     return FilteredDataModule.selectedRule;
+  }
+
+  get selectedChecklistAsset() {
+    const selectedChecklist = this.getChecklist(this.file_filter)
+    if (selectedChecklist) {
+      return selectedChecklist.asset
+    } else {
+      return FilteredDataModule.emptyAsset
+    }
   }
 
   /**
@@ -620,16 +652,16 @@ export default class Checklist extends RouteMixin {
     const filteredRulesList = rulesList.filter((rule) => {
       const includedStatuses: string[] = [];
       if (passed) {
-        includedStatuses.push('Passed');
+        includedStatuses.push('NotAFinding');
       }
       if (failed) {
-        includedStatuses.push('Failed');
+        includedStatuses.push('Open');
       }
       if (notApplicable) {
-        includedStatuses.push('Not Applicable');
+        includedStatuses.push('Not_Applicable');
       }
       if (notReviewed) {
-        includedStatuses.push('Not Reviewed');
+        includedStatuses.push('Not_Reviewed');
       }
 
       const includedSeverities: string[] = [];

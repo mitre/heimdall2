@@ -2,15 +2,15 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
-import {Trinary} from '@/enums/Trinary';
-import {InspecDataModule} from '@/store/data_store';
+import { Trinary } from '@/enums/Trinary';
+import { InspecDataModule } from '@/store/data_store';
 import {
   FileID,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {ChecklistFile, ChecklistVuln} from '@/types/checklist/control';
+import { ChecklistAsset, ChecklistFile, ChecklistVuln } from '@/types/checklist/control';
 import {
   ContextualizedControl,
   ContextualizedProfile,
@@ -151,6 +151,21 @@ export class FilteredData extends VuexModule {
     stigUuid: '',
     legacyId: '',
     cciRef: ''
+  };
+  readonly emptyAsset: ChecklistAsset = {
+    role: '',
+    assettype: '',
+    hostname: '',
+    hostip: '',
+    hostmac: '',
+    hostfqdn: '',
+    marking: '',
+    targetcomment: '',
+    techarea: '',
+    targetkey: '',
+    webordatabase: false,
+    webdbsite: '',
+    webdbinstance: ''
   };
 
   selectedRule: ChecklistVuln = this.emptyRule;
