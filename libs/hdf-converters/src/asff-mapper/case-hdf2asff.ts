@@ -163,7 +163,7 @@ function getPassthrough(execTypes: Record<string, unknown>) {
   if (_.has(execTypes, 'Execution.passthrough1of1')) {
     return _.get(execTypes, 'Execution.passthrough1of1');
   }
-  //Behavior for passthrough object reconstitution from divided strings
+  //Else reconstitute passthrough from detected strings
   const keysArr = [];
   const strArr = [];
   for (const key of _.keys(execTypes.Execution)) {
@@ -173,6 +173,7 @@ function getPassthrough(execTypes: Record<string, unknown>) {
   }
   const cntMax = keysArr.length;
   let cntMin = 1;
+  //No valid passthrough
   if (cntMax <= 1) {
     return {};
   }
