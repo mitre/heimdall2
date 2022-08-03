@@ -179,7 +179,7 @@ function getPassthrough(execTypes: Record<string, unknown>) {
       cntMin++;
     }
   }
-  return JSON.parse(strArr.join(''));
+  return strArr.join('');
 }
 
 function mapping(
