@@ -74,11 +74,15 @@
                 </v-row>
                 <v-row>
                   <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">{{ item.name }}</v-col>
+                  <v-col :cols="3">Short ID</v-col>
                 </v-row>
                 <v-row class="mt-n10">
                   <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
                     <v-switch v-model="item.enabled" dense justify="center" inset :color="item.color"
                       :label="numSeverity(item.value)" hide-details />
+                  </v-col>
+                  <v-col :cols="3">
+                    <v-switch v-model="shortIdEnabled" dense justify="center" inset color="teal" hide-details />
                   </v-col>
                 </v-row>
               </v-tab-item>
@@ -110,7 +114,7 @@
               <!-- Technology Area -->
               <v-tab-item class="pa-4">
                 <v-select dense outlined :items="techAreaLabels" justify="center"
-                  v-model="selectedChecklistAsset.techarea" />
+                  v-model="selectedChecklistAsset.techarea" label="Select a Technology Area (optional)" />
               </v-tab-item>
             </v-tabs-items>
           </v-card>
@@ -133,11 +137,12 @@
               </v-select>
             </v-card-title>
             <v-card-text>
-              <v-data-table ref="dataTable" :single-select="true" disable-pagination dense fixed-header :items="rules"
-                :item-class="checkSelected" :headers="headers" :search="searchValue" hide-default-footer
+              <v-data-table calculate-widths ref="dataTable" :single-select="true" disable-pagination dense fixed-header
+                :items="rules" :item-class="checkSelected" :headers="headers" :search="searchValue" hide-default-footer
                 class="overflow-y-auto" height="42vh" @click:row="showRule" @current-items="getFiltered">
                 <template #[`item.status`]="{ item }">
-                  {{ shortStatus(mapStatus(item.status)) }}
+                  <v-chip :color="statusColor(item.status)" small><strong>{{ shortStatus(mapStatus(item.status))
+                  }}</strong></v-chip>
                 </template>
                 <template #[`item.ruleVersion`]="{ item }">
                   {{ truncate(shortStigId(item.ruleVersion), 20) }}
@@ -224,7 +229,7 @@
           <v-card class="text-center px-8 pt-2" height="300px">
             <v-card-title class="justify-center">Severity Override Justification</v-card-title>
             <v-card-subtitle v-if="selectedRule.severityJustification === ''" class="justify-center mt-1">
-              <strong>Please input a valid severity override justification.</strong>
+              <strong>Please input a valid severity override justification. (Required)</strong>
             </v-card-subtitle>
             <v-card-subtitle v-else class="justify-center mt-1">
               <strong>Press "OK" to save.</strong>
@@ -300,16 +305,20 @@ export default class Checklist extends RouteMixin {
   filterSnackbar = false;
   controlSelection: string | null = null;
 
+  /** State variable to track status of bottom-sheet */
   sheet = false;
+
+  /** State variable to track "Short ID" switch */
+  shortIdEnabled = true;
 
   //** Variable for selected tab */
   tab = null;
   webOrDatabase = false; // Needs to be replaced for selected checklist
 
-  selectedHeaders: { text: string; value: string; width: string }[] = [
+  selectedHeaders: { text: string; value: string; width?: string }[] = [
     { text: 'Status', value: 'status', width: '100px' },
-    { text: 'STIG ID', value: 'ruleVersion', width: '130px' },
-    { text: 'Rule ID', value: 'ruleId', width: '160px' },
+    { text: 'STIG ID', value: 'ruleVersion', width: '170px' },
+    { text: 'Rule ID', value: 'ruleId', width: '170px' },
     { text: 'Vul ID', value: 'vulnNum', width: '100px' },
     { text: 'Group Name', value: 'groupTitle', width: '150px' },
     { text: 'CCIs', value: 'cciRef', width: '120px' }
@@ -317,8 +326,8 @@ export default class Checklist extends RouteMixin {
 
   headersList = [
     { text: 'Status', value: 'status', width: '100px' },
-    { text: 'STIG ID', value: 'ruleVersion', width: '130px' },
-    { text: 'Rule ID', value: 'ruleId', width: '160px' },
+    { text: 'STIG ID', value: 'ruleVersion', width: '170px' },
+    { text: 'Rule ID', value: 'ruleId', width: '170px' },
     { text: 'Vul ID', value: 'vulnNum', width: '100px' },
     { text: 'Group Name', value: 'groupTitle', width: '150px' },
     { text: 'CCIs', value: 'cciRef', width: '120px' }
@@ -378,12 +387,11 @@ export default class Checklist extends RouteMixin {
     { name: 'Not Reviewed', value: 'Not_Reviewed', enabled: true, color: 'statusNotReviewed' }
   ];
 
-  /** List of switches for each severity (includes Short ID) */
+  /** List of switches for each severity */
   severitySwitches = [
     { name: 'High', value: 'high', enabled: true, color: 'teal' },
     { name: 'Medium', value: 'medium', enabled: true, color: 'teal' },
     { name: 'Low', value: 'low', enabled: true, color: 'teal' },
-    { name: 'Short ID', value: 'Short ID', enabled: true, color: 'teal' }
   ];
 
   statusItems = [
@@ -396,7 +404,7 @@ export default class Checklist extends RouteMixin {
     { name: 'High', value: 'CAT I' },
     { name: 'Medium', value: 'CAT II' },
     { name: 'Low', value: 'CAT III' },
-    { name: 'None', value: '' }
+    { name: '(Default)', value: '' }
   ]
 
   evalInfo:
@@ -408,8 +416,21 @@ export default class Checklist extends RouteMixin {
     return _.truncate(value, { omission: omission, length: length });
   }
 
+  statusColor(status: string) {
+    switch (status) {
+      case 'NotAFinding':
+        return 'statusPassed'
+      case 'Not_Applicable':
+        return 'statusNotApplicable'
+      case 'Open':
+        return 'statusFailed'
+      default: // Not_Reviewed
+        return 'statusNotReviewed'
+    }
+  }
+
   shortStatus(status: string) {
-    if (this.severitySwitches.find(item => item.name === 'Short ID')?.enabled) {
+    if (this.shortIdEnabled) {
       switch (status) {
         case 'Not Reviewed':
           return 'NR'
@@ -425,12 +446,12 @@ export default class Checklist extends RouteMixin {
   }
 
   shortRuleId(ruleId: string) {
-    if (this.severitySwitches.find(item => item.name === 'Short ID')?.enabled) return ruleId.split('r')[0] || ruleId;
+    if (this.shortIdEnabled) return ruleId.split('r')[0] || ruleId;
     else return ruleId;
   }
 
   shortStigId(stigId: string) {
-    if (this.severitySwitches.find(item => item.name === 'Short ID')?.enabled) return stigId.split('-').slice(0, 2).join('-');
+    if (this.shortIdEnabled) return stigId.split('-').slice(0, 2).join('-');
     else return stigId;
   }
 
@@ -480,7 +501,6 @@ export default class Checklist extends RouteMixin {
   }
 
   numSeverity(severity: string): string {
-    if (severity === 'Short ID') return '';
     return this.tableItems
       .filter((item) => item.severity === severity.toLowerCase())
       .length.toString();
@@ -556,7 +576,11 @@ export default class Checklist extends RouteMixin {
     return this.severityOverrideItems.filter(item => item.value !== this.mapSeverity(severity))
   }
   promptSeverityJustification() {
-    this.selectedRule.severityJustification = '';
+    if (this.selectedRule.severityOverride === '') {
+      this.selectedRule.severityJustification = 'Returning to default severity.';
+    } else {
+      this.selectedRule.severityJustification = '';
+    }
     this.sheet = true;
   }
   validJustification = true;
