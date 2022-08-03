@@ -23,7 +23,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 
 export class TwistlockResults {
   data: Record<string, unknown>;
-  customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   withRaw: boolean;
   constructor(twistlockJson: string, withRaw = false) {
     this.data = JSON.parse(twistlockJson);
