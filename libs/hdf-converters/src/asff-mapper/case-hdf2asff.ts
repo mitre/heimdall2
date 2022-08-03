@@ -168,7 +168,7 @@ function getPassthrough(execTypes: Record<string, unknown>) {
   const strArr = [];
   for (const key of _.keys(execTypes.Execution)) {
     if (/passthrough.*of/.test(key)) {
-      keysArr.push(_.pick(execTypes.Execution, key));
+      keysArr.push(replaceTypesSlashes(_.pick(execTypes.Execution, key)));
     }
   }
   const cntMax = keysArr.length;
