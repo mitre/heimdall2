@@ -184,7 +184,7 @@ export class FortifyMapper extends BaseConverter {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
         let auxData = _.get(data, 'FVDL');
-        if (auxData instanceof Object) {
+        if (_.isObject(auxData)) {
           auxData = _.omit(auxData, [
             'CreatedTS',
             'UUID',
