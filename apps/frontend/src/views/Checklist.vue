@@ -50,7 +50,7 @@
   <template #main-content>
     <v-container fluid grid-list-md pt-0 mt-4 mx-1>
       <v-row>
-        <v-col xs="4" :cols="4">
+        <v-col md="4" :cols="12">
           <v-card height="25vh" class="overflow-auto">
             <v-tabs v-model="tab" show-arrows center-active grow>
               <v-tab> Benchmarks </v-tab>
@@ -145,7 +145,7 @@
           </v-card>
         </v-col>
         <!-- Rule Data -->
-        <v-col xs="4" :cols="8">
+        <v-col md="8" :cols="12">
           <v-card height="10vh" class="overflow-y-auto">
             <v-card-text class="text-center">
               <strong>{{ selectedRule.stigRef }}</strong>
@@ -161,7 +161,7 @@
               </v-row>
             </v-card-text>
           </v-card>
-          <v-card height="40vh" class="overflow-auto mt-4">
+          <v-card height="40vh" class="overflow-auto mt-4 pt-2">
             <div v-if="selectedRule.ruleId !== ''">
               <v-card-text>
                 <strong>Rule Title: </strong><br />
