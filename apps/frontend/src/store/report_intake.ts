@@ -2,19 +2,19 @@
  * Reads and parses inspec files
  */
 
-import { InspecDataModule } from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 import Store from '@/store/store';
 import {
+  ChecklistAsset,
   ChecklistFile,
   ChecklistHeader,
-  ChecklistVuln,
   ChecklistStig,
-  ChecklistAsset,
-  mapStatus,
-  mapSeverity
+  ChecklistVuln,
+  mapSeverity,
+  mapStatus
 } from '@/types/checklist/control';
-import { Tag } from '@/types/models';
-import { read_file_async } from '@/utilities/async_util';
+import {Tag} from '@/types/models';
+import {read_file_async} from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
@@ -39,7 +39,7 @@ import {
   XCCDFResultsMapper,
   ZapMapper
 } from '@mitre/hdf-converters';
-import { Jsonix } from '@mitre/jsonix';
+import {Jsonix} from '@mitre/jsonix';
 import axios from 'axios';
 import {
   ContextualizedEvaluation,
@@ -51,10 +51,10 @@ import {
   ExecJSON
 } from 'inspecjs';
 import _ from 'lodash';
-import { v4 as uuid } from 'uuid';
-import { Action, getModule, Module, VuexModule } from 'vuex-module-decorators';
-import { FilteredDataModule } from './data_filters';
-import { SnackbarModule } from './snackbar';
+import {v4 as uuid} from 'uuid';
+import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
+import {FilteredDataModule} from './data_filters';
+import {SnackbarModule} from './snackbar';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -189,9 +189,9 @@ export class InspecIntake extends VuexModule {
               filename: `${filename
                 .replace(/.json/gi, '')
                 .replace(/.nessus/gi, '')}-${_.get(
-                  evaluation,
-                  'platform.target_id'
-                )}.${originalFileType}`
+                evaluation,
+                'platform.target_id'
+              )}.${originalFileType}`
             });
           })
         );
@@ -327,8 +327,8 @@ export class InspecIntake extends VuexModule {
             Accept: 'application/json'
           }
         })
-        .then(async ({ data }) => {
-          data.forEach(async (file: { filename: string; data: string }) => {
+        .then(async ({data}) => {
+          data.forEach(async (file: {filename: string; data: string}) => {
             InspecIntakeModule.loadFile({
               file: new File([new Blob([file.data])], file.filename)
             });
@@ -478,7 +478,7 @@ export class InspecIntake extends VuexModule {
       webordatabase: _.get(raw, 'value.asset.webordatabase'),
       webdbsite: _.get(raw, 'value.asset.webdbsite'),
       webdbinstance: _.get(raw, 'value.asset.webdbinstance')
-    }
+    };
 
     const rawStigs: unknown[] = _.get(raw, 'value.stigs.istig');
     const stigs: ChecklistStig[] = [];

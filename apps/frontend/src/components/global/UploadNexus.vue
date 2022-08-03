@@ -1,15 +1,30 @@
 <template>
-  <Modal :visible="visible" :persistent="persistent" :fullscreen="fullscreen" @close-modal="$emit('close-modal')">
+  <Modal
+    :visible="visible"
+    :persistent="persistent"
+    :fullscreen="fullscreen"
+    @close-modal="$emit('close-modal')"
+  >
     <div class="elevation-24">
       <v-banner v-if="warning_banner" icon="mdi-alert" color="warning">
         {{ warning_banner }}
       </v-banner>
-      <v-tabs :vertical="$vuetify.breakpoint.mdAndUp" :value="activeTab" color="primary-visible" show-arrows
-        @change="selected_tab">
+      <v-tabs
+        :vertical="$vuetify.breakpoint.mdAndUp"
+        :value="activeTab"
+        color="primary-visible"
+        show-arrows
+        @change="selected_tab"
+      >
         <!-- Define our tabs -->
         <v-tab id="select-tab-local" href="#uploadtab-local">Local Files</v-tab>
 
-        <v-tab v-if="serverMode" id="select-tab-database" href="#uploadtab-database">Database</v-tab>
+        <v-tab
+          v-if="serverMode"
+          id="select-tab-database"
+          href="#uploadtab-database"
+          >Database</v-tab
+        >
 
         <v-tab id="select-tab-s3" href="#uploadtab-s3">S3 Bucket</v-tab>
 
@@ -64,14 +79,14 @@ import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vu
 import TenableReader from '@/components/global/upload_tabs/tenable/TenableReader.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
-import { FilteredDataModule } from '@/store/data_filters';
-import { InspecDataModule } from '@/store/data_store';
-import { FileID } from '@/store/report_intake';
-import { ServerModule } from '@/store/server';
-import { SnackbarModule } from '@/store/snackbar';
-import { LocalStorageVal } from '@/utilities/helper_util';
-import Component, { mixins } from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {FileID} from '@/store/report_intake';
+import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 const localTab = new LocalStorageVal<string>('nexus_curr_tab');
 /**
  * Multiplexes all of our file upload components
@@ -90,8 +105,8 @@ const localTab = new LocalStorageVal<string>('nexus_curr_tab');
   }
 })
 export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
-  @Prop({ default: true }) readonly visible!: boolean;
-  @Prop({ default: false }) readonly persistent!: boolean;
+  @Prop({default: true}) readonly visible!: boolean;
+  @Prop({default: false}) readonly persistent!: boolean;
   activeTab: string = localTab.get_default('uploadtab-local');
 
   get fullscreen() {
