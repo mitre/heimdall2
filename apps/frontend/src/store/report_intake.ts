@@ -22,7 +22,7 @@ import {
   SarifMapper,
   ScoutsuiteMapper,
   SnykResults,
-  TwistlockMapper,
+  TwistlockResults,
   VeracodeMapper,
   XCCDFResultsMapper,
   ZapMapper
@@ -239,7 +239,7 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.SNYK:
         return new SnykResults(convertOptions.data).toHdf();
       case INPUT_TYPES.TWISTLOCK:
-        return new TwistlockMapper(convertOptions.data).toHdf();
+        return new TwistlockResults(convertOptions.data).toHdf();
       case INPUT_TYPES.NESSUS:
         return new NessusResults(convertOptions.data).toHdf();
       case INPUT_TYPES.XCCDF:
