@@ -28,6 +28,9 @@ type Counts = {
   NotReviewed: number;
 };
 
+//Character limit for a single entry in an ASFF attribute
+const attributeCharLimit = 30000;
+
 export function escapeForwardSlashes<T>(s: T): T {
   return _.isString(s)
     ? (s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
@@ -512,12 +515,11 @@ function createProfileInfoFindingFields(
       }
     });
   });
-  const charLimit = 30000;
   const passThroughObj = _.get(hdf, 'passthrough');
   if (passThroughObj instanceof Object) {
     pushSplitString(
       escapeForwardSlashes(JSON.stringify(passThroughObj)),
-      charLimit,
+      attributeCharLimit,
       typesArr,
       'Execution/passthrough'
     );

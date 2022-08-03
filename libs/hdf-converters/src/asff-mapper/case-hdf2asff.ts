@@ -154,6 +154,34 @@ function getCodeForProfileLayer(
   }
 }
 
+function getPassthrough(execTypes: Record<string, unknown>) {
+  //Default behavior for old instances of HDF
+  if (_.has(execTypes, 'Execution.passthrough')) {
+    return _.get(execTypes, 'Execution.passthrough');
+  }
+  //Behavior for passthrough object reconstitution from divided strings
+  const keysArr = [];
+  const strArr = [];
+  const regex = /passthrough+.*of+/i;
+  for (const key in _.keys(execTypes.Execution)) {
+    if (regex.test(key)) {
+      keysArr.push(_.pick(execTypes.Execution, key));
+    }
+  }
+  const cntMax = keysArr.length;
+  let cntMin = 1;
+  const regex2 = /\d+/;
+  while (cntMin <= cntMax) {
+    for (const obj of keysArr) {
+      if (_.keys(obj)[0].match(regex2)![0] === String(cntMin)) {
+        strArr.push(_.values(obj)[0]);
+      }
+      cntMin++;
+    }
+  }
+  return JSON.parse(strArr.join(''));
+}
+
 function mapping(
   context: ASFFMapper
 ): MappedTransform<ExecJSON.Execution, ILookupPath> {
@@ -169,7 +197,7 @@ function mapping(
   );
   return {
     shortcircuit: true,
-    passthrough: _.get(executionTypes, 'Execution.passthrough'),
+    passthrough: getPassthrough(executionTypes),
     platform: {
       ...(_.get(executionTypes, 'Execution.platform') as ExecJSON.Platform),
       target_id: (
