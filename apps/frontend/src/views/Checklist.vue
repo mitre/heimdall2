@@ -199,7 +199,8 @@
                 </v-col>
                 <v-col>
                   <v-select v-model="selectedRule.severityOverride" dense label="Severity Override" item-text="name"
-                    item-value="value" :items="severityOverrideItems" @change="promptSeverityJustification" />
+                    item-value="value" :items="checkPossibleOverrides(selectedRule.severity)"
+                    @change="promptSeverityJustification" />
                 </v-col>
               </v-row>
               <v-row class="mt-n8">
@@ -218,6 +219,27 @@
           </v-card>
         </v-col>
       </v-row>
+      <div class="text-center">
+        <v-bottom-sheet v-model="sheet" persistent inset>
+          <v-card class="text-center px-8 pt-2" height="300px">
+            <v-card-title class="justify-center">Severity Override Justification</v-card-title>
+            <v-card-subtitle v-if="selectedRule.severityJustification === ''" class="justify-center mt-1">
+              <strong>Please input a valid severity override justification.</strong>
+            </v-card-subtitle>
+            <v-card-subtitle v-else class="justify-center mt-1">
+              <strong>Press "OK" to save.</strong>
+            </v-card-subtitle>
+            <v-textarea class="mt-2" v-model="selectedRule.severityJustification" solo outlined dense no-resize
+              height="130px" />
+            <v-btn color="#616161" dark @click="cancelSeverityOverride">
+              Cancel
+            </v-btn>
+            <v-btn class="ml-4" color="#616161" dark @click="validateSecurityJustification">
+              Ok
+            </v-btn>
+          </v-card>
+        </v-bottom-sheet>
+      </div>
     </v-container>
   </template>
   </Base>
@@ -255,7 +277,6 @@ import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import { ChecklistVuln } from '../types/checklist/control';
 import { InspecDataModule } from '@/store/data_store';
 import _ from 'lodash';
-// import SwitchTable from '@/components/cards/SwitchTable.vue';
 
 @Component({
   components: {
@@ -272,13 +293,14 @@ import _ from 'lodash';
     ExportHTMLModal,
     ExportSplunkModal,
     UploadButton
-    //SwitchTable
   }
 })
 export default class Checklist extends RouteMixin {
   /** Model for if all-filtered snackbar should be showing */
   filterSnackbar = false;
   controlSelection: string | null = null;
+
+  sheet = false;
 
   //** Variable for selected tab */
   tab = null;
@@ -373,7 +395,8 @@ export default class Checklist extends RouteMixin {
   severityOverrideItems = [
     { name: 'High', value: 'CAT I' },
     { name: 'Medium', value: 'CAT II' },
-    { name: 'Low', value: 'CAT III' }
+    { name: 'Low', value: 'CAT III' },
+    { name: 'None', value: '' }
   ]
 
   evalInfo:
@@ -436,6 +459,19 @@ export default class Checklist extends RouteMixin {
         return status;
     }
   }
+  mapSeverity(severity: string) {
+    switch (severity) {
+      case 'high':
+        return 'CAT I'
+      case 'medium':
+        return 'CAT II'
+      case 'low':
+        return 'CAT III'
+      default:
+        return ''
+    }
+  }
+
 
   numStatus(status: string): string {
     return this.tableItems
@@ -516,10 +552,30 @@ export default class Checklist extends RouteMixin {
     this.numItems = this.tableItems.length;
   }
 
+  checkPossibleOverrides(severity: string) {
+    return this.severityOverrideItems.filter(item => item.value !== this.mapSeverity(severity))
+  }
   promptSeverityJustification() {
-    // Pop up modal to prompt for severity override justification
-    // this.selectedRule.severityOverride = 'INSERT SEVERITY OVERRIDE HERE'
-    // this.selectedRule.severityJustification = 'Get value from modal'
+    this.selectedRule.severityJustification = '';
+    this.sheet = true;
+  }
+  validJustification = true;
+  validateSecurityJustification() {
+    if (this.selectedRule.severityJustification !== '') {
+      this.validJustification = true;
+      this.sheet = false;
+      return true;
+    } else {
+      this.validJustification = false;
+      this.sheet = true;
+      return false;
+    }
+  }
+  cancelSeverityOverride() {
+    this.validJustification = true;
+    this.sheet = false;
+    this.selectedRule.severityOverride = '';
+    this.selectedRule.severityJustification = '';
   }
 
   get searchValue(): string {
