@@ -180,7 +180,7 @@ function getPassthrough(execTypes: Record<string, unknown>) {
   while (cntMin <= cntMax) {
     for (const obj of keysArr) {
       if ((_.keys(obj)[0].match(/\d+/) || '')[0] === String(cntMin)) {
-        strArr.push(replaceTypesSlashes(_.values(obj)[0]));
+        strArr.push(_.values(obj)[0]);
       }
       cntMin++;
     }
