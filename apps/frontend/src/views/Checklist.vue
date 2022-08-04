@@ -53,10 +53,10 @@
         <v-col md="4" :cols="12">
           <v-card height="25vh" class="overflow-auto">
             <v-tabs v-model="tab" show-arrows center-active grow>
-              <v-tab> Benchmarks </v-tab>
-              <v-tab> Filters </v-tab>
-              <v-tab> Target Data </v-tab>
-              <v-tab> Technology Area </v-tab>
+              <v-tab class="text-button">Benchmarks</v-tab>
+              <v-tab class="text-button">Filters</v-tab>
+              <v-tab class="text-button">Target Data</v-tab>
+              <v-tab class="text-button">Technology Area</v-tab>
             </v-tabs>
             <v-tabs-items v-model="tab">
               <!-- Benchmarks -->
@@ -122,8 +122,8 @@
           <v-card class="mt-4" height="62vh" overflow-auto>
             <v-card-title class="pt-2">
               <div>
-                Rules ({{ numItems }} shown,
-                {{ loadedRules.length - numItems }} hidden)
+                <strong>Rules ({{ numItems }} shown,
+                  {{ loadedRules.length - numItems }} hidden)</strong>
               </div>
               <v-spacer class="mt-0 pt-0" />
               <v-select v-model="selectedHeaders" :items="headersList" label="Select Columns" class="mt-4 pt-0" multiple
@@ -137,9 +137,9 @@
               </v-select>
             </v-card-title>
             <v-card-text>
-              <v-data-table calculate-widths ref="dataTable" :single-select="true" disable-pagination dense fixed-header
-                :items="rules" :item-class="checkSelected" :headers="headers" :search="searchValue" hide-default-footer
-                class="overflow-y-auto" height="42vh" @click:row="showRule" @current-items="getFiltered">
+              <v-data-table :single-select="true" disable-pagination dense fixed-header :items="rules"
+                :item-class="checkSelected" :headers="headers" :search="searchValue" hide-default-footer
+                class="overflow-auto" height="42vh" @click:row="showRule" @current-items="getFiltered">
                 <template #[`item.status`]="{ item }">
                   <v-chip :color="statusColor(item.status)" small><strong>{{ shortStatus(mapStatus(item.status))
                   }}</strong></v-chip>
@@ -159,36 +159,59 @@
         </v-col>
         <!-- Rule Data -->
         <v-col md="8" :cols="12">
-          <v-card height="10vh" class="overflow-y-auto">
+          <v-card height="13vh" class="overflow-y-auto">
             <v-card-text class="text-center">
-              <strong>{{ selectedRule.stigRef }}</strong>
+              <div class="text-button">{{ selectedRule.stigRef }}</div>
               <v-row dense class="mt-2">
-                <v-col><strong>Vul ID: </strong>{{ selectedRule.vulnNum }}</v-col>
-                <v-col><strong>Rule ID: </strong>{{ shortRuleId(selectedRule.ruleId) }}</v-col>
-                <v-col><strong>STIG ID: </strong>{{ shortStigId(selectedRule.ruleVersion) }}</v-col>
+                <v-col :cols="4">
+                  <div><span class="text-overline white--text">Vul ID: </span>{{ selectedRule.vulnNum }}</div>
+                </v-col>
+                <v-col :cols="4">
+                  <div><span class="text-overline white--text">Rule ID: </span>{{ shortRuleId(selectedRule.ruleId) }}
+                  </div>
+                </v-col>
+                <v-col :cols="4">
+                  <div><span class="text-overline white--text">STIG ID: </span>{{
+                      shortStigId(selectedRule.ruleVersion)
+                  }}</div>
+                </v-col>
               </v-row>
               <v-row dense class="pa-0">
-                <v-col><strong>Severity: </strong>{{ selectedRule.severity }}</v-col>
-                <v-col><strong>Classification: </strong>{{ selectedRule.class }}</v-col>
-                <v-col><strong>Legacy IDs: </strong>{{ selectedRule.legacyId }}</v-col>
+                <v-col :cols="4">
+                  <div><span class="text-overline white--text">Severity: </span>{{ selectedRule.severity }}</div>
+                </v-col>
+                <v-col :cols="4">
+                  <div><span class="text-overline white--text">Classification: </span>{{ selectedRule.class }}</div>
+                </v-col>
+                <v-col :cols="4">
+                  <div><span class="text-overline white--text">Legacy IDs: </span>{{ selectedRule.legacyId }}</div>
+                </v-col>
               </v-row>
             </v-card-text>
           </v-card>
-          <v-card height="40vh" class="overflow-auto mt-4 pt-2">
+          <v-card height="36vh" class="overflow-auto mt-4 pt-2">
             <div v-if="selectedRule.ruleId !== ''">
               <v-card-text>
-                <strong>Rule Title: </strong><br />
+                <div><span class="text-overline white--text">Rule Title: </span></div>
                 {{ selectedRule.ruleTitle }}<br /><br />
-                <strong>Discussion: </strong><br />
+                <div><span class="text-overline white--text">Discussion: </span></div>
                 {{ selectedRule.vulnDiscuss }}<br /><br />
-                <strong>Check Text: </strong><br />
+                <div><span class="text-overline white--text">Check Text: </span></div>
                 {{ selectedRule.checkContent }}<br /><br />
-                <strong>Fix Text: </strong><br />
+                <div><span class="text-overline white--text">Fix Text: </span></div>
                 {{ selectedRule.fixText }}<br /><br />
               </v-card-text>
-              <v-card-subtitle class="text-center">References</v-card-subtitle>
+              <v-card-subtitle class="text-center text-subtitle-2">References</v-card-subtitle>
+              <v-divider />
               <v-card-text>
-                <strong>CCI: </strong>{{ selectedRule.cciRef }}<br /><br />
+                <div v-for="item in selectedRule.cciRef.split('; ')">
+                  {{ item }}: {{ cciDescription(item) }}
+                  <div>
+                    NIST 800-53 Rev 4: <v-chip small>{{ nistTag(item)[2] || 'None' }}</v-chip>
+                  </div>
+                  <br />
+                </div>
+                <br /><br />
               </v-card-text>
             </div>
             <div v-else>
@@ -200,7 +223,7 @@
               <v-row>
                 <v-col>
                   <v-select v-model="selectedRule.status" dense label="Status" :items="statusItems" item-text="name"
-                    item-value="value" />
+                    item-value="value" :item-color="statusColor(selectedRule.status)" />
                 </v-col>
                 <v-col>
                   <v-select v-model="selectedRule.severityOverride" dense label="Severity Override" item-text="name"
@@ -282,6 +305,8 @@ import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import { ChecklistVuln } from '../types/checklist/control';
 import { InspecDataModule } from '@/store/data_store';
 import _ from 'lodash';
+import { CciNistMapping } from '@mitre/hdf-converters/src/mappings/CciNistMapping';
+import { CCI_DESCRIPTIONS } from '@/utilities/cci_util';
 
 @Component({
   components: {
@@ -491,6 +516,13 @@ export default class Checklist extends RouteMixin {
       default:
         return ''
     }
+  }
+
+  nistTag(cci: string): string[] {
+    return CCI_DESCRIPTIONS[cci].nist
+  }
+  cciDescription(cci: string): string {
+    return CCI_DESCRIPTIONS[cci].def
   }
 
 
