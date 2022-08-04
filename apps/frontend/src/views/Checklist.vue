@@ -60,7 +60,14 @@
             </v-tabs>
             <v-tabs-items v-model="tab">
               <!-- Benchmarks -->
-              <v-tab-item />
+              <v-tab-item class="pa-4">
+                <v-data-table disable-pagination dense fixed-header hide-default-footer :items="selectedChecklistStigs"
+                  item-key="name" :headers="stigListHeaders" class="overflow-auto" height="15vh">
+                  <template #[`item.show`]="{ item }">
+                    <v-checkbox v-model="item.show"></v-checkbox>
+                  </template>
+                </v-data-table>
+              </v-tab-item>
               <!-- Filters -->
               <v-tab-item grid-list-md class="pa-4">
                 <v-row>
@@ -204,7 +211,7 @@
               <v-card-subtitle class="text-center text-subtitle-2">References</v-card-subtitle>
               <v-divider />
               <v-card-text>
-                <div v-for="item in selectedRule.cciRef.split('; ')">
+                <div v-for="item in selectedRule.cciRef.split('; ')" :key="item">
                   {{ item }}: {{ cciDescription(item) }}
                   <div>
                     NIST 800-53 Rev 4: <v-chip small>{{ nistTag(item)[2] || 'None' }}</v-chip>
@@ -384,6 +391,12 @@ export default class Checklist extends RouteMixin {
     { value: 'legacyId', align: ' d-none' }
   ];
 
+  stigListHeaders = [
+    { text: 'Selected', value: 'show' },
+    { text: 'Name', value: 'name' },
+    { text: 'Version', value: 'version' },
+    { text: 'Release Number', value: 'release' }
+  ]
   techAreaLabels: string[] = [
     'Application Review',
     'Boundary Security',
@@ -431,6 +444,8 @@ export default class Checklist extends RouteMixin {
     { name: 'Low', value: 'CAT III' },
     { name: '(Default)', value: '' }
   ]
+
+  stigInfo: { show: boolean, name: string }[] = []
 
   evalInfo:
     | SourcedContextualizedEvaluation
@@ -554,6 +569,22 @@ export default class Checklist extends RouteMixin {
     } else {
       return FilteredDataModule.emptyAsset
     }
+  }
+
+
+  get selectedChecklistStigs(): { show: boolean, name: string, version: string, release: string }[] {
+    const selectedChecklist = this.getChecklist(this.file_filter)
+    const stigInfo: { show: boolean, name: string, version: string, release: string }[] = []
+    selectedChecklist?.stigs.forEach((stig) => {
+      stigInfo.push({
+        show: true,
+        name: stig.header.title,
+        version: stig.header.version,
+        release: stig.header.releaseinfo?.split(' ')[1] || ''
+      })
+    })
+    this.stigInfo = stigInfo
+    return stigInfo
   }
 
   /**
@@ -787,10 +818,17 @@ export default class Checklist extends RouteMixin {
         includedSeverities.push('low');
       }
 
+      const includedStigs: string[] = []
+      this.stigInfo.forEach(stig => {
+        if (stig.show)
+          includedStigs.push(stig.name)
+      })
+
       if (
-        includedStatuses.includes(rule.status) &&
+        includedStigs.includes(rule.stigRef.split(' :: ')[0]) && includedStatuses.includes(rule.status) &&
         (includedSeverities.includes(rule.severity) ||
           includedSeverities.includes(rule.severityOverride))
+
       ) {
         return true;
       }

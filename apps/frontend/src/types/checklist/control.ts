@@ -16,7 +16,7 @@ export type ChecklistFile = {
 
   asset: ChecklistAsset;
   stigs: ChecklistStig[];
-  raw: unknown;
+  raw: Object;
 };
 
 export type ChecklistAsset = {
@@ -36,11 +36,11 @@ export type ChecklistAsset = {
 };
 
 export type ChecklistStig = {
-  header: ChecklistHeader;
+  header: StigHeader;
   vulns: ChecklistVuln[];
 };
 
-export type ChecklistHeader = {
+export type StigHeader = {
   version: string;
   classification: string;
   customname?: string;
