@@ -428,7 +428,7 @@ export class InspecIntake extends VuexModule {
   async loadChecklist(options: ChecklistLoadOptions) {
     const fileID: FileID = uuid();
 
-    const newChecklist = ChecklistIntermediaryConverter.convert({ text: options.text, filename: options.filename })
+    const newChecklist = ChecklistIntermediaryConverter.toIntermediary({ text: options.text, filename: options.filename })
 
     InspecDataModule.addChecklist({ uniqueId: fileID, ...newChecklist });
     FilteredDataModule.toggle_checklist(fileID);

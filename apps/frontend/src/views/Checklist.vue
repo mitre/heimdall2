@@ -17,31 +17,15 @@
         </template>
         <v-list class="py-0">
           <v-list-item class="px-0">
-            <ExportCaat :filter="all_filter" />
-          </v-list-item>
-          <v-list-item v-if="is_checklist_view" class="px-0">
-            <ExportNist :filter="all_filter" />
-          </v-list-item>
-          <v-list-item v-if="is_checklist_view" class="px-0">
-            <ExportASFFModal :filter="all_filter" />
-          </v-list-item>
-          <v-list-item v-if="is_checklist_view" class="px-0">
-            <ExportCKLModal :filter="all_filter" />
-          </v-list-item>
-          <v-list-item class="px-0">
-            <ExportCSVModal :filter="all_filter" />
-          </v-list-item>
-          <v-list-item v-if="is_checklist_view" class="px-0">
-            <ExportHTMLModal :filter="all_filter" :file-type="current_route_name" />
-          </v-list-item>
-          <v-list-item v-if="is_checklist_view" class="px-0">
-            <ExportSplunkModal />
-          </v-list-item>
-          <v-list-item class="px-0">
-            <ExportJson />
-          </v-list-item>
-          <v-list-item class="px-0">
-            <ExportXCCDFResults :filter="all_filter" :is-result-view="is_checklist_view" />
+            <template>
+              <v-tooltip top>
+                <template #activator="{ on }">
+                  <IconLinkItem key="export_ckl" text="Export as CKL" icon="mdi-check-all" @click="export_ckl()"
+                    v-on="on" />
+                </template>
+                <span>JSON Download</span>
+              </v-tooltip>
+            </template>
           </v-list-item>
         </v-list>
       </v-menu>
@@ -309,11 +293,12 @@ import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
-import { ChecklistVuln } from '@mitre/hdf-converters';
+import { ChecklistConverter, ChecklistVuln } from '@mitre/hdf-converters';
 import { InspecDataModule } from '@/store/data_store';
 import _ from 'lodash';
-import { CciNistMapping } from '@mitre/hdf-converters/src/mappings/CciNistMapping';
 import { CCI_DESCRIPTIONS } from '@/utilities/cci_util';
+import { saveSingleOrMultipleFiles } from '@/utilities/export_util';
+import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 
 @Component({
   components: {
@@ -329,7 +314,8 @@ import { CCI_DESCRIPTIONS } from '@/utilities/cci_util';
     ExportCKLModal,
     ExportHTMLModal,
     ExportSplunkModal,
-    UploadButton
+    UploadButton,
+    IconLinkItem
   }
 })
 export default class Checklist extends RouteMixin {
@@ -454,6 +440,22 @@ export default class Checklist extends RouteMixin {
 
   truncate(value: string, length: number, omission = '...') {
     return _.truncate(value, { omission: omission, length: length });
+  }
+
+  export_ckl() {
+    type FileData = {
+      filename: string;
+      data: string;
+    }
+    const checklist = this.getChecklist(this.file_filter)
+    if (checklist) {
+      const checklistString = ChecklistConverter.toChecklist(checklist)
+      const file: FileData[] = [{
+        filename: checklist.filename,
+        data: checklistString
+      }]
+      saveSingleOrMultipleFiles(file, 'ckl')
+    }
   }
 
   statusColor(status: string) {
