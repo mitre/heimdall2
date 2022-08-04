@@ -164,31 +164,31 @@ function getPassthrough(execTypes: Record<string, unknown>) {
     return _.get(execTypes, 'Execution.passthrough1of1');
   }
   //Else reconstitute passthrough from detected strings
-  const keysArr = [];
-  const strArr = [];
+  const keyValuePairs = [];
+  const strStorage = [];
   for (const key of _.keys(execTypes.Execution)) {
     if (/passthrough.*of/.test(key)) {
-      keysArr.push(_.pick(execTypes.Execution, key));
+      keyValuePairs.push(_.pick(execTypes.Execution, key));
     }
   }
-  const cntMax = keysArr.length;
+  const cntMax = keyValuePairs.length;
   let cntMin = 1;
   //No valid passthrough
   if (cntMax <= 1) {
     return {};
   }
   while (cntMin <= cntMax) {
-    for (const obj of keysArr) {
+    for (const obj of keyValuePairs) {
       if ((_.keys(obj)[0].match(/\d+/) || '')[0] === String(cntMin)) {
-        strArr.push(_.values(obj)[0]);
+        strStorage.push(_.values(obj)[0]);
       }
       cntMin++;
     }
   }
   try {
-    return JSON.parse(strArr.join(''));
+    return JSON.parse(strStorage.join(''));
   } catch {
-    return strArr.join('');
+    return strStorage.join('');
   }
 }
 
