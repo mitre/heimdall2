@@ -10,7 +10,7 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import { ChecklistFile } from '@/types/checklist/control';
+import { ChecklistFile } from '@mitre/hdf-converters';
 import _ from 'lodash';
 import {
   Action,

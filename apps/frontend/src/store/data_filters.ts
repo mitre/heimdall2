@@ -10,7 +10,7 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import { ChecklistAsset, ChecklistFile, ChecklistVuln } from '@/types/checklist/control';
+import { ChecklistAsset, ChecklistFile, ChecklistVuln } from '@mitre/hdf-converters';
 import {
   ContextualizedControl,
   ContextualizedProfile,
