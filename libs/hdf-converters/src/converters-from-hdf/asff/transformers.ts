@@ -518,7 +518,7 @@ function createProfileInfoFindingFields(
     });
   });
   const passThroughObj = _.get(hdf, 'passthrough');
-  if (passThroughObj instanceof Object) {
+  if (_.isObject(passThroughObj)) {
     pushSplitString(
       escapeForwardSlashes(JSON.stringify(passThroughObj)),
       ATTRIBUTE_CHARACTER_LIMIT,
