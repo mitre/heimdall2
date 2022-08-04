@@ -2,15 +2,19 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
-import { Trinary } from '@/enums/Trinary';
-import { InspecDataModule } from '@/store/data_store';
+import {Trinary} from '@/enums/Trinary';
+import {InspecDataModule} from '@/store/data_store';
 import {
   FileID,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import { ChecklistAsset, ChecklistFile, ChecklistVuln } from '@mitre/hdf-converters';
+import {
+  ChecklistAsset,
+  ChecklistFile,
+  ChecklistVuln
+} from '@mitre/hdf-converters';
 import {
   ContextualizedControl,
   ContextualizedProfile,
@@ -152,6 +156,7 @@ export class FilteredData extends VuexModule {
     legacyId: '',
     cciRef: ''
   };
+
   readonly emptyAsset: ChecklistAsset = {
     role: '',
     assettype: '',

@@ -99,7 +99,6 @@ export default class DropdownContent extends Vue {
   }
 
   inChecklistView(): boolean {
-    console.log(this.$router.currentRoute.path);
     return this.$router.currentRoute.path.split('/')[1] === 'checklists';
   }
 }

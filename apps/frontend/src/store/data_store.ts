@@ -10,7 +10,7 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import { ChecklistFile } from '@mitre/hdf-converters';
+import {ChecklistFile} from '@mitre/hdf-converters';
 import _ from 'lodash';
 import {
   Action,
@@ -19,7 +19,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import { FilteredDataModule } from './data_filters';
+import {FilteredDataModule} from './data_filters';
 
 /** We make some new variant types of the Contextual types, to include their files*/
 export function isFromProfileFile(p: SourcedContextualizedProfile) {
@@ -168,22 +168,66 @@ export class InspecData extends VuexModule {
   UPDATE_CHECKLISTS() {
     this.checklistFiles.forEach((checklistFile) => {
       // Setting assets
-      _.set(checklistFile.raw, 'value.asset.role', checklistFile.asset.role)
-      _.set(checklistFile.raw, 'value.asset.assettype', checklistFile.asset.assettype)
-      _.set(checklistFile.raw, 'value.asset.marking', checklistFile.asset.marking)
-      _.set(checklistFile.raw, 'value.asset.hostname', checklistFile.asset.hostname)
-      _.set(checklistFile.raw, 'value.asset.hostip', checklistFile.asset.hostip)
-      _.set(checklistFile.raw, 'value.asset.hostmac', checklistFile.asset.hostmac)
-      _.set(checklistFile.raw, 'value.asset.hostfqdn', checklistFile.asset.hostfqdn)
-      _.set(checklistFile.raw, 'value.asset.targetcomment', checklistFile.asset.targetcomment)
-      _.set(checklistFile.raw, 'value.asset.techarea', checklistFile.asset.techarea)
-      _.set(checklistFile.raw, 'value.asset.webordatabase', checklistFile.asset.webordatabase)
-      _.set(checklistFile.raw, 'value.asset.webdbsite', checklistFile.asset.webdbsite)
-      _.set(checklistFile.raw, 'value.asset.webdbinstance', checklistFile.asset.webdbinstance)
+      _.set(checklistFile.raw, 'value.asset.role', checklistFile.asset.role);
+      _.set(
+        checklistFile.raw,
+        'value.asset.assettype',
+        checklistFile.asset.assettype
+      );
+      _.set(
+        checklistFile.raw,
+        'value.asset.marking',
+        checklistFile.asset.marking
+      );
+      _.set(
+        checklistFile.raw,
+        'value.asset.hostname',
+        checklistFile.asset.hostname
+      );
+      _.set(
+        checklistFile.raw,
+        'value.asset.hostip',
+        checklistFile.asset.hostip
+      );
+      _.set(
+        checklistFile.raw,
+        'value.asset.hostmac',
+        checklistFile.asset.hostmac
+      );
+      _.set(
+        checklistFile.raw,
+        'value.asset.hostfqdn',
+        checklistFile.asset.hostfqdn
+      );
+      _.set(
+        checklistFile.raw,
+        'value.asset.targetcomment',
+        checklistFile.asset.targetcomment
+      );
+      _.set(
+        checklistFile.raw,
+        'value.asset.techarea',
+        checklistFile.asset.techarea
+      );
+      _.set(
+        checklistFile.raw,
+        'value.asset.webordatabase',
+        checklistFile.asset.webordatabase
+      );
+      _.set(
+        checklistFile.raw,
+        'value.asset.webdbsite',
+        checklistFile.asset.webdbsite
+      );
+      _.set(
+        checklistFile.raw,
+        'value.asset.webdbinstance',
+        checklistFile.asset.webdbinstance
+      );
 
       // Setting STIGs
       // _.set(checklistFile.raw, '')
-    })
+    });
   }
 
   /**

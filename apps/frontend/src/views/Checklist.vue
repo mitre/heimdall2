@@ -1,266 +1,471 @@
 <template>
-  <Base :show-search="true" :title="curr_title" @changed-files="evalInfo = null">
-  <!-- Topbar content - give it a search bar -->
-  <template #topbar-content>
-    <v-btn :disabled="!can_clear" @click="clear">
-      <span class="d-none d-md-inline pr-2"> Clear </span>
-      <v-icon>mdi-filter-remove</v-icon>
-    </v-btn>
-    <UploadButton />
-    <div class="text-center">
-      <v-menu>
-        <template #activator="{ on, attrs }">
-          <v-btn v-bind="attrs" class="mr-2" v-on="on">
-            <span class="d-none d-md-inline mr-2"> Export </span>
-            <v-icon> mdi-file-export </v-icon>
-          </v-btn>
-        </template>
-        <v-list class="py-0">
-          <v-list-item class="px-0">
-            <template>
+  <Base
+    :show-search="true"
+    :title="curr_title"
+    @changed-files="evalInfo = null"
+  >
+    <!-- Topbar content - give it a search bar -->
+    <template #topbar-content>
+      <v-btn :disabled="!can_clear" @click="clear">
+        <span class="d-none d-md-inline pr-2"> Clear </span>
+        <v-icon>mdi-filter-remove</v-icon>
+      </v-btn>
+      <UploadButton />
+      <div class="text-center">
+        <v-menu>
+          <template #activator="{on, attrs}">
+            <v-btn v-bind="attrs" class="mr-2" v-on="on">
+              <span class="d-none d-md-inline mr-2"> Export </span>
+              <v-icon> mdi-file-export </v-icon>
+            </v-btn>
+          </template>
+          <v-list class="py-0">
+            <v-list-item class="px-0">
               <v-tooltip top>
-                <template #activator="{ on }">
-                  <IconLinkItem key="export_ckl" text="Export as CKL" icon="mdi-check-all" @click="export_ckl()"
-                    v-on="on" />
+                <template #activator="{on}">
+                  <IconLinkItem
+                    key="export_ckl"
+                    text="Export as CKL"
+                    icon="mdi-check-all"
+                    @click="export_ckl()"
+                    v-on="on"
+                  />
                 </template>
                 <span>JSON Download</span>
               </v-tooltip>
-            </template>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-    </div>
-  </template>
-  <template #main-content>
-    <v-container fluid grid-list-md pt-0 mt-4 mx-1>
-      <v-row>
-        <v-col md="4" :cols="12">
-          <v-card height="25vh" class="overflow-auto">
-            <v-tabs v-model="tab" show-arrows center-active grow>
-              <v-tab class="text-button">Benchmarks</v-tab>
-              <v-tab class="text-button">Filters</v-tab>
-              <v-tab class="text-button">Target Data</v-tab>
-              <v-tab class="text-button">Technology Area</v-tab>
-            </v-tabs>
-            <v-tabs-items v-model="tab">
-              <!-- Benchmarks -->
-              <v-tab-item class="pa-4">
-                <v-data-table disable-pagination dense fixed-header hide-default-footer :items="selectedChecklistStigs"
-                  item-key="name" :headers="stigListHeaders" class="overflow-auto" height="15vh">
-                  <template #[`item.show`]="{ item }">
-                    <v-checkbox v-model="item.show"></v-checkbox>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </template>
+    <template #main-content>
+      <v-container fluid grid-list-md pt-0 mt-4 mx-1>
+        <v-row>
+          <v-col md="4" :cols="12">
+            <v-card height="25vh" class="overflow-auto">
+              <v-tabs v-model="tab" show-arrows center-active grow>
+                <v-tab class="text-button">Benchmarks</v-tab>
+                <v-tab class="text-button">Filters</v-tab>
+                <v-tab class="text-button">Target Data</v-tab>
+                <v-tab class="text-button">Technology Area</v-tab>
+              </v-tabs>
+              <v-tabs-items v-model="tab">
+                <!-- Benchmarks -->
+                <v-tab-item class="pa-4">
+                  <v-data-table
+                    disable-pagination
+                    dense
+                    fixed-header
+                    hide-default-footer
+                    :items="selectedChecklistStigs"
+                    item-key="name"
+                    :headers="stigListHeaders"
+                    class="overflow-auto"
+                    height="15vh"
+                  >
+                    <template #[`item.show`]="{item}">
+                      <v-checkbox v-model="item.show" />
+                    </template>
+                  </v-data-table>
+                </v-tab-item>
+                <!-- Filters -->
+                <v-tab-item grid-list-md class="pa-4">
+                  <v-row>
+                    <v-col
+                      v-for="item in controlStatusSwitches"
+                      :key="item.name"
+                      :cols="3"
+                      >{{ item.name }}</v-col
+                    >
+                  </v-row>
+                  <v-row class="mt-n10">
+                    <v-col
+                      v-for="item in controlStatusSwitches"
+                      :key="item.name"
+                      :cols="3"
+                    >
+                      <v-switch
+                        v-model="item.enabled"
+                        dense
+                        justify="center"
+                        inset
+                        :color="item.color"
+                        :label="numStatus(item.value)"
+                        hide-details
+                      />
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col
+                      v-for="item in severitySwitches"
+                      :key="item.name"
+                      :cols="3"
+                      >{{ item.name }}</v-col
+                    >
+                    <v-col :cols="3">Short ID</v-col>
+                  </v-row>
+                  <v-row class="mt-n10">
+                    <v-col
+                      v-for="item in severitySwitches"
+                      :key="item.name"
+                      :cols="3"
+                    >
+                      <v-switch
+                        v-model="item.enabled"
+                        dense
+                        justify="center"
+                        inset
+                        :color="item.color"
+                        :label="numSeverity(item.value)"
+                        hide-details
+                      />
+                    </v-col>
+                    <v-col :cols="3">
+                      <v-switch
+                        v-model="shortIdEnabled"
+                        dense
+                        justify="center"
+                        inset
+                        color="teal"
+                        hide-details
+                      />
+                    </v-col>
+                  </v-row>
+                </v-tab-item>
+                <!-- Target Data -->
+                <v-tab-item class="pa-4">
+                  <v-select
+                    v-model="selectedChecklistAsset.assettype"
+                    outlined
+                    dense
+                    :items="['Computing', 'Non-Computing']"
+                  />
+                  <v-text-field
+                    v-model="selectedChecklistAsset.marking"
+                    dense
+                    label="Marking"
+                  />
+                  <v-text-field
+                    v-model="selectedChecklistAsset.hostname"
+                    dense
+                    label="Host Name"
+                  />
+                  <v-text-field
+                    v-model="selectedChecklistAsset.hostip"
+                    dense
+                    label="IP Address"
+                  />
+                  <v-text-field
+                    v-model="selectedChecklistAsset.hostmac"
+                    dense
+                    label="MAC Address"
+                  />
+                  <v-text-field
+                    v-model="selectedChecklistAsset.hostfqdn"
+                    dense
+                    label="Fully Qualified Domain Name"
+                  />
+                  <v-text-field
+                    v-model="selectedChecklistAsset.targetcomment"
+                    dense
+                    label="Target Comments"
+                  />
+                  <br />
+                  <strong>Role</strong>
+                  <v-radio-group v-model="selectedChecklistAsset.role">
+                    <v-radio label="None" value="None" />
+                    <v-radio label="Workstation" value="Workstation" />
+                    <v-radio label="Member Server" value="Member Server" />
+                    <v-radio
+                      label="Domain Controller"
+                      value="Domain Controller"
+                    />
+                  </v-radio-group>
+                  <v-checkbox
+                    v-model="selectedChecklistAsset.webordatabase"
+                    label="Website or Database STIG"
+                    hide-details
+                  />
+                  <v-text-field
+                    v-if="selectedChecklistAsset.webordatabase"
+                    v-model="selectedChecklistAsset.webdbsite"
+                    label="Site"
+                  />
+                  <v-text-field
+                    v-if="selectedChecklistAsset.webordatabase"
+                    v-model="selectedChecklistAsset.webdbinstance"
+                    label="Instance"
+                  />
+                </v-tab-item>
+                <!-- Technology Area -->
+                <v-tab-item class="pa-4">
+                  <v-select
+                    v-model="selectedChecklistAsset.techarea"
+                    dense
+                    outlined
+                    :items="techAreaLabels"
+                    justify="center"
+                    label="Select a Technology Area (optional)"
+                  />
+                </v-tab-item>
+              </v-tabs-items>
+            </v-card>
+            <!-- Data Table -->
+            <v-card class="mt-4" height="62vh" overflow-auto>
+              <v-card-title class="pt-2">
+                <div>
+                  <strong
+                    >Rules ({{ numItems }} shown,
+                    {{ loadedRules.length - numItems }} hidden)</strong
+                  >
+                </div>
+                <v-spacer class="mt-0 pt-0" />
+                <v-select
+                  v-model="selectedHeaders"
+                  :items="headersList"
+                  label="Select Columns"
+                  class="mt-4 pt-0"
+                  multiple
+                  outlined
+                  return-object
+                  height="5vh"
+                >
+                  <template #selection="{item, index}">
+                    <v-chip v-if="index < 4" small>
+                      <span>{{ item.text }}</span>
+                    </v-chip>
+                    <span v-if="index === 4" class="grey--text caption"
+                      >(+{{ selectedHeaders.length - 4 }} others)</span
+                    >
+                  </template>
+                </v-select>
+              </v-card-title>
+              <v-card-text>
+                <v-data-table
+                  :single-select="true"
+                  disable-pagination
+                  dense
+                  fixed-header
+                  :items="rules"
+                  :item-class="checkSelected"
+                  :headers="headers"
+                  :search="searchValue"
+                  hide-default-footer
+                  class="overflow-auto"
+                  height="42vh"
+                  @click:row="showRule"
+                  @current-items="getFiltered"
+                >
+                  <template #[`item.status`]="{item}">
+                    <v-chip :color="statusColor(item.status)" small
+                      ><strong>{{
+                        shortStatus(mapStatus(item.status))
+                      }}</strong></v-chip
+                    >
+                  </template>
+                  <template #[`item.ruleVersion`]="{item}">
+                    {{ truncate(shortStigId(item.ruleVersion), 20) }}
+                  </template>
+                  <template #[`item.ruleId`]="{item}">
+                    {{ truncate(shortRuleId(item.ruleId), 20) }}
+                  </template>
+                  <template #[`item.cciRef`]="{item}">
+                    {{ truncate(shortRuleId(item.cciRef), 15) }}
                   </template>
                 </v-data-table>
-              </v-tab-item>
-              <!-- Filters -->
-              <v-tab-item grid-list-md class="pa-4">
-                <v-row>
-                  <v-col v-for="item in controlStatusSwitches" :key="item.name" :cols="3">{{ item.name }}</v-col>
-                </v-row>
-                <v-row class="mt-n10">
-                  <v-col v-for="item in controlStatusSwitches" :key="item.name" :cols="3">
-                    <v-switch v-model="item.enabled" dense justify="center" inset :color="item.color"
-                      :label="numStatus(item.value)" hide-details />
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">{{ item.name }}</v-col>
-                  <v-col :cols="3">Short ID</v-col>
-                </v-row>
-                <v-row class="mt-n10">
-                  <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
-                    <v-switch v-model="item.enabled" dense justify="center" inset :color="item.color"
-                      :label="numSeverity(item.value)" hide-details />
-                  </v-col>
-                  <v-col :cols="3">
-                    <v-switch v-model="shortIdEnabled" dense justify="center" inset color="teal" hide-details />
-                  </v-col>
-                </v-row>
-              </v-tab-item>
-              <!-- Target Data -->
-              <v-tab-item class="pa-4">
-                <v-select outlined dense :items="['Computing', 'Non-Computing']"
-                  v-model="selectedChecklistAsset.assettype" />
-                <v-text-field dense label="Marking" v-model="selectedChecklistAsset.marking" />
-                <v-text-field dense label="Host Name" v-model="selectedChecklistAsset.hostname" />
-                <v-text-field dense label="IP Address" v-model="selectedChecklistAsset.hostip" />
-                <v-text-field dense label="MAC Address" v-model="selectedChecklistAsset.hostmac" />
-                <v-text-field dense label="Fully Qualified Domain Name" v-model="selectedChecklistAsset.hostfqdn" />
-                <v-text-field dense label="Target Comments" v-model="selectedChecklistAsset.targetcomment" />
-                <br />
-                <strong>Role</strong>
-                <v-radio-group v-model="selectedChecklistAsset.role">
-                  <v-radio label="None" value="None" />
-                  <v-radio label="Workstation" value="Workstation" />
-                  <v-radio label="Member Server" value="Member Server" />
-                  <v-radio label="Domain Controller" value="Domain Controller" />
-                </v-radio-group>
-                <v-checkbox v-model="selectedChecklistAsset.webordatabase" label="Website or Database STIG"
-                  hide-details />
-                <v-text-field v-if="selectedChecklistAsset.webordatabase" label="Site"
-                  v-model="selectedChecklistAsset.webdbsite" />
-                <v-text-field v-if="selectedChecklistAsset.webordatabase" label="Instance"
-                  v-model="selectedChecklistAsset.webdbinstance" />
-              </v-tab-item>
-              <!-- Technology Area -->
-              <v-tab-item class="pa-4">
-                <v-select dense outlined :items="techAreaLabels" justify="center"
-                  v-model="selectedChecklistAsset.techarea" label="Select a Technology Area (optional)" />
-              </v-tab-item>
-            </v-tabs-items>
-          </v-card>
-          <!-- Data Table -->
-          <v-card class="mt-4" height="62vh" overflow-auto>
-            <v-card-title class="pt-2">
-              <div>
-                <strong>Rules ({{ numItems }} shown,
-                  {{ loadedRules.length - numItems }} hidden)</strong>
-              </div>
-              <v-spacer class="mt-0 pt-0" />
-              <v-select v-model="selectedHeaders" :items="headersList" label="Select Columns" class="mt-4 pt-0" multiple
-                outlined return-object height="5vh">
-                <template #selection="{ item, index }">
-                  <v-chip v-if="index < 4" small>
-                    <span>{{ item.text }}</span>
-                  </v-chip>
-                  <span v-if="index === 4" class="grey--text caption">(+{{ selectedHeaders.length - 4 }} others)</span>
-                </template>
-              </v-select>
-            </v-card-title>
-            <v-card-text>
-              <v-data-table :single-select="true" disable-pagination dense fixed-header :items="rules"
-                :item-class="checkSelected" :headers="headers" :search="searchValue" hide-default-footer
-                class="overflow-auto" height="42vh" @click:row="showRule" @current-items="getFiltered">
-                <template #[`item.status`]="{ item }">
-                  <v-chip :color="statusColor(item.status)" small><strong>{{ shortStatus(mapStatus(item.status))
-                  }}</strong></v-chip>
-                </template>
-                <template #[`item.ruleVersion`]="{ item }">
-                  {{ truncate(shortStigId(item.ruleVersion), 20) }}
-                </template>
-                <template #[`item.ruleId`]="{ item }">
-                  {{ truncate(shortRuleId(item.ruleId), 20) }}
-                </template>
-                <template #[`item.cciRef`]="{ item }">
-                  {{ truncate(shortRuleId(item.cciRef), 15) }}
-                </template>
-              </v-data-table>
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <!-- Rule Data -->
-        <v-col md="8" :cols="12">
-          <v-card height="13vh" class="overflow-y-auto">
-            <v-card-text class="text-center">
-              <div class="text-button">{{ selectedRule.stigRef }}</div>
-              <v-row dense class="mt-2">
-                <v-col :cols="4">
-                  <div><span class="text-overline white--text">Vul ID: </span>{{ selectedRule.vulnNum }}</div>
-                </v-col>
-                <v-col :cols="4">
-                  <div><span class="text-overline white--text">Rule ID: </span>{{ shortRuleId(selectedRule.ruleId) }}
-                  </div>
-                </v-col>
-                <v-col :cols="4">
-                  <div><span class="text-overline white--text">STIG ID: </span>{{
-                      shortStigId(selectedRule.ruleVersion)
-                  }}</div>
-                </v-col>
-              </v-row>
-              <v-row dense class="pa-0">
-                <v-col :cols="4">
-                  <div><span class="text-overline white--text">Severity: </span>{{ selectedRule.severity }}</div>
-                </v-col>
-                <v-col :cols="4">
-                  <div><span class="text-overline white--text">Classification: </span>{{ selectedRule.class }}</div>
-                </v-col>
-                <v-col :cols="4">
-                  <div><span class="text-overline white--text">Legacy IDs: </span>{{ selectedRule.legacyId }}</div>
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-          <v-card height="37.35vh" class="overflow-auto mt-4 pt-2">
-            <div v-if="selectedRule.ruleId !== ''">
-              <v-card-text>
-                <div><span class="text-overline white--text">Rule Title: </span></div>
-                {{ selectedRule.ruleTitle }}<br /><br />
-                <div><span class="text-overline white--text">Discussion: </span></div>
-                {{ selectedRule.vulnDiscuss }}<br /><br />
-                <div><span class="text-overline white--text">Check Text: </span></div>
-                {{ selectedRule.checkContent }}<br /><br />
-                <div><span class="text-overline white--text">Fix Text: </span></div>
-                {{ selectedRule.fixText }}<br /><br />
               </v-card-text>
-              <v-card-subtitle class="text-center text-subtitle-2">References</v-card-subtitle>
-              <v-divider />
-              <v-card-text>
-                <div v-for="item in selectedRule.cciRef.split('; ')" :key="item">
-                  {{ item }}: {{ cciDescription(item) }}
+            </v-card>
+          </v-col>
+          <!-- Rule Data -->
+          <v-col md="8" :cols="12">
+            <v-card height="13vh" class="overflow-y-auto">
+              <v-card-text class="text-center">
+                <div class="text-button">{{ selectedRule.stigRef }}</div>
+                <v-row dense class="mt-2">
+                  <v-col :cols="4">
+                    <div>
+                      <span class="text-overline white--text">Vul ID: </span
+                      >{{ selectedRule.vulnNum }}
+                    </div>
+                  </v-col>
+                  <v-col :cols="4">
+                    <div>
+                      <span class="text-overline white--text">Rule ID: </span
+                      >{{ shortRuleId(selectedRule.ruleId) }}
+                    </div>
+                  </v-col>
+                  <v-col :cols="4">
+                    <div>
+                      <span class="text-overline white--text">STIG ID: </span
+                      >{{ shortStigId(selectedRule.ruleVersion) }}
+                    </div>
+                  </v-col>
+                </v-row>
+                <v-row dense class="pa-0">
+                  <v-col :cols="4">
+                    <div>
+                      <span class="text-overline white--text">Severity: </span
+                      >{{ selectedRule.severity }}
+                    </div>
+                  </v-col>
+                  <v-col :cols="4">
+                    <div>
+                      <span class="text-overline white--text"
+                        >Classification: </span
+                      >{{ selectedRule.class }}
+                    </div>
+                  </v-col>
+                  <v-col :cols="4">
+                    <div>
+                      <span class="text-overline white--text">Legacy IDs: </span
+                      >{{ selectedRule.legacyId }}
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+            <v-card height="37.35vh" class="overflow-auto mt-4 pt-2">
+              <div v-if="selectedRule.ruleId !== ''">
+                <v-card-text>
                   <div>
-                    NIST 800-53 Rev 4: <v-chip small>{{ nistTag(item)[2] || 'None' }}</v-chip>
+                    <span class="text-overline white--text">Rule Title: </span>
                   </div>
-                  <br />
-                </div>
-                <br /><br />
+                  {{ selectedRule.ruleTitle }}<br /><br />
+                  <div>
+                    <span class="text-overline white--text">Discussion: </span>
+                  </div>
+                  {{ selectedRule.vulnDiscuss }}<br /><br />
+                  <div>
+                    <span class="text-overline white--text">Check Text: </span>
+                  </div>
+                  {{ selectedRule.checkContent }}<br /><br />
+                  <div>
+                    <span class="text-overline white--text">Fix Text: </span>
+                  </div>
+                  {{ selectedRule.fixText }}<br /><br />
+                </v-card-text>
+                <v-card-subtitle class="text-center text-subtitle-2"
+                  >References</v-card-subtitle
+                >
+                <v-divider />
+                <v-card-text>
+                  <div
+                    v-for="item in selectedRule.cciRef.split('; ')"
+                    :key="item"
+                  >
+                    {{ item }}: {{ cciDescription(item) }}
+                    <div>
+                      NIST 800-53 Rev 4:
+                      <v-chip small>{{ nistTag(item)[2] || 'None' }}</v-chip>
+                    </div>
+                    <br />
+                  </div>
+                  <br /><br />
+                </v-card-text>
+              </div>
+              <div v-else>
+                <v-card-text>No rule selected.</v-card-text>
+              </div>
+            </v-card>
+            <v-card class="mt-4 pt-4">
+              <v-card-text>
+                <v-row>
+                  <v-col>
+                    <v-select
+                      v-model="selectedRule.status"
+                      dense
+                      label="Status"
+                      :items="statusItems"
+                      item-text="name"
+                      item-value="value"
+                      :item-color="statusColor(selectedRule.status)"
+                    />
+                  </v-col>
+                  <v-col>
+                    <v-select
+                      v-model="selectedRule.severityOverride"
+                      dense
+                      label="Severity Override"
+                      item-text="name"
+                      item-value="value"
+                      :items="checkPossibleOverrides(selectedRule.severity)"
+                      @change="promptSeverityJustification"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row class="mt-n8">
+                  <v-col>
+                    <strong>Finding Details: </strong><br />
+                    <v-textarea
+                      v-model="selectedRule.findingDetails"
+                      solo
+                      outlined
+                      dense
+                      no-resize
+                      height="12vh"
+                    />
+                  </v-col>
+                </v-row>
+                <v-row class="mt-n10">
+                  <v-col>
+                    <strong>Comments: </strong>
+                    <v-textarea
+                      v-model="selectedRule.comments"
+                      solo
+                      outlined
+                      dense
+                      no-resize
+                      height="8vh"
+                    />
+                  </v-col>
+                </v-row>
               </v-card-text>
-            </div>
-            <div v-else>
-              <v-card-text>No rule selected.</v-card-text>
-            </div>
-          </v-card>
-          <v-card class="mt-4 pt-4">
-            <v-card-text>
-              <v-row>
-                <v-col>
-                  <v-select v-model="selectedRule.status" dense label="Status" :items="statusItems" item-text="name"
-                    item-value="value" :item-color="statusColor(selectedRule.status)" />
-                </v-col>
-                <v-col>
-                  <v-select v-model="selectedRule.severityOverride" dense label="Severity Override" item-text="name"
-                    item-value="value" :items="checkPossibleOverrides(selectedRule.severity)"
-                    @change="promptSeverityJustification" />
-                </v-col>
-              </v-row>
-              <v-row class="mt-n8">
-                <v-col>
-                  <strong>Finding Details: </strong><br />
-                  <v-textarea v-model="selectedRule.findingDetails" solo outlined dense no-resize height="12vh" />
-                </v-col>
-              </v-row>
-              <v-row class="mt-n10">
-                <v-col>
-                  <strong>Comments: </strong>
-                  <v-textarea v-model="selectedRule.comments" solo outlined dense no-resize height="8vh" />
-                </v-col>
-              </v-row>
-            </v-card-text>
-          </v-card>
-        </v-col>
-      </v-row>
-      <div class="text-center">
-        <v-bottom-sheet v-model="sheet" persistent inset>
-          <v-card class="text-center px-8 pt-2" height="300px">
-            <v-card-title class="justify-center">Severity Override Justification</v-card-title>
-            <v-card-subtitle v-if="selectedRule.severityJustification === ''" class="justify-center mt-1">
-              <strong>Please input a valid severity override justification. (Required)</strong>
-            </v-card-subtitle>
-            <v-card-subtitle v-else class="justify-center mt-1">
-              <strong>Press "OK" to save.</strong>
-            </v-card-subtitle>
-            <v-textarea class="mt-2" v-model="selectedRule.severityJustification" solo outlined dense no-resize
-              height="130px" />
-            <v-btn color="#616161" dark @click="cancelSeverityOverride">
-              Cancel
-            </v-btn>
-            <v-btn class="ml-4" color="#616161" dark @click="validateSecurityJustification">
-              Ok
-            </v-btn>
-          </v-card>
-        </v-bottom-sheet>
-      </div>
-    </v-container>
-  </template>
+            </v-card>
+          </v-col>
+        </v-row>
+        <div class="text-center">
+          <v-bottom-sheet v-model="sheet" persistent inset>
+            <v-card class="text-center px-8 pt-2" height="300px">
+              <v-card-title class="justify-center"
+                >Severity Override Justification</v-card-title
+              >
+              <v-card-subtitle
+                v-if="selectedRule.severityJustification === ''"
+                class="justify-center mt-1"
+              >
+                <strong
+                  >Please input a valid severity override justification.
+                  (Required)</strong
+                >
+              </v-card-subtitle>
+              <v-card-subtitle v-else class="justify-center mt-1">
+                <strong>Press "OK" to save.</strong>
+              </v-card-subtitle>
+              <v-textarea
+                v-model="selectedRule.severityJustification"
+                class="mt-2"
+                solo
+                outlined
+                dense
+                no-resize
+                height="130px"
+              />
+              <v-btn color="#616161" dark @click="cancelSeverityOverride">
+                Cancel
+              </v-btn>
+              <v-btn
+                class="ml-4"
+                color="#616161"
+                dark
+                @click="validateSecurityJustification"
+              >
+                Ok
+              </v-btn>
+            </v-card>
+          </v-bottom-sheet>
+        </div>
+      </v-container>
+    </template>
   </Base>
 </template>
 
@@ -268,7 +473,7 @@
 import Base from './Base.vue';
 import Component from 'vue-class-component';
 import RouteMixin from '@/mixins/RouteMixin';
-import { SearchModule } from '@/store/search';
+import {SearchModule} from '@/store/search';
 import {
   ExtendedControlStatus,
   Filter,
@@ -279,8 +484,8 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
-import { capitalize } from 'lodash';
-import { Severity } from 'inspecjs';
+import {capitalize} from 'lodash';
+import {Severity} from 'inspecjs';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
@@ -293,11 +498,11 @@ import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
-import { ChecklistConverter, ChecklistVuln } from '@mitre/hdf-converters';
-import { InspecDataModule } from '@/store/data_store';
+import {ChecklistConverter, ChecklistVuln} from '@mitre/hdf-converters';
+import {InspecDataModule} from '@/store/data_store';
 import _ from 'lodash';
-import { CCI_DESCRIPTIONS } from '@/utilities/cci_util';
-import { saveSingleOrMultipleFiles } from '@/utilities/export_util';
+import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
+import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 
 @Component({
@@ -333,56 +538,57 @@ export default class Checklist extends RouteMixin {
   tab = null;
   webOrDatabase = false; // Needs to be replaced for selected checklist
 
-  selectedHeaders: { text: string; value: string; width?: string }[] = [
-    { text: 'Status', value: 'status', width: '100px' },
-    { text: 'STIG ID', value: 'ruleVersion', width: '170px' },
-    { text: 'Rule ID', value: 'ruleId', width: '170px' },
-    { text: 'Vul ID', value: 'vulnNum', width: '100px' },
-    { text: 'Group Name', value: 'groupTitle', width: '150px' },
-    { text: 'CCIs', value: 'cciRef', width: '120px' }
+  selectedHeaders: {text: string; value: string; width?: string}[] = [
+    {text: 'Status', value: 'status', width: '100px'},
+    {text: 'STIG ID', value: 'ruleVersion', width: '170px'},
+    {text: 'Rule ID', value: 'ruleId', width: '170px'},
+    {text: 'Vul ID', value: 'vulnNum', width: '100px'},
+    {text: 'Group Name', value: 'groupTitle', width: '150px'},
+    {text: 'CCIs', value: 'cciRef', width: '120px'}
   ];
 
   headersList = [
-    { text: 'Status', value: 'status', width: '100px' },
-    { text: 'STIG ID', value: 'ruleVersion', width: '170px' },
-    { text: 'Rule ID', value: 'ruleId', width: '170px' },
-    { text: 'Vul ID', value: 'vulnNum', width: '100px' },
-    { text: 'Group Name', value: 'groupTitle', width: '150px' },
-    { text: 'CCIs', value: 'cciRef', width: '120px' }
+    {text: 'Status', value: 'status', width: '100px'},
+    {text: 'STIG ID', value: 'ruleVersion', width: '170px'},
+    {text: 'Rule ID', value: 'ruleId', width: '170px'},
+    {text: 'Vul ID', value: 'vulnNum', width: '100px'},
+    {text: 'Group Name', value: 'groupTitle', width: '150px'},
+    {text: 'CCIs', value: 'cciRef', width: '120px'}
   ];
 
   /** Kept so we can filter by these values even though they are hidden */
   hiddenRows = [
-    { value: 'severity', align: ' d-none' },
-    { value: 'ruleTitle', align: ' d-none' },
-    { value: 'vulnDiscuss', align: ' d-none' },
-    { value: 'iaControls', align: ' d-none' },
-    { value: 'checkContent', align: ' d-none' },
-    { value: 'fixText', align: ' d-none' },
-    { value: 'falsePositives', align: ' d-none' },
-    { value: 'falseNegatives', align: ' d-none' },
-    { value: 'documentable', align: ' d-none' },
-    { value: 'mitigations', align: ' d-none' },
-    { value: 'potentialImpact', align: ' d-none' },
-    { value: 'thirdPartyTools', align: ' d-none' },
-    { value: 'mitigationControl', align: ' d-none' },
-    { value: 'responsibility', align: ' d-none' },
-    { value: 'securityOverrideGuidance', align: ' d-none' },
-    { value: 'checkContentRef', align: ' d-none' },
-    { value: 'weight', align: ' d-none' },
-    { value: 'class', align: ' d-none' },
-    { value: 'stigRef', align: ' d-none' },
-    { value: 'targetKey', align: ' d-none' },
-    { value: 'stigUuid', align: ' d-none' },
-    { value: 'legacyId', align: ' d-none' }
+    {value: 'severity', align: ' d-none'},
+    {value: 'ruleTitle', align: ' d-none'},
+    {value: 'vulnDiscuss', align: ' d-none'},
+    {value: 'iaControls', align: ' d-none'},
+    {value: 'checkContent', align: ' d-none'},
+    {value: 'fixText', align: ' d-none'},
+    {value: 'falsePositives', align: ' d-none'},
+    {value: 'falseNegatives', align: ' d-none'},
+    {value: 'documentable', align: ' d-none'},
+    {value: 'mitigations', align: ' d-none'},
+    {value: 'potentialImpact', align: ' d-none'},
+    {value: 'thirdPartyTools', align: ' d-none'},
+    {value: 'mitigationControl', align: ' d-none'},
+    {value: 'responsibility', align: ' d-none'},
+    {value: 'securityOverrideGuidance', align: ' d-none'},
+    {value: 'checkContentRef', align: ' d-none'},
+    {value: 'weight', align: ' d-none'},
+    {value: 'class', align: ' d-none'},
+    {value: 'stigRef', align: ' d-none'},
+    {value: 'targetKey', align: ' d-none'},
+    {value: 'stigUuid', align: ' d-none'},
+    {value: 'legacyId', align: ' d-none'}
   ];
 
   stigListHeaders = [
-    { text: 'Selected', value: 'show', width: '100px' },
-    { text: 'Name', value: 'name' },
-    { text: 'Version', value: 'version', width: '100px' },
-    { text: 'Release', value: 'release', width: '100px' }
-  ]
+    {text: 'Selected', value: 'show', width: '100px'},
+    {text: 'Name', value: 'name'},
+    {text: 'Version', value: 'version', width: '100px'},
+    {text: 'Release', value: 'release', width: '100px'}
+  ];
+
   techAreaLabels: string[] = [
     'Application Review',
     'Boundary Security',
@@ -405,33 +611,49 @@ export default class Checklist extends RouteMixin {
 
   /** List of switches for each control Status */
   controlStatusSwitches = [
-    { name: 'Passed', value: 'NotAFinding', enabled: true, color: 'statusPassed' },
-    { name: 'Failed', value: 'Open', enabled: true, color: 'statusFailed' },
-    { name: 'Not Applicable', value: 'Not_Applicable', enabled: true, color: 'statusNotApplicable' },
-    { name: 'Not Reviewed', value: 'Not_Reviewed', enabled: true, color: 'statusNotReviewed' }
+    {
+      name: 'Passed',
+      value: 'NotAFinding',
+      enabled: true,
+      color: 'statusPassed'
+    },
+    {name: 'Failed', value: 'Open', enabled: true, color: 'statusFailed'},
+    {
+      name: 'Not Applicable',
+      value: 'Not_Applicable',
+      enabled: true,
+      color: 'statusNotApplicable'
+    },
+    {
+      name: 'Not Reviewed',
+      value: 'Not_Reviewed',
+      enabled: true,
+      color: 'statusNotReviewed'
+    }
   ];
 
   /** List of switches for each severity */
   severitySwitches = [
-    { name: 'High', value: 'high', enabled: true, color: 'teal' },
-    { name: 'Medium', value: 'medium', enabled: true, color: 'teal' },
-    { name: 'Low', value: 'low', enabled: true, color: 'teal' },
+    {name: 'High', value: 'high', enabled: true, color: 'teal'},
+    {name: 'Medium', value: 'medium', enabled: true, color: 'teal'},
+    {name: 'Low', value: 'low', enabled: true, color: 'teal'}
   ];
 
   statusItems = [
-    { name: 'Passed', value: 'NotAFinding' },
-    { name: 'Failed', value: 'Open' },
-    { name: 'Not Applicable', value: 'Not_Applicable' },
-    { name: 'Not Reviewed', value: 'Not_Reviewed', }
-  ]
-  severityOverrideItems = [
-    { name: 'High', value: 'CAT I' },
-    { name: 'Medium', value: 'CAT II' },
-    { name: 'Low', value: 'CAT III' },
-    { name: '(Default)', value: '' }
-  ]
+    {name: 'Passed', value: 'NotAFinding'},
+    {name: 'Failed', value: 'Open'},
+    {name: 'Not Applicable', value: 'Not_Applicable'},
+    {name: 'Not Reviewed', value: 'Not_Reviewed'}
+  ];
 
-  stigInfo: { show: boolean, name: string }[] = []
+  severityOverrideItems = [
+    {name: 'High', value: 'CAT I'},
+    {name: 'Medium', value: 'CAT II'},
+    {name: 'Low', value: 'CAT III'},
+    {name: '(Default)', value: ''}
+  ];
+
+  stigInfo: {show: boolean; name: string}[] = [];
 
   evalInfo:
     | SourcedContextualizedEvaluation
@@ -439,35 +661,37 @@ export default class Checklist extends RouteMixin {
     | null = null;
 
   truncate(value: string, length: number, omission = '...') {
-    return _.truncate(value, { omission: omission, length: length });
+    return _.truncate(value, {omission: omission, length: length});
   }
 
   export_ckl() {
     type FileData = {
       filename: string;
       data: string;
-    }
-    const checklist = this.getChecklist(this.file_filter)
+    };
+    const checklist = this.getChecklist(this.file_filter);
     if (checklist) {
-      const checklistString = ChecklistConverter.toChecklist(checklist)
-      const file: FileData[] = [{
-        filename: checklist.filename,
-        data: checklistString
-      }]
-      saveSingleOrMultipleFiles(file, 'ckl')
+      const checklistString = ChecklistConverter.toChecklist(checklist);
+      const file: FileData[] = [
+        {
+          filename: checklist.filename,
+          data: checklistString
+        }
+      ];
+      saveSingleOrMultipleFiles(file, 'ckl');
     }
   }
 
   statusColor(status: string) {
     switch (status) {
       case 'NotAFinding':
-        return 'statusPassed'
+        return 'statusPassed';
       case 'Not_Applicable':
-        return 'statusNotApplicable'
+        return 'statusNotApplicable';
       case 'Open':
-        return 'statusFailed'
+        return 'statusFailed';
       default: // Not_Reviewed
-        return 'statusNotReviewed'
+        return 'statusNotReviewed';
     }
   }
 
@@ -475,16 +699,16 @@ export default class Checklist extends RouteMixin {
     if (this.shortIdEnabled) {
       switch (status) {
         case 'Not Reviewed':
-          return 'NR'
+          return 'NR';
         case 'Failed':
-          return 'F'
+          return 'F';
         case 'Passed':
-          return 'P'
+          return 'P';
         case 'Not Applicable':
-          return 'NA'
+          return 'NA';
       }
     }
-    return status
+    return status;
   }
 
   shortRuleId(ruleId: string) {
@@ -522,26 +746,27 @@ export default class Checklist extends RouteMixin {
         return status;
     }
   }
+
   mapSeverity(severity: string) {
     switch (severity) {
       case 'high':
-        return 'CAT I'
+        return 'CAT I';
       case 'medium':
-        return 'CAT II'
+        return 'CAT II';
       case 'low':
-        return 'CAT III'
+        return 'CAT III';
       default:
-        return ''
+        return '';
     }
   }
 
   nistTag(cci: string): string[] {
-    return CCI_DESCRIPTIONS[cci].nist
-  }
-  cciDescription(cci: string): string {
-    return CCI_DESCRIPTIONS[cci].def
+    return CCI_DESCRIPTIONS[cci].nist;
   }
 
+  cciDescription(cci: string): string {
+    return CCI_DESCRIPTIONS[cci].def;
+  }
 
   numStatus(status: string): string {
     return this.tableItems
@@ -565,28 +790,37 @@ export default class Checklist extends RouteMixin {
   }
 
   get selectedChecklistAsset() {
-    const selectedChecklist = this.getChecklist(this.file_filter)
+    const selectedChecklist = this.getChecklist(this.file_filter);
     if (selectedChecklist) {
-      return selectedChecklist.asset
+      return selectedChecklist.asset;
     } else {
-      return FilteredDataModule.emptyAsset
+      return FilteredDataModule.emptyAsset;
     }
   }
 
-
-  get selectedChecklistStigs(): { show: boolean, name: string, version: string, release: string }[] {
-    const selectedChecklist = this.getChecklist(this.file_filter)
-    const stigInfo: { show: boolean, name: string, version: string, release: string }[] = []
+  get selectedChecklistStigs(): {
+    show: boolean;
+    name: string;
+    version: string;
+    release: string;
+  }[] {
+    const selectedChecklist = this.getChecklist(this.file_filter);
+    const stigInfo: {
+      show: boolean;
+      name: string;
+      version: string;
+      release: string;
+    }[] = [];
     selectedChecklist?.stigs.forEach((stig) => {
       stigInfo.push({
         show: true,
         name: stig.header.title,
         version: stig.header.version,
         release: stig.header.releaseinfo?.split(' ')[1] || ''
-      })
-    })
-    this.stigInfo = stigInfo
-    return stigInfo
+      });
+    });
+    this.stigInfo = stigInfo;
+    return stigInfo;
   }
 
   /**
@@ -638,16 +872,21 @@ export default class Checklist extends RouteMixin {
   }
 
   checkPossibleOverrides(severity: string) {
-    return this.severityOverrideItems.filter(item => item.value !== this.mapSeverity(severity))
+    return this.severityOverrideItems.filter(
+      (item) => item.value !== this.mapSeverity(severity)
+    );
   }
+
   promptSeverityJustification() {
     if (this.selectedRule.severityOverride === '') {
-      this.selectedRule.severityJustification = 'Returning to default severity.';
+      this.selectedRule.severityJustification =
+        'Returning to default severity.';
     } else {
       this.selectedRule.severityJustification = '';
     }
     this.sheet = true;
   }
+
   validJustification = true;
   validateSecurityJustification() {
     if (this.selectedRule.severityJustification !== '') {
@@ -660,6 +899,7 @@ export default class Checklist extends RouteMixin {
       return false;
     }
   }
+
   cancelSeverityOverride() {
     this.validJustification = true;
     this.sheet = false;
@@ -820,17 +1060,16 @@ export default class Checklist extends RouteMixin {
         includedSeverities.push('low');
       }
 
-      const includedStigs: string[] = []
-      this.stigInfo.forEach(stig => {
-        if (stig.show)
-          includedStigs.push(stig.name)
-      })
+      const includedStigs: string[] = [];
+      this.stigInfo.forEach((stig) => {
+        if (stig.show) includedStigs.push(stig.name);
+      });
 
       if (
-        includedStigs.includes(rule.stigRef.split(' :: ')[0]) && includedStatuses.includes(rule.status) &&
+        includedStigs.includes(rule.stigRef.split(' :: ')[0]) &&
+        includedStatuses.includes(rule.status) &&
         (includedSeverities.includes(rule.severity) ||
           includedSeverities.includes(rule.severityOverride))
-
       ) {
         return true;
       }

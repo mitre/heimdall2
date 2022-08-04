@@ -1,7 +1,5 @@
-import _ from "lodash";
-import { BaseConverter, MappedTransform } from "./base-converter";
-import { Jsonix } from '@mitre/jsonix';
-// import { ChecklistAsset, ChecklistStig, ChecklistVuln, StigHeader, ChecklistFile } from './checklist/index'
+import {Jsonix} from '@mitre/jsonix';
+import _ from 'lodash';
 
 export type ChecklistFile = {
   /**
@@ -92,7 +90,6 @@ export type ChecklistVuln = {
   cciRef: string;
 };
 
-
 function getAttributeData(stigdata: unknown[], tag: string): string {
   const results = stigdata.filter((attribute: unknown) => {
     return _.get(attribute, 'vulnattribute') === tag;
@@ -181,12 +178,7 @@ const mapping = {
           elementName: {
             localPart: 'ROLE'
           },
-          values: [
-            'None',
-            'Workstation',
-            'Member Server',
-            'Domain Controller'
-          ]
+          values: ['None', 'Workstation', 'Member Server', 'Domain Controller']
         },
         {
           name: 'assettype',
@@ -721,13 +713,12 @@ function convertChecklist(text: string): Object {
 function revertChecklist(data: Object): string {
   const context = new Jsonix.Context([mapping]);
 
-  const marshaller = context.createMarshaller()
-  return marshaller.marshalString(data)
+  const marshaller = context.createMarshaller();
+  return marshaller.marshalString(data);
 }
 
 export class ChecklistIntermediaryConverter {
-
-  static toIntermediary(options: { text: string, filename: string }) {
+  static toIntermediary(options: {text: string; filename: string}) {
     const raw = convertChecklist(options.text);
 
     const asset: ChecklistAsset = {
@@ -822,27 +813,49 @@ export class ChecklistIntermediaryConverter {
       raw: raw
     };
 
-    return newChecklist
+    return newChecklist;
   }
 }
 
 export class ChecklistConverter {
   static toChecklist(data: ChecklistFile): string {
     // Updating assets
-    const asset = { ...data.asset, "TYPE_NAME": 'Checklist.ASSET' }
-    _.set(data, 'raw.value.asset', asset)
+    const asset = {...data.asset, TYPE_NAME: 'Checklist.ASSET'};
+    _.set(data, 'raw.value.asset', asset);
 
     // Updating marked-up rule data
-    _.get(data.raw, 'value.stigs.istig').forEach((stig: any, stig_index: number) => {
-      _.get(stig, 'vuln').forEach((vuln: any, vuln_index: number) => {
-        _.set(vuln, 'status', data.stigs[stig_index].vulns[vuln_index].status)
-        _.set(vuln, 'findingdetails', data.stigs[stig_index].vulns[vuln_index].findingDetails)
-        _.set(vuln, 'comments', data.stigs[stig_index].vulns[vuln_index].comments)
-        _.set(vuln, 'severityoverride', data.stigs[stig_index].vulns[vuln_index].severityOverride)
-        _.set(vuln, 'severityjustification', data.stigs[stig_index].vulns[vuln_index].severityJustification)
-      })
-    })
+    _.get(data.raw, 'value.stigs.istig').forEach(
+      (stig: any, stig_index: number) => {
+        _.get(stig, 'vuln').forEach((vuln: any, vuln_index: number) => {
+          _.set(
+            vuln,
+            'status',
+            data.stigs[stig_index].vulns[vuln_index].status
+          );
+          _.set(
+            vuln,
+            'findingdetails',
+            data.stigs[stig_index].vulns[vuln_index].findingDetails
+          );
+          _.set(
+            vuln,
+            'comments',
+            data.stigs[stig_index].vulns[vuln_index].comments
+          );
+          _.set(
+            vuln,
+            'severityoverride',
+            data.stigs[stig_index].vulns[vuln_index].severityOverride
+          );
+          _.set(
+            vuln,
+            'severityjustification',
+            data.stigs[stig_index].vulns[vuln_index].severityJustification
+          );
+        });
+      }
+    );
 
-    return revertChecklist(data.raw)
+    return revertChecklist(data.raw);
   }
 }
