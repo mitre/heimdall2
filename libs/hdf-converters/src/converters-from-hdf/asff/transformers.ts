@@ -436,11 +436,11 @@ function pushSplitString(
   fieldName: string
 ): string[] {
   //Account for common escape characters in upper character limit
-  charLimit -= (pushedStr.match(/\"/g) || []).length;
-  charLimit -= (pushedStr.match(/\'/g) || []).length;
-  charLimit -= (pushedStr.match(/\n/g) || []).length;
-  charLimit -= (pushedStr.match(/\t/g) || []).length;
-  charLimit -= (pushedStr.match(/\r/g) || []).length;
+  //charLimit -= (pushedStr.match(/\"/g) || []).length;
+  //charLimit -= (pushedStr.match(/\'/g) || []).length;
+  //charLimit -= (pushedStr.match(/\n/g) || []).length;
+  //charLimit -= (pushedStr.match(/\t/g) || []).length;
+  //charLimit -= (pushedStr.match(/\r/g) || []).length;
   const passThroughStrs = [];
   const cntMax = Math.ceil(pushedStr.length / charLimit);
   let cntMin = 1;
