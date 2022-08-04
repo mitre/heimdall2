@@ -309,7 +309,7 @@ import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
-import { ChecklistVuln } from '../types/checklist/control';
+import { ChecklistVuln } from '@mitre/hdf-converters';
 import { InspecDataModule } from '@/store/data_store';
 import _ from 'lodash';
 import { CciNistMapping } from '@mitre/hdf-converters/src/mappings/CciNistMapping';

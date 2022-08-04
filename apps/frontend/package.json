@@ -30,9 +30,8 @@
   },
   "dependencies": {
     "@heimdall/interfaces": "^2.6.14",
-    "@mdi/font": "^6.1.95",
-    "@mdi/js": "^6.1.95",
-    "@mitre/jsonix": "^3.0.2",
+    "@mdi/font": "^7.0.96",
+    "@mdi/js": "^7.0.96",
     "@mitre/splunk-sdk-no-env": "^1.10.0",
     "@types/bootstrap": "^5.0.15",
     "@types/chroma-js": "^2.1.0",
