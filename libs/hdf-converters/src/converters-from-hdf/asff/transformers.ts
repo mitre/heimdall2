@@ -436,22 +436,19 @@ function pushSplitString(
   fieldName: string
 ): string[] {
   //Account for common escape characters in upper character limit
-  //charLimit -= (pushedStr.match(/\"/g) || []).length;
-  //charLimit -= (pushedStr.match(/\'/g) || []).length;
-  //charLimit -= (pushedStr.match(/\n/g) || []).length;
-  //charLimit -= (pushedStr.match(/\t/g) || []).length;
-  //charLimit -= (pushedStr.match(/\r/g) || []).length;
+  charLimit -= (pushedStr.match(/\"/g) || []).length;
+  charLimit -= (pushedStr.match(/\'/g) || []).length;
+  charLimit -= (pushedStr.match(/\n/g) || []).length;
+  charLimit -= (pushedStr.match(/\t/g) || []).length;
+  charLimit -= (pushedStr.match(/\r/g) || []).length;
   const passThroughStrs = [];
   const cntMax = Math.ceil(pushedStr.length / charLimit);
-  let cntMin = 1;
-  while (pushedStr.length > charLimit) {
+  for (let cntMin = 1; cntMin <= cntMax; cntMin++) {
     passThroughStrs.push(
       `${fieldName}${cntMin}of${cntMax}/${pushedStr.slice(0, charLimit)}`
     );
     pushedStr = pushedStr.slice(charLimit);
-    cntMin++;
   }
-  passThroughStrs.push(`${fieldName}${cntMin}of${cntMax}/${pushedStr}`);
   return passThroughStrs;
 }
 
