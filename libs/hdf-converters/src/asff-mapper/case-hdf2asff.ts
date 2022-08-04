@@ -179,7 +179,7 @@ function getPassthrough(execTypes: Record<string, unknown>) {
   }
   try {
     return JSON.parse(strStorage.join(''));
-  } catch {
+  } catch { //If no valid JSON, then return incomplete string
     return strStorage.join('');
   }
 }
