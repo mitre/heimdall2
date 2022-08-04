@@ -196,7 +196,7 @@
               </v-row>
             </v-card-text>
           </v-card>
-          <v-card height="36vh" class="overflow-auto mt-4 pt-2">
+          <v-card height="37.35vh" class="overflow-auto mt-4 pt-2">
             <div v-if="selectedRule.ruleId !== ''">
               <v-card-text>
                 <div><span class="text-overline white--text">Rule Title: </span></div>
@@ -392,10 +392,10 @@ export default class Checklist extends RouteMixin {
   ];
 
   stigListHeaders = [
-    { text: 'Selected', value: 'show' },
+    { text: 'Selected', value: 'show', width: '100px' },
     { text: 'Name', value: 'name' },
-    { text: 'Version', value: 'version' },
-    { text: 'Release Number', value: 'release' }
+    { text: 'Version', value: 'version', width: '100px' },
+    { text: 'Release', value: 'release', width: '100px' }
   ]
   techAreaLabels: string[] = [
     'Application Review',
