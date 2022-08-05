@@ -525,7 +525,12 @@ function createProfileInfoFindingFields(
       )
     );
   }
+  const typesArrLen = typesArr.length;
   typesArr = typesArr.slice(0, 50);
+  if (typesArrLen > 50) {
+    typesArr.pop();
+    typesArr.push('Execution/warning/Data has been lost via overflow');
+  }
   return typesArr;
 }
 
