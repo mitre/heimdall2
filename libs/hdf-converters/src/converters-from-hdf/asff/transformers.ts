@@ -430,16 +430,16 @@ function getFilename(options?: IOptions): string {
 }
 
 //Split and push a string that is above ASFF attribute character limit
-function pushSplitString(
+function divideString(
   pushedStr: string,
   charLimit: number,
   fieldName: string
 ): string[] {
   const passThroughStrs = [];
-  const cntMax = Math.ceil(pushedStr.length / charLimit);
-  for (let cntMin = 1; cntMin <= cntMax; cntMin++) {
+  const indexMax = Math.ceil(pushedStr.length / charLimit);
+  for (let index = 1; index <= indexMax; index++) {
     passThroughStrs.push(
-      `${fieldName}${cntMin}of${cntMax}/${pushedStr.slice(0, charLimit)}`
+      `${fieldName}${index}of${indexMax}/${pushedStr.slice(0, charLimit)}`
     );
     pushedStr = pushedStr.slice(charLimit);
   }
@@ -512,7 +512,7 @@ function createProfileInfoFindingFields(
   const passThroughObj = _.get(hdf, 'passthrough');
   if (_.isObject(passThroughObj)) {
     typesArr = typesArr.concat(
-      pushSplitString(
+      divideString(
         escapeForwardSlashes(JSON.stringify(passThroughObj)),
         ATTRIBUTE_CHARACTER_LIMIT,
         'Execution/passthrough'
