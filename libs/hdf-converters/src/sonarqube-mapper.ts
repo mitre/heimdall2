@@ -95,18 +95,17 @@ export class SonarQubeResults {
   data: IssueData = {
     issues: []
   };
-  sonarQubeHost = '';
-  projectId = '';
-  userToken = '';
-  branchName? = '';
-  pullRequestID? = '';
-  customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
+  sonarQubeHost: string
+  projectId: string
+  userToken: string
+  branchName?: string
+  pullRequestID?: string
   constructor(
     sonarQubeHost: string,
     projectId: string,
     userToken: string,
     branchName?: string,
-    pullRequestID?: string
+    pullRequestID?: string,
   ) {
     this.sonarQubeHost = sonarQubeHost;
     this.projectId = projectId;
@@ -116,10 +115,6 @@ export class SonarQubeResults {
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
-    return this.getProjectData();
-  }
-
-  async getProjectData(): Promise<ExecJSON.Execution> {
     // Find issues for this project ID
     let paging = true;
     let page = 1;
@@ -220,22 +215,14 @@ function createSonarqubeMappings(
       target_id: projectName
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: 'Sonarqube Scan',
-        version: null,
         title: `SonarQube Scan of Project ${projectName}${scanDescriptionModifier}`,
-        maintainer: null,
         summary: `SonarQube Scan of Project ${projectName}${scanDescriptionModifier}`,
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -243,7 +230,6 @@ function createSonarqubeMappings(
             path: 'issues',
             key: 'id',
             desc: {path: 'summary'},
-            descriptions: [],
             refs: [],
             source_location: {},
             id: {path: 'rule'},
@@ -252,7 +238,6 @@ function createSonarqubeMappings(
               path: 'severity',
               transformer: impactMapping(IMPACT_MAPPING)
             },
-            code: null,
             tags: {
               cci: {
                 transformer: (issue: Issue) =>
@@ -264,7 +249,6 @@ function createSonarqubeMappings(
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: formatCodeDesc},
-                run_time: 0,
                 start_time: ''
               }
             ]
@@ -277,9 +261,6 @@ function createSonarqubeMappings(
 }
 
 export class SonarQubeMapper extends BaseConverter {
-  projectName = '';
-  branchName = '';
-  pullRequestID = '';
   constructor(
     issuesJSON: IssueData,
     projectName: string,
