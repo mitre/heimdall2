@@ -166,8 +166,8 @@ function getPassthrough(execTypes: Record<string, unknown>) {
   //Else reconstitute passthrough from detected strings
   const strStorage = [];
   if (_.isObject(execTypes.Execution)) {
-    const keyValuePairs = Object.entries(execTypes.Execution).filter((keyValue) =>
-      keyValue[0].startsWith('passthrough')
+    const keyValuePairs = Object.entries(execTypes.Execution).filter(
+      (keyValue) => keyValue[0].startsWith('passthrough')
     );
     //No valid passthrough
     if (keyValuePairs.length <= 1) {
