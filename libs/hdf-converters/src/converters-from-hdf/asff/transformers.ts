@@ -523,7 +523,9 @@ function createProfileInfoFindingFields(
   typesArr = typesArr.slice(0, 50);
   if (typesArrLen > 50) {
     typesArr.pop();
-    typesArr.push('Execution/warning/Data has been lost via overflow');
+    typesArr.push(
+      `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file at '${typesArr[1]}' for all of the information.`
+    ); // provide the file/input/path
   }
   return typesArr;
 }
