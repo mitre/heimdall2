@@ -511,8 +511,8 @@ function createProfileInfoFindingFields(
   });
   const passThroughObj = _.get(hdf, 'passthrough');
   if (_.isObject(passThroughObj)) {
-    typesArr = typesArr.concat(
-      divideString(
+    typesArr.push(
+      ...divideString(
         escapeForwardSlashes(JSON.stringify(passThroughObj)),
         ATTRIBUTE_CHARACTER_LIMIT,
         'Execution/passthrough'
