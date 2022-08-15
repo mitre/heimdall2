@@ -191,6 +191,31 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         }
       );
       resList.push(createProfileInfoFinding(this.data, this.ioptions));
+
+      // ASFF findings have a maximum size of 240KB.  To try to meet that requirement, it automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere.
+      for (const finding of resList) {
+        const originalLength = new TextEncoder().encode(
+          JSON.stringify(finding)
+        ).length;
+        let length = originalLength;
+        while (
+          length > 239000 &&
+          (finding.FindingProviderFields.Types as string[]).length > 0
+        ) {
+          // left 1KB buffer space in case anything weird happens and also to have plenty of space for our warning message to be appended
+          (finding.FindingProviderFields.Types as string[]).pop();
+          length = new TextEncoder().encode(JSON.stringify(finding)).length;
+        }
+        if (length > 239000) {
+          throw new Error('Finding could not be reduced to less than 240KB');
+        }
+        if (originalLength !== length) {
+          (finding.FindingProviderFields.Types as string[]).push(
+            'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
+          );
+        }
+      }
+
       return resList;
     }
   }

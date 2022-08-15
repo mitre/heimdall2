@@ -524,7 +524,9 @@ function createProfileInfoFindingFields(
   if (typesArrLen > 50) {
     typesArr.pop();
     typesArr.push(
-      `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file at '${getFilename(options)}' for all of the information.`
+      `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file at '${getFilename(
+        options
+      )}' for all of the information.`
     );
   }
   return typesArr;
