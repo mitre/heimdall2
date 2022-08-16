@@ -4,6 +4,40 @@
 
 This repository contains the source code for Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/master/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/master/apps/frontend), [HDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpecJS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
 
+## Contents
+
+* [Demos](#demos)
+    * [Video](#video)
+    * [Hosted](#hosted)
+* [Heimdall (Lite) vs Heimdall with Backend (Server)](#heimdall-lite-vs-heimdall-with-backend-server)
+    * [Features](#features)
+    * [Use Cases](#use-cases)
+* [Getting Started / Installation](#getting-started--installation)
+    * [Heimdall Lite](#heimdall-lite)
+        * [Running via npm](#running-via-npm)
+        * [Running via Docker](#running-via-docker)
+    * [Heimdall Server - Docker](#heimdall-server---docker)
+        * [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
+        * [Running Docker Container](#running-docker-container)
+        * [Updating Docker Container](#updating-docker-container)
+        * [Stopping the Container](#stopping-the-container)
+        * [Helm Chart](#helm-chart)
+        * [Running via Cloud.gov](#running-via-cloudgov)
+* [External Data Sources](#external-data-sources)
+    * [AWS S3](#aws-s3)
+* [API Usage](#api-usage)
+* [For Developers](#for-developers)
+    * [How to Install](#how-to-install)
+    * [Debugging Heimdall Server](#debugging-heimdall-server)
+    * [Developing Heimdall Lite Standalone](#developing-heimdall-lite-standalone)
+    * [Lint and fix files](#lint-and-fix-files)
+    * [Compile and minify the frontend and backend for production](#compile-and-minify-the-frontend-and-backend-for-production)
+    * [Run tests](#run-tests)
+        * [Run Cypress End to End Tests](#run-cypress-end-to-end-tests)
+    * [Creating a Release](#creating-a-release)
+* [Versioning and State of Development](#versioning-and-state-of-development)
+* [Contributing, Issues and Support](#contributing-issues-and-support)
+
 ## Demos
 
 ### Video
@@ -32,16 +66,16 @@ As a single-page javascript app - you can run Heimdall-Lite from any web-server,
 | Features | Heimdall (Heimdall-Lite) | Heimdall with Backend |
 | :----------------------------------------------------------- | :------------------------------------------------------: | :----------------------------------------------------------: |
 | Additional Installation Requirements    |      |     Postgres Server |
-| Overview Dashboard & Counts | x | x |
-| Deep Dive View of Security Control Results and Metadata | x | x |
-| 800-53 Partition and TreeMap View     | x | x |
-| Comparison View      | x | x |
-| Advanced Data / Filters for Reports and Viewing     | x |  x |
-| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) | x | x |
-| View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF) | x | x |
-| Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | x | x |
-| Authenticated REST API       |   | x |
-| Users & Roles & multi-team support    |   | x |
+| Overview Dashboard & Counts | :white_check_mark: | :white_check_mark: |
+| Deep Dive View of Security Control Results and Metadata | :white_check_mark: | :white_check_mark: |
+| 800-53 Partition and TreeMap View     | :white_check_mark: | :white_check_mark: |
+| Comparison View      | :white_check_mark: | :white_check_mark: |
+| Advanced Data / Filters for Reports and Viewing     | :white_check_mark: |  :white_check_mark: |
+| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) | :white_check_mark: | :white_check_mark: |
+| View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF) | :white_check_mark: | :white_check_mark: |
+| Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | :white_check_mark: | :white_check_mark: |
+| Authenticated REST API       |   | :white_check_mark: |
+| Users & Roles & multi-team support    |   | :white_check_mark: |
 | Authentication & Authorization        | Hosting Webserver | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
 
 ### Use Cases
