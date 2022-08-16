@@ -1,8 +1,8 @@
-# Heimdall Enterprise Server 2.0
+# Heimdall
 
 ![Run E2E Backend + Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20E2E%20Backend%20+%20Frontend%20Tests/badge.svg) ![Run Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Frontend%20Tests/badge.svg) ![Run Backend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Backend%20Tests/badge.svg)
 
-This repository contains the source code for the Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/mentionInSpecJSandHDFConverters/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/mentionInSpecJSandHDFConverters/apps/frontend), [HDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpecJS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
+This repository contains the source code for Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/master/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/master/apps/frontend), [HDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpecJS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
 
 ## Demos
 
@@ -22,42 +22,36 @@ This repository contains the source code for the Heimdall's [Backend](https://gi
 
 [Heimdall Lite](https://heimdall-lite.netlify.com/) | [Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/)
 
-## Heimdall vs Heimdall-Lite
+## Heimdall (Lite) vs Heimdall with Backend (Server)
 
-There are two versions of the MITRE Heimdall Viewer - the full Heimdall Enterprise Server and the Heimdall-Lite version. Both share the same frontend but have been produced to meet different needs and use-cases.
+There are two ways to deploy MITRE Heimdall - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
 
-As a single-page javascript app - you can run Heimdall-Lite from any web-server, a _secured_ S3 bucket or directly via GitHub Pages (as it is here). Heimdall-Lite gives you the ability to easily review and produce reports about your InSpec run, filter the results for easy review and hot-wash, print out reports, generate System Security Plan (SSP) content, and much more.
+As a single-page javascript app - you can run Heimdall-Lite from any web-server, a _secured_ S3 bucket or directly via GitHub Pages (as it is here). Heimdall-Lite gives you the ability to easily review and produce reports about your InSpec run, filter the results for easy review and hot-wash, print out reports, and much more.
 
 ### Features
-
-|                                                              | [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) |        [Heimdall](https://github.com/mitre/heimdall/)        |
+| Features | Heimdall (Heimdall-Lite) | Heimdall with Backend |
 | :----------------------------------------------------------- | :------------------------------------------------------: | :----------------------------------------------------------: |
-| Installation Requirements                                    |                      any web server                      |                       Postgres Server                        |
-| Overview Dashboard & Counts                                  |                            x                             |                              x                               |
-| 800-53 Partition and TreeMap View                            |                            x                             |                              x                               |
-| Data Table / Control Summary                                 |                            x                             |                              x                               |
-| InSpec Code / Control Viewer                                 |                            x                             |                              x                               |
-| SSP Content Generator                                        |                                                          |                              x                               |
-| Users & Roles & multi-team support                           |                                                          |                              x                               |
-| Authentication & Authorization                               |                    Hosting Webserver                     | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
-| Advanced Data / Filters for Reports and Viewing              |                                                          |                              x                               |
-| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) |                                                          |                              x                               |
-| Authenticated REST API                                       |                                                          |                              x                               |
-| InSpec Run 'Delta' View                                      |                                                          |                              x                               |
-| Multi-Report Tagging, Filtering and Delta View               |                                                          |                              x                               |
+| Additional Installation Requirements    |      |     Postgres Server |
+| Overview Dashboard & Counts | x | x |
+| Deep Dive View of Security Control Results and Metadata | x | x |
+| 800-53 Partition and TreeMap View     | x | x |
+| Comparison View      | x | x |
+| Advanced Data / Filters for Reports and Viewing     | x |  x |
+| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) | x | x |
+| View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF) | x | x |
+| Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | x | x |
+| Authenticated REST API       |   | x |
+| Users & Roles & multi-team support    |   | x |
+| Authentication & Authorization        | Hosting Webserver | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
 
 ### Use Cases
 
-| [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) | [Heimdall](https://github.com/mitre/heimdall/)           |
+| Heimdall (Heimdall-Lite) | Heimdall with Backend  |
 | :------------------------------------------------------: | :------------------------------------------------------: |
-|            Ship the App & Data via simple Email          |                 Multiple Teams Support                   |
-|            Minimal Footprint & Deployment Time           |               Timeline and Report History                |
-|                Local or disconnected Use                 |               Centralized Deployment Model               |
-|                 One-Time Quick Reviews                   |       Need to view the delta between one or more runs    |
-|                Decentralized Deployment                  |   Need to view subsets of the 800-53 control alignment   |
-|                    Minimal A&A Time                      | Need to produce more complex reports in multiple formats |
-
-
+| Just-in-Time Use | Multiple Teams |
+| Minimal Footprint & Deployment Time  | Timeline and Report History |
+| Local or disconnected Use | Centralized Deployment Model |
+| Minimal Authorization & Approval Time |  |
 
 ## Getting Started / Installation
 
@@ -150,7 +144,7 @@ docker-compose down
 
 #### Helm Chart
 
-<https://github.com/nemonik/heimdall2-helm>
+<https://github.com/mitre/heimdall2-helm>
 
 #### Running via Cloud.gov
 
@@ -192,7 +186,7 @@ Heimdall currently supports AWS S3 for loading external HDF data.
 
 ### AWS S3
 
-In order to allow Heidmdall to Connect to your AWS S3 bucket, you need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficent, however you need to change the allowed origin to where you are deploying Heimdall.
+In order to allow Heimdall to Connect to your AWS S3 bucket, you need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficent, however you need to change the allowed origin to where you are deploying Heimdall.
 
 ```json
 [
