@@ -199,15 +199,18 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         ).length;
         let length = originalLength;
         while (
-          length > 239000 &&
+          // length > 239000 && // commenting out to test smaller size
+          length > 119000 && // 240000/2=120000; 120000-1k=119000
           (finding.FindingProviderFields.Types as string[]).length > 0
         ) {
           // left 1KB buffer space in case anything weird happens and also to have plenty of space for our warning message to be appended
           (finding.FindingProviderFields.Types as string[]).pop();
           length = new TextEncoder().encode(JSON.stringify(finding)).length;
         }
-        if (length > 239000) {
-          throw new Error('Finding could not be reduced to less than 240KB');
+        // if (length > 239000) {
+        if (length > 119000) {
+          // throw new Error('Finding could not be reduced to less than 240KB');
+          throw new Error('Finding could not be reduced to less than 120KB');
         }
         if (originalLength !== length) {
           (finding.FindingProviderFields.Types as string[]).push(
