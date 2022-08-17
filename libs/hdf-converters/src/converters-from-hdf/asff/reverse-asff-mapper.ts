@@ -200,7 +200,8 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         let length = originalLength;
         while (
           // length > 239000 && // commenting out to test smaller size
-          length > 119000 && // 240000/2=120000; 120000-1k=119000
+          // length > 119000 && // 240000/2=120000; 120000-1k=119000 commenting out to narrow down maximum size that will load
+          length > 179000 && // 240000*.75=180000; 180000-1k=179000
           (finding.FindingProviderFields.Types as string[]).length > 0
         ) {
           // left 1KB buffer space in case anything weird happens and also to have plenty of space for our warning message to be appended
