@@ -209,7 +209,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
           length = new TextEncoder().encode(JSON.stringify(finding)).length;
         }
         // if (length > 239000) {
-        if (length > 119000) {
+        if (length > 179000) {
           // throw new Error('Finding could not be reduced to less than 240KB');
           throw new Error('Finding could not be reduced to less than 120KB');
         }
