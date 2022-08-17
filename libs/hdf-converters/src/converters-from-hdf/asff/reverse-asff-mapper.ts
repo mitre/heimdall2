@@ -203,7 +203,8 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
           // length > 119000 && // 240000/2=120000; 120000-1k=119000 commenting out to narrow down maximum size that will load
           // length > 179000 && // 240000*.75=180000; 180000-1k=179000 commenting out to narrow down maximum size that will load
           // length > 209000 && // 240000*.875=210000; 210000-1k=209000
-          length > 224000 && 
+          // length > 224000 && 
+          length > 219000 && 
           (finding.FindingProviderFields.Types as string[]).length > 0
         ) {
           // left 1KB buffer space in case anything weird happens and also to have plenty of space for our warning message to be appended
@@ -214,7 +215,8 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         // if (length > 119000) {
         // if (length > 179000) {
         // if (length > 209000) {
-        if (length > 224000) {
+        // if (length > 224000) {
+        if (length > 219000) {
           // throw new Error('Finding could not be reduced to less than 240KB');
           throw new Error('Finding could not be reduced to less than 120KB');
         }
