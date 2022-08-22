@@ -337,7 +337,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
 You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
-6. ddCreate the database:
+6. Create the database:
 
    - ```bash
      yarn backend sequelize-cli db:create
