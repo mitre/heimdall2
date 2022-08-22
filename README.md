@@ -278,7 +278,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    OSX:
    
    - ```bash
-     brew install postgresql nodejs@16 nano git
+     brew install postgresql node@16 nano git
      sudo npm install -g yarn
      ```
 
@@ -288,8 +288,10 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      git clone https://github.com/mitre/heimdall2
      ```
 
-3. Create the Postgres role:
+3. Run the Postgres server:
 
+   Ubuntu:
+   
    - ```sql
      # Switch to the OS postgres user
      sudo -u postgres -i
@@ -305,7 +307,25 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      # Switch back to your original OS user
      exit
      ```
+   OSX:
 
+    - ```sql
+      # Start the server
+      pg_ctl -D /opt/homebrew/var/postgres start
+
+      # Start the Postgres terminal
+      psql postgres
+  
+      # Create the database user
+      CREATE USER <username> with encrypted password '<password>';
+      ALTER USER <username> CREATEDB;
+      \q
+
+      # Switch back to your original OS user
+      exit
+      ```   
+
+   
 4. Install project dependencies:
 
    - ```bash
@@ -317,7 +337,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
 You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
-6. Create the database:
+6. ddCreate the database:
 
    - ```bash
      yarn backend sequelize-cli db:create
