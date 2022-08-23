@@ -60,10 +60,16 @@ This repository contains the source code for Heimdall's [Backend](https://github
 
 There are two ways to deploy MITRE Heimdall - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
 
+### Heimdall-Lite
+
 As a single-page javascript app - you can run Heimdall-Lite from any web-server, a _secured_ S3 bucket or directly via GitHub Pages (as it is here). Heimdall-Lite gives you the ability to easily review and produce reports about your InSpec run, filter the results for easy review and hot-wash, print out reports, and much more.
 
+### Heimdall with Backend (Server)
+
+Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Lite, but is supported with a backend database to store persistent data overtime.
+
 ### Features
-| Features | Heimdall (Heimdall-Lite) | Heimdall with Backend |
+| Features | Heimdall-Lite | Heimdall with Backend |
 | :----------------------------------------------------------- | :------------------------------------------------------: | :----------------------------------------------------------: |
 | Additional Installation Requirements    |      |     Postgres Server |
 | Overview Dashboard & Counts | :white_check_mark: | :white_check_mark: |
@@ -80,7 +86,7 @@ As a single-page javascript app - you can run Heimdall-Lite from any web-server,
 
 ### Use Cases
 
-| Heimdall (Heimdall-Lite) | Heimdall with Backend  |
+| Heimdall-Lite | Heimdall with Backend  |
 | :------------------------------------------------------: | :------------------------------------------------------: |
 | Just-in-Time Use | Multiple Teams |
 | Minimal Footprint & Deployment Time  | Timeline and Report History |
