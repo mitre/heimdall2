@@ -915,4 +915,29 @@ tbody tr:nth-of-type(odd) {
 .selectedRow {
   background-color: #616161 !important;
 }
+
+.v-list .v-list-item--link:before {
+  background-color: #3e3e3e;
+}
+
+/*
+(bw)
+Color of selected text and checkboxes will not be overridden with
+
+.v-list .v-list-item--active {
+  color: #ffffff;
+}
+
+because
+
+.v-application .primary--text {
+  color: var(--v-primary-base) !important;
+  caret-color: var(--v-primary-base) !important;
+}
+
+troubleshooting
+*/
+.v-list .v-list-item:nth-of-type(odd) {
+  background-color: rgba(0, 0, 0, 0.1);
+}
 </style>
