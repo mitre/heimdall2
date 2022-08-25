@@ -131,7 +131,7 @@ If you would prefer to run the bleeding edge version of heimdall-lite, replace `
 
 ### Heimdall Server - Docker
 
-Given that Heimdall requires at least a database service, we use Docker and Docker Compose to provide a simple deployment experience.
+Given that Heimdall requires at least a database service, we use Docker and Docker Compose to provide a simple deployment experience. This process will also deploy an NGINX webserver in front of Heimdall to handle TLS.
 
 #### Setup Docker Container (Clean Install)
 
@@ -150,15 +150,7 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
      docker-compose up -d
      ```
 
-6. Navigate to  [`http://127.0.0.1:3000`](http://127.0.0.1:3000).
-
-#### Running Docker Container
-
-Make sure you have run the setup steps at least once before following these steps!
-
-1. Run the following command in a terminal window: ``docker-compose up -d``
-
-2. Go to [`http://127.0.0.1:3000`](http://127.0.0.1:3000) in a web browser.
+6. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.) 
 
 #### Updating Docker Container
 
