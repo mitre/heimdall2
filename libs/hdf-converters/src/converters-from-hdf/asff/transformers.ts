@@ -28,11 +28,6 @@ type Counts = {
   NotReviewed: number;
 };
 
-//Imposed character limit for fields generated in HDF2ASFF via pushSplitString function
-//Maximum possible character limit of 32768 per ASFF documentation
-//Set to 30k for 2k character buffer in case of unexpected behavior
-const ATTRIBUTE_CHARACTER_LIMIT = 30000;
-
 export function escapeForwardSlashes<T>(s: T): T {
   return _.isString(s)
     ? (s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
@@ -429,8 +424,13 @@ function getFilename(options?: IOptions): string {
   return slashSplit?.split('/')[slashSplit.split('/').length - 1] ?? '';
 }
 
+//Imposed character limit for fields generated in HDF2ASFF via pushSplitString function
+//Maximum possible character limit of 32768 per ASFF documentation
+//Set to 30k for 2k character buffer in case of unexpected behavior
+const ATTRIBUTE_CHARACTER_LIMIT = 30000;
+
 //Split and push a string that is above ASFF attribute character limit
-function divideString(
+function divideString( // TODO: get rid of 1of1 case
   pushedStr: string,
   charLimit: number,
   fieldName: string
@@ -517,16 +517,6 @@ function createProfileInfoFindingFields(
         ATTRIBUTE_CHARACTER_LIMIT,
         'Execution/passthrough'
       )
-    );
-  }
-  const typesArrLen = typesArr.length;
-  typesArr = typesArr.slice(0, 50);
-  if (typesArrLen > 50) {
-    typesArr.pop();
-    typesArr.push(
-      `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file at '${getFilename(
-        options
-      )}' for all of the information.`
     );
   }
   return typesArr;

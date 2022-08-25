@@ -192,35 +192,33 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       );
       resList.push(createProfileInfoFinding(this.data, this.ioptions));
 
-      // ASFF findings have a maximum size of 240KB.  To try to meet that requirement, it automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere.
+      // ASFF has several written and unwritten restrictions that cap how much information can be put into a finding
       for (const finding of resList) {
-        const originalLength = new TextEncoder().encode(
+        // FindingProviderFields.Types has a maximum size of 50 attributes
+        const cutoff = (finding.FindingProviderFields.Types as string[]).splice(50, (finding.FindingProviderFields.Types as string[]).length - 50);
+        if (cutoff.length > 0) {
+          (finding.FindingProviderFields.Types as string[]).pop();
+          (finding.FindingProviderFields.Types as string[]).push(
+            `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.`
+          );
+        }
+
+        // Findings have a maximum size of 240KB.  To try to meet that requirement, it automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere.  We're setting the max size to 200KB since anything much more than that doesn't seem to actually show up in SecHub even if there are no errors reported on upload.
+        const originalSize = new TextEncoder().encode(
           JSON.stringify(finding)
         ).length;
-        let length = originalLength;
+        let size = originalSize;
         while (
-          // length > 239000 && // commenting out to test smaller size
-          // length > 119000 && // 240000/2=120000; 120000-1k=119000 commenting out to narrow down maximum size that will load
-          // length > 179000 && // 240000*.75=180000; 180000-1k=179000 commenting out to narrow down maximum size that will load
-          // length > 209000 && // 240000*.875=210000; 210000-1k=209000
-          // length > 224000 && 
-          length > 219000 && 
+          size > 200000 &&
           (finding.FindingProviderFields.Types as string[]).length > 0
         ) {
-          // left 1KB buffer space in case anything weird happens and also to have plenty of space for our warning message to be appended
           (finding.FindingProviderFields.Types as string[]).pop();
-          length = new TextEncoder().encode(JSON.stringify(finding)).length;
+          size = new TextEncoder().encode(JSON.stringify(finding)).length;
         }
-        // if (length > 239000) {
-        // if (length > 119000) {
-        // if (length > 179000) {
-        // if (length > 209000) {
-        // if (length > 224000) {
-        if (length > 219000) {
-          // throw new Error('Finding could not be reduced to less than 240KB');
-          throw new Error('Finding could not be reduced to less than 120KB');
+        if (size > 200000) {
+          throw new Error('Finding could not be reduced to less than 200KB');
         }
-        if (originalLength !== length) {
+        if (originalSize !== size) {
           (finding.FindingProviderFields.Types as string[]).push(
             'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
           );
