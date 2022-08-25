@@ -424,6 +424,7 @@ function getFilename(options?: IOptions): string {
   return slashSplit?.split('/')[slashSplit.split('/').length - 1] ?? '';
 }
 
+/*
 //Imposed character limit for fields generated in HDF2ASFF via pushSplitString function
 //Maximum possible character limit of 32768 per ASFF documentation
 //Set to 30k for 2k character buffer in case of unexpected behavior
@@ -445,6 +446,7 @@ function divideString( // TODO: get rid of 1of1 case
   }
   return passThroughStrs;
 }
+*/
 
 function createProfileInfoFindingFields(
   hdf: ExecJSON.Execution,
@@ -511,13 +513,14 @@ function createProfileInfoFindingFields(
   });
   const passThroughObj = _.get(hdf, 'passthrough');
   if (_.isObject(passThroughObj)) {
-    typesArr.push(
-      ...divideString(
-        escapeForwardSlashes(JSON.stringify(passThroughObj)),
-        ATTRIBUTE_CHARACTER_LIMIT,
-        'Execution/passthrough'
-      )
-    );
+    typesArr.push(`Exection/passthrough/${escapeForwardSlashes(JSON.stringify(passThroughObj))}`);
+    // typesArr.push(
+    //   ...divideString(
+    //     escapeForwardSlashes(JSON.stringify(passThroughObj)),
+    //     ATTRIBUTE_CHARACTER_LIMIT,
+    //     'Execution/passthrough'
+    //   )
+    // );
   }
   return typesArr;
 }
