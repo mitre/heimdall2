@@ -204,21 +204,24 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         }
 
         // Findings have a maximum size of 240KB.  To try to meet that requirement, it automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere.  We're setting the max size to 200KB since anything much more than that doesn't seem to actually show up in SecHub even if there are no errors reported on upload.
+        const SIZE_CAP = 200000;
         const originalSize = new TextEncoder().encode(
           JSON.stringify(finding)
         ).length;
         let size = originalSize;
+        let popped;
         while (
-          size > 200000 &&
+          size > SIZE_CAP &&
           (finding.FindingProviderFields.Types as string[]).length > 0
         ) {
-          (finding.FindingProviderFields.Types as string[]).pop();
+          popped = (finding.FindingProviderFields.Types as string[]).pop();
           size = new TextEncoder().encode(JSON.stringify(finding)).length;
         }
-        if (size > 200000) {
+        if (size > SIZE_CAP) {
           throw new Error('Finding could not be reduced to less than 200KB');
         }
         if (originalSize !== size) {
+          (finding.FindingProviderFields.Types as string[]).push(new TextDecoder().decode(new TextEncoder().encode(popped).subarray(0, SIZE_CAP - size)));
           (finding.FindingProviderFields.Types as string[]).push(
             'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
           );
