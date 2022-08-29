@@ -40,19 +40,19 @@
 
 <script lang="ts">
 import {is_leaf, TreemapNode, TreemapNodeLeaf} from '@/utilities/treemap_util';
-import * as d3 from 'd3';
+import {HierarchyRectangularNode, ScaleLinear} from 'd3';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
 export interface XYScale {
-  scale_x: d3.ScaleLinear<number, number>;
-  scale_y: d3.ScaleLinear<number, number>;
+  scale_x: ScaleLinear<number, number>;
+  scale_y: ScaleLinear<number, number>;
 }
 
 /**
  * Categories property must be of type Category
- * Emits "select-node" with payload of type d3.HierarchyRectangularNode<TreemapNode>
+ * Emits "select-node" with payload of type HierarchyRectangularNode<TreemapNode>
  */
 @Component({
   name: 'Cell'
@@ -60,7 +60,7 @@ export interface XYScale {
 export default class Cell extends Vue {
   @Prop({type: String}) readonly selectedControlId!: string;
   @Prop({type: Object, required: true})
-  readonly node!: d3.HierarchyRectangularNode<TreemapNode>;
+  readonly node!: HierarchyRectangularNode<TreemapNode>;
 
   @Prop({type: Number, default: 0}) readonly depth!: number;
   @Prop({type: Object, default: 0}) readonly scales!: XYScale;
@@ -146,7 +146,7 @@ export default class Cell extends Vue {
   /**
    * Callback fired when the user clicks a node. Passes up from cell to cell until it reaches Treemap
    */
-  select_node(n: d3.HierarchyRectangularNode<TreemapNode>): void {
+  select_node(n: HierarchyRectangularNode<TreemapNode>): void {
     // Pass it up to root
     this.$emit('select-node', n);
   }

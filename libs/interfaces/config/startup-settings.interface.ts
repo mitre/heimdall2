@@ -7,4 +7,5 @@ export interface IStartupSettings {
   readonly oidcName: string;
   readonly ldap: boolean;
   readonly registrationEnabled: boolean;
+  readonly localLoginEnabled: boolean;
 }

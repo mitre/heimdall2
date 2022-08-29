@@ -20,8 +20,8 @@
           <br />
           <span class="subtitle-2">
             <strong>Changelog:</strong>
-            <a :href="'' + repository + branch + changelog + ''">
-              {{ repository }}{{ branch }}{{ changelog }}
+            <a :href="'' + repository + changelog + ''">
+              {{ repository }}{{ changelog }}
             </a>
           </span>
           <br />

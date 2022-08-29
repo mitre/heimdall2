@@ -8,34 +8,87 @@
 // match the expected interface, even if the JSON is valid.
 
 export interface ExecJsonmin {
-    controls:   ExecJSONMINControl[];
+    /**
+     * The set of controls including any findings as reported by the tool.
+     */
+    controls: ExecJSONMINControl[];
+    /**
+     * Statistics for the run(s) from the tool that generated the findings.  Example: the
+     * runtime duration.
+     */
     statistics: Statistics;
-    version:    string;
+    /**
+     * Version number of the tool that generated the findings.  Example: '4.18.108' is a version
+     * of Chef Inspec.
+     */
+    version: string;
 }
 
+/**
+ * The set of all tests within the control and their results and findings.
+ */
 export interface ExecJSONMINControl {
-    backtrace?:     string[] | null;
-    code_desc:      string;
-    exception?:     null | string;
-    id:             string;
-    message?:       null | string;
-    profile_id?:    null | string;
+    /**
+     * The stacktrace/backtrace of the exception if one occurred.
+     */
+    backtrace?: string[] | null;
+    /**
+     * A description of the control.  Example: 'limits.conf * is expected to include ['hard',
+     * 'maxlogins', '10'].
+     */
+    code_desc: string;
+    /**
+     * The type of exception if an exception was thrown.
+     */
+    exception?: null | string;
+    /**
+     * The id.
+     */
+    id: string;
+    /**
+     * An explanation of the control status - usually only provided when the control fails.
+     */
+    message?: null | string;
+    /**
+     * The name of the profile that can uniquely identify it - is nullable.
+     */
+    profile_id?: null | string;
+    /**
+     * The checksum of the profile.
+     */
     profile_sha256: string;
-    resource?:      null | string;
-    skip_message?:  null | string;
-    status:         string;
+    /**
+     * The resource used in the test.  Example: in Inspec, you can use the 'File' resource.
+     */
+    resource?: null | string;
+    /**
+     * An explanation of the status if the status was 'skipped'.
+     */
+    skip_message?: null | string;
+    /**
+     * The status of the control.  Example: 'failed'.
+     */
+    status: string;
 }
 
+/**
+ * Statistics for the run(s) from the tool that generated the findings.  Example: the
+ * runtime duration.
+ *
+ * Statistics for the run(s) such as how long it took.
+ */
 export interface Statistics {
     controls?: null | StatisticHash;
     /**
-     * How long (in seconds) this inspec exec ran for.
+     * How long (in seconds) this run by the tool was.
      */
     duration: number;
 }
 
 /**
  * Breakdowns of control statistics by result
+ *
+ * Statistics for the control results.
  */
 export interface StatisticHash {
     failed?:  null | StatisticBlock;
@@ -43,9 +96,18 @@ export interface StatisticHash {
     skipped?: null | StatisticBlock;
 }
 
+/**
+ * Statistics for the controls that failed.
+ *
+ * Statistics for a given item, such as the total.
+ *
+ * Statistics for the controls that passed.
+ *
+ * Statistics for the controls that were skipped.
+ */
 export interface StatisticBlock {
     /**
-     * Total number of controls (in this category) for this inspec execution.
+     * The total.  Example: the total number of controls in a given category for a run.
      */
     total: number;
 }

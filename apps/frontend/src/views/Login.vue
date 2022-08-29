@@ -24,7 +24,10 @@
                 color="primary-visible"
                 show-arrows
               >
-                <v-tab id="select-tab-standard-login" href="#login-standard"
+                <v-tab
+                  v-if="anyAuthProvidersAvailable"
+                  id="select-tab-standard-login"
+                  href="#login-standard"
                   >Heimdall Login</v-tab
                 >
                 <v-tab
@@ -66,7 +69,10 @@ const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
   }
 })
 export default class Login extends Vue {
-  activeTab: string = lastLoginTab.get_default('logintab-standard');
+  activeTab: string = lastLoginTab.get_default(
+    this.anyAuthProvidersAvailable ? 'logintab-standard' : 'login-ldap'
+  );
+
   logoffMessage = 'You have successfully logged off';
 
   mounted() {
@@ -95,8 +101,18 @@ export default class Login extends Vue {
     this.$router.push('/signup');
   }
 
+  get anyAuthProvidersAvailable() {
+    return (
+      ServerModule.localLoginEnabled || ServerModule.enabledOAuth.length !== 0
+    );
+  }
+
   get ldapenabled() {
     return ServerModule.ldap;
+  }
+
+  get localLoginEnabled() {
+    return ServerModule.localLoginEnabled;
   }
 
   get logoffFailure() {

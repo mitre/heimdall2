@@ -29,6 +29,12 @@ test/videos
 *.launch
 .settings/
 *.sublime-workspace
+.nvmrc
+.editorconfig
+
+# Editor - Vim
+.*.un~
+.*.swp
 
 # IDE - VSCode
 .vscode/*

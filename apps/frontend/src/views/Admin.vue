@@ -1,5 +1,9 @@
 <template>
-  <Base title="Heimdall - Admin Panel">
+  <Base
+    :show-back-button="true"
+    :minimal-topbar="true"
+    title="Heimdall - Admin Panel"
+  >
     <template #main-content>
       <v-tabs v-model="activeTab" fixed-tabs dark>
         <v-tab key="users"> User Management </v-tab>

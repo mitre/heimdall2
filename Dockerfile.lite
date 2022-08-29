@@ -1,5 +1,5 @@
 ARG BUILD_CONTAINER=node:lts-alpine
-ARG BASE_CONTAINER=nginx:1.18.0-alpine
+ARG BASE_CONTAINER=nginx:alpine
 
 FROM $BUILD_CONTAINER as builder
 

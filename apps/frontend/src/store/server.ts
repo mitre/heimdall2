@@ -33,6 +33,7 @@ export interface IServerState {
   registrationEnabled: boolean;
   oidcName: string;
   ldap: boolean;
+  localLoginEnabled: boolean;
   userInfo: IUser;
 }
 
@@ -56,6 +57,7 @@ class Server extends VuexModule implements IServerState {
   serverUrl = '';
   serverMode = false;
   registrationEnabled = true;
+  localLoginEnabled = true;
   loading = true;
   enabledOAuth: string[] = [];
   allUsers: ISlimUser[] = [];
@@ -101,6 +103,7 @@ class Server extends VuexModule implements IServerState {
     this.registrationEnabled = settings.registrationEnabled;
     this.oidcName = settings.oidcName;
     this.ldap = settings.ldap;
+    this.localLoginEnabled = settings.localLoginEnabled;
   }
 
   @Mutation

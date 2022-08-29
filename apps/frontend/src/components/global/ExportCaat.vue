@@ -16,6 +16,7 @@
 <script lang="ts">
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {s2ab} from '@/utilities/export_util';
+import {saveAs} from 'file-saver';
 import {ContextualizedControl, HDFControl, HDFControlSegment} from 'inspecjs';
 import _ from 'lodash';
 import Vue from 'vue';

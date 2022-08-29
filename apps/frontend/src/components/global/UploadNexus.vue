@@ -28,6 +28,8 @@
 
         <v-tab id="select-tab-s3" href="#uploadtab-s3">S3 Bucket</v-tab>
 
+        <v-tab id="select-tab-splunk" href="#uploadtab-splunk">Splunk</v-tab>
+
         <v-spacer />
         <v-divider />
         <v-tab id="select-tab-sample" href="#uploadtab-sample">Samples</v-tab>
@@ -48,6 +50,10 @@
         <v-tab-item value="uploadtab-s3">
           <S3Reader @got-files="got_files" />
         </v-tab-item>
+
+        <v-tab-item value="uploadtab-splunk">
+          <SplunkReader @got-files="got_files" />
+        </v-tab-item>
       </v-tabs>
       <HelpFooter />
     </div>
@@ -61,6 +67,7 @@ import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
 import FileReader from '@/components/global/upload_tabs/FileReader.vue';
 import HelpFooter from '@/components/global/upload_tabs/HelpFooter.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
+import SplunkReader from '@/components/global/upload_tabs/splunk/SplunkReader.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
 import {FilteredDataModule} from '@/store/data_filters';
@@ -83,6 +90,7 @@ const localTab = new LocalStorageVal<string>('nexus_curr_tab');
     FileReader,
     HelpFooter,
     S3Reader,
+    SplunkReader,
     SampleList
   }
 })

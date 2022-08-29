@@ -1,4 +1,3 @@
-import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -7,9 +6,14 @@ import {
   ILookupPath,
   impactMapping,
   MappedTransform,
-  parseHtml
+  parseHtml,
+  parseXml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
+import {
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  getCCIsForNISTTags
+} from './utils/global';
 
 // Constant
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -20,7 +24,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 const NAME = 'BurpSuite Pro Scan';
 const CWE_NIST_MAPPING = new CweNistMapping();
-const DEFAULT_NIST_TAG = ['SA-11', 'RA-5'];
 
 // Transformation Functions
 function formatCodeDesc(issue: unknown): string {
@@ -55,60 +58,46 @@ function idToString(id: unknown): string {
   }
 }
 function formatCweId(input: string): string {
-  return parseHtml(input).slice(1, -1).trimLeft();
+  return parseHtml(input).slice(1, -1).trimStart();
 }
+
 function nistTag(input: string): string[] {
   let cwe = formatCweId(input).split('CWE-');
   cwe.shift();
   cwe = cwe.map((x) => x.split(':')[0]);
-  return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG).concat(['Rev_4']);
+  return CWE_NIST_MAPPING.nistFilter(
+    cwe,
+    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+  );
 }
 
-function parseXml(xml: string): Record<string, unknown> {
-  const options = {
-    attributeNamePrefix: '',
-    textNodeName: 'text',
-    ignoreAttributes: false
-  };
-  return parser.parse(xml, options);
-}
 export class BurpSuiteMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: ''
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: NAME,
         version: {path: 'issues.burpVersion'},
         title: NAME,
-        maintainer: null,
         summary: NAME,
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
           {
             path: 'issues.issue',
             key: 'id',
-            id: {path: 'type', transformer: idToString},
-            title: {path: 'name'},
-            desc: {path: 'issueBackground', transformer: parseHtml},
-            impact: {
-              path: 'severity',
-              transformer: impactMapping(IMPACT_MAPPING)
-            },
             tags: {
               nist: {
                 path: 'vulnerabilityClassifications',
@@ -118,8 +107,17 @@ export class BurpSuiteMapper extends BaseConverter {
                 path: 'vulnerabilityClassifications',
                 transformer: formatCweId
               },
+              cci: {
+                path: 'vulnerabilityClassifications',
+                transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
+              },
               confidence: {path: 'confidence'}
             },
+            refs: [],
+            source_location: {},
+            title: {path: 'name'},
+            id: {path: 'type', transformer: idToString},
+            desc: {path: 'issueBackground', transformer: parseHtml},
             descriptions: [
               {
                 data: {path: 'issueBackground', transformer: parseHtml},
@@ -130,14 +128,18 @@ export class BurpSuiteMapper extends BaseConverter {
                 label: 'fix'
               }
             ],
-            refs: [],
-            source_location: {},
-            code: '',
+            impact: {
+              path: 'severity',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: formatCodeDesc},
-                run_time: 0,
                 start_time: {path: '$.issues.exportTime'}
               }
             ]
@@ -145,14 +147,17 @@ export class BurpSuiteMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    }
   };
-  constructor(burpsXml: string) {
+  constructor(burpsXml: string, withRaw = false) {
     super(parseXml(burpsXml));
-  }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
+    this.withRaw = withRaw;
   }
 }

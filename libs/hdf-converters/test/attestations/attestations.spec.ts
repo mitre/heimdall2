@@ -1,0 +1,80 @@
+import fs from 'fs';
+import {ExecJSON} from 'inspecjs';
+import {
+  addAttestationToHDF,
+  parseXLSXAttestations
+} from '../../src/utils/attestations';
+import {omitHDFTimes, omitVersions} from '../utils';
+
+describe('attestations', () => {
+  it('Should successfully add an attestation to a results set and ignore expired ones', () => {
+    const inputData = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/attestations/sample_input_report/rhel7-results.json',
+        'utf-8'
+      )
+    ) as ExecJSON.Execution;
+
+    const output = addAttestationToHDF(inputData, [
+      {
+        control_id: 'V-72087',
+        explanation:
+          'Audit logs are automatically backed up and cleared as necessary',
+        frequency: 'monthly',
+        status: ExecJSON.ControlResultStatus.Passed,
+        updated: '2022-05-02',
+        updated_by: 'Json Smith, Security'
+      },
+      {
+        control_id: 'V-73163',
+        explanation: 'Audit records are enabled for this system.',
+        frequency: '1d',
+        status: ExecJSON.ControlResultStatus.Passed,
+        updated: '2022-01-02',
+        updated_by: 'Alec Hardison, Security'
+      }
+    ]);
+
+    // fs.writeFileSync('sample_jsons/attestations/rhel7-json-attestedjson.json', JSON.stringify(output, null, 2))
+
+    const expected = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/attestations/rhel7-json-attestedjson.json',
+        'utf-8'
+      )
+    );
+
+    expect(omitHDFTimes(omitVersions(output))).toEqual(
+      omitHDFTimes(omitVersions(expected))
+    );
+  });
+
+  it('Should successfully parse XLSX attestations', async () => {
+    const xlsxInputFile: Buffer = fs.readFileSync(
+      'sample_jsons/attestations/attestations.xlsx',
+      null
+    );
+    const inputData = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/attestations/sample_input_report/rhel7-results.json',
+        'utf-8'
+      )
+    ) as ExecJSON.Execution;
+
+    const attestations = await parseXLSXAttestations(xlsxInputFile);
+    const output = addAttestationToHDF(inputData, attestations);
+
+    const expected = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/attestations/rhel7-json-spreadsheet.json',
+        'utf-8'
+      )
+    );
+
+    // fs.writeFileSync('sample_jsons/attestations/rhel7-json-spreadsheet.json', JSON.stringify(output, null, 2))
+
+    expect(omitHDFTimes(omitVersions(output))).toEqual(
+      omitHDFTimes(omitVersions(expected))
+    );
+  });
+});

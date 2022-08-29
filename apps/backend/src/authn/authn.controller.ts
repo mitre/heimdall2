@@ -1,5 +1,6 @@
 import {
   Controller,
+  ForbiddenException,
   Get,
   Post,
   Req,
@@ -29,7 +30,13 @@ export class AuthnController {
   async login(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
-    return this.authnService.login(req.user as User);
+    if (!this.configService.isLocalLoginAllowed()) {
+      throw new ForbiddenException(
+        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
+      );
+    } else {
+      return this.authnService.login(req.user as User);
+    }
   }
 
   @UseGuards(AuthGuard('ldap'))

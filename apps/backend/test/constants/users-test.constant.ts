@@ -44,6 +44,18 @@ export const BAD_AWS_S3_AUTHENTICATION = {
   accessToken: 'badlocalkey',
   secretToken: 'badsecretkey'
 };
+  
+export const SPLUNK_AUTHENTICATION = {
+  username: 'admin',
+  password: 'Valid_password!',
+  hostname: 'https://localhost:8089'
+};
+
+export const BAD_SPLUNK_AUTHENTICATION = {
+  username: 'admin',
+  password: 'Invalid_password!',
+  hostname: 'https://localhost:8089'
+};
 
 // @ts-ignore
 export const TEST_USER: User = {

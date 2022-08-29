@@ -1,4 +1,4 @@
-import {default as data} from '../../data/cci-nist-mapping.json';
+import {data} from './CciNistMappingData';
 import {CciNistMappingItem} from './CciNistMappingItem';
 
 export class CciNistMapping {

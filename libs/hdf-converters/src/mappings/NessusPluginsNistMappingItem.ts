@@ -4,7 +4,6 @@ export class NessusPluginsNistMappingItem {
   pluginFamily: string;
   pluginId: string;
   nistId: string;
-  rev: number;
 
   constructor(values: INESSUSJSONID) {
     if (values['pluginFamily'] === undefined) {
@@ -24,12 +23,6 @@ export class NessusPluginsNistMappingItem {
       this.nistId = '';
     } else {
       this.nistId = values['NIST-ID'];
-    }
-    // Could possibly be number, string, or null
-    if (typeof values['Rev'] === 'number') {
-      this.rev = values['Rev'];
-    } else {
-      this.rev = 0;
     }
   }
 }

@@ -4,7 +4,7 @@
 
 import {ColorHack} from '@/store/color_hack';
 import Chroma from 'chroma-js';
-import * as d3 from 'd3';
+import {hierarchy, HierarchyNode} from 'd3';
 import {
   ContextualizedControl,
   FULL_NIST_HIERARCHY,
@@ -44,7 +44,7 @@ export function is_parent(n: TreemapNode): n is TreemapNodeParent {
 
 /** The type of our treemap nodes, prior to rendering */
 export type TreemapNode = TreemapNodeLeaf | TreemapNodeParent;
-export type D3TreemapNode = d3.HierarchyNode<TreemapNode>;
+export type D3TreemapNode = HierarchyNode<TreemapNode>;
 
 /**
  * Converts a list of controls to treemap leaves.
@@ -205,13 +205,12 @@ function build_populated_nist_map(data: TreemapNodeLeaf[]): TreemapNodeParent {
 function node_data_to_tree_map(
   data: Readonly<TreemapNodeParent>
 ): D3TreemapNode {
-  return d3
-    .hierarchy<TreemapNode>(data, (d: TreemapNode) => {
-      if (is_parent(d)) {
-        return d.children;
-      }
-      return null;
-    })
+  return hierarchy<TreemapNode>(data, (d: TreemapNode) => {
+    if (is_parent(d)) {
+      return d.children;
+    }
+    return null;
+  })
     .sort((a, b) => a.data.title.localeCompare(b.data.title))
     .sum((root) => {
       if (is_parent(root)) {

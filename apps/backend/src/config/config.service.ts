@@ -26,6 +26,10 @@ export class ConfigService {
     return this.get('REGISTRATION_DISABLED')?.toLowerCase() !== 'true';
   }
 
+  isLocalLoginAllowed(): boolean {
+    return this.get('LOCAL_LOGIN_DISABLED')?.toLowerCase() !== 'true';
+  }
+
   isInProductionMode(): boolean {
     return this.get('NODE_ENV')?.toLowerCase() === 'production';
   }
@@ -51,7 +55,8 @@ export class ConfigService {
       enabledOAuth: this.enabledOauthStrategies(),
       oidcName: this.get('OIDC_NAME') || '',
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
-      registrationEnabled: this.isRegistrationAllowed()
+      registrationEnabled: this.isRegistrationAllowed(),
+      localLoginEnabled: this.isLocalLoginAllowed()
     });
   }
 

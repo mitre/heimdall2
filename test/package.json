@@ -1,12 +1,12 @@
 {
   "name": "@heimdall/cypress-tests",
-  "version": "2.6.1",
+  "version": "2.6.29",
   "private": true,
   "description": "",
   "scripts": {
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "mock-oauth": "node support/server/json-server.js",
+    "mock-json": "node support/server/json-server.js",
     "mock-openid": "node support/server/oidc-server.js"
   },
   "devDependencies": {
@@ -16,6 +16,6 @@
     "cypress-wait-until": "^1.7.1",
     "eslint-plugin-cypress": "^2.11.2",
     "json-server": "^0.17.0",
-    "oauth2-mock-server": "^4.0.0"
+    "oauth2-mock-server": "^5.0.0"
   }
 }

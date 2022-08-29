@@ -11,5 +11,6 @@ export class CreateApiKeyDto implements ICreateApiKey {
   readonly name?: string;
 
   @IsString()
+  @IsOptional()
   readonly currentPassword!: string;
 }

@@ -62,7 +62,9 @@ export class ApiKeyController {
       ? await this.usersService.findById(createApiKeyDto.userId)
       : request.user;
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, user);
-    await this.authnService.testPassword(createApiKeyDto, request.user);
+    if (request.user.creationMethod === 'local') {
+      await this.authnService.testPassword(createApiKeyDto, request.user);
+    }
     return this.apiKeyService.create(user, createApiKeyDto);
   }
 
@@ -79,7 +81,9 @@ export class ApiKeyController {
       Action.Update,
       apiKeyToDelete.user
     );
-    await this.authnService.testPassword(deleteApiKeyDto, request.user);
+    if (request.user.creationMethod === 'local') {
+      await this.authnService.testPassword(deleteApiKeyDto, request.user);
+    }
     return this.apiKeyService.remove(id);
   }
 
@@ -96,7 +100,9 @@ export class ApiKeyController {
       Action.Update,
       apiKeyToUpdate.user
     );
-    await this.authnService.testPassword(updateApiKeyDto, request.user);
+    if (request.user.creationMethod === 'local') {
+      await this.authnService.testPassword(updateApiKeyDto, request.user);
+    }
     return this.apiKeyService.update(apiKeyToUpdate.id, updateApiKeyDto);
   }
 }
