@@ -27,6 +27,16 @@ function impactMapping(severity: number): number {
   return IMPACT_MAPPING.get(severity.toString()) || 0.1;
 }
 
+function impactMappingcvss(severity: number): number {
+  return severity/10;
+}
+
+function getVuln(input: unknown): Record<string, unknown>[] {
+  if (!Array.isArray(input)) {
+    input = [input];
+  }
+  return input as Record<string, unknown>[];
+}
 function nistTag(input: Record<string, unknown>): string[] {
   const cwes = [];
   let cwe = _.get(input, 'cwe');
@@ -196,17 +206,17 @@ function formatCodeDesc(input: Record<string, unknown>[]): string {
 function formatSCACodeDesc(input: Record<string, unknown>): string {
   let flawDesc = '';
   const categories = [
-    'sha1',
-    'max_cvss_score',
-    'version',
-    'library',
-    'vendor',
-    'description',
-    'added_date',
-    'component_affects_policy_compliance'
+    'cvss_score',
+    'severity',
+    'cwe_id',
+    'first_found_date',
+    'cve_summary',
+    'severity_desc',
+    'mitigation',
+    'vulnerability_affects_policy_compliance'
   ];
-  if (_.has(input, 'component_id')) {
-    flawDesc = `component_id: ${_.get(input, 'component_id')};`;
+  if (_.has(input, 'cve_id')) {
+    flawDesc = `cve_id: ${_.get(input, 'cve_id')}\n`;
     flawDesc += _.compact(
       categories.map((value: string) => {
         if (_.has(input, value)) {
@@ -216,9 +226,6 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
         }
       })
     ).join('\n');
-    if (_.has(input, FILE_PATH_VALUE)) {
-      flawDesc += `file_path: ${_.get(input, FILE_PATH_VALUE)}`;
-    }
   }
   return flawDesc;
 }
@@ -238,65 +245,24 @@ function formatSourceLocation(input: Record<string, unknown>[]): string {
   return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n');
 }
 
-function componentListCreate(input: unknown): Record<string, unknown>[] {
-  const componentList: Record<string, unknown>[] = [];
-  let component = _.get(input, 'component');
-  if (!Array.isArray(component)) {
-    component = [component];
-  }
-  for (const value of component as Record<string, unknown>[]) {
-    if (_.get(value, `vulnerabilities`) !== '') {
-      componentList.push(value);
-    }
-  }
-  return componentList;
-}
-
-function componentTransform(input: unknown): Record<string, unknown>[] {
-  const componentList: Record<string, unknown>[] = componentListCreate(input);
-
-  const vulns: Record<string, unknown>[] = componentList
-    .map((component) => {
-      let vulnerability = _.get(component, 'vulnerabilities.vulnerability') as
-        | Record<string, unknown>
-        | Record<string, unknown>[];
-      if (!Array.isArray(vulnerability)) {
-        vulnerability = [vulnerability];
-      }
-      vulnerability = vulnerability.map((vuln) => ({
-        ...vuln,
-        components: [component]
-      }));
-      return vulnerability;
-    })
-    .flat()
-    .reduce((acc: Record<string, unknown>[], cur: Record<string, unknown>) => {
-      const cveId = _.get(cur, 'cve_id');
-      const index = acc.findIndex(({cve_id}) => cveId === cve_id);
-      if (index === -1) {
-        return [...acc, cur];
-      } else {
-        (_.get(acc[index], 'components') as Record<string, unknown>[]).push(
-          ...(_.get(cur, 'components') as Record<string, unknown>[])
-        );
-        return acc;
-      }
-    }, []);
-  return vulns;
-}
-
 function controlMappingCve(): MappedTransform<
   ExecJSON.Control & ILookupPath,
   ILookupPath
 > {
   return {
-    id: {path: 'cve_id'},
-    title: {path: 'cve_id'},
-    desc: {path: 'cve_summary'},
-    impact: {path: 'severity', transformer: impactMapping},
-    refs: [],
+    id: {path: 'component_id'},
+    title: {path: 'file_name'},
+    desc: {path: 'description'},
+    impact: {path: 'max_cvss_score', transformer: impactMappingcvss},
+    refs: [
+    ],
     tags: {
-      cwe: {path: 'cwe_id'},
+      sha1: {path:'sha1'},
+      library_id: {path:'library_id'},
+      library: {path:'library'},
+      vendor: {path:'vendor'},
+      component_affects_policy_compliance:{path:'compoenent_affects_policy_compliance'},
+      added_date: {path: 'added_date'},
       nist: {
         path: 'cwe_id',
         transformer: (value: string | string[]) => {
@@ -305,21 +271,16 @@ function controlMappingCve(): MappedTransform<
           }
           return CWE_NIST_MAPPING.nistFilter(value, DEFAULT_NIST_TAG);
         }
-      }
+      },
+      licenses:{path:'licenses'}
     },
     source_location: {
-      ref: {
-        transformer: (vuln: Record<string, unknown>) =>
-          (_.get(vuln, 'components') as Record<string, unknown>[])
-            .map((comp: Record<string, unknown>) =>
-              _.get(comp, FILE_PATH_VALUE)
-            )
-            .join('\n')
-      }
+      ref: {path:'file_paths.file_path.value'}
     },
     results: [
       {
-        path: 'components',
+        path: 'vulnerabilities.vulnerability',
+        pathTransform: getVuln,
         status: ExecJSON.ControlResultStatus.Failed,
         code_desc: {transformer: formatSCACodeDesc},
         start_time: {path: '$.detailedreport.first_build_submitted_date'}
@@ -416,7 +377,7 @@ export class VeracodeMapper extends BaseConverter {
               ...controlMappingCwe(5 - value)
             })),
             {
-              path: 'detailedreport.software_composition_analysis.vulnerable_components',
+              path: 'detailedreport.software_composition_analysis.vulnerable_components.component',
               /* The original formal of vulnerable_components is the following:
 
               [
@@ -446,7 +407,7 @@ export class VeracodeMapper extends BaseConverter {
               and the component, where the issue happened as being a test is a better aproximation of this.
               format.
               */
-              pathTransform: componentTransform,
+              // pathTransform: componentTransform,
               ...controlMappingCve()
             }
           ],
