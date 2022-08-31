@@ -1,4 +1,5 @@
 import {contextualizeEvaluation, ExecJSON} from 'inspecjs';
+import _ from 'lodash';
 import {MappedTransform} from '../../base-converter';
 import {FromHdfBaseConverter} from '../reverse-base-converter';
 import {IExecJSONASFF, IFindingASFF, IOptions} from './asff-types';
@@ -27,6 +28,15 @@ import {
 } from './transformers';
 
 export const TO_ASFF_TYPES_SLASH_REPLACEMENT = '{{{SLASH}}}'; // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
+
+export function escapeForwardSlashes<T>(s: T): T {
+  return _.isString(s)
+    ? (s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
+    : (JSON.stringify(s).replace(
+        /\//g,
+        TO_ASFF_TYPES_SLASH_REPLACEMENT
+      ) as unknown as T);
+}
 
 export type SegmentedControl = ExecJSON.Control & {
   result: ExecJSON.ControlResult;
@@ -175,6 +185,72 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     return segments;
   }
 
+  // ASFF has several written and unwritten restrictions that cap how much information can be put into a finding
+  restrictToSchemaSizes(resList: IFindingASFF[]): IFindingASFF[] {
+    for (const finding of resList) {
+      // TODO: reorder types array so that highest priority info is at the top
+      // Any ASFF value has to be less than 32768B - we're setting the max size to 30KB to have some buffer.  Only enforcing this restriction in FindingProviderFields.Types for now.
+      finding.FindingProviderFields.Types = (
+        finding.FindingProviderFields.Types as string[]
+      )
+        .map((typeString) => {
+          const ATTRIBUTE_CHARACTER_LIMIT = 30000;
+          if (typeString.length <= ATTRIBUTE_CHARACTER_LIMIT) {
+            return typeString;
+          }
+          const [type, attribute, value] = typeString.split('/');
+          return _.chunk(
+            value,
+            ATTRIBUTE_CHARACTER_LIMIT -
+              (type.length + attribute.length + 2) /*the slashes*/
+          ).map((chunk) => `${type}/${attribute}/${chunk.join('')}`);
+        })
+        .flat();
+
+      // Findings have a maximum size of 240KB.  To try to meet that requirement, it automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere.  We're setting the max size to 200KB since anything much more than that doesn't seem to actually show up in SecHub even if there are no errors reported on upload.
+      const SIZE_CAP = 200000;
+      const originalSize = new TextEncoder().encode(
+        JSON.stringify(finding)
+      ).length;
+      let size = originalSize;
+      let popped;
+      while (
+        size > SIZE_CAP &&
+        (finding.FindingProviderFields.Types as string[]).length > 0
+      ) {
+        popped = (finding.FindingProviderFields.Types as string[]).pop();
+        size = new TextEncoder().encode(JSON.stringify(finding)).length;
+      }
+      if (size > SIZE_CAP) {
+        throw new Error('Finding could not be reduced to less than 200KB');
+      }
+      if (originalSize !== size) {
+        (finding.FindingProviderFields.Types as string[]).push(
+          new TextDecoder().decode(
+            new TextEncoder().encode(popped).subarray(0, SIZE_CAP - size)
+          )
+        );
+        (finding.FindingProviderFields.Types as string[]).push(
+          'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
+        );
+      }
+
+      // FindingProviderFields.Types has a maximum size of 50 attributes
+      const cutoff = (finding.FindingProviderFields.Types as string[]).splice(
+        50,
+        (finding.FindingProviderFields.Types as string[]).length - 50
+      );
+      if (cutoff.length > 0) {
+        (finding.FindingProviderFields.Types as string[]).pop();
+        (finding.FindingProviderFields.Types as string[]).push(
+          `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.`
+        );
+      }
+    }
+
+    return resList;
+  }
+
   //Convert from HDF to ASFF
   toAsff(): IFindingASFF[] {
     if (this.mappings() === undefined) {
@@ -182,7 +258,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     } else {
       //Recursively transform the data into ASFF format
       //Returns an array of the findings
-      const resList: IFindingASFF[] = this.controlsToSegments().map(
+      let resList: IFindingASFF[] = this.controlsToSegments().map(
         (segment, index) => {
           this.index = index;
           return this.convertInternal(segment, this.mappings())[
@@ -192,41 +268,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       );
       resList.push(createProfileInfoFinding(this.data, this.ioptions));
 
-      // ASFF has several written and unwritten restrictions that cap how much information can be put into a finding
-      for (const finding of resList) {
-        // FindingProviderFields.Types has a maximum size of 50 attributes
-        const cutoff = (finding.FindingProviderFields.Types as string[]).splice(50, (finding.FindingProviderFields.Types as string[]).length - 50);
-        if (cutoff.length > 0) {
-          (finding.FindingProviderFields.Types as string[]).pop();
-          (finding.FindingProviderFields.Types as string[]).push(
-            `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.`
-          );
-        }
-
-        // Findings have a maximum size of 240KB.  To try to meet that requirement, it automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere.  We're setting the max size to 200KB since anything much more than that doesn't seem to actually show up in SecHub even if there are no errors reported on upload.
-        const SIZE_CAP = 200000;
-        const originalSize = new TextEncoder().encode(
-          JSON.stringify(finding)
-        ).length;
-        let size = originalSize;
-        let popped;
-        while (
-          size > SIZE_CAP &&
-          (finding.FindingProviderFields.Types as string[]).length > 0
-        ) {
-          popped = (finding.FindingProviderFields.Types as string[]).pop();
-          size = new TextEncoder().encode(JSON.stringify(finding)).length;
-        }
-        if (size > SIZE_CAP) {
-          throw new Error('Finding could not be reduced to less than 200KB');
-        }
-        if (originalSize !== size) {
-          (finding.FindingProviderFields.Types as string[]).push(new TextDecoder().decode(new TextEncoder().encode(popped).subarray(0, SIZE_CAP - size)));
-          (finding.FindingProviderFields.Types as string[]).push(
-            'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
-          );
-        }
-      }
+      resList = this.restrictToSchemaSizes(resList);
 
       return resList;
     }

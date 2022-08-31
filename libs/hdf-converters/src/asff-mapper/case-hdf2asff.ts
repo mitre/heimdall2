@@ -21,13 +21,18 @@ function objectifyTypesArray(
   if (!Array.isArray(typesArray)) {
     typesArray = _.get(typesArray, 'FindingProviderFields.Types') as string[];
   }
+  const groupedTypes = _.groupBy(typesArray, (typeString) =>
+    typeString.split('/').slice(0, -1).join('/')
+  );
   const ret = {};
-  for (const typeString of typesArray) {
+  for (const [typeAndAttribute, values] of Object.entries(groupedTypes)) {
     _.merge(
       ret,
       ((): Record<string, unknown> => {
-        const [type, attribute, value] = typeString.split('/');
-        let parsed = replaceTypesSlashes(value);
+        const [type, attribute] = typeAndAttribute.split('/');
+        let parsed = replaceTypesSlashes(
+          values.map((v) => v.split('/').slice(-1)).join('')
+        );
         try {
           parsed = JSON.parse(parsed);
         } catch {}
@@ -151,37 +156,6 @@ function getCodeForProfileLayer(
     return profileLayerToCodeMapping[profileName];
   } else {
     return '';
-  }
-}
-
-function getPassthrough(execTypes: Record<string, unknown>) {
-  //Default behavior for old instances of HDF
-  if (_.has(execTypes, 'Execution.passthrough')) {
-    return _.get(execTypes, 'Execution.passthrough');
-  }
-  //If only one field exists, then is already an object
-  if (_.has(execTypes, 'Execution.passthrough1of1')) {
-    return _.get(execTypes, 'Execution.passthrough1of1');
-  }
-  //Else reconstitute passthrough from detected strings
-  const strStorage = [];
-  if (_.isObject(execTypes.Execution)) {
-    const keys = Object.keys(
-      _.get(execTypes, 'Execution') as Record<string, unknown>
-    ).filter((key) => key.startsWith('passthrough'));
-    //No valid passthrough
-    if (keys.length <= 1) {
-      return {};
-    }
-    for (const key of keys) {
-      strStorage.push(_.get(execTypes, ['Execution', key]));
-    }
-  }
-  try {
-    return JSON.parse(strStorage.join(''));
-  } catch {
-    //If no valid JSON, then return incomplete string
-    return strStorage.join('');
   }
 }
 
@@ -315,7 +289,7 @@ function mapping(
         sha256: _.get(executionTypes, `${profileName}.sha256`)
       } as ExecJSON.Profile;
     }),
-    passthrough: getPassthrough(executionTypes)
+    passthrough: _.get(executionTypes, 'Execution.passthrough')
   } as MappedTransform<ExecJSON.Execution, ILookupPath>;
 }
 
