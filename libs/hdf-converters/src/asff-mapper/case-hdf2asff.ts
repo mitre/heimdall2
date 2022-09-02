@@ -170,7 +170,7 @@ function mapping(
     execution as Record<string, unknown>
   );
   const profileNames = Object.keys(executionTypes || {}).filter(
-    (type) => !['MITRE', 'File', 'Execution'].includes(type)
+    (type) => !['MITRE', 'File', 'Execution', 'HDF2ASFF-converter'].includes(type)
   );
   return {
     shortcircuit: true,
@@ -277,8 +277,8 @@ function mapping(
                               >,
                               ['code_desc', 'start_time']
                             )
-                          }
-                        ]
+                          } as ExecJSON.ControlResult
+                        ].concat(_.get(findingTypes, 'HDF2ASFF-converter.warning') ? [{code_desc: '', start_time: '', status: ExecJSON.ControlResultStatus.Skipped, skip_message: 'Warning: Entry was truncated when converted to ASFF (AWS Security Hub)'}] : [])
                       : []
                 } as ExecJSON.Control;
               }
@@ -289,7 +289,7 @@ function mapping(
         sha256: _.get(executionTypes, `${profileName}.sha256`)
       } as ExecJSON.Profile;
     }),
-    passthrough: _.get(executionTypes, 'Execution.passthrough')
+    passthrough: _.get(executionTypes, 'HDF2ASFF-converter.warning') ? [_.get(executionTypes, 'Execution.passthrough'), 'Warning: Entry was truncated when converted to ASFF (AWS Security Hub)'] : _.get(executionTypes, 'Execution.passthrough')
   } as MappedTransform<ExecJSON.Execution, ILookupPath>;
 }
 

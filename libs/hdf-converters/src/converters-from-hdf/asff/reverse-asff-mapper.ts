@@ -187,14 +187,21 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
   // ASFF has several written and unwritten restrictions that cap how much information can be put into a finding
   restrictToSchemaSizes(resList: IFindingASFF[]): IFindingASFF[] {
+    const profileInfoFindingId = resList.slice(-1)[0].Id;
+    let numRemoved = 0;
+    let numTruncated = 0;
+    const restricted: IFindingASFF[] = [];
     for (const finding of resList) {
-      // TODO: reorder types array so that highest priority info is at the top
-      // Any ASFF value has to be less than 32768B - we're setting the max size to 30KB to have some buffer.  Only enforcing this restriction in FindingProviderFields.Types for now.
+      // Any ASFF value has to be less than 32768B - we're setting the max size to 30KB to have some buffer.  Only enforcing this restriction in AssumeRolePolicyDocument and FindingProviderFields.Types for now.
+      const ATTRIBUTE_CHARACTER_LIMIT = 30000;
+      if (finding.Resources.length > 1) {
+        _.set(finding, 'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument', _.get(finding, 'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument', '').slice(0, ATTRIBUTE_CHARACTER_LIMIT));
+        // no need for truncation warning since AssumeRolePolicyDocument is only used to look nice in the GUI - FindingProviderFields.Types contains all the information
+      }
       finding.FindingProviderFields.Types = (
         finding.FindingProviderFields.Types as string[]
       )
         .map((typeString) => {
-          const ATTRIBUTE_CHARACTER_LIMIT = 30000;
           if (typeString.length <= ATTRIBUTE_CHARACTER_LIMIT) {
             return typeString;
           }
@@ -222,7 +229,17 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         size = new TextEncoder().encode(JSON.stringify(finding)).length;
       }
       if (size > SIZE_CAP) {
-        throw new Error('Finding could not be reduced to less than 200KB');
+        console.error(
+          `Warning: Normalized finding could not be sufficiently reduced in size to meet AWS Security Hub requirements and so will not be provided in the results set.  Finding could not be minimized more than as follows:
+            ${finding}`
+        );
+        if(finding.Id === profileInfoFindingId) {
+          console.error('Warning: This finding was the informational finding containing the scan/execution level information.');
+        }
+        if(finding.Id !== profileInfoFindingId) { // metrics are only for non-profile info findings
+          numRemoved++;
+        }
+        continue;
       }
       if (originalSize !== size) {
         (finding.FindingProviderFields.Types as string[]).push(
@@ -233,6 +250,10 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         (finding.FindingProviderFields.Types as string[]).push(
           'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
         );
+        console.error(`Warning: Normalized finding was truncated in size to meet AWS Security Hub requirements.  Finding id: ${finding.Id}`);
+        if(finding.Id !== profileInfoFindingId) {
+          numTruncated++;
+        }
       }
 
       // FindingProviderFields.Types has a maximum size of 50 attributes
@@ -245,10 +266,20 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         (finding.FindingProviderFields.Types as string[]).push(
           `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.`
         );
+        console.error(`Warning: Normalized finding was truncated in size to meet AWS Security Hub requirements.  Finding id: ${finding.Id}`);
+        if(finding.Id !== profileInfoFindingId) {
+          numTruncated++;
+        }
       }
+
+      restricted.push(finding);
     }
 
-    return resList;
+    if ((numRemoved > 0 || numTruncated > 0) && restricted.slice(-1)[0].Id === profileInfoFindingId) {
+      restricted.slice(-1)[0].Description = `${restricted.slice(-1)[0].Description} --- Findings removed: ${numRemoved} (Could not fit due to AWS Security Hub restrictions) --- Findings truncated: ${numTruncated} (Truncated to fit AWS Security Hub restrictions)`;
+    }
+
+    return restricted;
   }
 
   //Convert from HDF to ASFF
