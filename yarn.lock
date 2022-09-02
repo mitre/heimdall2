@@ -4409,9 +4409,9 @@
   integrity sha512-RGZdFlzuj/3ARNTgrf/yJCKREZ2HGYP///wq3pxYWhsw47ImY0FFIBjyNcgdN9Us6lvIMdW6RfubpCAiJb65mg==
 
 "@types/papaparse@^5.3.2":
-  version "5.3.4"
-  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.3.4.tgz#57f7366540a349675c4fa57ef01e5c8775aced2b"
-  integrity sha512-61/jki1Ri+v1/Fobrf4rlIo6ExNM8P0CHYwId8wkrC2WiKfDwiRtn/hiAa6jXj8vPa4oFZ14uFKME547V4VGyQ==
+  version "5.3.5"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.3.5.tgz#e5ad94b1fe98e2a8ea0b03284b83d2cb252bbf39"
+  integrity sha512-R1icl/hrJPFRpuYj9PVG03WBAlghJj4JW9Py5QdR8FFSxaLmZRyu7xYDCCBZIJNfUv3MYaeBbhBoX958mUTAaw==
   dependencies:
     "@types/node" "*"
 
