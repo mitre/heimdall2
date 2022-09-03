@@ -9085,9 +9085,9 @@ diff-sequences@^27.5.1:
   integrity sha512-k1gCAXAsNgLwEL+Y8Wvl+M6oEFj5bgazfZULpS5CneoPPXRaCCW7dm+q21Ky2VEE5X+VeRDBVg1Pcvvsr4TtNQ==
 
 diff2html@^3.1.7:
-  version "3.4.18"
-  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.18.tgz#1f68caf8d55ade5c0e6fdcf0def5f182b1d1dd52"
-  integrity sha512-eZP1vKjCNMPFpCoY0+ATZYTgdUUriUTLxRLjjAx6qPje7orIirtTkW3ghVcz3dIBjcum47AGIHBHpLhdrdS7aw==
+  version "3.4.19"
+  resolved "https://registry.yarnpkg.com/diff2html/-/diff2html-3.4.19.tgz#6150ed253957e22f38f078a5fb1b70d27eb9ce6c"
+  integrity sha512-23tBeyRxcw31p/XlEn9ZGYP9mRQRL3cB25aigrWV29UUUmEnlHnmUpFWGKVSiCJXoize+31SV412BYmdilRqEw==
   dependencies:
     diff "5.1.0"
     hogan.js "3.0.2"
