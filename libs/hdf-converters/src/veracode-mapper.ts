@@ -1,5 +1,6 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import { stringify } from 'querystring';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -384,6 +385,12 @@ export class VeracodeMapper extends BaseConverter {
         release: HeimdallToolsVersion
       },
       passthrough: {
+        licenses:{
+          path: 'detailedreport.software_composition_analysis.vulnerable_components',
+          transformer: (value: Record<string, unknown>) =>
+            (_.get(value, 'component') as Record<string, unknown>[]).map((component: Record<string,unknown>) => 
+              _.omit(component, 'vulnerabilities'))
+        },
         auxiliary_data: [
           {
             name: 'veracode',

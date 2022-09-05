@@ -4,6 +4,3058 @@
     "release": "2.6.29"
   },
   "passthrough": {
+    "licenses": [
+      {
+        "component_id": "057e93d5-c7c8-4b3a-bf16-d7450929ced2",
+        "file_name": "tomcat-jni-9.0.36.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "9.0.36",
+        "library": "tomcat-jni",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-jni&#x3a;9.0.36&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar&#x3a;tomcat-jni-9.0.36.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "0a7e5504-34d8-49a9-9910-10fc8e8ff384",
+        "file_name": "jakarta.el-api-3.0.3.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "3.0.3",
+        "library": "Jakarta Expression Language API",
+        "library_id": "maven&#x3a;jakarta.el&#x3a;jakarta.el-api&#x3a;3.0.3&#x3a;",
+        "vendor": "jakarta.el",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;jakarta.el-3.0.3.jar&#x3a;jakarta.el-api-3.0.3.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Eclipse Public License 2.0",
+              "spdx_id": "EPL-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;EPL-2.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License with Classpath Exceptions version 2.0",
+              "spdx_id": "GPL-2.0-with-classpath-exception",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0-with-classpath-exception.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "0d64a1dd-b9ae-4b6e-9b41-f811c7885b91",
+        "file_name": "spring-boot-starter-json-2.3.1.RELEASE.jar",
+        "sha1": "8342003919c7e5a2470072595ea190cb8a9552c0",
+        "max_cvss_score": "",
+        "version": "2.3.1.RELEASE",
+        "library": "spring-boot-starter-json",
+        "library_id": "maven&#x3a;org.springframework.boot&#x3a;spring-boot-starter-json&#x3a;2.3.1.RELEASE&#x3a;",
+        "vendor": "org.springframework.boot",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-boot-starter-json-2.3.1.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "10838146-6cb6-421a-9cad-8c6a1643157e",
+        "file_name": "slf4j-log4j12-1.7.7.jar",
+        "sha1": "58f588119ffd1702c77ccab6acb54bfb41bed8bd",
+        "max_cvss_score": "",
+        "version": "1.7.7",
+        "library": "SLF4J LOG4J-12 Binding",
+        "library_id": "maven&#x3a;org.slf4j&#x3a;slf4j-log4j12&#x3a;1.7.7&#x3a;",
+        "vendor": "org.slf4j",
+        "description": "SLF4J LOG4J-12 Binding",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;slf4j-log4j12-1.7.7.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "MIT License",
+            "spdx_id": "MIT",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;MIT.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "11a5a4d1-f78b-4e66-8a3c-24177ee8c7a4",
+        "file_name": "org.apache.servicemix.bundles.javax-el-impl-3.0.3_1.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "3.0.3_1",
+        "library": "org.apache.servicemix.bundles.javax-el-impl",
+        "library_id": "maven&#x3a;org.apache.servicemix.bundles&#x3a;org.apache.servicemix.bundles.javax-el-impl&#x3a;3.0.3_1&#x3a;",
+        "vendor": "org.apache.servicemix.bundles",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;jakarta.el-3.0.3.jar&#x3a;org.apache.servicemix.bundles.javax-el-impl-3.0.3_1.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "16f00554-a92c-4a63-b8a2-e71b572a529e",
+        "file_name": "maven-repository-metadata-2.0.jar",
+        "sha1": "3f162989e8077f37911ec7d025f3480e65c2c5be",
+        "max_cvss_score": "",
+        "version": "2.0",
+        "library": "Maven Repository Metadata Model",
+        "library_id": "maven&#x3a;org.apache.maven&#x3a;maven-repository-metadata&#x3a;2.0&#x3a;",
+        "vendor": "org.apache.maven",
+        "description": "Maven Plugin Mapping",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;maven-repository-metadata-2.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "1793362a-098a-47f2-95e8-0565117aa7fd",
+        "file_name": "commons-httpclient-3.1.jar",
+        "sha1": "964cd74171f427720480efdec40a7c7f6e58426a",
+        "max_cvss_score": "5.8",
+        "version": "3.1",
+        "library": "HttpClient",
+        "library_id": "maven&#x3a;commons-httpclient&#x3a;commons-httpclient&#x3a;3.1&#x3a;",
+        "vendor": "commons-httpclient",
+        "description": "The HttpClient  component supports the client-side of RFC 1945 &#x28;HTTP&#x2f;1.0&#x29;  and RFC 2616 &#x28;HTTP&#x2f;1.1&#x29; , several related specifications &#x28;RFC 2109 &#x28;Cookies&#x29; , RFC 2617 &#x28;HTTP Authentication&#x29; , etc.&#x29;, and provides a framework by which new request types &#x28;methods&#x29; or HTTP extensions can be created easily.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-httpclient-3.1.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "28614053-0ad6-4c0f-817e-6b4c89777501",
+        "file_name": "mysql-connector-java-5.1.48.jar",
+        "sha1": "9140be77aafa5050bf4bb936d560cbacb5a6b5c1",
+        "max_cvss_score": "3.5",
+        "version": "5.1.48",
+        "library": "MySQL Connector&#x2f;J",
+        "library_id": "maven&#x3a;mysql&#x3a;mysql-connector-java&#x3a;5.1.48&#x3a;",
+        "vendor": "mysql",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;mysql-connector-java-5.1.48.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "GNU General Public License v2.0 only",
+            "spdx_id": "GPL-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0.html",
+            "risk_rating": "4",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "2d1e78d8-89d7-46bb-9633-2fbea4d0e2c7",
+        "file_name": "tomcat-jasper-el-9.0.36.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "9.0.36",
+        "library": "tomcat-jasper-el",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-jasper-el&#x3a;9.0.36&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-el-9.0.36.jar&#x3a;tomcat-jasper-el-9.0.36.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "2dddf946-16e7-406d-9b77-ce36e04cf1f2",
+        "file_name": "spring-boot-2.3.1.RELEASE.jar",
+        "sha1": "ce8d8b6838ecceb68962b975b18682f4237ccf71",
+        "max_cvss_score": "",
+        "version": "2.3.1.RELEASE",
+        "library": "spring-boot",
+        "library_id": "maven&#x3a;org.springframework.boot&#x3a;spring-boot&#x3a;2.3.1.RELEASE&#x3a;",
+        "vendor": "org.springframework.boot",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-boot-2.3.1.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "31117674-2020-41e0-be67-1385f0a4257d",
+        "file_name": "tomcat-embed-websocket-9.0.36.jar",
+        "sha1": "33fa5038aa66be6e9cc188000c2188aa4dd33c85",
+        "max_cvss_score": "5.0",
+        "version": "9.0.36",
+        "library": "tomcat-embed-websocket",
+        "library_id": "maven&#x3a;org.apache.tomcat.embed&#x3a;tomcat-embed-websocket&#x3a;9.0.36&#x3a;",
+        "vendor": "org.apache.tomcat.embed",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-websocket-9.0.36.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "36fa0a91-39cf-4663-96e1-a413324a37df",
+        "file_name": "xmlsec-1.5.1.jar",
+        "sha1": "bbf5d96a49a2b58b8988202a3c8728461639090e",
+        "max_cvss_score": "5.0",
+        "version": "1.5.1",
+        "library": "Apache XML Security for Java",
+        "library_id": "maven&#x3a;org.apache.santuario&#x3a;xmlsec&#x3a;1.5.1&#x3a;",
+        "vendor": "org.apache.santuario",
+        "description": "Apache XML Security for Java supports XML-Signature Syntax and Processing,&#xa;        W3C Recommendation 12 February 2002, and XML Encryption Syntax and&#xa;        Processing, W3C Recommendation 10 December 2002. As of version 1.4,&#xa;        the library supports the standard Java API JSR-105&#x3a; XML Digital Signature APIs.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;xmlsec-1.5.1.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "372535e6-627f-4e28-8779-8737df8c8e4a",
+        "file_name": "maven-artifact-manager-2.0.jar",
+        "sha1": "8672c4278c184dbd4b18fed7e72688fd6018e112",
+        "max_cvss_score": "",
+        "version": "2.0",
+        "library": "Maven Artifact Manager",
+        "library_id": "maven&#x3a;org.apache.maven&#x3a;maven-artifact-manager&#x3a;2.0&#x3a;",
+        "vendor": "org.apache.maven",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;maven-artifact-manager-2.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "38678b7f-6718-4b4f-adb6-390ca146c1dc",
+        "file_name": "spring-core-5.2.7.RELEASE.jar",
+        "sha1": "56e14a3a5e2813534b5db2da1502cd58ab5bc61d",
+        "max_cvss_score": "4.0",
+        "version": "5.2.7.RELEASE",
+        "library": "Spring Core",
+        "library_id": "maven&#x3a;org.springframework&#x3a;spring-core&#x3a;5.2.7.RELEASE&#x3a;",
+        "vendor": "org.springframework",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-core-5.2.7.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "3c4a1c6a-aa0d-4a98-9125-a2ec75b88f58",
+        "file_name": "tomcat-jaspic-api-9.0.2.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "9.0.2",
+        "library": "tomcat-jaspic-api",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-jaspic-api&#x3a;9.0.2&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "javax.security.auth.message package",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar&#x3a;tomcat-jaspic-api-9.0.2.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "3e54457b-9cff-40ca-a06b-0ffcd76136b3",
+        "file_name": "hamcrest-core-2.2.jar",
+        "sha1": "3f2bd07716a31c395e2837254f37f21f0f0ab24b",
+        "max_cvss_score": "",
+        "version": "2.2",
+        "library": "Hamcrest Core",
+        "library_id": "maven&#x3a;org.hamcrest&#x3a;hamcrest-core&#x3a;2.2&#x3a;",
+        "vendor": "org.hamcrest",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;hamcrest-core-2.2.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "BSD 3-Clause &#x22;New&#x22; or &#x22;Revised&#x22; License",
+            "spdx_id": "BSD-3-Clause",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;BSD-3-Clause.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "47004b3b-df69-4a60-a235-ac4a0e62d206",
+        "file_name": "logback-classic-1.2.3.jar",
+        "sha1": "7c4f3c474fb2c041d8028740440937705ebb473a",
+        "max_cvss_score": "8.5",
+        "version": "1.2.3",
+        "library": "Logback Classic Module",
+        "library_id": "maven&#x3a;ch.qos.logback&#x3a;logback-classic&#x3a;1.2.3&#x3a;",
+        "vendor": "ch.qos.logback",
+        "description": "logback-classic module",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;logback-classic-1.2.3.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Eclipse Public License 1.0",
+              "spdx_id": "EPL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;EPL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU Lesser General Public License v2.1 only",
+              "spdx_id": "LGPL-2.1",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;LGPL-2.1.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU Lesser General Public License v2.1 only",
+              "spdx_id": "LGPL-2.1-only",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;LGPL-2.1-only.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU Lesser General Public License v3.0 only",
+              "spdx_id": "LGPL-3.0-only",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;LGPL-3.0-only.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "4bc7d82b-07f5-4b02-bd8c-4a2d278645d4",
+        "file_name": "spring-beans-5.2.7.RELEASE.jar",
+        "sha1": "05465ab17688ed62254fdef411cf883fd5c3b77a",
+        "max_cvss_score": "",
+        "version": "5.2.7.RELEASE",
+        "library": "Spring Beans",
+        "library_id": "maven&#x3a;org.springframework&#x3a;spring-beans&#x3a;5.2.7.RELEASE&#x3a;",
+        "vendor": "org.springframework",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-beans-5.2.7.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "4ebeadf3-e305-4520-8e20-f7b2b15141c4",
+        "file_name": "junit-4.13.jar",
+        "sha1": "e49ccba652b735c93bd6e6f59760d8254cf597dd",
+        "max_cvss_score": "1.9",
+        "version": "4.13",
+        "library": "JUnit",
+        "library_id": "maven&#x3a;junit&#x3a;junit&#x3a;4.13&#x3a;",
+        "vendor": "junit",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;junit-4.13.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Eclipse Public License 1.0",
+            "spdx_id": "EPL-1.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;EPL-1.0.html",
+            "risk_rating": "3",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "50739ae5-8acf-4331-afac-66410b4a688b",
+        "file_name": "tomcat-servlet-api-9.0.35.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "9.0.35",
+        "library": "tomcat-servlet-api",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-servlet-api&#x3a;9.0.35&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar&#x3a;tomcat-servlet-api-9.0.35.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Apache License 2.0",
+              "spdx_id": "Apache-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+              "risk_rating": "2",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "Common Development and Distribution License 1.0",
+              "spdx_id": "CDDL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CDDL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "522b27c1-fea7-4b03-bf79-25354ebe0270",
+        "file_name": "encoder-jsp-1.2.2.jar",
+        "sha1": "3f124a0eb702c11389aa79018781cb43c8041f32",
+        "max_cvss_score": "",
+        "version": "1.2.2",
+        "library": "JSP Encoder",
+        "library_id": "maven&#x3a;org.owasp.encoder&#x3a;encoder-jsp&#x3a;1.2.2&#x3a;",
+        "vendor": "org.owasp.encoder",
+        "description": "The OWASP Encoder JSP package contains JSP tag definitions and TLDs to allow&#xa;        easy use of the OWASP Encoder Project&#x27;s core API. The TLDs contain both tag&#xa;        definitions and JSP EL functions.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;encoder-jsp-1.2.2.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "BSD 3-Clause &#x22;New&#x22; or &#x22;Revised&#x22; License",
+            "spdx_id": "BSD-3-Clause",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;BSD-3-Clause.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "556904e5-40b0-49b9-be83-3822f3c1a11c",
+        "file_name": "tomcat-websocket-api-9.0.16.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "9.0.16",
+        "library": "tomcat-websocket-api",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-websocket-api&#x3a;9.0.16&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "WebSocket &#x28;JSR356&#x29; API",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-websocket-9.0.36.jar&#x3a;tomcat-websocket-api-9.0.16.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "58dab3c5-b691-4006-9be3-91edbf87d27f",
+        "file_name": "logback-core-1.2.3.jar",
+        "sha1": "864344400c3d4d92dfeb0a305dc87d953677c03c",
+        "max_cvss_score": "8.5",
+        "version": "1.2.3",
+        "library": "Logback Core Module",
+        "library_id": "maven&#x3a;ch.qos.logback&#x3a;logback-core&#x3a;1.2.3&#x3a;",
+        "vendor": "ch.qos.logback",
+        "description": "logback-core module",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;21 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;logback-core-1.2.3.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Eclipse Public License 1.0",
+              "spdx_id": "EPL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;EPL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU Lesser General Public License v2.1 only",
+              "spdx_id": "LGPL-2.1",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;LGPL-2.1.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU Lesser General Public License v2.1 only",
+              "spdx_id": "LGPL-2.1-only",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;LGPL-2.1-only.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU Lesser General Public License v3.0 only",
+              "spdx_id": "LGPL-3.0-only",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;LGPL-3.0-only.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "592cbbec-e7d4-4881-bc8b-3fa364cb1dce",
+        "file_name": "org.apache.sling.commons.osgi-2.0.2-incubator.jar",
+        "sha1": "7b13d706ac8019b269408831210707df64f93798",
+        "max_cvss_score": "",
+        "version": "2.0.2-incubator",
+        "library": "Apache Sling Commons OSGi support",
+        "library_id": "maven&#x3a;org.apache.sling&#x3a;org.apache.sling.commons.osgi&#x3a;2.0.2-incubator&#x3a;",
+        "vendor": "org.apache.sling",
+        "description": "Commons OSGi",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;org.apache.sling.commons.osgi-2.0.2-incubator.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "5bc897b9-5207-4702-a9b6-82f43266bcdd",
+        "file_name": "jackson-datatype-jsr310-2.11.0.jar",
+        "sha1": "168b2d0e11478b9f0a1bfccd62d6b5e8547b1e6f",
+        "max_cvss_score": "",
+        "version": "2.11.0",
+        "library": "Jackson datatype&#x3a; JSR310",
+        "library_id": "maven&#x3a;com.fasterxml.jackson.datatype&#x3a;jackson-datatype-jsr310&#x3a;2.11.0&#x3a;",
+        "vendor": "com.fasterxml.jackson.datatype",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jackson-datatype-jsr310-2.11.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "5d9e6e34-bc64-4f09-ba83-dd176dec6157",
+        "file_name": "maven-sling-plugin-2.0.4-incubator.jar",
+        "sha1": "d8b247e9c2e9b5b6e8d16142af9a5c66cd913430",
+        "max_cvss_score": "",
+        "version": "2.0.4-incubator",
+        "library": "Apache Sling Maven Plugin Relocation",
+        "library_id": "maven&#x3a;org.apache.sling&#x3a;maven-sling-plugin&#x3a;2.0.4-incubator&#x3a;",
+        "vendor": "org.apache.sling",
+        "description": "Maven Plugin supporting various Sling Development Tasks",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;maven-sling-plugin-2.0.4-incubator.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "5e780142-ba84-431f-b2f7-72cdf66861a0",
+        "file_name": "tomcat-jasper-9.0.35.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "9.0.35",
+        "library": "tomcat-jasper",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-jasper&#x3a;9.0.35&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-jasper-9.0.36.jar&#x3a;tomcat-jasper-9.0.35.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "5f415b4a-faa3-4ce8-97c7-78df73712658",
+        "file_name": "jakarta.el-3.0.3.jar",
+        "sha1": "dab46ee1ee23f7197c13d7c40fce14817c9017df",
+        "max_cvss_score": "",
+        "version": "3.0.3",
+        "library": "Jakarta Expression Language 3.0",
+        "library_id": "maven&#x3a;org.glassfish&#x3a;jakarta.el&#x3a;3.0.3&#x3a;",
+        "vendor": "org.glassfish",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;jakarta.el-3.0.3.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Eclipse Public License 2.0",
+              "spdx_id": "EPL-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;EPL-2.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License with Classpath Exceptions version 2.0",
+              "spdx_id": "GPL-2.0-with-classpath-exception",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0-with-classpath-exception.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "6599f523-eda1-4491-8724-418b20fe6380",
+        "file_name": "javax.mail-api-1.4.7.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "1.4.7",
+        "library": "JavaMail API jar",
+        "library_id": "maven&#x3a;javax.mail&#x3a;javax.mail-api&#x3a;1.4.7&#x3a;",
+        "vendor": "javax.mail",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;mail-1.4.7.jar&#x3a;javax.mail-api-1.4.7.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Apache License 2.0",
+              "spdx_id": "Apache-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+              "risk_rating": "2",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "Common Development and Distribution License 1.0",
+              "spdx_id": "CDDL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CDDL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "CeCILL Free Software License Agreement v1.0",
+              "spdx_id": "CECILL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CECILL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "Eclipse Distribution License &#x28;EDL&#x29;",
+              "spdx_id": "EDL",
+              "license_url": "https&#x3a;&#x2f;&#x2f;www.eclipse.org&#x2f;org&#x2f;documents&#x2f;edl-v10.php",
+              "risk_rating": "2",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "Eclipse Public License 2.0",
+              "spdx_id": "EPL-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;EPL-2.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License with Classpath Exceptions version 2.0",
+              "spdx_id": "GPL-2.0-with-classpath-exception",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0-with-classpath-exception.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "696ebdd0-a72f-4254-8433-ad57b7f8ff8b",
+        "file_name": "tomcat-annotations-api-9.0.36.jar",
+        "sha1": "accb87a9bffc36d717a8dc6bd6ae05982a172f8a",
+        "max_cvss_score": "",
+        "version": "9.0.36",
+        "library": "tomcat-annotations-api",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-annotations-api&#x3a;9.0.36&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-annotations-api-9.0.36.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "6d58721f-b672-4d42-b8b8-cdaf0c8a3e01",
+        "file_name": "tomcat-embed-el-9.0.36.jar",
+        "sha1": "0df7c99202598126a5897b37bbf7993ce321efdd",
+        "max_cvss_score": "",
+        "version": "9.0.36",
+        "library": "tomcat-embed-el",
+        "library_id": "maven&#x3a;org.apache.tomcat.embed&#x3a;tomcat-embed-el&#x3a;9.0.36&#x3a;",
+        "vendor": "org.apache.tomcat.embed",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-el-9.0.36.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "6d7c9b3e-39cd-4843-a0b3-4945a701ae8f",
+        "file_name": "tomcat-jsp-api-9.0.36.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "9.0.36",
+        "library": "tomcat-jsp-api",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-jsp-api&#x3a;9.0.36&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-jasper-9.0.36.jar&#x3a;tomcat-jsp-api-9.0.36.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "6e6add0e-02ba-4bd9-9445-a3fb27e96b95",
+        "file_name": "spring-boot-starter-web-2.3.1.RELEASE.jar",
+        "sha1": "555c4f90141cdbc7637145e413bca0d622ba6796",
+        "max_cvss_score": "",
+        "version": "2.3.1.RELEASE",
+        "library": "spring-boot-starter-web",
+        "library_id": "maven&#x3a;org.springframework.boot&#x3a;spring-boot-starter-web&#x3a;2.3.1.RELEASE&#x3a;",
+        "vendor": "org.springframework.boot",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;21 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-boot-starter-web-2.3.1.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "6f481977-a06c-45ff-a1ff-42a0079dcbcb",
+        "file_name": "org.osgi.core-1.2.0.jar",
+        "sha1": "3006beb1ca6a83449def6127dad3c060148a0209",
+        "max_cvss_score": "",
+        "version": "1.2.0",
+        "library": "OSGi R4 Core Bundle",
+        "library_id": "maven&#x3a;org.apache.felix&#x3a;org.osgi.core&#x3a;1.2.0&#x3a;",
+        "vendor": "org.apache.felix",
+        "description": "OSGi Service Platform Release 4 Core Interfaces and Classes.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;org.osgi.core-1.2.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "707fd737-73ed-4161-9863-b7b82cd59d72",
+        "file_name": "jaxb-api-2.3.1.jar",
+        "sha1": "8531ad5ac454cc2deb9d4d32c40c4d7451939b5d",
+        "max_cvss_score": "",
+        "version": "2.3.1",
+        "library": "jaxb-api",
+        "library_id": "maven&#x3a;javax.xml.bind&#x3a;jaxb-api&#x3a;2.3.1&#x3a;",
+        "vendor": "javax.xml.bind",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jaxb-api-2.3.1.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Common Development and Distribution License 1.1&#x28;CDDL-1.1&#x29;",
+              "spdx_id": "CDDL-1.1",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CDDL-1.1.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License with Classpath Exceptions version 2.0",
+              "spdx_id": "GPL-2.0-with-classpath-exception",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0-with-classpath-exception.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "723432a9-fca7-4cd1-a32c-0625a828c664",
+        "file_name": "VeracodeAnnotations-1.2.1.jar",
+        "sha1": "c7b6bcfca2967d20caa5fd1f03fd0ce7aa42b809",
+        "max_cvss_score": "",
+        "version": "1.2.1",
+        "library": "VeracodeAnnotations",
+        "library_id": "maven&#x3a;com.veracode.annotation&#x3a;VeracodeAnnotations&#x3a;1.2.1&#x3a;",
+        "vendor": "com.veracode.annotation",
+        "description": "Annotations used by Veracode&#x27;s software analysis framework",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;VeracodeAnnotations-1.2.1.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "MIT License",
+            "spdx_id": "MIT",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;MIT.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "72fb5479-fe7a-47f7-b7d2-85777227293d",
+        "file_name": "jul-to-slf4j-1.7.30.jar",
+        "sha1": "d58bebff8cbf70ff52b59208586095f467656c30",
+        "max_cvss_score": "",
+        "version": "1.7.30",
+        "library": "JUL to SLF4J bridge",
+        "library_id": "maven&#x3a;org.slf4j&#x3a;jul-to-slf4j&#x3a;1.7.30&#x3a;",
+        "vendor": "org.slf4j",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jul-to-slf4j-1.7.30.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "MIT License",
+            "spdx_id": "MIT",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;MIT.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "7339ff8f-298c-4821-98a9-7fd2c7a74fee",
+        "file_name": "pop3-1.4.6.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "1.4.6",
+        "library": "Jakarta Mail API pop3 provider",
+        "library_id": "maven&#x3a;com.sun.mail&#x3a;pop3&#x3a;1.4.6&#x3a;",
+        "vendor": "com.sun.mail",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;mail-1.4.7.jar&#x3a;pop3-1.4.6.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Common Development and Distribution License 1.0",
+              "spdx_id": "CDDL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CDDL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "CeCILL Free Software License Agreement v1.0",
+              "spdx_id": "CECILL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CECILL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "Eclipse Distribution License &#x28;EDL&#x29;",
+              "spdx_id": "EDL",
+              "license_url": "https&#x3a;&#x2f;&#x2f;www.eclipse.org&#x2f;org&#x2f;documents&#x2f;edl-v10.php",
+              "risk_rating": "2",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "Eclipse Public License 2.0",
+              "spdx_id": "EPL-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;EPL-2.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License v2.0 only",
+              "spdx_id": "GPL-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License with Classpath Exceptions version 2.0",
+              "spdx_id": "GPL-2.0-with-classpath-exception",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0-with-classpath-exception.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "7af6c9ab-b28e-4870-8553-6fec23094864",
+        "file_name": "tomcat-embed-jasper-9.0.36.jar",
+        "sha1": "a2dbada2312d6fa749ca2d6266466f0a3cb279f2",
+        "max_cvss_score": "",
+        "version": "9.0.36",
+        "library": "tomcat-embed-jasper",
+        "library_id": "maven&#x3a;org.apache.tomcat.embed&#x3a;tomcat-embed-jasper&#x3a;9.0.36&#x3a;",
+        "vendor": "org.apache.tomcat.embed",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-jasper-9.0.36.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "7b97d2dc-f55b-488d-a19b-f28a2c52a6e1",
+        "file_name": "maven-profile-2.0.jar",
+        "sha1": "442e147cd361128f56ce8003019421f0d90b388a",
+        "max_cvss_score": "",
+        "version": "2.0",
+        "library": "Maven Profile Model",
+        "library_id": "maven&#x3a;org.apache.maven&#x3a;maven-profile&#x3a;2.0&#x3a;",
+        "vendor": "org.apache.maven",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;maven-profile-2.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "80921602-84bd-4397-ae9a-ef836cb936f9",
+        "file_name": "spring-boot-starter-tomcat-2.3.1.RELEASE.jar",
+        "sha1": "5b599d0da04e724479c22daa47f9bfd62533a2e9",
+        "max_cvss_score": "",
+        "version": "2.3.1.RELEASE",
+        "library": "spring-boot-starter-tomcat",
+        "library_id": "maven&#x3a;org.springframework.boot&#x3a;spring-boot-starter-tomcat&#x3a;2.3.1.RELEASE&#x3a;",
+        "vendor": "org.springframework.boot",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;spring-boot-starter-tomcat-2.3.1.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "811aa8f7-da6c-4269-b1f8-5bbd19ce1a61",
+        "file_name": "hamcrest-2.2.jar",
+        "sha1": "1820c0968dba3a11a1b30669bb1f01978a91dedc",
+        "max_cvss_score": "",
+        "version": "2.2",
+        "library": "Hamcrest",
+        "library_id": "maven&#x3a;org.hamcrest&#x3a;hamcrest&#x3a;2.2&#x3a;",
+        "vendor": "org.hamcrest",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;hamcrest-2.2.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "BSD 3-Clause &#x22;New&#x22; or &#x22;Revised&#x22; License",
+            "spdx_id": "BSD-3-Clause",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;BSD-3-Clause.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "818e21c0-1a85-4a0e-acf9-77d264d85da4",
+        "file_name": "jackson-annotations-2.11.0.jar",
+        "sha1": "c626020ae55d19c690d25cb51c1532ba76e5890f",
+        "max_cvss_score": "",
+        "version": "2.11.0",
+        "library": "Jackson-annotations",
+        "library_id": "maven&#x3a;com.fasterxml.jackson.core&#x3a;jackson-annotations&#x3a;2.11.0&#x3a;",
+        "vendor": "com.fasterxml.jackson.core",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jackson-annotations-2.11.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "83fe7fdd-3039-409a-8fab-555d5b823ed0",
+        "file_name": "log4j-to-slf4j-2.13.3.jar",
+        "sha1": "966f6fd1af4959d6b12bfa880121d4a2b164f857",
+        "max_cvss_score": "",
+        "version": "2.13.3",
+        "library": "Apache Log4j to SLF4J Adapter",
+        "library_id": "maven&#x3a;org.apache.logging.log4j&#x3a;log4j-to-slf4j&#x3a;2.13.3&#x3a;",
+        "vendor": "org.apache.logging.log4j",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;log4j-to-slf4j-2.13.3.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "843d5a03-d3ab-42df-a149-3d89967d1f1c",
+        "file_name": "jackson-module-parameter-names-2.11.0.jar",
+        "sha1": "950a1e9a7c1093e7ffd92b216d5a0667f1e39058",
+        "max_cvss_score": "",
+        "version": "2.11.0",
+        "library": "Jackson-module-parameter-names",
+        "library_id": "maven&#x3a;com.fasterxml.jackson.module&#x3a;jackson-module-parameter-names&#x3a;2.11.0&#x3a;",
+        "vendor": "com.fasterxml.jackson.module",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jackson-module-parameter-names-2.11.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "8b4f55d4-ea0b-4115-a79f-41e564717d1e",
+        "file_name": "jstl-1.2.jar",
+        "sha1": "74aca283cd4f4b4f3e425f5820cda58f44409547",
+        "max_cvss_score": "7.5",
+        "version": "1.2",
+        "library": "jstl",
+        "library_id": "maven&#x3a;javax.servlet&#x3a;jstl&#x3a;1.2&#x3a;",
+        "vendor": "javax.servlet",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;jstl-1.2.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Common Development and Distribution License 1.0",
+              "spdx_id": "CDDL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CDDL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License v2.0 only",
+              "spdx_id": "GPL-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "8d83649b-8fe3-40fa-b124-9f9d43bb30b1",
+        "file_name": "org.ops4j.pax.tipi.tomcat-embed-core-9.0.36.1.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "9.0.36.1",
+        "library": "org.ops4j.pax.tipi.tomcat-embed-core",
+        "library_id": "maven&#x3a;org.ops4j.pax.tipi&#x3a;org.ops4j.pax.tipi.tomcat-embed-core&#x3a;9.0.36.1&#x3a;",
+        "vendor": "org.ops4j.pax.tipi",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar&#x3a;org.ops4j.pax.tipi.tomcat-embed-core-9.0.36.1.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "8d9a63d8-808b-4233-9e54-279d0f51826f",
+        "file_name": "log4j-1.2.17.jar",
+        "sha1": "5af35056b4d257e4b64b9e8069c0746e8b08629f",
+        "max_cvss_score": "7.5",
+        "version": "1.2.17",
+        "library": "Apache Log4j",
+        "library_id": "maven&#x3a;log4j&#x3a;log4j&#x3a;1.2.17&#x3a;",
+        "vendor": "log4j",
+        "description": "Apache Log4j 1.2",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;log4j-1.2.17.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "8e65d6c5-1044-42a1-9842-107728590261",
+        "file_name": "org.apache.sling.commons.json-2.0.4-incubator.jar",
+        "sha1": "19ce406cfe62be665037f5d397b62b4920a41e20",
+        "max_cvss_score": "",
+        "version": "2.0.4-incubator",
+        "library": "Apache Sling JSON Library",
+        "library_id": "maven&#x3a;org.apache.sling&#x3a;org.apache.sling.commons.json&#x3a;2.0.4-incubator&#x3a;",
+        "vendor": "org.apache.sling",
+        "description": "Apache Sling JSON Library",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;org.apache.sling.commons.json-2.0.4-incubator.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "8fadadf2-48d9-405b-a095-c526be235da2",
+        "file_name": "spring-boot-starter-2.3.1.RELEASE.jar",
+        "sha1": "e0d28696fea064578cb01da346232284f922eba4",
+        "max_cvss_score": "",
+        "version": "2.3.1.RELEASE",
+        "library": "spring-boot-starter",
+        "library_id": "maven&#x3a;org.springframework.boot&#x3a;spring-boot-starter&#x3a;2.3.1.RELEASE&#x3a;",
+        "vendor": "org.springframework.boot",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-boot-starter-2.3.1.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "909191b8-ab7f-4944-84bc-39f12b809732",
+        "file_name": "encoder-1.2.2.jar",
+        "sha1": "664346e62c3a95e1de5153db231bd283392a9532",
+        "max_cvss_score": "",
+        "version": "1.2.2",
+        "library": "Java Encoder",
+        "library_id": "maven&#x3a;org.owasp.encoder&#x3a;encoder&#x3a;1.2.2&#x3a;",
+        "vendor": "org.owasp.encoder",
+        "description": "The OWASP Encoders package is a collection of high-performance low-overhead&#xa;        contextual encoders, that when utilized correctly, is an effective tool in&#xa;        preventing Web Application security vulnerabilities such as Cross-Site&#xa;        Scripting.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;encoder-1.2.2.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "BSD 3-Clause &#x22;New&#x22; or &#x22;Revised&#x22; License",
+            "spdx_id": "BSD-3-Clause",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;BSD-3-Clause.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "91873e93-df8f-432b-b4eb-69c5ad96b775",
+        "file_name": "plexus-container-default-1.0-alpha-8.jar",
+        "sha1": "26fca33e988fb2c4a6688e65a1cd5bab3bb93a64",
+        "max_cvss_score": "",
+        "version": "1.0-alpha-8",
+        "library": "Plexus &#x3a;&#x3a; Default Container",
+        "library_id": "maven&#x3a;org.codehaus.plexus&#x3a;plexus-container-default&#x3a;1.0-alpha-8&#x3a;",
+        "vendor": "org.codehaus.plexus",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;plexus-container-default-1.0-alpha-8.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "92d18e2a-1b13-46df-b9be-de51d4bc6c9e",
+        "file_name": "commons-logging-1.0.4.jar",
+        "sha1": "f029a2aefe2b3e1517573c580f948caac31b1056",
+        "max_cvss_score": "",
+        "version": "1.0.4",
+        "library": "Apache Commons Logging",
+        "library_id": "maven&#x3a;commons-logging&#x3a;commons-logging&#x3a;1.0.4&#x3a;",
+        "vendor": "commons-logging",
+        "description": "Commons Logging is a thin adapter allowing configurable bridging to other,&#xa;    well known logging systems.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-logging-1.0.4.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "948a145e-813d-4d08-98d3-7795976aec7d",
+        "file_name": "jackson-datatype-jdk8-2.11.0.jar",
+        "sha1": "cca91d6375258fd7ff2a6abb7bf91eef492bd606",
+        "max_cvss_score": "",
+        "version": "2.11.0",
+        "library": "Jackson datatype&#x3a; jdk8",
+        "library_id": "maven&#x3a;com.fasterxml.jackson.datatype&#x3a;jackson-datatype-jdk8&#x3a;2.11.0&#x3a;",
+        "vendor": "com.fasterxml.jackson.datatype",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jackson-datatype-jdk8-2.11.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "97f0fb05-af1a-4a15-bb80-89dc2ac6f707",
+        "file_name": "org.apache.sling.api-2.0.2-incubator.jar",
+        "sha1": "b984f6288bb695b49d5eed9e3fcc3d75d5fe5e9f",
+        "max_cvss_score": "4.3",
+        "version": "2.0.2-incubator",
+        "library": "Apache Sling API",
+        "library_id": "maven&#x3a;org.apache.sling&#x3a;org.apache.sling.api&#x3a;2.0.2-incubator&#x3a;",
+        "vendor": "org.apache.sling",
+        "description": "The Sling API defines an extension to the Servlet API 2.4 to&#xa;        provide access to content and unified access to request&#xa;        parameters hiding the differences between the different methods&#xa;        of transferring parameters from client to server. Note that the&#xa;        Sling API bundle does not include the Servlet API but instead&#xa;        requires the API to be provided by the Servlet container in&#xa;        which the Sling framework is running or by another bundle.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;org.apache.sling.api-2.0.2-incubator.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "994959a9-c6e3-49f0-82c6-c283583e23ba",
+        "file_name": "tomcat-juli-9.0.37.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "9.0.37",
+        "library": "tomcat-juli",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-juli&#x3a;9.0.37&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar&#x3a;tomcat-juli-9.0.37.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "9fdb0cb9-3f05-4fb3-b221-cd97bdacc307",
+        "file_name": "commons-collections4-4.0.jar",
+        "sha1": "da217367fd25e88df52ba79e47658d4cf928b0d1",
+        "max_cvss_score": "7.5",
+        "version": "4.0",
+        "library": "Apache Commons Collections",
+        "library_id": "maven&#x3a;org.apache.commons&#x3a;commons-collections4&#x3a;4.0&#x3a;",
+        "vendor": "org.apache.commons",
+        "description": "The Apache Commons Collections package contains types that extend and augment the Java Collections Framework.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-collections4-4.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "a05bbd80-250f-4a54-b4fe-cc8d11957d25",
+        "file_name": "jbcrypt-0.3m.jar",
+        "sha1": "fe2d9c5f23767d681a7e38fc8986b812400ec583",
+        "max_cvss_score": "5.0",
+        "version": "0.3m",
+        "library": "jBCrypt",
+        "library_id": "maven&#x3a;org.mindrot&#x3a;jbcrypt&#x3a;0.3m&#x3a;",
+        "vendor": "org.mindrot",
+        "description": "jBCrypt is a Java implementation of OpenBSD&#x27;s Blowfish password hashing code, as described in A Future-Adaptable Password Scheme by Niels Provos and David Mazi&#xe8;res, by Damien Miller.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jbcrypt-0.3m.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "BSD 3-Clause &#x22;New&#x22; or &#x22;Revised&#x22; License",
+              "spdx_id": "BSD-3-Clause",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;BSD-3-Clause.html",
+              "risk_rating": "2",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "ISC License",
+              "spdx_id": "ISC",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;ISC.html",
+              "risk_rating": "2",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "a71a1300-9a17-45dd-81a6-bd4ec5dd18d9",
+        "file_name": "keycloak-saml-core-1.8.1.Final.jar",
+        "sha1": "73cebee358d4738326d4540ea496eefa1e5ad05f",
+        "max_cvss_score": "6.4",
+        "version": "1.8.1.Final",
+        "library": "Keycloak SAML Core",
+        "library_id": "maven&#x3a;org.keycloak&#x3a;keycloak-saml-core&#x3a;1.8.1.Final&#x3a;",
+        "vendor": "org.keycloak",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;keycloak-saml-core-1.8.1.Final.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "af04dc46-3a04-4c38-a0b0-dc438f6d3e53",
+        "file_name": "org.apache.servicemix.bundles.spring-aop-5.2.7.RELEASE_1.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "5.2.7.RELEASE_1",
+        "library": "org.apache.servicemix.bundles.spring-aop",
+        "library_id": "maven&#x3a;org.apache.servicemix.bundles&#x3a;org.apache.servicemix.bundles.spring-aop&#x3a;5.2.7.RELEASE_1&#x3a;",
+        "vendor": "org.apache.servicemix.bundles",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-aop-5.2.7.RELEASE.jar&#x3a;org.apache.servicemix.bundles.spring-aop-5.2.7.RELEASE_1.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "b2fe525b-676f-4cfb-a9e5-898a840923f3",
+        "file_name": "spring-webmvc-5.2.7.RELEASE.jar",
+        "sha1": "dcd97bcb0a2aa33f272b0031e4771134e327d942",
+        "max_cvss_score": "",
+        "version": "5.2.7.RELEASE",
+        "library": "Spring Web MVC",
+        "library_id": "maven&#x3a;org.springframework&#x3a;spring-webmvc&#x3a;5.2.7.RELEASE&#x3a;",
+        "vendor": "org.springframework",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-webmvc-5.2.7.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "b710849d-bda8-4518-a5fb-d73c8554bc7e",
+        "file_name": "activation-1.1.jar",
+        "sha1": "e6cb541461c2834bdea3eb920f1884d1eb508b50",
+        "max_cvss_score": "",
+        "version": "1.1",
+        "library": "JavaBeans&#x28;TM&#x29; Activation Framework",
+        "library_id": "maven&#x3a;javax.activation&#x3a;activation&#x3a;1.1&#x3a;",
+        "vendor": "javax.activation",
+        "description": "JavaBeans Activation Framework &#x28;JAF&#x29; is a standard extension to the Java platform that lets you take advantage of standard services to&#x3a; determine the type of an arbitrary piece of data&#x3b; encapsulate access to it&#x3b; discover the operations available on it&#x3b; and instantiate the appropriate bean to perform the operation&#x28;s&#x29;.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;activation-1.1.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Common Development and Distribution License 1.0",
+              "spdx_id": "CDDL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CDDL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "CeCILL Free Software License Agreement v1.0",
+              "spdx_id": "CECILL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CECILL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "b9352d09-4d50-4f03-9e6d-3a0209047cc3",
+        "file_name": "spring-boot-autoconfigure-2.3.1.RELEASE.jar",
+        "sha1": "6d679d6ba26235a0e81ca1d58f9c1024d9427411",
+        "max_cvss_score": "",
+        "version": "2.3.1.RELEASE",
+        "library": "spring-boot-autoconfigure",
+        "library_id": "maven&#x3a;org.springframework.boot&#x3a;spring-boot-autoconfigure&#x3a;2.3.1.RELEASE&#x3a;",
+        "vendor": "org.springframework.boot",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-boot-autoconfigure-2.3.1.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "b9545edb-70de-4de0-ac0a-022f90ddd1d5",
+        "file_name": "maven-model-2.0.jar",
+        "sha1": "fa69aef20d04737d916ea79957ccacc4ff41aa55",
+        "max_cvss_score": "",
+        "version": "2.0",
+        "library": "Maven Model",
+        "library_id": "maven&#x3a;org.apache.maven&#x3a;maven-model&#x3a;2.0&#x3a;",
+        "vendor": "org.apache.maven",
+        "description": "Maven Model",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;maven-model-2.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "bb0ca070-f19a-40ce-a058-c7f855b56643",
+        "file_name": "classworlds-1.1-alpha-2.jar",
+        "sha1": "05adf2e681c57d7f48038b602f3ca2254ee82d47",
+        "max_cvss_score": "",
+        "version": "1.1-alpha-2",
+        "library": "classworlds",
+        "library_id": "maven&#x3a;classworlds&#x3a;classworlds&#x3a;1.1-alpha-2&#x3a;",
+        "vendor": "classworlds",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;classworlds-1.1-alpha-2.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "BSD 4-Clause &#x22;Original&#x22; or &#x22;Old&#x22; License &#x28;BSD-4-Clause&#x29;",
+              "spdx_id": "BSD-4-Clause",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;BSD-4-Clause.html",
+              "risk_rating": "2",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "MIT License",
+              "spdx_id": "MIT",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;MIT.html",
+              "risk_rating": "2",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "bf9c6956-425a-45b1-8c48-c6cddbc41cec",
+        "file_name": "maven-plugin-api-2.0.jar",
+        "sha1": "163ff2bc46c56d26e37e82a2cd79408c394a01e2",
+        "max_cvss_score": "",
+        "version": "2.0",
+        "library": "Maven Plugin API",
+        "library_id": "maven&#x3a;org.apache.maven&#x3a;maven-plugin-api&#x3a;2.0&#x3a;",
+        "vendor": "org.apache.maven",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;maven-plugin-api-2.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "c08a27c6-e9a8-4a4d-8696-221ff9d1c6be",
+        "file_name": "tomcat-embed-core-9.0.36.jar",
+        "sha1": "cf6574dd9c4764e60c548b69da52fc07a5a0a9bd",
+        "max_cvss_score": "5.8",
+        "version": "9.0.36",
+        "library": "tomcat-embed-core",
+        "library_id": "maven&#x3a;org.apache.tomcat.embed&#x3a;tomcat-embed-core&#x3a;9.0.36&#x3a;",
+        "vendor": "org.apache.tomcat.embed",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-core-9.0.36.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "c4aa313a-7457-4444-9df3-1bd931ed88d6",
+        "file_name": "log4j-api-2.13.3.jar",
+        "sha1": "ec1508160b93d274b1add34419b897bae84c6ca9",
+        "max_cvss_score": "",
+        "version": "2.13.3",
+        "library": "Apache Log4j API",
+        "library_id": "maven&#x3a;org.apache.logging.log4j&#x3a;log4j-api&#x3a;2.13.3&#x3a;",
+        "vendor": "org.apache.logging.log4j",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;log4j-api-2.13.3.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "c7ce22bf-c9d5-4465-9fb7-5aedd8261079",
+        "file_name": "commons-io-2.4.jar",
+        "sha1": "b1b6ea3b7e4aa4f492509a4952029cd8e48019ad",
+        "max_cvss_score": "5.8",
+        "version": "2.4",
+        "library": "Apache Commons IO",
+        "library_id": "maven&#x3a;commons-io&#x3a;commons-io&#x3a;2.4&#x3a;",
+        "vendor": "commons-io",
+        "description": "The Commons IO library contains utility classes, stream implementations, file filters, &#xa;file comparators, endian transformation classes, and much more.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-io-2.4.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "c8eddd7c-a541-4367-82a3-1ce00d4526b1",
+        "file_name": "ecj-3.18.0.jar",
+        "sha1": "4d5d0911b30db24c8eb844702c8adf8e434314ff",
+        "max_cvss_score": "",
+        "version": "3.18.0",
+        "library": "Eclipse Compiler for Java&#x28;TM&#x29;",
+        "library_id": "maven&#x3a;org.eclipse.jdt&#x3a;ecj&#x3a;3.18.0&#x3a;",
+        "vendor": "org.eclipse.jdt",
+        "description": "Eclipse Compiler for Java&#x28;TM&#x29;",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;ecj-3.18.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Eclipse Public License 2.0",
+            "spdx_id": "EPL-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;EPL-2.0.html",
+            "risk_rating": "3",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "c8f4b14a-fd9f-485f-b06b-95ce0e42b6a2",
+        "file_name": "slf4j-api-1.7.30.jar",
+        "sha1": "b5a4b6d16ab13e34a88fae84c35cd5d68cac922c",
+        "max_cvss_score": "",
+        "version": "1.7.30",
+        "library": "SLF4J API Module",
+        "library_id": "maven&#x3a;org.slf4j&#x3a;slf4j-api&#x3a;1.7.30&#x3a;",
+        "vendor": "org.slf4j",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;slf4j-api-1.7.30.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "MIT License",
+            "spdx_id": "MIT",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;MIT.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "c9daab8d-4347-44b0-ae8f-3d9a6060193f",
+        "file_name": "commons-fileupload-1.3.2.jar",
+        "sha1": "5d7491ed6ebd02b6a8d2305f8e6b7fe5dbd95f72",
+        "max_cvss_score": "7.5",
+        "version": "1.3.2",
+        "library": "Apache Commons FileUpload",
+        "library_id": "maven&#x3a;commons-fileupload&#x3a;commons-fileupload&#x3a;1.3.2&#x3a;",
+        "vendor": "commons-fileupload",
+        "description": "The Apache Commons FileUpload component provides a simple yet flexible means of adding support for multipart&#xa;    file upload functionality to servlets and web applications.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-fileupload-1.3.2.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "ca8c30b8-db2a-4378-8700-5c971d4a3257",
+        "file_name": "jakarta.annotation-api-1.3.5.jar",
+        "sha1": "59eb84ee0d616332ff44aba065f3888cf002cd2d",
+        "max_cvss_score": "",
+        "version": "1.3.5",
+        "library": "Jakarta Annotations API",
+        "library_id": "maven&#x3a;jakarta.annotation&#x3a;jakarta.annotation-api&#x3a;1.3.5&#x3a;",
+        "vendor": "jakarta.annotation",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jakarta.annotation-api-1.3.5.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Eclipse Public License 2.0",
+              "spdx_id": "EPL-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;EPL-2.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License with Classpath Exceptions version 2.0",
+              "spdx_id": "GPL-2.0-with-classpath-exception",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0-with-classpath-exception.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "cf0f4e71-354e-4d78-adb6-4d6155418e16",
+        "file_name": "commons-codec-1.14.jar",
+        "sha1": "3cb1181b2141a7e752f5bdc998b7ef1849f726cf",
+        "max_cvss_score": "",
+        "version": "1.14",
+        "library": "Apache Commons Codec",
+        "library_id": "maven&#x3a;commons-codec&#x3a;commons-codec&#x3a;1.14&#x3a;",
+        "vendor": "commons-codec",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;commons-codec-1.14.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "d3d7a9ab-12fd-41a3-a344-7e30c4d07dbd",
+        "file_name": "maven-archiver-2.0.jar",
+        "sha1": "e68a6b39a72aa99bab1e28083e400bb72e9a2da3",
+        "max_cvss_score": "",
+        "version": "2.0",
+        "library": "Apache Maven Archiver",
+        "library_id": "maven&#x3a;org.apache.maven&#x3a;maven-archiver&#x3a;2.0&#x3a;",
+        "vendor": "org.apache.maven",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;maven-archiver-2.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "d3ff7550-8371-4531-97c7-c20d70b6e537",
+        "file_name": "plexus-archiver-1.0-alpha-3.jar",
+        "sha1": "0f9ac8399aae46521a8d50703e68e1849722580e",
+        "max_cvss_score": "4.3",
+        "version": "1.0-alpha-3",
+        "library": "Plexus Archiver Component",
+        "library_id": "maven&#x3a;org.codehaus.plexus&#x3a;plexus-archiver&#x3a;1.0-alpha-3&#x3a;",
+        "vendor": "org.codehaus.plexus",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;plexus-archiver-1.0-alpha-3.jar"
+          }
+        },
+        "licenses": "",
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "d59b6b9c-0c8a-49b4-b4fb-460bde0608e9",
+        "file_name": "maven-artifact-2.0.jar",
+        "sha1": "7a8be3d404ff84f3fc329204a5ff42e321e1b1ca",
+        "max_cvss_score": "",
+        "version": "2.0",
+        "library": "Maven Artifact",
+        "library_id": "maven&#x3a;org.apache.maven&#x3a;maven-artifact&#x3a;2.0&#x3a;",
+        "vendor": "org.apache.maven",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;maven-artifact-2.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "d6ad47d1-6990-4a6d-b248-aa8cb1a968c1",
+        "file_name": "tomcat-websocket-9.0.36.jar",
+        "sha1": "",
+        "max_cvss_score": "5.0",
+        "version": "9.0.36",
+        "library": "tomcat-websocket",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-websocket&#x3a;9.0.36&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-websocket-9.0.36.jar&#x3a;tomcat-websocket-9.0.36.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "d7da02ab-ef18-4e19-a9d3-cebc46975778",
+        "file_name": "jackson-core-2.11.0.jar",
+        "sha1": "f84302e14648f9f63c0c73951054aeb2ff0b810a",
+        "max_cvss_score": "",
+        "version": "2.11.0",
+        "library": "Jackson-core",
+        "library_id": "maven&#x3a;com.fasterxml.jackson.core&#x3a;jackson-core&#x3a;2.11.0&#x3a;",
+        "vendor": "com.fasterxml.jackson.core",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jackson-core-2.11.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "da356a8c-2a4f-4ae6-8e3b-6e343832bd2a",
+        "file_name": "spring-jcl-5.2.7.RELEASE.jar",
+        "sha1": "72282e1f89c58284632220437b5a1e8066c53d7d",
+        "max_cvss_score": "",
+        "version": "5.2.7.RELEASE",
+        "library": "Spring Commons Logging Bridge",
+        "library_id": "maven&#x3a;org.springframework&#x3a;spring-jcl&#x3a;5.2.7.RELEASE&#x3a;",
+        "vendor": "org.springframework",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-jcl-5.2.7.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "da8ad165-d5a1-4651-9897-d074b84ae47f",
+        "file_name": "mail-1.4.7.jar",
+        "sha1": "9add058589d5d85adeb625859bf2c5eeaaedf12d",
+        "max_cvss_score": "",
+        "version": "1.4.7",
+        "library": "JavaMail API &#x28;compat&#x29;",
+        "library_id": "maven&#x3a;javax.mail&#x3a;mail&#x3a;1.4.7&#x3a;",
+        "vendor": "javax.mail",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;mail-1.4.7.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "BSD 3-Clause &#x22;New&#x22; or &#x22;Revised&#x22; License",
+              "spdx_id": "BSD-3-Clause",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;BSD-3-Clause.html",
+              "risk_rating": "2",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "Common Development and Distribution License 1.0",
+              "spdx_id": "CDDL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CDDL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "CeCILL Free Software License Agreement v1.0",
+              "spdx_id": "CECILL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CECILL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "Eclipse Distribution License &#x28;EDL&#x29;",
+              "spdx_id": "EDL",
+              "license_url": "https&#x3a;&#x2f;&#x2f;www.eclipse.org&#x2f;org&#x2f;documents&#x2f;edl-v10.php",
+              "risk_rating": "2",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "Eclipse Public License 2.0",
+              "spdx_id": "EPL-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;EPL-2.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License with Classpath Exceptions version 2.0",
+              "spdx_id": "GPL-2.0-with-classpath-exception",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0-with-classpath-exception.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "e3dcb8c9-9d7d-4f2c-832c-fb638c4b5761",
+        "file_name": "spring-boot-starter-logging-2.3.1.RELEASE.jar",
+        "sha1": "03f242a91ffddf7485fde1367e1354c7e13024c8",
+        "max_cvss_score": "",
+        "version": "2.3.1.RELEASE",
+        "library": "spring-boot-starter-logging",
+        "library_id": "maven&#x3a;org.springframework.boot&#x3a;spring-boot-starter-logging&#x3a;2.3.1.RELEASE&#x3a;",
+        "vendor": "org.springframework.boot",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-boot-starter-logging-2.3.1.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "e4889cf9-7ffc-4de7-b65f-e9a3568b304e",
+        "file_name": "snakeyaml-1.26.jar",
+        "sha1": "a78a8747147d2c5807683e76ec2b633e95c14fe9",
+        "max_cvss_score": "",
+        "version": "1.26",
+        "library": "SnakeYAML",
+        "library_id": "maven&#x3a;org.yaml&#x3a;snakeyaml&#x3a;1.26&#x3a;",
+        "vendor": "org.yaml",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;snakeyaml-1.26.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "e5ecc7cd-f1f1-469d-92d5-4a081b2bd69d",
+        "file_name": "smtp-1.4.7.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "1.4.7",
+        "library": "Jakarta Mail API smtp provider",
+        "library_id": "maven&#x3a;com.sun.mail&#x3a;smtp&#x3a;1.4.7&#x3a;",
+        "vendor": "com.sun.mail",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;mail-1.4.7.jar&#x3a;smtp-1.4.7.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Common Development and Distribution License 1.0",
+              "spdx_id": "CDDL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CDDL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "CeCILL Free Software License Agreement v1.0",
+              "spdx_id": "CECILL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CECILL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License v2.0 only",
+              "spdx_id": "GPL-2.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "GNU General Public License with Classpath Exceptions version 2.0",
+              "spdx_id": "GPL-2.0-with-classpath-exception",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;GPL-2.0-with-classpath-exception.html",
+              "risk_rating": "4",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "e8e5529c-07b3-46e9-a6b3-59a8152b8265",
+        "file_name": "maven-project-2.0.jar",
+        "sha1": "ab4f37a40999caefc6cd65863dcacc591572171a",
+        "max_cvss_score": "",
+        "version": "2.0",
+        "library": "Maven Project Builder",
+        "library_id": "maven&#x3a;org.apache.maven&#x3a;maven-project&#x3a;2.0&#x3a;",
+        "vendor": "org.apache.maven",
+        "description": "This library is used to not only read Maven project object model files, but to assemble inheritence&#xa;    and to retrieve remote models as required.",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;19 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;maven-project-2.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "ec7cced4-487b-4c4c-b2c0-f6d1fc9a935f",
+        "file_name": "tomcat-el-api-9.0.36.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "9.0.36",
+        "library": "tomcat-el-api",
+        "library_id": "maven&#x3a;org.apache.tomcat&#x3a;tomcat-el-api&#x3a;9.0.36&#x3a;",
+        "vendor": "org.apache.tomcat",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;21 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib-provided&#x2f;tomcat-embed-el-9.0.36.jar&#x3a;tomcat-el-api-9.0.36.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "edd26e9d-0c8f-4e6e-96c3-67603d61499c",
+        "file_name": "jackson-databind-2.11.0.jar",
+        "sha1": "8f5aaf3878b0647ff3a16610af53b1a5c05d9f15",
+        "max_cvss_score": "",
+        "version": "2.11.0",
+        "library": "jackson-databind",
+        "library_id": "maven&#x3a;com.fasterxml.jackson.core&#x3a;jackson-databind&#x3a;2.11.0&#x3a;",
+        "vendor": "com.fasterxml.jackson.core",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;jackson-databind-2.11.0.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "ee9b8868-dd77-47d1-8019-7b21861a87f4",
+        "file_name": "spring-web-5.2.7.RELEASE.jar",
+        "sha1": "050a27c77e1731f3b7af5c2ae7caf6fe59bcc309",
+        "max_cvss_score": "4.6",
+        "version": "5.2.7.RELEASE",
+        "library": "Spring Web",
+        "library_id": "maven&#x3a;org.springframework&#x3a;spring-web&#x3a;5.2.7.RELEASE&#x3a;",
+        "vendor": "org.springframework",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-web-5.2.7.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "eebcd29b-5d6b-4c58-b15b-897448f67f4f",
+        "file_name": "plexus-utils-1.0.4.jar",
+        "sha1": "60783e4623f2e44063cf2d43d9fbacb2816855c2",
+        "max_cvss_score": "7.5",
+        "version": "1.0.4",
+        "library": "Plexus Common Utilities",
+        "library_id": "maven&#x3a;org.codehaus.plexus&#x3a;plexus-utils&#x3a;1.0.4&#x3a;",
+        "vendor": "org.codehaus.plexus",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;plexus-utils-1.0.4.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 1.1",
+            "spdx_id": "Apache-1.1",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-1.1.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "f4bb26b8-67cb-4128-86a9-cadd07bf9ef6",
+        "file_name": "javax.activation-api-1.2.0.jar",
+        "sha1": "85262acf3ca9816f9537ca47d5adeabaead7cb16",
+        "max_cvss_score": "",
+        "version": "1.2.0",
+        "library": "JavaBeans Activation Framework API jar",
+        "library_id": "maven&#x3a;javax.activation&#x3a;javax.activation-api&#x3a;1.2.0&#x3a;",
+        "vendor": "javax.activation",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;21 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;javax.activation-api-1.2.0.jar"
+          }
+        },
+        "licenses": {
+          "license": [
+            {
+              "name": "Common Development and Distribution License 1.0",
+              "spdx_id": "CDDL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CDDL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            },
+            {
+              "name": "CeCILL Free Software License Agreement v1.0",
+              "spdx_id": "CECILL-1.0",
+              "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;CECILL-1.0.html",
+              "risk_rating": "3",
+              "mitigation": "false",
+              "license_affects_policy_compliance": "false"
+            }
+          ]
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "f5eb3ae0-bbc8-422a-a186-1f6575c4af6a",
+        "file_name": "wagon-provider-api-1.0-alpha-5.jar",
+        "sha1": "30d03be3128389dae0419701b1cb4b3034e1cabc",
+        "max_cvss_score": "",
+        "version": "1.0-alpha-5",
+        "library": "Apache Maven Wagon &#x3a;&#x3a; API",
+        "library_id": "maven&#x3a;org.apache.maven.wagon&#x3a;wagon-provider-api&#x3a;1.0-alpha-5&#x3a;",
+        "vendor": "org.apache.maven.wagon",
+        "description": "Tools to manage artifacts and deployment",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;wagon-provider-api-1.0-alpha-5.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "f617d7be-e92d-42f9-8cfd-2ce03ad8a7e2",
+        "file_name": "spring-expression-5.2.7.RELEASE.jar",
+        "sha1": "c98d7b10f959f9bedfbbbd4d723cf7a1f17a1f71",
+        "max_cvss_score": "",
+        "version": "5.2.7.RELEASE",
+        "library": "Spring Expression Language &#x28;SpEL&#x29;",
+        "library_id": "maven&#x3a;org.springframework&#x3a;spring-expression&#x3a;5.2.7.RELEASE&#x3a;",
+        "vendor": "org.springframework",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-expression-5.2.7.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "fb8e54c1-dd82-4897-87dc-2c4ac4f4830f",
+        "file_name": "spring-aop-5.2.7.RELEASE.jar",
+        "sha1": "9cf69f8e888091684c05f0a287bb638502e90725",
+        "max_cvss_score": "",
+        "version": "5.2.7.RELEASE",
+        "library": "Spring AOP",
+        "library_id": "maven&#x3a;org.springframework&#x3a;spring-aop&#x3a;5.2.7.RELEASE&#x3a;",
+        "vendor": "org.springframework",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-aop-5.2.7.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "fcd10677-f7e1-4a35-874b-e2b5c1475400",
+        "file_name": "spring-boot-loader-2.3.1.RELEASE.jar",
+        "sha1": "",
+        "max_cvss_score": "",
+        "version": "2.3.1.RELEASE",
+        "library": "spring-boot-loader",
+        "library_id": "maven&#x3a;org.springframework.boot&#x3a;spring-boot-loader&#x3a;2.3.1.RELEASE&#x3a;",
+        "vendor": "org.springframework.boot",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x3a;spring-boot-loader-2.3.1.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      },
+      {
+        "component_id": "fe7a7b24-afac-44ca-b650-54ef440328d7",
+        "file_name": "spring-context-5.2.7.RELEASE.jar",
+        "sha1": "7fd9c4ea311a5d9ab92770be7fc93cc53db334f9",
+        "max_cvss_score": "",
+        "version": "5.2.7.RELEASE",
+        "library": "Spring Context",
+        "library_id": "maven&#x3a;org.springframework&#x3a;spring-context&#x3a;5.2.7.RELEASE&#x3a;",
+        "vendor": "org.springframework",
+        "description": "",
+        "added_date": "2021-12-29 22&#x3a;18&#x3a;20 UTC",
+        "component_affects_policy_compliance": "false",
+        "file_paths": {
+          "file_path": {
+            "value": "verademo.war&#x23;zip&#x3a;WEB-INF&#x2f;lib&#x2f;spring-context-5.2.7.RELEASE.jar"
+          }
+        },
+        "licenses": {
+          "license": {
+            "name": "Apache License 2.0",
+            "spdx_id": "Apache-2.0",
+            "license_url": "https&#x3a;&#x2f;&#x2f;spdx.org&#x2f;licenses&#x2f;Apache-2.0.html",
+            "risk_rating": "2",
+            "mitigation": "false",
+            "license_affects_policy_compliance": "false"
+          }
+        },
+        "violated_policy_rules": ""
+      }
+    ],
     "auxiliary_data": [
       {
         "name": "veracode",
