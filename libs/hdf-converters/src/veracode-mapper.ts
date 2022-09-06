@@ -225,7 +225,7 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
       })
     ).join('\n');
     if (_.has(input, FILE_PATH_VALUE)) {
-      flawDesc += `file_path: ${_.get(input, FILE_PATH_VALUE)}\n`;
+      flawDesc += `\nfile_path: ${_.get(input, FILE_PATH_VALUE)}\n`;
     }
   }
   return flawDesc;
@@ -381,6 +381,22 @@ function controlMappingCwe(
   };
 }
 
+function componentPass(component: Record<string, unknown>){
+  let vulnList: string[] = []
+  _.set(component, 'control_ids', vulnList)
+  if(_.get(component, 'vulnerabilities.vulnerability')) {
+    if(!Array.isArray(_.get(component, 'vulnerabilities.vulnerability'))){
+      vulnList.push(_.get(component, 'vulnerabilities.vulnerability.cve_id') as string)
+      _.set(component, 'control_ids', vulnList)
+    }
+    else {
+      vulnList.push(...(_.get(component, 'vulnerabilities.vulnerability') as Record<string, unknown>[]).map((vuln:  Record<string, unknown>) => _.get(vuln, 'cve_id') as string))
+      _.set(component, 'control_ids', vulnList)
+    }
+  }
+  return _.omit(component, 'vulnerabilities')
+}
+
 export class VeracodeMapper extends BaseConverter {
   originalData: unknown;
   defaultMapping(
@@ -392,12 +408,12 @@ export class VeracodeMapper extends BaseConverter {
         release: HeimdallToolsVersion
       },
       passthrough: {
-        licenses: {
+        components: {
           path: 'detailedreport.software_composition_analysis.vulnerable_components',
           transformer: (value: Record<string, unknown>) =>
             (_.get(value, 'component') as Record<string, unknown>[]).map(
               (component: Record<string, unknown>) =>
-                _.omit(component, 'vulnerabilities')
+                componentPass(component)
             )
         },
         auxiliary_data: [
