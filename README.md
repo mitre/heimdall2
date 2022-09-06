@@ -1,8 +1,42 @@
-# Heimdall Enterprise Server 2.0
+# Heimdall
 
 ![Run E2E Backend + Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20E2E%20Backend%20+%20Frontend%20Tests/badge.svg) ![Run Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Frontend%20Tests/badge.svg) ![Run Backend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Backend%20Tests/badge.svg)
 
-This repository contains the source code for the Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/mentionInSpecJSandHDFConverters/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/mentionInSpecJSandHDFConverters/apps/frontend), [HDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpecJS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
+This repository contains the source code for Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/master/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/master/apps/frontend), [HDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpecJS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
+
+## Contents
+
+* [Demos](#demos)
+    * [Video](#video)
+    * [Hosted](#hosted)
+* [Heimdall (Lite) vs Heimdall with Backend (Server)](#heimdall-lite-vs-heimdall-with-backend-server)
+    * [Features](#features)
+    * [Use Cases](#use-cases)
+* [Getting Started / Installation](#getting-started--installation)
+    * [Heimdall Lite](#heimdall-lite)
+        * [Running via npm](#running-via-npm)
+        * [Running via Docker](#running-via-docker)
+    * [Heimdall Server - Docker](#heimdall-server---docker)
+        * [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
+        * [Running Docker Container](#running-docker-container)
+        * [Updating Docker Container](#updating-docker-container)
+        * [Stopping the Container](#stopping-the-container)
+        * [Helm Chart](#helm-chart)
+        * [Running via Cloud.gov](#running-via-cloudgov)
+* [External Data Sources](#external-data-sources)
+    * [AWS S3](#aws-s3)
+* [API Usage](#api-usage)
+* [For Developers](#for-developers)
+    * [How to Install](#how-to-install)
+    * [Debugging Heimdall Server](#debugging-heimdall-server)
+    * [Developing Heimdall Lite Standalone](#developing-heimdall-lite-standalone)
+    * [Lint and fix files](#lint-and-fix-files)
+    * [Compile and minify the frontend and backend for production](#compile-and-minify-the-frontend-and-backend-for-production)
+    * [Run tests](#run-tests)
+        * [Run Cypress End to End Tests](#run-cypress-end-to-end-tests)
+    * [Creating a Release](#creating-a-release)
+* [Versioning and State of Development](#versioning-and-state-of-development)
+* [Contributing, Issues and Support](#contributing-issues-and-support)
 
 ## Demos
 
@@ -22,42 +56,42 @@ This repository contains the source code for the Heimdall's [Backend](https://gi
 
 [Heimdall Lite](https://heimdall-lite.netlify.com/) | [Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/)
 
-## Heimdall vs Heimdall-Lite
+## Heimdall (Lite) vs Heimdall with Backend (Server)
 
-There are two versions of the MITRE Heimdall Viewer - the full Heimdall Enterprise Server and the Heimdall-Lite version. Both share the same frontend but have been produced to meet different needs and use-cases.
+There are two ways to deploy MITRE Heimdall - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
 
-As a single-page javascript app - you can run Heimdall-Lite from any web-server, a _secured_ S3 bucket or directly via GitHub Pages (as it is here). Heimdall-Lite gives you the ability to easily review and produce reports about your InSpec run, filter the results for easy review and hot-wash, print out reports, generate System Security Plan (SSP) content, and much more.
+### Heimdall-Lite
+
+As a single-page javascript app - you can run Heimdall-Lite from any web-server, a _secured_ S3 bucket or directly via GitHub Pages (as it is here). Heimdall-Lite gives you the ability to easily review and produce reports about your InSpec run, filter the results for easy review and hot-wash, print out reports, and much more.
+
+### Heimdall with Backend (Server)
+
+Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Lite, but is supported with a backend database to store persistent data overtime.
 
 ### Features
-
-|                                                              | [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) |        [Heimdall](https://github.com/mitre/heimdall/)        |
+| Features | Heimdall-Lite | Heimdall with Backend |
 | :----------------------------------------------------------- | :------------------------------------------------------: | :----------------------------------------------------------: |
-| Installation Requirements                                    |                      any web server                      |                       Postgres Server                        |
-| Overview Dashboard & Counts                                  |                            x                             |                              x                               |
-| 800-53 Partition and TreeMap View                            |                            x                             |                              x                               |
-| Data Table / Control Summary                                 |                            x                             |                              x                               |
-| InSpec Code / Control Viewer                                 |                            x                             |                              x                               |
-| SSP Content Generator                                        |                                                          |                              x                               |
-| Users & Roles & multi-team support                           |                                                          |                              x                               |
-| Authentication & Authorization                               |                    Hosting Webserver                     | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
-| Advanced Data / Filters for Reports and Viewing              |                                                          |                              x                               |
-| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) |                                                          |                              x                               |
-| Authenticated REST API                                       |                                                          |                              x                               |
-| InSpec Run 'Delta' View                                      |                                                          |                              x                               |
-| Multi-Report Tagging, Filtering and Delta View               |                                                          |                              x                               |
+| Additional Installation Requirements    |      |     Postgres Server |
+| Overview Dashboard & Counts | :white_check_mark: | :white_check_mark: |
+| Deep Dive View of Security Control Results and Metadata | :white_check_mark: | :white_check_mark: |
+| 800-53 Partition and TreeMap View     | :white_check_mark: | :white_check_mark: |
+| Comparison View      | :white_check_mark: | :white_check_mark: |
+| Advanced Data / Filters for Reports and Viewing     | :white_check_mark: |  :white_check_mark: |
+| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) | :white_check_mark: | :white_check_mark: |
+| View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF) | :white_check_mark: | :white_check_mark: |
+| Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | :white_check_mark: | :white_check_mark: |
+| Authenticated REST API       |   | :white_check_mark: |
+| Users & Roles & multi-team support    |   | :white_check_mark: |
+| Authentication & Authorization        | Hosting Webserver | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
 
 ### Use Cases
 
-| [Heimdall-Lite](https://github.com/mitre/heimdall-lite/) | [Heimdall](https://github.com/mitre/heimdall/)           |
+| Heimdall-Lite | Heimdall with Backend  |
 | :------------------------------------------------------: | :------------------------------------------------------: |
-|            Ship the App & Data via simple Email          |                 Multiple Teams Support                   |
-|            Minimal Footprint & Deployment Time           |               Timeline and Report History                |
-|                Local or disconnected Use                 |               Centralized Deployment Model               |
-|                 One-Time Quick Reviews                   |       Need to view the delta between one or more runs    |
-|                Decentralized Deployment                  |   Need to view subsets of the 800-53 control alignment   |
-|                    Minimal A&A Time                      | Need to produce more complex reports in multiple formats |
-
-
+| Just-in-Time Use | Multiple Teams |
+| Minimal Footprint & Deployment Time  | Timeline and Report History |
+| Local or disconnected Use | Centralized Deployment Model |
+| Minimal Authorization & Approval Time |  |
 
 ## Getting Started / Installation
 
@@ -97,7 +131,7 @@ If you would prefer to run the bleeding edge version of heimdall-lite, replace `
 
 ### Heimdall Server - Docker
 
-Given that Heimdall requires at least a database service, we use Docker and Docker Compose to provide a simple deployment experience.
+Given that Heimdall requires at least a database service, we use Docker and Docker Compose to provide a simple deployment experience. This process will also deploy an NGINX webserver in front of Heimdall to handle TLS.
 
 #### Setup Docker Container (Clean Install)
 
@@ -116,15 +150,7 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
      docker-compose up -d
      ```
 
-6. Navigate to  [`http://127.0.0.1:3000`](http://127.0.0.1:3000).
-
-#### Running Docker Container
-
-Make sure you have run the setup steps at least once before following these steps!
-
-1. Run the following command in a terminal window: ``docker-compose up -d``
-
-2. Go to [`http://127.0.0.1:3000`](http://127.0.0.1:3000) in a web browser.
+6. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.) 
 
 #### Updating Docker Container
 
@@ -150,7 +176,7 @@ docker-compose down
 
 #### Helm Chart
 
-<https://github.com/nemonik/heimdall2-helm>
+<https://github.com/mitre/heimdall2-helm>
 
 #### Running via Cloud.gov
 
@@ -192,7 +218,7 @@ Heimdall currently supports AWS S3 for loading external HDF data.
 
 ### AWS S3
 
-In order to allow Heidmdall to Connect to your AWS S3 bucket, you need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficent, however you need to change the allowed origin to where you are deploying Heimdall.
+In order to allow Heimdall to Connect to your AWS S3 bucket, you need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficent, however you need to change the allowed origin to where you are deploying Heimdall.
 
 ```json
 [
@@ -222,9 +248,9 @@ Proper API documentation does not exist yet. In the meantime here are quick inst
 ```sh
 # To use API Keys, ensure you have set the API_KEY_SECRET environment variable. To create a secret run: openssl rand -hex 33
 # Create an API key using the Heimdall frontend (within the edit user profile modal) and upload an evaluation with the following command
-curl -F "data=@<Path to Evaluation File>" -F "filename=<Filename To Show in Heimdall>" -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
+curl -F "data=@<Path to Evaluation File>" -F "filename=<Filename To Show in Heimdall>" -F "public=true/false" -F "evaluationTags=<tag-name>,<another-tag-name>..." -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
 # You can upload multiple files at once (up to 100)
-curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evaluation File>" ... -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
+curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evaluation File>" ... -F "public=true/false" -F "evaluationTags=<tag-name>,<another-tag-name>..." -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
 ```
 
 ## For Developers
@@ -250,7 +276,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    OSX:
    
    - ```bash
-     brew install postgresql nodejs@16 nano git
+     brew install postgresql node@16 nano git
      sudo npm install -g yarn
      ```
 
@@ -260,8 +286,10 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      git clone https://github.com/mitre/heimdall2
      ```
 
-3. Create the Postgres role:
+3. Run the Postgres server:
 
+   Ubuntu:
+   
    - ```sql
      # Switch to the OS postgres user
      sudo -u postgres -i
@@ -277,7 +305,25 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      # Switch back to your original OS user
      exit
      ```
+   OSX:
 
+    - ```sql
+      # Start the server
+      pg_ctl -D /opt/homebrew/var/postgres start
+
+      # Start the Postgres terminal
+      psql postgres
+  
+      # Create the database user
+      CREATE USER <username> with encrypted password '<password>';
+      ALTER USER <username> CREATEDB;
+      \q
+
+      # Switch back to your original OS user
+      exit
+      ```   
+
+   
 4. Install project dependencies:
 
    - ```bash
