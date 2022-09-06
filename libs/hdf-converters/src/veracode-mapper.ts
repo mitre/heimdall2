@@ -177,7 +177,13 @@ function formatCodeDesc(input: Record<string, unknown>[]): string {
     ['CWE ID', 'cweid'],
     ['Date First Occurence', 'date_first_occurence'],
     ['CIA Impact', 'cia_impact'],
-    ['Description', 'description']
+    ['Description', 'description'],
+    ['Source File', 'sourcefile'],
+    ['Scope', 'scope'],
+    ['CIA Impact', 'cia_impact'],
+    ['PCI Related', 'pcirelated'],
+    ['Function Prototype', 'functionprototype'],
+    ['Function Relative Location', 'functionrelativelocation']
   ];
   if (_.has(input, 'sourcefilepath')) {
     flawDesc = `Sourcefile Path: ${_.get(input, 'sourcefilepath')}\n`;
@@ -198,16 +204,18 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
   let flawDesc = '';
   const categories = [
     'sha1',
+    'file_name',
     'max_cvss_score',
     'version',
     'library',
+    'library_id',
     'vendor',
     'description',
     'added_date',
     'component_affects_policy_compliance'
   ];
   if (_.has(input, 'component_id')) {
-    flawDesc = `component_id: ${_.get(input, 'component_id')};`;
+    flawDesc = `component_id: ${_.get(input, 'component_id')}\n`;
     flawDesc += _.compact(
       categories.map((value: string) => {
         if (_.has(input, value)) {
@@ -218,7 +226,7 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
       })
     ).join('\n');
     if (_.has(input, FILE_PATH_VALUE)) {
-      flawDesc += `file_path: ${_.get(input, FILE_PATH_VALUE)}`;
+      flawDesc += `file_path: ${_.get(input, FILE_PATH_VALUE)}\n`;
     }
   }
   return flawDesc;
