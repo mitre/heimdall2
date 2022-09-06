@@ -312,7 +312,10 @@ function controlMappingCve(): MappedTransform<
             value = [value];
           }
 
-          return CWE_NIST_MAPPING.nistFilter(value.map((val:string) => val.substring(4)), DEFAULT_NIST_TAG);
+          return CWE_NIST_MAPPING.nistFilter(
+            value.map((val: string) => val.substring(4)),
+            DEFAULT_NIST_TAG
+          );
         }
       }
     },
@@ -353,6 +356,7 @@ function controlMappingCwe(
     impact: impactMapping(severity),
     refs: [],
     tags: {
+      cweid: {transformer: formatCweData},
       cweDescription: {transformer: formatCweDesc},
       cci: {
         transformer: (data: Record<string, unknown>) =>
@@ -381,20 +385,30 @@ function controlMappingCwe(
   };
 }
 
-function componentPass(component: Record<string, unknown>){
-  let vulnList: string[] = []
-  _.set(component, 'control_ids', vulnList)
-  if(_.get(component, 'vulnerabilities.vulnerability')) {
-    if(!Array.isArray(_.get(component, 'vulnerabilities.vulnerability'))){
-      vulnList.push(_.get(component, 'vulnerabilities.vulnerability.cve_id') as string)
-      _.set(component, 'control_ids', vulnList)
-    }
-    else {
-      vulnList.push(...(_.get(component, 'vulnerabilities.vulnerability') as Record<string, unknown>[]).map((vuln:  Record<string, unknown>) => _.get(vuln, 'cve_id') as string))
-      _.set(component, 'control_ids', vulnList)
+function componentPass(component: Record<string, unknown>) {
+  const vulnList: string[] = [];
+  _.set(component, 'control_ids', vulnList);
+  if (_.get(component, 'vulnerabilities.vulnerability')) {
+    if (!Array.isArray(_.get(component, 'vulnerabilities.vulnerability'))) {
+      vulnList.push(
+        _.get(component, 'vulnerabilities.vulnerability.cve_id') as string
+      );
+      _.set(component, 'control_ids', vulnList);
+    } else {
+      vulnList.push(
+        ...(
+          _.get(component, 'vulnerabilities.vulnerability') as Record<
+            string,
+            unknown
+          >[]
+        ).map(
+          (vuln: Record<string, unknown>) => _.get(vuln, 'cve_id') as string
+        )
+      );
+      _.set(component, 'control_ids', vulnList);
     }
   }
-  return _.omit(component, 'vulnerabilities')
+  return _.omit(component, 'vulnerabilities');
 }
 
 export class VeracodeMapper extends BaseConverter {
@@ -412,8 +426,7 @@ export class VeracodeMapper extends BaseConverter {
           path: 'detailedreport.software_composition_analysis.vulnerable_components',
           transformer: (value: Record<string, unknown>) =>
             (_.get(value, 'component') as Record<string, unknown>[]).map(
-              (component: Record<string, unknown>) =>
-                componentPass(component)
+              (component: Record<string, unknown>) => componentPass(component)
             )
         },
         auxiliary_data: [
