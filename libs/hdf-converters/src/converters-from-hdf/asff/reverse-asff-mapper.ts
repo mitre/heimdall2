@@ -195,7 +195,15 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       // Any ASFF value has to be less than 32768B - we're setting the max size to 30KB to have some buffer.  Only enforcing this restriction in AssumeRolePolicyDocument and FindingProviderFields.Types for now.
       const ATTRIBUTE_CHARACTER_LIMIT = 30000;
       if (finding.Resources.length > 1) {
-        _.set(finding, 'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument', _.get(finding, 'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument', '').slice(0, ATTRIBUTE_CHARACTER_LIMIT));
+        _.set(
+          finding,
+          'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
+          _.get(
+            finding,
+            'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
+            ''
+          ).slice(0, ATTRIBUTE_CHARACTER_LIMIT)
+        );
         // no need for truncation warning since AssumeRolePolicyDocument is only used to look nice in the GUI - FindingProviderFields.Types contains all the information
       }
       finding.FindingProviderFields.Types = (
@@ -233,10 +241,13 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
           `Warning: Normalized entry could not be sufficiently reduced in size to meet AWS Security Hub requirements and so will not be provided in the results set.  Entry could not be minimized more than as follows:
             ${finding}`
         );
-        if(finding.Id === profileInfoFindingId) {
-          console.error('Warning: This entry was the informational one containing the scan/execution level information.');
+        if (finding.Id === profileInfoFindingId) {
+          console.error(
+            'Warning: This entry was the informational one containing the scan/execution level information.'
+          );
         }
-        if(finding.Id !== profileInfoFindingId) { // metrics are only for non-profile info findings
+        if (finding.Id !== profileInfoFindingId) {
+          // metrics are only for non-profile info findings
           numRemoved++;
         }
         continue;
@@ -250,8 +261,10 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         (finding.FindingProviderFields.Types as string[]).push(
           'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
         );
-        console.error(`Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`);
-        if(finding.Id !== profileInfoFindingId) {
+        console.error(
+          `Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`
+        );
+        if (finding.Id !== profileInfoFindingId) {
           numTruncated++;
         }
       }
@@ -266,22 +279,29 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         (finding.FindingProviderFields.Types as string[]).push(
           `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.`
         );
-        console.error(`Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`);
-        if(finding.Id !== profileInfoFindingId) {
+        console.error(
+          `Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`
+        );
+        if (finding.Id !== profileInfoFindingId) {
           numTruncated++;
         }
       }
 
       // sechub doesn't allow two types to have the same values; future iteration should find a way to work around this instead of just skipping it like we're going to do here (maybe add a number of {MAKE LINE DIFFERENT} block things at the end of an otherwise same line that'll get removed by the asff2hdf mapper similar to how we do the slash substitutions
-      if ((finding.FindingProviderFields.Types as string[]).length !== new Set(finding.FindingProviderFields.Types as string[]).size) {
+      if (
+        (finding.FindingProviderFields.Types as string[]).length !==
+        new Set(finding.FindingProviderFields.Types as string[]).size
+      ) {
         console.error(
           `Warning: Normalized entry contained data that is duplicated (i.e. a subsection of a string by happenstance has the same values) which means this entry does not meet AWS Security Hub requirements and so will not be provided in the results set.  Entry that contains duplicate data is as follows:
             ${finding}`
         );
-        if(finding.Id === profileInfoFindingId) {
-          console.error('Warning: This entry was the informational one containing the scan/execution level information.');
+        if (finding.Id === profileInfoFindingId) {
+          console.error(
+            'Warning: This entry was the informational one containing the scan/execution level information.'
+          );
         }
-        if(finding.Id !== profileInfoFindingId) {
+        if (finding.Id !== profileInfoFindingId) {
           numRemoved++;
         }
         continue;
@@ -290,8 +310,13 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       restricted.push(finding);
     }
 
-    if ((numRemoved > 0 || numTruncated > 0) && restricted.slice(-1)[0].Id === profileInfoFindingId) {
-      restricted.slice(-1)[0].Description = `${restricted.slice(-1)[0].Description} ---- MITRE SAF HDF2ASFF converter warnings -- Entries truncated: ${numTruncated} (Truncated to fit AWS Security Hub restrictions) --- Entries removed: ${numRemoved} (Could not fit due to AWS Security Hub restrictions)`;
+    if (
+      (numRemoved > 0 || numTruncated > 0) &&
+      restricted.slice(-1)[0].Id === profileInfoFindingId
+    ) {
+      restricted.slice(-1)[0].Description = `${
+        restricted.slice(-1)[0].Description
+      } ---- MITRE SAF HDF2ASFF converter warnings -- Entries truncated: ${numTruncated} (Truncated to fit AWS Security Hub restrictions) --- Entries removed: ${numRemoved} (Could not fit due to AWS Security Hub restrictions)`;
     }
 
     return restricted;

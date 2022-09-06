@@ -577,7 +577,9 @@ export function setupFindingType(
   const nistTagIndex = typesArr.findIndex((typeString) =>
     typeString.startsWith('Tags/nist/')
   );
-  const tagsIndex = typesArr.findIndex((typeString) => typeString.startsWith('Tags/'));
+  const tagsIndex = typesArr.findIndex((typeString) =>
+    typeString.startsWith('Tags/')
+  );
   if (nistTagIndex !== -1) {
     typesArr.splice(tagsIndex, 0, typesArr.splice(nistTagIndex, 1)[0]);
   }

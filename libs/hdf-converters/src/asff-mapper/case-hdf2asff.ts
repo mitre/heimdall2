@@ -170,7 +170,8 @@ function mapping(
     execution as Record<string, unknown>
   );
   const profileNames = Object.keys(executionTypes || {}).filter(
-    (type) => !['MITRE', 'File', 'Execution', 'HDF2ASFF-converter'].includes(type)
+    (type) =>
+      !['MITRE', 'File', 'Execution', 'HDF2ASFF-converter'].includes(type)
   );
   return {
     shortcircuit: true,
@@ -187,23 +188,54 @@ function mapping(
       // order could be incorrect since we're only doing it via index instead of mapping the depends tree properly
       return {
         name: _.get(executionTypes, `${profileName}.name`),
-        ...(_.has(executionTypes, `${profileName}.version`) && { version: _.get(executionTypes, `${profileName}.version`) }),
-        ...(_.has(executionTypes, `${profileName}.title`) && { title: _.get(executionTypes, `${profileName}.title`) }),
-        ...(_.has(executionTypes, `${profileName}.maintainer`) && { maintainer: _.get(executionTypes, `${profileName}.maintainer`) }),
-        ...(_.has(executionTypes, `${profileName}.summary`) && { summary: _.get(executionTypes, `${profileName}.summary`) }),
-        ...(_.has(executionTypes, `${profileName}.license`) && { license: _.get(executionTypes, `${profileName}.license`) }),
-        ...(_.has(executionTypes, `${profileName}.copyright`) && { copyright: _.get(executionTypes, `${profileName}.copyright`) }),
-        ...(_.has(executionTypes, `${profileName}.copyright_email`) && { copyright_email: _.get(executionTypes, `${profileName}.copyright_email`) }),
+        ...(_.has(executionTypes, `${profileName}.version`) && {
+          version: _.get(executionTypes, `${profileName}.version`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.title`) && {
+          title: _.get(executionTypes, `${profileName}.title`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.maintainer`) && {
+          maintainer: _.get(executionTypes, `${profileName}.maintainer`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.summary`) && {
+          summary: _.get(executionTypes, `${profileName}.summary`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.license`) && {
+          license: _.get(executionTypes, `${profileName}.license`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.copyright`) && {
+          copyright: _.get(executionTypes, `${profileName}.copyright`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.copyright_email`) && {
+          copyright_email: _.get(
+            executionTypes,
+            `${profileName}.copyright_email`
+          )
+        }),
         supports: _.get(executionTypes, `${profileName}.supports`, []),
         attributes: _.get(executionTypes, `${profileName}.attributes`, []),
-        ...(_.has(executionTypes, `${profileName}.depends`) && { depends: _.get(executionTypes, `${profileName}.depends`) }),
+        ...(_.has(executionTypes, `${profileName}.depends`) && {
+          depends: _.get(executionTypes, `${profileName}.depends`)
+        }),
         groups: [],
-        ...(_.has(executionTypes, `${profileName}.status`) && { status: _.get(executionTypes, `${profileName}.status`) }),
-        ...(_.has(executionTypes, `${profileName}.description`) && { description: _.get(executionTypes, `${profileName}.description`) }),
-        ...(_.has(executionTypes, `${profileName}.inspec_version`) && { inspec_version: _.get(executionTypes, `${profileName}.inspec_version`) }),
-        ...(_.has(executionTypes, `${profileName}.parent_profile`) && { parent_profile: _.get(executionTypes, `${profileName}.parent_profile`) }),
-        ...(_.has(executionTypes, `${profileName}.skip_message`) && { skip_message: _.get(executionTypes, `${profileName}.skip_message`) }),
-        ...(_.has(executionTypes, `${profileName}.status_message`) && { status_message: _.get(executionTypes, `${profileName}.status_message`) }),
+        ...(_.has(executionTypes, `${profileName}.status`) && {
+          status: _.get(executionTypes, `${profileName}.status`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.description`) && {
+          description: _.get(executionTypes, `${profileName}.description`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.inspec_version`) && {
+          inspec_version: _.get(executionTypes, `${profileName}.inspec_version`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.parent_profile`) && {
+          parent_profile: _.get(executionTypes, `${profileName}.parent_profile`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.skip_message`) && {
+          skip_message: _.get(executionTypes, `${profileName}.skip_message`)
+        }),
+        ...(_.has(executionTypes, `${profileName}.status_message`) && {
+          status_message: _.get(executionTypes, `${profileName}.status_message`)
+        }),
         controls: consolidate(
           context,
           ((): ExecJSON.Control[] => {
@@ -275,7 +307,19 @@ function mapping(
                               ['code_desc', 'start_time']
                             )
                           } as ExecJSON.ControlResult
-                        ].concat(_.get(findingTypes, 'HDF2ASFF-converter.warning') ? [{code_desc: '', start_time: '', status: ExecJSON.ControlResultStatus.Skipped, skip_message: 'Warning: Entry was truncated when converted to ASFF (AWS Security Hub)'}] : [])
+                        ].concat(
+                          _.get(findingTypes, 'HDF2ASFF-converter.warning')
+                            ? [
+                                {
+                                  code_desc: '',
+                                  start_time: '',
+                                  status: ExecJSON.ControlResultStatus.Skipped,
+                                  skip_message:
+                                    'Warning: Entry was truncated when converted to ASFF (AWS Security Hub)'
+                                }
+                              ]
+                            : []
+                        )
                       : []
                 } as ExecJSON.Control;
               }
@@ -286,7 +330,14 @@ function mapping(
         sha256: _.get(executionTypes, `${profileName}.sha256`)
       } as ExecJSON.Profile;
     }),
-    ...(_.has(executionTypes, 'Execution.passthrough') && { passthrough: _.get(executionTypes, 'HDF2ASFF-converter.warning') ? [_.get(executionTypes, 'Execution.passthrough'), 'Warning: Entry was truncated when converted to ASFF (AWS Security Hub)'] : _.get(executionTypes, 'Execution.passthrough') })
+    ...(_.has(executionTypes, 'Execution.passthrough') && {
+      passthrough: _.get(executionTypes, 'HDF2ASFF-converter.warning')
+        ? [
+            _.get(executionTypes, 'Execution.passthrough'),
+            'Warning: Entry was truncated when converted to ASFF (AWS Security Hub)'
+          ]
+        : _.get(executionTypes, 'Execution.passthrough')
+    })
   } as MappedTransform<ExecJSON.Execution, ILookupPath>;
 }
 
