@@ -311,7 +311,8 @@ function controlMappingCve(): MappedTransform<
           if (!Array.isArray(value)) {
             value = [value];
           }
-          return CWE_NIST_MAPPING.nistFilter(value, DEFAULT_NIST_TAG);
+
+          return CWE_NIST_MAPPING.nistFilter(value.map((val:string) => val.substring(4)), DEFAULT_NIST_TAG);
         }
       }
     },
@@ -352,7 +353,6 @@ function controlMappingCwe(
     impact: impactMapping(severity),
     refs: [],
     tags: {
-      cweid: {transformer: formatCweData},
       cweDescription: {transformer: formatCweDesc},
       cci: {
         transformer: (data: Record<string, unknown>) =>
