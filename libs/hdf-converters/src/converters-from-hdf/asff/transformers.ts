@@ -159,7 +159,7 @@ export function statusCount(evaluation: ContextualizedEvaluation): Counts {
 }
 
 export function createDescription(counts: Counts): string {
-  return `Passed: ${counts.Passed} (${
+  return `Result Set Status Summary -- Passed: ${counts.Passed} (${
     counts.PassedTests
   } individual checks passed) --- Failed: ${counts.Failed} (${
     counts.PassingTestsFailedControl
@@ -478,7 +478,7 @@ function createProfileInfoFindingFields(
   const passthrough = _.get(hdf, 'passthrough');
   if (_.isString(passthrough) && passthrough.trim()) {
     typesArr.push(`Execution/passthrough/${escapeForwardSlashes(passthrough)}`);
-  } else {
+  } else if (passthrough !== undefined) {
     typesArr.push(
       `Execution/passthrough/${escapeForwardSlashes(
         JSON.stringify(passthrough)
@@ -572,15 +572,21 @@ export function setupFindingType(
   typesArr.push(...createSegmentInfo(control.result));
   // Add Tags to Finding Provider Fields
   typesArr.push(...createTagInfo(control));
-  // Add Descriptions to FindingProviderFields
+
+  // nist tag, then subdescriptions, then remaining tags
   const nistTagIndex = typesArr.findIndex((typeString) =>
     typeString.startsWith('Tags/nist/')
   );
+  const tagsIndex = typesArr.findIndex((typeString) => typeString.startsWith('Tags/'));
+  if (nistTagIndex !== -1) {
+    typesArr.splice(tagsIndex, 0, typesArr.splice(nistTagIndex, 1)[0]);
+  }
   typesArr.splice(
-    nistTagIndex === -1 ? typesArr.length : nistTagIndex + 1,
+    tagsIndex === -1 ? typesArr.length : tagsIndex + 1,
     0,
+    // Add Descriptions to FindingProviderFields
     ...createDescriptionInfo(control)
-  ); // nist tag, then subdescriptions, then remaining tags
+  );
 
   // description > code > code_desc
   const desc = typesArr.splice(
@@ -601,7 +607,7 @@ export function setupFindingType(
     ),
     1
   )[0];
-  typesArr.push(..._.compact([desc, code, codeDesc])); // [][0] returns undefined so use compact to deal with them
+  typesArr.push(..._.compact([desc, code, codeDesc])); // [][0] can return undefined so use compact to deal with them
 
   return typesArr;
 }
