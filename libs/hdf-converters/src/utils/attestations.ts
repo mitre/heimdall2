@@ -17,8 +17,10 @@ export type Attestation = {
   updated_by: string;
 };
 
-export function advanceDate(date: moment.Moment, frequency: string): moment.Moment {
-
+export function advanceDate(
+  date: moment.Moment,
+  frequency: string
+): moment.Moment {
   switch (frequency) {
     case 'annually':
       date.add(1, 'year');
@@ -29,7 +31,7 @@ export function advanceDate(date: moment.Moment, frequency: string): moment.Mome
     case 'quarterly':
       date.add(3, 'months');
       break;
-    case 'monthly': 
+    case 'monthly':
       date.add(1, 'month');
       break;
     case 'every2weeks':
@@ -48,9 +50,9 @@ export function advanceDate(date: moment.Moment, frequency: string): moment.Mome
       date.add(1, 'day');
       break;
     default:
-      const msTime = ms(frequency)
+      const msTime = ms(frequency);
       if (!msTime) {
-        throw new Error("Unknown date format: " + frequency)
+        throw new Error('Unknown date format: ' + frequency);
       } else {
         date.add(msTime, 'milliseconds');
       }
@@ -59,7 +61,10 @@ export function advanceDate(date: moment.Moment, frequency: string): moment.Mome
   return date;
 }
 
-export function createAttestationMessage(attestation: Attestation, expired: boolean) {
+export function createAttestationMessage(
+  attestation: Attestation,
+  expired: boolean
+) {
   let message = '';
 
   if (expired) {
