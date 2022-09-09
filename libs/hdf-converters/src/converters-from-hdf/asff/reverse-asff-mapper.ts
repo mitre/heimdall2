@@ -185,128 +185,170 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     return segments;
   }
 
+  // Any ASFF value has to be less than 32768B - we're setting the max size to 30KB to have some buffer.  Only enforcing this restriction in AssumeRolePolicyDocument and FindingProviderFields.Types for now.
+  restrictionAttributesLessThan32KiB(finding: IFindingASFF): IFindingASFF {
+    const ATTRIBUTE_CHARACTER_LIMIT = 30000;
+    if (finding.Resources.length > 1) {
+      _.set(
+        finding,
+        'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
+        _.get(
+          finding,
+          'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
+          ''
+        ).slice(0, ATTRIBUTE_CHARACTER_LIMIT)
+      );
+      // no need for truncation warning since AssumeRolePolicyDocument is only used to look nice in the GUI - FindingProviderFields.Types contains all the information
+    }
+    finding.FindingProviderFields.Types = (
+      finding.FindingProviderFields.Types as string[]
+    )
+      .map((typeString) => {
+        if (typeString.length <= ATTRIBUTE_CHARACTER_LIMIT) {
+          return typeString;
+        }
+        const [type, attribute, value] = typeString.split('/');
+        return _.chunk(
+          value,
+          ATTRIBUTE_CHARACTER_LIMIT -
+            (type.length + attribute.length + 2) /*the slashes*/
+        ).map((chunk) => `${type}/${attribute}/${chunk.join('')}`);
+      })
+      .flat();
+    return finding;
+  }
+
+  // Findings have a maximum size of 240KB.  To try to meet that requirement, it automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere.  We're setting the max size to 200KB since anything much more than that doesn't seem to actually show up in SecHub even if there are no errors reported on upload.
+  restrictionFindingLessThan240KB(
+    finding: IFindingASFF,
+    numRemoved: number,
+    numTruncated: number
+  ): [IFindingASFF | undefined, number, number] {
+    const SIZE_CAP = 200000;
+    const originalSize = new TextEncoder().encode(
+      JSON.stringify(finding)
+    ).length;
+    let size = originalSize;
+    let popped;
+    while (
+      size > SIZE_CAP &&
+      (finding.FindingProviderFields.Types as string[]).length > 0
+    ) {
+      popped = (finding.FindingProviderFields.Types as string[]).pop();
+      size = new TextEncoder().encode(JSON.stringify(finding)).length;
+    }
+    if (size > SIZE_CAP) {
+      console.error(
+        `Warning: Normalized entry could not be sufficiently reduced in size to meet AWS Security Hub requirements and so will not be provided in the results set.  Entry could not be minimized more than as follows:
+            ${finding}`
+      );
+      if (finding.Id === profileInfoFindingId) {
+        console.error(
+          'Warning: This entry was the informational one containing the scan/execution level information.'
+        );
+      }
+      if (finding.Id !== profileInfoFindingId) {
+        // metrics are only for non-profile info findings
+        numRemoved++;
+      }
+      return [undefined, numRemoved, numTruncated];
+    }
+    if (originalSize !== size) {
+      (finding.FindingProviderFields.Types as string[]).push(
+        new TextDecoder().decode(
+          new TextEncoder().encode(popped).subarray(0, SIZE_CAP - size)
+        )
+      );
+      (finding.FindingProviderFields.Types as string[]).push(
+        'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
+      );
+      console.error(
+        `Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`
+      );
+      if (finding.Id !== profileInfoFindingId) {
+        numTruncated++;
+      }
+    }
+    return [finding, numRemoved, numTruncated];
+  }
+
+  // FindingProviderFields.Types has a maximum size of 50 attributes
+  restrictionTypesArrayLengthLessThan50(
+    finding: IFindingASFF,
+    numTruncated: number
+  ): [IFindingASFF | undefined, number] {
+    const cutoff = (finding.FindingProviderFields.Types as string[]).splice(
+      50,
+      (finding.FindingProviderFields.Types as string[]).length - 50
+    );
+    if (cutoff.length > 0) {
+      (finding.FindingProviderFields.Types as string[]).pop();
+      (finding.FindingProviderFields.Types as string[]).push(
+        `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.`
+      );
+      console.error(
+        `Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`
+      );
+      if (finding.Id !== profileInfoFindingId) {
+        numTruncated++;
+      }
+    }
+    return [finding, numTruncated];
+  }
+
+  // sechub doesn't allow two types to have the same values; future iteration should find a way to work around this instead of just skipping it like we're going to do here (maybe add a number of {MAKE LINE DIFFERENT} block things at the end of an otherwise same line that'll get removed by the asff2hdf mapper similar to how we do the slash substitutions
+  restrictionTypesArrayMustBeUnique(
+    finding: IFindingASFF,
+    numRemoved: number
+  ): [IFindingASFF | undefined, number] {
+    if (
+      (finding.FindingProviderFields.Types as string[]).length !==
+      new Set(finding.FindingProviderFields.Types as string[]).size
+    ) {
+      console.error(
+        `Warning: Normalized entry contained data that is duplicated (i.e. a subsection of a string by happenstance has the same values) which means this entry does not meet AWS Security Hub requirements and so will not be provided in the results set.  Entry that contains duplicate data is as follows:
+            ${finding}`
+      );
+      if (finding.Id === profileInfoFindingId) {
+        console.error(
+          'Warning: This entry was the informational one containing the scan/execution level information.'
+        );
+      }
+      if (finding.Id !== profileInfoFindingId) {
+        numRemoved++;
+      }
+      return [undefined, numRemoved];
+    }
+    return [finding, numRemoved];
+  }
+
   // ASFF has several written and unwritten restrictions that cap how much information can be put into a finding
   restrictToSchemaSizes(resList: IFindingASFF[]): IFindingASFF[] {
     const profileInfoFindingId = resList.slice(-1)[0].Id;
     let numRemoved = 0;
     let numTruncated = 0;
     const restricted: IFindingASFF[] = [];
-    for (const finding of resList) {
-      // Any ASFF value has to be less than 32768B - we're setting the max size to 30KB to have some buffer.  Only enforcing this restriction in AssumeRolePolicyDocument and FindingProviderFields.Types for now.
-      const ATTRIBUTE_CHARACTER_LIMIT = 30000;
-      if (finding.Resources.length > 1) {
-        _.set(
-          finding,
-          'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
-          _.get(
-            finding,
-            'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
-            ''
-          ).slice(0, ATTRIBUTE_CHARACTER_LIMIT)
-        );
-        // no need for truncation warning since AssumeRolePolicyDocument is only used to look nice in the GUI - FindingProviderFields.Types contains all the information
-      }
-      finding.FindingProviderFields.Types = (
-        finding.FindingProviderFields.Types as string[]
-      )
-        .map((typeString) => {
-          if (typeString.length <= ATTRIBUTE_CHARACTER_LIMIT) {
-            return typeString;
-          }
-          const [type, attribute, value] = typeString.split('/');
-          return _.chunk(
-            value,
-            ATTRIBUTE_CHARACTER_LIMIT -
-              (type.length + attribute.length + 2) /*the slashes*/
-          ).map((chunk) => `${type}/${attribute}/${chunk.join('')}`);
-        })
-        .flat();
-
-      // Findings have a maximum size of 240KB.  To try to meet that requirement, it automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere.  We're setting the max size to 200KB since anything much more than that doesn't seem to actually show up in SecHub even if there are no errors reported on upload.
-      const SIZE_CAP = 200000;
-      const originalSize = new TextEncoder().encode(
-        JSON.stringify(finding)
-      ).length;
-      let size = originalSize;
-      let popped;
-      while (
-        size > SIZE_CAP &&
-        (finding.FindingProviderFields.Types as string[]).length > 0
-      ) {
-        popped = (finding.FindingProviderFields.Types as string[]).pop();
-        size = new TextEncoder().encode(JSON.stringify(finding)).length;
-      }
-      if (size > SIZE_CAP) {
-        console.error(
-          `Warning: Normalized entry could not be sufficiently reduced in size to meet AWS Security Hub requirements and so will not be provided in the results set.  Entry could not be minimized more than as follows:
-            ${finding}`
-        );
-        if (finding.Id === profileInfoFindingId) {
-          console.error(
-            'Warning: This entry was the informational one containing the scan/execution level information.'
-          );
-        }
-        if (finding.Id !== profileInfoFindingId) {
-          // metrics are only for non-profile info findings
-          numRemoved++;
-        }
-        continue;
-      }
-      if (originalSize !== size) {
-        (finding.FindingProviderFields.Types as string[]).push(
-          new TextDecoder().decode(
-            new TextEncoder().encode(popped).subarray(0, SIZE_CAP - size)
-          )
-        );
-        (finding.FindingProviderFields.Types as string[]).push(
-          'HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.'
-        );
-        console.error(
-          `Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`
-        );
-        if (finding.Id !== profileInfoFindingId) {
-          numTruncated++;
-        }
-      }
-
-      // FindingProviderFields.Types has a maximum size of 50 attributes
-      const cutoff = (finding.FindingProviderFields.Types as string[]).splice(
-        50,
-        (finding.FindingProviderFields.Types as string[]).length - 50
+    for (let finding of resList) {
+      finding = restrictionAttributesLessThan32KiB(finding);
+      [finding, numRemoved, numTruncated] = restrictionFindingLessThan240KB(
+        finding,
+        numRemoved,
+        numTruncated
       );
-      if (cutoff.length > 0) {
-        (finding.FindingProviderFields.Types as string[]).pop();
-        (finding.FindingProviderFields.Types as string[]).push(
-          `HDF2ASFF-converter/warning/Not all information was captured in this entry.  Please consult the original file for all of the information.`
-        );
-        console.error(
-          `Warning: Normalized entry was truncated in size to meet AWS Security Hub requirements.  Entry id: ${finding.Id}`
-        );
-        if (finding.Id !== profileInfoFindingId) {
-          numTruncated++;
-        }
-      }
-
-      // sechub doesn't allow two types to have the same values; future iteration should find a way to work around this instead of just skipping it like we're going to do here (maybe add a number of {MAKE LINE DIFFERENT} block things at the end of an otherwise same line that'll get removed by the asff2hdf mapper similar to how we do the slash substitutions
-      if (
-        (finding.FindingProviderFields.Types as string[]).length !==
-        new Set(finding.FindingProviderFields.Types as string[]).size
-      ) {
-        console.error(
-          `Warning: Normalized entry contained data that is duplicated (i.e. a subsection of a string by happenstance has the same values) which means this entry does not meet AWS Security Hub requirements and so will not be provided in the results set.  Entry that contains duplicate data is as follows:
-            ${finding}`
-        );
-        if (finding.Id === profileInfoFindingId) {
-          console.error(
-            'Warning: This entry was the informational one containing the scan/execution level information.'
-          );
-        }
-        if (finding.Id !== profileInfoFindingId) {
-          numRemoved++;
-        }
+      if (!finding) {
         continue;
       }
-
+      [finding, numTruncated] = restrictionTypesArrayLengthLessThan50(
+        finding,
+        numTruncated
+      );
+      [finding, numRemoved] = restrictionTypesArrayMustBeUnique(
+        finding,
+        numRemoved
+      );
+      if (!finding) {
+        continue;
+      }
       restricted.push(finding);
     }
 
