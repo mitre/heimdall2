@@ -107,7 +107,7 @@ describe('attestations', () => {
 
   it('Should parse words for durations correctly', () => {
     expect(advanceDate(moment(1662758942522), 'fortnightly').format()).toEqual(
-      '2022-09-23T17:29:02-04:00'
+      '2022-09-23T21:29:02-00:00'
     );
   });
 });
