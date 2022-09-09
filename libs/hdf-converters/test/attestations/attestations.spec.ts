@@ -50,10 +50,6 @@ describe('attestations', () => {
     expect(expiredAttestationMessage).toEqual(
       expect.stringMatching(/^Expired/)
     );
-
-    // expect(unexpiredAttestationMessage.match(/Manually verified status provided through attestation/));
-    // expect(unexpiredAttestationMessage.match(/Manually/)).not;
-    // expect(expiredAttestationMessage.match(/Manual verification status provided through attestation has expired/));
   });
 
   it('Should successfully add an attestation to a results set and ignore expired ones', () => {
