@@ -17,7 +17,8 @@ export type Attestation = {
   updated_by: string;
 };
 
-function advanceDate(date: moment.Moment, frequency: string): moment.Moment {
+export function advanceDate(date: moment.Moment, frequency: string): moment.Moment {
+
   switch (frequency) {
     case 'annually':
       date.add(1, 'year');
@@ -28,27 +29,37 @@ function advanceDate(date: moment.Moment, frequency: string): moment.Moment {
     case 'quarterly':
       date.add(3, 'months');
       break;
-    case 'monthly':
+    case 'monthly': 
       date.add(1, 'month');
       break;
     case 'every2weeks':
       date.add(2, 'weeks');
       break;
+    case 'fortnightly':
+      date.add(2, 'weeks');
+      break;
     case 'weekly':
       date.add(1, 'week');
+      break;
+    case 'every3days':
+      date.add(3, 'day');
       break;
     case 'daily':
       date.add(1, 'day');
       break;
     default:
-      date.add(ms(frequency), 'milliseconds');
+      const msTime = ms(frequency)
+      if (!msTime) {
+        throw new Error("Unknown date format: " + frequency)
+      } else {
+        date.add(msTime, 'milliseconds');
+      }
       break;
   }
-
   return date;
 }
 
-function createAttestationMessage(attestation: Attestation, expired: boolean) {
+export function createAttestationMessage(attestation: Attestation, expired: boolean) {
   let message = '';
 
   if (expired) {
@@ -93,7 +104,7 @@ export function convertAttestationToSegment(
     return {
       code_desc: 'Manually verified status provided through attestation',
       status: attestation.status as ControlResultStatus,
-      message: createAttestationMessage(attestation, true),
+      message: createAttestationMessage(attestation, false),
       start_time: new Date().toISOString()
     };
   }
