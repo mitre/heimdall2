@@ -220,6 +220,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
   // Findings have a maximum size of 240KB.  To try to meet that requirement, it automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere.  We're setting the max size to 200KB since anything much more than that doesn't seem to actually show up in SecHub even if there are no errors reported on upload.
   restrictionFindingLessThan240KB(
+    profileInfoFindingId: string,
     finding: IFindingASFF,
     numRemoved: number,
     numTruncated: number
@@ -274,6 +275,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
   // FindingProviderFields.Types has a maximum size of 50 attributes
   restrictionTypesArrayLengthLessThan50(
+    profileInfoFindingId: string,
     finding: IFindingASFF,
     numTruncated: number
   ): [IFindingASFF | undefined, number] {
@@ -298,6 +300,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
 
   // sechub doesn't allow two types to have the same values; future iteration should find a way to work around this instead of just skipping it like we're going to do here (maybe add a number of {MAKE LINE DIFFERENT} block things at the end of an otherwise same line that'll get removed by the asff2hdf mapper similar to how we do the slash substitutions
   restrictionTypesArrayMustBeUnique(
+    profileInfoFindingId: string,
     finding: IFindingASFF,
     numRemoved: number
   ): [IFindingASFF | undefined, number] {
@@ -328,9 +331,11 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     let numRemoved = 0;
     let numTruncated = 0;
     const restricted: IFindingASFF[] = [];
-    for (let finding of resList) {
-      finding = restrictionAttributesLessThan32KiB(finding);
-      [finding, numRemoved, numTruncated] = restrictionFindingLessThan240KB(
+    for (const f of resList) {
+      let finding: IFindingASFF | undefined = f;
+      finding = this.restrictionAttributesLessThan32KiB(finding);
+      [finding, numRemoved, numTruncated] = this.restrictionFindingLessThan240KB(
+        profileInfoFindingId,
         finding,
         numRemoved,
         numTruncated
@@ -338,11 +343,13 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       if (!finding) {
         continue;
       }
-      [finding, numTruncated] = restrictionTypesArrayLengthLessThan50(
+      [finding, numTruncated] = this.restrictionTypesArrayLengthLessThan50(
+        profileInfoFindingId,
         finding,
         numTruncated
       );
-      [finding, numRemoved] = restrictionTypesArrayMustBeUnique(
+      [finding, numRemoved] = this.restrictionTypesArrayMustBeUnique(
+        profileInfoFindingId,
         finding,
         numRemoved
       );
