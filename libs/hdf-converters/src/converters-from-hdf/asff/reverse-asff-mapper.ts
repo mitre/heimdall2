@@ -218,7 +218,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     return finding;
   }
 
-  // Findings have a maximum size of 240KB.  To try to meet that requirement, it automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere.  We're setting the max size to 200KB since anything much more than that doesn't seem to actually show up in SecHub even if there are no errors reported on upload.
+  // Findings have a maximum size of 240KB.  To try to meet that requirement, SecHub automatically removes the Resource.Details object, but we don't put anything there so we gotta find space savings elsewhere: we can't remove anything from what'll show up nice in the GUI for the user since they need all that info to have a useable experience in SecHub, so instead we're going to remove the flattened HDF file that's in the FindingProviderFields.Types array starting from the least important stuff.  We're setting the max size to 200KB since anything much more than that doesn't seem to actually show up in SecHub even if there are no errors reported on upload.
   restrictionFindingLessThan240KB(
     profileInfoFindingId: string,
     finding: IFindingASFF,
@@ -245,7 +245,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       );
       if (finding.Id === profileInfoFindingId) {
         console.error(
-          'Warning: This entry was the informational one containing the scan/execution level information.'
+          'Warning: This was the informational entry that contains the scan/execution level information.'
         );
       }
       if (finding.Id !== profileInfoFindingId) {
@@ -278,7 +278,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     profileInfoFindingId: string,
     finding: IFindingASFF,
     numTruncated: number
-  ): [IFindingASFF | undefined, number] {
+  ): [IFindingASFF, number] {
     const cutoff = (finding.FindingProviderFields.Types as string[]).splice(
       50,
       (finding.FindingProviderFields.Types as string[]).length - 50
@@ -298,7 +298,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     return [finding, numTruncated];
   }
 
-  // sechub doesn't allow two types to have the same values; future iteration should find a way to work around this instead of just skipping it like we're going to do here (maybe add a number of {MAKE LINE DIFFERENT} block things at the end of an otherwise same line that'll get removed by the asff2hdf mapper similar to how we do the slash substitutions
+  // SecHub doesn't allow two types to have the same values; future iteration should find a way to work around this instead of just skipping it like we're going to do here (maybe add a number of {MAKE LINE DIFFERENT} block things at the end of an otherwise same line that'll get removed by the asff2hdf mapper similar to how we do the slash substitutions
   restrictionTypesArrayMustBeUnique(
     profileInfoFindingId: string,
     finding: IFindingASFF,
@@ -314,7 +314,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       );
       if (finding.Id === profileInfoFindingId) {
         console.error(
-          'Warning: This entry was the informational one containing the scan/execution level information.'
+          'Warning: This was the informational entry that contains the scan/execution level information.'
         );
       }
       if (finding.Id !== profileInfoFindingId) {
@@ -330,7 +330,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     const profileInfoFindingId = resList.slice(-1)[0].Id;
     let numRemoved = 0;
     let numTruncated = 0;
-    const restricted: IFindingASFF[] = [];
+    const restrictedResults: IFindingASFF[] = [];
     for (const f of resList) {
       let finding: IFindingASFF | undefined = f;
       finding = this.restrictionAttributesLessThan32KiB(finding);
@@ -356,19 +356,19 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       if (!finding) {
         continue;
       }
-      restricted.push(finding);
+      restrictedResults.push(finding);
     }
 
     if (
       (numRemoved > 0 || numTruncated > 0) &&
-      restricted.slice(-1)[0].Id === profileInfoFindingId
+      restrictedResults.slice(-1)[0].Id === profileInfoFindingId
     ) {
-      restricted.slice(-1)[0].Description = `${
-        restricted.slice(-1)[0].Description
+      restrictedResults.slice(-1)[0].Description = `${
+        restrictedResults.slice(-1)[0].Description
       } ---- MITRE SAF HDF2ASFF converter warnings -- Entries truncated: ${numTruncated} (Truncated to fit AWS Security Hub restrictions) --- Entries removed: ${numRemoved} (Could not fit due to AWS Security Hub restrictions)`;
     }
 
-    return restricted;
+    return restrictedResults;
   }
 
   //Convert from HDF to ASFF

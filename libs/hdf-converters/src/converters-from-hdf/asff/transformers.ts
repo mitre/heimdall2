@@ -590,7 +590,7 @@ export function setupFindingType(
     ...createDescriptionInfo(control)
   );
 
-  // description > code > code_desc
+  // description, then code, then code_desc
   const desc = typesArr.splice(
     typesArr.findIndex((typeString) => typeString.startsWith('Control/Desc/')),
     1

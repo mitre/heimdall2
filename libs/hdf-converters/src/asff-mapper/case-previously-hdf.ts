@@ -85,7 +85,7 @@ function supportingDocs(
   const [asff, docs] = input;
   const index = findExecutionFindingIndex(asff);
   const docsClone = _.cloneDeep(docs);
-  docsClone.set(SpecialCasing.HDF2ASFF, {
+  docsClone.set(SpecialCasing.PreviouslyHDF, {
     execution: _.get(asff, `Findings[${index}]`) as Record<string, unknown>
   });
   return docsClone;
@@ -164,7 +164,7 @@ function mapping(
   context: ASFFMapper
 ): MappedTransform<ExecJSON.Execution, ILookupPath> {
   const execution = _.get(
-    context.supportingDocs.get(SpecialCasing.HDF2ASFF),
+    context.supportingDocs.get(SpecialCasing.PreviouslyHDF),
     'execution'
   );
   const executionTypes = objectifyTypesArray(
@@ -179,7 +179,7 @@ function mapping(
     platform: {
       ...(_.get(executionTypes, 'Execution.platform') as ExecJSON.Platform),
       target_id: (
-        context.supportingDocs.get(SpecialCasing.HDF2ASFF)?.execution
+        context.supportingDocs.get(SpecialCasing.PreviouslyHDF)?.execution
           .Id as string
       ).split('/')[0]
     },
@@ -377,7 +377,7 @@ function mapping(
   } as MappedTransform<ExecJSON.Execution, ILookupPath>;
 }
 
-export function getHDF2ASFF(): Record<string, (...inputs: any) => any> {
+export function getPreviouslyHDF(): Record<string, (...inputs: any) => any> {
   return {
     preprocessingASFF,
     supportingDocs,
