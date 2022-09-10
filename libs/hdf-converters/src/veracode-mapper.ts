@@ -176,7 +176,13 @@ function formatCodeDesc(input: Record<string, unknown>[]): string {
     ['CWE ID', 'cweid'],
     ['Date First Occurence', 'date_first_occurence'],
     ['CIA Impact', 'cia_impact'],
-    ['Description', 'description']
+    ['Description', 'description'],
+    ['Source File', 'sourcefile'],
+    ['Scope', 'scope'],
+    ['CIA Impact', 'cia_impact'],
+    ['PCI Related', 'pcirelated'],
+    ['Function Prototype', 'functionprototype'],
+    ['Function Relative Location', 'functionrelativelocation']
   ];
   if (_.has(input, 'sourcefilepath')) {
     flawDesc = `Sourcefile Path: ${_.get(input, 'sourcefilepath')}\n`;
@@ -197,16 +203,18 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
   let flawDesc = '';
   const categories = [
     'sha1',
+    'file_name',
     'max_cvss_score',
     'version',
     'library',
+    'library_id',
     'vendor',
     'description',
     'added_date',
     'component_affects_policy_compliance'
   ];
   if (_.has(input, 'component_id')) {
-    flawDesc = `component_id: ${_.get(input, 'component_id')};`;
+    flawDesc = `component_id: ${_.get(input, 'component_id')}\n`;
     flawDesc += _.compact(
       categories.map((value: string) => {
         if (_.has(input, value)) {
@@ -217,7 +225,7 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
       })
     ).join('\n');
     if (_.has(input, FILE_PATH_VALUE)) {
-      flawDesc += `file_path: ${_.get(input, FILE_PATH_VALUE)}`;
+      flawDesc += `\nfile_path: ${_.get(input, FILE_PATH_VALUE)}\n`;
     }
   }
   return flawDesc;
@@ -303,7 +311,11 @@ function controlMappingCve(): MappedTransform<
           if (!Array.isArray(value)) {
             value = [value];
           }
-          return CWE_NIST_MAPPING.nistFilter(value, DEFAULT_NIST_TAG);
+
+          return CWE_NIST_MAPPING.nistFilter(
+            value.map((val: string) => val.substring(4)),
+            DEFAULT_NIST_TAG
+          );
         }
       }
     },
@@ -373,6 +385,32 @@ function controlMappingCwe(
   };
 }
 
+function componentPass(component: Record<string, unknown>) {
+  const vulnList: string[] = [];
+  _.set(component, 'control_ids', vulnList);
+  if (_.get(component, 'vulnerabilities.vulnerability')) {
+    if (!Array.isArray(_.get(component, 'vulnerabilities.vulnerability'))) {
+      vulnList.push(
+        _.get(component, 'vulnerabilities.vulnerability.cve_id') as string
+      );
+      _.set(component, 'control_ids', vulnList);
+    } else {
+      vulnList.push(
+        ...(
+          _.get(component, 'vulnerabilities.vulnerability') as Record<
+            string,
+            unknown
+          >[]
+        ).map(
+          (vuln: Record<string, unknown>) => _.get(vuln, 'cve_id') as string
+        )
+      );
+      _.set(component, 'control_ids', vulnList);
+    }
+  }
+  return _.omit(component, 'vulnerabilities');
+}
+
 export class VeracodeMapper extends BaseConverter {
   originalData: unknown;
   defaultMapping(
@@ -384,6 +422,13 @@ export class VeracodeMapper extends BaseConverter {
         release: HeimdallToolsVersion
       },
       passthrough: {
+        components: {
+          path: 'detailedreport.software_composition_analysis.vulnerable_components',
+          transformer: (value: Record<string, unknown>) =>
+            (_.get(value, 'component') as Record<string, unknown>[]).map(
+              (component: Record<string, unknown>) => componentPass(component)
+            )
+        },
         auxiliary_data: [
           {
             name: 'veracode',
