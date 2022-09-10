@@ -334,12 +334,13 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
     for (const f of resList) {
       let finding: IFindingASFF | undefined = f;
       finding = this.restrictionAttributesLessThan32KiB(finding);
-      [finding, numRemoved, numTruncated] = this.restrictionFindingLessThan240KB(
-        profileInfoFindingId,
-        finding,
-        numRemoved,
-        numTruncated
-      );
+      [finding, numRemoved, numTruncated] =
+        this.restrictionFindingLessThan240KB(
+          profileInfoFindingId,
+          finding,
+          numRemoved,
+          numTruncated
+        );
       if (!finding) {
         continue;
       }
