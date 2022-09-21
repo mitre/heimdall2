@@ -117,15 +117,15 @@ Then, any subsequent `npx @mitre/heimdall-lite` will use the local version and l
 
 #### Running via Docker
 
-It is also possible to run heimdall-lite using Docker, using the following command:
+It is also possible to run Heimdall-Lite using Docker, using the following command:
 
 ```bash
 docker run -d -p 8080:80 mitre/heimdall-lite:release-latest
 ```
 
-You can then access heimdall-lite at [`http://localhost:8080`](http://localhost:8080).
+You can then access Heimdall-Lite at [`http://localhost:8080`](http://localhost:8080).
 
-If you would prefer to run the bleeding edge version of heimdall-lite, replace `mitre/heimdall-lite:release-latest` with `mitre/heimdall-lite:latest`.
+If you would prefer to run the bleeding edge version of Heimdall-Lite, replace `mitre/heimdall-lite:release-latest` with `mitre/heimdall-lite:latest`.
 
 ---
 
