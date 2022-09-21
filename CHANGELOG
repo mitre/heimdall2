@@ -1,7 +1,30 @@
 v2.6.31
 
-    updated dependencies
     updated documentation
+
+    ## Dependency Updates
+
+    - Bump aws-sdk from 2.1216.0 to 2.1220.0 @dependabot (#3573)
+    - Bump @typescript-eslint/eslint-plugin from 5.36.2 to 5.38.0 @dependabot (#3565)
+    - Bump @casl/ability from 6.1.1 to 6.2.0 @dependabot (#3572)
+    - Bump core-js from 3.25.1 to 3.25.2 @dependabot (#3569)
+    - Bump ts-loader from 9.3.1 to 9.4.0 @dependabot (#3571)
+    - Bump @typescript-eslint/parser from 5.37.0 to 5.38.0 @dependabot (#3570)
+    - Bump vue-cli-plugin-vuetify from 2.5.5 to 2.5.8 @dependabot (#3567)
+    - Bump typedoc from 0.23.14 to 0.23.15 @dependabot (#3564)
+    - Bump @aws-sdk/client-config-service from 3.168.0 to 3.171.0 @dependabot (#3562)
+    - Bump jose from 4.8.3 to 4.9.3 @dependabot (#3561)
+    - Bump sanitize-html from 2.7.1 to 2.7.2 @dependabot (#3559)
+    - Bump date-fns from 2.29.2 to 2.29.3 @dependabot (#3560)
+    - Bump aws-sdk from 2.1214.0 to 2.1216.0 @dependabot (#3557)
+    - Bump quicktype from 15.0.261 to 15.1.0 @dependabot (#3556)
+    - Bump @types/express from 4.17.13 to 4.17.14 @dependabot (#3553)
+    - Bump @types/lodash from 4.14.184 to 4.14.185 @dependabot (#3546)
+    - Bump @typescript-eslint/parser from 5.36.2 to 5.37.0 @dependabot (#3552)
+    - Bump vuetify from 2.6.9 to 2.6.10 @dependabot (#3551)
+    - Bump eslint from 8.23.0 to 8.23.1 @dependabot (#3550)
+    - Bump aws-sdk from 2.1213.0 to 2.1214.0 @dependabot (#3549)
+
 
 v2.6.30
 
