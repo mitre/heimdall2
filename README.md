@@ -50,11 +50,15 @@ This repository contains the source code for Heimdall's [Backend](https://github
 
 #### Released Previews
 
-[Heimdall Lite](https://heimdall-lite.mitre.org) | [Heimdall Server](https://heimdall-demo.mitre.org/)
+ [Heimdall Lite](https://heimdall-lite.mitre.org) | [Heimdall Server](https://heimdall-demo.mitre.org/) &nbsp; <a href="https://pages.github.com/"><img src="https://cdn-icons-png.flaticon.com/512/733/733609.png " height="25" /></a>
 
 #### Current *Development Master Branch* Preview
 
-[Heimdall Lite](https://heimdall-lite.netlify.com/) | [Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/)
+[Heimdall Lite](https://heimdall-lite.netlify.com/) &nbsp; <a href="https://www.netlify.com"><img src="https://www.netlify.com/v3/img/components/full-logo-light-simple.svg#gh-light-mode-only" height="25" /></a><a href="https://www.netlify.com"><img src="https://www.netlify.com/v3/img/components/full-logo-dark-simple.svg#gh-dark-mode-only" width="100" /></a> 
+
+<br />
+
+[Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/) &nbsp; <a href="https://www.heroku.com/"><img src="https://www.herokucdn.com/deploy/button.svg" height="25" /></a>
 
 ## Heimdall (Lite) vs Heimdall with Backend (Server)
 
