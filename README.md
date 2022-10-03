@@ -49,16 +49,27 @@ This repository contains the source code for Heimdall's [Backend](https://github
 #### *These demos are only intended to show the functionality of Heimdall, please do not upload any sensitive data to them.*
 
 #### Released Previews
+[Heimdall Lite](https://heimdall-lite.mitre.org) | [Heimdall Server](https://heimdall-demo.mitre.org/) &nbsp;&nbsp;
+<a href="https://pages.github.com/">
+<picture>
+   <source media="(prefers-color-scheme: dark)" srcset="apps/frontend/src/assets/GitHub-Mark-Light-64px.png">
+   <source media="(prefers-color-scheme: light)" srcset="apps/frontend/src/assets/GitHub-Mark-64px.png">
+    <img alt="Github Logo" src="apps/frontend/src/assets/GitHub-Mark-64px.png" height="25">
+</picture>
+</a>
 
- [Heimdall Lite](https://heimdall-lite.mitre.org) | [Heimdall Server](https://heimdall-demo.mitre.org/) &nbsp; <a href="https://pages.github.com/"><img src="https://cdn-icons-png.flaticon.com/512/733/733609.png " height="25" /></a>
 
 #### Current *Development Master Branch* Preview
-
-[Heimdall Lite](https://heimdall-lite.netlify.com/) &nbsp; <a href="https://www.netlify.com"><img src="https://www.netlify.com/v3/img/components/full-logo-light-simple.svg#gh-light-mode-only" height="25" /></a><a href="https://www.netlify.com"><img src="https://www.netlify.com/v3/img/components/full-logo-dark-simple.svg#gh-dark-mode-only" width="100" /></a> 
-
+[Heimdall Lite](https://heimdall-lite.netlify.com/) &nbsp;&nbsp; <a href="https://www.netlify.com">
+<picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://www.netlify.com/v3/img/components/full-logo-dark-simple.svg">
+   <source media="(prefers-color-scheme: light)" srcset="https://www.netlify.com/v3/img/components/full-logo-light-simple.svg">
+   <img alt="Netlify Logo" src="https://www.netlify.com/v3/img/components/full-logo-dark-simple.svg" height="25">
+</picture>
+</a> 
 <br />
 
-[Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/) &nbsp; <a href="https://www.heroku.com/"><img src="https://www.herokucdn.com/deploy/button.svg" height="25" /></a>
+[Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/) &nbsp;&nbsp; <a href="https://www.heroku.com/"><img src="https://www.herokucdn.com/deploy/button.svg" height="25"/></a>
 
 ## Heimdall (Lite) vs Heimdall with Backend (Server)
 
