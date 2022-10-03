@@ -12,6 +12,8 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
+import {FileInterceptor} from '@nestjs/platform-express';
+import { ApiProperty, ApiTags } from '@nestjs/swagger';
 import {AnyFilesInterceptor} from '@nestjs/platform-express';
 import _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
