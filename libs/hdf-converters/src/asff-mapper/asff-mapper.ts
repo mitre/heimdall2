@@ -3,9 +3,12 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from '../base-converter';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
+import {
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  getCCIsForNISTTags
+} from '../utils/global';
 import {getFirewallManager} from './case-firewall-manager';
-import {getHDF2ASFF} from './case-hdf2asff';
+import {getPreviouslyHDF} from './case-previously-hdf';
 import {getProwler} from './case-prowler';
 import {getSecurityHub} from './case-security-hub';
 import {getTrivy} from './case-trivy';
@@ -27,7 +30,7 @@ export enum SpecialCasing {
   Prowler = 'Prowler',
   SecurityHub = 'AWS Security Hub',
   Trivy = 'Aqua Trivy',
-  HDF2ASFF = 'MITRE SAF HDF2ASFF',
+  PreviouslyHDF = 'MITRE SAF HDF2ASFF',
   Default = 'Default'
 }
 
@@ -61,7 +64,8 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     _.some(
       _.get(finding, 'FindingProviderFields.Types') as string[],
       (type: string) => {
-        const version = type.split('/')[2].split('-')[0];
+        const delimitedType = type.split('/');
+        const version = delimitedType[delimitedType.length - 1].split('-')[0];
         const [major, minor, patch] = version.split('.');
         if (
           parseInt(major) > 1 &&
@@ -75,7 +79,7 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
       }
     )
   ) {
-    return SpecialCasing.HDF2ASFF;
+    return SpecialCasing.PreviouslyHDF;
   } else {
     return SpecialCasing.Default;
   }
@@ -90,7 +94,7 @@ const SPECIAL_CASE_MAPPING: Map<
   [SpecialCasing.Prowler, getProwler()],
   [SpecialCasing.SecurityHub, getSecurityHub()],
   [SpecialCasing.Trivy, getTrivy()],
-  [SpecialCasing.HDF2ASFF, getHDF2ASFF()]
+  [SpecialCasing.PreviouslyHDF, getPreviouslyHDF()]
 ]);
 
 function externalProductHandler<T>(
@@ -303,7 +307,7 @@ export class ASFFMapper extends BaseConverter {
             .split(':')
             .slice(-1)[0]
             .split('/');
-          const defaultTargetId = `${productInfo[1]} | ${productInfo[2]}`;
+          const defaultTargetId = `${productInfo[1]} - ${productInfo[2]}`;
           return externalProductHandler(
             this,
             whichSpecialCase(
@@ -409,6 +413,24 @@ export class ASFFMapper extends BaseConverter {
                   'findingTags',
                   {}
                 ) as Record<string, unknown>,
+              cci: {
+                transformer: (finding: Record<string, unknown>): string[] => {
+                  const tags = externalProductHandler(
+                    this,
+                    whichSpecialCase(finding),
+                    finding,
+                    'findingNistTag',
+                    []
+                  ) as string[];
+                  if (tags.length === 0) {
+                    return getCCIsForNISTTags(
+                      DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+                    );
+                  } else {
+                    return getCCIsForNISTTags(tags);
+                  }
+                }
+              },
               nist: {
                 transformer: (finding: Record<string, unknown>): string[] => {
                   const tags = externalProductHandler(
@@ -451,9 +473,7 @@ export class ASFFMapper extends BaseConverter {
                 ): Record<string, unknown> => {
                   return {
                     ...(_.has(finding, 'SourceUrl') && {
-                      url: {
-                        path: 'SourceUrl'
-                      }
+                      url: _.get(finding, 'SourceUrl')
                     })
                   };
                 }
@@ -668,7 +688,7 @@ export class ASFFResults {
         .split(':')
         .slice(-1)[0]
         .split('/');
-      const defaultFilename = `${productInfo[1]} | ${productInfo[2]}.json`;
+      const defaultFilename = `${productInfo[1]} - ${productInfo[2]}.json`;
       return externalProductHandler(
         this,
         whichSpecialCase(finding),

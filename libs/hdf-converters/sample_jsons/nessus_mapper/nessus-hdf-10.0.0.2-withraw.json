@@ -1,0 +1,1730 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.29",
+    "target_id": "10.0.0.2"
+  },
+  "version": "2.6.29",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Nessus Basic Network Scan",
+      "version": "",
+      "title": "Nessus Basic Network Scan",
+      "summary": "Nessus Basic Network Scan",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "nist": [],
+            "rid": "104410",
+            "risk_factor": "None",
+            "plugin_type": "summary",
+            "plugin_publication_date": "2017/11/06",
+            "fname": "host_credentials_failed.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Target Credential Status by Authentication Protocol - Failure for Provided Credentials",
+          "id": "104410",
+          "desc": "Plugin Family: Settings; Port: 22; Protocol: tcp;",
+          "descriptions": [
+            {
+              "data": "Address the reported problem(s) so that credentialed checks can be executed.",
+              "label": "fix"
+            }
+          ],
+          "impact": 0,
+          "code": "{\n  \"port\": \"22\",\n  \"svc_name\": \"ssh\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"104410\",\n  \"pluginName\": \"Target Credential Status by Authentication Protocol - Failure for Provided Credentials\",\n  \"pluginFamily\": \"Settings\",\n  \"description\": \"Nessus failed to successfully authenticate directly to the remote target on an available authentication protocol. Nessus was able to connect to the remote port and identify that the service running on the port supports an authentication protocol, but Nessus failed to authenticate to the remote service using the provided credentials.\\n\\nThere may have been a failure in protocol negotiation or communication that prevented authentication from being attempted or all of the provided credentials for the authentication protocol may have been invalid. A protocol failure may indicate a compatibility issue with the protocol configuration. A protocol failure due to an environmental issue such as resource or congestion issues may also prevent valid credentials from being identified. See plugin output for error details.\\n\\nPlease note the following :\\n\\n- This plugin reports per protocol, so it is possible for   valid credentials to be provided for one protocol and not   another. For example, authentication may succeed via SSH   but fail via SMB, while no credentials were provided for   an available SNMP service.\\n\\n- Providing valid credentials for all available   authentication protocols may improve scan coverage, but   the value of successful authentication for a given   protocol may vary from target to target depending upon   what data (if any) is gathered from the target via that   protocol. For example, successful authentication via SSH   is more valuable for Linux targets than for Windows   targets, and likewise successful authentication via SMB   is more valuable for Windows targets than for Linux   targets.\",\n  \"fname\": \"host_credentials_failed.nasl\",\n  \"iavb\": \"0001-B-0503\",\n  \"plugin_modification_date\": \"2020/10/19\",\n  \"plugin_name\": \"Target Credential Status by Authentication Protocol - Failure for Provided Credentials\",\n  \"plugin_publication_date\": \"2017/11/06\",\n  \"plugin_type\": \"summary\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.23,\n  \"solution\": \"Address the reported problem(s) so that credentialed checks can be executed.\",\n  \"synopsis\": \"Nessus was unable to log into the detected authentication protocol, using the provided credentials, in order to perform credentialed checks.\",\n  \"xref\": \"IAVB:0001-B-0503\",\n  \"plugin_output\": \"Nessus was unable to log into the following host for which\\ncredentials have been provided :\\n\\n  Protocol        : SSH\\n  Port            : 22\\n  Failure details :\\n\\n  - User : someUsernameHere\\n\\n    - Plugin      : ssh_rate_limiting.nasl\\n      Plugin ID   : 122501\\n      Plugin Name : SSH Rate Limited Device\\n      Message     : Failed to parse the given key information.\\n\\n\\n    - Plugin      : ssh_rate_limiting.nasl\\n      Plugin ID   : 122501\\n      Plugin Name : SSH Rate Limited Device\\n      Message     : Failed to parse ssh keys.\\n\\n\\n    - Plugin      : netstat_portscan.nasl\\n      Plugin ID   : 14272\\n      Plugin Name : Netstat Portscanner (SSH)\\n      Message     : \\nNessus failed to load the SSH private key. Is the associated passphrase correct?\\n\\n\\n    - Plugin      : netstat_portscan.nasl\\n      Plugin ID   : 14272\\n      Plugin Name : Netstat Portscanner (SSH)\\n      Message     : Failed to parse the given key information.\\n\\n\\n    - Plugin      : netstat_portscan.nasl\\n      Plugin ID   : 14272\\n      Plugin Name : Netstat Portscanner (SSH)\\n      Message     : Failed to parse ssh keys.\\n\\n\\n    - Plugin      : ssh_check_compression.nasl\\n      Plugin ID   : 104411\\n      Plugin Name : SSH Compression Error Checking\\n      Message     : Failed to parse the given key information.\\n\\n\\n    - Plugin      : ssh_check_compression.nasl\\n      Plugin ID   : 104411\\n      Plugin Name : SSH Compression Error Checking\\n      Message     : Failed to parse ssh keys.\\n\\n\\n    - Plugin      : ssh_get_info2.nasl\\n      Plugin ID   : 97993\\n      Plugin Name : OS Identification and Installed Software Enumeration over SSH v2 (Using New SSH Library)\\n      Message     : Failed to parse the given key information.\\n\\n\\n    - Plugin      : ssh_get_info2.nasl\\n      Plugin ID   : 97993\\n      Plugin Name : OS Identification and Installed Software Enumeration over SSH v2 (Using New SSH Library)\\n      Message     : Failed to parse ssh keys.\\n\\n\\n    - Plugin      : ssh_get_info.nasl\\n      Plugin ID   : 12634\\n      Plugin Name : Authenticated Check : OS Name and Installed Package Enumeration\\n      Message     : \\nNessus failed to load the SSH private key. Is the associated passphrase correct?\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Nessus failed to successfully authenticate directly to the remote target on an available authentication protocol. Nessus was able to connect to the remote port and identify that the service running on the port supports an authentication protocol, but Nessus failed to authenticate to the remote service using the provided credentials.\n\nThere may have been a failure in protocol negotiation or communication that prevented authentication from being attempted or all of the provided credentials for the authentication protocol may have been invalid. A protocol failure may indicate a compatibility issue with the protocol configuration. A protocol failure due to an environmental issue such as resource or congestion issues may also prevent valid credentials from being identified. See plugin output for error details.\n\nPlease note the following :\n\n- This plugin reports per protocol, so it is possible for   valid credentials to be provided for one protocol and not   another. For example, authentication may succeed via SSH   but fail via SMB, while no credentials were provided for   an available SNMP service.\n\n- Providing valid credentials for all available   authentication protocols may improve scan coverage, but   the value of successful authentication for a given   protocol may vary from target to target depending upon   what data (if any) is gathered from the target via that   protocol. For example, successful authentication via SSH   is more valuable for Linux targets than for Windows   targets, and likewise successful authentication via SMB   is more valuable for Windows targets than for Linux   targets.",
+              "message": "Nessus was unable to log into the following host for which\ncredentials have been provided :\n\n  Protocol        : SSH\n  Port            : 22\n  Failure details :\n\n  - User : someUsernameHere\n\n    - Plugin      : ssh_rate_limiting.nasl\n      Plugin ID   : 122501\n      Plugin Name : SSH Rate Limited Device\n      Message     : Failed to parse the given key information.\n\n\n    - Plugin      : ssh_rate_limiting.nasl\n      Plugin ID   : 122501\n      Plugin Name : SSH Rate Limited Device\n      Message     : Failed to parse ssh keys.\n\n\n    - Plugin      : netstat_portscan.nasl\n      Plugin ID   : 14272\n      Plugin Name : Netstat Portscanner (SSH)\n      Message     : \nNessus failed to load the SSH private key. Is the associated passphrase correct?\n\n\n    - Plugin      : netstat_portscan.nasl\n      Plugin ID   : 14272\n      Plugin Name : Netstat Portscanner (SSH)\n      Message     : Failed to parse the given key information.\n\n\n    - Plugin      : netstat_portscan.nasl\n      Plugin ID   : 14272\n      Plugin Name : Netstat Portscanner (SSH)\n      Message     : Failed to parse ssh keys.\n\n\n    - Plugin      : ssh_check_compression.nasl\n      Plugin ID   : 104411\n      Plugin Name : SSH Compression Error Checking\n      Message     : Failed to parse the given key information.\n\n\n    - Plugin      : ssh_check_compression.nasl\n      Plugin ID   : 104411\n      Plugin Name : SSH Compression Error Checking\n      Message     : Failed to parse ssh keys.\n\n\n    - Plugin      : ssh_get_info2.nasl\n      Plugin ID   : 97993\n      Plugin Name : OS Identification and Installed Software Enumeration over SSH v2 (Using New SSH Library)\n      Message     : Failed to parse the given key information.\n\n\n    - Plugin      : ssh_get_info2.nasl\n      Plugin ID   : 97993\n      Plugin Name : OS Identification and Installed Software Enumeration over SSH v2 (Using New SSH Library)\n      Message     : Failed to parse ssh keys.\n\n\n    - Plugin      : ssh_get_info.nasl\n      Plugin ID   : 12634\n      Plugin Name : Authenticated Check : OS Name and Installed Package Enumeration\n      Message     : \nNessus failed to load the SSH private key. Is the associated passphrase correct?",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [],
+            "rid": "21745",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2006/06/23",
+            "fname": "hostlevel_check_failed.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "OS Security Patch Assessment Failed",
+          "id": "21745",
+          "desc": "Plugin Family: Settings; Port: 0; Protocol: tcp;",
+          "descriptions": [
+            {
+              "data": "Fix the problem(s) so that OS Security Patch Assessment is possible.",
+              "label": "fix"
+            }
+          ],
+          "impact": 0,
+          "code": "{\n  \"port\": \"0\",\n  \"svc_name\": \"general\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"21745\",\n  \"pluginName\": \"OS Security Patch Assessment Failed\",\n  \"pluginFamily\": \"Settings\",\n  \"agent\": \"all\",\n  \"description\": \"OS Security Patch Assessment is not available for this host because either the credentials supplied in the scan policy did not allow Nessus to log into it or some other problem occurred.\",\n  \"fname\": \"hostlevel_check_failed.nasl\",\n  \"iavb\": \"0001-B-0501\",\n  \"plugin_modification_date\": \"2021/07/12\",\n  \"plugin_name\": \"OS Security Patch Assessment Failed\",\n  \"plugin_publication_date\": \"2006/06/23\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.32,\n  \"solution\": \"Fix the problem(s) so that OS Security Patch Assessment is possible.\",\n  \"synopsis\": \"Errors prevented OS Security Patch Assessment.\",\n  \"xref\": \"IAVB:0001-B-0501\",\n  \"plugin_output\": \"The following service errors were logged :\\n\\n  - Plugin      : ssh_get_info2.nasl\\n    Plugin ID   : 97993\\n    Plugin Name : OS Identification and Installed Software Enumeration over SSH v2 (Using New SSH Library)\\n    Protocol    : SSH\\n    Message     : \\nUnable to login to remote host with supplied credential sets.\\nErrors:\\n  - No supplied credential sets succeeded on any of the ssh ports\\n\\n  - Plugin      : ssh_get_info.nasl\\n    Plugin ID   : 12634\\n    Plugin Name : Authenticated Check : OS Name and Installed Package Enumeration\\n    Protocol    : SSH\\n    Message     : \\nNessus failed to load the SSH private key. Is the associated passphrase correct?\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "OS Security Patch Assessment is not available for this host because either the credentials supplied in the scan policy did not allow Nessus to log into it or some other problem occurred.",
+              "message": "The following service errors were logged :\n\n  - Plugin      : ssh_get_info2.nasl\n    Plugin ID   : 97993\n    Plugin Name : OS Identification and Installed Software Enumeration over SSH v2 (Using New SSH Library)\n    Protocol    : SSH\n    Message     : \nUnable to login to remote host with supplied credential sets.\nErrors:\n  - No supplied credential sets succeeded on any of the ssh ports\n\n  - Plugin      : ssh_get_info.nasl\n    Plugin ID   : 12634\n    Plugin Name : Authenticated Check : OS Name and Installed Package Enumeration\n    Protocol    : SSH\n    Message     : \nNessus failed to load the SSH private key. Is the associated passphrase correct?",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "CM-8"
+            ],
+            "rid": "45590",
+            "risk_factor": "None",
+            "plugin_type": "combined",
+            "plugin_publication_date": "2010/04/21",
+            "fname": "cpe.nbin",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [
+            {
+              "url": "http://cpe.mitre.org/\nhttps://nvd.nist.gov/products/cpe"
+            }
+          ],
+          "source_location": {},
+          "title": "Common Platform Enumeration (CPE)",
+          "id": "45590",
+          "desc": "Plugin Family: General; Port: 0; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"0\",\n  \"svc_name\": \"general\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"45590\",\n  \"pluginName\": \"Common Platform Enumeration (CPE)\",\n  \"pluginFamily\": \"General\",\n  \"agent\": \"all\",\n  \"description\": \"By using information obtained from a Nessus scan, this plugin reports CPE (Common Platform Enumeration) matches for various hardware and software products found on a host. \\n\\nNote that if an official CPE is not available for the product, this plugin computes the best possible CPE based on the information available from the scan.\",\n  \"fname\": \"cpe.nbin\",\n  \"plugin_modification_date\": \"2022/02/14\",\n  \"plugin_name\": \"Common Platform Enumeration (CPE)\",\n  \"plugin_publication_date\": \"2010/04/21\",\n  \"plugin_type\": \"combined\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.118,\n  \"see_also\": \"http://cpe.mitre.org/\\nhttps://nvd.nist.gov/products/cpe\",\n  \"solution\": \"n/a\",\n  \"synopsis\": \"It was possible to enumerate CPE names that matched on the remote system.\",\n  \"plugin_output\": \"The remote operating system matched the following CPE : \\n\\n  cpe:/o:canonical:ubuntu_linux:18.04 -&gt; Canonical Ubuntu Linux\\n\\nFollowing application CPE&apos;s matched on the remote system : \\n\\n  cpe:/a:openbsd:openssh:7.6 -&gt; OpenBSD OpenSSH\\n  cpe:/a:splunk:splunk -&gt; Splunk\\n  cpe:/a:splunk:splunk:8.2.5 -&gt; Splunk\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "By using information obtained from a Nessus scan, this plugin reports CPE (Common Platform Enumeration) matches for various hardware and software products found on a host. \n\nNote that if an official CPE is not available for the product, this plugin computes the best possible CPE based on the information available from the scan.",
+              "message": "The remote operating system matched the following CPE : \n\n  cpe:/o:canonical:ubuntu_linux:18.04 -&gt; Canonical Ubuntu Linux\n\nFollowing application CPE&apos;s matched on the remote system : \n\n  cpe:/a:openbsd:openssh:7.6 -&gt; OpenBSD OpenSSH\n  cpe:/a:splunk:splunk -&gt; Splunk\n  cpe:/a:splunk:splunk:8.2.5 -&gt; Splunk",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "UM-1"
+            ],
+            "rid": "19506",
+            "risk_factor": "None",
+            "plugin_type": "summary",
+            "plugin_publication_date": "2005/08/26",
+            "fname": "scan_info.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Nessus Scan Information",
+          "id": "19506",
+          "desc": "Plugin Family: Settings; Port: 0; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"0\",\n  \"svc_name\": \"general\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"19506\",\n  \"pluginName\": \"Nessus Scan Information\",\n  \"pluginFamily\": \"Settings\",\n  \"agent\": \"all\",\n  \"always_run\": 1,\n  \"description\": \"This plugin displays, for each tested host, information about the scan itself :\\n\\n  - The version of the plugin set.\\n  - The type of scanner (Nessus or Nessus Home).\\n  - The version of the Nessus Engine.\\n  - The port scanner(s) used.\\n  - The port range scanned.\\n  - The ping round trip time \\n  - Whether credentialed or third-party patch management     checks are possible.\\n  - Whether the display of superseded patches is enabled\\n  - The date of the scan.\\n  - The duration of the scan.\\n  - The number of hosts scanned in parallel.\\n  - The number of checks done in parallel.\",\n  \"fname\": \"scan_info.nasl\",\n  \"plugin_modification_date\": \"2021/09/27\",\n  \"plugin_name\": \"Nessus Scan Information\",\n  \"plugin_publication_date\": \"2005/08/26\",\n  \"plugin_type\": \"summary\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.106,\n  \"solution\": \"n/a\",\n  \"synopsis\": \"This plugin displays information about the Nessus scan.\",\n  \"plugin_output\": \"Information about this scan : \\n\\nNessus version : 10.1.1\\nNessus build : X20061\\nPlugin feed version : 202203221555\\nScanner edition used : Nessus\\nScanner OS : LINUX\\nScanner distribution : ubuntu1110-x86-64\\nScan type : Normal\\nScan name : Home Network\\nScan policy used : Basic Network Scan\\nScanner IP : 10.0.0.3\\nPort scanner(s) : nessus_syn_scanner \\nPort range : default\\nPing RTT : 251.249 ms\\nThorough tests : no\\nExperimental tests : no\\nParanoia level : 1\\nReport verbosity : 1\\nSafe checks : yes\\nOptimize the test : yes\\nCredentialed checks : no\\nPatch management checks : None\\nDisplay superseded patches : yes (supersedence plugin launched)\\nCGI scanning : disabled\\nWeb application tests : disabled\\nMax hosts : 30\\nMax checks : 4\\nRecv timeout : 5\\nBackports : None\\nAllow post-scan editing: Yes\\nScan Start Date : 2022/3/22 14:54 EDT\\nScan duration : 127 sec\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "This plugin displays, for each tested host, information about the scan itself :\n\n  - The version of the plugin set.\n  - The type of scanner (Nessus or Nessus Home).\n  - The version of the Nessus Engine.\n  - The port scanner(s) used.\n  - The port range scanned.\n  - The ping round trip time \n  - Whether credentialed or third-party patch management     checks are possible.\n  - Whether the display of superseded patches is enabled\n  - The date of the scan.\n  - The duration of the scan.\n  - The number of hosts scanned in parallel.\n  - The number of checks done in parallel.",
+              "message": "Information about this scan : \n\nNessus version : 10.1.1\nNessus build : X20061\nPlugin feed version : 202203221555\nScanner edition used : Nessus\nScanner OS : LINUX\nScanner distribution : ubuntu1110-x86-64\nScan type : Normal\nScan name : Home Network\nScan policy used : Basic Network Scan\nScanner IP : 10.0.0.3\nPort scanner(s) : nessus_syn_scanner \nPort range : default\nPing RTT : 251.249 ms\nThorough tests : no\nExperimental tests : no\nParanoia level : 1\nReport verbosity : 1\nSafe checks : yes\nOptimize the test : yes\nCredentialed checks : no\nPatch management checks : None\nDisplay superseded patches : yes (supersedence plugin launched)\nCGI scanning : disabled\nWeb application tests : disabled\nMax hosts : 30\nMax checks : 4\nRecv timeout : 5\nBackports : None\nAllow post-scan editing: Yes\nScan Start Date : 2022/3/22 14:54 EDT\nScan duration : 127 sec",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "CM-8"
+            ],
+            "rid": "54615",
+            "risk_factor": "None",
+            "plugin_type": "combined",
+            "plugin_publication_date": "2011/05/23",
+            "fname": "device_type.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Device Type",
+          "id": "54615",
+          "desc": "Plugin Family: General; Port: 0; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"0\",\n  \"svc_name\": \"general\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"54615\",\n  \"pluginName\": \"Device Type\",\n  \"pluginFamily\": \"General\",\n  \"description\": \"Based on the remote operating system, it is possible to determine what the remote system type is (eg: a printer, router, general-purpose computer, etc).\",\n  \"fname\": \"device_type.nasl\",\n  \"plugin_modification_date\": \"2011/05/23\",\n  \"plugin_name\": \"Device Type\",\n  \"plugin_publication_date\": \"2011/05/23\",\n  \"plugin_type\": \"combined\",\n  \"risk_factor\": \"None\",\n  \"script_version\": \"$Revision: 1.1 $\",\n  \"solution\": \"n/a\",\n  \"synopsis\": \"It is possible to guess the remote device type.\",\n  \"plugin_output\": \"Remote device type : general-purpose\\nConfidence level : 95\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Based on the remote operating system, it is possible to determine what the remote system type is (eg: a printer, router, general-purpose computer, etc).",
+              "message": "Remote device type : general-purpose\nConfidence level : 95",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "CM-8"
+            ],
+            "rid": "11936",
+            "risk_factor": "None",
+            "plugin_type": "combined",
+            "plugin_publication_date": "2003/12/09",
+            "fname": "os_fingerprint.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "OS Identification",
+          "id": "11936",
+          "desc": "Plugin Family: General; Port: 0; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"0\",\n  \"svc_name\": \"general\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"11936\",\n  \"pluginName\": \"OS Identification\",\n  \"pluginFamily\": \"General\",\n  \"agent\": \"all\",\n  \"asset_inventory\": \"True\",\n  \"description\": \"Using a combination of remote probes (e.g., TCP/IP, SMB, HTTP, NTP, SNMP, etc.), it is possible to guess the name of the remote operating system in use. It is also possible sometimes to guess the version of the operating system.\",\n  \"fname\": \"os_fingerprint.nasl\",\n  \"os_identification\": \"True\",\n  \"plugin_modification_date\": \"2022/03/09\",\n  \"plugin_name\": \"OS Identification\",\n  \"plugin_publication_date\": \"2003/12/09\",\n  \"plugin_type\": \"combined\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 2.61,\n  \"solution\": \"n/a\",\n  \"synopsis\": \"It is possible to guess the remote operating system.\",\n  \"plugin_output\": \"Remote operating system : Linux Kernel 4.15 on Ubuntu 18.04 (bionic)\\nConfidence level : 95\\nMethod : SSH\\n\\n \\nThe remote host is running Linux Kernel 4.15 on Ubuntu 18.04 (bionic)\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Using a combination of remote probes (e.g., TCP/IP, SMB, HTTP, NTP, SNMP, etc.), it is possible to guess the name of the remote operating system in use. It is also possible sometimes to guess the version of the operating system.",
+              "message": "Remote operating system : Linux Kernel 4.15 on Ubuntu 18.04 (bionic)\nConfidence level : 95\nMethod : SSH\n\n \nThe remote host is running Linux Kernel 4.15 on Ubuntu 18.04 (bionic)",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "CM-8"
+            ],
+            "rid": "86420",
+            "risk_factor": "None",
+            "plugin_type": "combined",
+            "plugin_publication_date": "2015/10/16",
+            "fname": "report_hw_macs.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Ethernet MAC Addresses",
+          "id": "86420",
+          "desc": "Plugin Family: General; Port: 0; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"0\",\n  \"svc_name\": \"general\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"86420\",\n  \"pluginName\": \"Ethernet MAC Addresses\",\n  \"pluginFamily\": \"General\",\n  \"description\": \"This plugin gathers MAC addresses discovered from both remote probing of the host (e.g. SNMP and Netbios) and from running local checks (e.g. ifconfig). It then consolidates the MAC addresses into a single, unique, and uniform list.\",\n  \"fname\": \"report_hw_macs.nasl\",\n  \"plugin_modification_date\": \"2020/05/13\",\n  \"plugin_name\": \"Ethernet MAC Addresses\",\n  \"plugin_publication_date\": \"2015/10/16\",\n  \"plugin_type\": \"combined\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.6,\n  \"solution\": \"n/a\",\n  \"synopsis\": \"This plugin gathers MAC addresses from various sources and consolidates them into a list.\",\n  \"plugin_output\": \"The following is a consolidated list of detected MAC addresses:\\n  - 5A:FB:26:2E:B0:70\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "This plugin gathers MAC addresses discovered from both remote probing of the host (e.g. SNMP and Netbios) and from running local checks (e.g. ifconfig). It then consolidates the MAC addresses into a single, unique, and uniform list.",
+              "message": "The following is a consolidated list of detected MAC addresses:\n  - 5A:FB:26:2E:B0:70",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [],
+            "rid": "47619",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2010/07/07",
+            "fname": "splunk_web_detect.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [
+            {
+              "url": "https://www.splunk.com/en_us/software.html"
+            }
+          ],
+          "source_location": {},
+          "title": "Splunk Web Detection",
+          "id": "47619",
+          "desc": "Plugin Family: Web Servers; Port: 8000; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"8000\",\n  \"svc_name\": \"www\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"47619\",\n  \"pluginName\": \"Splunk Web Detection\",\n  \"pluginFamily\": \"Web Servers\",\n  \"asset_inventory\": \"True\",\n  \"cpe\": \"cpe:/a:splunk:splunk\",\n  \"description\": \"The web interface for Splunk is running on the remote host. Splunk is a search, monitoring, and reporting tool for system administrators.\\n\\nNote that HTTP Basic Authentication credentials may be required to retrieve version information for some recent Splunk releases.\",\n  \"fname\": \"splunk_web_detect.nasl\",\n  \"iavt\": \"0001-T-0723\",\n  \"plugin_modification_date\": \"2022/01/05\",\n  \"plugin_name\": \"Splunk Web Detection\",\n  \"plugin_publication_date\": \"2010/07/07\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.2,\n  \"see_also\": \"https://www.splunk.com/en_us/software.html\",\n  \"solution\": \"n/a\",\n  \"synopsis\": \"An infrastructure monitoring tool is running on the remote host.\",\n  \"xref\": \"IAVT:0001-T-0723\",\n  \"plugin_output\": \"URL           : http://splunk.cmoo.rs:8000/\\n  Version       : unknown\\n  License       : Enterprise\\n  Web interface : 1\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "The web interface for Splunk is running on the remote host. Splunk is a search, monitoring, and reporting tool for system administrators.\n\nNote that HTTP Basic Authentication credentials may be required to retrieve version information for some recent Splunk releases.",
+              "message": "URL           : http://splunk.cmoo.rs:8000/\n  Version       : unknown\n  License       : Enterprise\n  Web interface : 1",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [],
+            "rid": "49069",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2010/09/01",
+            "fname": "splunkd_detect.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [
+            {
+              "url": "https://www.splunk.com/en_us/software.html\nhttp://dev.splunk.com/restapi\nhttp://www.nessus.org/u?3aa0f4e2\nhttps://www.splunk.com/en_us/download/universal-forwarder.html"
+            }
+          ],
+          "source_location": {},
+          "title": "Splunk Management API Detection",
+          "id": "49069",
+          "desc": "Plugin Family: Web Servers; Port: 8089; Protocol: tcp;",
+          "descriptions": [
+            {
+              "data": "Limit incoming traffic to this port if desired.",
+              "label": "fix"
+            }
+          ],
+          "impact": 0,
+          "code": "{\n  \"port\": \"8089\",\n  \"svc_name\": \"www\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"49069\",\n  \"pluginName\": \"Splunk Management API Detection\",\n  \"pluginFamily\": \"Web Servers\",\n  \"asset_inventory\": \"True\",\n  \"cpe\": \"cpe:/a:splunk:splunk\\ncpe:/a:splunk:universal_forwarder\",\n  \"description\": \"The remote web server is an instance of the Splunk management API.\\nSplunk is a search, monitoring, and reporting tool for system administrators.\",\n  \"fname\": \"splunkd_detect.nasl\",\n  \"iavt\": \"0001-T-0722\",\n  \"plugin_modification_date\": \"2021/12/20\",\n  \"plugin_name\": \"Splunk Management API Detection\",\n  \"plugin_publication_date\": \"2010/09/01\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.14,\n  \"see_also\": \"https://www.splunk.com/en_us/software.html\\nhttp://dev.splunk.com/restapi\\nhttp://www.nessus.org/u?3aa0f4e2\\nhttps://www.splunk.com/en_us/download/universal-forwarder.html\",\n  \"solution\": \"Limit incoming traffic to this port if desired.\",\n  \"synopsis\": \"An infrastructure monitoring tool is running on the remote host.\",\n  \"xref\": \"IAVT:0001-T-0722\",\n  \"plugin_output\": \"URL            : http://splunk.cmoo.rs:8089/\\n  Version        : 8.2.5\\n  Build          : 77015bc7a462\\n  Management API : 1\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "The remote web server is an instance of the Splunk management API.\nSplunk is a search, monitoring, and reporting tool for system administrators.",
+              "message": "URL            : http://splunk.cmoo.rs:8089/\n  Version        : 8.2.5\n  Build          : 77015bc7a462\n  Management API : 1",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            },
+            {
+              "status": "failed",
+              "code_desc": "The remote web server is an instance of the Splunk management API.\nSplunk is a search, monitoring, and reporting tool for system administrators.",
+              "message": "URL            : http://splunk.cmoo.rs:8000/\n  Version        : unknown\n  Management API : 1",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "CM-8"
+            ],
+            "rid": "43111",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2009/12/10",
+            "fname": "web_directory_options.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [
+            {
+              "url": "http://www.nessus.org/u?d9c03a9a\nhttp://www.nessus.org/u?b019cbdb\nhttps://www.owasp.org/index.php/Test_HTTP_Methods_(OTG-CONFIG-006)"
+            }
+          ],
+          "source_location": {},
+          "title": "HTTP Methods Allowed (per directory)",
+          "id": "43111",
+          "desc": "Plugin Family: Web Servers; Port: 8089; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"8089\",\n  \"svc_name\": \"www\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"43111\",\n  \"pluginName\": \"HTTP Methods Allowed (per directory)\",\n  \"pluginFamily\": \"Web Servers\",\n  \"description\": \"By calling the OPTIONS method, it is possible to determine which HTTP methods are allowed on each directory.\\n\\nThe following HTTP methods are considered insecure:\\n  PUT, DELETE, CONNECT, TRACE, HEAD\\n\\nMany frameworks and languages treat &apos;HEAD&apos; as a &apos;GET&apos; request, albeit one without any body in the response. If a security constraint was set on &apos;GET&apos; requests such that only &apos;authenticatedUsers&apos; could access GET requests for a particular servlet or resource, it would be bypassed for the &apos;HEAD&apos; version. This allowed unauthorized blind submission of any privileged GET request.\\n\\nAs this list may be incomplete, the plugin also tests - if &apos;Thorough tests&apos; are enabled or &apos;Enable web applications tests&apos; is set to &apos;yes&apos; in the scan policy - various known HTTP methods on each directory and considers them as unsupported if it receives a response code of 400, 403, 405, or 501.\\n\\nNote that the plugin output is only informational and does not necessarily indicate the presence of any security vulnerabilities.\",\n  \"fname\": \"web_directory_options.nasl\",\n  \"plugin_modification_date\": \"2019/03/19\",\n  \"plugin_name\": \"HTTP Methods Allowed (per directory)\",\n  \"plugin_publication_date\": \"2009/12/10\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.11,\n  \"see_also\": \"http://www.nessus.org/u?d9c03a9a\\nhttp://www.nessus.org/u?b019cbdb\\nhttps://www.owasp.org/index.php/Test_HTTP_Methods_(OTG-CONFIG-006)\",\n  \"solution\": \"n/a\",\n  \"synopsis\": \"This plugin determines which HTTP methods are allowed on various CGI directories.\",\n  \"plugin_output\": \"Based on the response to an OPTIONS request :\\n\\n  - HTTP methods GET HEAD OPTIONS are allowed on : \\n\\n    /\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "By calling the OPTIONS method, it is possible to determine which HTTP methods are allowed on each directory.\n\nThe following HTTP methods are considered insecure:\n  PUT, DELETE, CONNECT, TRACE, HEAD\n\nMany frameworks and languages treat 'HEAD' as a 'GET' request, albeit one without any body in the response. If a security constraint was set on 'GET' requests such that only 'authenticatedUsers' could access GET requests for a particular servlet or resource, it would be bypassed for the 'HEAD' version. This allowed unauthorized blind submission of any privileged GET request.\n\nAs this list may be incomplete, the plugin also tests - if 'Thorough tests' are enabled or 'Enable web applications tests' is set to 'yes' in the scan policy - various known HTTP methods on each directory and considers them as unsupported if it receives a response code of 400, 403, 405, or 501.\n\nNote that the plugin output is only informational and does not necessarily indicate the presence of any security vulnerabilities.",
+              "message": "Based on the response to an OPTIONS request :\n\n  - HTTP methods GET HEAD OPTIONS are allowed on : \n\n    /",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "CM-8"
+            ],
+            "rid": "10107",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2000/01/04",
+            "fname": "http_version.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "HTTP Server Type and Version",
+          "id": "10107",
+          "desc": "Plugin Family: Web Servers; Port: 8089; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"8089\",\n  \"svc_name\": \"www\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"10107\",\n  \"pluginName\": \"HTTP Server Type and Version\",\n  \"pluginFamily\": \"Web Servers\",\n  \"asset_inventory\": \"True\",\n  \"description\": \"This plugin attempts to determine the type and the version of the   remote web server.\",\n  \"fname\": \"http_version.nasl\",\n  \"iavt\": \"0001-T-0931\",\n  \"plugin_modification_date\": \"2020/10/30\",\n  \"plugin_name\": \"HTTP Server Type and Version\",\n  \"plugin_publication_date\": \"2000/01/04\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.141,\n  \"solution\": \"n/a\",\n  \"synopsis\": \"A web server is running on the remote host.\",\n  \"xref\": \"IAVT:0001-T-0931\",\n  \"plugin_output\": \"The remote web server type is :\\n\\nSplunkd\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "This plugin attempts to determine the type and the version of the   remote web server.",
+              "message": "The remote web server type is :\n\nSplunkd",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            },
+            {
+              "status": "failed",
+              "code_desc": "This plugin attempts to determine the type and the version of the   remote web server.",
+              "message": "The remote web server type is :\n\nSplunkd",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [],
+            "rid": "19689",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2005/09/14",
+            "fname": "embedded_web_server_detect.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Embedded Web Server Detection",
+          "id": "19689",
+          "desc": "Plugin Family: Web Servers; Port: 8089; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"8089\",\n  \"svc_name\": \"www\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"19689\",\n  \"pluginName\": \"Embedded Web Server Detection\",\n  \"pluginFamily\": \"Web Servers\",\n  \"asset_inventory\": \"True\",\n  \"cpe\": \"cpe:/a:cesanta:mongoose_embedded_web_server_library\",\n  \"description\": \"The remote web server cannot host user-supplied CGIs. CGI scanning will be disabled on this server.\",\n  \"fname\": \"embedded_web_server_detect.nasl\",\n  \"plugin_modification_date\": \"2019/11/22\",\n  \"plugin_name\": \"Embedded Web Server Detection\",\n  \"plugin_publication_date\": \"2005/09/14\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.83,\n  \"solution\": \"n/a\",\n  \"synopsis\": \"The remote web server is embedded.\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "The remote web server cannot host user-supplied CGIs. CGI scanning will be disabled on this server.",
+              "message": "",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            },
+            {
+              "status": "failed",
+              "code_desc": "The remote web server cannot host user-supplied CGIs. CGI scanning will be disabled on this server.",
+              "message": "",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-17(2)",
+              "SC-13"
+            ],
+            "rid": "10881",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2002/03/06",
+            "fname": "ssh_proto_version.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "SSH Protocol Versions Supported",
+          "id": "10881",
+          "desc": "Plugin Family: General; Port: 22; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"22\",\n  \"svc_name\": \"ssh\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"10881\",\n  \"pluginName\": \"SSH Protocol Versions Supported\",\n  \"pluginFamily\": \"General\",\n  \"asset_inventory\": \"True\",\n  \"description\": \"This plugin determines the versions of the SSH protocol supported by the remote SSH daemon.\",\n  \"fname\": \"ssh_proto_version.nasl\",\n  \"plugin_modification_date\": \"2021/01/19\",\n  \"plugin_name\": \"SSH Protocol Versions Supported\",\n  \"plugin_publication_date\": \"2002/03/06\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.39,\n  \"solution\": \"n/a\",\n  \"synopsis\": \"A SSH server is running on the remote host.\",\n  \"plugin_output\": \"The remote SSH daemon supports the following versions of the\\nSSH protocol :\\n\\n  - 1.99\\n  - 2.0\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "This plugin determines the versions of the SSH protocol supported by the remote SSH daemon.",
+              "message": "The remote SSH daemon supports the following versions of the\nSSH protocol :\n\n  - 1.99\n  - 2.0",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [],
+            "rid": "149334",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2021/05/07",
+            "fname": "ssh_password_auth.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [
+            {
+              "url": "https://tools.ietf.org/html/rfc4252#section-8"
+            }
+          ],
+          "source_location": {},
+          "title": "SSH Password Authentication Accepted",
+          "id": "149334",
+          "desc": "Plugin Family: Service detection; Port: 22; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"22\",\n  \"svc_name\": \"ssh\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"149334\",\n  \"pluginName\": \"SSH Password Authentication Accepted\",\n  \"pluginFamily\": \"Service detection\",\n  \"description\": \"The SSH server on the remote host accepts password authentication.\",\n  \"fname\": \"ssh_password_auth.nasl\",\n  \"plugin_modification_date\": \"2021/05/07\",\n  \"plugin_name\": \"SSH Password Authentication Accepted\",\n  \"plugin_publication_date\": \"2021/05/07\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.1,\n  \"see_also\": \"https://tools.ietf.org/html/rfc4252#section-8\",\n  \"solution\": \"n/a\",\n  \"synopsis\": \"The SSH server on the remote host accepts password authentication.\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "The SSH server on the remote host accepts password authentication.",
+              "message": "",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [],
+            "rid": "153588",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2021/09/23",
+            "fname": "ssh_sha1_hmac_enabled.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "SSH SHA-1 HMAC Algorithms Enabled",
+          "id": "153588",
+          "desc": "Plugin Family: Misc.; Port: 22; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"22\",\n  \"svc_name\": \"ssh\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"153588\",\n  \"pluginName\": \"SSH SHA-1 HMAC Algorithms Enabled\",\n  \"pluginFamily\": \"Misc.\",\n  \"description\": \"The remote SSH server is configured to enable SHA-1 HMAC algorithms.\\n\\nAlthough NIST has formally deprecated use of SHA-1 for digital signatures, SHA-1 is still considered secure for HMAC as the security of HMAC does not rely on the underlying hash function being resistant to collisions.\\n\\nNote that this plugin only checks for the options of the remote SSH server.\",\n  \"fname\": \"ssh_sha1_hmac_enabled.nasl\",\n  \"plugin_modification_date\": \"2021/09/23\",\n  \"plugin_name\": \"SSH SHA-1 HMAC Algorithms Enabled\",\n  \"plugin_publication_date\": \"2021/09/23\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.1,\n  \"solution\": \"n/a\",\n  \"synopsis\": \"The remote SSH server is configured to enable SHA-1 HMAC algorithms.\",\n  \"plugin_output\": \"The following client-to-server SHA-1 Hash-based Message Authentication Code (HMAC) algorithms are supported : \\n\\n  hmac-sha1\\n  hmac-sha1-etm@openssh.com\\n\\nThe following server-to-client SHA-1 Hash-based Message Authentication Code (HMAC) algorithms are supported : \\n\\n  hmac-sha1\\n  hmac-sha1-etm@openssh.com\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "The remote SSH server is configured to enable SHA-1 HMAC algorithms.\n\nAlthough NIST has formally deprecated use of SHA-1 for digital signatures, SHA-1 is still considered secure for HMAC as the security of HMAC does not rely on the underlying hash function being resistant to collisions.\n\nNote that this plugin only checks for the options of the remote SSH server.",
+              "message": "The following client-to-server SHA-1 Hash-based Message Authentication Code (HMAC) algorithms are supported : \n\n  hmac-sha1\n  hmac-sha1-etm@openssh.com\n\nThe following server-to-client SHA-1 Hash-based Message Authentication Code (HMAC) algorithms are supported : \n\n  hmac-sha1\n  hmac-sha1-etm@openssh.com",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-17(2)",
+              "SC-13"
+            ],
+            "rid": "70657",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2013/10/28",
+            "fname": "ssh_supported_algorithms.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "SSH Algorithms and Languages Supported",
+          "id": "70657",
+          "desc": "Plugin Family: Misc.; Port: 22; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"22\",\n  \"svc_name\": \"ssh\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"70657\",\n  \"pluginName\": \"SSH Algorithms and Languages Supported\",\n  \"pluginFamily\": \"Misc.\",\n  \"description\": \"This script detects which algorithms and languages are supported by the remote service for encrypting communications.\",\n  \"fname\": \"ssh_supported_algorithms.nasl\",\n  \"plugin_modification_date\": \"2017/08/28\",\n  \"plugin_name\": \"SSH Algorithms and Languages Supported\",\n  \"plugin_publication_date\": \"2013/10/28\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": \"$Revision: 1.6 $\",\n  \"solution\": \"n/a\",\n  \"synopsis\": \"An SSH server is listening on this port.\",\n  \"plugin_output\": \"Nessus negotiated the following encryption algorithm with the server : \\n\\nThe server supports the following options for kex_algorithms : \\n\\n  curve25519-sha256\\n  curve25519-sha256@libssh.org\\n  diffie-hellman-group-exchange-sha256\\n  diffie-hellman-group14-sha1\\n  diffie-hellman-group14-sha256\\n  diffie-hellman-group16-sha512\\n  diffie-hellman-group18-sha512\\n  ecdh-sha2-nistp256\\n  ecdh-sha2-nistp384\\n  ecdh-sha2-nistp521\\n\\nThe server supports the following options for server_host_key_algorithms : \\n\\n  ecdsa-sha2-nistp256\\n  rsa-sha2-256\\n  rsa-sha2-512\\n  ssh-ed25519\\n  ssh-rsa\\n\\nThe server supports the following options for encryption_algorithms_client_to_server : \\n\\n  aes128-ctr\\n  aes128-gcm@openssh.com\\n  aes192-ctr\\n  aes256-ctr\\n  aes256-gcm@openssh.com\\n  chacha20-poly1305@openssh.com\\n\\nThe server supports the following options for encryption_algorithms_server_to_client : \\n\\n  aes128-ctr\\n  aes128-gcm@openssh.com\\n  aes192-ctr\\n  aes256-ctr\\n  aes256-gcm@openssh.com\\n  chacha20-poly1305@openssh.com\\n\\nThe server supports the following options for mac_algorithms_client_to_server : \\n\\n  hmac-sha1\\n  hmac-sha1-etm@openssh.com\\n  hmac-sha2-256\\n  hmac-sha2-256-etm@openssh.com\\n  hmac-sha2-512\\n  hmac-sha2-512-etm@openssh.com\\n  umac-128-etm@openssh.com\\n  umac-128@openssh.com\\n  umac-64-etm@openssh.com\\n  umac-64@openssh.com\\n\\nThe server supports the following options for mac_algorithms_server_to_client : \\n\\n  hmac-sha1\\n  hmac-sha1-etm@openssh.com\\n  hmac-sha2-256\\n  hmac-sha2-256-etm@openssh.com\\n  hmac-sha2-512\\n  hmac-sha2-512-etm@openssh.com\\n  umac-128-etm@openssh.com\\n  umac-128@openssh.com\\n  umac-64-etm@openssh.com\\n  umac-64@openssh.com\\n\\nThe server supports the following options for compression_algorithms_client_to_server : \\n\\n  none\\n  zlib@openssh.com\\n\\nThe server supports the following options for compression_algorithms_server_to_client : \\n\\n  none\\n  zlib@openssh.com\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "This script detects which algorithms and languages are supported by the remote service for encrypting communications.",
+              "message": "Nessus negotiated the following encryption algorithm with the server : \n\nThe server supports the following options for kex_algorithms : \n\n  curve25519-sha256\n  curve25519-sha256@libssh.org\n  diffie-hellman-group-exchange-sha256\n  diffie-hellman-group14-sha1\n  diffie-hellman-group14-sha256\n  diffie-hellman-group16-sha512\n  diffie-hellman-group18-sha512\n  ecdh-sha2-nistp256\n  ecdh-sha2-nistp384\n  ecdh-sha2-nistp521\n\nThe server supports the following options for server_host_key_algorithms : \n\n  ecdsa-sha2-nistp256\n  rsa-sha2-256\n  rsa-sha2-512\n  ssh-ed25519\n  ssh-rsa\n\nThe server supports the following options for encryption_algorithms_client_to_server : \n\n  aes128-ctr\n  aes128-gcm@openssh.com\n  aes192-ctr\n  aes256-ctr\n  aes256-gcm@openssh.com\n  chacha20-poly1305@openssh.com\n\nThe server supports the following options for encryption_algorithms_server_to_client : \n\n  aes128-ctr\n  aes128-gcm@openssh.com\n  aes192-ctr\n  aes256-ctr\n  aes256-gcm@openssh.com\n  chacha20-poly1305@openssh.com\n\nThe server supports the following options for mac_algorithms_client_to_server : \n\n  hmac-sha1\n  hmac-sha1-etm@openssh.com\n  hmac-sha2-256\n  hmac-sha2-256-etm@openssh.com\n  hmac-sha2-512\n  hmac-sha2-512-etm@openssh.com\n  umac-128-etm@openssh.com\n  umac-128@openssh.com\n  umac-64-etm@openssh.com\n  umac-64@openssh.com\n\nThe server supports the following options for mac_algorithms_server_to_client : \n\n  hmac-sha1\n  hmac-sha1-etm@openssh.com\n  hmac-sha2-256\n  hmac-sha2-256-etm@openssh.com\n  hmac-sha2-512\n  hmac-sha2-512-etm@openssh.com\n  umac-128-etm@openssh.com\n  umac-128@openssh.com\n  umac-64-etm@openssh.com\n  umac-64@openssh.com\n\nThe server supports the following options for compression_algorithms_client_to_server : \n\n  none\n  zlib@openssh.com\n\nThe server supports the following options for compression_algorithms_server_to_client : \n\n  none\n  zlib@openssh.com",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "AC-17(2)"
+            ],
+            "rid": "10267",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "1999/10/12",
+            "fname": "ssh_detect.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "SSH Server Type and Version Information",
+          "id": "10267",
+          "desc": "Plugin Family: Service detection; Port: 22; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"22\",\n  \"svc_name\": \"ssh\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"10267\",\n  \"pluginName\": \"SSH Server Type and Version Information\",\n  \"pluginFamily\": \"Service detection\",\n  \"asset_inventory\": \"True\",\n  \"description\": \"It is possible to obtain information about the remote SSH server by sending an empty authentication request.\",\n  \"fname\": \"ssh_detect.nasl\",\n  \"iavt\": \"0001-T-0933\",\n  \"plugin_modification_date\": \"2020/09/22\",\n  \"plugin_name\": \"SSH Server Type and Version Information\",\n  \"plugin_publication_date\": \"1999/10/12\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 2.3,\n  \"solution\": \"n/a\",\n  \"synopsis\": \"An SSH server is listening on this port.\",\n  \"xref\": \"IAVT:0001-T-0933\",\n  \"plugin_output\": \"SSH version : SSH-2.0-OpenSSH_7.6p1 Ubuntu-4ubuntu0.6\\nSSH supported authentication : publickey,password\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "It is possible to obtain information about the remote SSH server by sending an empty authentication request.",
+              "message": "SSH version : SSH-2.0-OpenSSH_7.6p1 Ubuntu-4ubuntu0.6\nSSH supported authentication : publickey,password",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "CM-8"
+            ],
+            "rid": "22964",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2007/08/19",
+            "fname": "find_service.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Service Detection",
+          "id": "22964",
+          "desc": "Plugin Family: Service detection; Port: 8089; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"8089\",\n  \"svc_name\": \"www\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"22964\",\n  \"pluginName\": \"Service Detection\",\n  \"pluginFamily\": \"Service detection\",\n  \"description\": \"Nessus was able to identify the remote service by its banner or by looking at the error message it sends when it receives an HTTP request.\",\n  \"fname\": \"find_service.nasl\",\n  \"plugin_modification_date\": \"2021/04/14\",\n  \"plugin_name\": \"Service Detection\",\n  \"plugin_publication_date\": \"2007/08/19\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.189,\n  \"solution\": \"n/a\",\n  \"synopsis\": \"The remote service could be identified.\",\n  \"plugin_output\": \"A web server is running on this port.\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Nessus was able to identify the remote service by its banner or by looking at the error message it sends when it receives an HTTP request.",
+              "message": "A web server is running on this port.",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Nessus was able to identify the remote service by its banner or by looking at the error message it sends when it receives an HTTP request.",
+              "message": "A web server is running on this port.",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Nessus was able to identify the remote service by its banner or by looking at the error message it sends when it receives an HTTP request.",
+              "message": "An SSH server is running on this port.",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Nessus was able to identify the remote service by its banner or by looking at the error message it sends when it receives an HTTP request.",
+              "message": "The service closed the connection without sending any data.\nIt might be protected by some sort of TCP wrapper.",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "CM-8"
+            ],
+            "rid": "10287",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "1999/11/27",
+            "fname": "traceroute.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Traceroute Information",
+          "id": "10287",
+          "desc": "Plugin Family: General; Port: 0; Protocol: udp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"0\",\n  \"svc_name\": \"general\",\n  \"protocol\": \"udp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"10287\",\n  \"pluginName\": \"Traceroute Information\",\n  \"pluginFamily\": \"General\",\n  \"description\": \"Makes a traceroute to the remote host.\",\n  \"fname\": \"traceroute.nasl\",\n  \"plugin_modification_date\": \"2020/08/20\",\n  \"plugin_name\": \"Traceroute Information\",\n  \"plugin_publication_date\": \"1999/11/27\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.67,\n  \"solution\": \"n/a\",\n  \"synopsis\": \"It was possible to obtain traceroute information.\",\n  \"plugin_output\": \"For your information, here is the traceroute from 10.0.0.3 to 10.0.0.2 : \\n10.0.0.3\\n10.0.0.2\\n\\nHop Count: 1\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Makes a traceroute to the remote host.",
+              "message": "For your information, here is the traceroute from 10.0.0.3 to 10.0.0.2 : \n10.0.0.3\n10.0.0.2\n\nHop Count: 1",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SC-8"
+            ],
+            "rid": "25220",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2007/05/16",
+            "fname": "tcp_timestamps.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [
+            {
+              "url": "http://www.ietf.org/rfc/rfc1323.txt"
+            }
+          ],
+          "source_location": {},
+          "title": "TCP/IP Timestamps Supported",
+          "id": "25220",
+          "desc": "Plugin Family: General; Port: 0; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"0\",\n  \"svc_name\": \"general\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"25220\",\n  \"pluginName\": \"TCP/IP Timestamps Supported\",\n  \"pluginFamily\": \"General\",\n  \"description\": \"The remote host implements TCP timestamps, as defined by RFC1323.  A side effect of this feature is that the uptime of the remote host can sometimes be computed.\",\n  \"fname\": \"tcp_timestamps.nasl\",\n  \"plugin_modification_date\": \"2019/03/06\",\n  \"plugin_name\": \"TCP/IP Timestamps Supported\",\n  \"plugin_publication_date\": \"2007/05/16\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.21,\n  \"see_also\": \"http://www.ietf.org/rfc/rfc1323.txt\",\n  \"solution\": \"n/a\",\n  \"synopsis\": \"The remote service implements TCP timestamps.\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "The remote host implements TCP timestamps, as defined by RFC1323.  A side effect of this feature is that the uptime of the remote host can sometimes be computed.",
+              "message": "",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "CM-6"
+            ],
+            "rid": "10114",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "1999/08/01",
+            "fname": "icmp_timestamp.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "ICMP Timestamp Request Remote Date Disclosure",
+          "id": "10114",
+          "desc": "Plugin Family: General; Port: 0; Protocol: icmp;",
+          "descriptions": [
+            {
+              "data": "Filter out the ICMP timestamp requests (13), and the outgoing ICMP timestamp replies (14).",
+              "label": "fix"
+            }
+          ],
+          "impact": 0,
+          "code": "{\n  \"port\": \"0\",\n  \"svc_name\": \"general\",\n  \"protocol\": \"icmp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"10114\",\n  \"pluginName\": \"ICMP Timestamp Request Remote Date Disclosure\",\n  \"pluginFamily\": \"General\",\n  \"cve\": \"CVE-1999-0524\",\n  \"cvss3_base_score\": 0,\n  \"cvss3_vector\": \"CVSS:3.0/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N\",\n  \"cvss_base_score\": 0,\n  \"cvss_score_source\": \"CVE-1999-0524\",\n  \"cvss_vector\": \"CVSS2#AV:L/AC:L/Au:N/C:N/I:N/A:N\",\n  \"cwe\": 200,\n  \"description\": \"The remote host answers to an ICMP timestamp request.  This allows an attacker to know the date that is set on the targeted machine, which may assist an unauthenticated, remote attacker in defeating time-based authentication protocols.\\n\\nTimestamps returned from machines running Windows Vista / 7 / 2008 / 2008 R2 are deliberately incorrect, but usually within 1000 seconds of the actual system time.\",\n  \"fname\": \"icmp_timestamp.nasl\",\n  \"plugin_modification_date\": \"2019/10/04\",\n  \"plugin_name\": \"ICMP Timestamp Request Remote Date Disclosure\",\n  \"plugin_publication_date\": \"1999/08/01\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.48,\n  \"solution\": \"Filter out the ICMP timestamp requests (13), and the outgoing ICMP timestamp replies (14).\",\n  \"synopsis\": \"It is possible to determine the exact time set on the remote host.\",\n  \"vuln_publication_date\": \"1995/01/01\",\n  \"xref\": \"CWE:200\",\n  \"plugin_output\": \"The difference between the local and remote clocks is 1 second.\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "The remote host answers to an ICMP timestamp request.  This allows an attacker to know the date that is set on the targeted machine, which may assist an unauthenticated, remote attacker in defeating time-based authentication protocols.\n\nTimestamps returned from machines running Windows Vista / 7 / 2008 / 2008 R2 are deliberately incorrect, but usually within 1000 seconds of the actual system time.",
+              "message": "The difference between the local and remote clocks is 1 second.",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "CM-8"
+            ],
+            "rid": "12053",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2004/02/11",
+            "fname": "fqdn.nasl",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Host Fully Qualified Domain Name (FQDN) Resolution",
+          "id": "12053",
+          "desc": "Plugin Family: General; Port: 0; Protocol: tcp;",
+          "descriptions": [],
+          "impact": 0,
+          "code": "{\n  \"port\": \"0\",\n  \"svc_name\": \"general\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"12053\",\n  \"pluginName\": \"Host Fully Qualified Domain Name (FQDN) Resolution\",\n  \"pluginFamily\": \"General\",\n  \"description\": \"Nessus was able to resolve the fully qualified domain name (FQDN) of the remote host.\",\n  \"fname\": \"fqdn.nasl\",\n  \"plugin_modification_date\": \"2017/04/14\",\n  \"plugin_name\": \"Host Fully Qualified Domain Name (FQDN) Resolution\",\n  \"plugin_publication_date\": \"2004/02/11\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": \"$Revision: 1.16 $\",\n  \"solution\": \"n/a\",\n  \"synopsis\": \"It was possible to resolve the name of the remote host.\",\n  \"plugin_output\": \"10.0.0.2 resolves as splunk.cmoo.rs.\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Nessus was able to resolve the fully qualified domain name (FQDN) of the remote host.",
+              "message": "10.0.0.2 resolves as splunk.cmoo.rs.",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [],
+            "rid": "11219",
+            "risk_factor": "None",
+            "plugin_type": "remote",
+            "plugin_publication_date": "2009/02/04",
+            "fname": "nessus_syn_scanner.nbin",
+            "cvss3_base_score": "",
+            "cvss_base_score": ""
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Nessus SYN scanner",
+          "id": "11219",
+          "desc": "Plugin Family: Port scanners; Port: 8089; Protocol: tcp;",
+          "descriptions": [
+            {
+              "data": "Protect your target with an IP filter.",
+              "label": "fix"
+            }
+          ],
+          "impact": 0,
+          "code": "{\n  \"port\": \"8089\",\n  \"svc_name\": \"www\",\n  \"protocol\": \"tcp\",\n  \"severity\": \"0\",\n  \"pluginID\": \"11219\",\n  \"pluginName\": \"Nessus SYN scanner\",\n  \"pluginFamily\": \"Port scanners\",\n  \"description\": \"This plugin is a SYN &apos;half-open&apos; port scanner.  It shall be reasonably quick even against a firewalled target. \\n\\nNote that SYN scans are less intrusive than TCP (full connect) scans against broken services, but they might cause problems for less robust firewalls and also leave unclosed connections on the remote target, if the network is loaded.\",\n  \"fname\": \"nessus_syn_scanner.nbin\",\n  \"plugin_modification_date\": \"2022/02/14\",\n  \"plugin_name\": \"Nessus SYN scanner\",\n  \"plugin_publication_date\": \"2009/02/04\",\n  \"plugin_type\": \"remote\",\n  \"risk_factor\": \"None\",\n  \"script_version\": 1.43,\n  \"solution\": \"Protect your target with an IP filter.\",\n  \"synopsis\": \"It is possible to determine which TCP ports are open.\",\n  \"plugin_output\": \"Port 8089/tcp was found to be open\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "This plugin is a SYN 'half-open' port scanner.  It shall be reasonably quick even against a firewalled target. \n\nNote that SYN scans are less intrusive than TCP (full connect) scans against broken services, but they might cause problems for less robust firewalls and also leave unclosed connections on the remote target, if the network is loaded.",
+              "message": "Port 8089/tcp was found to be open",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            },
+            {
+              "status": "failed",
+              "code_desc": "This plugin is a SYN 'half-open' port scanner.  It shall be reasonably quick even against a firewalled target. \n\nNote that SYN scans are less intrusive than TCP (full connect) scans against broken services, but they might cause problems for less robust firewalls and also leave unclosed connections on the remote target, if the network is loaded.",
+              "message": "Port 2181/tcp was found to be open",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            },
+            {
+              "status": "failed",
+              "code_desc": "This plugin is a SYN 'half-open' port scanner.  It shall be reasonably quick even against a firewalled target. \n\nNote that SYN scans are less intrusive than TCP (full connect) scans against broken services, but they might cause problems for less robust firewalls and also leave unclosed connections on the remote target, if the network is loaded.",
+              "message": "Port 8000/tcp was found to be open",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            },
+            {
+              "status": "failed",
+              "code_desc": "This plugin is a SYN 'half-open' port scanner.  It shall be reasonably quick even against a firewalled target. \n\nNote that SYN scans are less intrusive than TCP (full connect) scans against broken services, but they might cause problems for less robust firewalls and also leave unclosed connections on the remote target, if the network is loaded.",
+              "message": "Port 22/tcp was found to be open",
+              "start_time": "Tue Mar 22 14:54:47 2022"
+            }
+          ]
+        }
+      ],
+      "sha256": "4c46ea1ce788efeea6f68cbc3ad431663fa0760f7e0aff5dffddd6d7accf3181"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "Nessus",
+        "data": {
+          "HostProperties": {
+            "tag": [
+              {
+                "text": "cpe:/a:splunk:splunk -&gt; Splunk",
+                "name": "cpe-3"
+              },
+              {
+                "text": "cpe:/a:splunk:splunk:8.2.5 -&gt; Splunk",
+                "name": "cpe-2"
+              },
+              {
+                "text": 1647975422,
+                "name": "LastUnauthenticatedResults"
+              },
+              {
+                "text": "Basic Network Scan",
+                "name": "policy-used"
+              },
+              {
+                "text": "cpe:/a:openbsd:openssh:7.6 -&gt; OpenBSD OpenSSH",
+                "name": "cpe-1"
+              },
+              {
+                "text": 1,
+                "name": "patch-summary-total-cves"
+              },
+              {
+                "text": "cpe:/o:canonical:ubuntu_linux:18.04 -&gt; Canonical Ubuntu Linux",
+                "name": "cpe-0"
+              },
+              {
+                "text": "cpe:/o:linux:linux_kernel",
+                "name": "cpe"
+              },
+              {
+                "text": "linux",
+                "name": "os"
+              },
+              {
+                "text": 95,
+                "name": "operating-system-conf"
+              },
+              {
+                "text": "SSH",
+                "name": "operating-system-method"
+              },
+              {
+                "text": "[{&quot;FQDN&quot;:&quot;splunk.cmoo.rs&quot;,&quot;sources&quot;:[&quot;get_host_fqdn()&quot;,&quot;determine_fqdn()&quot;]}]",
+                "name": "host-fqdns"
+              },
+              {
+                "text": "5A:FB:26:2E:B0:70",
+                "name": "mac-address"
+              },
+              {
+                "text": "SSH-2.0-OpenSSH_7.6p1 Ubuntu-4ubuntu0.6",
+                "name": "ssh-fingerprint"
+              },
+              {
+                "text": "general-purpose",
+                "name": "system-type"
+              },
+              {
+                "text": "Linux Kernel 4.15 on Ubuntu 18.04 (bionic)",
+                "name": "operating-system"
+              },
+              {
+                "text": false,
+                "name": "Credentialed_Scan"
+              },
+              {
+                "text": "10.0.0.2",
+                "name": "traceroute-hop-0"
+              },
+              {
+                "text": "[{&quot;predicted-os&quot;: &quot;Ubuntu 16.04 Linux Kernel 4.4&quot;, &quot;confidence&quot;: 2},{&quot;predicted-os&quot;: &quot;Cisco SIP Device&quot;, &quot;confidence&quot;: 3}]",
+                "name": "sinfp-ml-prediction"
+              },
+              {
+                "text": "P1:B10113:F0x12:W64240:O0204ffff:M1460:\n   P2:B10113:F0x12:W65160:O0204ffff0402080affffffff4445414401030307:M1460:\n   P3:B00000:F0x00:W0:O0:M0\n   P4:190101_7_p=22",
+                "name": "sinfp-signature"
+              },
+              {
+                "text": "splunk.cmoo.rs",
+                "name": "host-fqdn"
+              },
+              {
+                "text": "splunk.cmoo.rs",
+                "name": "host-rdns"
+              },
+              {
+                "text": 1647975423,
+                "name": "HOST_END_TIMESTAMP"
+              },
+              {
+                "text": "Tue Mar 22 14:57:03 2022",
+                "name": "HOST_END"
+              },
+              {
+                "text": "10.0.0.2",
+                "name": "host-ip"
+              },
+              {
+                "text": 1647975287,
+                "name": "HOST_START_TIMESTAMP"
+              },
+              {
+                "text": "Tue Mar 22 14:54:47 2022",
+                "name": "HOST_START"
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "raw": {
+      "name": "10.0.0.2",
+      "HostProperties": {
+        "tag": [
+          {
+            "text": "cpe:/a:splunk:splunk -&gt; Splunk",
+            "name": "cpe-3"
+          },
+          {
+            "text": "cpe:/a:splunk:splunk:8.2.5 -&gt; Splunk",
+            "name": "cpe-2"
+          },
+          {
+            "text": 1647975422,
+            "name": "LastUnauthenticatedResults"
+          },
+          {
+            "text": "Basic Network Scan",
+            "name": "policy-used"
+          },
+          {
+            "text": "cpe:/a:openbsd:openssh:7.6 -&gt; OpenBSD OpenSSH",
+            "name": "cpe-1"
+          },
+          {
+            "text": 1,
+            "name": "patch-summary-total-cves"
+          },
+          {
+            "text": "cpe:/o:canonical:ubuntu_linux:18.04 -&gt; Canonical Ubuntu Linux",
+            "name": "cpe-0"
+          },
+          {
+            "text": "cpe:/o:linux:linux_kernel",
+            "name": "cpe"
+          },
+          {
+            "text": "linux",
+            "name": "os"
+          },
+          {
+            "text": 95,
+            "name": "operating-system-conf"
+          },
+          {
+            "text": "SSH",
+            "name": "operating-system-method"
+          },
+          {
+            "text": "[{&quot;FQDN&quot;:&quot;splunk.cmoo.rs&quot;,&quot;sources&quot;:[&quot;get_host_fqdn()&quot;,&quot;determine_fqdn()&quot;]}]",
+            "name": "host-fqdns"
+          },
+          {
+            "text": "5A:FB:26:2E:B0:70",
+            "name": "mac-address"
+          },
+          {
+            "text": "SSH-2.0-OpenSSH_7.6p1 Ubuntu-4ubuntu0.6",
+            "name": "ssh-fingerprint"
+          },
+          {
+            "text": "general-purpose",
+            "name": "system-type"
+          },
+          {
+            "text": "Linux Kernel 4.15 on Ubuntu 18.04 (bionic)",
+            "name": "operating-system"
+          },
+          {
+            "text": false,
+            "name": "Credentialed_Scan"
+          },
+          {
+            "text": "10.0.0.2",
+            "name": "traceroute-hop-0"
+          },
+          {
+            "text": "[{&quot;predicted-os&quot;: &quot;Ubuntu 16.04 Linux Kernel 4.4&quot;, &quot;confidence&quot;: 2},{&quot;predicted-os&quot;: &quot;Cisco SIP Device&quot;, &quot;confidence&quot;: 3}]",
+            "name": "sinfp-ml-prediction"
+          },
+          {
+            "text": "P1:B10113:F0x12:W64240:O0204ffff:M1460:\n   P2:B10113:F0x12:W65160:O0204ffff0402080affffffff4445414401030307:M1460:\n   P3:B00000:F0x00:W0:O0:M0\n   P4:190101_7_p=22",
+            "name": "sinfp-signature"
+          },
+          {
+            "text": "splunk.cmoo.rs",
+            "name": "host-fqdn"
+          },
+          {
+            "text": "splunk.cmoo.rs",
+            "name": "host-rdns"
+          },
+          {
+            "text": 1647975423,
+            "name": "HOST_END_TIMESTAMP"
+          },
+          {
+            "text": "Tue Mar 22 14:57:03 2022",
+            "name": "HOST_END"
+          },
+          {
+            "text": "10.0.0.2",
+            "name": "host-ip"
+          },
+          {
+            "text": 1647975287,
+            "name": "HOST_START_TIMESTAMP"
+          },
+          {
+            "text": "Tue Mar 22 14:54:47 2022",
+            "name": "HOST_START"
+          }
+        ]
+      },
+      "ReportItem": [
+        {
+          "port": "22",
+          "svc_name": "ssh",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "104410",
+          "pluginName": "Target Credential Status by Authentication Protocol - Failure for Provided Credentials",
+          "pluginFamily": "Settings",
+          "description": "Nessus failed to successfully authenticate directly to the remote target on an available authentication protocol. Nessus was able to connect to the remote port and identify that the service running on the port supports an authentication protocol, but Nessus failed to authenticate to the remote service using the provided credentials.\n\nThere may have been a failure in protocol negotiation or communication that prevented authentication from being attempted or all of the provided credentials for the authentication protocol may have been invalid. A protocol failure may indicate a compatibility issue with the protocol configuration. A protocol failure due to an environmental issue such as resource or congestion issues may also prevent valid credentials from being identified. See plugin output for error details.\n\nPlease note the following :\n\n- This plugin reports per protocol, so it is possible for   valid credentials to be provided for one protocol and not   another. For example, authentication may succeed via SSH   but fail via SMB, while no credentials were provided for   an available SNMP service.\n\n- Providing valid credentials for all available   authentication protocols may improve scan coverage, but   the value of successful authentication for a given   protocol may vary from target to target depending upon   what data (if any) is gathered from the target via that   protocol. For example, successful authentication via SSH   is more valuable for Linux targets than for Windows   targets, and likewise successful authentication via SMB   is more valuable for Windows targets than for Linux   targets.",
+          "fname": "host_credentials_failed.nasl",
+          "iavb": "0001-B-0503",
+          "plugin_modification_date": "2020/10/19",
+          "plugin_name": "Target Credential Status by Authentication Protocol - Failure for Provided Credentials",
+          "plugin_publication_date": "2017/11/06",
+          "plugin_type": "summary",
+          "risk_factor": "None",
+          "script_version": 1.23,
+          "solution": "Address the reported problem(s) so that credentialed checks can be executed.",
+          "synopsis": "Nessus was unable to log into the detected authentication protocol, using the provided credentials, in order to perform credentialed checks.",
+          "xref": "IAVB:0001-B-0503",
+          "plugin_output": "Nessus was unable to log into the following host for which\ncredentials have been provided :\n\n  Protocol        : SSH\n  Port            : 22\n  Failure details :\n\n  - User : someUsernameHere\n\n    - Plugin      : ssh_rate_limiting.nasl\n      Plugin ID   : 122501\n      Plugin Name : SSH Rate Limited Device\n      Message     : Failed to parse the given key information.\n\n\n    - Plugin      : ssh_rate_limiting.nasl\n      Plugin ID   : 122501\n      Plugin Name : SSH Rate Limited Device\n      Message     : Failed to parse ssh keys.\n\n\n    - Plugin      : netstat_portscan.nasl\n      Plugin ID   : 14272\n      Plugin Name : Netstat Portscanner (SSH)\n      Message     : \nNessus failed to load the SSH private key. Is the associated passphrase correct?\n\n\n    - Plugin      : netstat_portscan.nasl\n      Plugin ID   : 14272\n      Plugin Name : Netstat Portscanner (SSH)\n      Message     : Failed to parse the given key information.\n\n\n    - Plugin      : netstat_portscan.nasl\n      Plugin ID   : 14272\n      Plugin Name : Netstat Portscanner (SSH)\n      Message     : Failed to parse ssh keys.\n\n\n    - Plugin      : ssh_check_compression.nasl\n      Plugin ID   : 104411\n      Plugin Name : SSH Compression Error Checking\n      Message     : Failed to parse the given key information.\n\n\n    - Plugin      : ssh_check_compression.nasl\n      Plugin ID   : 104411\n      Plugin Name : SSH Compression Error Checking\n      Message     : Failed to parse ssh keys.\n\n\n    - Plugin      : ssh_get_info2.nasl\n      Plugin ID   : 97993\n      Plugin Name : OS Identification and Installed Software Enumeration over SSH v2 (Using New SSH Library)\n      Message     : Failed to parse the given key information.\n\n\n    - Plugin      : ssh_get_info2.nasl\n      Plugin ID   : 97993\n      Plugin Name : OS Identification and Installed Software Enumeration over SSH v2 (Using New SSH Library)\n      Message     : Failed to parse ssh keys.\n\n\n    - Plugin      : ssh_get_info.nasl\n      Plugin ID   : 12634\n      Plugin Name : Authenticated Check : OS Name and Installed Package Enumeration\n      Message     : \nNessus failed to load the SSH private key. Is the associated passphrase correct?"
+        },
+        {
+          "port": "0",
+          "svc_name": "general",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "21745",
+          "pluginName": "OS Security Patch Assessment Failed",
+          "pluginFamily": "Settings",
+          "agent": "all",
+          "description": "OS Security Patch Assessment is not available for this host because either the credentials supplied in the scan policy did not allow Nessus to log into it or some other problem occurred.",
+          "fname": "hostlevel_check_failed.nasl",
+          "iavb": "0001-B-0501",
+          "plugin_modification_date": "2021/07/12",
+          "plugin_name": "OS Security Patch Assessment Failed",
+          "plugin_publication_date": "2006/06/23",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.32,
+          "solution": "Fix the problem(s) so that OS Security Patch Assessment is possible.",
+          "synopsis": "Errors prevented OS Security Patch Assessment.",
+          "xref": "IAVB:0001-B-0501",
+          "plugin_output": "The following service errors were logged :\n\n  - Plugin      : ssh_get_info2.nasl\n    Plugin ID   : 97993\n    Plugin Name : OS Identification and Installed Software Enumeration over SSH v2 (Using New SSH Library)\n    Protocol    : SSH\n    Message     : \nUnable to login to remote host with supplied credential sets.\nErrors:\n  - No supplied credential sets succeeded on any of the ssh ports\n\n  - Plugin      : ssh_get_info.nasl\n    Plugin ID   : 12634\n    Plugin Name : Authenticated Check : OS Name and Installed Package Enumeration\n    Protocol    : SSH\n    Message     : \nNessus failed to load the SSH private key. Is the associated passphrase correct?"
+        },
+        {
+          "port": "0",
+          "svc_name": "general",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "45590",
+          "pluginName": "Common Platform Enumeration (CPE)",
+          "pluginFamily": "General",
+          "agent": "all",
+          "description": "By using information obtained from a Nessus scan, this plugin reports CPE (Common Platform Enumeration) matches for various hardware and software products found on a host. \n\nNote that if an official CPE is not available for the product, this plugin computes the best possible CPE based on the information available from the scan.",
+          "fname": "cpe.nbin",
+          "plugin_modification_date": "2022/02/14",
+          "plugin_name": "Common Platform Enumeration (CPE)",
+          "plugin_publication_date": "2010/04/21",
+          "plugin_type": "combined",
+          "risk_factor": "None",
+          "script_version": 1.118,
+          "see_also": "http://cpe.mitre.org/\nhttps://nvd.nist.gov/products/cpe",
+          "solution": "n/a",
+          "synopsis": "It was possible to enumerate CPE names that matched on the remote system.",
+          "plugin_output": "The remote operating system matched the following CPE : \n\n  cpe:/o:canonical:ubuntu_linux:18.04 -&gt; Canonical Ubuntu Linux\n\nFollowing application CPE&apos;s matched on the remote system : \n\n  cpe:/a:openbsd:openssh:7.6 -&gt; OpenBSD OpenSSH\n  cpe:/a:splunk:splunk -&gt; Splunk\n  cpe:/a:splunk:splunk:8.2.5 -&gt; Splunk"
+        },
+        {
+          "port": "0",
+          "svc_name": "general",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "19506",
+          "pluginName": "Nessus Scan Information",
+          "pluginFamily": "Settings",
+          "agent": "all",
+          "always_run": 1,
+          "description": "This plugin displays, for each tested host, information about the scan itself :\n\n  - The version of the plugin set.\n  - The type of scanner (Nessus or Nessus Home).\n  - The version of the Nessus Engine.\n  - The port scanner(s) used.\n  - The port range scanned.\n  - The ping round trip time \n  - Whether credentialed or third-party patch management     checks are possible.\n  - Whether the display of superseded patches is enabled\n  - The date of the scan.\n  - The duration of the scan.\n  - The number of hosts scanned in parallel.\n  - The number of checks done in parallel.",
+          "fname": "scan_info.nasl",
+          "plugin_modification_date": "2021/09/27",
+          "plugin_name": "Nessus Scan Information",
+          "plugin_publication_date": "2005/08/26",
+          "plugin_type": "summary",
+          "risk_factor": "None",
+          "script_version": 1.106,
+          "solution": "n/a",
+          "synopsis": "This plugin displays information about the Nessus scan.",
+          "plugin_output": "Information about this scan : \n\nNessus version : 10.1.1\nNessus build : X20061\nPlugin feed version : 202203221555\nScanner edition used : Nessus\nScanner OS : LINUX\nScanner distribution : ubuntu1110-x86-64\nScan type : Normal\nScan name : Home Network\nScan policy used : Basic Network Scan\nScanner IP : 10.0.0.3\nPort scanner(s) : nessus_syn_scanner \nPort range : default\nPing RTT : 251.249 ms\nThorough tests : no\nExperimental tests : no\nParanoia level : 1\nReport verbosity : 1\nSafe checks : yes\nOptimize the test : yes\nCredentialed checks : no\nPatch management checks : None\nDisplay superseded patches : yes (supersedence plugin launched)\nCGI scanning : disabled\nWeb application tests : disabled\nMax hosts : 30\nMax checks : 4\nRecv timeout : 5\nBackports : None\nAllow post-scan editing: Yes\nScan Start Date : 2022/3/22 14:54 EDT\nScan duration : 127 sec"
+        },
+        {
+          "port": "0",
+          "svc_name": "general",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "54615",
+          "pluginName": "Device Type",
+          "pluginFamily": "General",
+          "description": "Based on the remote operating system, it is possible to determine what the remote system type is (eg: a printer, router, general-purpose computer, etc).",
+          "fname": "device_type.nasl",
+          "plugin_modification_date": "2011/05/23",
+          "plugin_name": "Device Type",
+          "plugin_publication_date": "2011/05/23",
+          "plugin_type": "combined",
+          "risk_factor": "None",
+          "script_version": "$Revision: 1.1 $",
+          "solution": "n/a",
+          "synopsis": "It is possible to guess the remote device type.",
+          "plugin_output": "Remote device type : general-purpose\nConfidence level : 95"
+        },
+        {
+          "port": "0",
+          "svc_name": "general",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "11936",
+          "pluginName": "OS Identification",
+          "pluginFamily": "General",
+          "agent": "all",
+          "asset_inventory": "True",
+          "description": "Using a combination of remote probes (e.g., TCP/IP, SMB, HTTP, NTP, SNMP, etc.), it is possible to guess the name of the remote operating system in use. It is also possible sometimes to guess the version of the operating system.",
+          "fname": "os_fingerprint.nasl",
+          "os_identification": "True",
+          "plugin_modification_date": "2022/03/09",
+          "plugin_name": "OS Identification",
+          "plugin_publication_date": "2003/12/09",
+          "plugin_type": "combined",
+          "risk_factor": "None",
+          "script_version": 2.61,
+          "solution": "n/a",
+          "synopsis": "It is possible to guess the remote operating system.",
+          "plugin_output": "Remote operating system : Linux Kernel 4.15 on Ubuntu 18.04 (bionic)\nConfidence level : 95\nMethod : SSH\n\n \nThe remote host is running Linux Kernel 4.15 on Ubuntu 18.04 (bionic)"
+        },
+        {
+          "port": "0",
+          "svc_name": "general",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "86420",
+          "pluginName": "Ethernet MAC Addresses",
+          "pluginFamily": "General",
+          "description": "This plugin gathers MAC addresses discovered from both remote probing of the host (e.g. SNMP and Netbios) and from running local checks (e.g. ifconfig). It then consolidates the MAC addresses into a single, unique, and uniform list.",
+          "fname": "report_hw_macs.nasl",
+          "plugin_modification_date": "2020/05/13",
+          "plugin_name": "Ethernet MAC Addresses",
+          "plugin_publication_date": "2015/10/16",
+          "plugin_type": "combined",
+          "risk_factor": "None",
+          "script_version": 1.6,
+          "solution": "n/a",
+          "synopsis": "This plugin gathers MAC addresses from various sources and consolidates them into a list.",
+          "plugin_output": "The following is a consolidated list of detected MAC addresses:\n  - 5A:FB:26:2E:B0:70"
+        },
+        {
+          "port": "8000",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "47619",
+          "pluginName": "Splunk Web Detection",
+          "pluginFamily": "Web Servers",
+          "asset_inventory": "True",
+          "cpe": "cpe:/a:splunk:splunk",
+          "description": "The web interface for Splunk is running on the remote host. Splunk is a search, monitoring, and reporting tool for system administrators.\n\nNote that HTTP Basic Authentication credentials may be required to retrieve version information for some recent Splunk releases.",
+          "fname": "splunk_web_detect.nasl",
+          "iavt": "0001-T-0723",
+          "plugin_modification_date": "2022/01/05",
+          "plugin_name": "Splunk Web Detection",
+          "plugin_publication_date": "2010/07/07",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.2,
+          "see_also": "https://www.splunk.com/en_us/software.html",
+          "solution": "n/a",
+          "synopsis": "An infrastructure monitoring tool is running on the remote host.",
+          "xref": "IAVT:0001-T-0723",
+          "plugin_output": "URL           : http://splunk.cmoo.rs:8000/\n  Version       : unknown\n  License       : Enterprise\n  Web interface : 1"
+        },
+        {
+          "port": "8089",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "49069",
+          "pluginName": "Splunk Management API Detection",
+          "pluginFamily": "Web Servers",
+          "asset_inventory": "True",
+          "cpe": "cpe:/a:splunk:splunk\ncpe:/a:splunk:universal_forwarder",
+          "description": "The remote web server is an instance of the Splunk management API.\nSplunk is a search, monitoring, and reporting tool for system administrators.",
+          "fname": "splunkd_detect.nasl",
+          "iavt": "0001-T-0722",
+          "plugin_modification_date": "2021/12/20",
+          "plugin_name": "Splunk Management API Detection",
+          "plugin_publication_date": "2010/09/01",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.14,
+          "see_also": "https://www.splunk.com/en_us/software.html\nhttp://dev.splunk.com/restapi\nhttp://www.nessus.org/u?3aa0f4e2\nhttps://www.splunk.com/en_us/download/universal-forwarder.html",
+          "solution": "Limit incoming traffic to this port if desired.",
+          "synopsis": "An infrastructure monitoring tool is running on the remote host.",
+          "xref": "IAVT:0001-T-0722",
+          "plugin_output": "URL            : http://splunk.cmoo.rs:8089/\n  Version        : 8.2.5\n  Build          : 77015bc7a462\n  Management API : 1"
+        },
+        {
+          "port": "8000",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "49069",
+          "pluginName": "Splunk Management API Detection",
+          "pluginFamily": "Web Servers",
+          "asset_inventory": "True",
+          "cpe": "cpe:/a:splunk:splunk\ncpe:/a:splunk:universal_forwarder",
+          "description": "The remote web server is an instance of the Splunk management API.\nSplunk is a search, monitoring, and reporting tool for system administrators.",
+          "fname": "splunkd_detect.nasl",
+          "iavt": "0001-T-0722",
+          "plugin_modification_date": "2021/12/20",
+          "plugin_name": "Splunk Management API Detection",
+          "plugin_publication_date": "2010/09/01",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.14,
+          "see_also": "https://www.splunk.com/en_us/software.html\nhttp://dev.splunk.com/restapi\nhttp://www.nessus.org/u?3aa0f4e2\nhttps://www.splunk.com/en_us/download/universal-forwarder.html",
+          "solution": "Limit incoming traffic to this port if desired.",
+          "synopsis": "An infrastructure monitoring tool is running on the remote host.",
+          "xref": "IAVT:0001-T-0722",
+          "plugin_output": "URL            : http://splunk.cmoo.rs:8000/\n  Version        : unknown\n  Management API : 1"
+        },
+        {
+          "port": "8089",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "43111",
+          "pluginName": "HTTP Methods Allowed (per directory)",
+          "pluginFamily": "Web Servers",
+          "description": "By calling the OPTIONS method, it is possible to determine which HTTP methods are allowed on each directory.\n\nThe following HTTP methods are considered insecure:\n  PUT, DELETE, CONNECT, TRACE, HEAD\n\nMany frameworks and languages treat &apos;HEAD&apos; as a &apos;GET&apos; request, albeit one without any body in the response. If a security constraint was set on &apos;GET&apos; requests such that only &apos;authenticatedUsers&apos; could access GET requests for a particular servlet or resource, it would be bypassed for the &apos;HEAD&apos; version. This allowed unauthorized blind submission of any privileged GET request.\n\nAs this list may be incomplete, the plugin also tests - if &apos;Thorough tests&apos; are enabled or &apos;Enable web applications tests&apos; is set to &apos;yes&apos; in the scan policy - various known HTTP methods on each directory and considers them as unsupported if it receives a response code of 400, 403, 405, or 501.\n\nNote that the plugin output is only informational and does not necessarily indicate the presence of any security vulnerabilities.",
+          "fname": "web_directory_options.nasl",
+          "plugin_modification_date": "2019/03/19",
+          "plugin_name": "HTTP Methods Allowed (per directory)",
+          "plugin_publication_date": "2009/12/10",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.11,
+          "see_also": "http://www.nessus.org/u?d9c03a9a\nhttp://www.nessus.org/u?b019cbdb\nhttps://www.owasp.org/index.php/Test_HTTP_Methods_(OTG-CONFIG-006)",
+          "solution": "n/a",
+          "synopsis": "This plugin determines which HTTP methods are allowed on various CGI directories.",
+          "plugin_output": "Based on the response to an OPTIONS request :\n\n  - HTTP methods GET HEAD OPTIONS are allowed on : \n\n    /"
+        },
+        {
+          "port": "8089",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "10107",
+          "pluginName": "HTTP Server Type and Version",
+          "pluginFamily": "Web Servers",
+          "asset_inventory": "True",
+          "description": "This plugin attempts to determine the type and the version of the   remote web server.",
+          "fname": "http_version.nasl",
+          "iavt": "0001-T-0931",
+          "plugin_modification_date": "2020/10/30",
+          "plugin_name": "HTTP Server Type and Version",
+          "plugin_publication_date": "2000/01/04",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.141,
+          "solution": "n/a",
+          "synopsis": "A web server is running on the remote host.",
+          "xref": "IAVT:0001-T-0931",
+          "plugin_output": "The remote web server type is :\n\nSplunkd"
+        },
+        {
+          "port": "8000",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "10107",
+          "pluginName": "HTTP Server Type and Version",
+          "pluginFamily": "Web Servers",
+          "asset_inventory": "True",
+          "description": "This plugin attempts to determine the type and the version of the   remote web server.",
+          "fname": "http_version.nasl",
+          "iavt": "0001-T-0931",
+          "plugin_modification_date": "2020/10/30",
+          "plugin_name": "HTTP Server Type and Version",
+          "plugin_publication_date": "2000/01/04",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.141,
+          "solution": "n/a",
+          "synopsis": "A web server is running on the remote host.",
+          "xref": "IAVT:0001-T-0931",
+          "plugin_output": "The remote web server type is :\n\nSplunkd"
+        },
+        {
+          "port": "8089",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "19689",
+          "pluginName": "Embedded Web Server Detection",
+          "pluginFamily": "Web Servers",
+          "asset_inventory": "True",
+          "cpe": "cpe:/a:cesanta:mongoose_embedded_web_server_library",
+          "description": "The remote web server cannot host user-supplied CGIs. CGI scanning will be disabled on this server.",
+          "fname": "embedded_web_server_detect.nasl",
+          "plugin_modification_date": "2019/11/22",
+          "plugin_name": "Embedded Web Server Detection",
+          "plugin_publication_date": "2005/09/14",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.83,
+          "solution": "n/a",
+          "synopsis": "The remote web server is embedded."
+        },
+        {
+          "port": "8000",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "19689",
+          "pluginName": "Embedded Web Server Detection",
+          "pluginFamily": "Web Servers",
+          "asset_inventory": "True",
+          "cpe": "cpe:/a:cesanta:mongoose_embedded_web_server_library",
+          "description": "The remote web server cannot host user-supplied CGIs. CGI scanning will be disabled on this server.",
+          "fname": "embedded_web_server_detect.nasl",
+          "plugin_modification_date": "2019/11/22",
+          "plugin_name": "Embedded Web Server Detection",
+          "plugin_publication_date": "2005/09/14",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.83,
+          "solution": "n/a",
+          "synopsis": "The remote web server is embedded."
+        },
+        {
+          "port": "22",
+          "svc_name": "ssh",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "10881",
+          "pluginName": "SSH Protocol Versions Supported",
+          "pluginFamily": "General",
+          "asset_inventory": "True",
+          "description": "This plugin determines the versions of the SSH protocol supported by the remote SSH daemon.",
+          "fname": "ssh_proto_version.nasl",
+          "plugin_modification_date": "2021/01/19",
+          "plugin_name": "SSH Protocol Versions Supported",
+          "plugin_publication_date": "2002/03/06",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.39,
+          "solution": "n/a",
+          "synopsis": "A SSH server is running on the remote host.",
+          "plugin_output": "The remote SSH daemon supports the following versions of the\nSSH protocol :\n\n  - 1.99\n  - 2.0"
+        },
+        {
+          "port": "22",
+          "svc_name": "ssh",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "149334",
+          "pluginName": "SSH Password Authentication Accepted",
+          "pluginFamily": "Service detection",
+          "description": "The SSH server on the remote host accepts password authentication.",
+          "fname": "ssh_password_auth.nasl",
+          "plugin_modification_date": "2021/05/07",
+          "plugin_name": "SSH Password Authentication Accepted",
+          "plugin_publication_date": "2021/05/07",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.1,
+          "see_also": "https://tools.ietf.org/html/rfc4252#section-8",
+          "solution": "n/a",
+          "synopsis": "The SSH server on the remote host accepts password authentication."
+        },
+        {
+          "port": "22",
+          "svc_name": "ssh",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "153588",
+          "pluginName": "SSH SHA-1 HMAC Algorithms Enabled",
+          "pluginFamily": "Misc.",
+          "description": "The remote SSH server is configured to enable SHA-1 HMAC algorithms.\n\nAlthough NIST has formally deprecated use of SHA-1 for digital signatures, SHA-1 is still considered secure for HMAC as the security of HMAC does not rely on the underlying hash function being resistant to collisions.\n\nNote that this plugin only checks for the options of the remote SSH server.",
+          "fname": "ssh_sha1_hmac_enabled.nasl",
+          "plugin_modification_date": "2021/09/23",
+          "plugin_name": "SSH SHA-1 HMAC Algorithms Enabled",
+          "plugin_publication_date": "2021/09/23",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.1,
+          "solution": "n/a",
+          "synopsis": "The remote SSH server is configured to enable SHA-1 HMAC algorithms.",
+          "plugin_output": "The following client-to-server SHA-1 Hash-based Message Authentication Code (HMAC) algorithms are supported : \n\n  hmac-sha1\n  hmac-sha1-etm@openssh.com\n\nThe following server-to-client SHA-1 Hash-based Message Authentication Code (HMAC) algorithms are supported : \n\n  hmac-sha1\n  hmac-sha1-etm@openssh.com"
+        },
+        {
+          "port": "22",
+          "svc_name": "ssh",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "70657",
+          "pluginName": "SSH Algorithms and Languages Supported",
+          "pluginFamily": "Misc.",
+          "description": "This script detects which algorithms and languages are supported by the remote service for encrypting communications.",
+          "fname": "ssh_supported_algorithms.nasl",
+          "plugin_modification_date": "2017/08/28",
+          "plugin_name": "SSH Algorithms and Languages Supported",
+          "plugin_publication_date": "2013/10/28",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": "$Revision: 1.6 $",
+          "solution": "n/a",
+          "synopsis": "An SSH server is listening on this port.",
+          "plugin_output": "Nessus negotiated the following encryption algorithm with the server : \n\nThe server supports the following options for kex_algorithms : \n\n  curve25519-sha256\n  curve25519-sha256@libssh.org\n  diffie-hellman-group-exchange-sha256\n  diffie-hellman-group14-sha1\n  diffie-hellman-group14-sha256\n  diffie-hellman-group16-sha512\n  diffie-hellman-group18-sha512\n  ecdh-sha2-nistp256\n  ecdh-sha2-nistp384\n  ecdh-sha2-nistp521\n\nThe server supports the following options for server_host_key_algorithms : \n\n  ecdsa-sha2-nistp256\n  rsa-sha2-256\n  rsa-sha2-512\n  ssh-ed25519\n  ssh-rsa\n\nThe server supports the following options for encryption_algorithms_client_to_server : \n\n  aes128-ctr\n  aes128-gcm@openssh.com\n  aes192-ctr\n  aes256-ctr\n  aes256-gcm@openssh.com\n  chacha20-poly1305@openssh.com\n\nThe server supports the following options for encryption_algorithms_server_to_client : \n\n  aes128-ctr\n  aes128-gcm@openssh.com\n  aes192-ctr\n  aes256-ctr\n  aes256-gcm@openssh.com\n  chacha20-poly1305@openssh.com\n\nThe server supports the following options for mac_algorithms_client_to_server : \n\n  hmac-sha1\n  hmac-sha1-etm@openssh.com\n  hmac-sha2-256\n  hmac-sha2-256-etm@openssh.com\n  hmac-sha2-512\n  hmac-sha2-512-etm@openssh.com\n  umac-128-etm@openssh.com\n  umac-128@openssh.com\n  umac-64-etm@openssh.com\n  umac-64@openssh.com\n\nThe server supports the following options for mac_algorithms_server_to_client : \n\n  hmac-sha1\n  hmac-sha1-etm@openssh.com\n  hmac-sha2-256\n  hmac-sha2-256-etm@openssh.com\n  hmac-sha2-512\n  hmac-sha2-512-etm@openssh.com\n  umac-128-etm@openssh.com\n  umac-128@openssh.com\n  umac-64-etm@openssh.com\n  umac-64@openssh.com\n\nThe server supports the following options for compression_algorithms_client_to_server : \n\n  none\n  zlib@openssh.com\n\nThe server supports the following options for compression_algorithms_server_to_client : \n\n  none\n  zlib@openssh.com"
+        },
+        {
+          "port": "22",
+          "svc_name": "ssh",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "10267",
+          "pluginName": "SSH Server Type and Version Information",
+          "pluginFamily": "Service detection",
+          "asset_inventory": "True",
+          "description": "It is possible to obtain information about the remote SSH server by sending an empty authentication request.",
+          "fname": "ssh_detect.nasl",
+          "iavt": "0001-T-0933",
+          "plugin_modification_date": "2020/09/22",
+          "plugin_name": "SSH Server Type and Version Information",
+          "plugin_publication_date": "1999/10/12",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 2.3,
+          "solution": "n/a",
+          "synopsis": "An SSH server is listening on this port.",
+          "xref": "IAVT:0001-T-0933",
+          "plugin_output": "SSH version : SSH-2.0-OpenSSH_7.6p1 Ubuntu-4ubuntu0.6\nSSH supported authentication : publickey,password"
+        },
+        {
+          "port": "8089",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "22964",
+          "pluginName": "Service Detection",
+          "pluginFamily": "Service detection",
+          "description": "Nessus was able to identify the remote service by its banner or by looking at the error message it sends when it receives an HTTP request.",
+          "fname": "find_service.nasl",
+          "plugin_modification_date": "2021/04/14",
+          "plugin_name": "Service Detection",
+          "plugin_publication_date": "2007/08/19",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.189,
+          "solution": "n/a",
+          "synopsis": "The remote service could be identified.",
+          "plugin_output": "A web server is running on this port."
+        },
+        {
+          "port": "8000",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "22964",
+          "pluginName": "Service Detection",
+          "pluginFamily": "Service detection",
+          "description": "Nessus was able to identify the remote service by its banner or by looking at the error message it sends when it receives an HTTP request.",
+          "fname": "find_service.nasl",
+          "plugin_modification_date": "2021/04/14",
+          "plugin_name": "Service Detection",
+          "plugin_publication_date": "2007/08/19",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.189,
+          "solution": "n/a",
+          "synopsis": "The remote service could be identified.",
+          "plugin_output": "A web server is running on this port."
+        },
+        {
+          "port": "22",
+          "svc_name": "ssh",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "22964",
+          "pluginName": "Service Detection",
+          "pluginFamily": "Service detection",
+          "description": "Nessus was able to identify the remote service by its banner or by looking at the error message it sends when it receives an HTTP request.",
+          "fname": "find_service.nasl",
+          "plugin_modification_date": "2021/04/14",
+          "plugin_name": "Service Detection",
+          "plugin_publication_date": "2007/08/19",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.189,
+          "solution": "n/a",
+          "synopsis": "The remote service could be identified.",
+          "plugin_output": "An SSH server is running on this port."
+        },
+        {
+          "port": "2181",
+          "svc_name": "eforward?",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "22964",
+          "pluginName": "Service Detection",
+          "pluginFamily": "Service detection",
+          "description": "Nessus was able to identify the remote service by its banner or by looking at the error message it sends when it receives an HTTP request.",
+          "fname": "find_service.nasl",
+          "plugin_modification_date": "2021/04/14",
+          "plugin_name": "Service Detection",
+          "plugin_publication_date": "2007/08/19",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.189,
+          "solution": "n/a",
+          "synopsis": "The remote service could be identified.",
+          "plugin_output": "The service closed the connection without sending any data.\nIt might be protected by some sort of TCP wrapper."
+        },
+        {
+          "port": "0",
+          "svc_name": "general",
+          "protocol": "udp",
+          "severity": "0",
+          "pluginID": "10287",
+          "pluginName": "Traceroute Information",
+          "pluginFamily": "General",
+          "description": "Makes a traceroute to the remote host.",
+          "fname": "traceroute.nasl",
+          "plugin_modification_date": "2020/08/20",
+          "plugin_name": "Traceroute Information",
+          "plugin_publication_date": "1999/11/27",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.67,
+          "solution": "n/a",
+          "synopsis": "It was possible to obtain traceroute information.",
+          "plugin_output": "For your information, here is the traceroute from 10.0.0.3 to 10.0.0.2 : \n10.0.0.3\n10.0.0.2\n\nHop Count: 1"
+        },
+        {
+          "port": "0",
+          "svc_name": "general",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "25220",
+          "pluginName": "TCP/IP Timestamps Supported",
+          "pluginFamily": "General",
+          "description": "The remote host implements TCP timestamps, as defined by RFC1323.  A side effect of this feature is that the uptime of the remote host can sometimes be computed.",
+          "fname": "tcp_timestamps.nasl",
+          "plugin_modification_date": "2019/03/06",
+          "plugin_name": "TCP/IP Timestamps Supported",
+          "plugin_publication_date": "2007/05/16",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.21,
+          "see_also": "http://www.ietf.org/rfc/rfc1323.txt",
+          "solution": "n/a",
+          "synopsis": "The remote service implements TCP timestamps."
+        },
+        {
+          "port": "0",
+          "svc_name": "general",
+          "protocol": "icmp",
+          "severity": "0",
+          "pluginID": "10114",
+          "pluginName": "ICMP Timestamp Request Remote Date Disclosure",
+          "pluginFamily": "General",
+          "cve": "CVE-1999-0524",
+          "cvss3_base_score": 0,
+          "cvss3_vector": "CVSS:3.0/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:N",
+          "cvss_base_score": 0,
+          "cvss_score_source": "CVE-1999-0524",
+          "cvss_vector": "CVSS2#AV:L/AC:L/Au:N/C:N/I:N/A:N",
+          "cwe": 200,
+          "description": "The remote host answers to an ICMP timestamp request.  This allows an attacker to know the date that is set on the targeted machine, which may assist an unauthenticated, remote attacker in defeating time-based authentication protocols.\n\nTimestamps returned from machines running Windows Vista / 7 / 2008 / 2008 R2 are deliberately incorrect, but usually within 1000 seconds of the actual system time.",
+          "fname": "icmp_timestamp.nasl",
+          "plugin_modification_date": "2019/10/04",
+          "plugin_name": "ICMP Timestamp Request Remote Date Disclosure",
+          "plugin_publication_date": "1999/08/01",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.48,
+          "solution": "Filter out the ICMP timestamp requests (13), and the outgoing ICMP timestamp replies (14).",
+          "synopsis": "It is possible to determine the exact time set on the remote host.",
+          "vuln_publication_date": "1995/01/01",
+          "xref": "CWE:200",
+          "plugin_output": "The difference between the local and remote clocks is 1 second."
+        },
+        {
+          "port": "0",
+          "svc_name": "general",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "12053",
+          "pluginName": "Host Fully Qualified Domain Name (FQDN) Resolution",
+          "pluginFamily": "General",
+          "description": "Nessus was able to resolve the fully qualified domain name (FQDN) of the remote host.",
+          "fname": "fqdn.nasl",
+          "plugin_modification_date": "2017/04/14",
+          "plugin_name": "Host Fully Qualified Domain Name (FQDN) Resolution",
+          "plugin_publication_date": "2004/02/11",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": "$Revision: 1.16 $",
+          "solution": "n/a",
+          "synopsis": "It was possible to resolve the name of the remote host.",
+          "plugin_output": "10.0.0.2 resolves as splunk.cmoo.rs."
+        },
+        {
+          "port": "8089",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "11219",
+          "pluginName": "Nessus SYN scanner",
+          "pluginFamily": "Port scanners",
+          "description": "This plugin is a SYN &apos;half-open&apos; port scanner.  It shall be reasonably quick even against a firewalled target. \n\nNote that SYN scans are less intrusive than TCP (full connect) scans against broken services, but they might cause problems for less robust firewalls and also leave unclosed connections on the remote target, if the network is loaded.",
+          "fname": "nessus_syn_scanner.nbin",
+          "plugin_modification_date": "2022/02/14",
+          "plugin_name": "Nessus SYN scanner",
+          "plugin_publication_date": "2009/02/04",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.43,
+          "solution": "Protect your target with an IP filter.",
+          "synopsis": "It is possible to determine which TCP ports are open.",
+          "plugin_output": "Port 8089/tcp was found to be open"
+        },
+        {
+          "port": "2181",
+          "svc_name": "eforward?",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "11219",
+          "pluginName": "Nessus SYN scanner",
+          "pluginFamily": "Port scanners",
+          "description": "This plugin is a SYN &apos;half-open&apos; port scanner.  It shall be reasonably quick even against a firewalled target. \n\nNote that SYN scans are less intrusive than TCP (full connect) scans against broken services, but they might cause problems for less robust firewalls and also leave unclosed connections on the remote target, if the network is loaded.",
+          "fname": "nessus_syn_scanner.nbin",
+          "plugin_modification_date": "2022/02/14",
+          "plugin_name": "Nessus SYN scanner",
+          "plugin_publication_date": "2009/02/04",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.43,
+          "solution": "Protect your target with an IP filter.",
+          "synopsis": "It is possible to determine which TCP ports are open.",
+          "plugin_output": "Port 2181/tcp was found to be open"
+        },
+        {
+          "port": "8000",
+          "svc_name": "www",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "11219",
+          "pluginName": "Nessus SYN scanner",
+          "pluginFamily": "Port scanners",
+          "description": "This plugin is a SYN &apos;half-open&apos; port scanner.  It shall be reasonably quick even against a firewalled target. \n\nNote that SYN scans are less intrusive than TCP (full connect) scans against broken services, but they might cause problems for less robust firewalls and also leave unclosed connections on the remote target, if the network is loaded.",
+          "fname": "nessus_syn_scanner.nbin",
+          "plugin_modification_date": "2022/02/14",
+          "plugin_name": "Nessus SYN scanner",
+          "plugin_publication_date": "2009/02/04",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.43,
+          "solution": "Protect your target with an IP filter.",
+          "synopsis": "It is possible to determine which TCP ports are open.",
+          "plugin_output": "Port 8000/tcp was found to be open"
+        },
+        {
+          "port": "22",
+          "svc_name": "ssh",
+          "protocol": "tcp",
+          "severity": "0",
+          "pluginID": "11219",
+          "pluginName": "Nessus SYN scanner",
+          "pluginFamily": "Port scanners",
+          "description": "This plugin is a SYN &apos;half-open&apos; port scanner.  It shall be reasonably quick even against a firewalled target. \n\nNote that SYN scans are less intrusive than TCP (full connect) scans against broken services, but they might cause problems for less robust firewalls and also leave unclosed connections on the remote target, if the network is loaded.",
+          "fname": "nessus_syn_scanner.nbin",
+          "plugin_modification_date": "2022/02/14",
+          "plugin_name": "Nessus SYN scanner",
+          "plugin_publication_date": "2009/02/04",
+          "plugin_type": "remote",
+          "risk_factor": "None",
+          "script_version": 1.43,
+          "solution": "Protect your target with an IP filter.",
+          "synopsis": "It is possible to determine which TCP ports are open.",
+          "plugin_output": "Port 22/tcp was found to be open"
+        }
+      ]
+    }
+  }
+}

@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.20",
+    "release": "2.6.27",
     "target_id": "Aqua Security - Trivy"
   },
-  "version": "2.6.20",
+  "version": "2.6.27",
   "statistics": {
     "duration": null
   },
@@ -28,6 +28,10 @@
           "id": "Trivy/CVE-2021-36159",
           "title": "Trivy found a vulnerability to CVE-2021-36159 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -57,6 +61,10 @@
           "id": "Trivy/CVE-2021-30139",
           "title": "Trivy found a vulnerability to CVE-2021-30139 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -86,6 +94,10 @@
           "id": "Trivy/CVE-2021-28831",
           "title": "Trivy found a vulnerability to CVE-2021-28831 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -121,6 +133,10 @@
           "id": "Trivy/CVE-2021-42378",
           "title": "Trivy found a vulnerability to CVE-2021-42378 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -156,6 +172,10 @@
           "id": "Trivy/CVE-2021-42379",
           "title": "Trivy found a vulnerability to CVE-2021-42379 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -191,6 +211,10 @@
           "id": "Trivy/CVE-2021-42380",
           "title": "Trivy found a vulnerability to CVE-2021-42380 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -226,6 +250,10 @@
           "id": "Trivy/CVE-2021-42381",
           "title": "Trivy found a vulnerability to CVE-2021-42381 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -261,6 +289,10 @@
           "id": "Trivy/CVE-2021-42382",
           "title": "Trivy found a vulnerability to CVE-2021-42382 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -296,6 +328,10 @@
           "id": "Trivy/CVE-2021-42383",
           "title": "Trivy found a vulnerability to CVE-2021-42383 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -331,6 +367,10 @@
           "id": "Trivy/CVE-2021-42384",
           "title": "Trivy found a vulnerability to CVE-2021-42384 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -366,6 +406,10 @@
           "id": "Trivy/CVE-2021-42385",
           "title": "Trivy found a vulnerability to CVE-2021-42385 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -401,6 +445,10 @@
           "id": "Trivy/CVE-2021-42386",
           "title": "Trivy found a vulnerability to CVE-2021-42386 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -436,6 +484,10 @@
           "id": "Trivy/CVE-2021-42374",
           "title": "Trivy found a vulnerability to CVE-2021-42374 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -471,6 +523,10 @@
           "id": "Trivy/CVE-2021-3711",
           "title": "Trivy found a vulnerability to CVE-2021-3711 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -506,6 +562,10 @@
           "id": "Trivy/CVE-2020-1967",
           "title": "Trivy found a vulnerability to CVE-2020-1967 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -541,6 +601,10 @@
           "id": "Trivy/CVE-2021-23840",
           "title": "Trivy found a vulnerability to CVE-2021-23840 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -576,6 +640,10 @@
           "id": "Trivy/CVE-2021-3450",
           "title": "Trivy found a vulnerability to CVE-2021-3450 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -611,6 +679,10 @@
           "id": "Trivy/CVE-2021-3712",
           "title": "Trivy found a vulnerability to CVE-2021-3712 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -646,6 +718,10 @@
           "id": "Trivy/CVE-2020-1971",
           "title": "Trivy found a vulnerability to CVE-2020-1971 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -681,6 +757,10 @@
           "id": "Trivy/CVE-2021-23841",
           "title": "Trivy found a vulnerability to CVE-2021-23841 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -716,6 +796,10 @@
           "id": "Trivy/CVE-2021-3449",
           "title": "Trivy found a vulnerability to CVE-2021-3449 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -751,6 +835,10 @@
           "id": "Trivy/CVE-2021-23839",
           "title": "Trivy found a vulnerability to CVE-2021-23839 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -786,6 +874,10 @@
           "id": "Trivy/CVE-2020-28928",
           "title": "Trivy found a vulnerability to CVE-2020-28928 in container golang:1.12-alpine (alpine 3.11.3)",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -818,7 +910,7 @@
           ]
         }
       ],
-      "sha256": "f9122ed75d0b4d41a3a0fbd1dd53ecd4967c61f6c3af896ebdc20cd853ef73f0"
+      "sha256": "c6ec1716a630a64135af648ebc6f955aea7c0b5c5fc576b8e3a271105e1f2a65"
     }
   ]
 }

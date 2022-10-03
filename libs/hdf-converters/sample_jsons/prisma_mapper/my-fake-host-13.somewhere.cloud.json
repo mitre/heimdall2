@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.16",
+    "release": "2.6.29",
     "target_id": "my-fake-host-13.somewhere.cloud"
   },
-  "version": "2.6.16",
+  "version": "2.6.29",
   "statistics": {
     "duration": null
   },
@@ -27,6 +27,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 4.1.3) Ensure auditd service is enabled",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -57,6 +61,10 @@
         {
           "desc": "(CIS_Linux_2.0.0 - 1.4.3) Ensure authentication required for single user mode",
           "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
             "nist": [
               "SA-11",
               "RA-5"
@@ -87,6 +95,10 @@
         {
           "desc": "In SQLite through 3.22.0, databases whose schema is corrupted using a CREATE TABLE AS statement could cause a NULL pointer dereference, related to build.c and prepare.c.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -117,6 +129,10 @@
         {
           "desc": "An issue was discovered in certain Apple products. iOS before 10.3.2 is affected. macOS before 10.12.5 is affected. The issue involves the \\\"SQLite\\\" component. It allows remote attackers to execute arbitrary code or cause a denial of service (memory corruption and application crash) via a crafted web site.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -147,6 +163,10 @@
         {
           "desc": "The ecryptfs_privileged_open function in fs/ecryptfs/kthread.c in the Linux kernel before 4.6.3 allows local users to gain privileges or cause a denial of service (stack memory consumption) via vectors involving crafted mmap calls for /proc pathnames, leading to recursive pagefault handling.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -177,6 +197,10 @@
         {
           "desc": "DOCUMENTATION: A null pointer dereference vulnerability was found in golang. When using the library\\'s ssh server without specifying an option for GSSAPIWithMICConfig, it is possible for an attacker to craft an ssh client connection using the `gssapi-with-mic` authentication method and cause the server to panic resulting in a denial of service. The highest threat from this vulnerability is to system availability.             STATEMENT: A large number of products include the affected package, but do not make use of the vulnerable SSH server code.  Accordingly, the flaw itself is rated as \\\"Important\\\", but these products themselves all have a \\\"Low\\\" severity rating.  Additionally, a number of products include golang.org/x/crypto (or even golang.org/x/crypto/ssh/terminal) but not specifically golang.org/x/crypto/ssh/server.go in the final build. As this would result in a very large number of entries of not affected products, only products which include the ssh server code (golang.org/x/crypto/ssh/server.go) have been represented here.    Red Hat Enterprise Linux 8 container-tools:rhel8/containernetworking-plugins is not affected because although it uses some functionality from golang.org/x/crypto, it does not use or import anything from golang.org/x/crypto/ssh/*.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -207,6 +231,10 @@
         {
           "desc": "Red Hat\\'s versions of the associated software have been determined to NOT be affected by CVE-2021-38297.",
           "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
             "nist": [
               "SI-2",
               "RA-5"
@@ -235,7 +263,7 @@
           ]
         }
       ],
-      "sha256": "e2a512c681de2c4191559de4dcf4e29a56e4897aad9cf8b9780558c4b28aee51"
+      "sha256": "f9253b4551b7c659d4dbd2ee1e8890695744e7bd66b39b958af3d72c630cb93a"
     }
   ]
 }

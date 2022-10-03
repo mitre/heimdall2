@@ -30,6 +30,7 @@
       "**/dist": true,
       "**/samples": true,
       "**/parse_testbed": true
-    }
+    },
+    "xml.downloadExternalResources.enabled": true
   }
 }

@@ -1,0 +1,73 @@
+<Benchmark xmlns="http://checklists.nist.gov/xccdf/1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://checklists.nist.gov/xccdf/1.2 https://csrc.nist.gov/schema/xccdf/1.2/xccdf_1.2.xsd" id="xccdf_mitre.hdf-converters.xccdf_benchmark_hdf2xccdf">
+    <status date="{{Benchmark.date}}">draft</status>
+    <title>{{Benchmark.title}}</title>
+    <description>HDF Results Set converted Into XCCDF Benchmark</description>
+    <notice id="terms-of-use" xml:lang="en"></notice>
+    <front-matter xml:lang="en">{{Benchmark.passthrough}}</front-matter>
+    <rear-matter xml:lang="en"></rear-matter>
+    <version>{{Benchmark.version}}</version>
+    <metadata xmlns:xhtml="http://www.w3.org/1999/xhtml">
+        <dc:publisher xmlns:dc="http://purl.org/dc/elements/1.1/">{{Benchmark.metadata.copyright}}</dc:publisher>
+        <dc:creator xmlns:dc="http://purl.org/dc/elements/1.1/">{{Benchmark.metadata.maintainer}}</dc:creator>
+    </metadata>
+    {{#Benchmark.Profile}}
+    <Profile id="{{id}}">
+        <status>draft</status>
+        <version>{{version}}</version>
+        <title xmlns:xhtml="http://www.w3.org/1999/xhtml" xml:lang="en-US" override="true">{{title}}</title>
+        {{#select}}
+        <select idref="{{.}}" selected="true"/>
+        {{/select}}
+    </Profile>
+    {{/Benchmark.Profile}}
+    
+    {{#Benchmark.Rule}}
+    <Group id="{{groupId}}">
+        <title>{{title}}</title>
+        <description>{{description}}</description>
+        <Rule id="{{id}}" severity="{{severity}}">
+            <version>{{version}}</version>
+            <title>{{title}}</title>
+            <description>&lt;VulnDiscussion&gt;{{description}}&lt;/VulnDiscussion&gt;&lt;FalsePositives&gt;&lt;/FalsePositives&gt;&lt;FalseNegatives&gt;&lt;/FalseNegatives&gt;&lt;Documentable&gt;{{documentable}}&lt;/Documentable&gt;&lt;Mitigations&gt;&lt;/Mitigations&gt;&lt;SeverityOverrideGuidance&gt;{{waiver}}&lt;/SeverityOverrideGuidance&gt;&lt;PotentialImpacts&gt;&lt;/PotentialImpacts&gt;&lt;ThirdPartyTools&gt;&lt;/ThirdPartyTools&gt;&lt;MitigationControl&gt;&lt;/MitigationControl&gt;&lt;Responsibility&gt;&lt;/Responsibility&gt;&lt;IAControls&gt;&lt;/IAControls&gt;</description>
+            {{#descriptions}}
+            <description>{{.}}</description>
+            {{/descriptions}}
+            {{#tags}}
+            <description>{{.}}</description>
+            {{/tags}}
+            {{#ccis}}
+            <ident system="http://iase.disa.mil/cci">{{.}}</ident>
+            {{/ccis}}
+            <fixtext {{#fixid}} fixref="{{fixid}}" {{/fixid}}>{{fix}}</fixtext>
+            {{#fixid}}
+            <fix id="{{fixid}}" />
+            {{/fixid}}
+            <check system="http://www.w3.org/1999/xhtml">
+                <check-content>{{checkContent}}</check-content>
+            </check>
+        </Rule>
+    </Group>
+    {{/Benchmark.Rule}}
+    <TestResult id="xccdf_mitre.hdf-converters.xccdf_testresult_hdf2xccdf" end-time="{{Benchmark.TestResult.endTime}}">
+        <target>Original Target</target>
+        {{#Benchmark.TestResult.hasAttributes}}
+        <target-facts>
+            {{#Benchmark.TestResult.attributes}}
+            <fact name="hdf:attribute:fact:input:{{name}}">{{options.value}}</fact>
+            {{/Benchmark.TestResult.attributes}}
+        </target-facts>
+        {{/Benchmark.TestResult.hasAttributes}}
+        {{#Benchmark.TestResult.results}}
+        <rule-result idref="{{idref}}">
+            <result>{{result}}</result>
+            <message severity="{{messageType}}">{{message}}</message>
+            <check system="">
+                <check-content>{{code}}</check-content>
+            </check>
+        </rule-result>
+        {{/Benchmark.TestResult.results}}
+        <score system="urn:xccdf:scoring:absolute" maximum="1">0</score>
+    </TestResult>
+</Benchmark>
