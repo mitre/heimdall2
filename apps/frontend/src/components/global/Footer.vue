@@ -11,7 +11,7 @@
         class="mr-4"
       />
     </a>
-    <a href="https://github.com/mitre/mitre-saf" style="text-decoration: none">
+    <a href="https://github.com/mitre/heimdall2" style="text-decoration: none">
       <v-icon medium color="white">mdi-github</v-icon>
     </a>
   </v-footer>
