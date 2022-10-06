@@ -26,6 +26,7 @@
           <img
             :src="require('@/assets/netlify-light.svg')"
             style="width: 1.15rem; height: 1.15rem"
+            alt="Netlify.com"
           />
           <span class="d-none d-sm-inline pl-3">Netlify</span>
         </v-btn>

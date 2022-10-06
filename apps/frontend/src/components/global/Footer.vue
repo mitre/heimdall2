@@ -9,6 +9,7 @@
         :src="require('@/assets/netlify-light.svg')"
         style="width: 1.5rem; height: 1.5rem; vertical-align: middle"
         class="mr-4"
+        alt="Netlify.com"
       />
     </a>
     <a href="https://github.com/mitre/heimdall2" style="text-decoration: none">
