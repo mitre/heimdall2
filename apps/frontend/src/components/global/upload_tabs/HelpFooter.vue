@@ -18,6 +18,10 @@
             </v-btn>
           </template>
         </HelpModal>
+        <v-btn :href="repository + '/wiki'" target="_blank" text small>
+          <v-icon small>mdi-information</v-icon>
+          <span class="d-none d-sm-inline pl-3">Docs</span>
+        </v-btn>
         <v-btn :href="repository" target="_blank" text small>
           <v-icon small>mdi-github</v-icon>
           <span class="d-none d-sm-inline pl-3">Github</span>
@@ -29,10 +33,6 @@
             alt="Netlify.com"
           />
           <span class="d-none d-sm-inline pl-3">Netlify</span>
-        </v-btn>
-        <v-btn :href="repository" target="_blank" text small>
-          <v-icon small>mdi-information</v-icon>
-          <span class="d-none d-sm-inline pl-3">Docs</span>
         </v-btn>
         <v-btn :href="repository + changelog" target="_blank" text small>
           <v-icon small>mdi-alpha-v-circle</v-icon>
