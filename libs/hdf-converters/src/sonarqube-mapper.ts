@@ -152,7 +152,8 @@ export class SonarQubeResults {
         axios.get(`${this.sonarQubeHost}/api/sources/raw`, {
           auth: {username: this.userToken, password: ''},
           params: {
-            key: issue.component
+            key: issue.component,
+            ...(this.branchName && {branch: this.branchName})
           }
         })
       );
