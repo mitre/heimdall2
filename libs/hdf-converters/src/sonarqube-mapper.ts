@@ -130,6 +130,7 @@ export class SonarQubeResults {
           params: {
             componentKeys: this.projectId,
             types: 'VULNERABILITY',
+            statuses: 'OPEN,REOPENED',
             p: page,
             ...(this.branchName && {branch: this.branchName}),
             ...(this.pullRequestID && {pullRequest: this.pullRequestID})
