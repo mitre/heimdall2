@@ -4685,9 +4685,9 @@
   integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
 
 "@types/validator@*", "@types/validator@^13.0.0":
-  version "13.7.8"
-  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.7.8.tgz#1340c85e51d5deee03df95721c4ff5c28dae5ff8"
-  integrity sha512-HKayOBe2ThTcQykiycCQYf70Fvo0WaJEJdxxNjvX3D/mnC0IUAhMe6wsIb1wwthmjiqBAR3qGkEzHYx74MS2yw==
+  version "13.7.9"
+  resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.7.9.tgz#9b1d1c534574c89176f770f1c7b95f808cae2c1e"
+  integrity sha512-y5KJ1PjGXPpU4CZ7lThDu31s+FqvzhqwMOR6Go/x6xaQMFjgzwfzfOvCwABsylr/5n8sB1qFQm1Vi7TaCB8P+A==
 
 "@types/vuelidate@^0.7.13":
   version "0.7.15"
