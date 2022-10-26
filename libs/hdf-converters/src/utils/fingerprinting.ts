@@ -45,7 +45,10 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
     'results[0].complianceDistribution',
     'results[0].vulnerabilityDistribution',
     'results[0].collections',
-    'results[0].digest'
+    'results[0].digest',
+    'packages',
+    'complianceDistribution',
+    'vulnerabilityDistribution'
   ],
   [INPUT_TYPES.ZAP]: ['@generated', '@version', 'site'],
 
@@ -95,6 +98,8 @@ export function fingerprint(guessOptions: {
       return INPUT_TYPES.XCCDF;
     } else if (guessOptions.data.match(/<netsparker-.*generated.*>/)) {
       return INPUT_TYPES.NETSPARKER;
+    } else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {
+      return INPUT_TYPES.FORTIFY;
     } else if (
       guessOptions.data.indexOf('"AwsAccountId"') !== -1 &&
       guessOptions.data.indexOf('"SchemaVersion"') !== -1

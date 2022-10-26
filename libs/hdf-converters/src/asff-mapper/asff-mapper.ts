@@ -8,7 +8,7 @@ import {
   getCCIsForNISTTags
 } from '../utils/global';
 import {getFirewallManager} from './case-firewall-manager';
-import {getHDF2ASFF} from './case-hdf2asff';
+import {getPreviouslyHDF} from './case-previously-hdf';
 import {getProwler} from './case-prowler';
 import {getSecurityHub} from './case-security-hub';
 import {getTrivy} from './case-trivy';
@@ -30,7 +30,7 @@ export enum SpecialCasing {
   Prowler = 'Prowler',
   SecurityHub = 'AWS Security Hub',
   Trivy = 'Aqua Trivy',
-  HDF2ASFF = 'MITRE SAF HDF2ASFF',
+  PreviouslyHDF = 'MITRE SAF HDF2ASFF',
   Default = 'Default'
 }
 
@@ -79,7 +79,7 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
       }
     )
   ) {
-    return SpecialCasing.HDF2ASFF;
+    return SpecialCasing.PreviouslyHDF;
   } else {
     return SpecialCasing.Default;
   }
@@ -94,7 +94,7 @@ const SPECIAL_CASE_MAPPING: Map<
   [SpecialCasing.Prowler, getProwler()],
   [SpecialCasing.SecurityHub, getSecurityHub()],
   [SpecialCasing.Trivy, getTrivy()],
-  [SpecialCasing.HDF2ASFF, getHDF2ASFF()]
+  [SpecialCasing.PreviouslyHDF, getPreviouslyHDF()]
 ]);
 
 function externalProductHandler<T>(

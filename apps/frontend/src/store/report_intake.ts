@@ -12,6 +12,7 @@ import {
   ChecklistIntermediaryConverter,
   DBProtectMapper,
   fingerprint,
+  FortifyMapper,
   INPUT_TYPES,
   IonChannelMapper,
   JfrogXrayMapper,
@@ -22,7 +23,7 @@ import {
   SarifMapper,
   ScoutsuiteMapper,
   SnykResults,
-  TwistlockMapper,
+  TwistlockResults,
   VeracodeMapper,
   XCCDFResultsMapper,
   ZapMapper
@@ -266,7 +267,7 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.SNYK:
         return new SnykResults(convertOptions.data).toHdf();
       case INPUT_TYPES.TWISTLOCK:
-        return new TwistlockMapper(convertOptions.data).toHdf();
+        return new TwistlockResults(convertOptions.data).toHdf();
       case INPUT_TYPES.NESSUS:
         return new NessusResults(convertOptions.data).toHdf();
       case INPUT_TYPES.XCCDF:
@@ -283,8 +284,10 @@ export class InspecIntake extends VuexModule {
         return new NetsparkerMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.PRISMA:
         return new PrismaMapper(convertOptions.data).toHdf();
-      case 'veracode':
+      case INPUT_TYPES.VERACODE:
         return new VeracodeMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.FORTIFY:
+        return new FortifyMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`

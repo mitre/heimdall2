@@ -73,3 +73,15 @@ export function getCCIsForNISTTags(nistTags: string[]): string[] {
   }
   return cciTags;
 }
+
+// Using the spread operator on a falsy value within an object does nothing.  It is possible to use that syntactic behavior to conditionally add attributes to an object by writing something as follows: {...(condition && {attributeName: attribute})} which returns {} if condition is falsy and {attributeName: attribute} otherwise.  Use this function to replace the stuff in the parentheses to save cognitive complexity marks when sonarqube complains.
+export function conditionallyProvideAttribute(
+  attributeName: string,
+  attribute: unknown,
+  condition: boolean
+): Record<string, unknown> | undefined {
+  if (!condition) {
+    return undefined;
+  }
+  return {[attributeName]: attribute};
+}

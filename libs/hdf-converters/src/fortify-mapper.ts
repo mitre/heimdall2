@@ -113,34 +113,31 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
 
 export class FortifyMapper extends BaseConverter {
   startTime: string;
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: ''
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: 'Fortify Static Analyzer Scan',
         version: {path: 'FVDL.EngineData.EngineVersion'},
         title: 'Fortify Static Analyzer Scan',
-        maintainer: null,
         summary: {
           path: 'FVDL.UUID',
           transformer: (uuid: unknown): string => {
             return `Fortify Static Analyzer Scan of UUID: ${uuid}`;
           }
         },
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -148,10 +145,6 @@ export class FortifyMapper extends BaseConverter {
             arrayTransformer: filterVuln,
             path: 'FVDL.Description',
             key: 'id',
-            id: {path: 'classID'},
-            title: {path: 'Abstract', transformer: parseHtml},
-            desc: {path: 'Explanation', transformer: parseHtml},
-            impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},
             tags: {
               nist: {transformer: nistTag},
               cci: {
@@ -159,16 +152,22 @@ export class FortifyMapper extends BaseConverter {
                   getCCIsForNISTTags(nistTag(data))
               }
             },
-            descriptions: [],
             refs: [],
             source_location: {},
-            code: '',
+            title: {path: 'Abstract', transformer: parseHtml},
+            id: {path: 'classID'},
+            desc: {path: 'Explanation', transformer: parseHtml},
+            impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 path: '$.FVDL.Snippets.Snippet',
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: processEntry},
-                run_time: 0,
                 start_time: {
                   path: '$.FVDL.CreatedTS',
                   transformer: (input: unknown): string => {
@@ -181,13 +180,36 @@ export class FortifyMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        let auxData = _.get(data, 'FVDL');
+        if (_.isObject(auxData)) {
+          auxData = _.omit(auxData, [
+            'CreatedTS',
+            'UUID',
+            'Description',
+            'Snippets'
+          ]);
+        }
+        return {
+          auxiliary_data: [
+            {
+              name: 'Fortify',
+              data: {FVDL: auxData}
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    }
   };
-  constructor(fvdl: string) {
+  constructor(fvdl: string, withRaw = false) {
     super(parseXml(fvdl));
     this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(
       this.data,
       'FVDL.CreatedTS.time'
     )}`;
+    this.withRaw = withRaw;
   }
 }

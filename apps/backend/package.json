@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.6.27",
+  "version": "2.6.30",
   "description": "",
   "license": "Apache-2.0",
   "author": "",
@@ -105,7 +105,7 @@
     "ts-loader": "^9.1.0",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^4.0.0",
-    "uuid": "^8.3.2",
+    "uuid": "^9.0.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
