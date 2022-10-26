@@ -23,7 +23,7 @@ if ! grep -qF "JWT_SECRET" .env; then
 fi
 
 if ! grep -qF "API_KEY_SECRET" .env; then
-	read -p ".env does not contain API_KEY_SECRET, would you like to enable API Keys? [Y/n]" -n 1 -r
+	read -p ".env does not contain API_KEY_SECRET, would you like to enable API Keys? [Y/n]"
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		echo "API_KEY_SECRET=$(openssl rand -hex 33)" >> .env
