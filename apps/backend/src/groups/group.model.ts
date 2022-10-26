@@ -6,6 +6,7 @@ import {
   CreatedAt,
   DataType,
   Default,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -47,6 +48,9 @@ export class Group extends Model {
 
   @BelongsToMany(() => User, () => GroupUser)
   users!: Array<User & {GroupUser: GroupUser}>;
+
+  @HasMany(() => Group)
+  subGroups!: Array<Group>
 
   @BelongsToMany(() => Evaluation, () => GroupEvaluation)
   evaluations!: Array<Evaluation & {GroupEvaluation: GroupEvaluation}>;

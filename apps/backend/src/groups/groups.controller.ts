@@ -11,10 +11,10 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
+import { APIKeyOrJwtAuthGuard } from 'src/guards/api-key-or-jwt-auth.guard';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
-import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
@@ -26,7 +26,7 @@ import {RemoveUserFromGroupDto} from './dto/remove-user-from-group.dto';
 import {GroupsService} from './groups.service';
 
 @Controller('groups')
-@UseGuards(JwtAuthGuard)
+@UseGuards(APIKeyOrJwtAuthGuard)
 @UseInterceptors(LoggingInterceptor)
 export class GroupsController {
   constructor(
@@ -118,7 +118,7 @@ export class GroupsController {
     return new GroupDto(group);
   }
 
-  @Delete('/:id/evaluation')
+
   async removeEvaluationFromGroup(
     @Param('id') id: string,
     @Request() request: {user: User},
