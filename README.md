@@ -162,7 +162,7 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
    - ```bash
      ./setup-docker-env.sh
      # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
-     docker-compose up -d
+     docker-compose up
      ```
 
 6. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.) 
