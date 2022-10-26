@@ -58,11 +58,17 @@ export class ApiKeyController {
     @Body() createApiKeyDto: CreateApiKeyDto
   ): Promise<{id: string; apiKey: string}> {
     const abac = this.authz.abac.createForUser(request.user);
-    const user = createApiKeyDto.userId
-      ? await this.usersService.findById(createApiKeyDto.userId)
-      : createApiKeyDto.userEmail
-      ? await this.usersService.findByEmail(createApiKeyDto.userEmail)
-      : request.user;
+
+    let user;
+
+    if (createApiKeyDto.userId) {
+      user = await this.usersService.findById(createApiKeyDto.userId)
+    } else if (createApiKeyDto.userEmail) {
+      user = await this.usersService.findByEmail(createApiKeyDto.userEmail)
+    } else {
+      user = request.user
+    }
+
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, user);
     if (request.user.creationMethod === 'local') {
       await this.authnService.testPassword(createApiKeyDto, request.user);
