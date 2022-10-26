@@ -152,7 +152,7 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 
 1. Install Docker
 
-2. Download and extract the most recent Heimdall release from our [releases page](https://github.com/mitre/heimdall2/releases).
+2. Download and extract the most recent Heimdall release from our [releases page](https://github.com/mitre/heimdall2/releases). Alternatively, you can clone this repository and navigate to the `heimdall2` folder.
 
 3. Navigate to the base folder where `docker-compose.yml` is located
 
