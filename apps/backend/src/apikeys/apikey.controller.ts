@@ -60,6 +60,8 @@ export class ApiKeyController {
     const abac = this.authz.abac.createForUser(request.user);
     const user = createApiKeyDto.userId
       ? await this.usersService.findById(createApiKeyDto.userId)
+      : createApiKeyDto.userEmail
+      ? await this.usersService.findByEmail(createApiKeyDto.userEmail)
       : request.user;
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, user);
     if (request.user.creationMethod === 'local') {
