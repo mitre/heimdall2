@@ -1,7 +1,8 @@
 #!/bin/bash
 
 if [ -f .env ]; then
-	echo ".env already exists, if you would like to regenerate your secrets, please delete this file and re-run the script."
+	echo ".env already exists, if you would like to regenerate your secrets, please delete this file and re-run the script. Re-running this script will cause the database password to be reset within the .env file (This will not reset it in the database). If this happens, you can connect to the database directly and reset the password. Alternatively, you can remove the 'data/' folder (which will delete all data)."
+	
 else
 	echo ".env does not exist, creating..."
 	(umask 066; touch .env)
