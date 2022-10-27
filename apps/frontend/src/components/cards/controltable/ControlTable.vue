@@ -57,11 +57,25 @@
         </template>
 
         <template #id>
-          <ColumnHeader
-            text="ID"
-            :sort="sortId"
-            @input="set_sort('id', $event)"
-          />
+          <v-row class="pa-4">
+            <ColumnHeader
+              text="ID"
+              :sort="sortId"
+              @input="set_sort('id', $event)"
+            />
+            <v-tooltip bottom>
+              <template #activator="{on, attrs}">
+                <v-icon
+                  style="cursor: pointer"
+                  class="ml-2"
+                  v-bind="attrs"
+                  v-on="on"
+                  >mdi-help</v-icon
+                >
+              </template>
+              <span>ID (and legacy ID)</span>
+            </v-tooltip>
+          </v-row>
         </template>
 
         <template #severity>
