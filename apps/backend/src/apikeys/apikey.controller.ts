@@ -62,11 +62,11 @@ export class ApiKeyController {
     let user;
 
     if (createApiKeyDto.userId) {
-      user = await this.usersService.findById(createApiKeyDto.userId)
+      user = await this.usersService.findById(createApiKeyDto.userId);
     } else if (createApiKeyDto.userEmail) {
-      user = await this.usersService.findByEmail(createApiKeyDto.userEmail)
+      user = await this.usersService.findByEmail(createApiKeyDto.userEmail);
     } else {
-      user = request.user
+      user = request.user;
     }
 
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, user);
