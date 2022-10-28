@@ -21,7 +21,7 @@
             <li>Static Analysis Results Interchange Format (SARIF)</li>
             <li>Scoutsuite</li>
             <li>Snyk</li>
-            <li>XCCDF Results</li>
+            <li>XCCDF Results (Only support native OpenSCAP output and SCC output)</li>
             <li>OWASP ZAP</li>
           </ul>
         </v-tooltip>
