@@ -57,7 +57,7 @@
         </template>
 
         <template #id>
-          <v-row class="pa-4">
+          <v-row class="pa-3">
             <ColumnHeader
               text="ID"
               :sort="sortId"
@@ -67,9 +67,9 @@
               <template #activator="{on, attrs}">
                 <v-icon
                   style="cursor: pointer"
-                  class="ml-2"
                   v-bind="attrs"
                   v-on="on"
+                  x-small
                   >mdi-help</v-icon
                 >
               </template>
