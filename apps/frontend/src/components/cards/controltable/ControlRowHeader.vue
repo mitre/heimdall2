@@ -71,8 +71,11 @@
     <template #id>
       <v-card-text class="pa-2 title font-weight-bold">
         {{ control.data.id }}
-        {{ control.data.tags["legacy"]? "("+control.data.tags["legacy"][0]+")":""}}
-
+        {{
+          control.data.tags['legacy']
+            ? '(' + control.data.tags['legacy'][0] + ')'
+            : ''
+        }}
       </v-card-text>
     </template>
     <template #tags>

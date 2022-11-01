@@ -65,15 +65,11 @@
             />
             <v-tooltip bottom>
               <template #activator="{on, attrs}">
-                <v-icon
-                  style="cursor: pointer"
-                  v-bind="attrs"
-                  v-on="on"
-                  x-small
+                <v-icon style="cursor: pointer" v-bind="attrs" x-small v-on="on"
                   >mdi-help</v-icon
                 >
               </template>
-              <span>ID (and legacy ID)</span>
+              <span>ID <br />(Legacy ID) </span>
             </v-tooltip>
           </v-row>
         </template>
