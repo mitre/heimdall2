@@ -156,7 +156,7 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 
 3. Navigate to the base folder where `docker-compose.yml` is located
 
-4. By default Heimdall will generate self-signed certificates that will last for 7 days. For producetion use, place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively. For development use you can use the default generated certificates which means you do not need to put any certificate files in the `./nginx/certs/` folder.
+4. By default Heimdall will generate self-signed certificates that will last for 7 days. For production use, place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively. For development use, you can use the default generated certificates which means you do not need to put any certificate files in the `./nginx/certs/` folder.
 
 *NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
 
