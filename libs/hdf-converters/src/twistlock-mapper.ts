@@ -91,6 +91,7 @@ export class TwistlockMapper extends BaseConverter {
           {
             path: 'vulnerabilities',
             key: 'id',
+            pathTransform: (value) => Array.isArray(value) ? value : [],
             tags: {
               nist: DEFAULT_UPDATE_REMEDIATION_NIST_TAGS,
               cci: getCCIsForNISTTags(DEFAULT_UPDATE_REMEDIATION_NIST_TAGS),
