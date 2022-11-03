@@ -68,3 +68,6 @@ apps/frontend/public/static/export/jquery.min.js
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# Database Content
+data/*

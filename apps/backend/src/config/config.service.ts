@@ -64,7 +64,7 @@ export class ConfigService {
     return this.appConfig.getDbConfig();
   }
 
-  getSSLConfig(): false | {rejectUnauthorized: boolean} {
+  getSSLConfig(): false | Record<string, unknown> {
     return this.appConfig.getSSLConfig();
   }
 
