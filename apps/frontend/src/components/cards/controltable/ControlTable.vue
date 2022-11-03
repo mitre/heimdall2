@@ -71,7 +71,7 @@
                   style="cursor: pointer"
                   v-bind="attrs"
                   v-on="on"
-                  >mdi-help-circle</v-icon
+                  >mdi-information-outline</v-icon
                 >
               </template>
               <span>ID <br />(Legacy ID) </span>

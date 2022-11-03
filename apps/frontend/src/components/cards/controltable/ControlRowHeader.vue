@@ -73,7 +73,7 @@
         <div>
           {{ control.data.id }}
         </div>
-        <div>
+        <div v-if="showLegacy(control)">
           {{ showLegacy(control) }}
         </div>
       </v-card-text>
@@ -269,15 +269,20 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     });
   }
   showLegacy(control: any) {
-    let legacyTag = control.data.tags['legacy'];
+    const legacyTag = control.data.tags['legacy'];
     if (legacyTag) {
       if (Array.isArray(legacyTag)) {
-        return '(' + legacyTag.find((ele) => ele.indexOf('V-') == 0) + ')';
+        const legacyID = legacyTag.find(
+          (ele) => typeof ele === 'string' && ele.startsWith('V-')
+        );
+        return legacyID ? '(' + legacyID + ')' : '';
       } else {
-        return legacyTag;
+        return typeof legacyTag === 'string' && legacyTag.startsWith('V-')
+          ? '(' + legacyTag + ')'
+          : '';
       }
     } else {
-      return;
+      return '';
     }
   }
 }
