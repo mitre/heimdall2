@@ -70,12 +70,12 @@
     <!-- ID and Tags -->
     <template #id>
       <v-card-text class="pa-2 title font-weight-bold">
-        {{ control.data.id }}
-        {{
-          control.data.tags['legacy']
-            ? '(' + control.data.tags['legacy'][0] + ')'
-            : ''
-        }}
+        <div>
+          {{ control.data.id }}
+        </div>
+        <div>
+          {{ showLegacy(control) }}
+        </div>
       </v-card-text>
     </template>
     <template #tags>
@@ -267,6 +267,18 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return cci_tags.map((cci) => {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
     });
+  }
+  showLegacy(control: any) {
+    let legacyTag = control.data.tags['legacy'];
+    if (legacyTag) {
+      if (Array.isArray(legacyTag)) {
+        return '(' + legacyTag.find((ele) => ele.indexOf('V-') == 0) + ')';
+      } else {
+        return legacyTag;
+      }
+    } else {
+      return;
+    }
   }
 }
 </script>
