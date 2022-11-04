@@ -268,6 +268,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
     });
   }
+
   showLegacy(control: any) {
     const legacyTag = control.data.tags['legacy'];
     if (legacyTag) {
