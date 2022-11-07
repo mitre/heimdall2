@@ -135,7 +135,6 @@
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import CircleRating from '@/components/generic/CircleRating.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
-import LegacyIdMixin from '@/mixins/LegacyIdMixin';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {getControlRunTime} from '@/utilities/delta_util';
 import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
@@ -156,10 +155,7 @@ interface Tag {
     CircleRating
   }
 })
-export default class ControlRowHeader extends mixins(
-  HtmlSanitizeMixin,
-  LegacyIdMixin
-) {
+export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Object, required: true})
   readonly control!: ContextualizedControl;
 
@@ -271,6 +267,20 @@ export default class ControlRowHeader extends mixins(
     return cci_tags.map((cci) => {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
     });
+  }
+
+  showLegacy(control: ContextualizedControl) {
+    let legacyTag = control.data.tags['legacy'];
+    if (!legacyTag) {
+      return '';
+    }
+    if (!Array.isArray(legacyTag)) {
+      legacyTag = [legacyTag];
+    }
+    const legacyID = legacyTag.find(
+      (ele: unknown) => _.isString(ele) && ele.startsWith('V-')
+    );
+    return legacyID ? '(' + legacyID + ')' : '';
   }
 }
 </script>

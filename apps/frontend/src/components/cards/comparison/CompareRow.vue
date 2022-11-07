@@ -4,12 +4,7 @@
       <!-- Control ID -->
       <v-col cols="3" xs="3" sm="2" md="1" class="pt-0">
         <div style="text-align: center; padding: 19px">
-          <div>
-            {{ controlId }}
-          </div>
-          <div v-if="showLegacy(control)">
-            {{ showLegacy(control) }}
-          </div>
+          {{ controlId }}
         </div>
       </v-col>
       <v-col v-for="fileId in fileIds" :key="fileId" cols="4" md="5" filter>
@@ -49,11 +44,11 @@
 <script lang="ts">
 import DeltaView from '@/components/cards/comparison/DeltaView.vue';
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
-import LegacyIdMixin from '@/mixins/LegacyIdMixin';
 import {FileID} from '@/store/report_intake';
 import {ControlDelta, ControlSeries} from '@/utilities/delta_util';
 import {ContextualizedControl, HDFControl} from 'inspecjs';
-import Component, {mixins} from 'vue-class-component';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
 @Component({
@@ -62,7 +57,7 @@ import {Prop} from 'vue-property-decorator';
     ControlRowDetails
   }
 })
-export default class CompareRow extends mixins(LegacyIdMixin) {
+export default class CompareRow extends Vue {
   @Prop({type: String, required: true}) readonly controlId!: string;
   @Prop({type: Array, required: true}) readonly fileIds!: FileID[];
   @Prop({type: Object, required: true}) readonly controls!: ControlSeries;
