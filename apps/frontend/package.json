@@ -142,6 +142,9 @@
     "ts-jest": "^27.0.2",
     "vue-jest": "^3.0.7"
   },
+  "engines": {
+    "node": "<17.0.0"
+  },
   "branch": "/blob/master/",
   "changelog": "/releases",
   "issues": "/issues/new/choose",
