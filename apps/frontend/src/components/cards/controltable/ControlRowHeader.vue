@@ -269,22 +269,18 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     });
   }
 
-  showLegacy(control: any) {
-    const legacyTag = control.data.tags['legacy'];
-    if (legacyTag) {
-      if (Array.isArray(legacyTag)) {
-        const legacyID = legacyTag.find(
-          (ele) => typeof ele === 'string' && ele.startsWith('V-')
-        );
-        return legacyID ? '(' + legacyID + ')' : '';
-      } else {
-        return typeof legacyTag === 'string' && legacyTag.startsWith('V-')
-          ? '(' + legacyTag + ')'
-          : '';
-      }
-    } else {
+  showLegacy(control: ContextualizedControl) {
+    let legacyTag = control.data.tags['legacy'];
+    if (!legacyTag) {
       return '';
     }
+    if (!Array.isArray(legacyTag)) {
+      legacyTag = [legacyTag];
+    }
+    const legacyID = legacyTag.find(
+      (ele: unknown) => _.isString(ele) && ele.startsWith('V-')
+    );
+    return legacyID ? '(' + legacyID + ')' : '';
   }
 }
 </script>
