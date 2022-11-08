@@ -4312,12 +4312,12 @@
     "@types/istanbul-lib-report" "*"
 
 "@types/jest-environment-puppeteer@^5.0.0":
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/@types/jest-environment-puppeteer/-/jest-environment-puppeteer-5.0.2.tgz#604370c20b3c62e40d155b19eb544d1580dbc69e"
-  integrity sha512-YCdegQnDou6aIK8wqygDDctHgJZtlXd03fI9Bgbqkdu66EFKnImmt7auiR9OkxkSSiqS9smn0joX2pGpVs7ErA==
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/@types/jest-environment-puppeteer/-/jest-environment-puppeteer-5.0.3.tgz#9a77a7162b56eb41c248f4b0f7e2dc0f91681c6f"
+  integrity sha512-vWGfeb+0TOPZy7+VscKURWzE5lzYjclSWLxtjVpDAYcjUv8arAS1av06xK3mpgeNCDVx7XvavD8Elq1a4w9wIA==
   dependencies:
     "@jest/types" ">=24 <=27"
-    "@types/puppeteer" "*"
+    "@types/puppeteer" "^5.4.0"
     jest-environment-node ">=24 <=27"
 
 "@types/jest@*", "@types/jest@^27.0.0", "@types/jest@^27.0.1":
@@ -4553,7 +4553,7 @@
     "@types/duplexify" "*"
     "@types/node" "*"
 
-"@types/puppeteer@*", "@types/puppeteer@^5.4.0":
+"@types/puppeteer@^5.4.0":
   version "5.4.6"
   resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-5.4.6.tgz#afc438e41dcbc27ca1ba0235ea464a372db2b21c"
   integrity sha512-98Kghehs7+/GD9b56qryhqdqVCXUTbetTv3PlvDnmFRTHQH0j9DIp1f7rkAW3BAj4U3yoeSEQnKgdW8bDq0Y0Q==
