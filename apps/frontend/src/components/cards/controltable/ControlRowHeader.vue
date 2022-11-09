@@ -19,7 +19,11 @@
 
     <template #set>
       <v-row class="pa-4">
-        <div class="pa-2 title" v-text="filename" />
+        <div
+          class="pa-2 title"
+          :style="$vuetify.breakpoint.lgAndUp ? 'width: 15vw' : 'width:20vw'"
+          v-text="filename"
+        />
         <v-tooltip v-if="isOverlaid" bottom>
           <template #activator="{on, attrs}">
             <v-icon
@@ -66,7 +70,12 @@
     <!-- ID and Tags -->
     <template #id>
       <v-card-text class="pa-2 title font-weight-bold">
-        {{ control.data.id }}
+        <div>
+          {{ control.data.id }}
+        </div>
+        <div v-if="showLegacy(control)">
+          {{ showLegacy(control) }}
+        </div>
       </v-card-text>
     </template>
     <template #tags>
@@ -189,7 +198,11 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get isOverlaid() {
-    return Boolean(this.control.extendsFrom.length);
+    return this.control.extendsFrom.some(
+      (extension) =>
+        extension.data.code !== this.control.data.code &&
+        extension.data.code !== ''
+    );
   }
 
   severity_arrow_count(severity: string): number {
@@ -236,7 +249,9 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
           add_spaces: false,
           allow_letters: false
         });
-        url = 'https://nvd.nist.gov/800-53/Rev4/control/' + url;
+        url =
+          'https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/control?version=5.1&number=' +
+          url;
       }
       return {label: tag, url: url, description: this.descriptionForTag(tag)};
     });
@@ -252,6 +267,20 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return cci_tags.map((cci) => {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
     });
+  }
+
+  showLegacy(control: ContextualizedControl) {
+    let legacyTag = control.data.tags['legacy'];
+    if (!legacyTag) {
+      return '';
+    }
+    if (!Array.isArray(legacyTag)) {
+      legacyTag = [legacyTag];
+    }
+    const legacyID = legacyTag.find(
+      (ele: unknown) => _.isString(ele) && ele.startsWith('V-')
+    );
+    return legacyID ? '(' + legacyID + ')' : '';
   }
 }
 </script>

@@ -29,6 +29,12 @@ test/videos
 *.launch
 .settings/
 *.sublime-workspace
+.nvmrc
+.editorconfig
+
+# Editor - Vim
+.*.un~
+.*.swp
 
 # IDE - VSCode
 .vscode/*
@@ -62,3 +68,6 @@ apps/frontend/public/static/export/jquery.min.js
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# Database Content
+data/*

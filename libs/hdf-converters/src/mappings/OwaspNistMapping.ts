@@ -1,4 +1,4 @@
-import {default as data} from '../../data/owasp-nist-mapping.json';
+import {data} from './OWaspNistMappingData';
 import {OwaspNistMappingItem} from './OwaspNistMappingItem';
 
 export interface IOWASPJSONID {

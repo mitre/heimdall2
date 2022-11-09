@@ -108,9 +108,11 @@
               <template #[`item.name`]="{item}"
                 ><v-text-field v-model="item.name" @change="updateAPIKey(item)"
               /></template>
-              <template #[`item.apiKey`]="{item}">{{
-                truncate(item.apiKey) || 'Only Shown on Creation'
-              }}</template>
+              <template #[`item.apiKey`]="{item}"
+                ><span class="break-lines">{{
+                  item.apiKey || 'Only Shown on Creation'
+                }}</span></template
+              >
               <template #[`item.action`]="{item}">
                 <v-tooltip left>
                   <template #activator="{on, attrs}">
@@ -247,7 +249,6 @@ import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {IApiKey, IUpdateUser, IUser} from '@heimdall/interfaces';
 import axios from 'axios';
-import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -360,10 +361,6 @@ export default class UserModal extends Vue {
     }
   }
 
-  truncate(str: string) {
-    return _.truncate(str, {length: 80});
-  }
-
   changePasswordDialog() {
     this.changePassword = !this.changePassword;
   }
@@ -416,10 +413,28 @@ export default class UserModal extends Vue {
       });
   }
 
-  deleteAPIKey(keyToDelete: IApiKey) {
-    this.activeAPIKey = keyToDelete;
-    this.updateCallback = this.deleteAPIKeyConfirm;
-    this.inputPasswordDialog = true;
+  deleteAPIKey(item: IApiKey) {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
+    this.inputPasswordDialog = false;
+    axios
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
+        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
+      })
+      .then(() => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.updateCallback = this.deleteAPIKeyConfirm;
+            this.inputPasswordDialog = true;
+          }
+        }
+        throw error;
+      });
+    this.activeAPIKey = null;
   }
 
   deleteAPIKeyConfirm() {
@@ -463,10 +478,29 @@ export default class UserModal extends Vue {
     this.activeAPIKey = null;
   }
 
-  refreshAPIKey(keyToRefresh: IApiKey) {
-    this.activeAPIKey = keyToRefresh;
-    this.updateCallback = this.refreshAPIKeyConfirm;
-    this.inputPasswordDialog = true;
+  refreshAPIKey(item: IApiKey) {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
+    this.inputPasswordDialog = false;
+    axios
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
+        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
+      })
+      .then(() => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
+        this.addAPIKey();
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.updateCallback = this.refreshAPIKeyConfirm;
+            this.inputPasswordDialog = true;
+          }
+        }
+        throw error;
+      });
+    this.activeAPIKey = null;
   }
 
   refreshAPIKeyConfirm() {
@@ -494,3 +528,9 @@ export default class UserModal extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.break-lines {
+  overflow-wrap: anywhere;
+}
+</style>

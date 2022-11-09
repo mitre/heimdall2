@@ -51,11 +51,62 @@ export default class AppConfig {
   }
 
   getSSLConfig() {
-    return Boolean(this.get('DATABASE_SSL'))
-      ? {
-          rejectUnauthorized: false
+    if (
+      !this.get('DATABASE_SSL') ||
+      this.get('DATABASE_SSL')?.toLowerCase() === 'false'
+    ) {
+      return false;
+    }
+
+    let sslKey, sslCert, sslCA;
+
+    if (typeof this.get('DATABASE_SSL_KEY') === 'string') {
+      if (this.get('DATABASE_SSL_KEY')?.indexOf('-BEGIN') !== -1) {
+        sslKey = this.get('DATABASE_SSL_KEY');
+      } else {
+        // Verify file exists
+        if (fs.statSync(this.get('DATABASE_SSL_KEY')!).isFile()) {
+          sslKey = fs.readFileSync(this.get('DATABASE_SSL_KEY')!);
+        } else {
+          throw new Error('SSL Key file does not exist');
         }
-      : false;
+      }
+    }
+
+    if (typeof this.get('DATABASE_SSL_CERT') === 'string') {
+      if (this.get('DATABASE_SSL_CERT')?.indexOf('-BEGIN') !== -1) {
+        sslCert = this.get('DATABASE_SSL_CERT');
+      } else {
+        // Verify file exists
+        if (fs.statSync(this.get('DATABASE_SSL_CERT')!).isFile()) {
+          sslCert = fs.readFileSync(this.get('DATABASE_SSL_CERT')!);
+        } else {
+          throw new Error('SSL Cert file does not exist');
+        }
+      }
+    }
+
+    if (typeof this.get('DATABASE_SSL_CA') === 'string') {
+      if (this.get('DATABASE_SSL_CA')?.indexOf('-BEGIN') !== -1) {
+        sslCA = this.get('DATABASE_SSL_CA');
+      } else {
+        // Verify file exists
+        if (fs.statSync(this.get('DATABASE_SSL_CA')!).isFile()) {
+          sslCA = fs.readFileSync(this.get('DATABASE_SSL_CA')!);
+        } else {
+          throw new Error('SSL CA file does not exist');
+        }
+      }
+    }
+
+    return {
+      rejectUnauthorized:
+        this.get('DATABASE_SSL_INSECURE') &&
+        this.get('DATABASE_SSL_INSECURE')?.toLowerCase() === 'true',
+      key: sslKey,
+      cert: sslCert,
+      ca: sslCA
+    }
   }
 
   getDbConfig() {

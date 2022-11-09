@@ -8,6 +8,11 @@
       "name": "Backend",
       "path": "apps/backend"
     },
+
+    {
+      "name": "HDF Converters",
+      "path": "libs/hdf-converters"
+    },
     {
       "name": "InspecJS",
       "path": "libs/inspecjs"
@@ -25,6 +30,7 @@
       "**/dist": true,
       "**/samples": true,
       "**/parse_testbed": true
-    }
+    },
+    "xml.downloadExternalResources.enabled": true
   }
 }

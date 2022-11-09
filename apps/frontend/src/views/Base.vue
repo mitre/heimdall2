@@ -19,6 +19,7 @@
         'margin-top': classification ? '1.5em' : '0'
       }"
       :minimal-topbar="minimalTopbar"
+      :show-back-button="showBackButton"
       @toggle-drawer="drawer = !drawer"
     >
       <template #content>
@@ -69,6 +70,7 @@ export default class Base extends Vue {
   @Prop({default: 'Heimdall'}) readonly title!: string;
   @Prop({default: 11}) readonly topbarZIndex!: number;
   @Prop({default: false}) readonly minimalTopbar!: boolean;
+  @Prop({default: false}) readonly showBackButton!: boolean;
   @Prop({default: true}) readonly showTopbar!: boolean;
   @Prop({default: false}) readonly showSearch!: boolean;
 
@@ -101,6 +103,14 @@ export default class Base extends Vue {
         });
       });
     }
+  }
+
+  mounted() {
+    InspecIntakeModule.detectAndLoadPredefinedJSON().then((resultLoaded) => {
+      if (resultLoaded) {
+        this.$router.push('/results');
+      }
+    });
   }
 }
 </script>

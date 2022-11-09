@@ -5,6 +5,7 @@ export interface IOptions {
   awsAccountId: string;
   target: string;
   region: string;
+  regionAttribute?: boolean;
 }
 
 export interface IExecJSONASFF {

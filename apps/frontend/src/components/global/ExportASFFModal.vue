@@ -32,7 +32,7 @@
             </template>
             <span
               >The target name is a user-defined string that is used to update
-              exisitng controls in Security Hub.<br />
+              existing controls in Security Hub.<br />
               If you upload a different results set of the same controls and
               using the same target name, the existing<br />
               findings in Security Hub will be updated.

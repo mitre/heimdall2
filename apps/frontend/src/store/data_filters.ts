@@ -315,10 +315,7 @@ export class FilteredData extends VuexModule {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
-      const controlFilters: Record<
-        string,
-        boolean | Array<string> | undefined
-      > = {
+      const controlFilters: Record<string, boolean | string[] | undefined> = {
         'root.hdf.severity': filter.severity,
         'hdf.wraps.id': filter.ids,
         'hdf.wraps.title': filter.titleSearchTerms,
@@ -387,7 +384,7 @@ export function filter_cache_key(f: Filter) {
 
 export function filterControlsBy(
   controls: readonly ContextualizedControl[],
-  filters: Record<string, boolean | Array<string> | undefined>
+  filters: Record<string, boolean | string[] | undefined>
 ): readonly ContextualizedControl[] {
   const activeFilters: typeof filters = _.pickBy(
     filters,

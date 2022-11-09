@@ -57,11 +57,26 @@
         </template>
 
         <template #id>
-          <ColumnHeader
-            text="ID"
-            :sort="sortId"
-            @input="set_sort('id', $event)"
-          />
+          <v-row class="pa-3">
+            <ColumnHeader
+              text="ID"
+              :sort="sortId"
+              @input="set_sort('id', $event)"
+            />
+            <v-tooltip bottom>
+              <template #activator="{on, attrs}">
+                <v-icon
+                  class="ml-0"
+                  small
+                  style="cursor: pointer"
+                  v-bind="attrs"
+                  v-on="on"
+                  >mdi-information-outline</v-icon
+                >
+              </template>
+              <span>ID <br />(Legacy ID) </span>
+            </v-tooltip>
+          </v-row>
         </template>
 
         <template #severity>
@@ -179,7 +194,7 @@ export default class ControlTable extends Vue {
   syncTab = 'tab-test';
 
   // List of currently expanded options. If unique id is in here, it is expanded
-  expanded: Array<string> = [];
+  expanded: string[] = [];
 
   // Sorts
   sortId: Sort = 'none';

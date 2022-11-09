@@ -1,4 +1,4 @@
-import axios, {AxiosResponse} from 'axios';
+import axios from 'axios';
 import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
@@ -9,6 +9,7 @@ import {
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
+import {getCCIsForNISTTags} from './utils/global';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type Issue = {
@@ -97,11 +98,21 @@ export class SonarQubeResults {
   sonarQubeHost = '';
   projectId = '';
   userToken = '';
+  branchName? = '';
+  pullRequestID? = '';
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  constructor(sonarQubeHost: string, projectId: string, userToken: string) {
+  constructor(
+    sonarQubeHost: string,
+    projectId: string,
+    userToken: string,
+    branchName?: string,
+    pullRequestID?: string
+  ) {
     this.sonarQubeHost = sonarQubeHost;
     this.projectId = projectId;
     this.userToken = userToken;
+    this.branchName = branchName;
+    this.pullRequestID = pullRequestID;
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
@@ -119,7 +130,12 @@ export class SonarQubeResults {
           params: {
             componentKeys: this.projectId,
             types: 'VULNERABILITY',
-            p: page
+            statuses: 'OPEN,REOPENED,CONFIRMED,RESOLVED',
+            p: page,
+            ...(this.branchName && {branch: this.branchName}),
+            ...(this.pullRequestID && {pullRequest: this.pullRequestID})
+            //these are optional, if not specified sonarqube will default to the
+            // default branch from git.
           }
         })
         .then(({data}) => {
@@ -130,77 +146,75 @@ export class SonarQubeResults {
           page += 1;
         });
     }
-    // Get code snippets for each issue
-    let requests: Promise<AxiosResponse>[] = [];
-    this.data.issues?.forEach((issue) => {
-      requests.push(
-        axios.get(`${this.sonarQubeHost}/api/sources/raw`, {
-          auth: {username: this.userToken, password: ''},
-          params: {
-            key: issue.component
-          }
-        })
-      );
-    });
-    // Wait for all requests
-    await axios.all(requests).then(
-      axios.spread((...responses) => {
-        // Extract code snippets from SonarQube
-        responses.forEach((response, index) => {
-          this.data.issues[index].snip = response.data
-            .split('\n')
-            .slice(
-              (this.data.issues[index].textRange?.startLine as number) - 3,
-              // api doesn't care if we request lines past end of file
-              (this.data.issues[index].textRange?.endLine as number) + 3
-            )
-            .join('\n');
-        });
-      })
-    );
-    // Get all rules
-    requests = [];
-    this.data.issues?.forEach((issue) => {
-      requests.push(
-        axios.get(`${this.sonarQubeHost}/api/rules/show`, {
-          auth: {username: this.userToken, password: ''},
-          params: {
-            key: issue.rule
-          }
-        })
-      );
-    });
-    await axios.all(requests).then(
-      axios.spread((...responses) => {
-        responses.forEach((response, index) => {
-          this.data.issues[index].sysTags = response.data.rule.sysTags;
-          this.data.issues[index].name = response.data.rule.name;
-          this.data.issues[index].summary = response.data.rule.htmlDesc;
-        });
-      })
-    );
-    const result = new SonarQubeMapper(this.data, this.projectId);
-    return result.toHdf();
-  }
 
-  setMappings(
-    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    this.customMapping = customMapping;
+    // Get code snippets for each issue
+    await Promise.all(
+      this.data.issues?.map((issue) =>
+        axios
+          .get(`${this.sonarQubeHost}/api/sources/raw`, {
+            auth: {username: this.userToken, password: ''},
+            params: {
+              key: issue.component,
+              ...(this.branchName && {branch: this.branchName})
+            }
+          })
+          .then(
+            (response) =>
+              (issue.snip = response.data
+                .split('\n')
+                .slice(
+                  // api does care if we request lines before the start of the file (returns an empty string)
+                  Math.max((issue.textRange?.startLine as number) - 3, 0),
+                  // api doesn't care if we request lines past end of file
+                  (issue.textRange?.endLine as number) + 3
+                )
+                .join('\n')
+                .trim())
+          )
+      )
+    );
+
+    // Get all rules
+    await Promise.all(
+      this.data.issues?.map((issue) =>
+        axios
+          .get(`${this.sonarQubeHost}/api/rules/show`, {
+            auth: {username: this.userToken, password: ''},
+            params: {
+              key: issue.rule
+            }
+          })
+          .then((response) => {
+            issue.sysTags = response.data.rule.sysTags;
+            issue.name = response.data.rule.name;
+            issue.summary = response.data.rule.htmlDesc;
+          })
+      )
+    );
+
+    const result = new SonarQubeMapper(
+      this.data,
+      this.projectId,
+      this.branchName,
+      this.pullRequestID
+    );
+    return result.toHdf();
   }
 }
 
-export class SonarQubeMapper extends BaseConverter {
-  projectName = '';
-  constructor(issuesJSON: IssueData, projectName: string) {
-    super(issuesJSON as Record<string, any>);
-    this.projectName = projectName;
-  }
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+function createSonarqubeMappings(
+  projectName: string,
+  branchName?: string,
+  pullRequestID?: string
+): MappedTransform<ExecJSON.Execution, ILookupPath> {
+  const scanDescriptionModifier =
+    (branchName ? ` Branch ${branchName}` : '') +
+    (pullRequestID ? ` Pull Request ${pullRequestID}` : '');
+  return {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: this.projectName
+      target_id: projectName
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -209,10 +223,10 @@ export class SonarQubeMapper extends BaseConverter {
     profiles: [
       {
         name: 'Sonarqube Scan',
-        version: '',
-        title: `SonarQube Scan of Project ${this.projectName}`,
+        version: null,
+        title: `SonarQube Scan of Project ${projectName}${scanDescriptionModifier}`,
         maintainer: null,
-        summary: `SonarQube Scan of Project ${this.projectName}`,
+        summary: `SonarQube Scan of Project ${projectName}${scanDescriptionModifier}`,
         license: null,
         copyright: null,
         copyright_email: null,
@@ -237,6 +251,10 @@ export class SonarQubeMapper extends BaseConverter {
             },
             code: null,
             tags: {
+              cci: {
+                transformer: (issue: Issue) =>
+                  getCCIsForNISTTags(parseNistTags(issue))
+              },
               nist: {transformer: parseNistTags}
             },
             results: [
@@ -253,9 +271,21 @@ export class SonarQubeMapper extends BaseConverter {
       }
     ]
   };
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
+}
+
+export class SonarQubeMapper extends BaseConverter {
+  projectName = '';
+  branchName = '';
+  pullRequestID = '';
+  constructor(
+    issuesJSON: IssueData,
+    projectName: string,
+    branchName?: string,
+    pullRequestID?: string
+  ) {
+    super(issuesJSON as Record<string, any>);
+    super.setMappings(
+      createSonarqubeMappings(projectName, branchName, pullRequestID)
+    );
   }
 }

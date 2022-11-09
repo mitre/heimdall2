@@ -1,11 +1,10 @@
-import {default as data} from '../../data/nessus-plugins-nist-mapping.json';
+import {data} from './NessusPluginNistMappingData';
 import {NessusPluginsNistMappingItem} from './NessusPluginsNistMappingItem';
 
 export interface INESSUSJSONID {
   pluginFamily: string;
   pluginID: string | number;
   'NIST-ID': string;
-  Rev: string | number;
 }
 
 export class NessusPluginsNistMapping {
@@ -43,8 +42,6 @@ export class NessusPluginsNistMapping {
     }
     if (matches.length === 0) {
       return DEFAULT_NIST_TAG;
-    } else {
-      matches.push('Rev_4');
     }
     return matches;
   }

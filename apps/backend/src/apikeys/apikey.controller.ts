@@ -58,11 +58,21 @@ export class ApiKeyController {
     @Body() createApiKeyDto: CreateApiKeyDto
   ): Promise<{id: string; apiKey: string}> {
     const abac = this.authz.abac.createForUser(request.user);
-    const user = createApiKeyDto.userId
-      ? await this.usersService.findById(createApiKeyDto.userId)
-      : request.user;
+
+    let user;
+
+    if (createApiKeyDto.userId) {
+      user = await this.usersService.findById(createApiKeyDto.userId);
+    } else if (createApiKeyDto.userEmail) {
+      user = await this.usersService.findByEmail(createApiKeyDto.userEmail);
+    } else {
+      user = request.user;
+    }
+
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, user);
-    await this.authnService.testPassword(createApiKeyDto, request.user);
+    if (request.user.creationMethod === 'local') {
+      await this.authnService.testPassword(createApiKeyDto, request.user);
+    }
     return this.apiKeyService.create(user, createApiKeyDto);
   }
 
@@ -79,7 +89,9 @@ export class ApiKeyController {
       Action.Update,
       apiKeyToDelete.user
     );
-    await this.authnService.testPassword(deleteApiKeyDto, request.user);
+    if (request.user.creationMethod === 'local') {
+      await this.authnService.testPassword(deleteApiKeyDto, request.user);
+    }
     return this.apiKeyService.remove(id);
   }
 
@@ -96,7 +108,9 @@ export class ApiKeyController {
       Action.Update,
       apiKeyToUpdate.user
     );
-    await this.authnService.testPassword(updateApiKeyDto, request.user);
+    if (request.user.creationMethod === 'local') {
+      await this.authnService.testPassword(updateApiKeyDto, request.user);
+    }
     return this.apiKeyService.update(apiKeyToUpdate.id, updateApiKeyDto);
   }
 }

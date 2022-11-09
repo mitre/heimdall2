@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {NiktoNistMapping} from './mappings/NiktoNistMapping';
+import {getCCIsForNISTTags} from './utils/global';
 
 const NIKTO_NIST_MAPPING = new NiktoNistMapping();
 
@@ -23,34 +24,31 @@ function nistTag(id: string): string[] {
 }
 
 export class NiktoMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: {transformer: projectName}
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: 'Nikto Website Scanner',
-        version: '',
         title: {transformer: formatTitle},
-        maintainer: null,
         summary: {
           path: 'banner',
           transformer: (input: unknown): string => {
             return `Banner: ${input}`;
           }
         },
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -59,21 +57,26 @@ export class NiktoMapper extends BaseConverter {
             key: 'id',
             tags: {
               nist: {path: 'id', transformer: nistTag},
+              cci: {
+                path: 'id',
+                transformer: (id: string) => getCCIsForNISTTags(nistTag(id))
+              },
               ösvdb: {path: 'OSVDB'}
             },
-            descriptions: [],
             refs: [],
             source_location: {},
             title: {path: 'msg'},
             id: {path: 'id'},
             desc: {path: 'msg'},
             impact: 0.5,
-            code: '',
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {transformer: formatCodeDesc},
-                run_time: 0,
                 start_time: ''
               }
             ]
@@ -81,14 +84,23 @@ export class NiktoMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {
+          auxiliary_data: [
+            {
+              name: 'Nikto',
+              data: _.omit(data, ['banner', 'host', 'port', 'vulnerabilities'])
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    }
   };
-  constructor(niktoJson: string) {
+  constructor(niktoJson: string, withRaw = false) {
     super(JSON.parse(niktoJson));
-  }
-  setMappings(
-    customMappings: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    super.setMappings(customMappings);
+    this.withRaw = withRaw;
   }
 }

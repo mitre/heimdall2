@@ -1,4 +1,3 @@
-import parser from 'fast-xml-parser';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -7,7 +6,8 @@ import {
   ILookupPath,
   impactMapping,
   MappedTransform,
-  parseHtml
+  parseHtml,
+  parseXml
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
 import {NessusPluginsNistMapping} from './mappings/NessusPluginsNistMapping';
@@ -27,16 +27,7 @@ const COMPLIANCE_PATH = 'cm:compliance-reference';
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
-const DEFAULT_NIST_TAG = ['unmapped'];
-
-function parseXml(xml: string): Record<string, unknown> {
-  const options = {
-    attributeNamePrefix: '',
-    textNodeName: 'text',
-    ignoreAttributes: false
-  };
-  return parser.parse(xml, options);
-}
+const DEFAULT_NIST_TAG: string[] = [];
 
 let policyName: string;
 let version: string;
@@ -99,6 +90,7 @@ function getImpact(item: unknown): number {
     return impactMapping(IMPACT_MAPPING)(_.get(item, 'severity'));
   }
 }
+
 function getCheck(item: unknown): string {
   if (_.has(item, 'cm:compliance-solution')) {
     return parseHtml(_.get(item, 'cm:compliance-solution'));
@@ -106,6 +98,15 @@ function getCheck(item: unknown): string {
     return '';
   }
 }
+
+function getFix(item: unknown): string {
+  const fix = _.get(item, 'solution');
+  if (fix && fix !== 'n/a') {
+    return fix;
+  }
+  return '';
+}
+
 function getNist(item: unknown): string[] {
   if (_.has(item, COMPLIANCE_PATH)) {
     return cciNistTag(_.get(item, COMPLIANCE_PATH));
@@ -166,6 +167,7 @@ function getStartTime(tag: unknown): string {
     return _.get(tag, 'text');
   }
 }
+
 function cleanData(control: unknown[]): ExecJSON.Control[] {
   const filteredControl = control as ExecJSON.Control[];
   filteredControl.forEach((element) => {
@@ -179,10 +181,11 @@ function cleanData(control: unknown[]): ExecJSON.Control[] {
       if (_.get(element.tags, 'stig_id') === '') {
         element.tags = _.omit(element.tags, 'stig_id');
       }
+      element.refs = element.refs.filter((ref) => ref.url);
       if (element.descriptions !== undefined && element.descriptions !== null) {
-        if (_.get(element.descriptions[0], 'data') === '') {
-          element.descriptions = [];
-        }
+        element.descriptions = element.descriptions.filter(
+          (description) => description && description.data
+        );
       }
     }
   });
@@ -191,8 +194,10 @@ function cleanData(control: unknown[]): ExecJSON.Control[] {
 export class NessusResults {
   data: Record<string, unknown>;
   customMapping?: MappedTransform<ExecJSON.Execution, ILookupPath>;
-  constructor(nessusXml: string) {
+  withRaw: boolean;
+  constructor(nessusXml: string, withRaw = false) {
     this.data = parseXml(nessusXml);
+    this.withRaw = withRaw;
   }
 
   toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
@@ -220,7 +225,7 @@ export class NessusResults {
     );
     if (Array.isArray(reportHost)) {
       reportHost.forEach((element: Record<string, unknown>) => {
-        const entry = new NessusMapper(element);
+        const entry = new NessusMapper(element, this.withRaw);
         if (this.customMapping !== undefined) {
           entry.setMappings(this.customMapping);
         }
@@ -228,44 +233,40 @@ export class NessusResults {
       });
       return results;
     } else {
-      const result = new NessusMapper(reportHost as Record<string, unknown>);
+      const result = new NessusMapper(
+        reportHost as Record<string, unknown>,
+        this.withRaw
+      );
       if (this.customMapping !== undefined) {
         result.setMappings(this.customMapping);
       }
       return result.toHdf();
     }
   }
-  setMappings(
-    customMapping: MappedTransform<ExecJSON.Execution, ILookupPath>
-  ): void {
-    this.customMapping = customMapping;
-  }
 }
 
 export class NessusMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  withRaw: boolean;
+
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: {path: 'name'}
     },
     version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
+    statistics: {},
     profiles: [
       {
         name: {transformer: getPolicyName},
         version: {transformer: getVersion},
         title: {transformer: getPolicyName},
-        maintainer: null,
         summary: {transformer: getPolicyName},
-        license: null,
-        copyright: null,
-        copyright_email: null,
         supports: [],
         attributes: [],
-        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
@@ -277,26 +278,53 @@ export class NessusMapper extends BaseConverter {
               nist: {transformer: getNist},
               cci: {transformer: getCci},
               rid: {transformer: getRid},
-              stig_id: {transformer: getStig}
+              stig_id: {transformer: getStig},
+              risk_factor: {path: 'risk_factor'},
+              plugin_type: {path: 'plugin_type'},
+              plugin_publication_date: {path: 'plugin_publication_date'},
+              fname: {path: 'fname'},
+              cvss3_base_score: {path: 'cvss3_base_score'},
+              cvss_base_score: {path: 'cvss_base_score'}
             },
+            refs: [
+              {
+                url: {
+                  path: 'see_also'
+                }
+              }
+            ],
+            source_location: {},
+            title: {transformer: getTitle},
+            id: {transformer: getId},
+            desc: {transformer: getDesc},
             descriptions: [
               {
                 data: {transformer: getCheck},
                 label: 'check'
+              },
+              {
+                data: {transformer: getFix},
+                label: 'fix'
               }
             ],
-            refs: [],
-            source_location: {},
-            id: {transformer: getId},
-            title: {transformer: getTitle},
-            desc: {transformer: getDesc},
             impact: {transformer: getImpact},
-            code: '',
+            code: {
+              transformer: (reportItem: unknown) =>
+                JSON.stringify(reportItem, null, 2)
+            },
             results: [
               {
                 status: {transformer: getStatus},
                 code_desc: {transformer: formatCodeDesc},
-                run_time: 0,
+                message: {
+                  path: ['plugin_output', 'cm:compliance-actual-value'],
+                  transformer: (value: unknown) => {
+                    if (value === null || value === undefined) {
+                      return value;
+                    }
+                    return String(value);
+                  }
+                },
                 start_time: {
                   path: '$.HostProperties.tag',
                   transformer: getStartTime
@@ -307,9 +335,23 @@ export class NessusMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {
+          auxiliary_data: [
+            {
+              name: 'Nessus',
+              data: _.omit(data, ['name', 'ReportItem'])
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    }
   };
-  constructor(nessusJson: Record<string, unknown>) {
+  constructor(nessusJson: Record<string, unknown>, withRaw = false) {
     super(nessusJson);
+    this.withRaw = withRaw;
   }
 }

@@ -11,7 +11,7 @@ import {
 const testbed = 'parse_testbed/';
 
 it('correctly reads the contents of the given files', () => {
-  expect.assertions(26);
+  expect.assertions(27);
   const filenames = fs.readdirSync(testbed);
   expect(() => {
     filenames.forEach((filename) => {
@@ -23,7 +23,7 @@ it('correctly reads the contents of the given files', () => {
 });
 
 it('checks file files are contextualized evaluations', () => {
-  expect.assertions(26);
+  expect.assertions(27);
   const filenames = fs.readdirSync(testbed);
   expect(() => {
     filenames.forEach((filename) => {
@@ -37,7 +37,7 @@ it('checks file files are contextualized evaluations', () => {
 });
 
 it('checks file files are not contextualized evaluations', () => {
-  expect.assertions(26);
+  expect.assertions(27);
   const filenames = fs.readdirSync(testbed);
   expect(() => {
     filenames.forEach((filename) => {

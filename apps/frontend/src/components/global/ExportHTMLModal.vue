@@ -48,7 +48,7 @@ import {
 } from '@mdi/js';
 import axios from 'axios';
 import {saveAs} from 'file-saver';
-import {ContextualizedControl} from 'inspecjs';
+import {ContextualizedControl, HDFControlSegment} from 'inspecjs';
 import _ from 'lodash';
 import Mustache from 'mustache';
 import Vue from 'vue';
@@ -200,15 +200,28 @@ export default class ExportHTMLModal extends Vue {
       duration: _.get(file, 'evaluation.data.statistics.duration')
     });
     this.outputData.exportType = _.capitalize(this.exportType);
+    const allControlLevels = FilteredDataModule.controls({
+      ...this.filter,
+      fromFile: [file.uniqueId],
+      omit_overlayed_controls: false
+    });
     const controls = FilteredDataModule.controls({
       ...this.filter,
-      fromFile: [file.uniqueId]
+      fromFile: [file.uniqueId],
+      omit_overlayed_controls: true
     });
     // Convert them into rows
     this.outputData.controlSets.push({
       filename: file.filename,
       fileID: file.uniqueId,
-      controls: controls.map((control) => this.addDetails(control))
+      controls: controls.map((control) =>
+        this.addDetails(
+          control,
+          allControlLevels.filter(
+            (searchingControl) => searchingControl.data.id === control.data.id
+          )
+        )
+      )
     });
   }
 
@@ -233,10 +246,18 @@ export default class ExportHTMLModal extends Vue {
   }
 
   addDetails(
-    control: ContextualizedControl
+    control: ContextualizedControl,
+    controlLevels: ContextualizedControl[]
   ): ContextualizedControl & {details: Detail[]} {
     return {
-      ...control,
+      ..._.set(
+        control,
+        'hdf.segments',
+        ([] as HDFControlSegment[]).concat.apply(
+          [],
+          controlLevels.map((controlLevel) => controlLevel.hdf.segments || [])
+        )
+      ),
       full_code: control.full_code,
       details: [
         {

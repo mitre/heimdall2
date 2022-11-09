@@ -67,6 +67,7 @@ import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {InspecDataModule} from '../../store/data_store';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
+import {getDescription} from '../../utilities/helper_util';
 
 const fieldNames = [
   'Results Set',
@@ -75,7 +76,6 @@ const fieldNames = [
   'Title',
   'Description',
   'Descriptions',
-  'Message',
   'Impact',
   'Severity',
   'Code',
@@ -83,7 +83,7 @@ const fieldNames = [
   'Fix',
   '800-53 Controls',
   'CCI IDs',
-  'Segments',
+  'Results',
   'Waived',
   'Waiver Data'
 ];
@@ -132,7 +132,7 @@ export default class ExportCSVModal extends Vue {
   descriptionsToString(
     descriptions?:
       | ExecJSON.ControlDescription[]
-      | {[key: string]: unknown}
+      | {[key: string]: string}
       | null
   ): string {
     let result = '';
@@ -199,25 +199,13 @@ export default class ExportCSVModal extends Vue {
 
     if (control.data.tags.check) {
       check = control.data.tags.check;
-    } else if (typeof control.data.descriptions === 'object') {
-      const found = control.data.descriptions?.find(
-        (description: ExecJSON.ControlDescription) =>
-          description.label.toLowerCase() === 'check'
-      );
-      if (found) {
-        check = found.data;
-      }
+    } else if (control.data.descriptions) {
+      check = getDescription(control.data.descriptions, 'check') || '';
     }
     if (control.data.tags.fix) {
       fix = control.data.tags.fix;
-    } else if (typeof control.data.descriptions === 'object') {
-      const found = control.data.descriptions?.find(
-        (description: ExecJSON.ControlDescription) =>
-          description.label.toLowerCase() === 'fix'
-      );
-      if (found) {
-        fix = found.data;
-      }
+    } else if (control.data.descriptions) {
+      fix = getDescription(control.data.descriptions, 'fix') || '';
     }
     this.fieldsToAdd.forEach((field) => {
       switch (field) {
@@ -247,49 +235,45 @@ export default class ExportCSVModal extends Vue {
             control.data.descriptions
           );
           break;
-        // Message
-        case fieldNames[6]:
-          result[fieldNames[6]] = control.hdf.message;
-          break;
         // Impact
-        case fieldNames[7]:
-          result[fieldNames[7]] = control.data.impact;
+        case fieldNames[6]:
+          result[fieldNames[6]] = control.data.impact;
           break;
         // Severity
-        case fieldNames[8]:
-          result[fieldNames[8]] = control.hdf.severity;
+        case fieldNames[7]:
+          result[fieldNames[7]] = control.hdf.severity;
           break;
         // Code
-        case fieldNames[9]:
-          result[fieldNames[9]] = this.createOverlaidCode(file, control);
+        case fieldNames[8]:
+          result[fieldNames[8]] = this.createOverlaidCode(file, control);
           break;
         // Check
-        case fieldNames[10]:
-          result[fieldNames[10]] = check;
+        case fieldNames[9]:
+          result[fieldNames[9]] = check;
           break;
         // Fix
-        case fieldNames[11]:
-          result[fieldNames[11]] = fix;
+        case fieldNames[10]:
+          result[fieldNames[10]] = fix;
           break;
         // NIST IDs
-        case fieldNames[12]:
-          result[fieldNames[12]] = control.hdf.rawNistTags.join(', ');
+        case fieldNames[11]:
+          result[fieldNames[11]] = control.hdf.rawNistTags.join(', ');
           break;
         // CCI IDs
-        case fieldNames[13]:
-          result[fieldNames[13]] = (control.data.tags.cci || []).join(', ');
+        case fieldNames[12]:
+          result[fieldNames[12]] = (control.data.tags.cci || []).join(', ');
           break;
-        // Segments
-        case fieldNames[14]:
-          result[fieldNames[14]] = this.segmentsToString(control.hdf.segments);
+        // Results
+        case fieldNames[13]:
+          result[fieldNames[13]] = this.segmentsToString(control.hdf.segments);
           break;
         // Is Waived
-        case fieldNames[15]:
-          result[fieldNames[15]] = control.hdf.waived ? 'True' : 'False';
+        case fieldNames[14]:
+          result[fieldNames[14]] = control.hdf.waived ? 'True' : 'False';
           break;
         // Waiver Data (JSON)
-        case fieldNames[16]:
-          result[fieldNames[16]] = JSON.stringify(
+        case fieldNames[15]:
+          result[fieldNames[15]] = JSON.stringify(
             _.get(control, 'hdf.wraps.waiver_data')
           );
           break;
