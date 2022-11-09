@@ -102,7 +102,7 @@ export default class AppConfig {
     return {
       rejectUnauthorized:
         this.get('DATABASE_SSL_INSECURE') &&
-        this.get('DATABASE_SSL_INSECURE')?.toLowerCase() === 'true',
+        this.get('DATABASE_SSL_INSECURE')?.toLowerCase() !== 'true',
       key: sslKey,
       cert: sslCert,
       ca: sslCA
