@@ -50,7 +50,7 @@ export class Group extends Model {
   users!: Array<User & {GroupUser: GroupUser}>;
 
   @HasMany(() => Group)
-  subGroups!: Array<Group>
+  subGroups!: Array<Group>;
 
   @BelongsToMany(() => Evaluation, () => GroupEvaluation)
   evaluations!: Array<Evaluation & {GroupEvaluation: GroupEvaluation}>;

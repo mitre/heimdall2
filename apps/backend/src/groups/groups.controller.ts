@@ -11,7 +11,7 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { APIKeyOrJwtAuthGuard } from 'src/guards/api-key-or-jwt-auth.guard';
+import {APIKeyOrJwtAuthGuard} from 'src/guards/api-key-or-jwt-auth.guard';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
@@ -117,7 +117,6 @@ export class GroupsController {
     await this.groupsService.addEvaluationToGroup(group, evaluationToAdd);
     return new GroupDto(group);
   }
-
 
   async removeEvaluationFromGroup(
     @Param('id') id: string,
