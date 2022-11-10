@@ -541,12 +541,13 @@ export function filterControlsBy(
   });
 }
 
+// Status Toggle Switching
 export let passedFilterEnabled = false;
 export let failedFilterEnabled = false;
 export let naFilterEnabled = false;
 export let nrFilterEnabled = false;
 
-export function changeControlStatusSwitch(name: string) {
+export function changeStatusSwitch(name: string) {
   if (name === 'Passed') {
     passedFilterEnabled = !passedFilterEnabled;
     if (passedFilterEnabled) {
@@ -574,6 +575,36 @@ export function changeControlStatusSwitch(name: string) {
       SearchModule.addStatusFilter('Not Reviewed');
     } else {
       SearchModule.removeStatusFilter('Not Reviewed');
+    }
+  }
+}
+
+// Severity Toggle Switching
+export let highFilterEnabled = false;
+export let mediumFilterEnabled = false;
+export let lowFilterEnabled = false;
+
+export function changeSeveritySwitch(name: string) {
+  if (name === 'High') {
+    highFilterEnabled = !highFilterEnabled;
+    if (highFilterEnabled) {
+      SearchModule.addSeverityFilter('high');
+    } else {
+      SearchModule.removeSeverity('high');
+    }
+  } else if (name === 'Medium') {
+    mediumFilterEnabled = !mediumFilterEnabled;
+    if (mediumFilterEnabled) {
+      SearchModule.addSeverityFilter('medium');
+    } else {
+      SearchModule.removeSeverity('medium');
+    }
+  } else if (name === 'Low') {
+    lowFilterEnabled = !lowFilterEnabled;
+    if (lowFilterEnabled) {
+      SearchModule.addSeverityFilter('low');
+    } else {
+      SearchModule.removeSeverity('low');
     }
   }
 }

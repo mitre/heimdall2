@@ -1,4 +1,4 @@
-import {Jsonix} from '@mitre/jsonix';
+import { Jsonix } from '@mitre/jsonix';
 import _ from 'lodash';
 
 export type ChecklistFile = {
@@ -718,7 +718,7 @@ function revertChecklist(data: Object): string {
 }
 
 export class ChecklistIntermediaryConverter {
-  static toIntermediary(options: {text: string; filename: string}) {
+  static toIntermediary(options: { text: string; filename: string }) {
     const raw = convertChecklist(options.text);
 
     const asset: ChecklistAsset = {
@@ -756,7 +756,7 @@ export class ChecklistIntermediaryConverter {
         source: getSiData(stigInfo, 'source')
       };
 
-      const STATUS_MAPPING: Map<string, string> = new Map([
+      const STATUS_MAPPING_FROM: Map<string, string> = new Map([
         ['NotAFinding', 'Passed'],
         ['Open', 'Failed'],
         ['Not_Applicable', 'Not Applicable'],
@@ -768,7 +768,7 @@ export class ChecklistIntermediaryConverter {
       vulns.forEach((vuln: unknown) => {
         const stigdata: unknown[] = _.get(vuln, 'stigdata');
         const checklistVuln: ChecklistVuln = {
-          status: STATUS_MAPPING.get(_.get(vuln, 'status')),
+          status: STATUS_MAPPING_FROM.get(_.get(vuln, 'status')),
           findingDetails: _.get(vuln, 'findingdetails'),
           comments: _.get(vuln, 'comments'),
           severityOverride: _.get(vuln, 'severityoverride'),
@@ -827,10 +827,10 @@ export class ChecklistIntermediaryConverter {
 export class ChecklistConverter {
   static toChecklist(data: ChecklistFile): string {
     // Updating assets
-    const asset = {...data.asset, TYPE_NAME: 'Checklist.ASSET'};
+    const asset = { ...data.asset, TYPE_NAME: 'Checklist.ASSET' };
     _.set(data, 'raw.value.asset', asset);
 
-    const STATUS_MAPPING: Map<string | undefined, string> = new Map([
+    const STATUS_MAPPING_TO: Map<string | undefined, string> = new Map([
       ['Passed', 'NotAFinding'],
       ['Failed', 'Open'],
       ['Not Applicable', 'Not_Applicable'],
@@ -844,7 +844,7 @@ export class ChecklistConverter {
           _.set(
             vuln,
             'status',
-            STATUS_MAPPING.get(data.stigs[stig_index].vulns[vuln_index].status)
+            STATUS_MAPPING_TO.get(data.stigs[stig_index].vulns[vuln_index].status)
           );
           _.set(
             vuln,
