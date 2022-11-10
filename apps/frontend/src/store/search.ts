@@ -17,6 +17,12 @@ export interface ISearchState {
   descriptionSearchTerms: string[];
   controlIdSearchTerms: string[];
   codeSearchTerms: string[];
+  ruleidSearchTerms: string[];
+  vulidSearchTerms: string[];
+  stigidSearchTerms: string[];
+  classificationSearchTerms: string[];
+  groupNameSearchTerms: string[];
+  cciSearchTerms: string[];
   NISTIdFilter: string[];
   statusFilter: ExtendedControlStatus[];
   severityFilter: Severity[];
@@ -67,6 +73,12 @@ export function valueToSeverity(severity: string): Severity {
 class Search extends VuexModule implements ISearchState {
   controlIdSearchTerms: string[] = [];
   codeSearchTerms: string[] = [];
+  ruleidSearchTerms: string[] = [];
+  vulidSearchTerms: string[] = [];
+  stigidSearchTerms: string[] = [];
+  classificationSearchTerms: string[] = [];
+  groupNameSearchTerms: string[] = [];
+  cciSearchTerms: string[] = [];
   NISTIdFilter: string[] = [];
   descriptionSearchTerms: string[] = [];
   freeSearch = '';
@@ -99,7 +111,13 @@ class Search extends VuexModule implements ISearchState {
         'desc',
         'description',
         'code',
-        'input'
+        'input',
+        'ruleid',
+        'vulid',
+        'stigid',
+        'classification',
+        'groupname',
+        'cci'
       ]
     };
     const searchResult = parse(this.searchTerm, options);
@@ -133,6 +151,24 @@ class Search extends VuexModule implements ISearchState {
           case 'code':
             this.addCodeFilter(lowercaseAll(include));
             break;
+          case 'ruleid':
+            this.addRuleidFilter(lowercaseAll(include));
+            break;
+          case 'vulid':
+            this.addVulidFilter(lowercaseAll(include));
+            break;
+          case 'stigid':
+            this.addStigidFilter(lowercaseAll(include));
+            break;
+          case 'classification':
+            this.addClassificationFilter(lowercaseAll(include));
+            break;
+          case 'groupname':
+            this.addGroupnameFilter(lowercaseAll(include));
+            break;
+          case 'cci':
+            this.addCciFilter(lowercaseAll(include));
+            break;
           case 'text':
             if (typeof include === 'string') {
               this.setFreesearch(include);
@@ -159,6 +195,7 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_NIST');
     this.context.commit('CLEAR_DESCRIPTION');
     this.context.commit('CLEAR_CODE');
+    this.context.commit('CLEAR_RULEID');
     this.context.commit('CLEAR_FREESEARCH');
   }
 
@@ -423,6 +460,121 @@ class Search extends VuexModule implements ISearchState {
   @Mutation
   CLEAR_CODE() {
     this.codeSearchTerms = [];
+  }
+
+  // Ruleid filtering
+
+  /** Adds Ruleid to filter */
+  @Action
+  addRuleidFilter(ruleid: string | string[]) {
+    this.context.commit('ADD_RULEID', ruleid);
+  }
+
+  @Mutation
+  ADD_RULEID(ruleid: string | string[]) {
+    this.ruleidSearchTerms = this.ruleidSearchTerms.concat(ruleid);
+  }
+
+  /** Clears all Ruleid filters */
+  @Mutation
+  CLEAR_RULEID() {
+    this.ruleidSearchTerms = [];
+  }
+
+  // Vulid filtering
+
+  /** Adds Vulid to filter */
+  @Action
+  addVulidFilter(vulid: string | string[]) {
+    this.context.commit('ADD_VULID', vulid);
+  }
+
+  @Mutation
+  ADD_VULID(vulid: string | string[]) {
+    this.vulidSearchTerms = this.vulidSearchTerms.concat(vulid);
+  }
+
+  /** Clears all Vulid filters */
+  @Mutation
+  CLEAR_VULID() {
+    this.vulidSearchTerms = [];
+  }
+
+  // Stigid filtering
+
+  /** Adds Stigid to filter */
+  @Action
+  addStigidFilter(stigid: string | string[]) {
+    this.context.commit('ADD_STIGID', stigid);
+  }
+
+  @Mutation
+  ADD_STIGID(stigid: string | string[]) {
+    this.stigidSearchTerms = this.stigidSearchTerms.concat(stigid);
+  }
+
+  /** Clears all Stigid filters */
+  @Mutation
+  CLEAR_STIGID() {
+    this.stigidSearchTerms = [];
+  }
+
+  // Classification filtering
+
+  /** Adds Classification to filter */
+  @Action
+  addClassificationFilter(classification: string | string[]) {
+    this.context.commit('ADD_CLASSIFICATION', classification);
+  }
+
+  @Mutation
+  ADD_CLASSIFICATION(classification: string | string[]) {
+    this.classificationSearchTerms =
+      this.classificationSearchTerms.concat(classification);
+  }
+
+  /** Clears all Classification filters */
+  @Mutation
+  CLEAR_CLASSIFICATION() {
+    this.classificationSearchTerms = [];
+  }
+
+  // Groupname filtering
+
+  /** Adds Groupname to filter */
+  @Action
+  addGroupnameFilter(groupname: string | string[]) {
+    this.context.commit('ADD_GROUPNAME', groupname);
+  }
+
+  @Mutation
+  ADD_GROUPNAME(groupname: string | string[]) {
+    this.groupNameSearchTerms = this.groupNameSearchTerms.concat(groupname);
+  }
+
+  /** Clears all Groupname filters */
+  @Mutation
+  CLEAR_GROUPNAME() {
+    this.groupNameSearchTerms = [];
+  }
+
+  // CCI filtering
+
+  /** Adds CCI to filter */
+  @Action
+  addCciFilter(cci: string | string[]) {
+    this.context.commit('ADD_CCI', cci);
+  }
+
+  @Mutation
+  ADD_CCI(cci: string | string[]) {
+    this.cciSearchTerms = this.cciSearchTerms.concat(cci);
+  }
+
+  /** Clears all CCI filters */
+  @Mutation
+  CLEAR_CCI() {
+    this.cciSearchTerms = [];
   }
 
   // Freetext search

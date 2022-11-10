@@ -2,8 +2,8 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
-import {Trinary} from '@/enums/Trinary';
-import {InspecDataModule} from '@/store/data_store';
+import { Trinary } from '@/enums/Trinary';
+import { InspecDataModule } from '@/store/data_store';
 import {
   FileID,
   SourcedContextualizedEvaluation,
@@ -31,6 +31,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import { SearchModule } from './search';
 
 const MAX_CACHE_ENTRIES = 20;
 
@@ -66,6 +67,24 @@ export interface Filter {
 
   /** CCIs to search for */
   nistIdFilter?: string[];
+
+  /** Ruleid to search for */
+  ruleidSearchTerms?: string[];
+
+  /** Vulid to search for */
+  vulidSearchTerms?: string[];
+
+  /** Stigid to search for */
+  stigidSearchTerms?: string[];
+
+  /** Classification to search for */
+  classificationSearchTerms?: string[];
+
+  /** Groupname to search for */
+  groupNameSearchTerms?: string[];
+
+  /** Checklist CCIs to search for */
+  cciSearchTerms?: string[];
 
   /** A search term string, case insensitive
    * We look for this in
@@ -520,6 +539,117 @@ export function filterControlsBy(
       }
     });
   });
+}
+
+export let passedFilterEnabled = false;
+export let failedFilterEnabled = false;
+export let naFilterEnabled = false;
+export let nrFilterEnabled = false;
+
+export function changeControlStatusSwitch(name: string) {
+  if (name === 'Passed') {
+    passedFilterEnabled = !passedFilterEnabled;
+    if (passedFilterEnabled) {
+      SearchModule.addStatusFilter('Passed');
+    } else {
+      SearchModule.removeStatusFilter('Passed');
+    }
+  } else if (name === 'Failed') {
+    failedFilterEnabled = !failedFilterEnabled;
+    if (failedFilterEnabled) {
+      SearchModule.addStatusFilter('Failed');
+    } else {
+      SearchModule.removeStatusFilter('Failed');
+    }
+  } else if (name === 'Not Applicable') {
+    naFilterEnabled = !naFilterEnabled;
+    if (naFilterEnabled) {
+      SearchModule.addStatusFilter('Not Applicable');
+    } else {
+      SearchModule.removeStatusFilter('Not Applicable');
+    }
+  } else if (name === 'Not Reviewed') {
+    nrFilterEnabled = !nrFilterEnabled;
+    if (nrFilterEnabled) {
+      SearchModule.addStatusFilter('Not Reviewed');
+    } else {
+      SearchModule.removeStatusFilter('Not Reviewed');
+    }
+  }
+}
+
+export function filterChecklistVulnsBy(
+  rules: readonly ChecklistVuln[],
+  filters: Filter
+): readonly ChecklistVuln[] {
+  console.log('Rules: ', rules);
+  console.log('Active filters: ', filters);
+
+  // Get current filters
+  let severities: string[] = [];
+  let statuses: string[] = [];
+  let ids: string[] = [];
+  let titleSearchTerms: string[] = [];
+  Object.entries(filters).forEach((elem) => {
+    // Look into a more optimized way of implementing this
+    if (elem[1] === undefined || elem[1].length <= 0) {
+      return;
+    } else if (elem[0] === 'severity') {
+      severities = elem[1];
+      severities.forEach(
+        (elem, index, arr) => (arr[index] = elem.toLowerCase())
+      );
+    } else if (elem[0] === 'status') {
+      statuses = elem[1];
+      statuses.forEach((elem, index, arr) => {
+        arr[index] = elem.toLowerCase();
+      });
+    } else if (elem[0] === 'ids') {
+      ids = elem[1];
+      ids.forEach((elem, index, arr) => (arr[index] = elem.toLowerCase()));
+    } else if (elem[0] === 'titleSearchTerms') {
+      titleSearchTerms = elem[1];
+      titleSearchTerms.forEach(
+        (elem, index, arr) => (arr[index] = elem.toLowerCase())
+      );
+    }
+  });
+
+  // Filter out rules
+  let filteredRules = rules;
+  if (severities.length > 0) {
+    filteredRules = filteredRules.filter((rule) => {
+      if (severities.includes(rule.severity.toLowerCase())) {
+        return true;
+      }
+    });
+  }
+  if (statuses.length > 0) {
+    filteredRules = filteredRules.filter((rule) => {
+      if (
+        rule.status != undefined &&
+        statuses.includes(rule.status.toLowerCase())
+      ) {
+        return true;
+      }
+    });
+  }
+  if (ids.length > 0) {
+    filteredRules = filteredRules.filter((rule) => {
+      if (ids.includes(rule.ruleId.toLowerCase())) {
+        return true;
+      }
+    });
+  }
+  if (titleSearchTerms.length > 0) {
+    filteredRules = filteredRules.filter((rule) => {
+      if (titleSearchTerms.includes(rule.ruleTitle.toLowerCase())) {
+        return true;
+      }
+    });
+  }
+  console.log('Filtered rules: ', filteredRules);
+  return filteredRules;
 }
 
 /** Iterate over a string or array of strings and call the string compare function provided on every element **/
