@@ -56,7 +56,7 @@ export type StigHeader = {
 };
 
 export type ChecklistVuln = {
-  status: string;
+  status: string | undefined; // Look into alternate way of mapping.  Shouldn't be undefined
   findingDetails: string;
   comments: string;
   severityOverride: string;
@@ -756,12 +756,19 @@ export class ChecklistIntermediaryConverter {
         source: getSiData(stigInfo, 'source')
       };
 
+      const STATUS_MAPPING: Map<string, string> = new Map([
+        ['NotAFinding', 'Passed'],
+        ['Open', 'Failed'],
+        ['Not_Applicable', 'Not Applicable'],
+        ['Not_Reviewed', 'Not Reviewed']
+      ]);
+
       const checklistVulns: ChecklistVuln[] = [];
       const vulns: unknown[] = _.get(stig, 'vuln');
       vulns.forEach((vuln: unknown) => {
         const stigdata: unknown[] = _.get(vuln, 'stigdata');
         const checklistVuln: ChecklistVuln = {
-          status: _.get(vuln, 'status'),
+          status: STATUS_MAPPING.get(_.get(vuln, 'status')),
           findingDetails: _.get(vuln, 'findingdetails'),
           comments: _.get(vuln, 'comments'),
           severityOverride: _.get(vuln, 'severityoverride'),
@@ -823,6 +830,13 @@ export class ChecklistConverter {
     const asset = {...data.asset, TYPE_NAME: 'Checklist.ASSET'};
     _.set(data, 'raw.value.asset', asset);
 
+    const STATUS_MAPPING: Map<string | undefined, string> = new Map([
+      ['Passed', 'NotAFinding'],
+      ['Failed', 'Open'],
+      ['Not Applicable', 'Not_Applicable'],
+      ['Not Reviewed', 'Not_Reviewed']
+    ]);
+
     // Updating marked-up rule data
     _.get(data.raw, 'value.stigs.istig').forEach(
       (stig: any, stig_index: number) => {
@@ -830,7 +844,7 @@ export class ChecklistConverter {
           _.set(
             vuln,
             'status',
-            data.stigs[stig_index].vulns[vuln_index].status
+            STATUS_MAPPING.get(data.stigs[stig_index].vulns[vuln_index].status)
           );
           _.set(
             vuln,
