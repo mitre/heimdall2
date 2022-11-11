@@ -1,4 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
+import https from 'https';
 import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
@@ -100,18 +101,22 @@ export class SonarQubeResults {
   userToken: string
   branchName?: string
   pullRequestID?: string
+  insecure?: boolean
+
   constructor(
     sonarQubeHost: string,
     projectId: string,
     userToken: string,
     branchName?: string,
     pullRequestID?: string,
+    insecure = false,
   ) {
     this.sonarQubeHost = sonarQubeHost;
     this.projectId = projectId;
     this.userToken = userToken;
     this.branchName = branchName;
     this.pullRequestID = pullRequestID;
+    this.insecure = insecure;
   }
 
   async toHdf(): Promise<ExecJSON.Execution> {
