@@ -414,6 +414,9 @@ export class FilteredData extends VuexModule {
    * Parameterized getter.
    * Get all controls from all profiles from the specified file id.
    * Utlizes the profiles getter to accelerate the file filter.
+   *
+   * @param filter - Filters to apply
+   * @returns Controls from all profiles from the specified file id
    */
   get controls(): (filter: Filter) => readonly ContextualizedControl[] {
     /** Cache by filter */
@@ -505,6 +508,10 @@ export const FilteredDataModule = getModule(FilteredData);
  * Does some minor "acceleration" techniques such as
  * - annihilating empty search terms
  * - defaulting "omit_overlayed_controls"
+ *
+ * @param f - Filter object
+ * @returns Converted newFilter to a JSON string.
+ *
  */
 export function filter_cache_key(f: Filter) {
   const newFilter: Filter = {
@@ -515,6 +522,14 @@ export function filter_cache_key(f: Filter) {
   return JSON.stringify(newFilter);
 }
 
+/**
+ * Filters controls by given filters
+ *
+ * @param controls - Array of contextualized controls
+ * @param filters - Filters to apply to the controls
+ * @returns Filtered array of controls
+ *
+ */
 export function filterControlsBy(
   controls: readonly ContextualizedControl[],
   filters: Record<string, boolean | string[] | undefined>
@@ -542,148 +557,147 @@ export function filterControlsBy(
 }
 
 // Status Toggle Switching
-export let passedFilterEnabled = false;
-export let failedFilterEnabled = false;
-export let naFilterEnabled = false;
-export let nrFilterEnabled = false;
+export const passedFilterEnabled = false;
+export const failedFilterEnabled = false;
+export const naFilterEnabled = false;
+export const nrFilterEnabled = false;
 
-export function changeStatusSwitch(name: string) {
-  if (name === 'Passed') {
-    passedFilterEnabled = !passedFilterEnabled;
-    if (passedFilterEnabled) {
-      SearchModule.addStatusFilter('Passed');
-    } else {
-      SearchModule.removeStatusFilter('Passed');
-    }
-  } else if (name === 'Failed') {
-    failedFilterEnabled = !failedFilterEnabled;
-    if (failedFilterEnabled) {
-      SearchModule.addStatusFilter('Failed');
-    } else {
-      SearchModule.removeStatusFilter('Failed');
-    }
-  } else if (name === 'Not Applicable') {
-    naFilterEnabled = !naFilterEnabled;
-    if (naFilterEnabled) {
-      SearchModule.addStatusFilter('Not Applicable');
-    } else {
-      SearchModule.removeStatusFilter('Not Applicable');
-    }
-  } else if (name === 'Not Reviewed') {
-    nrFilterEnabled = !nrFilterEnabled;
-    if (nrFilterEnabled) {
-      SearchModule.addStatusFilter('Not Reviewed');
-    } else {
-      SearchModule.removeStatusFilter('Not Reviewed');
-    }
+const statusSwitchToggles: { [key: string]: boolean } = {
+  Passed: passedFilterEnabled,
+  Failed: passedFilterEnabled,
+  'Not Applicable': passedFilterEnabled,
+  'Not Reviewed': passedFilterEnabled
+};
+
+/**
+ * Handles the condition change when a status switch is clicked
+ *
+ * @param name - Status value of clicked switch
+ *
+ */
+export function changeStatusSwitch(name: ExtendedControlStatus) {
+  statusSwitchToggles[name] = !statusSwitchToggles[name];
+  if (statusSwitchToggles[name]) {
+    console.log('These are my previous values: ', SearchModule.statusFilter);
+    SearchModule.addSearchFilter({
+      field: 'status',
+      value: name,
+      previousValues: SearchModule.statusFilter
+    });
+  } else {
+    SearchModule.removeSearchFilter({
+      field: 'status',
+      value: name,
+      previousValues: SearchModule.statusFilter
+    });
   }
 }
 
 // Severity Toggle Switching
-export let highFilterEnabled = false;
-export let mediumFilterEnabled = false;
-export let lowFilterEnabled = false;
+export const highFilterEnabled = false;
+export const mediumFilterEnabled = false;
+export const lowFilterEnabled = false;
 
-export function changeSeveritySwitch(name: string) {
-  if (name === 'High') {
-    highFilterEnabled = !highFilterEnabled;
-    if (highFilterEnabled) {
-      SearchModule.addSeverityFilter('high');
-    } else {
-      SearchModule.removeSeverity('high');
-    }
-  } else if (name === 'Medium') {
-    mediumFilterEnabled = !mediumFilterEnabled;
-    if (mediumFilterEnabled) {
-      SearchModule.addSeverityFilter('medium');
-    } else {
-      SearchModule.removeSeverity('medium');
-    }
-  } else if (name === 'Low') {
-    lowFilterEnabled = !lowFilterEnabled;
-    if (lowFilterEnabled) {
-      SearchModule.addSeverityFilter('low');
-    } else {
-      SearchModule.removeSeverity('low');
-    }
+const severitySwitchToggles: { [key: string]: boolean } = {
+  High: highFilterEnabled,
+  Medium: mediumFilterEnabled,
+  Low: lowFilterEnabled
+};
+
+/**
+ * Handles the condition change when a severity switch is clicked
+ *
+ * @param name - Severity value of clicked switch
+ *
+ */
+export function changeSeveritySwitch(name: Severity) {
+  severitySwitchToggles[name] = !severitySwitchToggles[name];
+  if (severitySwitchToggles[name]) {
+    SearchModule.addSearchFilter({
+      field: 'severity',
+      value: name,
+      previousValues: SearchModule.severityFilter
+    });
+  } else {
+    SearchModule.removeSearchFilter({
+      field: 'severity',
+      value: name,
+      previousValues: SearchModule.severityFilter
+    });
   }
 }
 
-export function filterChecklistVulnsBy(
+/**
+ * Filters checklist rules by given filters
+ *
+ * @param rules - Array of checklist rules
+ * @param filters - Filters to apply to the checklist rules
+ * @returns Filtered checklist rules
+ *
+ */
+export function filterChecklistBy(
+  rules: readonly ChecklistVuln[],
+  filters: Record<string, boolean | string[] | undefined>
+): readonly ChecklistVuln[] {
+  const activeFilters: typeof filters = _.pickBy(
+    filters,
+    (value, _key) =>
+      (Array.isArray(value) && value.length > 0) ||
+      (typeof value === 'boolean' && value)
+  );
+  return rules.filter((rule) => {
+    return Object.entries(activeFilters).every(([filter, value]) => {
+      const item: string | string[] | boolean = _.get(rule, filter);
+      if (Array.isArray(value) && typeof item !== 'boolean') {
+        return value?.some((term) => {
+          return arrayOrStringIncludes(item, (compareValue) =>
+            compareValue.toLowerCase().includes(term.toLowerCase())
+          );
+        });
+      } else {
+        return item === value;
+      }
+    });
+  });
+}
+
+/**
+ * Get checklist rules that should be displayed
+ *
+ * @param rukes - Array of checklist rules
+ * @param filters - Any filters that should be applied
+ * @returns Array of checklist rules after processing
+ *
+ */
+export function checklistRules(
   rules: readonly ChecklistVuln[],
   filters: Filter
 ): readonly ChecklistVuln[] {
-  console.log('Rules: ', rules);
-  console.log('Active filters: ', filters);
-
-  // Get current filters
-  let severities: string[] = [];
-  let statuses: string[] = [];
-  let ids: string[] = [];
-  let titleSearchTerms: string[] = [];
-  Object.entries(filters).forEach((elem) => {
-    // Look into a more optimized way of implementing this
-    if (elem[1] === undefined || elem[1].length <= 0) {
-      return;
-    } else if (elem[0] === 'severity') {
-      severities = elem[1];
-      severities.forEach(
-        (elem, index, arr) => (arr[index] = elem.toLowerCase())
-      );
-    } else if (elem[0] === 'status') {
-      statuses = elem[1];
-      statuses.forEach((elem, index, arr) => {
-        arr[index] = elem.toLowerCase();
-      });
-    } else if (elem[0] === 'ids') {
-      ids = elem[1];
-      ids.forEach((elem, index, arr) => (arr[index] = elem.toLowerCase()));
-    } else if (elem[0] === 'titleSearchTerms') {
-      titleSearchTerms = elem[1];
-      titleSearchTerms.forEach(
-        (elem, index, arr) => (arr[index] = elem.toLowerCase())
-      );
-    }
-  });
-
-  // Filter out rules
-  let filteredRules = rules;
-  if (severities.length > 0) {
-    filteredRules = filteredRules.filter((rule) => {
-      if (severities.includes(rule.severity.toLowerCase())) {
-        return true;
-      }
-    });
-  }
-  if (statuses.length > 0) {
-    filteredRules = filteredRules.filter((rule) => {
-      if (
-        rule.status != undefined &&
-        statuses.includes(rule.status.toLowerCase())
-      ) {
-        return true;
-      }
-    });
-  }
-  if (ids.length > 0) {
-    filteredRules = filteredRules.filter((rule) => {
-      if (ids.includes(rule.ruleId.toLowerCase())) {
-        return true;
-      }
-    });
-  }
-  if (titleSearchTerms.length > 0) {
-    filteredRules = filteredRules.filter((rule) => {
-      if (titleSearchTerms.includes(rule.ruleTitle.toLowerCase())) {
-        return true;
-      }
-    });
-  }
-  console.log('Filtered rules: ', filteredRules);
+  const checklistFilters: Record<string, boolean | string[] | undefined> = {
+    severity: filters.severity,
+    vulNum: filters.vulidSearchTerms,
+    ruleId: filters.ruleidSearchTerms,
+    ruleVersion: filters.stigidSearchTerms,
+    class: filters.classificationSearchTerms,
+    groupTitle: filters.groupNameSearchTerms,
+    cciRef: filters.cciSearchTerms,
+    status: _.filter(
+      filters.status,
+      (status: ExtendedControlStatus) => status !== 'Waived'
+    )
+  };
+  const filteredRules = filterChecklistBy(rules, checklistFilters);
   return filteredRules;
 }
 
-/** Iterate over a string or array of strings and call the string compare function provided on every element **/
+/**
+ * Iterate over a string or array of strings and call the string compare function provided on every element
+ *
+ * @param arrayOrString - Value that is of type string or string array
+ * @param comparator - Function used to compare
+ * @returns A boolean value returned from the comparator function passed
+ *
+ */
 function arrayOrStringIncludes(
   arrayOrString: string | string[],
   comparator: (compareValue: string) => boolean
