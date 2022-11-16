@@ -1,6 +1,6 @@
 import Store from '@/store/store';
-import {Severity} from 'inspecjs';
-import {parse} from 'search-query-parser';
+import { Severity } from 'inspecjs';
+import { parse } from 'search-query-parser';
 import {
   Action,
   getModule,
@@ -8,7 +8,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {ExtendedControlStatus} from './data_filters';
+import { ExtendedControlStatus } from './data_filters';
 
 export interface ISearchState {
   searchTerm: string;
@@ -47,6 +47,11 @@ export const statusTypes = [
 
 export const severityTypes = ['none', 'low', 'medium', 'high', 'critical'];
 
+/**
+ * Will lowercase a string or array of strings.
+ *
+ * @param input - The string or array of strings that need to be lowercased
+ */
 export function lowercaseAll(input: string | string[]): string | string[] {
   if (typeof input === 'string') {
     return input.toLowerCase();
@@ -57,6 +62,12 @@ export function lowercaseAll(input: string | string[]): string | string[] {
   }
 }
 
+/**
+ * Will take a string and map it to a severity.
+ *
+ * @param severity - The string to be mapped to a severity
+ * @returns The severity string as a Severity
+ */
 export function valueToSeverity(severity: string): Severity {
   if (severityTypes.includes(severity.toLowerCase())) {
     return severity as Severity;
@@ -97,6 +108,7 @@ class Search extends VuexModule implements ISearchState {
     }
   }
 
+  /** Parse search bar to add strings to needed filter category */
   @Action
   parseSearch() {
     this.clear();
@@ -199,12 +211,18 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_FREESEARCH');
   }
 
-  // Generic filtering
+  /**
+   * Allows values to be added to a specific field in the querystring.
+   *
+   * @param field - The field to add to (e.g., status, severity, etc.)
+   * @param value - The value to add to the field (e.g., "Passed","Failed", etc.)
+   * @param previousValues - The values already in the querystring
+   */
   @Action
   addSearchFilter(searchPayload: {
     field: string;
     value: string;
-    previousValues: (string | ExtendedControlStatus)[];
+    previousValues: (string | ExtendedControlStatus | Severity)[];
   }) {
     // If we already have search filtering
     if (this.searchTerm.trim() !== '') {
@@ -222,11 +240,10 @@ class Search extends VuexModule implements ISearchState {
         this.context.commit('SET_SEARCH', newSearch);
       } // We have a filter already, but it doesn't include the field
       else {
-        const newSearch = `${this.searchTerm} ${
-          searchPayload.field
-        }:"${searchPayload.previousValues
-          .concat(searchPayload.value)
-          .join(',')}"`;
+        const newSearch = `${this.searchTerm} ${searchPayload.field
+          }:"${searchPayload.previousValues
+            .concat(searchPayload.value)
+            .join(',')}"`;
         this.context.commit('SET_SEARCH', newSearch);
       }
     }
@@ -240,11 +257,18 @@ class Search extends VuexModule implements ISearchState {
     this.parseSearch();
   }
 
+  /**
+   * Allows values to be removed from a specific field in the querystring.
+   *
+   * @param field - The field to remove from (e.g., status, severity, etc.)
+   * @param value - The value to remove from the field (e.g., "Passed","Failed", etc.)
+   * @param previousValues - The values already in the querystring
+   */
   @Action
   removeSearchFilter(searchPayload: {
     field: string;
     value: string;
-    previousValues: (string | ExtendedControlStatus)[];
+    previousValues: (string | ExtendedControlStatus | Severity)[];
   }) {
     searchPayload.previousValues = searchPayload.previousValues.filter(
       (filter) => filter.toLowerCase() !== searchPayload.value.toLowerCase()
