@@ -14,7 +14,9 @@
     "paths": {
       "@/*": ["src/*"]
     },
-    "lib": ["ES2019", "dom", "dom.iterable", "scripthost"]
+    "module":"CommonJS",
+    "target": "ES2022",
+    "lib": ["ES2022", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
     "src/**/*.ts",

@@ -7,10 +7,11 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "ES2019",
+    "target": "ES2022",
     "esModuleInterop": true,
     "noImplicitAny": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "lib": ["ES2022"]
   },
   "include": [
     "types/**/*.d.ts"
