@@ -243,9 +243,9 @@
     tslib "^2.3.1"
 
 "@aws-sdk/client-config-service@^3.23.0", "@aws-sdk/client-config-service@^3.95.0":
-  version "3.218.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.218.0.tgz#ab7e7be80ca5e8cc543e6ee2583d01e91487c2d7"
-  integrity sha512-s3qOKGez9iDRg3w9GQ2c3Oicj07Yq8vTnv1LN0dDKWwoBwzKk8k5eFzDc6UOjrC+p3/TVHlZfG349jBvLUfZyA==
+  version "3.219.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.219.0.tgz#77772c4f2ef858ccf30c41edb831658235dff7d5"
+  integrity sha512-/lmnrU1ZUezM69Mgaz1VvCs8sNZlShXQfAyl1qx/olZghMbapVSXuyGcAnMyG5ZT566EMIObTr10kIsU1JXkKA==
   dependencies:
     "@aws-crypto/sha256-browser" "2.0.0"
     "@aws-crypto/sha256-js" "2.0.0"
@@ -4723,10 +4723,10 @@
   dependencies:
     source-map "^0.6.1"
 
-"@types/uuid@^8.3.0", "@types/uuid@^8.3.1":
-  version "8.3.4"
-  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
-  integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
+"@types/uuid@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-9.0.0.tgz#53ef263e5239728b56096b0a869595135b7952d2"
+  integrity sha512-kr90f+ERiQtKWMz5rP32ltJ/BtULDI5RVO0uavn1HQUOwjx0R1h0rnDYNL0CepF1zL5bSY6FISAfd9tOdDhU5Q==
 
 "@types/validator@*", "@types/validator@^13.0.0":
   version "13.7.10"
