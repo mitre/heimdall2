@@ -84,7 +84,7 @@ function parseRef(input: string, key: string): string[] {
 function getImpact(item: unknown): number {
   if (_.has(item, COMPLIANCE_PATH)) {
     return impactMapping(IMPACT_MAPPING)(
-      parseRef(_.get(item, COMPLIANCE_PATH), 'CAT').join('')
+      parseRef(_.get(item, COMPLIANCE_PATH,''), 'CAT').join('')
     );
   } else {
     return impactMapping(IMPACT_MAPPING)(_.get(item, 'severity'));
