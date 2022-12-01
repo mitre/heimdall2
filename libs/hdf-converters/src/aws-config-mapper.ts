@@ -205,11 +205,11 @@ export class AwsConfigMapper {
     evaluationResults.forEach((result) => {
       const resourceType: string = _.get(
         result,
-        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceType'
+        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceType',''
       );
       const resourceId: string = _.get(
         result,
-        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId'
+        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId',''
       );
       if (!(resourceType in resourceMap)) {
         resourceMap[resourceType] = [resourceId];

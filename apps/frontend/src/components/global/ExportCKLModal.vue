@@ -299,7 +299,7 @@ export default class ExportCKLModal extends Vue {
       checkText: control.hdf.descriptions.check || control.data.tags.check,
       fixText: control.hdf.descriptions.fix || control.data.tags.fix,
       profileName: profileName,
-      startTime: _.get(control, 'hdf.segments![0].start_time'),
+      startTime: _.get(control, 'hdf.segments![0].start_time',''),
       targetKey: 0,
       uuidV4: v4(),
       ccis: control.data.tags.cci,

@@ -49,7 +49,7 @@ function processEntry(input: unknown): string {
   output.push(`\nPath: ${_.get(input, 'File')}\n`);
   output.push(`StartLine: ${_.get(input, 'StartLine')}, `);
   output.push(`EndLine: ${_.get(input, 'EndLine')}\n`);
-  output.push(`Code:\n${_.get(input, 'Text').trim()}`);
+  output.push(`Code:\n${_.get(input, 'Text','').trim()}`);
 
   return output.join('');
 }

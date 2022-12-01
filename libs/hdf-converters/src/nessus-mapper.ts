@@ -41,16 +41,16 @@ function getVersion(): string {
 
 function getId(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH), 'Vuln-ID')[0];
+    return parseRef(_.get(item, COMPLIANCE_PATH,''), 'Vuln-ID')[0];
   } else {
-    return _.get(item, 'pluginID');
+    return _.get(item, 'pluginID','');
   }
 }
 function getTitle(item: unknown): string {
   if (_.has(item, 'cm:compliance-check-name')) {
-    return _.get(item, 'cm:compliance-check-name');
+    return _.get(item, 'cm:compliance-check-name','');
   } else {
-    return _.get(item, 'pluginName');
+    return _.get(item, 'pluginName','');
   }
 }
 function getDesc(item: unknown): string {
@@ -109,28 +109,28 @@ function getFix(item: unknown): string {
 
 function getNist(item: unknown): string[] {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return cciNistTag(_.get(item, COMPLIANCE_PATH));
+    return cciNistTag(_.get(item, COMPLIANCE_PATH,''));
   } else {
     return pluginNistTag(item);
   }
 }
 function getCci(item: unknown): string[] {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH), 'CCI');
+    return parseRef(_.get(item, COMPLIANCE_PATH,''), 'CCI');
   } else {
     return [];
   }
 }
 function getRid(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH), 'Rule-ID').join(',');
+    return parseRef(_.get(item, COMPLIANCE_PATH,''), 'Rule-ID').join(',');
   } else {
-    return _.get(item, 'pluginID');
+    return _.get(item, 'pluginID','');
   }
 }
 function getStig(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH), 'STIG-ID').join(',');
+    return parseRef(_.get(item, COMPLIANCE_PATH,''), 'STIG-ID').join(',');
   } else {
     return '';
   }
@@ -164,7 +164,7 @@ function getStartTime(tag: unknown): string {
       'text'
     );
   } else {
-    return _.get(tag, 'text');
+    return _.get(tag, 'text','');
   }
 }
 
