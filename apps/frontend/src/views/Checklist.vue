@@ -42,178 +42,8 @@
       <v-container fluid grid-list-md pt-0 mt-4 mx-1>
         <v-row>
           <v-col md="4" :cols="12">
-            <v-card height="25vh" class="overflow-auto">
-              <v-tabs v-model="tab" show-arrows center-active grow>
-                <v-tab class="text-button">Benchmarks</v-tab>
-                <v-tab class="text-button">Filters</v-tab>
-                <v-tab class="text-button">Target Data</v-tab>
-                <v-tab class="text-button">Technology Area</v-tab>
-              </v-tabs>
-              <v-tabs-items v-model="tab">
-                <!-- Benchmarks -->
-                <v-tab-item class="pa-4">
-                  <v-data-table
-                    disable-pagination
-                    dense
-                    fixed-header
-                    hide-default-footer
-                    :items="selectedChecklistStigs"
-                    item-key="name"
-                    :headers="stigListHeaders"
-                    class="overflow-auto"
-                    height="15vh"
-                  >
-                    <template #[`item.show`]="{item}">
-                      <v-checkbox v-model="item.show" />
-                    </template>
-                  </v-data-table>
-                </v-tab-item>
-                <!-- Filters -->
-                <v-tab-item grid-list-md class="pa-4">
-                  <v-row>
-                    <v-col
-                      v-for="item in controlStatusSwitches"
-                      :key="item.name"
-                      :cols="3"
-                      >{{ item.name }}</v-col
-                    >
-                  </v-row>
-                  <v-row class="mt-n10">
-                    <v-col
-                      v-for="item in controlStatusSwitches"
-                      :key="item.name"
-                      :cols="3"
-                    >
-                      <v-switch
-                        v-model="item.enabled"
-                        dense
-                        justify="center"
-                        inset
-                        :color="item.color"
-                        :label="numStatus(item.value)"
-                        hide-details
-                        @change="changeStatusToggle(item.value)"
-                      />
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col
-                      v-for="item in severitySwitches"
-                      :key="item.name"
-                      :cols="3"
-                      >{{ item.name }}</v-col
-                    >
-                    <v-col :cols="3">Short ID</v-col>
-                  </v-row>
-                  <v-row class="mt-n10">
-                    <v-col
-                      v-for="item in severitySwitches"
-                      :key="item.name"
-                      :cols="3"
-                    >
-                      <v-switch
-                        v-model="item.enabled"
-                        dense
-                        justify="center"
-                        inset
-                        :color="item.color"
-                        :label="numSeverity(item.value)"
-                        hide-details
-                        @change="changeSeverityToggle(item.name)"
-                      />
-                    </v-col>
-                    <v-col :cols="3">
-                      <v-switch
-                        v-model="shortIdEnabled"
-                        dense
-                        justify="center"
-                        inset
-                        color="teal"
-                        hide-details
-                      />
-                    </v-col>
-                  </v-row>
-                </v-tab-item>
-                <!-- Target Data -->
-                <v-tab-item class="pa-4">
-                  <v-select
-                    v-model="selectedChecklistAsset.assettype"
-                    outlined
-                    dense
-                    :items="['Computing', 'Non-Computing']"
-                  />
-                  <v-text-field
-                    v-model="selectedChecklistAsset.marking"
-                    dense
-                    label="Marking"
-                  />
-                  <v-text-field
-                    v-model="selectedChecklistAsset.hostname"
-                    dense
-                    label="Host Name"
-                  />
-                  <v-text-field
-                    v-model="selectedChecklistAsset.hostip"
-                    dense
-                    label="IP Address"
-                  />
-                  <v-text-field
-                    v-model="selectedChecklistAsset.hostmac"
-                    dense
-                    label="MAC Address"
-                  />
-                  <v-text-field
-                    v-model="selectedChecklistAsset.hostfqdn"
-                    dense
-                    label="Fully Qualified Domain Name"
-                  />
-                  <v-text-field
-                    v-model="selectedChecklistAsset.targetcomment"
-                    dense
-                    label="Target Comments"
-                  />
-                  <br />
-                  <strong>Role</strong>
-                  <v-radio-group v-model="selectedChecklistAsset.role">
-                    <v-radio label="None" value="None" />
-                    <v-radio label="Workstation" value="Workstation" />
-                    <v-radio label="Member Server" value="Member Server" />
-                    <v-radio
-                      label="Domain Controller"
-                      value="Domain Controller"
-                    />
-                  </v-radio-group>
-                  <v-checkbox
-                    v-model="selectedChecklistAsset.webordatabase"
-                    label="Website or Database STIG"
-                    hide-details
-                  />
-                  <v-text-field
-                    v-if="selectedChecklistAsset.webordatabase"
-                    v-model="selectedChecklistAsset.webdbsite"
-                    label="Site"
-                  />
-                  <v-text-field
-                    v-if="selectedChecklistAsset.webordatabase"
-                    v-model="selectedChecklistAsset.webdbinstance"
-                    label="Instance"
-                  />
-                </v-tab-item>
-                <!-- Technology Area -->
-                <v-tab-item class="pa-4">
-                  <v-select
-                    v-model="selectedChecklistAsset.techarea"
-                    dense
-                    outlined
-                    :items="techAreaLabels"
-                    justify="center"
-                    label="Select a Technology Area (optional)"
-                  />
-                </v-tab-item>
-              </v-tabs-items>
-            </v-card>
             <!-- Data Table -->
-            <v-card class="mt-4" height="62vh" overflow-auto>
+            <v-card height="94vh" overflow-auto>
               <v-card-title class="pt-2">
                 <div>
                   <strong
@@ -254,7 +84,7 @@
                   :headers="headers"
                   hide-default-footer
                   class="overflow-auto"
-                  height="42vh"
+                  height="72vh"
                   @current-items="getFiltered"
                   @click:row="showRule"
                 >
@@ -478,16 +308,7 @@ import {
   ExtendedControlStatus,
   Filter,
   FilteredDataModule,
-  checklistRules,
-  passedFilterEnabled,
-  failedFilterEnabled,
-  naFilterEnabled,
-  nrFilterEnabled,
-  highFilterEnabled,
-  mediumFilterEnabled,
-  lowFilterEnabled,
-  changeStatusSwitch,
-  changeSeveritySwitch
+  checklistRules
 } from '@/store/data_filters';
 import {
   FileID,
@@ -566,6 +387,9 @@ export default class Checklist extends RouteMixin {
     {text: 'CCIs', value: 'cciRef', width: '120px'}
   ];
 
+  currentFreeTextFilterCategory = '';
+  currentFreeTextFilterInput = '';
+
   /** Kept so we can filter by these values even though they are hidden */
   hiddenRows = [
     {value: 'severity', align: ' d-none'},
@@ -617,54 +441,6 @@ export default class Checklist extends RouteMixin {
     'Web Review',
     'Windows OS',
     'Other Review'
-  ];
-
-  /* Declarartions for Vuexstore filter consts and functions*/
-  controlStatusSwitches = [
-    {
-      name: 'Passed',
-      value: 'Passed',
-      enabled: passedFilterEnabled,
-      color: 'statusPassed'
-    },
-    {
-      name: 'Failed',
-      value: 'Failed',
-      enabled: failedFilterEnabled,
-      color: 'statusFailed'
-    },
-    {
-      name: 'Not Applicable',
-      value: 'Not Applicable',
-      enabled: naFilterEnabled,
-      color: 'statusNotApplicable'
-    },
-    {
-      name: 'Not Reviewed',
-      value: 'Not Reviewed',
-      enabled: nrFilterEnabled,
-      color: 'statusNotReviewed'
-    }
-  ];
-
-  changeStatusToggle(name: ExtendedControlStatus) {
-    changeStatusSwitch(name);
-  }
-
-  changeSeverityToggle(name: Severity) {
-    changeSeveritySwitch(name);
-  }
-
-  /** List of switches for each severity */
-  severitySwitches = [
-    {name: 'High', value: 'high', enabled: highFilterEnabled, color: 'teal'},
-    {
-      name: 'Medium',
-      value: 'medium',
-      enabled: mediumFilterEnabled,
-      color: 'teal'
-    },
-    {name: 'Low', value: 'low', enabled: lowFilterEnabled, color: 'teal'}
   ];
 
   statusItems = [

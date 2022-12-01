@@ -2,8 +2,8 @@
  * This module provides a cached, reusable method for filtering data from data_store.
  */
 
-import { Trinary } from '@/enums/Trinary';
-import { InspecDataModule } from '@/store/data_store';
+import {Trinary} from '@/enums/Trinary';
+import {InspecDataModule} from '@/store/data_store';
 import {
   FileID,
   SourcedContextualizedEvaluation,
@@ -31,7 +31,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import { SearchModule } from './search';
+import {SearchModule} from './search';
 
 const MAX_CACHE_ENTRIES = 20;
 
@@ -499,6 +499,194 @@ export class FilteredData extends VuexModule {
       return r;
     };
   }
+
+  // Default Status Toggles
+  passedFilterEnabled = false;
+  failedFilterEnabled = false;
+  naFilterEnabled = false;
+  nrFilterEnabled = false;
+
+  /** List of status switches */
+  controlStatusSwitches: {
+    name: string;
+    value: ExtendedControlStatus;
+    enabled: boolean;
+    color: string;
+  }[] = [
+    {
+      name: 'Passed',
+      value: 'Passed',
+      enabled: this.passedFilterEnabled,
+      color: 'statusPassed'
+    },
+    {
+      name: 'Failed',
+      value: 'Failed',
+      enabled: this.failedFilterEnabled,
+      color: 'statusFailed'
+    },
+    {
+      name: 'Not Applicable',
+      value: 'Not Applicable',
+      enabled: this.naFilterEnabled,
+      color: 'statusNotApplicable'
+    },
+    {
+      name: 'Not Reviewed',
+      value: 'Not Reviewed',
+      enabled: this.nrFilterEnabled,
+      color: 'statusNotReviewed'
+    }
+  ];
+
+  @Mutation
+  alterStatusBoolean() {
+    this.controlStatusSwitches.forEach((item, itemIndex) => {
+      if (
+        SearchModule.statusFilter.some(
+          (statusFilter) =>
+            statusFilter.toLowerCase() === item.value.toLowerCase()
+        )
+      ) {
+        this.controlStatusSwitches[itemIndex].enabled = true;
+      } else {
+        this.controlStatusSwitches[itemIndex].enabled = false;
+      }
+    });
+  }
+
+  /**
+   * Handles the condition change when a status switch is clicked
+   *
+   * @param name - Status value of clicked switch
+   *
+   */
+  @Action
+  changeStatusSwitch(name: ExtendedControlStatus) {
+    //  Commented code is for testing the removal of all values no matter case sensitivity //
+    //const regex = new RegExp("passed", "i");
+    //let temp = SearchModule.currentSearchResult.clone()
+    this.controlStatusSwitches.forEach((item, itemIndex) => {
+      if (item.name == name.charAt(0).toUpperCase() + name.slice(1)) {
+        this.controlStatusSwitches[itemIndex].enabled =
+          !this.controlStatusSwitches[itemIndex].enabled;
+        if (!this.controlStatusSwitches[itemIndex].enabled) {
+          SearchModule.addSearchFilter({
+            field: 'status',
+            value: name
+          });
+        } else {
+          SearchModule.removeSearchFilter({
+            field: 'status',
+            value: item.value
+          });
+
+          // console.log("Temp value: ", temp)
+          // temp.conditionArray.forEach((item: {keyword: string, value: string, negated: boolean})=>{
+          //   console.log(item.value, " : ", regex.exec(item.value) !== null)
+          //   if(item.keyword === 'status' && regex.exec(item.value) !== null){
+          //     console.log("I am removing: ", item.value)
+          //     temp.removeEntry(
+          //       'status',
+          //       item.value,
+          //       false
+          //     );
+          //     // SearchModule.removeSearchFilter({
+          //     //   field: 'status',
+          //     //   value: item.value
+          //     // });
+          //   }
+          // })
+          //SearchModule.SET_SEARCH(temp.toString());
+        }
+      }
+    });
+  }
+
+  // Default Severity Toggles
+  criticalFilterEnabled = false;
+  highFilterEnabled = false;
+  mediumFilterEnabled = false;
+  lowFilterEnabled = false;
+
+  /** List of severity switches */
+  severitySwitches: {
+    name: string;
+    value: Severity;
+    enabled: boolean;
+    color: string;
+  }[] = [
+    {
+      name: 'Critical',
+      value: 'critical',
+      enabled: this.criticalFilterEnabled,
+      color: 'teal'
+    },
+    {
+      name: 'High',
+      value: 'high',
+      enabled: this.highFilterEnabled,
+      color: 'teal'
+    },
+    {
+      name: 'Medium',
+      value: 'medium',
+      enabled: this.mediumFilterEnabled,
+      color: 'teal'
+    },
+    {
+      name: 'Low',
+      value: 'low',
+      enabled: this.lowFilterEnabled,
+      color: 'teal'
+    }
+  ];
+
+  severitySwitchToggles: {[key: string]: boolean} = {
+    Critical: this.criticalFilterEnabled,
+    High: this.highFilterEnabled,
+    Medium: this.mediumFilterEnabled,
+    Low: this.lowFilterEnabled
+  };
+
+  @Mutation
+  alterSeverityBoolean() {
+    this.severitySwitches.forEach((item, itemIndex) => {
+      if (
+        SearchModule.severityFilter.some(
+          (severityFilter) =>
+            severityFilter.toLowerCase() === item.value.toLowerCase()
+        )
+      ) {
+        this.severitySwitches[itemIndex].enabled = true;
+      } else {
+        this.severitySwitches[itemIndex].enabled = false;
+      }
+    });
+  }
+
+  /**
+   * Handles the condition change when a severity switch is clicked
+   *
+   * @param name - Severity value of clicked switch
+   *
+   */
+  @Action
+  changeSeveritySwitch(name: Severity) {
+    console.log('I am the name!2: ', name);
+    this.severitySwitchToggles[name] = !this.severitySwitchToggles[name];
+    if (this.severitySwitchToggles[name]) {
+      SearchModule.addSearchFilter({
+        field: 'severity',
+        value: name
+      });
+    } else {
+      SearchModule.removeSearchFilter({
+        field: 'severity',
+        value: name
+      });
+    }
+  }
 }
 
 export const FilteredDataModule = getModule(FilteredData);
@@ -556,77 +744,6 @@ export function filterControlsBy(
   });
 }
 
-// Status Toggle Switching
-export const passedFilterEnabled = false;
-export const failedFilterEnabled = false;
-export const naFilterEnabled = false;
-export const nrFilterEnabled = false;
-
-const statusSwitchToggles: { [key: string]: boolean } = {
-  Passed: passedFilterEnabled,
-  Failed: passedFilterEnabled,
-  'Not Applicable': passedFilterEnabled,
-  'Not Reviewed': passedFilterEnabled
-};
-
-/**
- * Handles the condition change when a status switch is clicked
- *
- * @param name - Status value of clicked switch
- *
- */
-export function changeStatusSwitch(name: ExtendedControlStatus) {
-  statusSwitchToggles[name] = !statusSwitchToggles[name];
-  if (statusSwitchToggles[name]) {
-    console.log('These are my previous values: ', SearchModule.statusFilter);
-    SearchModule.addSearchFilter({
-      field: 'status',
-      value: name,
-      previousValues: SearchModule.statusFilter
-    });
-  } else {
-    SearchModule.removeSearchFilter({
-      field: 'status',
-      value: name,
-      previousValues: SearchModule.statusFilter
-    });
-  }
-}
-
-// Severity Toggle Switching
-export const highFilterEnabled = false;
-export const mediumFilterEnabled = false;
-export const lowFilterEnabled = false;
-
-const severitySwitchToggles: { [key: string]: boolean } = {
-  High: highFilterEnabled,
-  Medium: mediumFilterEnabled,
-  Low: lowFilterEnabled
-};
-
-/**
- * Handles the condition change when a severity switch is clicked
- *
- * @param name - Severity value of clicked switch
- *
- */
-export function changeSeveritySwitch(name: Severity) {
-  severitySwitchToggles[name] = !severitySwitchToggles[name];
-  if (severitySwitchToggles[name]) {
-    SearchModule.addSearchFilter({
-      field: 'severity',
-      value: name,
-      previousValues: SearchModule.severityFilter
-    });
-  } else {
-    SearchModule.removeSearchFilter({
-      field: 'severity',
-      value: name,
-      previousValues: SearchModule.severityFilter
-    });
-  }
-}
-
 /**
  * Filters checklist rules by given filters
  *
@@ -645,6 +762,8 @@ export function filterChecklistBy(
       (Array.isArray(value) && value.length > 0) ||
       (typeof value === 'boolean' && value)
   );
+  console.log('Filters here: ', filters);
+  console.log('Rules: ', rules);
   return rules.filter((rule) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
       const item: string | string[] | boolean = _.get(rule, filter);

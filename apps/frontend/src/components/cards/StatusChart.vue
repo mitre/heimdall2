@@ -85,14 +85,12 @@ export default class StatusChart extends Vue {
     if (SearchModule.statusFilter?.indexOf(status.value) !== -1) {
       SearchModule.removeSearchFilter({
         field: 'status',
-        value: status.value,
-        previousValues: this.value || []
+        value: status.value
       });
     } else {
       SearchModule.addSearchFilter({
         field: 'status',
-        value: status.value,
-        previousValues: this.value || []
+        value: status.value
       });
     }
   }

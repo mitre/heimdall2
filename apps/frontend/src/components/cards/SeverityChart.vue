@@ -67,14 +67,12 @@ export default class SeverityChart extends Vue {
     ) {
       SearchModule.removeSearchFilter({
         field: 'severity',
-        value: valueToSeverity(severity.value),
-        previousValues: this.value
+        value: valueToSeverity(severity.value)
       });
     } else {
       SearchModule.addSearchFilter({
         field: 'severity',
-        value: valueToSeverity(severity.value),
-        previousValues: this.value
+        value: valueToSeverity(severity.value)
       });
     }
   }

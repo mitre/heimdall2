@@ -490,16 +490,14 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   addStatusSearch(status: ExtendedControlStatus) {
     SearchModule.addSearchFilter({
       field: 'status',
-      value: status,
-      previousValues: this.statusFilter
+      value: status
     });
   }
 
   removeStatusFilter(status: ExtendedControlStatus) {
     SearchModule.removeSearchFilter({
       field: 'status',
-      value: status,
-      previousValues: this.statusFilter
+      value: status
     });
   }
 }
