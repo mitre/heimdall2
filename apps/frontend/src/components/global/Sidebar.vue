@@ -38,6 +38,117 @@
         @changed-files="$emit('changed-files')"
       />
     </v-expansion-panels>
+    <div class="mx-5 mr-10">
+      <v-divider class="mb-5" />
+      <v-row class="my-4">
+        <v-btn
+          id="upload-btn"
+          :disabled="showModal"
+          class="mx-2"
+          @click="show_modal"
+        >
+          <span class="d-none d-md-inline pr-2"> Add/Update Target Data </span>
+          <v-icon> mdi-cloud-upload </v-icon>
+        </v-btn>
+        <v-btn
+          id="upload-btn"
+          :disabled="showModal"
+          class="mx-2"
+          @click="show_modal"
+        >
+          <span class="d-none d-md-inline pr-2">
+            Add/Update Technology Area
+          </span>
+          <v-icon> mdi-cloud-upload </v-icon>
+        </v-btn>
+      </v-row>
+      <h1 class="my-4">Quick Filters:</h1>
+      <v-row class="my-4">
+        <v-col
+          v-for="item in controlStatusSwitches"
+          :key="item.name"
+          :cols="3"
+          >{{ item.name }}</v-col
+        >
+      </v-row>
+      <v-row class="mt-n10">
+        <v-col
+          v-for="item in controlStatusSwitches"
+          :key="item.name"
+          v-model="controlStatusSwitches"
+          :cols="3"
+        >
+          <v-switch
+            v-model="item.enabled"
+            dense
+            justify="center"
+            inset
+            :color="item.color"
+            hide-details
+            @change="changeStatusToggle(item.name)"
+          />
+          <!-- numStatus(item.value)  -->
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">{{
+          item.name
+        }}</v-col>
+        <!-- <v-col :cols="3">Short ID</v-col> -->
+      </v-row>
+      <v-row class="mt-n10">
+        <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
+          <v-switch
+            v-model="item.enabled"
+            dense
+            justify="center"
+            inset
+            :color="item.color"
+            hide-details
+            @change="changeSeverityToggle(item.name)"
+          />
+          <!-- :label='numSeverity(item.value)'' -->
+        </v-col>
+        <!-- <v-col :cols="3">
+          <v-switch
+            v-model="shortIdEnabled"
+            dense
+            justify="center"
+            inset
+            color="teal"
+            hide-details
+          />
+        </v-col> -->
+      </v-row>
+      <h1 class="my-4">Category Filters:</h1>
+      <v-row class="my-4">
+        <v-select
+          v-model="currentFreeTextFilterCategory"
+          class="mx-2"
+          :items="categories"
+          label="Filter Categories"
+          dark
+        />
+        <v-text-field
+          v-model="currentFreeTextFilterInput"
+          class="mr-2"
+          label="Enter filter keyword"
+          dark
+        />
+        <v-btn
+          id="upload-btn"
+          class="mx-2"
+          @click="
+            addCategoryFilter(
+              currentFreeTextFilterCategory,
+              currentFreeTextFilterInput
+            )
+          "
+        >
+          <span class="d-none d-md-inline pr-2"> Add </span>
+        </v-btn>
+      </v-row>
+    </div>
   </v-navigation-drawer>
 </template>
 
@@ -45,13 +156,16 @@
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
 import {Trinary} from '@/enums/Trinary';
 import RouteMixin from '@/mixins/RouteMixin';
-import {FilteredDataModule} from '@/store/data_filters';
+import {ExtendedControlStatus, FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {ChecklistFile} from '@mitre/hdf-converters';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '../../store/server';
+
+import {SearchModule} from '@/store/search';
+import {Severity} from 'inspecjs';
 
 @Component({
   components: {
@@ -60,6 +174,51 @@ import {ServerModule} from '../../store/server';
 })
 export default class Sidebar extends mixins(RouteMixin) {
   @Prop({type: Boolean}) readonly value!: boolean;
+
+  addCategoryFilter(field: string, value: string) {
+    SearchModule.addSearchFilter({
+      field,
+      value
+    });
+  }
+
+  get controlStatusSwitches(): any {
+    return FilteredDataModule.controlStatusSwitches;
+  }
+
+  get severitySwitches(): any {
+    return FilteredDataModule.severitySwitches;
+  }
+
+  changeSeverityToggle(name: Severity) {
+    FilteredDataModule.changeSeveritySwitch(name);
+  }
+
+  changeStatusToggle(name: ExtendedControlStatus) {
+    FilteredDataModule.changeStatusSwitch(name);
+  }
+
+  showModal = false;
+
+  shortIdEnabled = false;
+
+  show_modal() {
+    //TODO: Implement modal
+    console.log('I should open modal!');
+  }
+
+  currentFreeTextFilterInput = '';
+  currentFreeTextFilterCategory = '';
+
+  categories = [
+    'Vul ID',
+    'Rule ID',
+    'Stig ID',
+    'Classification',
+    'Group Name',
+    'CCIs',
+    'Keywords'
+  ];
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {

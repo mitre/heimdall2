@@ -1,6 +1,6 @@
 import Store from '@/store/store';
-import { Severity } from 'inspecjs';
-import { parse } from 'search-query-parser';
+import {Severity} from 'inspecjs';
+import {parse} from 'search-string';
 import {
   Action,
   getModule,
@@ -8,7 +8,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import { ExtendedControlStatus } from './data_filters';
+import {ExtendedControlStatus, FilteredDataModule} from './data_filters';
 
 export interface ISearchState {
   searchTerm: string;
@@ -108,37 +108,34 @@ class Search extends VuexModule implements ISearchState {
     }
   }
 
+  /** Current value of the parsed query string */
+  currentSearchResult: any = parse('');
+
+  /** Parse search bar to add strings to needed filter category */
+  @Mutation
+  setCurrentSearchResult(value: any) {
+    this.currentSearchResult = value;
+  }
+
   /** Parse search bar to add strings to needed filter category */
   @Action
   parseSearch() {
-    this.clear();
-    const options = {
-      keywords: [
-        'status',
-        'severity',
-        'impact',
-        'id',
-        'title',
-        'nist',
-        'desc',
-        'description',
-        'code',
-        'input',
-        'ruleid',
-        'vulid',
-        'stigid',
-        'classification',
-        'groupname',
-        'cci'
-      ]
-    };
-    const searchResult = parse(this.searchTerm, options);
-    if (typeof searchResult === 'string') {
-      this.setFreesearch(searchResult);
-    } else {
-      for (const prop in searchResult) {
-        const include: string | string[] = searchResult[prop] || '';
-        switch (prop) {
+    this.clear(); // Look into if this is still needed
+    const freeTextTransformer = (text: string) => ({
+      key: 'keywords',
+      value: text
+    });
+    const searchResult = parse(this.searchTerm);
+    this.setCurrentSearchResult(searchResult);
+    searchResult.conditionArray.forEach(
+      (prop: {keyword: string; value: string; negated: boolean}): void => {
+        const include: string = prop.value;
+        if (include === '') {
+          return;
+        }
+        // Need to go back and add exclusive, but first want to test inclusive
+        const isNegated: boolean = prop.negated;
+        switch (prop.keyword) {
           case 'status':
             this.addStatusFilter(
               include as ExtendedControlStatus | ExtendedControlStatus[]
@@ -172,6 +169,7 @@ class Search extends VuexModule implements ISearchState {
           case 'stigid':
             this.addStigidFilter(lowercaseAll(include));
             break;
+          case 'class':
           case 'classification':
             this.addClassificationFilter(lowercaseAll(include));
             break;
@@ -188,7 +186,11 @@ class Search extends VuexModule implements ISearchState {
             break;
         }
       }
-    }
+    );
+
+    // Lodash debounce may be needed for these functions
+    FilteredDataModule.alterStatusBoolean();
+    FilteredDataModule.alterSeverityBoolean();
   }
 
   /** Sets the current search */
@@ -208,85 +210,69 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_DESCRIPTION');
     this.context.commit('CLEAR_CODE');
     this.context.commit('CLEAR_RULEID');
-    this.context.commit('CLEAR_FREESEARCH');
+    this.context.commit('CLEAR_VULID');
+    this.context.commit('CLEAR_STIGID');
+    this.context.commit('CLEAR_CLASSIFICATION');
+    this.context.commit('CLEAR_GROUPNAME');
+    this.context.commit('CLEAR_RULEID');
+    this.context.commit('CLEAR_CCI');
   }
+
+  /** Mapper for category input fields to valid filter values*/
+  categoryToFilterMapping: Map<string, string> = new Map([
+    ['Vul ID', 'vulNum'],
+    ['Rule ID', 'ruleid'],
+    ['Stig ID', 'stigid'],
+    ['Classification', 'classification'],
+    ['Group Name', 'groupname'],
+    ['CCIs', 'cii']
+  ]);
 
   /**
    * Allows values to be added to a specific field in the querystring.
+   * @param searchPayload - An object of (The field to add to (e.g., status, severity, etc.)), value (The value to add to the field (e.g., "Passed","Failed", etc.)), and previousValues (The values already in the querystring)
    *
-   * @param field - The field to add to (e.g., status, severity, etc.)
-   * @param value - The value to add to the field (e.g., "Passed","Failed", etc.)
-   * @param previousValues - The values already in the querystring
    */
   @Action
-  addSearchFilter(searchPayload: {
-    field: string;
-    value: string;
-    previousValues: (string | ExtendedControlStatus | Severity)[];
-  }) {
-    // If we already have search filtering
-    if (this.searchTerm.trim() !== '') {
-      // If our current filters include the field
-      if (
-        this.searchTerm.toLowerCase().indexOf(`${searchPayload.field}:`) !== -1
-      ) {
-        const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
-        const newSearch = this.searchTerm.replace(
-          replaceRegex,
-          `${searchPayload.field}:"${searchPayload.previousValues
-            .concat(searchPayload.value)
-            .join(',')}"`
-        );
-        this.context.commit('SET_SEARCH', newSearch);
-      } // We have a filter already, but it doesn't include the field
-      else {
-        const newSearch = `${this.searchTerm} ${searchPayload.field
-          }:"${searchPayload.previousValues
-            .concat(searchPayload.value)
-            .join(',')}"`;
-        this.context.commit('SET_SEARCH', newSearch);
-      }
+  addSearchFilter(searchPayload: {field: string; value: string}) {
+    if (this.currentSearchResult == undefined) {
+      return;
     }
-    // We don't have any search yet
-    else {
-      this.context.commit(
-        'SET_SEARCH',
-        `${searchPayload.field}:"${searchPayload.value}"`
+    // TODO: Will need to add exclusive boolean later here and up in the payload
+    // If coming from a category filter, else a quick filter
+    if (!this.categoryToFilterMapping.get(searchPayload.field)) {
+      this.currentSearchResult.addEntry(
+        searchPayload.field,
+        searchPayload.value,
+        false
+      );
+    } else {
+      this.currentSearchResult.addEntry(
+        this.categoryToFilterMapping.get(searchPayload.field),
+        searchPayload.value,
+        false
       );
     }
-    this.parseSearch();
+    this.context.commit('SET_SEARCH', this.currentSearchResult.toString());
   }
 
   /**
    * Allows values to be removed from a specific field in the querystring.
-   *
-   * @param field - The field to remove from (e.g., status, severity, etc.)
-   * @param value - The value to remove from the field (e.g., "Passed","Failed", etc.)
-   * @param previousValues - The values already in the querystring
+   * @param searchPayload - An object of field (The field to add to (e.g., status, severity, etc.)), value (The value to add to the field (e.g., "Passed","Failed", etc.)), and previousValues (The values already in the querystring)
    */
   @Action
-  removeSearchFilter(searchPayload: {
-    field: string;
-    value: string;
-    previousValues: (string | ExtendedControlStatus | Severity)[];
-  }) {
-    searchPayload.previousValues = searchPayload.previousValues.filter(
-      (filter) => filter.toLowerCase() !== searchPayload.value.toLowerCase()
-    );
-    const replaceRegex = new RegExp(`${searchPayload.field}:"(.*?)"`, 'gm');
-    if (searchPayload.previousValues.length !== 0) {
-      // If we still have any filters
-      const newSearch = this.searchTerm.replace(
-        replaceRegex,
-        `${searchPayload.field}:"${searchPayload.previousValues.join(',')}"`
-      );
-      this.context.commit('SET_SEARCH', newSearch);
-    } // Otherwise just remove the text from the search bar
-    else {
-      const newSearch = this.searchTerm.replace(replaceRegex, '');
-      this.context.commit('SET_SEARCH', newSearch);
+  removeSearchFilter(searchPayload: {field: string; value: string}) {
+    if (this.currentSearchResult == undefined) {
+      return;
     }
-    this.parseSearch();
+
+    // TODO: Will need to add exclusive boolean later here and up in the payload
+    this.currentSearchResult.removeEntry(
+      searchPayload.field,
+      searchPayload.value,
+      false
+    );
+    this.context.commit('SET_SEARCH', this.currentSearchResult.toString());
   }
 
   // Status filtering
