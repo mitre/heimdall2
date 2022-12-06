@@ -5,6 +5,7 @@ import {ApiKeyModule} from '../apikeys/apikeys.module';
 import {ConfigModule} from '../config/config.module';
 import {TokenModule} from '../token/token.module';
 import {UsersModule} from '../users/users.module';
+import {GroupsModule} from '../groups/groups.module';
 import {APIKeyStrategy} from './apikey.strategy';
 import {AuthnController} from './authn.controller';
 import {AuthnService} from './authn.service';
@@ -23,7 +24,8 @@ import {OktaStrategy} from './okta.strategy';
     UsersModule,
     PassportModule,
     TokenModule,
-    ConfigModule
+    ConfigModule,
+    GroupsModule
   ],
   providers: [
     AuthnService,

@@ -1,8 +1,12 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
+import {Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from 'passport-openidconnect';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
+import {GroupsService} from '../groups/groups.service';
+import {CreateGroupDto} from '../groups/dto/create-group.dto';
+import {GroupDto} from '../groups/dto/group.dto';
+import {User} from '../users/user.model';
 
 interface OIDCProfile {
   _json: {
@@ -10,6 +14,7 @@ interface OIDCProfile {
     family_name: string;
     email: string;
     email_verified: boolean;
+    groups: Array<string>;
   };
 }
 
@@ -17,7 +22,8 @@ interface OIDCProfile {
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly groupsService: GroupsService
   ) {
     super(
       {
@@ -39,15 +45,52 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         done: any
       ) {
         const userData = profile._json;
-        const {given_name, family_name, email, email_verified} = userData;
+        const {given_name, family_name, email, email_verified, groups} = userData;
         if (email_verified) {
-          const user = authnService.validateOrCreateUser(
+          authnService.validateOrCreateUser(
             email,
             given_name,
             family_name,
             'oidc'
-          );
-          return done(null, user);
+          ).then((user) => {
+
+            if(configService.get('OIDC_EXTERNAL_GROUPS') === "true" && groups !== undefined) {
+
+              // Check if user is any existing groups that they should not be
+              user.$get('groups', {include: [User]}).then((currentGroups) => {
+                currentGroups.filter(group => !groups.includes(group.name)).forEach((groupToLeave) => {
+                  groupsService.removeUserFromGroup(groupToLeave, user);
+                })
+              })
+
+              groups.forEach((group) => {
+                groupsService.findByName(group).then((existingGroup) => {
+                  // Check if the user is already in that group
+                  user.$get('groups', {include: [User]}).then((groups) => {
+                    var groupMap = groups.map((group) => new GroupDto(group));
+
+                    if(!groupMap.includes(existingGroup)) {
+                      groupsService.addUserToGroup(existingGroup, user, "member");
+                    } 
+                  });
+                }).catch((err) => {
+                  if(err instanceof NotFoundException) {
+
+                    const createGroup: CreateGroupDto = {
+                      name: group,
+                      public: false
+                    };
+
+                    groupsService.create(createGroup).then((newGroup) => {
+                      groupsService.addUserToGroup(newGroup, user, "member");
+                    });
+                  }
+                });
+              });
+            }
+
+            return done(null, user);
+        })
         } else {
           throw new UnauthorizedException(
             'Please verify your email with your identity provider before logging into Heimdall.'

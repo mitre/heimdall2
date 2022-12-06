@@ -9,6 +9,7 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {User} from '../users/user.model';
 import {CreateGroupDto} from './dto/create-group.dto';
 import {Group} from './group.model';
+import {FindOptions} from 'sequelize/types';
 
 @Injectable()
 export class GroupsService {
@@ -23,6 +24,23 @@ export class GroupsService {
 
   async count(): Promise<number> {
     return this.groupModel.count();
+  }
+
+  async findByName(name: string): Promise<Group> {
+    return this.findOneBang({
+      where: {
+        name
+      }
+    });
+  }
+
+  async findOneBang(options: FindOptions | undefined): Promise<Group> {
+    const group = await this.groupModel.findOne<Group>(options);
+    if (group === null) {
+      throw new NotFoundException('Group with given name not found');
+    } else {
+      return group;
+    }
   }
 
   async findByPkBang(id: string): Promise<Group> {
