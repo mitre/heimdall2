@@ -111,6 +111,7 @@ import {Prop} from 'vue-property-decorator';
     ActionDialog,
     EditEvaluationModal,
     CopyButton,
+    GroupRow,
     TagRow
   }
 })
