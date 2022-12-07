@@ -26,6 +26,7 @@ export interface ISearchState {
   NISTIdFilter: string[];
   statusFilter: ExtendedControlStatus[];
   severityFilter: Severity[];
+  keywordsSearchTerms: string[];
 }
 
 export interface SearchQuery {
@@ -97,6 +98,7 @@ class Search extends VuexModule implements ISearchState {
   statusFilter: ExtendedControlStatus[] = [];
   severityFilter: Severity[] = [];
   titleSearchTerms: string[] = [];
+  keywordsSearchTerms: string[] = [];
 
   /** Update the current search */
   @Action
@@ -121,12 +123,14 @@ class Search extends VuexModule implements ISearchState {
   @Action
   parseSearch() {
     this.clear(); // Look into if this is still needed
-    const freeTextTransformer = (text: string) => ({
-      key: 'keywords',
-      value: text
-    });
-    const searchResult = parse(this.searchTerm);
+    const freeTextTransformer = (text: string) =>
+      true && {
+        key: 'keywords',
+        value: text
+      };
+    const searchResult = parse(this.searchTerm, [freeTextTransformer]);
     this.setCurrentSearchResult(searchResult);
+    console.log('Parse Result: ', searchResult);
     searchResult.conditionArray.forEach(
       (prop: {keyword: string; value: string; negated: boolean}): void => {
         const include: string = prop.value;
@@ -179,10 +183,8 @@ class Search extends VuexModule implements ISearchState {
           case 'cci':
             this.addCciFilter(lowercaseAll(include));
             break;
-          case 'text':
-            if (typeof include === 'string') {
-              this.setFreesearch(include);
-            }
+          case 'keywords':
+            this.addKeywordsFilter(lowercaseAll(include));
             break;
         }
       }
@@ -216,6 +218,7 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_GROUPNAME');
     this.context.commit('CLEAR_RULEID');
     this.context.commit('CLEAR_CCI');
+    this.context.commit('CLEAR_KEYWORDS');
   }
 
   /** Mapper for category input fields to valid filter values*/
@@ -586,6 +589,25 @@ class Search extends VuexModule implements ISearchState {
   CLEAR_CCI() {
     this.cciSearchTerms = [];
   }
+
+  /** Adds Keywords to filter */
+  @Action
+  addKeywordsFilter(keyword: string | string[]) {
+    this.context.commit('ADD_KEYWORD', keyword);
+  }
+
+  @Mutation
+  ADD_KEYWORD(keyword: string | string[]) {
+    this.keywordsSearchTerms = this.keywordsSearchTerms.concat(keyword);
+  }
+
+  /** Clears all keyword filters */
+  @Mutation
+  CLEAR_KEYWORDS() {
+    this.keywordsSearchTerms = [];
+  }
+
+  ////   It is possible that keywords will replace below ////
 
   // Freetext search
 
