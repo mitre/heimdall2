@@ -45,7 +45,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     },
     {
       text: 'Groups',
-      value: 'evaluationTags',
+      value: 'groups',
       sortable: true
     },
     {
