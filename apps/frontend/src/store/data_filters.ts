@@ -86,6 +86,9 @@ export interface Filter {
   /** Checklist CCIs to search for */
   cciSearchTerms?: string[];
 
+  /** Checklist keywords to search for */
+  keywordsSearchTerms?: string[];
+
   /** A search term string, case insensitive
    * We look for this in
    * - control ID
@@ -474,14 +477,6 @@ export class FilteredData extends VuexModule {
         );
       }
 
-      // Freeform search
-      if (filter.searchTerm !== undefined) {
-        const term = filter.searchTerm.toLowerCase();
-
-        // Filter controls to those that contain search term
-        controls = controls.filter((c) => contains_term(c, term));
-      }
-
       // Filter by nist stuff
       if (filter.treeFilters && filter.treeFilters.length > 0) {
         // Construct a nist control to represent the filter
@@ -673,7 +668,6 @@ export class FilteredData extends VuexModule {
    */
   @Action
   changeSeveritySwitch(name: Severity) {
-    console.log('I am the name!2: ', name);
     this.severitySwitchToggles[name] = !this.severitySwitchToggles[name];
     if (this.severitySwitchToggles[name]) {
       SearchModule.addSearchFilter({
@@ -728,7 +722,9 @@ export function filterControlsBy(
       (Array.isArray(value) && value.length > 0) ||
       (typeof value === 'boolean' && value)
   );
-  return controls.filter((control) => {
+
+  // Filter out specific categories
+  const firstPass = controls.filter((control) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
       const item: string | string[] | boolean = _.get(control, filter);
       if (Array.isArray(value) && typeof item !== 'boolean') {
@@ -742,6 +738,13 @@ export function filterControlsBy(
       }
     });
   });
+  // Keywords filtering
+  const final = firstPass.filter((control) => {
+    return SearchModule.keywordsSearchTerms.every((keyword) => {
+      return contains_term(control, keyword);
+    });
+  });
+  return final;
 }
 
 /**
@@ -764,7 +767,8 @@ export function filterChecklistBy(
   );
   console.log('Filters here: ', filters);
   console.log('Rules: ', rules);
-  return rules.filter((rule) => {
+  // Filter out specific categories
+  const firstPass = rules.filter((rule) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
       const item: string | string[] | boolean = _.get(rule, filter);
       if (Array.isArray(value) && typeof item !== 'boolean') {
@@ -778,12 +782,26 @@ export function filterChecklistBy(
       }
     });
   });
+  // Keywords filtering
+  // TODO: Move to use a funcion like contains_term once checklist mapping work is complete
+  const final = firstPass.filter((rule) => {
+    return SearchModule.keywordsSearchTerms.every((keyword) => {
+      return Object.entries(rule).some((item) => {
+        if (item[1]?.toLowerCase().includes(keyword)) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    });
+  });
+  return final;
 }
 
 /**
- * Get checklist rules that should be displayed
+ * Get checklist rules that should be displayed.
  *
- * @param rukes - Array of checklist rules
+ * @param rules - Array of checklist rules
  * @param filters - Any filters that should be applied
  * @returns Array of checklist rules after processing
  *
@@ -792,6 +810,7 @@ export function checklistRules(
   rules: readonly ChecklistVuln[],
   filters: Filter
 ): readonly ChecklistVuln[] {
+  // If an attribute name changes in the checklist mapping, make sure it is reflected here
   const checklistFilters: Record<string, boolean | string[] | undefined> = {
     severity: filters.severity,
     vulNum: filters.vulidSearchTerms,

@@ -95,7 +95,7 @@ export default class SearchBar extends Vue {
     if (this.typingTimer) {
       clearTimeout(this.typingTimer);
     }
-    this.typingTimer = setTimeout(this.onDoneTyping, 100);
+    this.typingTimer = setTimeout(this.onDoneTyping, 500);
   }
 }
 </script>

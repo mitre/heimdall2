@@ -41,7 +41,7 @@
     <template #main-content>
       <v-container fluid grid-list-md pt-0 mt-4 mx-1>
         <v-row>
-          <v-col md="4" :cols="12">
+          <v-col md="4" :cols="12" class="pr-0 pl-1">
             <!-- Data Table -->
             <v-card height="94vh" overflow-auto>
               <v-card-title class="pt-2">
@@ -154,7 +154,7 @@
                 </v-row>
               </v-card-text>
             </v-card>
-            <v-card height="37.35vh" class="overflow-auto mt-4 pt-2">
+            <v-card height="37vh" class="overflow-auto mt-3 pt-2">
               <div v-if="selectedRule.ruleId !== ''">
                 <v-card-text>
                   <div>
@@ -197,7 +197,7 @@
                 <v-card-text>No rule selected.</v-card-text>
               </div>
             </v-card>
-            <v-card class="mt-4 pt-4">
+            <v-card class="mt-3 pt-4" height="42vh">
               <v-card-text>
                 <v-row>
                   <v-col>
@@ -710,7 +710,6 @@ export default class Checklist extends RouteMixin {
    * The filter for charts. Contains all of our filter stuff
    */
   get all_filter(): Filter {
-    console.log('Filter: ', SearchModule.severityFilter);
     return {
       status: SearchModule.statusFilter,
       severity: SearchModule.severityFilter,
@@ -728,7 +727,8 @@ export default class Checklist extends RouteMixin {
       searchTerm: SearchModule.freeSearch || '',
       codeSearchTerms: SearchModule.codeSearchTerms,
       omit_overlayed_controls: true,
-      control_id: this.controlSelection || undefined
+      control_id: this.controlSelection || undefined,
+      keywordsSearchTerms: SearchModule.keywordsSearchTerms
     };
   }
 

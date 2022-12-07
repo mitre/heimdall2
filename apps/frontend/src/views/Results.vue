@@ -369,7 +369,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       codeSearchTerms: SearchModule.codeSearchTerms,
       treeFilters: this.treeFilters,
       omit_overlayed_controls: true,
-      control_id: this.controlSelection || undefined
+      control_id: this.controlSelection || undefined,
+      keywordsSearchTerms: SearchModule.keywordsSearchTerms
     };
   }
 

@@ -1,115 +1,147 @@
 <template>
-  <v-navigation-drawer
-    :value="value"
-    :clipped="$vuetify.breakpoint.lgAndUp"
-    app
-    :style="{'margin-top': classification ? '5em' : '3.5em', 'z-index': 11}"
-    disable-resize-watcher
-    disable-route-watcher
-    fixed
-    temporary
-    width="600px"
-    @input="$emit('input', $event)"
-    @blur="value = false"
-  >
-    <v-expansion-panels v-model="active_path" accordion>
-      <DropdownContent
-        header-text="Results"
-        :files="visible_evaluation_files"
-        :all-selected="all_evaluations_selected"
-        :enable-compare-view="true"
-        :compare-view-active="compareViewActive"
-        @toggle-all="toggle_all_evaluations"
-        @toggle-compare-view="compareView"
-        @changed-files="$emit('changed-files')"
-      />
-      <DropdownContent
-        header-text="Profiles"
-        :files="visible_profile_files"
-        :all-selected="all_profiles_selected"
-        @toggle-all="toggle_all_profiles"
-        @changed-files="$emit('changed-files')"
-      />
-      <DropdownContent
-        header-text="Checklists"
-        :files="visible_checklist_files"
-        :all-selected="all_checklists_selected"
-        @toggle-all="toggle_all_checklists"
-        @changed-files="$emit('changed-files')"
-      />
-    </v-expansion-panels>
-    <div class="mx-5 mr-10">
-      <v-divider class="mb-5" />
-      <v-row class="my-4">
-        <v-btn
-          id="upload-btn"
-          :disabled="showModal"
-          class="mx-2"
-          @click="show_modal"
-        >
-          <span class="d-none d-md-inline pr-2"> Add/Update Target Data </span>
-          <v-icon> mdi-cloud-upload </v-icon>
-        </v-btn>
-        <v-btn
-          id="upload-btn"
-          :disabled="showModal"
-          class="mx-2"
-          @click="show_modal"
-        >
-          <span class="d-none d-md-inline pr-2">
-            Add/Update Technology Area
-          </span>
-          <v-icon> mdi-cloud-upload </v-icon>
-        </v-btn>
-      </v-row>
-      <h1 class="my-4">Quick Filters:</h1>
-      <v-row class="my-4">
-        <v-col
-          v-for="item in controlStatusSwitches"
-          :key="item.name"
-          :cols="3"
-          >{{ item.name }}</v-col
-        >
-      </v-row>
-      <v-row class="mt-n10">
-        <v-col
-          v-for="item in controlStatusSwitches"
-          :key="item.name"
-          v-model="controlStatusSwitches"
-          :cols="3"
-        >
-          <v-switch
-            v-model="item.enabled"
-            dense
-            justify="center"
-            inset
-            :color="item.color"
-            hide-details
-            @change="changeStatusToggle(item.name)"
+  <div>
+    <v-navigation-drawer
+      :clipped="$vuetify.breakpoint.lgAndUp"
+      app
+      :style="{'z-index': 11}"
+      disable-resize-watcher
+      disable-route-watcher
+      fixed
+      permanent
+      width="45px"
+      @input="$emit('input', $event)"
+      @blur="value = false"
+    >
+      <v-container v-if="!isSideUtilityDrawerShown" fill-height fluid>
+        <v-row align="center" justify="center">
+          <v-col
+            ><v-icon
+              class="text-center"
+              right
+              @click="isSideUtilityDrawerShown = !isSideUtilityDrawerShown"
+              >mdi-arrow-right</v-icon
+            ></v-col
+          >
+        </v-row>
+      </v-container>
+    </v-navigation-drawer>
+    <v-navigation-drawer
+      v-model="isSideUtilityDrawerShown"
+      :clipped="$vuetify.breakpoint.lgAndUp"
+      app
+      :style="{'z-index': 11, 'margin-top': classification ? '5em' : '3em'}"
+      disable-resize-watcher
+      disable-route-watcher
+      fixed
+      temporary
+      width="600px"
+      @input="$emit('input', $event)"
+      @blur="value = false"
+    >
+      <div v-if="isSideUtilityDrawerShown">
+        <v-expansion-panels v-model="active_path" accordion>
+          <DropdownContent
+            header-text="Results"
+            :files="visible_evaluation_files"
+            :all-selected="all_evaluations_selected"
+            :enable-compare-view="true"
+            :compare-view-active="compareViewActive"
+            @toggle-all="toggle_all_evaluations"
+            @toggle-compare-view="compareView"
+            @changed-files="$emit('changed-files')"
           />
-          <!-- numStatus(item.value)  -->
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">{{
-          item.name
-        }}</v-col>
-        <!-- <v-col :cols="3">Short ID</v-col> -->
-      </v-row>
-      <v-row class="mt-n10">
-        <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
-          <v-switch
-            v-model="item.enabled"
-            dense
-            justify="center"
-            inset
-            :color="item.color"
-            hide-details
-            @change="changeSeverityToggle(item.name)"
+          <DropdownContent
+            header-text="Profiles"
+            :files="visible_profile_files"
+            :all-selected="all_profiles_selected"
+            @toggle-all="toggle_all_profiles"
+            @changed-files="$emit('changed-files')"
           />
-          <!-- :label='numSeverity(item.value)'' -->
-        </v-col>
-        <!-- <v-col :cols="3">
+          <DropdownContent
+            header-text="Checklists"
+            :files="visible_checklist_files"
+            :all-selected="all_checklists_selected"
+            @toggle-all="toggle_all_checklists"
+            @changed-files="$emit('changed-files')"
+          />
+        </v-expansion-panels>
+        <div class="mx-5 mr-10 mb-5">
+          <v-divider class="mb-5" />
+          <v-row class="my-4">
+            <v-btn
+              id="upload-btn"
+              :disabled="showModal"
+              class="mx-2"
+              @click="show_modal"
+            >
+              <span class="d-none d-md-inline pr-2">
+                Add/Update Target Data
+              </span>
+              <v-icon> mdi-cloud-upload </v-icon>
+            </v-btn>
+            <v-btn
+              id="upload-btn"
+              :disabled="showModal"
+              class="mx-2"
+              @click="show_modal"
+            >
+              <span class="d-none d-md-inline pr-2">
+                Add/Update Technology Area
+              </span>
+              <v-icon> mdi-cloud-upload </v-icon>
+            </v-btn>
+          </v-row>
+          <h1 class="my-4">Quick Filters:</h1>
+          <v-row class="my-4">
+            <v-col
+              v-for="item in controlStatusSwitches"
+              :key="item.name"
+              :cols="3"
+              >{{ item.name }}</v-col
+            >
+          </v-row>
+          <v-row class="mt-n10">
+            <v-col
+              v-for="item in controlStatusSwitches"
+              :key="item.name"
+              v-model="controlStatusSwitches"
+              :cols="3"
+            >
+              <v-switch
+                v-model="item.enabled"
+                dense
+                justify="center"
+                inset
+                :color="item.color"
+                hide-details
+                @change="changeStatusToggle(item.name)"
+              />
+              <!-- numStatus(item.value)  -->
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col
+              v-for="item in severitySwitches"
+              :key="item.name"
+              :cols="3"
+              >{{ item.name }}</v-col
+            >
+            <!-- <v-col :cols="3">Short ID</v-col> -->
+          </v-row>
+          <v-row class="mt-n10">
+            <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
+              <v-switch
+                v-model="item.enabled"
+                dense
+                justify="center"
+                inset
+                :color="item.color"
+                hide-details
+                @change="changeSeverityToggle(item.name)"
+              />
+              <!-- :label='numSeverity(item.value)'' -->
+            </v-col>
+            <!-- <v-col :cols="3">
           <v-switch
             v-model="shortIdEnabled"
             dense
@@ -119,37 +151,39 @@
             hide-details
           />
         </v-col> -->
-      </v-row>
-      <h1 class="my-4">Category Filters:</h1>
-      <v-row class="my-4">
-        <v-select
-          v-model="currentFreeTextFilterCategory"
-          class="mx-2"
-          :items="categories"
-          label="Filter Categories"
-          dark
-        />
-        <v-text-field
-          v-model="currentFreeTextFilterInput"
-          class="mr-2"
-          label="Enter filter keyword"
-          dark
-        />
-        <v-btn
-          id="upload-btn"
-          class="mx-2"
-          @click="
-            addCategoryFilter(
-              currentFreeTextFilterCategory,
-              currentFreeTextFilterInput
-            )
-          "
-        >
-          <span class="d-none d-md-inline pr-2"> Add </span>
-        </v-btn>
-      </v-row>
-    </div>
-  </v-navigation-drawer>
+          </v-row>
+          <h1 class="my-4">Category Filters:</h1>
+          <v-row class="my-4">
+            <v-select
+              v-model="currentFreeTextFilterCategory"
+              class="mx-2 select"
+              :items="categories"
+              label="Filter Categories"
+              dark
+            />
+            <v-text-field
+              v-model="currentFreeTextFilterInput"
+              class="mr-2"
+              label="Enter filter keyword"
+              dark
+            />
+            <v-btn
+              id="upload-btn"
+              class="mx-2"
+              @click="
+                addCategoryFilter(
+                  currentFreeTextFilterCategory,
+                  currentFreeTextFilterInput
+                )
+              "
+            >
+              <span class="d-none d-md-inline pr-2"> Add </span>
+            </v-btn>
+          </v-row>
+        </div>
+      </div>
+    </v-navigation-drawer>
+  </div>
 </template>
 
 <script lang="ts">
@@ -199,6 +233,12 @@ export default class Sidebar extends mixins(RouteMixin) {
   }
 
   showModal = false;
+
+  isSideUtilityDrawerShown = false;
+
+  setUtilityDrawerBoolean() {
+    this.isSideUtilityDrawerShown = !this.isSideUtilityDrawerShown;
+  }
 
   shortIdEnabled = false;
 
@@ -325,5 +365,10 @@ nav.v-navigation-drawer {
   max-height: 100vh !important;
   /* z-index hides behind footer and topbar */
   z-index: 1;
+}
+.select {
+  width: 70px;
+  max-height: 60px;
+  font-size: 15px;
 }
 </style>

@@ -11,13 +11,6 @@
       <v-app-bar-nav-icon v-if="showBackButton" @click.stop="goBack">
         <v-icon>mdi-arrow-left</v-icon>
       </v-app-bar-nav-icon>
-      <v-app-bar-nav-icon
-        v-if="!minimalTopbar"
-        data-cy="openSidebar"
-        @click.stop="$emit('toggle-drawer')"
-      >
-        <v-icon color="bar-visible">mdi-menu</v-icon>
-      </v-app-bar-nav-icon>
       <span class="hidden-sm-and-down bar-visible--text">{{
         elipsisTitle
       }}</span>
@@ -44,7 +37,6 @@ import {Prop} from 'vue-property-decorator';
 })
 export default class Topbar extends mixins(ServerMixin) {
   @Prop({type: String, required: true}) readonly title!: string;
-  @Prop({default: false}) readonly minimalTopbar!: boolean;
   @Prop({default: false}) readonly showBackButton!: boolean;
 
   mounted() {
