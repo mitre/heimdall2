@@ -1,7 +1,19 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import {CweNistMapping} from './mappings/CweNistMapping';
+
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+
+const CWE_NIST_MAPPING = new CweNistMapping();
+const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
+
+function nistTag(input: Record<string, unknown>): string[] {
+    let cwe = [`${_.get(input, 'id')}`];
+    console.log(cwe)
+    return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG);
+  }
+
 
 function formatMessage(input: Record<string, unknown>): string {
   return `${_.get(input, 'file')}, line:${_.get(input, 'line')}, column:${_.get(input, 'column')}`;
@@ -34,10 +46,13 @@ export class GoSecMapper extends BaseConverter {
         status: 'loaded',
         controls: [
           {
-            path: 'issues',
+            path: 'Issues',
             key: 'id',
             tags: {
-              nist: {path: 'cwe'},
+              nist: {
+                path: 'cwe',
+                transformer: nistTag    
+            },
               cwe: {path:'cwe'},
               nosec: {path:'nosec'},
               suppressions: {path: 'supressions'},
