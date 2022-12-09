@@ -4500,10 +4500,10 @@
   resolved "https://registry.yarnpkg.com/@types/mustache/-/mustache-4.2.2.tgz#825bf5c214c3ab84d0b23fef2c8eb898f3ff8717"
   integrity sha512-MUSpfpW0yZbTgjekDbH0shMYBUD+X/uJJJMm9LXN1d5yjl5lCY1vN/eWKD6D1tOtjA6206K0zcIPnUaFMurdNA==
 
-"@types/node@*", "@types/node@^17.0.25":
-  version "17.0.39"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-17.0.39.tgz#3652d82e2a16b4ea679d5ea3143b816c91b7e113"
-  integrity sha512-JDU3YLlnPK3WDao6/DlXLOgSNpG13ct+CwIO17V8q0/9fWJyeMJJ/VyZ1lv8kDprihvZMydzVwf0tQOqGiY2Nw==
+"@types/node@*", "@types/node@^18.11.12":
+  version "18.11.12"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.11.12.tgz#89e7f8aa8c88abf432f9bd594888144d7dba10aa"
+  integrity sha512-FgD3NtTAKvyMmD44T07zz2fEf+OKwutgBCEVM8GcvMGVGaDktiLNTDvPwC/LUe3PinMW+X6CuLOF2Ui1mAlSXg==
 
 "@types/node@12.12.50":
   version "12.12.50"
