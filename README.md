@@ -49,12 +49,27 @@ This repository contains the source code for Heimdall's [Backend](https://github
 #### *These demos are only intended to show the functionality of Heimdall, please do not upload any sensitive data to them.*
 
 #### Released Previews
+[Heimdall Lite](https://heimdall-lite.mitre.org) | [Heimdall Server](https://heimdall-demo.mitre.org/) &nbsp;&nbsp;
+<a href="https://pages.github.com/">
+<picture>
+   <source media="(prefers-color-scheme: dark)" srcset="apps/frontend/src/assets/GitHub-Mark-Light-64px.png">
+   <source media="(prefers-color-scheme: light)" srcset="apps/frontend/src/assets/GitHub-Mark-64px.png">
+    <img alt="Github Logo" src="apps/frontend/src/assets/GitHub-Mark-64px.png" height="25">
+</picture>
+</a>
 
-[Heimdall Lite](https://heimdall-lite.mitre.org) | [Heimdall Server](https://heimdall-demo.mitre.org/)
 
 #### Current *Development Master Branch* Preview
+[Heimdall Lite](https://heimdall-lite.netlify.com/) &nbsp;&nbsp; <a href="https://www.netlify.com">
+<picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://www.netlify.com/v3/img/components/full-logo-dark-simple.svg">
+   <source media="(prefers-color-scheme: light)" srcset="https://www.netlify.com/v3/img/components/full-logo-light-simple.svg">
+   <img alt="Netlify Logo" src="https://www.netlify.com/v3/img/components/full-logo-dark-simple.svg" height="25">
+</picture>
+</a> 
+<br />
 
-[Heimdall Lite](https://heimdall-lite.netlify.com/) | [Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/)
+[Heimdall Server](https://mitre-heimdall-staging.herokuapp.com/) &nbsp;&nbsp; <a href="https://www.heroku.com/"><img src="https://www.herokucdn.com/deploy/button.svg" height="25"/></a>
 
 ## Heimdall (Lite) vs Heimdall with Backend (Server)
 
@@ -117,15 +132,15 @@ Then, any subsequent `npx @mitre/heimdall-lite` will use the local version and l
 
 #### Running via Docker
 
-It is also possible to run heimdall-lite using Docker, using the following command:
+It is also possible to run Heimdall-Lite using Docker, using the following command:
 
 ```bash
 docker run -d -p 8080:80 mitre/heimdall-lite:release-latest
 ```
 
-You can then access heimdall-lite at [`http://localhost:8080`](http://localhost:8080).
+You can then access Heimdall-Lite at [`http://localhost:8080`](http://localhost:8080).
 
-If you would prefer to run the bleeding edge version of heimdall-lite, replace `mitre/heimdall-lite:release-latest` with `mitre/heimdall-lite:latest`.
+If you would prefer to run the bleeding edge version of Heimdall-Lite, replace `mitre/heimdall-lite:release-latest` with `mitre/heimdall-lite:latest`.
 
 ---
 
@@ -137,17 +152,19 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 
 1. Install Docker
 
-2. Download and extract the most recent Heimdall release from our [releases page](https://github.com/mitre/heimdall2/releases).
+2. Download and extract the most recent Heimdall release from our [releases page](https://github.com/mitre/heimdall2/releases). Alternatively, you can clone this repository and navigate to the `heimdall2` folder.
 
 3. Navigate to the base folder where `docker-compose.yml` is located
 
-4. By default Heimdall will generate self-signed certificates that will last for 7 days. Place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively.
+4. By default Heimdall will generate self-signed certificates that will last for 7 days. For production use, place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively. For development use, you can use the default generated certificates which means you do not need to put any certificate files in the `./nginx/certs/` folder.
+
+*NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
    - ```bash
      ./setup-docker-env.sh
      # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
-     docker-compose up -d
+     docker-compose up
      ```
 
 6. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.) 
@@ -248,9 +265,9 @@ Proper API documentation does not exist yet. In the meantime here are quick inst
 ```sh
 # To use API Keys, ensure you have set the API_KEY_SECRET environment variable. To create a secret run: openssl rand -hex 33
 # Create an API key using the Heimdall frontend (within the edit user profile modal) and upload an evaluation with the following command
-curl -F "data=@<Path to Evaluation File>" -F "filename=<Filename To Show in Heimdall>" -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
+curl -F "data=@<Path to Evaluation File>" -F "filename=<Filename To Show in Heimdall>" -F "public=true/false" -F "evaluationTags=<tag-name>,<another-tag-name>..." -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
 # You can upload multiple files at once (up to 100)
-curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evaluation File>" ... -F "public=true/false" -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
+curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evaluation File>" ... -F "public=true/false" -F "evaluationTags=<tag-name>,<another-tag-name>..." -H "Authorization: Api-Key apikeygoeshere" "http://localhost:3000/evaluations"
 ```
 
 ## For Developers

@@ -8124,10 +8124,10 @@
               "skip_message": "Can't find file: /etc/audisp/audisp-remote.conf"
             },
             {
-              "code_desc": "Manual verification status provided through attestation has expired",
-              "status": "skipped",
-              "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: Audit logs are automatically backed up and cleared as necessary\n\nUpdated: 2022-05-02\nUpdated By: Json Smith, Security\nFrequency: monthly",
-              "start_time": "2022-06-08T14:25:39.202Z"
+              "code_desc": "Manually verified status provided through attestation",
+              "status": "passed",
+              "message": "Attestation:\nStatus: passed\nExplanation: Audit logs are automatically backed up and cleared as necessary\n\nUpdated: 2022-09-09\nUpdated By: Json Smith, Security\nFrequency: monthly",
+              "start_time": "2022-09-09T20:06:18.295Z"
             }
           ],
           "attestation_data": {
@@ -8135,7 +8135,7 @@
             "explanation": "Audit logs are automatically backed up and cleared as necessary",
             "frequency": "monthly",
             "status": "passed",
-            "updated": "2022-05-02",
+            "updated": "2022-09-09",
             "updated_by": "Json Smith, Security"
           }
         },
@@ -17705,7 +17705,7 @@
               "code_desc": "Manual verification status provided through attestation has expired",
               "status": "skipped",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: Audit records are enabled for this system.\n\nUpdated: 2022-01-02\nUpdated By: Alec Hardison, Security\nFrequency: 1d",
-              "start_time": "2022-06-08T14:25:39.204Z"
+              "start_time": "2022-09-09T20:06:18.336Z"
             }
           ],
           "attestation_data": {

@@ -34,6 +34,9 @@
               item.filename
             }}</span>
           </template>
+          <template #[`item.groups`]="{item}">
+            <GroupRow v-if="item.id" :evaluation="item" />
+          </template>
           <template #[`item.evaluationTags`]="{item}">
             <TagRow v-if="item.id" :evaluation="item" />
           </template>
@@ -92,6 +95,7 @@
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import CopyButton from '@/components/generic/CopyButton.vue';
+import GroupRow from '@/components/global/groups/GroupRow.vue';
 import TagRow from '@/components/global/tags/TagRow.vue';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 import {EvaluationModule} from '@/store/evaluations';
@@ -107,6 +111,7 @@ import {Prop} from 'vue-property-decorator';
     ActionDialog,
     EditEvaluationModal,
     CopyButton,
+    GroupRow,
     TagRow
   }
 })

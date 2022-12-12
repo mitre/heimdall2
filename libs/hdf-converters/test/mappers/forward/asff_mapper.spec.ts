@@ -127,7 +127,7 @@ describe('ASFF Mapper', () => {
     );
   });
 
-  it('Successfully converts HDF2ASFF', () => {
+  it('Successfully converts HDF2ASFF / Previously HDF', () => {
     let mapper = new Mapper(
       fs.readFileSync(
         'sample_jsons/asff_mapper/sample_input_report/rhel7_V-71931_asff.json',
