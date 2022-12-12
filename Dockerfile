@@ -1,4 +1,4 @@
-ARG BASE_CONTAINER=node:lts-alpine
+ARG BASE_CONTAINER=node:16-alpine
 
 FROM $BASE_CONTAINER as builder
 

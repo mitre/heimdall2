@@ -256,7 +256,7 @@ export class InspecIntake extends VuexModule {
         return new NetsparkerMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.PRISMA:
         return new PrismaMapper(convertOptions.data).toHdf();
-      case 'veracode':
+      case INPUT_TYPES.VERACODE:
         return new VeracodeMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.FORTIFY:
         return new FortifyMapper(convertOptions.data).toHdf();

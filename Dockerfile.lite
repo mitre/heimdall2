@@ -1,4 +1,4 @@
-ARG BUILD_CONTAINER=node:lts-alpine
+ARG BUILD_CONTAINER=node:16-alpine
 ARG BASE_CONTAINER=nginx:alpine
 
 FROM $BUILD_CONTAINER as builder
