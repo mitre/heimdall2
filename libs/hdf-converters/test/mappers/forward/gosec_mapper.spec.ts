@@ -10,11 +10,6 @@ describe('veracode_mapper', () => {
       )
     );
 
-    /*fs.writeFileSync(
-        'sample_jsons/gosec_mapper/gosec-hdf.json',
-         JSON.stringify(mapper.toHdf(), null, 2)
-    );*/
-
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(

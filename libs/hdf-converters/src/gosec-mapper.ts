@@ -18,9 +18,6 @@ function nistTag(input: Record<string, unknown>): string[] {
 function formatMessage(input: Record<string, unknown>): string {
   return `${_.get(input, 'file')}, line:${_.get(input, 'line')}, column:${_.get(input, 'column')}`;
 }
-/*function nistTag(id: string): string[] {
-  return NIKTO_NIST_MAPPING.nistTag(id);
-}*/
 
 export class GoSecMapper extends BaseConverter {
   withRaw: boolean;
