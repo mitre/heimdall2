@@ -4,6 +4,7 @@ export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
   FORTIFY = 'fortify',
+  GOSEC = 'gosec',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
   NIKTO = 'nikto',
@@ -60,7 +61,8 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.NETSPARKER]: [],
   [INPUT_TYPES.SCOUTSUITE]: [],
   [INPUT_TYPES.NOT_FOUND]: [],
-  [INPUT_TYPES.VERACODE]: []
+  [INPUT_TYPES.VERACODE]: [],
+  [INPUT_TYPES.GOSEC]:[]
 };
 
 export function fingerprint(guessOptions: {
@@ -130,6 +132,11 @@ export function fingerprint(guessOptions: {
       guessOptions.data.indexOf('detailedreport') !== -1
     ) {
       return INPUT_TYPES.VERACODE;
+    } else if (
+      guessOptions.data.indexOf('Golang errors') !== -1 &&
+      guessOptions.data.indexOf('Issues') !== -1
+    ) {
+      return INPUT_TYPES.GOSEC; 
     }
   }
   return INPUT_TYPES.NOT_FOUND;
