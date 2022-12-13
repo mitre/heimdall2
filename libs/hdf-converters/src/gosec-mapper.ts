@@ -1,34 +1,32 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import {CweNistMapping} from './mappings/CweNistMapping';
-
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {CweNistMapping} from './mappings/CweNistMapping';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
 
 function nistTag(input: Record<string, unknown>): string[] {
-    let cwe = [`${_.get(input, 'id')}`];
-    console.log(cwe)
-    return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG);
-  }
-
+  const cwe = [`${_.get(input, 'id')}`];
+  console.log(cwe);
+  return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG);
+}
 
 function formatMessage(input: Record<string, unknown>): string {
-  return `${_.get(input, 'file')}, line:${_.get(input, 'line')}, column:${_.get(input, 'column')}`;
+  return `${_.get(input, 'file')}, line:${_.get(input, 'line')}, column:${_.get(
+    input,
+    'column'
+  )}`;
 }
 
 export class GoSecMapper extends BaseConverter {
   withRaw: boolean;
 
-  mappings: MappedTransform<
-    ExecJSON.Execution,
-    ILookupPath
-  > = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
     statistics: {},
@@ -48,25 +46,25 @@ export class GoSecMapper extends BaseConverter {
             tags: {
               nist: {
                 path: 'cwe',
-                transformer: nistTag    
-            },
-              cwe: {path:'cwe'},
-              nosec: {path:'nosec'},
+                transformer: nistTag
+              },
+              cwe: {path: 'cwe'},
+              nosec: {path: 'nosec'},
               suppressions: {path: 'supressions'},
-              severity:{path: 'severity'},
-              confidence:{path: 'confidence'}
+              severity: {path: 'severity'},
+              confidence: {path: 'confidence'}
             },
             refs: [],
             source_location: {},
             title: {path: 'details'},
             id: {path: 'rule_id'},
-            desc: "",
+            desc: '',
             impact: 0.5,
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {path: 'code'},
-                message:{transformer: formatMessage},
+                message: {transformer: formatMessage},
                 start_time: ''
               }
             ]
@@ -74,7 +72,7 @@ export class GoSecMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ],
+    ]
   };
   constructor(gosecJson: string, withRaw = false) {
     super(JSON.parse(gosecJson));
