@@ -2,7 +2,7 @@
 	"Golang errors": {},
 	"Issues": [
 		{
-			"severity": "MDIUM",
+			"severity": "MEDIUM",
 			"confidence": "HIGH",
 			"cwe": {
 				"id": "22",

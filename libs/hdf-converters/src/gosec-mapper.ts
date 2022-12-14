@@ -23,7 +23,26 @@ function formatMessage(input: Record<string, unknown>): string {
 export class GoSecMapper extends BaseConverter {
   withRaw: boolean;
 
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > = {
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {
+          auxiliary_data: [
+            {
+              name: 'Gosec',
+              data: {
+                "Gosec Errors": _.get(data, 'Gosec Errors'),
+                Issues: _.get(data, 'Issues')
+              }
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    },
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion
@@ -72,7 +91,7 @@ export class GoSecMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
   };
   constructor(gosecJson: string, withRaw = false) {
     super(JSON.parse(gosecJson));

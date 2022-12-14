@@ -1,7 +1,7 @@
 import fs from 'fs';
 import {GoSecMapper} from '../../../src/gosec-mapper';
 import {omitVersions} from '../../utils';
-describe('veracode_mapper', () => {
+describe('gosec_mapper', () => {
   it('Successfully converts Veracode reports', () => {
     const mapper = new GoSecMapper(
       fs.readFileSync(

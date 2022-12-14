@@ -62,7 +62,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.SCOUTSUITE]: [],
   [INPUT_TYPES.NOT_FOUND]: [],
   [INPUT_TYPES.VERACODE]: [],
-  [INPUT_TYPES.GOSEC]: []
+  [INPUT_TYPES.GOSEC]: ['Golang Errors', 'Issues']
 };
 
 export function fingerprint(guessOptions: {
