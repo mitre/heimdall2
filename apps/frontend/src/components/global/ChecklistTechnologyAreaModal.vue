@@ -1,0 +1,87 @@
+<template>
+  <Modal :visible="visible" @close-modal="$emit('close-modal')">
+    <v-card>
+      <h2 style="text-align: center; padding-top: 25px">
+        Add/Update Technology Area
+      </h2>
+      <div style="margin: 30px">
+        <v-select
+          v-model="selectedChecklistAsset.techarea"
+          dense
+          outlined
+          :items="techAreaLabels"
+          justify="center"
+          label="Select a Technology Area (optional)"
+        />
+      </div>
+      <v-divider />
+      <v-card-actions>
+        <v-btn color="primary" text @click="$emit('close-modal')"
+          >Close Window</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </Modal>
+</template>
+
+<script lang="ts">
+import Modal from '@/components/global/Modal.vue';
+import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {FileID} from '@/store/report_intake';
+import Vue from 'vue';
+import Component from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
+
+@Component({
+  components: {
+    Modal
+  }
+})
+export default class ChecklistTechnologyAreaModal extends Vue {
+  @Prop({default: true}) readonly visible!: boolean;
+
+  /**
+   * The currently selected file, if one exists.
+   * Controlled by router.
+   */
+  get file_filter(): FileID[] {
+    return FilteredDataModule.selectedChecklistIds;
+  }
+
+  getChecklist(fileID: FileID[]) {
+    return InspecDataModule.allChecklistFiles.find(
+      (f) => f.uniqueId === fileID[0]
+    );
+  }
+
+  get selectedChecklistAsset() {
+    const selectedChecklist = this.getChecklist(this.file_filter);
+    if (selectedChecklist) {
+      return selectedChecklist.asset;
+    } else {
+      return FilteredDataModule.emptyAsset;
+    }
+  }
+
+  techAreaLabels: string[] = [
+    'Application Review',
+    'Boundary Security',
+    'CDS Admin Review',
+    'CDS Technical Review',
+    'Database Review',
+    'Domain Name System (DNS)',
+    'Exchange Server',
+    'Host Based System Security (HBSS)',
+    'Internal Network',
+    'Mobility',
+    'Releasable Networks (REL)',
+    'Traditional Security',
+    'UNIX OS',
+    'VVOIP Review',
+    'Web Review',
+    'Windows OS',
+    'Other Review'
+  ];
+}
+</script>

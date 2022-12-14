@@ -198,7 +198,7 @@ export default class StatusCardRow extends Vue {
       this.filter.status?.length === 0 ||
       this.filter.status?.some(
         (statusFilter) =>
-          statusFilter.toLowerCase() === card.title.toLowerCase()
+          statusFilter.value.toLowerCase() === card.title.toLowerCase()
       )
     ) {
       return card.color;
@@ -207,10 +207,14 @@ export default class StatusCardRow extends Vue {
   }
 
   toggleFilter(filter: ExtendedControlStatus) {
-    if (this.filter.status?.includes(filter)) {
-      this.$emit('remove-filter', filter);
+    if (
+      this.filter.status?.find((obj) => {
+        return obj.value === filter.toLowerCase();
+      }) !== undefined
+    ) {
+      this.$emit('remove-filter', filter.toLowerCase());
     } else {
-      this.$emit('add-filter', filter);
+      this.$emit('add-filter', filter.toLowerCase());
     }
   }
 }
