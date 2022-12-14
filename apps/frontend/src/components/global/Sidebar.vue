@@ -1,5 +1,16 @@
 <template>
   <div>
+    <ChecklistTargetDataModal
+      :visible="showTargetModal"
+      style="display: none"
+      @close-modal="showTargetModal = false"
+    />
+    <ChecklistTechnologyAreaModal
+      :visible="showTechnologyModal"
+      style="display: none"
+      @close-modal="showTechnologyModal = false"
+    />
+
     <v-navigation-drawer
       :clipped="$vuetify.breakpoint.lgAndUp"
       app
@@ -67,30 +78,28 @@
         </v-expansion-panels>
         <div class="mx-5 mr-10 mb-5">
           <v-divider class="mb-5" />
-          <v-row class="my-4">
+          <!-- Checklist Data Modals -->
+          <v-row v-if="inChecklistView()" class="my-4" style="width: 600px">
             <v-btn
-              id="upload-btn"
-              :disabled="showModal"
+              id="target-data-btn"
               class="mx-2"
-              @click="show_modal"
+              @click="setShowTargetModal"
             >
               <span class="d-none d-md-inline pr-2">
                 Add/Update Target Data
               </span>
-              <v-icon> mdi-cloud-upload </v-icon>
             </v-btn>
             <v-btn
-              id="upload-btn"
-              :disabled="showModal"
+              id="technology-area-btn"
               class="mx-2"
-              @click="show_modal"
+              @click="setShowTechnologyModal"
             >
               <span class="d-none d-md-inline pr-2">
                 Add/Update Technology Area
               </span>
-              <v-icon> mdi-cloud-upload </v-icon>
             </v-btn>
           </v-row>
+          <!-- Quick Filters -->
           <h1 class="my-4">Quick Filters:</h1>
           <v-row class="my-4">
             <v-col
@@ -152,8 +161,10 @@
           />
         </v-col> -->
           </v-row>
-          <h1 class="my-4">Category Filters:</h1>
-          <v-row class="my-4">
+          <v-divider class="my-5" />
+          <!-- Category Filters -->
+          <h1 class="mt-5">Category Filters:</h1>
+          <v-row class="mt-4">
             <v-select
               v-model="currentFreeTextFilterCategory"
               class="mx-2 select"
@@ -180,6 +191,49 @@
               <span class="d-none d-md-inline pr-2"> Add </span>
             </v-btn>
           </v-row>
+          <v-row
+            style="align-items: center; justify-content: center"
+            class="mt-n5"
+          >
+            <v-radio-group v-model="selectedRadioButton" row>
+              <v-radio label="Inclusive (+) Filter" value="inclusive" />
+              <v-radio label="Exclusive (-) Filter" value="exclusive" />
+            </v-radio-group>
+          </v-row>
+          <v-divider class="my-5" />
+          <!-- Selected Filters -->
+          <h1 class="my-4">Selected Filters:</h1>
+          <v-row class="mt-4 mx-auto">
+            <v-data-table
+              v-model="selectedFilters"
+              dense
+              show-select
+              single-select
+              :headers="filterHeaders"
+              :items="convertFilterData(currentFilters.conditionArray)"
+              item-key="value"
+              class="elevation-1 mb-3"
+            />
+          </v-row>
+          <v-row
+            class="mt-2 mx-auto"
+            style="
+              padding-bottom: 5rem;
+              align-items: center;
+              justify-content: center;
+            "
+          >
+            <v-btn
+              id="remove-filters-btn"
+              class="mx-2"
+              @click="removeSelectedFilters"
+            >
+              <span class="d-none d-md-inline pr-2"> Remove Filter(s) </span>
+            </v-btn>
+            <v-btn id="clear-all-btn" class="mx-2" @click="removeAllFilters">
+              <span class="d-none d-md-inline pr-2"> Remove All Filters </span>
+            </v-btn>
+          </v-row>
         </div>
       </div>
     </v-navigation-drawer>
@@ -201,19 +255,55 @@ import {ServerModule} from '../../store/server';
 import {SearchModule} from '@/store/search';
 import {Severity} from 'inspecjs';
 
+import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
+import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
+
 @Component({
   components: {
-    DropdownContent
+    DropdownContent,
+    ChecklistTargetDataModal,
+    ChecklistTechnologyAreaModal
   }
 })
 export default class Sidebar extends mixins(RouteMixin) {
   @Prop({type: Boolean}) readonly value!: boolean;
 
   addCategoryFilter(field: string, value: string) {
+    let negated = false;
+    if (this.selectedRadioButton === 'exclusive') {
+      negated = true;
+    }
     SearchModule.addSearchFilter({
       field,
-      value
+      value,
+      negated
     });
+  }
+
+  /** Whether category filter is inclusive or exclusive (default: inclusive)*/
+  selectedRadioButton = 'inclusive';
+
+  selectedFilters = [];
+  removeSelectedFilters() {
+    this.selectedFilters.forEach((item: any) => {
+      const field = item.keyword;
+      const value = item.value;
+      let negated = false;
+      if (item.negated === '-') {
+        negated = true;
+      }
+      SearchModule.removeSearchFilter({
+        field,
+        value,
+        negated
+      });
+    });
+  }
+
+  removeAllFilters() {
+    SearchModule.clear();
+    this.selectedFilters = [];
+    SearchModule.SET_SEARCH('');
   }
 
   get controlStatusSwitches(): any {
@@ -232,33 +322,75 @@ export default class Sidebar extends mixins(RouteMixin) {
     FilteredDataModule.changeStatusSwitch(name);
   }
 
-  showModal = false;
-
+  // Used for toggling the side nav drawer
   isSideUtilityDrawerShown = false;
-
   setUtilityDrawerBoolean() {
     this.isSideUtilityDrawerShown = !this.isSideUtilityDrawerShown;
   }
 
   shortIdEnabled = false;
 
-  show_modal() {
-    //TODO: Implement modal
-    console.log('I should open modal!');
+  // Used for toggling the target data modal
+  showTargetModal = false;
+  setShowTargetModal() {
+    this.showTargetModal = !this.showTargetModal;
+  }
+
+  /** Converts the active filters into array that can be ingested by selected filter data table */
+  convertFilterData(filters: any) {
+    let temp: {keyword: string; value: string; negated: string}[] = [];
+    filters.forEach(
+      (item: {keyword: string; value: string; negated: boolean}) => {
+        if (item.negated) {
+          temp.push({keyword: item.keyword, value: item.value, negated: '-'});
+        } else {
+          temp.push({keyword: item.keyword, value: item.value, negated: '+'});
+        }
+      }
+    );
+    return temp;
+  }
+
+  // Used for toggling the technology area modal
+  showTechnologyModal = false;
+  setShowTechnologyModal() {
+    this.showTechnologyModal = !this.showTechnologyModal;
   }
 
   currentFreeTextFilterInput = '';
   currentFreeTextFilterCategory = '';
 
+  /** Free text filter category list for dropdown */
   categories = [
+    'Keywords',
     'Vul ID',
     'Rule ID',
     'Stig ID',
     'Classification',
     'Group Name',
-    'CCIs',
-    'Keywords'
+    'CCIs'
   ];
+
+  /** Returns the current parsed search result */
+  get currentFilters(): any {
+    return SearchModule.currentSearchResult;
+  }
+
+  /** Headers that are displayed on top of selected filters data table */
+  filterHeaders = [
+    {
+      text: '+ / -',
+      align: 'start',
+      value: 'negated'
+    },
+    {text: 'Keyword', align: 'start', value: 'value'},
+    {text: 'Filter', align: 'start', value: 'keyword'}
+  ];
+
+  /** Checks to see if you are in checklist view */
+  inChecklistView(): boolean {
+    return this.$router.currentRoute.path.split('/')[1] === 'checklists';
+  }
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
@@ -366,6 +498,7 @@ nav.v-navigation-drawer {
   /* z-index hides behind footer and topbar */
   z-index: 1;
 }
+
 .select {
   width: 70px;
   max-height: 60px;

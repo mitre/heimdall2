@@ -82,15 +82,21 @@ export default class StatusChart extends Vue {
   }
 
   onSelect(status: Category<ControlStatus>) {
-    if (SearchModule.statusFilter?.indexOf(status.value) !== -1) {
+    if (
+      SearchModule.statusFilter?.find((obj) => {
+        return obj.value === status.value.toLowerCase();
+      }) !== undefined
+    ) {
       SearchModule.removeSearchFilter({
         field: 'status',
-        value: status.value
+        value: status.value.toLowerCase(),
+        negated: false // Defaulted as false
       });
     } else {
       SearchModule.addSearchFilter({
         field: 'status',
-        value: status.value
+        value: status.value.toLowerCase(),
+        negated: false // Defaulted as false
       });
     }
   }

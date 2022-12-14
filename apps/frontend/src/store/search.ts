@@ -13,22 +13,23 @@ import {ExtendedControlStatus, FilteredDataModule} from './data_filters';
 export interface ISearchState {
   searchTerm: string;
   freeSearch: string;
-  titleSearchTerms: string[];
-  descriptionSearchTerms: string[];
-  controlIdSearchTerms: string[];
-  codeSearchTerms: string[];
-  ruleidSearchTerms: string[];
-  vulidSearchTerms: string[];
-  stigidSearchTerms: string[];
-  classificationSearchTerms: string[];
-  groupNameSearchTerms: string[];
-  cciSearchTerms: string[];
-  NISTIdFilter: string[];
-  statusFilter: ExtendedControlStatus[];
-  severityFilter: Severity[];
-  keywordsSearchTerms: string[];
+  titleSearchTerms: SearchEntry[];
+  descriptionSearchTerms: SearchEntry[];
+  controlIdSearchTerms: SearchEntry[];
+  codeSearchTerms: SearchEntry[];
+  ruleidSearchTerms: SearchEntry[];
+  vulidSearchTerms: SearchEntry[];
+  stigidSearchTerms: SearchEntry[];
+  classificationSearchTerms: SearchEntry[];
+  groupNameSearchTerms: SearchEntry[];
+  cciSearchTerms: SearchEntry[];
+  NISTIdFilter: SearchEntry[];
+  statusFilter: SearchEntry[];
+  severityFilter: SearchEntry[];
+  keywordsSearchTerms: SearchEntry[];
 }
 
+/** (Unknown)  */
 export interface SearchQuery {
   [key: string]: {
     include?: string;
@@ -36,6 +37,13 @@ export interface SearchQuery {
   };
 }
 
+/** Type used to represent a parsed value and negated pair from query string  */
+export type SearchEntry = {
+  value: string | ExtendedControlStatus | Severity;
+  negated: boolean;
+};
+
+/** List of possible status types  */
 export const statusTypes = [
   'Not Applicable',
   'From Profile',
@@ -46,6 +54,7 @@ export const statusTypes = [
   'Waived'
 ];
 
+/** List of possible severity types  */
 export const severityTypes = ['none', 'low', 'medium', 'high', 'critical'];
 
 /**
@@ -83,22 +92,22 @@ export function valueToSeverity(severity: string): Severity {
   name: 'SearchModule'
 })
 class Search extends VuexModule implements ISearchState {
-  controlIdSearchTerms: string[] = [];
-  codeSearchTerms: string[] = [];
-  ruleidSearchTerms: string[] = [];
-  vulidSearchTerms: string[] = [];
-  stigidSearchTerms: string[] = [];
-  classificationSearchTerms: string[] = [];
-  groupNameSearchTerms: string[] = [];
-  cciSearchTerms: string[] = [];
-  NISTIdFilter: string[] = [];
-  descriptionSearchTerms: string[] = [];
+  controlIdSearchTerms: SearchEntry[] = [];
+  codeSearchTerms: SearchEntry[] = [];
+  ruleidSearchTerms: SearchEntry[] = [];
+  vulidSearchTerms: SearchEntry[] = [];
+  stigidSearchTerms: SearchEntry[] = [];
+  classificationSearchTerms: SearchEntry[] = [];
+  groupNameSearchTerms: SearchEntry[] = [];
+  cciSearchTerms: SearchEntry[] = [];
+  NISTIdFilter: SearchEntry[] = [];
+  descriptionSearchTerms: SearchEntry[] = [];
   freeSearch = '';
   searchTerm = '';
-  statusFilter: ExtendedControlStatus[] = [];
-  severityFilter: Severity[] = [];
-  titleSearchTerms: string[] = [];
-  keywordsSearchTerms: string[] = [];
+  statusFilter: SearchEntry[] = [];
+  severityFilter: SearchEntry[] = [];
+  titleSearchTerms: SearchEntry[] = [];
+  keywordsSearchTerms: SearchEntry[] = [];
 
   /** Update the current search */
   @Action
@@ -133,64 +142,99 @@ class Search extends VuexModule implements ISearchState {
     console.log('Parse Result: ', searchResult);
     searchResult.conditionArray.forEach(
       (prop: {keyword: string; value: string; negated: boolean}): void => {
-        const include: string = prop.value;
-        if (include === '') {
+        const include: {value: string; negated: boolean} = {
+          value: prop.value,
+          negated: prop.negated
+        };
+        if (include.value === '') {
           return;
         }
-        // Need to go back and add exclusive, but first want to test inclusive
-        const isNegated: boolean = prop.negated;
+
         switch (prop.keyword) {
           case 'status':
-            this.addStatusFilter(
-              include as ExtendedControlStatus | ExtendedControlStatus[]
-            );
+            this.addStatusFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'severity':
-            this.addSeverityFilter(include as Severity | Severity[]);
+            this.addSeverityFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'id':
-            this.addIdFilter(lowercaseAll(include));
+            this.addIdFilter({value: include.value, negated: include.negated});
             break;
           case 'title':
-            this.addTitleFilter(lowercaseAll(include));
+            this.addTitleFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'nist':
-            this.addNISTIdFilter(lowercaseAll(include));
+            this.addNISTIdFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'desc':
           case 'description':
-            this.addDescriptionFilter(lowercaseAll(include));
+            this.addDescriptionFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'code':
-            this.addCodeFilter(lowercaseAll(include));
+            this.addCodeFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'ruleid':
-            this.addRuleidFilter(lowercaseAll(include));
+            this.addRuleidFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'vulid':
-            this.addVulidFilter(lowercaseAll(include));
+            this.addVulidFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'stigid':
-            this.addStigidFilter(lowercaseAll(include));
+            this.addStigidFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'class':
           case 'classification':
-            this.addClassificationFilter(lowercaseAll(include));
+            this.addClassificationFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'groupname':
-            this.addGroupnameFilter(lowercaseAll(include));
+            this.addGroupnameFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'cci':
-            this.addCciFilter(lowercaseAll(include));
+            this.addCciFilter({value: include.value, negated: include.negated});
             break;
           case 'keywords':
-            this.addKeywordsFilter(lowercaseAll(include));
+            this.addKeywordsFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
         }
       }
     );
 
-    // Lodash debounce may be needed for these functions
     FilteredDataModule.alterStatusBoolean();
     FilteredDataModule.alterSeverityBoolean();
   }
@@ -223,12 +267,13 @@ class Search extends VuexModule implements ISearchState {
 
   /** Mapper for category input fields to valid filter values*/
   categoryToFilterMapping: Map<string, string> = new Map([
-    ['Vul ID', 'vulNum'],
+    ['Vul ID', 'vulid'],
     ['Rule ID', 'ruleid'],
     ['Stig ID', 'stigid'],
     ['Classification', 'classification'],
     ['Group Name', 'groupname'],
-    ['CCIs', 'cii']
+    ['CCIs', 'cii'],
+    ['Keywords', 'keywords']
   ]);
 
   /**
@@ -237,7 +282,11 @@ class Search extends VuexModule implements ISearchState {
    *
    */
   @Action
-  addSearchFilter(searchPayload: {field: string; value: string}) {
+  addSearchFilter(searchPayload: {
+    field: string;
+    value: string;
+    negated: boolean;
+  }) {
     if (this.currentSearchResult == undefined) {
       return;
     }
@@ -247,13 +296,13 @@ class Search extends VuexModule implements ISearchState {
       this.currentSearchResult.addEntry(
         searchPayload.field,
         searchPayload.value,
-        false
+        searchPayload.negated
       );
     } else {
       this.currentSearchResult.addEntry(
         this.categoryToFilterMapping.get(searchPayload.field),
         searchPayload.value,
-        false
+        searchPayload.negated
       );
     }
     this.context.commit('SET_SEARCH', this.currentSearchResult.toString());
@@ -264,7 +313,11 @@ class Search extends VuexModule implements ISearchState {
    * @param searchPayload - An object of field (The field to add to (e.g., status, severity, etc.)), value (The value to add to the field (e.g., "Passed","Failed", etc.)), and previousValues (The values already in the querystring)
    */
   @Action
-  removeSearchFilter(searchPayload: {field: string; value: string}) {
+  removeSearchFilter(searchPayload: {
+    field: string;
+    value: string;
+    negated: boolean;
+  }) {
     if (this.currentSearchResult == undefined) {
       return;
     }
@@ -273,7 +326,7 @@ class Search extends VuexModule implements ISearchState {
     this.currentSearchResult.removeEntry(
       searchPayload.field,
       searchPayload.value,
-      false
+      searchPayload.negated
     );
     this.context.commit('SET_SEARCH', this.currentSearchResult.toString());
   }
@@ -281,31 +334,31 @@ class Search extends VuexModule implements ISearchState {
   // Status filtering
 
   @Action
-  addStatusFilter(status: ExtendedControlStatus | ExtendedControlStatus[]) {
+  addStatusFilter(status: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_STATUS', status);
   }
 
   @Action
-  removeStatusFilter(status: ExtendedControlStatus) {
+  removeStatusFilter(status: SearchEntry) {
     this.context.commit('REMOVE_STATUS', status);
   }
 
   @Action
-  setStatusFilter(status: ExtendedControlStatus[]) {
+  setStatusFilter(status: SearchEntry[]) {
     this.context.commit('SET_STATUS', status);
   }
 
   /** Adds a status filter */
   @Mutation
-  ADD_STATUS(status: ExtendedControlStatus | ExtendedControlStatus[]) {
+  ADD_STATUS(status: SearchEntry | SearchEntry[]) {
     this.statusFilter = this.statusFilter.concat(status);
   }
 
   /** Removes a status filter */
   @Mutation
-  REMOVE_STATUS(status: ExtendedControlStatus) {
+  REMOVE_STATUS(status: SearchEntry) {
     this.statusFilter = this.statusFilter.filter(
-      (filter) => filter.toLowerCase() !== status.toLowerCase()
+      (filter) => filter.value.toLowerCase() !== status.value.toLowerCase()
     );
   }
 
@@ -315,7 +368,7 @@ class Search extends VuexModule implements ISearchState {
   }
 
   @Mutation
-  SET_STATUS(status: ExtendedControlStatus[]) {
+  SET_STATUS(status: SearchEntry[]) {
     this.statusFilter = status;
   }
 
@@ -323,17 +376,17 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds severity to filter */
   @Action
-  addSeverityFilter(severity: Severity | Severity[]) {
+  addSeverityFilter(severity: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_SEVERITY', severity);
   }
 
   @Action
-  removeSeverity(severity: Severity) {
+  removeSeverity(severity: SearchEntry) {
     this.context.commit('REMOVE_SEVERITY', severity);
   }
 
   @Action
-  setSeverity(severity: Severity[]) {
+  setSeverity(severity: SearchEntry[]) {
     this.context.commit('SET_SEVERITY', severity);
   }
 
@@ -343,20 +396,20 @@ class Search extends VuexModule implements ISearchState {
   }
 
   @Mutation
-  ADD_SEVERITY(severity: Severity | Severity[]) {
+  ADD_SEVERITY(severity: SearchEntry | SearchEntry[]) {
     this.severityFilter = this.severityFilter.concat(severity);
   }
 
   @Mutation
-  REMOVE_SEVERITY(severity: Severity) {
+  REMOVE_SEVERITY(severity: SearchEntry) {
     this.severityFilter = this.severityFilter.filter(
-      (filter) => filter.toLowerCase() !== severity.toLowerCase()
+      (filter) => filter.value.toLowerCase() !== severity.value.toLowerCase()
     );
   }
 
   /** Sets the severity filter */
   @Mutation
-  SET_SEVERITY(severity: Severity[]) {
+  SET_SEVERITY(severity: SearchEntry[]) {
     this.severityFilter = severity;
   }
 
@@ -370,18 +423,18 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds control id to filter */
   @Action
-  addIdFilter(id: string | string[]) {
+  addIdFilter(id: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_ID', id);
   }
 
   @Mutation
-  ADD_ID(id: string | string[]) {
+  ADD_ID(id: SearchEntry | SearchEntry[]) {
     this.controlIdSearchTerms = this.controlIdSearchTerms.concat(id);
   }
 
   /** Sets the control IDs filter */
   @Mutation
-  SET_ID(ids: string[]) {
+  SET_ID(ids: SearchEntry[]) {
     this.controlIdSearchTerms = ids;
   }
 
@@ -395,18 +448,18 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds a title filter */
   @Action
-  addTitleFilter(title: string | string[]) {
+  addTitleFilter(title: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_TITLE', title);
   }
 
   @Mutation
-  ADD_TITLE(title: string | string[]) {
+  ADD_TITLE(title: SearchEntry | SearchEntry[]) {
     this.titleSearchTerms = this.titleSearchTerms.concat(title);
   }
 
   /** Sets the title filters */
   @Mutation
-  SET_TITLE(titles: string[]) {
+  SET_TITLE(titles: SearchEntry[]) {
     this.titleSearchTerms = titles;
   }
 
@@ -420,12 +473,12 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds NIST ID to filter */
   @Action
-  addNISTIdFilter(NISTId: string | string[]) {
+  addNISTIdFilter(NISTId: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_NIST', NISTId);
   }
 
   @Mutation
-  ADD_NIST(NISTId: string | string[]) {
+  ADD_NIST(NISTId: SearchEntry | SearchEntry[]) {
     this.NISTIdFilter = this.NISTIdFilter.concat(NISTId);
   }
 
@@ -439,13 +492,13 @@ class Search extends VuexModule implements ISearchState {
 
   /** Calls the description mutator to add a description to the filter */
   @Action
-  addDescriptionFilter(description: string | string[]) {
+  addDescriptionFilter(description: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_DESCRIPTION', description);
   }
 
   /** Adds a description to the filter */
   @Mutation
-  ADD_DESCRIPTION(description: string | string[]) {
+  ADD_DESCRIPTION(description: SearchEntry | SearchEntry[]) {
     this.descriptionSearchTerms =
       this.descriptionSearchTerms.concat(description);
   }
@@ -460,12 +513,12 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds code to filter */
   @Action
-  addCodeFilter(code: string | string[]) {
+  addCodeFilter(code: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_CODE', code);
   }
 
   @Mutation
-  ADD_CODE(code: string | string[]) {
+  ADD_CODE(code: SearchEntry | SearchEntry[]) {
     this.codeSearchTerms = this.codeSearchTerms.concat(code);
   }
 
@@ -479,12 +532,12 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds Ruleid to filter */
   @Action
-  addRuleidFilter(ruleid: string | string[]) {
+  addRuleidFilter(ruleid: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_RULEID', ruleid);
   }
 
   @Mutation
-  ADD_RULEID(ruleid: string | string[]) {
+  ADD_RULEID(ruleid: SearchEntry | SearchEntry[]) {
     this.ruleidSearchTerms = this.ruleidSearchTerms.concat(ruleid);
   }
 
@@ -498,12 +551,12 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds Vulid to filter */
   @Action
-  addVulidFilter(vulid: string | string[]) {
+  addVulidFilter(vulid: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_VULID', vulid);
   }
 
   @Mutation
-  ADD_VULID(vulid: string | string[]) {
+  ADD_VULID(vulid: SearchEntry | SearchEntry[]) {
     this.vulidSearchTerms = this.vulidSearchTerms.concat(vulid);
   }
 
@@ -517,12 +570,12 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds Stigid to filter */
   @Action
-  addStigidFilter(stigid: string | string[]) {
+  addStigidFilter(stigid: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_STIGID', stigid);
   }
 
   @Mutation
-  ADD_STIGID(stigid: string | string[]) {
+  ADD_STIGID(stigid: SearchEntry | SearchEntry[]) {
     this.stigidSearchTerms = this.stigidSearchTerms.concat(stigid);
   }
 
@@ -536,12 +589,12 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds Classification to filter */
   @Action
-  addClassificationFilter(classification: string | string[]) {
+  addClassificationFilter(classification: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_CLASSIFICATION', classification);
   }
 
   @Mutation
-  ADD_CLASSIFICATION(classification: string | string[]) {
+  ADD_CLASSIFICATION(classification: SearchEntry | SearchEntry[]) {
     this.classificationSearchTerms =
       this.classificationSearchTerms.concat(classification);
   }
@@ -556,12 +609,12 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds Groupname to filter */
   @Action
-  addGroupnameFilter(groupname: string | string[]) {
+  addGroupnameFilter(groupname: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_GROUPNAME', groupname);
   }
 
   @Mutation
-  ADD_GROUPNAME(groupname: string | string[]) {
+  ADD_GROUPNAME(groupname: SearchEntry | SearchEntry[]) {
     this.groupNameSearchTerms = this.groupNameSearchTerms.concat(groupname);
   }
 
@@ -575,12 +628,12 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds CCI to filter */
   @Action
-  addCciFilter(cci: string | string[]) {
+  addCciFilter(cci: SearchEntry | SearchEntry[]) {
     this.context.commit('ADD_CCI', cci);
   }
 
   @Mutation
-  ADD_CCI(cci: string | string[]) {
+  ADD_CCI(cci: SearchEntry | SearchEntry[]) {
     this.cciSearchTerms = this.cciSearchTerms.concat(cci);
   }
 
@@ -592,12 +645,12 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds Keywords to filter */
   @Action
-  addKeywordsFilter(keyword: string | string[]) {
+  addKeywordsFilter(keyword: SearchEntry) {
     this.context.commit('ADD_KEYWORD', keyword);
   }
 
   @Mutation
-  ADD_KEYWORD(keyword: string | string[]) {
+  ADD_KEYWORD(keyword: SearchEntry) {
     this.keywordsSearchTerms = this.keywordsSearchTerms.concat(keyword);
   }
 

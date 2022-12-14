@@ -232,7 +232,7 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
-import {SearchModule} from '@/store/search';
+import {SearchEntry, SearchModule} from '@/store/search';
 import {ServerModule} from '@/store/server';
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/interfaces';
@@ -295,19 +295,19 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     SearchModule.updateSearch(term);
   }
 
-  get severityFilter(): Severity[] {
+  get severityFilter(): SearchEntry[] {
     return SearchModule.severityFilter;
   }
 
-  set severityFilter(severity: Severity[]) {
+  set severityFilter(severity: SearchEntry[]) {
     SearchModule.setSeverity(severity);
   }
 
-  get statusFilter(): ExtendedControlStatus[] {
+  get statusFilter(): SearchEntry[] {
     return SearchModule.statusFilter;
   }
 
-  set statusFilter(status: ExtendedControlStatus[]) {
+  set statusFilter(status: SearchEntry[]) {
     SearchModule.setStatusFilter(status);
   }
 
@@ -491,14 +491,16 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   addStatusSearch(status: ExtendedControlStatus) {
     SearchModule.addSearchFilter({
       field: 'status',
-      value: status
+      value: status,
+      negated: false // Defaulted as false
     });
   }
 
   removeStatusFilter(status: ExtendedControlStatus) {
     SearchModule.removeSearchFilter({
       field: 'status',
-      value: status
+      value: status,
+      negated: false // Defaulted as false
     });
   }
 }

@@ -110,8 +110,13 @@
           <v-col md="8" :cols="12">
             <v-card height="13vh" class="overflow-y-auto">
               <v-card-text class="text-center">
-                <div class="text-button">{{ selectedRule.stigRef }}</div>
-                <v-row dense class="mt-2">
+                <h3
+                  class="d-inline-block text-truncate mx-2"
+                  style="max-width: 100%"
+                >
+                  {{ selectedRule.stigRef }}
+                </h3>
+                <v-row dense class="mt-n2 mt-xl-3">
                   <v-col :cols="4">
                     <div>
                       <span class="text-overline white--text">Vul ID: </span
@@ -131,7 +136,7 @@
                     </div>
                   </v-col>
                 </v-row>
-                <v-row dense class="pa-0">
+                <v-row dense class="mt-n2 mt-xl-2">
                   <v-col :cols="4">
                     <div>
                       <span class="text-overline white--text">Severity: </span
@@ -335,6 +340,8 @@ import _ from 'lodash';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
+import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
+import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
 
 @Component({
   components: {
@@ -351,7 +358,9 @@ import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
     ExportHTMLModal,
     ExportSplunkModal,
     UploadButton,
-    IconLinkItem
+    IconLinkItem,
+    ChecklistTargetDataModal,
+    ChecklistTechnologyAreaModal
   }
 })
 export default class Checklist extends RouteMixin {
@@ -368,6 +377,8 @@ export default class Checklist extends RouteMixin {
   //** Variable for selected tab */
   tab = null;
   webOrDatabase = false; // Needs to be replaced for selected checklist
+
+  showSearchHelp = true;
 
   selectedHeaders: {text: string; value: string; width?: string}[] = [
     {text: 'Status', value: 'status', width: '100px'},
@@ -599,29 +610,29 @@ export default class Checklist extends RouteMixin {
     SearchModule.updateSearch(term);
   }
 
-  get severityFilter(): Severity[] {
-    return SearchModule.severityFilter;
-  }
+  // get severityFilter(): Severity[] {
+  //   return SearchModule.severityFilter;
+  // }
 
-  set severityFilter(severity: Severity[]) {
-    SearchModule.setSeverity(severity);
-  }
+  // set severityFilter(severity: Severity[]) {
+  //   SearchModule.setSeverity(severity);
+  // }
 
-  get ruleidSearchTerms(): string[] {
-    return SearchModule.ruleidSearchTerms;
-  }
+  // get ruleidSearchTerms(): string[] {
+  //   return SearchModule.ruleidSearchTerms;
+  // }
 
-  set ruleidSearchTerms(ruleid: string[]) {
-    SearchModule.addRuleidFilter(ruleid);
-  }
+  // set ruleidSearchTerms(ruleid: string[]) {
+  //   SearchModule.addRuleidFilter(ruleid);
+  // }
 
-  get statusFilter(): ExtendedControlStatus[] {
-    return SearchModule.statusFilter;
-  }
+  // get statusFilter(): ExtendedControlStatus[] {
+  //   return SearchModule.statusFilter;
+  // }
 
-  set statusFilter(status: ExtendedControlStatus[]) {
-    SearchModule.setStatusFilter(status);
-  }
+  // set statusFilter(status: ExtendedControlStatus[]) {
+  //   SearchModule.setStatusFilter(status);
+  // }
 
   /**
    * The currently selected file, if one exists.

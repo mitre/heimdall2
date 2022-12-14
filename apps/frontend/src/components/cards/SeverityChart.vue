@@ -63,16 +63,20 @@ export default class SeverityChart extends Vue {
     // In the case that the values are the same, we want to instead emit null
     if (
       this.value &&
-      this.value?.indexOf(valueToSeverity(severity.value)) !== -1
+      this.value?.find((obj) => {
+        return obj.value === valueToSeverity(severity.value);
+      }) !== undefined
     ) {
       SearchModule.removeSearchFilter({
         field: 'severity',
-        value: valueToSeverity(severity.value)
+        value: valueToSeverity(severity.value).toLowerCase(),
+        negated: false // Defaulted as false
       });
     } else {
       SearchModule.addSearchFilter({
         field: 'severity',
-        value: valueToSeverity(severity.value)
+        value: valueToSeverity(severity.value).toLowerCase(),
+        negated: false // Defaulted as false
       });
     }
   }

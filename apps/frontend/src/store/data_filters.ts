@@ -31,7 +31,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {SearchModule} from './search';
+import {SearchEntry, SearchModule} from './search';
 
 const MAX_CACHE_ENTRIES = 20;
 
@@ -45,49 +45,49 @@ export interface Filter {
 
   // Control specific
   /** What status the controls can have. Undefined => any */
-  status?: ExtendedControlStatus[];
+  status?: SearchEntry[]; //ExtendedControlStatus[];
 
   /** What severity the controls can have. Undefined => any */
-  severity?: Severity[];
+  severity?: SearchEntry[]; //Severity[];
 
   /** Whether or not to allow/include overlayed controls */
   omit_overlayed_controls?: boolean;
 
   /** Control IDs to search for */
-  ids?: string[];
+  ids?: SearchEntry[];
 
   /** Titles to search for */
-  titleSearchTerms?: string[];
+  titleSearchTerms?: SearchEntry[];
 
   /** Descriptions to search for */
-  descriptionSearchTerms?: string[];
+  descriptionSearchTerms?: SearchEntry[];
 
   /** Code to search for */
-  codeSearchTerms?: string[];
+  codeSearchTerms?: SearchEntry[];
 
   /** CCIs to search for */
-  nistIdFilter?: string[];
+  nistIdFilter?: SearchEntry[];
 
   /** Ruleid to search for */
-  ruleidSearchTerms?: string[];
+  ruleidSearchTerms?: SearchEntry[];
 
   /** Vulid to search for */
-  vulidSearchTerms?: string[];
+  vulidSearchTerms?: SearchEntry[];
 
   /** Stigid to search for */
-  stigidSearchTerms?: string[];
+  stigidSearchTerms?: SearchEntry[];
 
   /** Classification to search for */
-  classificationSearchTerms?: string[];
+  classificationSearchTerms?: SearchEntry[];
 
   /** Groupname to search for */
-  groupNameSearchTerms?: string[];
+  groupNameSearchTerms?: SearchEntry[];
 
   /** Checklist CCIs to search for */
-  cciSearchTerms?: string[];
+  cciSearchTerms?: SearchEntry[];
 
   /** Checklist keywords to search for */
-  keywordsSearchTerms?: string[];
+  keywordsSearchTerms?: SearchEntry[];
 
   /** A search term string, case insensitive
    * We look for this in
@@ -454,17 +454,23 @@ export class FilteredData extends VuexModule {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
-      const controlFilters: Record<string, boolean | string[] | undefined> = {
+      const controlFilters: Record<
+        string,
+        boolean | SearchEntry[] | undefined
+      > = {
         'root.hdf.severity': filter.severity,
         'hdf.wraps.id': filter.ids,
         'hdf.wraps.title': filter.titleSearchTerms,
         'hdf.wraps.desc': filter.descriptionSearchTerms,
         'hdf.rawNistTags': filter.nistIdFilter,
         full_code: filter.codeSearchTerms,
-        'hdf.waived': filter.status?.includes('Waived'),
+        'hdf.waived': filter.status?.includes({
+          value: 'Waived',
+          negated: false
+        }),
         'root.hdf.status': _.filter(
           filter.status,
-          (status) => status !== 'Waived'
+          (status) => status.value !== 'Waived'
         )
       };
 
@@ -540,7 +546,7 @@ export class FilteredData extends VuexModule {
       if (
         SearchModule.statusFilter.some(
           (statusFilter) =>
-            statusFilter.toLowerCase() === item.value.toLowerCase()
+            statusFilter.value.toLowerCase() === item.value.toLowerCase()
         )
       ) {
         this.controlStatusSwitches[itemIndex].enabled = true;
@@ -559,8 +565,8 @@ export class FilteredData extends VuexModule {
   @Action
   changeStatusSwitch(name: ExtendedControlStatus) {
     //  Commented code is for testing the removal of all values no matter case sensitivity //
-    //const regex = new RegExp("passed", "i");
-    //let temp = SearchModule.currentSearchResult.clone()
+    const regex = new RegExp(name, 'i');
+    const temp = SearchModule.currentSearchResult.clone();
     this.controlStatusSwitches.forEach((item, itemIndex) => {
       if (item.name == name.charAt(0).toUpperCase() + name.slice(1)) {
         this.controlStatusSwitches[itemIndex].enabled =
@@ -568,31 +574,28 @@ export class FilteredData extends VuexModule {
         if (!this.controlStatusSwitches[itemIndex].enabled) {
           SearchModule.addSearchFilter({
             field: 'status',
-            value: name
+            value: name.toLowerCase(),
+            negated: false // Defaulted as false
           });
         } else {
           SearchModule.removeSearchFilter({
             field: 'status',
-            value: item.value
+            value: item.value.toLowerCase(),
+            negated: false // Defaulted as false
           });
 
-          // console.log("Temp value: ", temp)
-          // temp.conditionArray.forEach((item: {keyword: string, value: string, negated: boolean})=>{
-          //   console.log(item.value, " : ", regex.exec(item.value) !== null)
-          //   if(item.keyword === 'status' && regex.exec(item.value) !== null){
-          //     console.log("I am removing: ", item.value)
-          //     temp.removeEntry(
-          //       'status',
-          //       item.value,
-          //       false
-          //     );
-          //     // SearchModule.removeSearchFilter({
-          //     //   field: 'status',
-          //     //   value: item.value
-          //     // });
-          //   }
-          // })
-          //SearchModule.SET_SEARCH(temp.toString());
+          console.log('Temp value: ', temp);
+          temp.conditionArray.forEach(
+            (item: {keyword: string; value: string; negated: boolean}) => {
+              if (
+                item.keyword === 'status' &&
+                regex.exec(item.value) !== null
+              ) {
+                temp.removeEntry('status', item.value, false);
+              }
+            }
+          );
+          SearchModule.SET_SEARCH(temp.toString());
         }
       }
     });
@@ -650,7 +653,7 @@ export class FilteredData extends VuexModule {
       if (
         SearchModule.severityFilter.some(
           (severityFilter) =>
-            severityFilter.toLowerCase() === item.value.toLowerCase()
+            severityFilter.value.toLowerCase() === item.value.toLowerCase()
         )
       ) {
         this.severitySwitches[itemIndex].enabled = true;
@@ -668,18 +671,42 @@ export class FilteredData extends VuexModule {
    */
   @Action
   changeSeveritySwitch(name: Severity) {
-    this.severitySwitchToggles[name] = !this.severitySwitchToggles[name];
-    if (this.severitySwitchToggles[name]) {
-      SearchModule.addSearchFilter({
-        field: 'severity',
-        value: name
-      });
-    } else {
-      SearchModule.removeSearchFilter({
-        field: 'severity',
-        value: name
-      });
-    }
+    const regex = new RegExp(name, 'i');
+    const temp = SearchModule.currentSearchResult.clone();
+    this.severitySwitches.forEach((item, itemIndex) => {
+      if (item.name == name.charAt(0).toUpperCase() + name.slice(1)) {
+        this.severitySwitches[itemIndex].enabled =
+          !this.severitySwitches[itemIndex].enabled;
+        if (!this.severitySwitches[itemIndex].enabled) {
+          SearchModule.addSearchFilter({
+            field: 'severity',
+            value: name.toLowerCase(),
+            negated: false // Defaulted as false
+          });
+        } else {
+          SearchModule.removeSearchFilter({
+            field: 'severity',
+            value: item.value.toLowerCase(),
+            negated: false // Defaulted as false
+          });
+
+          console.log('Temp value: ', temp);
+          temp.conditionArray.forEach(
+            (item: {keyword: string; value: string; negated: boolean}) => {
+              console.log(item.value, ' : ', regex.exec(item.value) !== null);
+              if (
+                item.keyword === 'severity' &&
+                regex.exec(item.value) !== null
+              ) {
+                console.log('I am removing: ', item.value);
+                temp.removeEntry('severity', item.value, false);
+              }
+            }
+          );
+          SearchModule.SET_SEARCH(temp.toString());
+        }
+      }
+    });
   }
 }
 
@@ -714,7 +741,7 @@ export function filter_cache_key(f: Filter) {
  */
 export function filterControlsBy(
   controls: readonly ContextualizedControl[],
-  filters: Record<string, boolean | string[] | undefined>
+  filters: Record<string, boolean | SearchEntry[] | undefined>
 ): readonly ContextualizedControl[] {
   const activeFilters: typeof filters = _.pickBy(
     filters,
@@ -726,24 +753,43 @@ export function filterControlsBy(
   // Filter out specific categories
   const firstPass = controls.filter((control) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
-      const item: string | string[] | boolean = _.get(control, filter);
+      const item: SearchEntry | SearchEntry[] | boolean = _.get(
+        control,
+        filter
+      );
       if (Array.isArray(value) && typeof item !== 'boolean') {
         return value?.some((term) => {
-          return arrayOrStringIncludes(item, (compareValue) =>
-            compareValue.toLowerCase().includes(term.toLowerCase())
-          );
+          if (!term.negated) {
+            return arrayOrStringIncludes(item, (compareValue) =>
+              compareValue.toLowerCase().includes(term.value.toLowerCase())
+            );
+          } else {
+            return !arrayOrStringIncludes(item, (compareValue) =>
+              compareValue.toLowerCase().includes(term.value.toLowerCase())
+            );
+          }
         });
       } else {
         return item === value;
       }
     });
   });
-  // Keywords filtering
-  const final = firstPass.filter((control) => {
-    return SearchModule.keywordsSearchTerms.every((keyword) => {
-      return contains_term(control, keyword);
+
+  // Overall keywords filtering
+  let final = firstPass;
+  if (SearchModule.keywordsSearchTerms.length > 0) {
+    SearchModule.keywordsSearchTerms.forEach((filter) => {
+      if (!filter.negated) {
+        final = firstPass.filter((control) => {
+          return contains_term(control, filter.value);
+        });
+      } else {
+        final = firstPass.filter((control) => {
+          return !contains_term(control, filter.value);
+        });
+      }
     });
-  });
+  }
   return final;
 }
 
@@ -757,7 +803,7 @@ export function filterControlsBy(
  */
 export function filterChecklistBy(
   rules: readonly ChecklistVuln[],
-  filters: Record<string, boolean | string[] | undefined>
+  filters: Record<string, boolean | SearchEntry[] | undefined>
 ): readonly ChecklistVuln[] {
   const activeFilters: typeof filters = _.pickBy(
     filters,
@@ -770,31 +816,52 @@ export function filterChecklistBy(
   // Filter out specific categories
   const firstPass = rules.filter((rule) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
-      const item: string | string[] | boolean = _.get(rule, filter);
+      const item: SearchEntry | SearchEntry[] | boolean = _.get(rule, filter);
       if (Array.isArray(value) && typeof item !== 'boolean') {
         return value?.some((term) => {
-          return arrayOrStringIncludes(item, (compareValue) =>
-            compareValue.toLowerCase().includes(term.toLowerCase())
-          );
+          if (!term.negated) {
+            return arrayOrStringIncludes(item, (compareValue) =>
+              compareValue.toLowerCase().includes(term.value.toLowerCase())
+            );
+          } else {
+            return !arrayOrStringIncludes(item, (compareValue) =>
+              compareValue.toLowerCase().includes(term.value.toLowerCase())
+            );
+          }
         });
       } else {
         return item === value;
       }
     });
   });
-  // Keywords filtering
-  // TODO: Move to use a funcion like contains_term once checklist mapping work is complete
-  const final = firstPass.filter((rule) => {
-    return SearchModule.keywordsSearchTerms.every((keyword) => {
-      return Object.entries(rule).some((item) => {
-        if (item[1]?.toLowerCase().includes(keyword)) {
-          return true;
-        } else {
-          return false;
-        }
-      });
+
+  // Overall keywords filtering
+  let final: ChecklistVuln[] = firstPass;
+  if (SearchModule.keywordsSearchTerms.length > 0) {
+    SearchModule.keywordsSearchTerms.forEach((filter) => {
+      if (!filter.negated) {
+        final = firstPass.filter((rule) => {
+          return Object.entries(rule).some((item) => {
+            if (item[1]?.toLowerCase().includes(filter.value)) {
+              return true;
+            } else {
+              return false;
+            }
+          });
+        });
+      } else {
+        final = firstPass.filter((rule) => {
+          return !Object.entries(rule).some((item) => {
+            if (item[1]?.toLowerCase().includes(filter.value)) {
+              return true;
+            } else {
+              return false;
+            }
+          });
+        });
+      }
     });
-  });
+  }
   return final;
 }
 
@@ -811,19 +878,21 @@ export function checklistRules(
   filters: Filter
 ): readonly ChecklistVuln[] {
   // If an attribute name changes in the checklist mapping, make sure it is reflected here
-  const checklistFilters: Record<string, boolean | string[] | undefined> = {
-    severity: filters.severity,
-    vulNum: filters.vulidSearchTerms,
-    ruleId: filters.ruleidSearchTerms,
-    ruleVersion: filters.stigidSearchTerms,
-    class: filters.classificationSearchTerms,
-    groupTitle: filters.groupNameSearchTerms,
-    cciRef: filters.cciSearchTerms,
-    status: _.filter(
-      filters.status,
-      (status: ExtendedControlStatus) => status !== 'Waived'
-    )
-  };
+  const checklistFilters: Record<string, boolean | SearchEntry[] | undefined> =
+    {
+      severity: filters.severity,
+      vulnNum: filters.vulidSearchTerms,
+      ruleId: filters.ruleidSearchTerms,
+      ruleVersion: filters.stigidSearchTerms,
+      class: filters.classificationSearchTerms,
+      groupTitle: filters.groupNameSearchTerms,
+      cciRef: filters.cciSearchTerms,
+      status: _.filter(
+        filters.status,
+        (status: SearchEntry) => status.value !== 'Waived'
+      )
+    };
+  console.log('Is this mapping correct: ', checklistFilters);
   const filteredRules = filterChecklistBy(rules, checklistFilters);
   return filteredRules;
 }
@@ -837,12 +906,12 @@ export function checklistRules(
  *
  */
 function arrayOrStringIncludes(
-  arrayOrString: string | string[],
+  arrayOrString: SearchEntry | SearchEntry[],
   comparator: (compareValue: string) => boolean
 ) {
   if (typeof arrayOrString === 'string') {
     return comparator(arrayOrString);
   } else {
-    return arrayOrString.some((value) => comparator(value));
+    return Array(arrayOrString).some((value) => comparator(value));
   }
 }
