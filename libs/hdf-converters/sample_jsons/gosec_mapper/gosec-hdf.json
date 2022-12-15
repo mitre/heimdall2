@@ -127,7 +127,9 @@
     "auxiliary_data": [
       {
         "name": "Gosec",
-        "data": {}
+        "data": {
+          "Golang errors": {}
+        }
       }
     ]
   },
