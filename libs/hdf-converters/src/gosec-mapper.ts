@@ -34,7 +34,7 @@ export class GoSecMapper extends BaseConverter {
             {
               name: 'Gosec',
               data: {
-                "Gosec Errors": _.get(data, 'Gosec Errors'),
+                'Gosec Errors': _.get(data, 'Gosec Errors'),
                 Issues: _.get(data, 'Issues')
               }
             }
@@ -91,7 +91,7 @@ export class GoSecMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ],
+    ]
   };
   constructor(gosecJson: string, withRaw = false) {
     super(JSON.parse(gosecJson));
