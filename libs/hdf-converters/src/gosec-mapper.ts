@@ -30,12 +30,12 @@ export class GoSecMapper extends BaseConverter {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
         return {
+          raw:data,
           auxiliary_data: [
             {
               name: 'Gosec',
               data: {
-                'Gosec Errors': _.get(data, 'Gosec Errors'),
-                Issues: _.get(data, 'Issues')
+                'Golang Errors': _.get(data, 'Golang Errors'),
               }
             }
           ],

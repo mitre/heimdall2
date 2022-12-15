@@ -4,7 +4,7 @@ export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
   FORTIFY = 'fortify',
-  GOSEC = 'gosec',
+  GoSec = 'gosec',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
   NIKTO = 'nikto',
@@ -62,7 +62,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.SCOUTSUITE]: [],
   [INPUT_TYPES.NOT_FOUND]: [],
   [INPUT_TYPES.VERACODE]: [],
-  [INPUT_TYPES.GOSEC]: ['Golang Errors', 'Issues']
+  [INPUT_TYPES.GoSec]: ['Golang Errors', 'Issues']
 };
 
 export function fingerprint(guessOptions: {

@@ -2,7 +2,7 @@ import fs from 'fs';
 import {GoSecMapper} from '../../../src/gosec-mapper';
 import {omitVersions} from '../../utils';
 describe('gosec_mapper', () => {
-  it('Successfully converts Veracode reports', () => {
+  it('Successfully converts gosec reports', () => {
     const mapper = new GoSecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Grype_gosec_results.json',
