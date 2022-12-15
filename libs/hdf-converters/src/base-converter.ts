@@ -1,4 +1,4 @@
-import { Jsonix } from '@mitre/jsonix';
+import {Jsonix} from '@mitre/jsonix';
 import {createHash} from 'crypto';
 import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
@@ -64,12 +64,15 @@ export function parseXml(xml: string): Record<string, unknown> {
   return parser.parse(xml, options);
 }
 
-export function parseXmlToJsonix(xml: string, mapping: object ): Record<string, any> {
+export function parseXmlToJsonix(
+  xml: string,
+  mapping: object
+): Record<string, any> {
   const context = new Jsonix.Context([mapping]);
   const unmarshaller = context.createUnmarshaller();
   const jsonix_unmarshalled = unmarshaller.unmarshalString(xml);
   return jsonix_unmarshalled;
-};
+}
 
 export function parseCsv(csv: string): unknown[] {
   const result = Papa.parse(csv.trim(), {header: true});
