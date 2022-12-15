@@ -165,12 +165,12 @@ export class BaseConverter {
     }
   }
 
-  objectMap<T, V>(
+  objectMap<T extends Array<unknown>, V>(
     obj: T,
     fn: (v: ObjectEntryValue<T>) => V
   ): {[K in keyof T]: V} {
     return Object.fromEntries(
-      Object.entries(obj).map(([k, v]) => [k, fn(v)])
+      Object.entries(obj).map(([k, v]) => [k, fn(v as ObjectEntryValue<T>)])
     ) as Record<keyof T, V>;
   }
   convertInternal<T>(

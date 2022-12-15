@@ -334,7 +334,7 @@ export class AwsConfigMapper {
       result = _.set(
         result,
         'nist',
-        _.get(result, 'nist').concat(defaultMatch)
+        defaultMatch
       );
     }
     return result;

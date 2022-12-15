@@ -68,8 +68,8 @@ function formatDesc(issue: unknown): string {
   return desc.join('; ') + ';';
 }
 function pluginNistTag(item: unknown): string[] {
-  const family = _.get(item, 'pluginFamily');
-  const id = _.get(item, 'pluginID');
+  const family = _.get(item, 'pluginFamily','');
+  const id = _.get(item, 'pluginID','');
   return NESSUS_PLUGINS_NIST_MAPPING.nistFilter(family, id, DEFAULT_NIST_TAG);
 }
 function cciNistTag(input: string): string[] {
@@ -137,6 +137,9 @@ function getStig(item: unknown): string {
 }
 function getStatus(item: unknown): ExecJSON.ControlResultStatus {
   const result = _.get(item, 'cm:compliance-result');
+  if (result==undefined){
+    return ExecJSON.ControlResultStatus.Failed;
+  }
   switch (result) {
     case 'PASSED':
       return ExecJSON.ControlResultStatus.Passed;

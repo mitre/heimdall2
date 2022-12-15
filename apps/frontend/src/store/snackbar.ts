@@ -43,7 +43,7 @@ export class Snackbar extends VuexModule {
 
   @Action
   HTTPFailure(error: unknown) {
-    const nestedError = _.get(error, 'response.data.message');
+    const nestedError = _.get(error, 'response.data.message',[]);
     if (typeof nestedError === 'object') {
       this.failure(
         nestedError

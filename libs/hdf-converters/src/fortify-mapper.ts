@@ -66,7 +66,7 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
       _.set(
         element,
         'results',
-        _.get(element, 'results').filter((result: ExecJSON.ControlResult) => {
+        _.get(element, 'results',[]).filter((result: ExecJSON.ControlResult) => {
           const codedesc = _.get(result, 'code_desc').split('<=SNIPPET');
           const snippetid = codedesc[0];
           const classid = _.get(element, 'id');
@@ -75,7 +75,7 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
           let isMatch = false;
           const matches = _.get(
             file,
-            'FVDL.Vulnerabilities.Vulnerability'
+            'FVDL.Vulnerabilities.Vulnerability',[]
           ).filter((subElement: Record<string, unknown>) => {
             return _.get(subElement, 'ClassInfo.ClassID') === classid;
           });
@@ -103,7 +103,7 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
       _.set(
         element,
         'impact',
-        impactMapping(_.get(element, 'impact'), _.get(element, 'id'))
+        impactMapping(_.get(element, 'impact') as unknown as Record<string,unknown>, _.get(element, 'id',''))
       );
     }
     return element;

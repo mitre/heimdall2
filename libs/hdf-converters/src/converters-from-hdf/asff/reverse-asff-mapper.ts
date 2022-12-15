@@ -193,7 +193,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
         finding,
         'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
         _.get(
-          finding,
+          finding as Object,
           'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
           ''
         ).slice(0, ATTRIBUTE_CHARACTER_LIMIT)

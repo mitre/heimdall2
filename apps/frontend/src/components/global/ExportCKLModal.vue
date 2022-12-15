@@ -184,7 +184,7 @@ export default class ExportCKLModal extends Vue {
 
   getProfileInfo(file: EvaluationFile | ProfileFile) {
     let result = '';
-    const profile: ExecJSONProfile = _.get(file, 'evaluation.data.profiles[0]');
+    const profile: ExecJSONProfile = _.get(file, 'evaluation.data.profiles[0]') as unknown as ExecJSONProfile;
     if (file.filename) {
       result += `File Name: ${file.filename}\n`;
     }
@@ -210,7 +210,7 @@ export default class ExportCKLModal extends Vue {
   }
 
   addFiledata(file: ExtendedEvaluationFile) {
-    const profileName = _.get(file, 'evaluation.data.profiles[0].name');
+    const profileName = _.get(file, 'evaluation.data.profiles[0].name','');
     const controls = FilteredDataModule.controls({
       ...this.filter,
       fromFile: [file.uniqueId]

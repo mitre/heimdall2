@@ -359,7 +359,7 @@ export default class ControlTable extends Vue {
           d.root.hdf.severity
         ),
         filename: _.get(d, 'sourcedFrom.sourcedFrom.from_file.filename')
-      };
+      } as unknown as ListElt;
     });
   }
 

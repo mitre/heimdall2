@@ -622,7 +622,7 @@ export class ASFFMapper extends BaseConverter {
   };
 
   statusReason(finding: unknown): string | undefined {
-    return _.get(finding, 'Compliance.StatusReasons')
+    return (_.get(finding, 'Compliance.StatusReasons',[]) as Array<Record<string,string>>)
       ?.map((reason: Record<string, string>) =>
         Object.entries(reason || {}).map(([key, value]: [string, string]) => {
           return `${encode(key)}: ${encode(value)}`;

@@ -39,12 +39,12 @@ export class FromHdfBaseConverter {
   }
 
   // Preforms fn() on all entries inside the passed obj
-  objectMap<T, V>(
+  objectMap<T extends Array<unknown>, V>(
     obj: T,
     fn: (v: ObjectEntryValue<T>) => V
   ): {[K in keyof T]: V} {
     return Object.fromEntries(
-      Object.entries(obj).map(([k, v]) => [k, fn(v)])
+      Object.entries(obj).map(([k, v]) => [k, fn(v as ObjectEntryValue<T>)])
     ) as Record<keyof T, V>;
   }
 
@@ -53,7 +53,7 @@ export class FromHdfBaseConverter {
     file: object,
     v: T | Array<T>
   ): T | Array<T> | MappedReform<T, ILookupPathFH> {
-    const transformer = _.get(v, 'transformer');
+    const transformer = _.get(v, 'transformer') as Function;
     if (Array.isArray(v)) {
       return this.handleArray(file, v);
     }
