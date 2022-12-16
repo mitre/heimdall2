@@ -34,7 +34,7 @@ export class GoSecMapper extends BaseConverter {
             {
               name: 'Gosec',
               data: {
-                'Golang errors': _.get(data, 'Golang errors'),
+                'Golang errors': _.get(data, 'Golang errors')
               }
             }
           ],
