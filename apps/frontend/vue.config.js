@@ -56,7 +56,8 @@ module.exports = {
             }
           }
         }
-      ]
+      ],
+      noParse: /node_modules\/@mitre\/jsonix\/jsonix.js/
     },
     devtool: 'source-map',
     plugins: [
