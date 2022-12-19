@@ -424,14 +424,15 @@ export class VeracodeMapper extends BaseConverter {
       passthrough: {
         components: {
           path: 'detailedreport.software_composition_analysis.vulnerable_components',
-          transformer: (value: Record<string, unknown>) =>
-          {
-            if (_.get(value, 'component') as Record<string, unknown>[]){
-              return (_.get(value, 'component') as Record<string, unknown>[]).map(
-                (component: Record<string, unknown>) => componentPass(component)
-            )}
-            else{
-              return ''
+          transformer: (value: Record<string, unknown>) => {
+            if (_.get(value, 'component') as Record<string, unknown>[]) {
+              return (
+                _.get(value, 'component') as Record<string, unknown>[]
+              ).map((component: Record<string, unknown>) =>
+                componentPass(component)
+              );
+            } else {
+              return '';
             }
           }
         },
