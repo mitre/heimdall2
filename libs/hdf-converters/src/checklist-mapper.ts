@@ -899,6 +899,13 @@ function findSeverity(vuln: Record<string, any>): string {
   return vuln.severity;
 }
 
+/**
+ * Inner function that uses current heimdall checklist export syntax for
+ * findingDetails attribute to separate a single string into multiple
+ * result objects
+ * @param input
+ * @returns ExecJSON.ControlResult
+ */
 function parseFindingDetails(
   input: Record<string, any>
 ): ExecJSON.ControlResult[] {
@@ -906,13 +913,17 @@ function parseFindingDetails(
   const findings: string = input[0].code_desc;
   if (findings.length !== 0) {
     const splitFindings: string[] = findings.split(
-      '--------------------------------\n'
+      '--------------------------------\n' // join variable identified from cklResults function in ExportCKLModal.vue
     );
     splitFindings.forEach((details) => {
       let codeDesc = '';
       let status = '';
-      const splitResults: string[] = details.split(/\n(.*)/s, 2);
-      if (splitResults[0] == 'passed' || splitResults[0] == 'failed') {
+      const splitResults: string[] = details.split(/\n(.*)/s, 2); // split using the first new line character only
+      if (
+        splitResults[0] === 'passed' ||
+        splitResults[0] === 'failed' ||
+        splitResults[0] === 'skipped'
+      ) {
         codeDesc = splitResults[1];
         status = splitResults[0];
       } else {
