@@ -3178,13 +3178,13 @@
   resolved "https://registry.yarnpkg.com/@mdi/js/-/js-7.0.96.tgz#8e7a54d5cb38831e3150632cc19e380f54d9edd6"
   integrity sha512-lNqhkV3cpPfYb/Avh+vXLFukUTbHbyHoFo4Jdc7Oc9UvURGVhamFIpgOVvEf2bNA78zvjXTZeVWExUTR+DLBfQ==
 
-"@mitre/jsonix@^3.0.2":
-  version "3.0.2"
-  resolved "https://registry.yarnpkg.com/@mitre/jsonix/-/jsonix-3.0.2.tgz#e7fd81dce6edf88905e9a4ddac46dde3afc6d805"
-  integrity sha512-avHlejYuBSr6frdaDEcjId8I7aQ6lgplyCFLOaPRY9SOWeMhXV8/QivAn3rZ6LALslwnFUvAEJcwtbxNVUviMA==
+"@mitre/jsonix@^3.0.3":
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/@mitre/jsonix/-/jsonix-3.0.3.tgz#08aedf3ece35abd9ced0f2fdaf83d6ffa5d9032f"
+  integrity sha512-RH5poYIxFTN6BCyyhyN+wXpYfjDSCGlFJWSgYU19CAFziTZ2ekGoajJfKcFf61oa1T40pi9r/MEgcO78F5y9ow==
   dependencies:
+    "@xmldom/xmldom" "^0.8.2"
     amdefine "^0.0.4"
-    xmldom "^0.6.0"
     xmlhttprequest "^1.8.0"
 
 "@mitre/splunk-sdk-no-env@^1.10.0":
@@ -5510,6 +5510,11 @@
     "@webassemblyjs/ast" "1.9.0"
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
+
+"@xmldom/xmldom@^0.8.2":
+  version "0.8.6"
+  resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.6.tgz#8a1524eb5bd5e965c1e3735476f0262469f71440"
+  integrity sha512-uRjjusqpoqfmRkTaNuLJ2VohVr67Q5YwDATW3VU7PfzTj6IRaihGrYI7zckGZjxQPBIp63nfvJbM+Yu5ICh0Bg==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -21386,11 +21391,6 @@ xmlchars@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
-
-xmldom@^0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.6.0.tgz#43a96ecb8beece991cef382c08397d82d4d0c46f"
-  integrity sha512-iAcin401y58LckRZ0TkI4k0VSM1Qg0KGSc3i8rU+xrxe19A/BN1zHyVSJY7uoutVlaTSzYyk/v5AmkewAP7jtg==
 
 xmlhttprequest@^1.8.0:
   version "1.8.0"
