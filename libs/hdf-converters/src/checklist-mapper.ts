@@ -877,7 +877,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 function cciRef(input: string): string[] {
-  return input.split('; ')
+  return input.split('; ');
 }
 
 const CCI_NIST_MAPPING = new CciNistMapping();
@@ -896,6 +896,12 @@ function transformImpact(vuln: Record<string, any>): number {
   return IMPACT_MAPPING.get(severity.toString().toLowerCase()) || 0;
 }
 
+/**
+ * Transformer function that uses the vulnerablity
+ * 
+ * @param vuln 
+ * @returns 
+ */
 function findSeverity(vuln: Record<string, any>): string {
   if (vuln.severityOverride.length > 0) {
     return vuln.severityOverride;
@@ -904,10 +910,11 @@ function findSeverity(vuln: Record<string, any>): string {
 }
 
 /**
- * Inner function that uses current heimdall checklist export syntax for
+ * Transformer function that uses current heimdall checklist export syntax for
  * findingDetails attribute to separate a single string into multiple
  * result objects
- * @param input
+ * 
+ * @param input - array of one element consisting of {code_desc, status, start_time}
  * @returns ExecJSON.ControlResult
  */
 function parseFindingDetails(
@@ -922,14 +929,22 @@ function parseFindingDetails(
     splitFindings.forEach((details) => {
       let codeDesc = '';
       let status = '';
+      let message = '';
       const splitResults: string[] = details.split(/\n(.*)/s, 2); // split using the first new line character only
       if (
         splitResults[0] === 'passed' ||
         splitResults[0] === 'failed' ||
         splitResults[0] === 'skipped'
       ) {
-        codeDesc = splitResults[1];
-        status = splitResults[0];
+        const indexOfExpected = splitResults[1].indexOf('expected');
+        if (indexOfExpected > 0) {
+          codeDesc = splitResults[1].slice(0,indexOfExpected - 1);
+          message = splitResults[1].slice(indexOfExpected);
+          status = splitResults[0];
+        } else {
+          codeDesc = splitResults[1];
+          status = splitResults[0];
+        }
       } else {
         codeDesc = splitResults[0];
         status = input[0].status;
@@ -937,7 +952,8 @@ function parseFindingDetails(
       const hdfResult: ExecJSON.ControlResult = {
         code_desc: codeDesc,
         status: getStatus(status),
-        start_time: ''
+        start_time: '',
+        message: message
       };
       results.push(hdfResult);
     });
@@ -953,6 +969,14 @@ function parseFindingDetails(
   }
 }
 
+/**
+ * Inner function that returns appropriate enum value based on param
+ * This is required because the status value of the ControlResult object
+ * must be an ExecJSON.ControlResultStatus type
+ * 
+ * @param input - string
+ * @returns enum ExecJSON.ControlResultStatus
+ */
 function getStatus(input: string): ExecJSON.ControlResultStatus {
   const status = input.toLowerCase();
   switch (status) {
@@ -1062,6 +1086,9 @@ export class ChecklistMapper extends BaseConverter {
     this.data = createChecklistObject(this.data);
   }
 
+  /**
+   * Gets info for Checklist Viewer
+   */
   get getStigInfo(): unknown {
     return this.data.stigs;
   }
