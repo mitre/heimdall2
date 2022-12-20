@@ -982,6 +982,9 @@ function parseFindingDetails(
         splitResults[0] === 'failed' ||
         splitResults[0] === 'skipped'
       ) {
+        // TODO: this does not necessarily work when the code_desc has the work expected
+        // will need to update the export to add a key word that can be used to split code_desc
+        // and message values easier - maybe *results* or *details*
         const indexOfExpected = splitResults[1].indexOf('expected');
         if (indexOfExpected > 0) {
           codeDesc = splitResults[1].slice(0, indexOfExpected - 1);
@@ -1063,8 +1066,10 @@ export class ChecklistMapper extends BaseConverter {
             path: 'vulns',
             key: 'id',
             tags: {
-              groupId: {path: 'groupTitle'},
-              ruleId: {path: 'ruleId'},
+              default: {path: 'vulnDiscuss'},
+              gtitle: {path: 'groupTitle'},
+              rid: {path: 'ruleId'},
+              gid: {path: 'vulnNum'},
               stigId: {path: 'ruleVersion'},
               cci: {
                 path: 'cciRef',
