@@ -898,9 +898,8 @@ function transformImpact(vuln: Record<string, any>): number {
 
 /**
  * Transformer function that uses the vulnerablity
- * 
- * @param vuln 
- * @returns 
+ * @param vuln
+ * @returns
  */
 function findSeverity(vuln: Record<string, any>): string {
   if (vuln.severityOverride.length > 0) {
@@ -913,7 +912,6 @@ function findSeverity(vuln: Record<string, any>): string {
  * Transformer function that uses current heimdall checklist export syntax for
  * findingDetails attribute to separate a single string into multiple
  * result objects
- * 
  * @param input - array of one element consisting of {code_desc, status, start_time}
  * @returns ExecJSON.ControlResult
  */
@@ -938,7 +936,7 @@ function parseFindingDetails(
       ) {
         const indexOfExpected = splitResults[1].indexOf('expected');
         if (indexOfExpected > 0) {
-          codeDesc = splitResults[1].slice(0,indexOfExpected - 1);
+          codeDesc = splitResults[1].slice(0, indexOfExpected - 1);
           message = splitResults[1].slice(indexOfExpected);
           status = splitResults[0];
         } else {
