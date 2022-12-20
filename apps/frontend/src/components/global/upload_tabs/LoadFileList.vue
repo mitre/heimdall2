@@ -168,6 +168,18 @@ export default class LoadFileList extends Vue {
     return result;
   }
 
+  filterEvaluationGroups(file: IEvaluation | Sample, search: string) {
+    let result = false;
+    if ('groups' in file) {
+      file.groups?.forEach((group) => {
+        if (group.name.toLowerCase().includes(search)) {
+          result = true;
+        }
+      });
+    }
+    return result;
+  }
+
   async deleteItemConfirm(): Promise<void> {
     EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
       SnackbarModule.notify('Deleted evaluation successfully.');
@@ -187,6 +199,7 @@ export default class LoadFileList extends Vue {
         async (item: IEvaluation | Sample) => {
           if (
             this.filterEvaluationTags(item, searchToLower) ||
+            this.filterEvaluationGroups(item, searchToLower) ||
             item.filename.toLowerCase().includes(searchToLower)
           ) {
             matches.push(item);
