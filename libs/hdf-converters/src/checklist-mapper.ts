@@ -876,10 +876,14 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['none', 0.0]
 ]);
 
+function cciRef(input: string): string[] {
+  return input.split('; ')
+}
+
 const CCI_NIST_MAPPING = new CciNistMapping();
 
 function nistTag(input: string): string[] {
-  const identifiers: string[] = input.split(',');
+  const identifiers: string[] = input.split('; ');
   return CCI_NIST_MAPPING.nistFilter(
     identifiers,
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
@@ -993,7 +997,10 @@ export class ChecklistMapper extends BaseConverter {
               groupId: {path: 'groupTitle'},
               ruleId: {path: 'ruleId'},
               stigId: {path: 'ruleVersion'},
-              cci: {path: 'cciRef'},
+              cci: {
+                path: 'cciRef',
+                transformer: cciRef
+              },
               nist: {
                 path: 'cciRef',
                 transformer: nistTag

@@ -22,10 +22,13 @@
             "groupId": "SRG-OS-000257-GPOS-00098",
             "ruleId": "SV-86473r2_rule",
             "stigId": "RHEL-07-010010",
-            "cci": "CCI-001494; CCI-001496",
+            "cci": [
+              "CCI-001494",
+              "CCI-001496"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-9",
+              "AU-9 (3)"
             ],
             "severity_override": "high",
             "weight": "10.0"
@@ -60,7 +63,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86479r2_rule",
             "stigId": "RHEL-07-010020",
-            "cci": "CCI-000663",
+            "cci": [
+              "CCI-000663"
+            ],
             "nist": [
               "SA-7"
             ],
@@ -97,7 +102,9 @@
             "groupId": "SRG-OS-000023-GPOS-00006",
             "ruleId": "SV-86483r3_rule",
             "stigId": "RHEL-07-010030",
-            "cci": "CCI-000048",
+            "cci": [
+              "CCI-000048"
+            ],
             "nist": [
               "AC-8 a"
             ],
@@ -134,7 +141,9 @@
             "groupId": "SRG-OS-000023-GPOS-00006",
             "ruleId": "SV-86485r3_rule",
             "stigId": "RHEL-07-010040",
-            "cci": "CCI-000048",
+            "cci": [
+              "CCI-000048"
+            ],
             "nist": [
               "AC-8 a"
             ],
@@ -171,7 +180,9 @@
             "groupId": "SRG-OS-000023-GPOS-00006",
             "ruleId": "SV-86487r2_rule",
             "stigId": "RHEL-07-010050",
-            "cci": "CCI-000048",
+            "cci": [
+              "CCI-000048"
+            ],
             "nist": [
               "AC-8 a"
             ],
@@ -213,7 +224,9 @@
             "groupId": "SRG-OS-000028-GPOS-00009",
             "ruleId": "SV-86515r4_rule",
             "stigId": "RHEL-07-010060",
-            "cci": "CCI-000056",
+            "cci": [
+              "CCI-000056"
+            ],
             "nist": [
               "AC-11 b"
             ],
@@ -250,7 +263,9 @@
             "groupId": "SRG-OS-000029-GPOS-00010",
             "ruleId": "SV-86517r4_rule",
             "stigId": "RHEL-07-010070",
-            "cci": "CCI-000057",
+            "cci": [
+              "CCI-000057"
+            ],
             "nist": [
               "AC-11 a"
             ],
@@ -287,7 +302,9 @@
             "groupId": "SRG-OS-000029-GPOS-00010",
             "ruleId": "SV-86519r3_rule",
             "stigId": "RHEL-07-010080",
-            "cci": "CCI-000057",
+            "cci": [
+              "CCI-000057"
+            ],
             "nist": [
               "AC-11 a"
             ],
@@ -329,7 +346,9 @@
             "groupId": "SRG-OS-000029-GPOS-00010",
             "ruleId": "SV-86521r1_rule",
             "stigId": "RHEL-07-010090",
-            "cci": "CCI-000057",
+            "cci": [
+              "CCI-000057"
+            ],
             "nist": [
               "AC-11 a"
             ],
@@ -366,7 +385,9 @@
             "groupId": "SRG-OS-000029-GPOS-00010",
             "ruleId": "SV-86523r3_rule",
             "stigId": "RHEL-07-010100",
-            "cci": "CCI-000057",
+            "cci": [
+              "CCI-000057"
+            ],
             "nist": [
               "AC-11 a"
             ],
@@ -403,7 +424,9 @@
             "groupId": "SRG-OS-000029-GPOS-00010",
             "ruleId": "SV-86525r2_rule",
             "stigId": "RHEL-07-010110",
-            "cci": "CCI-000057",
+            "cci": [
+              "CCI-000057"
+            ],
             "nist": [
               "AC-11 a"
             ],
@@ -440,7 +463,9 @@
             "groupId": "SRG-OS-000069-GPOS-00037",
             "ruleId": "SV-86527r2_rule",
             "stigId": "RHEL-07-010120",
-            "cci": "CCI-000192",
+            "cci": [
+              "CCI-000192"
+            ],
             "nist": [
               "IA-5 (1) (a)"
             ],
@@ -477,7 +502,9 @@
             "groupId": "SRG-OS-000070-GPOS-00038",
             "ruleId": "SV-86529r4_rule",
             "stigId": "RHEL-07-010130",
-            "cci": "CCI-000193",
+            "cci": [
+              "CCI-000193"
+            ],
             "nist": [
               "IA-5 (1) (a)"
             ],
@@ -514,7 +541,9 @@
             "groupId": "SRG-OS-000071-GPOS-00039",
             "ruleId": "SV-86531r2_rule",
             "stigId": "RHEL-07-010140",
-            "cci": "CCI-000194",
+            "cci": [
+              "CCI-000194"
+            ],
             "nist": [
               "IA-5 (1) (a)"
             ],
@@ -551,7 +580,9 @@
             "groupId": "SRG-OS-000266-GPOS-00101",
             "ruleId": "SV-86533r1_rule",
             "stigId": "RHEL-07-010150",
-            "cci": "CCI-001619",
+            "cci": [
+              "CCI-001619"
+            ],
             "nist": [
               "IA-5 (1) (a)"
             ],
@@ -588,7 +619,9 @@
             "groupId": "SRG-OS-000072-GPOS-00040",
             "ruleId": "SV-86535r1_rule",
             "stigId": "RHEL-07-010160",
-            "cci": "CCI-000195",
+            "cci": [
+              "CCI-000195"
+            ],
             "nist": [
               "IA-5 (1) (b)"
             ],
@@ -625,7 +658,9 @@
             "groupId": "SRG-OS-000072-GPOS-00040",
             "ruleId": "SV-86537r1_rule",
             "stigId": "RHEL-07-010170",
-            "cci": "CCI-000195",
+            "cci": [
+              "CCI-000195"
+            ],
             "nist": [
               "IA-5 (1) (b)"
             ],
@@ -662,7 +697,9 @@
             "groupId": "SRG-OS-000072-GPOS-00040",
             "ruleId": "SV-86539r2_rule",
             "stigId": "RHEL-07-010180",
-            "cci": "CCI-000195",
+            "cci": [
+              "CCI-000195"
+            ],
             "nist": [
               "IA-5 (1) (b)"
             ],
@@ -699,7 +736,9 @@
             "groupId": "SRG-OS-000072-GPOS-00040",
             "ruleId": "SV-86541r1_rule",
             "stigId": "RHEL-07-010190",
-            "cci": "CCI-000195",
+            "cci": [
+              "CCI-000195"
+            ],
             "nist": [
               "IA-5 (1) (b)"
             ],
@@ -736,7 +775,9 @@
             "groupId": "SRG-OS-000073-GPOS-00041",
             "ruleId": "SV-86543r2_rule",
             "stigId": "RHEL-07-010200",
-            "cci": "CCI-000196",
+            "cci": [
+              "CCI-000196"
+            ],
             "nist": [
               "IA-5 (1) (c)"
             ],
@@ -778,7 +819,9 @@
             "groupId": "SRG-OS-000073-GPOS-00041",
             "ruleId": "SV-86545r1_rule",
             "stigId": "RHEL-07-010210",
-            "cci": "CCI-000196",
+            "cci": [
+              "CCI-000196"
+            ],
             "nist": [
               "IA-5 (1) (c)"
             ],
@@ -815,7 +858,9 @@
             "groupId": "SRG-OS-000073-GPOS-00041",
             "ruleId": "SV-86547r2_rule",
             "stigId": "RHEL-07-010220",
-            "cci": "CCI-000196",
+            "cci": [
+              "CCI-000196"
+            ],
             "nist": [
               "IA-5 (1) (c)"
             ],
@@ -852,7 +897,9 @@
             "groupId": "SRG-OS-000075-GPOS-00043",
             "ruleId": "SV-86549r1_rule",
             "stigId": "RHEL-07-010230",
-            "cci": "CCI-000198",
+            "cci": [
+              "CCI-000198"
+            ],
             "nist": [
               "IA-5 (1) (d)"
             ],
@@ -889,7 +936,9 @@
             "groupId": "SRG-OS-000075-GPOS-00043",
             "ruleId": "SV-86551r1_rule",
             "stigId": "RHEL-07-010240",
-            "cci": "CCI-000198",
+            "cci": [
+              "CCI-000198"
+            ],
             "nist": [
               "IA-5 (1) (d)"
             ],
@@ -931,7 +980,9 @@
             "groupId": "SRG-OS-000076-GPOS-00044",
             "ruleId": "SV-86553r1_rule",
             "stigId": "RHEL-07-010250",
-            "cci": "CCI-000199",
+            "cci": [
+              "CCI-000199"
+            ],
             "nist": [
               "IA-5 (1) (d)"
             ],
@@ -968,7 +1019,9 @@
             "groupId": "SRG-OS-000076-GPOS-00044",
             "ruleId": "SV-86555r1_rule",
             "stigId": "RHEL-07-010260",
-            "cci": "CCI-000199",
+            "cci": [
+              "CCI-000199"
+            ],
             "nist": [
               "IA-5 (1) (d)"
             ],
@@ -1010,7 +1063,9 @@
             "groupId": "SRG-OS-000077-GPOS-00045",
             "ruleId": "SV-86557r2_rule",
             "stigId": "RHEL-07-010270",
-            "cci": "CCI-000200",
+            "cci": [
+              "CCI-000200"
+            ],
             "nist": [
               "IA-5 (1) (e)"
             ],
@@ -1047,7 +1102,9 @@
             "groupId": "SRG-OS-000078-GPOS-00046",
             "ruleId": "SV-86559r1_rule",
             "stigId": "RHEL-07-010280",
-            "cci": "CCI-000205",
+            "cci": [
+              "CCI-000205"
+            ],
             "nist": [
               "IA-5 (1) (a)"
             ],
@@ -1084,7 +1141,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86561r2_rule",
             "stigId": "RHEL-07-010290",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -1121,7 +1180,9 @@
             "groupId": "SRG-OS-000106-GPOS-00053",
             "ruleId": "SV-86563r2_rule",
             "stigId": "RHEL-07-010300",
-            "cci": "CCI-000766",
+            "cci": [
+              "CCI-000766"
+            ],
             "nist": [
               "IA-2 (2)"
             ],
@@ -1158,7 +1219,9 @@
             "groupId": "SRG-OS-000118-GPOS-00060",
             "ruleId": "SV-86565r1_rule",
             "stigId": "RHEL-07-010310",
-            "cci": "CCI-000795",
+            "cci": [
+              "CCI-000795"
+            ],
             "nist": [
               "IA-4 e"
             ],
@@ -1200,7 +1263,9 @@
             "groupId": "SRG-OS-000329-GPOS-00128",
             "ruleId": "SV-86567r3_rule",
             "stigId": "RHEL-07-010320",
-            "cci": "CCI-002238",
+            "cci": [
+              "CCI-002238"
+            ],
             "nist": [
               "AC-7 b"
             ],
@@ -1272,7 +1337,9 @@
             "groupId": "SRG-OS-000329-GPOS-00128",
             "ruleId": "SV-86569r2_rule",
             "stigId": "RHEL-07-010330",
-            "cci": "CCI-002238",
+            "cci": [
+              "CCI-002238"
+            ],
             "nist": [
               "AC-7 b"
             ],
@@ -1324,7 +1391,9 @@
             "groupId": "SRG-OS-000373-GPOS-00156",
             "ruleId": "SV-86571r2_rule",
             "stigId": "RHEL-07-010340",
-            "cci": "CCI-002038",
+            "cci": [
+              "CCI-002038"
+            ],
             "nist": [
               "IA-11"
             ],
@@ -1361,7 +1430,9 @@
             "groupId": "SRG-OS-000373-GPOS-00156",
             "ruleId": "SV-86573r2_rule",
             "stigId": "RHEL-07-010350",
-            "cci": "CCI-002038",
+            "cci": [
+              "CCI-002038"
+            ],
             "nist": [
               "IA-11"
             ],
@@ -1398,7 +1469,9 @@
             "groupId": "SRG-OS-000480-GPOS-00226",
             "ruleId": "SV-86575r1_rule",
             "stigId": "RHEL-07-010430",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -1435,7 +1508,9 @@
             "groupId": "SRG-OS-000480-GPOS-00229",
             "ruleId": "SV-86577r1_rule",
             "stigId": "RHEL-07-010440",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -1472,7 +1547,9 @@
             "groupId": "SRG-OS-000480-GPOS-00229",
             "ruleId": "SV-86579r2_rule",
             "stigId": "RHEL-07-010450",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -1509,7 +1586,9 @@
             "groupId": "SRG-OS-000480-GPOS-00229",
             "ruleId": "SV-86581r2_rule",
             "stigId": "RHEL-07-010460",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -1546,7 +1625,9 @@
             "groupId": "SRG-OS-000480-GPOS-00229",
             "ruleId": "SV-86583r2_rule",
             "stigId": "RHEL-07-010470",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -1583,7 +1664,9 @@
             "groupId": "SRG-OS-000080-GPOS-00048",
             "ruleId": "SV-86585r4_rule",
             "stigId": "RHEL-07-010480",
-            "cci": "CCI-000213",
+            "cci": [
+              "CCI-000213"
+            ],
             "nist": [
               "AC-3"
             ],
@@ -1620,7 +1703,9 @@
             "groupId": "SRG-OS-000080-GPOS-00048",
             "ruleId": "SV-86587r3_rule",
             "stigId": "RHEL-07-010490",
-            "cci": "CCI-000213",
+            "cci": [
+              "CCI-000213"
+            ],
             "nist": [
               "AC-3"
             ],
@@ -1657,7 +1742,9 @@
             "groupId": "SRG-OS-000104-GPOS-00051",
             "ruleId": "SV-86589r1_rule",
             "stigId": "RHEL-07-010500",
-            "cci": "CCI-000766",
+            "cci": [
+              "CCI-000766"
+            ],
             "nist": [
               "IA-2 (2)"
             ],
@@ -1704,7 +1791,9 @@
             "groupId": "SRG-OS-000095-GPOS-00049",
             "ruleId": "SV-86591r1_rule",
             "stigId": "RHEL-07-020000",
-            "cci": "CCI-000381",
+            "cci": [
+              "CCI-000381"
+            ],
             "nist": [
               "CM-7 a"
             ],
@@ -1741,7 +1830,9 @@
             "groupId": "SRG-OS-000095-GPOS-00049",
             "ruleId": "SV-86593r1_rule",
             "stigId": "RHEL-07-020010",
-            "cci": "CCI-000381",
+            "cci": [
+              "CCI-000381"
+            ],
             "nist": [
               "CM-7 a"
             ],
@@ -1778,10 +1869,13 @@
             "groupId": "SRG-OS-000324-GPOS-00125",
             "ruleId": "SV-86595r1_rule",
             "stigId": "RHEL-07-020020",
-            "cci": "CCI-002165; CCI-002235",
+            "cci": [
+              "CCI-002165",
+              "CCI-002235"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-3 (4)",
+              "AC-6 (10)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -1841,7 +1935,9 @@
             "groupId": "SRG-OS-000363-GPOS-00150",
             "ruleId": "SV-86597r1_rule",
             "stigId": "RHEL-07-020030",
-            "cci": "CCI-001744",
+            "cci": [
+              "CCI-001744"
+            ],
             "nist": [
               "CM-3 (5)"
             ],
@@ -1898,7 +1994,9 @@
             "groupId": "SRG-OS-000363-GPOS-00150",
             "ruleId": "SV-86599r1_rule",
             "stigId": "RHEL-07-020040",
-            "cci": "CCI-001744",
+            "cci": [
+              "CCI-001744"
+            ],
             "nist": [
               "CM-3 (5)"
             ],
@@ -1950,7 +2048,9 @@
             "groupId": "SRG-OS-000366-GPOS-00153",
             "ruleId": "SV-86601r1_rule",
             "stigId": "RHEL-07-020050",
-            "cci": "CCI-001749",
+            "cci": [
+              "CCI-001749"
+            ],
             "nist": [
               "CM-5 (3)"
             ],
@@ -1987,7 +2087,9 @@
             "groupId": "SRG-OS-000366-GPOS-00153",
             "ruleId": "SV-86603r1_rule",
             "stigId": "RHEL-07-020060",
-            "cci": "CCI-001749",
+            "cci": [
+              "CCI-001749"
+            ],
             "nist": [
               "CM-5 (3)"
             ],
@@ -2024,7 +2126,9 @@
             "groupId": "SRG-OS-000366-GPOS-00153",
             "ruleId": "SV-86605r1_rule",
             "stigId": "RHEL-07-020070",
-            "cci": "CCI-001749",
+            "cci": [
+              "CCI-001749"
+            ],
             "nist": [
               "CM-5 (3)"
             ],
@@ -2061,10 +2165,14 @@
             "groupId": "SRG-OS-000114-GPOS-00059",
             "ruleId": "SV-86607r2_rule",
             "stigId": "RHEL-07-020100",
-            "cci": "CCI-000366; CCI-000778; CCI-001958",
+            "cci": [
+              "CCI-000366",
+              "CCI-000778",
+              "CCI-001958"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "CM-6 b",
+              "IA-3"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -2104,10 +2212,14 @@
             "groupId": "SRG-OS-000114-GPOS-00059",
             "ruleId": "SV-86609r1_rule",
             "stigId": "RHEL-07-020110",
-            "cci": "CCI-000366; CCI-000778; CCI-001958",
+            "cci": [
+              "CCI-000366",
+              "CCI-000778",
+              "CCI-001958"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "CM-6 b",
+              "IA-3"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -2152,7 +2264,9 @@
             "groupId": "SRG-OS-000437-GPOS-00194",
             "ruleId": "SV-86611r1_rule",
             "stigId": "RHEL-07-020200",
-            "cci": "CCI-002617",
+            "cci": [
+              "CCI-002617"
+            ],
             "nist": [
               "SI-2 (6)"
             ],
@@ -2189,10 +2303,13 @@
             "groupId": "SRG-OS-000445-GPOS-00199",
             "ruleId": "SV-86613r2_rule",
             "stigId": "RHEL-07-020210",
-            "cci": "CCI-002165; CCI-002696",
+            "cci": [
+              "CCI-002165",
+              "CCI-002696"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-3 (4)",
+              "SI-6 a"
             ],
             "severity_override": "high",
             "weight": "10.0"
@@ -2227,10 +2344,13 @@
             "groupId": "SRG-OS-000445-GPOS-00199",
             "ruleId": "SV-86615r3_rule",
             "stigId": "RHEL-07-020220",
-            "cci": "CCI-002165; CCI-002696",
+            "cci": [
+              "CCI-002165",
+              "CCI-002696"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-3 (4)",
+              "SI-6 a"
             ],
             "severity_override": "high",
             "weight": "10.0"
@@ -2265,7 +2385,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86617r1_rule",
             "stigId": "RHEL-07-020230",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -2307,7 +2429,9 @@
             "groupId": "SRG-OS-000480-GPOS-00228",
             "ruleId": "SV-86619r1_rule",
             "stigId": "RHEL-07-020240",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -2344,7 +2468,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86621r2_rule",
             "stigId": "RHEL-07-020250",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -2381,7 +2507,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86623r3_rule",
             "stigId": "RHEL-07-020260",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -2418,7 +2546,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86625r1_rule",
             "stigId": "RHEL-07-020270",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -2460,7 +2590,9 @@
             "groupId": "SRG-OS-000104-GPOS-00051",
             "ruleId": "SV-86627r1_rule",
             "stigId": "RHEL-07-020300",
-            "cci": "CCI-000764",
+            "cci": [
+              "CCI-000764"
+            ],
             "nist": [
               "IA-2"
             ],
@@ -2692,7 +2824,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86629r1_rule",
             "stigId": "RHEL-07-020310",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -2734,7 +2868,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86631r2_rule",
             "stigId": "RHEL-07-020320",
-            "cci": "CCI-002165",
+            "cci": [
+              "CCI-002165"
+            ],
             "nist": [
               "AC-3 (4)"
             ],
@@ -2771,7 +2907,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86633r2_rule",
             "stigId": "RHEL-07-020330",
-            "cci": "CCI-002165",
+            "cci": [
+              "CCI-002165"
+            ],
             "nist": [
               "AC-3 (4)"
             ],
@@ -2808,7 +2946,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86635r1_rule",
             "stigId": "RHEL-07-020600",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -2850,7 +2990,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86637r1_rule",
             "stigId": "RHEL-07-020610",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -2887,7 +3029,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86639r1_rule",
             "stigId": "RHEL-07-020620",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -2929,7 +3073,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86641r2_rule",
             "stigId": "RHEL-07-020630",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -2966,7 +3112,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86643r4_rule",
             "stigId": "RHEL-07-020640",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3018,7 +3166,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86645r4_rule",
             "stigId": "RHEL-07-020650",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3055,7 +3205,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86647r1_rule",
             "stigId": "RHEL-07-020660",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3092,7 +3244,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86649r1_rule",
             "stigId": "RHEL-07-020670",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3129,7 +3283,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86651r1_rule",
             "stigId": "RHEL-07-020680",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3166,7 +3322,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86653r1_rule",
             "stigId": "RHEL-07-020690",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3203,7 +3361,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86655r2_rule",
             "stigId": "RHEL-07-020700",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3240,7 +3400,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86657r1_rule",
             "stigId": "RHEL-07-020710",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3277,7 +3439,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86659r3_rule",
             "stigId": "RHEL-07-020720",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3314,7 +3478,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86661r1_rule",
             "stigId": "RHEL-07-020730",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3351,10 +3517,19 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86663r1_rule",
             "stigId": "RHEL-07-020900",
-            "cci": "CCI-000318; CCI-000368; CCI-001812; CCI-001813; CCI-001814",
+            "cci": [
+              "CCI-000318",
+              "CCI-000368",
+              "CCI-001812",
+              "CCI-001813",
+              "CCI-001814"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "CM-3 f",
+              "CM-6 c",
+              "CM-11 (2)",
+              "CM-5 (1) (a)",
+              "CM-5 (1)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -3389,7 +3564,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86665r3_rule",
             "stigId": "RHEL-07-021000",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3426,7 +3603,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86667r1_rule",
             "stigId": "RHEL-07-021010",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3468,7 +3647,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86669r1_rule",
             "stigId": "RHEL-07-021020",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3505,7 +3686,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86671r3_rule",
             "stigId": "RHEL-07-021030",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3802,10 +3985,19 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86673r1_rule",
             "stigId": "RHEL-07-021040",
-            "cci": "CCI-000318; CCI-000368; CCI-001812; CCI-001813; CCI-001814",
+            "cci": [
+              "CCI-000318",
+              "CCI-000368",
+              "CCI-001812",
+              "CCI-001813",
+              "CCI-001814"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "CM-3 f",
+              "CM-6 c",
+              "CM-11 (2)",
+              "CM-5 (1) (a)",
+              "CM-5 (1)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -3840,7 +4032,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86675r1_rule",
             "stigId": "RHEL-07-021100",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3877,7 +4071,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86677r2_rule",
             "stigId": "RHEL-07-021110",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3914,7 +4110,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86679r1_rule",
             "stigId": "RHEL-07-021120",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3951,7 +4149,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86681r1_rule",
             "stigId": "RHEL-07-021300",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -3988,7 +4188,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86683r1_rule",
             "stigId": "RHEL-07-021310",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -4030,7 +4232,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86685r1_rule",
             "stigId": "RHEL-07-021320",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -4067,7 +4271,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86687r5_rule",
             "stigId": "RHEL-07-021330",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -4104,7 +4310,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86689r1_rule",
             "stigId": "RHEL-07-021340",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -4141,10 +4349,17 @@
             "groupId": "SRG-OS-000033-GPOS-00014",
             "ruleId": "SV-86691r3_rule",
             "stigId": "RHEL-07-021350",
-            "cci": "CCI-000068; CCI-001199; CCI-002450; CCI-002476",
+            "cci": [
+              "CCI-000068",
+              "CCI-001199",
+              "CCI-002450",
+              "CCI-002476"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-17 (2)",
+              "SC-28",
+              "SC-13 b",
+              "SC-28 (1)"
             ],
             "severity_override": "high",
             "weight": "10.0"
@@ -4194,7 +4409,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86693r2_rule",
             "stigId": "RHEL-07-021600",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -4236,7 +4453,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86695r2_rule",
             "stigId": "RHEL-07-021610",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -4278,7 +4497,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86697r2_rule",
             "stigId": "RHEL-07-021620",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -4320,10 +4541,19 @@
             "groupId": "SRG-OS-000364-GPOS-00151",
             "ruleId": "SV-86699r1_rule",
             "stigId": "RHEL-07-021700",
-            "cci": "CCI-000318; CCI-000368; CCI-001812; CCI-001813; CCI-001814",
+            "cci": [
+              "CCI-000318",
+              "CCI-000368",
+              "CCI-001812",
+              "CCI-001813",
+              "CCI-001814"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "CM-3 f",
+              "CM-6 c",
+              "CM-11 (2)",
+              "CM-5 (1) (a)",
+              "CM-5 (1)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -4378,7 +4608,9 @@
             "groupId": "SRG-OS-000095-GPOS-00049",
             "ruleId": "SV-86701r1_rule",
             "stigId": "RHEL-07-021710",
-            "cci": "CCI-000381",
+            "cci": [
+              "CCI-000381"
+            ],
             "nist": [
               "CM-7 a"
             ],
@@ -4415,10 +4647,13 @@
             "groupId": "SRG-OS-000038-GPOS-00016",
             "ruleId": "SV-86703r2_rule",
             "stigId": "RHEL-07-030000",
-            "cci": "CCI-000126; CCI-000131",
+            "cci": [
+              "CCI-000126",
+              "CCI-000131"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-2 c",
+              "AU-3 b"
             ],
             "severity_override": "high",
             "weight": "10.0"
@@ -4453,7 +4688,9 @@
             "groupId": "SRG-OS-000046-GPOS-00022",
             "ruleId": "SV-86705r3_rule",
             "stigId": "RHEL-07-030010",
-            "cci": "CCI-000139",
+            "cci": [
+              "CCI-000139"
+            ],
             "nist": [
               "AU-5 a"
             ],
@@ -4490,7 +4727,9 @@
             "groupId": "SRG-OS-000342-GPOS-00133",
             "ruleId": "SV-86707r1_rule",
             "stigId": "RHEL-07-030300",
-            "cci": "CCI-001851",
+            "cci": [
+              "CCI-001851"
+            ],
             "nist": [
               "AU-4 (1)"
             ],
@@ -4516,7 +4755,7 @@
           "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingDetails\": \"skipped\\nFile '/etc/audisp/audisp-remote.conf' cannot be found. This test cannot be checked in a automated fashion and you must check it manually\\nFile '/etc/audisp/audisp-remote.conf' cannot be found. This check must be performed manually\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72083\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000342-GPOS-00133\",\n  \"ruleId\": \"SV-86707r1_rule\",\n  \"ruleVersion\": \"RHEL-07-030300\",\n  \"ruleTitle\": \"The operating system must off-load audit records onto a different\\nsystem or media from the system being audited.\",\n  \"vulnDiscuss\": \"Information stored in one location is vulnerable to accidental or\\nincidental deletion or alteration.\\n\\n    Off-loading is a common process in information systems with limited audit\\nstorage capacity.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the operating system off-loads audit records onto a different\\nsystem or media from the system being audited.\\n\\nTo determine the remote server that the records are being sent to, use the\\nfollowing command:\\n\\n# grep -i remote_server /etc/audisp/audisp-remote.conf\\nremote_server = 10.0.21.1\\n\\nIf a remote server is not configured, or the line is commented out, ask the\\nSystem Administrator to indicate how the audit logs are off-loaded to a\\ndifferent system or media.\\n\\nIf there is no evidence that the audit logs are being off-loaded to another\\nsystem or media, this is a finding.\",\n  \"fixText\": \"Configure the operating system to off-load audit records onto a\\ndifferent system or media from the system being audited.\\n\\nSet the remote server option in \\\"/etc/audisp/audisp-remote.conf\\\" with the IP\\naddress of the log aggregation server.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"0b8db06b-01ce-4a11-8982-96f823a715d3\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001851\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "File '/etc/audisp/audisp-remote.conf' cannot be found. This test cannot be checked in a automated fashion and you must check it manually\nFile '/etc/audisp/audisp-remote.conf' cannot be found. This check must be performed manually",
               "status": "skipped",
               "start_time": ""
             }
@@ -4527,7 +4766,9 @@
             "groupId": "SRG-OS-000342-GPOS-00133",
             "ruleId": "SV-86709r1_rule",
             "stigId": "RHEL-07-030310",
-            "cci": "CCI-001851",
+            "cci": [
+              "CCI-001851"
+            ],
             "nist": [
               "AU-4 (1)"
             ],
@@ -4553,7 +4794,7 @@
           "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingDetails\": \"skipped\\nParse Config File /etc/audisp/audisp-remote.conf\\nCan't find file: /etc/audisp/audisp-remote.conf\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72085\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000342-GPOS-00133\",\n  \"ruleId\": \"SV-86709r1_rule\",\n  \"ruleVersion\": \"RHEL-07-030310\",\n  \"ruleTitle\": \"The operating system must encrypt the transfer of audit records\\noff-loaded onto a different system or media from the system being audited.\",\n  \"vulnDiscuss\": \"Information stored in one location is vulnerable to accidental or\\nincidental deletion or alteration.\\n\\n    Off-loading is a common process in information systems with limited audit\\nstorage capacity.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the operating system encrypts audit records off-loaded\\nonto a different system or media from the system being audited.\\n\\nTo determine if the transfer is encrypted, use the following command:\\n\\n# grep -i enable_krb5 /etc/audisp/audisp-remote.conf\\nenable_krb5 = yes\\n\\nIf the value of the \\\"enable_krb5\\\" option is not set to \\\"yes\\\" or the line is\\ncommented out, ask the System Administrator to indicate how the audit logs are\\noff-loaded to a different system or media.\\n\\nIf there is no evidence that the transfer of the audit logs being off-loaded to\\nanother system or media is encrypted, this is a finding.\",\n  \"fixText\": \"Configure the operating system to encrypt the transfer of\\noff-loaded audit records onto a different system or media from the system being\\naudited.\\n\\nUncomment the \\\"enable_krb5\\\" option in \\\"/etc/audisp/audisp-remote.conf\\\" and\\nset it with the following line:\\n\\nenable_krb5 = yes\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"25ea706e-f4d2-4cc5-be48-624974604f37\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001851\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "Parse Config File /etc/audisp/audisp-remote.conf\nCan't find file: /etc/audisp/audisp-remote.conf",
               "status": "skipped",
               "start_time": ""
             }
@@ -4564,7 +4805,9 @@
             "groupId": "SRG-OS-000342-GPOS-00133",
             "ruleId": "SV-86711r2_rule",
             "stigId": "RHEL-07-030320",
-            "cci": "CCI-001851",
+            "cci": [
+              "CCI-001851"
+            ],
             "nist": [
               "AU-4 (1)"
             ],
@@ -4590,7 +4833,12 @@
           "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingDetails\": \"skipped\\nParse Config File /etc/audisp/audisp-remote.conf\\nCan't find file: /etc/audisp/audisp-remote.conf\\n--------------------------------\\nskipped\\nParse Config File /etc/audisp/audisp-remote.conf\\nCan't find file: /etc/audisp/audisp-remote.conf\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72087\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000342-GPOS-00133\",\n  \"ruleId\": \"SV-86711r2_rule\",\n  \"ruleVersion\": \"RHEL-07-030320\",\n  \"ruleTitle\": \"The audit system must take appropriate action when the audit storage\\nvolume is full.\",\n  \"vulnDiscuss\": \"Taking appropriate action in case of a filled audit storage volume\\nwill minimize the possibility of losing audit records.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the action the operating system takes if the disk the audit\\nrecords are written to becomes full.\\n\\nTo determine the action that takes place if the disk is full on the remote\\nserver, use the following command:\\n\\n# grep -i disk_full_action /etc/audisp/audisp-remote.conf\\ndisk_full_action = single\\n\\nTo determine the action that takes place if the network connection fails, use\\nthe following command:\\n\\n# grep -i network_failure_action /etc/audisp/audisp-remote.conf\\nnetwork_failure_action = stop\\n\\nIf the value of the \\\"network_failure_action\\\" option is not \\\"syslog\\\",\\n\\\"single\\\", or \\\"halt\\\", or the line is commented out, this is a finding.\\n\\nIf the value of the \\\"disk_full_action\\\" option is not \\\"syslog\\\", \\\"single\\\",\\nor \\\"halt\\\", or the line is commented out, this is a finding.\",\n  \"fixText\": \"Configure the action the operating system takes if the disk the\\naudit records are written to becomes full.\\n\\nUncomment or edit the \\\"disk_full_action\\\" option in\\n\\\"/etc/audisp/audisp-remote.conf\\\" and set it to \\\"syslog\\\", \\\"single\\\", or\\n\\\"halt\\\", such as the following line:\\n\\ndisk_full_action = single\\n\\nUncomment the \\\"network_failure_action\\\" option in\\n\\\"/etc/audisp/audisp-remote.conf\\\" and set it to \\\"syslog\\\", \\\"single\\\", or\\n\\\"halt\\\".\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"cf03ac7d-6ee5-4332-85ce-8787188ad670\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001851\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "Parse Config File /etc/audisp/audisp-remote.conf\nCan't find file: /etc/audisp/audisp-remote.conf\n",
+              "status": "skipped",
+              "start_time": ""
+            },
+            {
+              "code_desc": "Parse Config File /etc/audisp/audisp-remote.conf\nCan't find file: /etc/audisp/audisp-remote.conf",
               "status": "skipped",
               "start_time": ""
             }
@@ -4601,7 +4849,9 @@
             "groupId": "SRG-OS-000343-GPOS-00134",
             "ruleId": "SV-86713r1_rule",
             "stigId": "RHEL-07-030330",
-            "cci": "CCI-001855",
+            "cci": [
+              "CCI-001855"
+            ],
             "nist": [
               "AU-5 (1)"
             ],
@@ -4638,7 +4888,9 @@
             "groupId": "SRG-OS-000343-GPOS-00134",
             "ruleId": "SV-86715r1_rule",
             "stigId": "RHEL-07-030340",
-            "cci": "CCI-001855",
+            "cci": [
+              "CCI-001855"
+            ],
             "nist": [
               "AU-5 (1)"
             ],
@@ -4675,7 +4927,9 @@
             "groupId": "SRG-OS-000343-GPOS-00134",
             "ruleId": "SV-86717r2_rule",
             "stigId": "RHEL-07-030350",
-            "cci": "CCI-001855",
+            "cci": [
+              "CCI-001855"
+            ],
             "nist": [
               "AU-5 (1)"
             ],
@@ -4712,7 +4966,9 @@
             "groupId": "SRG-OS-000327-GPOS-00127",
             "ruleId": "SV-86719r5_rule",
             "stigId": "RHEL-07-030360",
-            "cci": "CCI-002234",
+            "cci": [
+              "CCI-002234"
+            ],
             "nist": [
               "AC-6 (9)"
             ],
@@ -5194,10 +5450,13 @@
             "groupId": "SRG-OS-000064-GPOS-00033",
             "ruleId": "SV-86721r3_rule",
             "stigId": "RHEL-07-030370",
-            "cci": "CCI-000126; CCI-000172",
+            "cci": [
+              "CCI-000126",
+              "CCI-000172"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-2 c",
+              "AU-12 c"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -5247,10 +5506,13 @@
             "groupId": "SRG-OS-000064-GPOS-00033",
             "ruleId": "SV-86723r3_rule",
             "stigId": "RHEL-07-030380",
-            "cci": "CCI-000126; CCI-000172",
+            "cci": [
+              "CCI-000126",
+              "CCI-000172"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-2 c",
+              "AU-12 c"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -5300,10 +5562,13 @@
             "groupId": "SRG-OS-000064-GPOS-00033",
             "ruleId": "SV-86725r3_rule",
             "stigId": "RHEL-07-030390",
-            "cci": "CCI-000126; CCI-000172",
+            "cci": [
+              "CCI-000126",
+              "CCI-000172"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-2 c",
+              "AU-12 c"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -5353,10 +5618,13 @@
             "groupId": "SRG-OS-000064-GPOS-00033",
             "ruleId": "SV-86727r3_rule",
             "stigId": "RHEL-07-030400",
-            "cci": "CCI-000126; CCI-000172",
+            "cci": [
+              "CCI-000126",
+              "CCI-000172"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-2 c",
+              "AU-12 c"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -5406,7 +5674,9 @@
             "groupId": "SRG-OS-000458-GPOS-00203",
             "ruleId": "SV-86729r3_rule",
             "stigId": "RHEL-07-030410",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -5458,7 +5728,9 @@
             "groupId": "SRG-OS-000458-GPOS-00203",
             "ruleId": "SV-86731r3_rule",
             "stigId": "RHEL-07-030420",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -5510,7 +5782,9 @@
             "groupId": "SRG-OS-000458-GPOS-00203",
             "ruleId": "SV-86733r3_rule",
             "stigId": "RHEL-07-030430",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -5562,7 +5836,9 @@
             "groupId": "SRG-OS-000458-GPOS-00203",
             "ruleId": "SV-86735r3_rule",
             "stigId": "RHEL-07-030440",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -5614,7 +5890,9 @@
             "groupId": "SRG-OS-000458-GPOS-00203",
             "ruleId": "SV-86737r3_rule",
             "stigId": "RHEL-07-030450",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -5666,7 +5944,9 @@
             "groupId": "SRG-OS-000458-GPOS-00203",
             "ruleId": "SV-86739r3_rule",
             "stigId": "RHEL-07-030460",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -5718,7 +5998,9 @@
             "groupId": "SRG-OS-000458-GPOS-00203",
             "ruleId": "SV-86741r3_rule",
             "stigId": "RHEL-07-030470",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -5770,7 +6052,9 @@
             "groupId": "SRG-OS-000458-GPOS-00203",
             "ruleId": "SV-86743r3_rule",
             "stigId": "RHEL-07-030480",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -5822,7 +6106,9 @@
             "groupId": "SRG-OS-000458-GPOS-00203",
             "ruleId": "SV-86745r3_rule",
             "stigId": "RHEL-07-030490",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -5874,10 +6160,13 @@
             "groupId": "SRG-OS-000064-GPOS-00033",
             "ruleId": "SV-86747r3_rule",
             "stigId": "RHEL-07-030500",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -5947,10 +6236,13 @@
             "groupId": "SRG-OS-000064-GPOS-00033",
             "ruleId": "SV-86749r3_rule",
             "stigId": "RHEL-07-030510",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6020,10 +6312,13 @@
             "groupId": "SRG-OS-000064-GPOS-00033",
             "ruleId": "SV-86751r3_rule",
             "stigId": "RHEL-07-030520",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6093,10 +6388,13 @@
             "groupId": "SRG-OS-000064-GPOS-00033",
             "ruleId": "SV-86753r3_rule",
             "stigId": "RHEL-07-030530",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6166,10 +6464,13 @@
             "groupId": "SRG-OS-000064-GPOS-00033",
             "ruleId": "SV-86755r3_rule",
             "stigId": "RHEL-07-030540",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6239,10 +6540,13 @@
             "groupId": "SRG-OS-000064-GPOS-00033",
             "ruleId": "SV-86757r3_rule",
             "stigId": "RHEL-07-030550",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6312,10 +6616,13 @@
             "groupId": "SRG-OS-000392-GPOS-00172",
             "ruleId": "SV-86759r3_rule",
             "stigId": "RHEL-07-030560",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6355,10 +6662,13 @@
             "groupId": "SRG-OS-000392-GPOS-00172",
             "ruleId": "SV-86761r3_rule",
             "stigId": "RHEL-07-030570",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6398,10 +6708,13 @@
             "groupId": "SRG-OS-000392-GPOS-00172",
             "ruleId": "SV-86763r3_rule",
             "stigId": "RHEL-07-030580",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6441,10 +6754,13 @@
             "groupId": "SRG-OS-000392-GPOS-00172",
             "ruleId": "SV-86765r4_rule",
             "stigId": "RHEL-07-030590",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6484,10 +6800,15 @@
             "groupId": "SRG-OS-000392-GPOS-00172",
             "ruleId": "SV-86767r2_rule",
             "stigId": "RHEL-07-030600",
-            "cci": "CCI-000126; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000126",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-2 c",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6527,10 +6848,15 @@
             "groupId": "SRG-OS-000392-GPOS-00172",
             "ruleId": "SV-86769r3_rule",
             "stigId": "RHEL-07-030610",
-            "cci": "CCI-000126; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000126",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-2 c",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6570,10 +6896,15 @@
             "groupId": "SRG-OS-000392-GPOS-00172",
             "ruleId": "SV-86771r2_rule",
             "stigId": "RHEL-07-030620",
-            "cci": "CCI-000126; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000126",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-2 c",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6613,10 +6944,15 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86773r3_rule",
             "stigId": "RHEL-07-030630",
-            "cci": "CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6656,10 +6992,15 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86775r4_rule",
             "stigId": "RHEL-07-030640",
-            "cci": "CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6699,10 +7040,15 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86777r3_rule",
             "stigId": "RHEL-07-030650",
-            "cci": "CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6742,10 +7088,15 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86779r3_rule",
             "stigId": "RHEL-07-030660",
-            "cci": "CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6785,10 +7136,15 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86781r3_rule",
             "stigId": "RHEL-07-030670",
-            "cci": "CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6828,10 +7184,17 @@
             "groupId": "SRG-OS-000037-GPOS-00015",
             "ruleId": "SV-86783r4_rule",
             "stigId": "RHEL-07-030680",
-            "cci": "CCI-000130; CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000130",
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 a",
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6871,10 +7234,17 @@
             "groupId": "SRG-OS-000037-GPOS-00015",
             "ruleId": "SV-86785r3_rule",
             "stigId": "RHEL-07-030690",
-            "cci": "CCI-000130; CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000130",
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 a",
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6914,10 +7284,17 @@
             "groupId": "SRG-OS-000037-GPOS-00015",
             "ruleId": "SV-86787r4_rule",
             "stigId": "RHEL-07-030700",
-            "cci": "CCI-000130; CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000130",
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 a",
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -6967,10 +7344,17 @@
             "groupId": "SRG-OS-000037-GPOS-00015",
             "ruleId": "SV-86789r3_rule",
             "stigId": "RHEL-07-030710",
-            "cci": "CCI-000130; CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000130",
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 a",
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7010,10 +7394,17 @@
             "groupId": "SRG-OS-000037-GPOS-00015",
             "ruleId": "SV-86791r3_rule",
             "stigId": "RHEL-07-030720",
-            "cci": "CCI-000130; CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000130",
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 a",
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7053,10 +7444,17 @@
             "groupId": "SRG-OS-000037-GPOS-00015",
             "ruleId": "SV-86793r4_rule",
             "stigId": "RHEL-07-030730",
-            "cci": "CCI-000130; CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000130",
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 a",
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7096,10 +7494,13 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86795r5_rule",
             "stigId": "RHEL-07-030740",
-            "cci": "CCI-000135; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7189,10 +7590,13 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86797r4_rule",
             "stigId": "RHEL-07-030750",
-            "cci": "CCI-000135; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7232,10 +7636,13 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86799r3_rule",
             "stigId": "RHEL-07-030760",
-            "cci": "CCI-000135; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7275,10 +7682,13 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86801r2_rule",
             "stigId": "RHEL-07-030770",
-            "cci": "CCI-000135; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7318,10 +7728,15 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86803r2_rule",
             "stigId": "RHEL-07-030780",
-            "cci": "CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7361,7 +7776,9 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86805r2_rule",
             "stigId": "RHEL-07-030790",
-            "cci": "CCI-002884",
+            "cci": [
+              "CCI-002884"
+            ],
             "nist": [
               "MA-4 (1) (a)"
             ],
@@ -7387,7 +7804,7 @@
           "code": "{\n  \"status\": \"Not Applicable\",\n  \"findingDetails\": \"skipped\\nThe /usr/libexec/pt_chown file does not exist\\nThe /usr/libexec/pt_chown file does not exist, this requirement is Not Applicable.\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72181\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000042-GPOS-00020\",\n  \"ruleId\": \"SV-86805r2_rule\",\n  \"ruleVersion\": \"RHEL-07-030790\",\n  \"ruleTitle\": \"All uses of the pt_chown command must be audited.\",\n  \"vulnDiscuss\": \"Reconstruction of harmful events or forensic analysis is not possible if audit\\nrecords do not contain enough information.\\n\\n    At a minimum, the organization must audit the full-text recording of privileged\\ncommands. The organization must maintain audit trails in sufficient detail to\\nreconstruct events to determine the cause and impact of compromise.\\n\\n    Satisfies: SRG-OS-000042-GPOS-00020, SRG-OS-000392-GPOS-00172,\\nSRG-OS-000471-GPOS-0021.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the operating system generates audit records when\\nsuccessful/unsuccessful attempts to use the \\\"pt_chown\\\" command occur.\\n\\nCheck for the following system call being audited by performing the following\\ncommand to check the file system rules in \\\"/etc/audit/audit.rules\\\":\\n\\n# grep -i /usr/libexec/pt_chown /etc/audit/audit.rules\\n\\n-a always,exit -F path=/usr/libexec/pt_chown -F perm=x -F auid>=1000 -F\\nauid!=4294967295 -k privileged_terminal\\n\\nIf the command does not return any output, this is a finding.\",\n  \"fixText\": \"Configure the operating system to generate audit records when\\nsuccessful/unsuccessful attempts to use the \\\"pt_chown\\\" command occur.\\n\\nAdd or update the following rule in \\\"/etc/audit/rules.d/audit.rules\\\":\\n\\n-a always,exit -F path=/usr/libexec/pt_chown -F perm=x -F auid>=1000 -F\\nauid!=4294967295 -k privileged_terminal\\n\\nThe audit daemon must be restarted for the changes to take effect.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"4daace88-08bb-4646-b371-6040f4e35b6a\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-002884\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "The /usr/libexec/pt_chown file does not exist\nThe /usr/libexec/pt_chown file does not exist, this requirement is Not Applicable.",
               "status": "skipped",
               "start_time": ""
             }
@@ -7398,10 +7815,15 @@
             "groupId": "SRG-OS-000042-GPOS-00020",
             "ruleId": "SV-86807r2_rule",
             "stigId": "RHEL-07-030800",
-            "cci": "CCI-000135; CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000135",
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-3 (1)",
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7441,7 +7863,9 @@
             "groupId": "SRG-OS-000471-GPOS-00215",
             "ruleId": "SV-86809r3_rule",
             "stigId": "RHEL-07-030810",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -7483,7 +7907,9 @@
             "groupId": "SRG-OS-000471-GPOS-00216",
             "ruleId": "SV-86811r3_rule",
             "stigId": "RHEL-07-030820",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -7535,7 +7961,9 @@
             "groupId": "SRG-OS-000471-GPOS-00216",
             "ruleId": "SV-86813r3_rule",
             "stigId": "RHEL-07-030830",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -7587,7 +8015,9 @@
             "groupId": "SRG-OS-000471-GPOS-00216",
             "ruleId": "SV-86815r3_rule",
             "stigId": "RHEL-07-030840",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -7629,7 +8059,9 @@
             "groupId": "SRG-OS-000471-GPOS-00216",
             "ruleId": "SV-86817r3_rule",
             "stigId": "RHEL-07-030850",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -7671,7 +8103,9 @@
             "groupId": "SRG-OS-000471-GPOS-00216",
             "ruleId": "SV-86819r3_rule",
             "stigId": "RHEL-07-030860",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -7713,10 +8147,15 @@
             "groupId": "SRG-OS-000004-GPOS-00004",
             "ruleId": "SV-86821r4_rule",
             "stigId": "RHEL-07-030870",
-            "cci": "CCI-000018; CCI-000172; CCI-001403; CCI-002130",
+            "cci": [
+              "CCI-000018",
+              "CCI-000172",
+              "CCI-001403",
+              "CCI-002130"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-2 (4)",
+              "AU-12 c"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7756,10 +8195,13 @@
             "groupId": "SRG-OS-000466-GPOS-00210",
             "ruleId": "SV-86823r3_rule",
             "stigId": "RHEL-07-030880",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7809,10 +8251,13 @@
             "groupId": "SRG-OS-000466-GPOS-00210",
             "ruleId": "SV-86825r3_rule",
             "stigId": "RHEL-07-030890",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7862,10 +8307,13 @@
             "groupId": "SRG-OS-000466-GPOS-00210",
             "ruleId": "SV-86827r3_rule",
             "stigId": "RHEL-07-030900",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7915,10 +8363,13 @@
             "groupId": "SRG-OS-000466-GPOS-00210",
             "ruleId": "SV-86829r3_rule",
             "stigId": "RHEL-07-030910",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -7968,10 +8419,13 @@
             "groupId": "SRG-OS-000466-GPOS-00210",
             "ruleId": "SV-86831r3_rule",
             "stigId": "RHEL-07-030920",
-            "cci": "CCI-000172; CCI-002884",
+            "cci": [
+              "CCI-000172",
+              "CCI-002884"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-12 c",
+              "MA-4 (1) (a)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -8021,7 +8475,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86833r1_rule",
             "stigId": "RHEL-07-031000",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -8058,10 +8514,19 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86835r1_rule",
             "stigId": "RHEL-07-031010",
-            "cci": "CCI-000318; CCI-000368; CCI-001812; CCI-001813; CCI-001814",
+            "cci": [
+              "CCI-000318",
+              "CCI-000368",
+              "CCI-001812",
+              "CCI-001813",
+              "CCI-001814"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "CM-3 f",
+              "CM-6 c",
+              "CM-11 (2)",
+              "CM-5 (1) (a)",
+              "CM-5 (1)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -8101,7 +8566,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86837r2_rule",
             "stigId": "RHEL-07-032000",
-            "cci": "CCI-001668",
+            "cci": [
+              "CCI-001668"
+            ],
             "nist": [
               "SI-3 a"
             ],
@@ -8143,7 +8610,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86839r2_rule",
             "stigId": "RHEL-07-032010",
-            "cci": "CCI-001668",
+            "cci": [
+              "CCI-001668"
+            ],
             "nist": [
               "SI-3 a"
             ],
@@ -8185,7 +8654,9 @@
             "groupId": "SRG-OS-000027-GPOS-00008",
             "ruleId": "SV-86841r1_rule",
             "stigId": "RHEL-07-040000",
-            "cci": "CCI-000054",
+            "cci": [
+              "CCI-000054"
+            ],
             "nist": [
               "AC-10"
             ],
@@ -8222,10 +8693,13 @@
             "groupId": "SRG-OS-000096-GPOS-00050",
             "ruleId": "SV-86843r1_rule",
             "stigId": "RHEL-07-040100",
-            "cci": "CCI-000382; CCI-002314",
+            "cci": [
+              "CCI-000382",
+              "CCI-002314"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "CM-7 b",
+              "AC-17 (1)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -8249,7 +8723,7 @@
           "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingDetails\": \"skipped\\nThis test currently has no automated tests, you must check manually\\nThis check must be preformed manually\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72219\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000096-GPOS-00050\",\n  \"ruleId\": \"SV-86843r1_rule\",\n  \"ruleVersion\": \"RHEL-07-040100\",\n  \"ruleTitle\": \"The host must be configured to prohibit or restrict the use of\\nfunctions, ports, protocols, and/or services, as defined in the Ports,\\nProtocols, and Services Management Component Local Service Assessment (PPSM\\nCLSA) and vulnerability assessments.\",\n  \"vulnDiscuss\": \"In order to prevent unauthorized connection of devices, unauthorized\\ntransfer of information, or unauthorized tunneling (i.e., embedding of data\\ntypes within data types), organizations must disable or restrict unused or\\nunnecessary physical and logical ports/protocols on information systems.\\n\\n    Operating systems are capable of providing a wide variety of functions and\\nservices. Some of the functions and services provided by default may not be\\nnecessary to support essential organizational operations. Additionally, it is\\nsometimes convenient to provide multiple services from a single component\\n(e.g., VPN and IPS); however, doing so increases risk over limiting the\\nservices provided by any one component.\\n\\n    To support the requirements and principles of least functionality, the\\noperating system must support the organizational requirements, providing only\\nessential capabilities and limiting the use of ports, protocols, and/or\\nservices to only those required, authorized, and approved to conduct official\\nbusiness or to address authorized quality of life issues.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Inspect the firewall configuration and running services to\\nverify that it is configured to prohibit or restrict the use of functions,\\nports, protocols, and/or services that are unnecessary or prohibited.\\n\\nCheck which services are currently active with the following command:\\n\\n# firewall-cmd --list-all\\npublic (default, active)\\n  interfaces: enp0s3\\n  sources:\\n  services: dhcpv6-client dns http https ldaps rpc-bind ssh\\n  ports:\\n  masquerade: no\\n  forward-ports:\\n  icmp-blocks:\\n  rich rules:\\n\\nAsk the System Administrator for the site or program PPSM CLSA. Verify the\\nservices allowed by the firewall match the PPSM CLSA.\\n\\nIf there are additional ports, protocols, or services that are not in the PPSM\\nCLSA, or there are ports, protocols, or services that are prohibited by the\\nPPSM Category Assurance List (CAL), this is a finding.\",\n  \"fixText\": \"Update the host's firewall settings and/or running services to\\ncomply with the PPSM CLSA for the site or program and the PPSM CAL.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"430101e5-b8ba-40c0-969a-e7230a60bde1\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000382; CCI-002314\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "This test currently has no automated tests, you must check manually\nThis check must be preformed manually",
               "status": "skipped",
               "start_time": ""
             }
@@ -8260,10 +8734,15 @@
             "groupId": "SRG-OS-000033-GPOS-00014",
             "ruleId": "SV-86845r2_rule",
             "stigId": "RHEL-07-040110",
-            "cci": "CCI-000068; CCI-000366; CCI-000803",
+            "cci": [
+              "CCI-000068",
+              "CCI-000366",
+              "CCI-000803"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-17 (2)",
+              "CM-6 b",
+              "IA-7"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -8298,10 +8777,13 @@
             "groupId": "SRG-OS-000163-GPOS-00072",
             "ruleId": "SV-86847r3_rule",
             "stigId": "RHEL-07-040160",
-            "cci": "CCI-001133; CCI-002361",
+            "cci": [
+              "CCI-001133",
+              "CCI-002361"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "SC-10",
+              "AC-12"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -8441,10 +8923,21 @@
             "groupId": "SRG-OS-000023-GPOS-00006",
             "ruleId": "SV-86849r3_rule",
             "stigId": "RHEL-07-040170",
-            "cci": "CCI-000048; CCI-000050; CCI-001384; CCI-001385; CCI-001386; CCI-001387; CCI-001388",
+            "cci": [
+              "CCI-000048",
+              "CCI-000050",
+              "CCI-001384",
+              "CCI-001385",
+              "CCI-001386",
+              "CCI-001387",
+              "CCI-001388"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-8 a",
+              "AC-8 b",
+              "AC-8 c 1",
+              "AC-8 c 2",
+              "AC-8 c 3"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -8479,7 +8972,9 @@
             "groupId": "SRG-OS-000250-GPOS-00093",
             "ruleId": "SV-86851r2_rule",
             "stigId": "RHEL-07-040180",
-            "cci": "CCI-001453",
+            "cci": [
+              "CCI-001453"
+            ],
             "nist": [
               "AC-17 (2)"
             ],
@@ -8505,7 +9000,7 @@
           "code": "{\n  \"status\": \"Not Applicable\",\n  \"findingDetails\": \"skipped\\nLDAP not enabled\\nLDAP not enabled using any known mechanisms, this control is Not Applicable.\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72227\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000250-GPOS-00093\",\n  \"ruleId\": \"SV-86851r2_rule\",\n  \"ruleVersion\": \"RHEL-07-040180\",\n  \"ruleTitle\": \"The operating system must implement cryptography to protect the\\nintegrity of Lightweight Directory Access Protocol (LDAP) authentication\\ncommunications.\",\n  \"vulnDiscuss\": \"Without cryptographic integrity protections, information can be altered by\\nunauthorized users without detection.\\n\\n    Cryptographic mechanisms used for protecting the integrity of information\\ninclude, for example, signed hash functions using asymmetric cryptography\\nenabling distribution of the public key to verify the hash information while\\nmaintaining the confidentiality of the key used to generate the hash.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the operating system implements cryptography to protect\\nthe integrity of remote LDAP authentication sessions.\\n\\nTo determine if LDAP is being used for authentication, use the following\\ncommand:\\n\\n# grep -i useldapauth /etc/sysconfig/authconfig\\nUSELDAPAUTH=yes\\n\\nIf USELDAPAUTH=yes, then LDAP is being used. To see if LDAP is configured to\\nuse TLS, use the following command:\\n\\n# grep -i ssl /etc/pam_ldap.conf\\nssl start_tls\\n\\nIf the \\\"ssl\\\" option is not \\\"start_tls\\\", this is a finding.\",\n  \"fixText\": \"Configure the operating system to implement cryptography to\\nprotect the integrity of LDAP authentication sessions.\\n\\nSet the USELDAPAUTH=yes in \\\"/etc/sysconfig/authconfig\\\".\\n\\nSet \\\"ssl start_tls\\\" in \\\"/etc/pam_ldap.conf\\\".\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"c5194b57-ebc5-414b-a9a7-22102ff739f8\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001453\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "LDAP not enabled\nLDAP not enabled using any known mechanisms, this control is Not Applicable.",
               "status": "skipped",
               "start_time": ""
             }
@@ -8516,7 +9011,9 @@
             "groupId": "SRG-OS-000250-GPOS-00093",
             "ruleId": "SV-86853r2_rule",
             "stigId": "RHEL-07-040190",
-            "cci": "CCI-001453",
+            "cci": [
+              "CCI-001453"
+            ],
             "nist": [
               "AC-17 (2)"
             ],
@@ -8542,7 +9039,7 @@
           "code": "{\n  \"status\": \"Not Applicable\",\n  \"findingDetails\": \"skipped\\nLDAP not enabled\\nLDAP not enabled using any known mechanisms, this control is Not Applicable.\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72229\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000250-GPOS-00093\",\n  \"ruleId\": \"SV-86853r2_rule\",\n  \"ruleVersion\": \"RHEL-07-040190\",\n  \"ruleTitle\": \"The operating system must implement cryptography to protect the\\nintegrity of Lightweight Directory Access Protocol (LDAP) communications.\",\n  \"vulnDiscuss\": \"Without cryptographic integrity protections, information can be altered by\\nunauthorized users without detection.\\n\\n    Cryptographic mechanisms used for protecting the integrity of information\\ninclude, for example, signed hash functions using asymmetric cryptography\\nenabling distribution of the public key to verify the hash information while\\nmaintaining the confidentiality of the key used to generate the hash.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the operating system implements cryptography to protect\\nthe integrity of remote LDAP access sessions.\\n\\nTo determine if LDAP is being used for authentication, use the following\\ncommand:\\n\\n# grep -i useldapauth /etc/sysconfig/authconfig\\nUSELDAPAUTH=yes\\n\\nIf USELDAPAUTH=yes, then LDAP is being used.\\n\\nCheck for the directory containing X.509 certificates for peer authentication\\nwith the following command:\\n\\n# grep -i cacertdir /etc/pam_ldap.conf\\ntls_cacertdir /etc/openldap/certs\\n\\nVerify the directory set with the \\\"tls_cacertdir\\\" option exists.\\n\\nIf the directory does not exist or the option is commented out, this is a\\nfinding.\",\n  \"fixText\": \"Configure the operating system to implement cryptography to\\nprotect the integrity of LDAP remote access sessions.\\n\\nSet the \\\"tls_cacertdir\\\" option in \\\"/etc/pam_ldap.conf\\\" to point to the\\ndirectory that will contain the X.509 certificates for peer authentication.\\n\\nSet the \\\"tls_cacertfile\\\" option in \\\"/etc/pam_ldap.conf\\\" to point to the\\npath for the X.509 certificates used for peer authentication.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"433821a8-2210-4df5-a9c7-a714f26f4b5b\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001453\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "LDAP not enabled\nLDAP not enabled using any known mechanisms, this control is Not Applicable.",
               "status": "skipped",
               "start_time": ""
             }
@@ -8553,7 +9050,9 @@
             "groupId": "SRG-OS-000250-GPOS-00093",
             "ruleId": "SV-86855r2_rule",
             "stigId": "RHEL-07-040200",
-            "cci": "CCI-001453",
+            "cci": [
+              "CCI-001453"
+            ],
             "nist": [
               "AC-17 (2)"
             ],
@@ -8579,7 +9078,7 @@
           "code": "{\n  \"status\": \"Not Applicable\",\n  \"findingDetails\": \"skipped\\nLDAP not enabled\\nLDAP not enabled using any known mechanisms, this control is Not Applicable.\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72231\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000250-GPOS-00093\",\n  \"ruleId\": \"SV-86855r2_rule\",\n  \"ruleVersion\": \"RHEL-07-040200\",\n  \"ruleTitle\": \"The operating system must implement cryptography to protect the\\nintegrity of Lightweight Directory Access Protocol (LDAP) communications.\",\n  \"vulnDiscuss\": \"Without cryptographic integrity protections, information can be altered by\\nunauthorized users without detection.\\n\\n    Cryptographic mechanisms used for protecting the integrity of information\\ninclude, for example, signed hash functions using asymmetric cryptography\\nenabling distribution of the public key to verify the hash information while\\nmaintaining the confidentiality of the key used to generate the hash.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the operating system implements cryptography to protect\\nthe integrity of remote ldap access sessions.\\n\\nTo determine if LDAP is being used for authentication, use the following\\ncommand:\\n\\n# grep -i useldapauth /etc/sysconfig/authconfig\\nUSELDAPAUTH=yes\\n\\nIf USELDAPAUTH=yes, then LDAP is being used.\\n\\nCheck that the path to the X.509 certificate for peer authentication with the\\nfollowing command:\\n\\n# grep -i cacertfile /etc/pam_ldap.conf\\ntls_cacertfile /etc/openldap/ldap-cacert.pem\\n\\nVerify the \\\"tls_cacertfile\\\" option points to a file that contains the trusted\\nCA certificate.\\n\\nIf this file does not exist, or the option is commented out or missing, this is\\na finding.\",\n  \"fixText\": \"Configure the operating system to implement cryptography to\\nprotect the integrity of LDAP remote access sessions.\\n\\nSet the \\\"tls_cacertfile\\\" option in \\\"/etc/pam_ldap.conf\\\" to point to the\\npath for the X.509 certificates used for peer authentication.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"6694b7a1-97de-4421-b45d-f2f58b930e2c\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001453\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "LDAP not enabled\nLDAP not enabled using any known mechanisms, this control is Not Applicable.",
               "status": "skipped",
               "start_time": ""
             }
@@ -8590,10 +9089,16 @@
             "groupId": "SRG-OS-000423-GPOS-00187",
             "ruleId": "SV-86857r2_rule",
             "stigId": "RHEL-07-040300",
-            "cci": "CCI-002418; CCI-002420; CCI-002421; CCI-002422",
+            "cci": [
+              "CCI-002418",
+              "CCI-002420",
+              "CCI-002421",
+              "CCI-002422"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "SC-8",
+              "SC-8 (2)",
+              "SC-8 (1)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -8633,10 +9138,16 @@
             "groupId": "SRG-OS-000423-GPOS-00187",
             "ruleId": "SV-86859r2_rule",
             "stigId": "RHEL-07-040310",
-            "cci": "CCI-002418; CCI-002420; CCI-002421; CCI-002422",
+            "cci": [
+              "CCI-002418",
+              "CCI-002420",
+              "CCI-002421",
+              "CCI-002422"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "SC-8",
+              "SC-8 (2)",
+              "SC-8 (1)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -8671,10 +9182,13 @@
             "groupId": "SRG-OS-000163-GPOS-00072",
             "ruleId": "SV-86861r3_rule",
             "stigId": "RHEL-07-040320",
-            "cci": "CCI-001133; CCI-002361",
+            "cci": [
+              "CCI-001133",
+              "CCI-002361"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "SC-10",
+              "AC-12"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -8719,7 +9233,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86863r3_rule",
             "stigId": "RHEL-07-040330",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -8756,10 +9272,13 @@
             "groupId": "SRG-OS-000163-GPOS-00072",
             "ruleId": "SV-86865r3_rule",
             "stigId": "RHEL-07-040340",
-            "cci": "CCI-001133; CCI-002361",
+            "cci": [
+              "CCI-001133",
+              "CCI-002361"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "SC-10",
+              "AC-12"
             ],
             "severity_override": "low",
             "weight": "10.0"
@@ -8783,7 +9302,7 @@
           "code": "{\n  \"status\": \"Not Applicable\",\n  \"findingDetails\": \"skipped\\nThe release is 7.6.1810\\nThe release is newer than 7.4; this control is Not Applicable.\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72241\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000163-GPOS-00072\",\n  \"ruleId\": \"SV-86865r3_rule\",\n  \"ruleVersion\": \"RHEL-07-040340\",\n  \"ruleTitle\": \"All network connections associated with SSH traffic must terminate\\nafter a period of inactivity.\",\n  \"vulnDiscuss\": \"Terminating an idle SSH session within a short time period reduces the\\nwindow of opportunity for unauthorized personnel to take control of a\\nmanagement session enabled on the console or console port that has been left\\nunattended. In addition, quickly terminating an idle SSH session will also free\\nup resources committed by the managed network element.\\n\\n    Terminating network connections associated with communications sessions\\nincludes, for example, de-allocating associated TCP/IP address/port pairs at\\nthe operating system level and de-allocating networking assignments at the\\napplication level if multiple application sessions are using a single operating\\nsystem-level network connection. This does not mean that the operating system\\nterminates all sessions or network access; it only ends the inactive session\\nand releases the resources associated with that session.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Check the version of the operating system with the following\\ncommand:\\n\\n# cat /etc/redhat-release\\n\\nIf the release is 7.4 or newer this requirement is Not Applicable.\\n\\nVerify the operating system automatically terminates a user session after\\ninactivity time-outs have expired.\\n\\nCheck for the value of the \\\"ClientAliveCountMax\\\" keyword with the following\\ncommand:\\n\\n# grep -i clientalivecount /etc/ssh/sshd_config\\nClientAliveCountMax 0\\n\\nIf \\\"ClientAliveCountMax\\\" is not set to \\\"0\\\" in \\\"/etc/ ssh/sshd_config\\\",\\nthis is a finding.\",\n  \"fixText\": \"Configure the operating system to automatically terminate a user\\nsession after inactivity time-outs have expired or at shutdown.\\n\\nAdd the following line (or modify the line to have the required value) to the\\n\\\"/etc/ssh/sshd_config\\\" file (this file may be named differently or be in a\\ndifferent location if using a version of SSH that is provided by a third-party\\nvendor):\\n\\nClientAliveCountMax 0\\n\\nThe SSH service must be restarted for changes to take effect.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"1e2287c1-fb83-4fb3-83e8-5571f4d99392\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001133; CCI-002361\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "The release is 7.6.1810\nThe release is newer than 7.4; this control is Not Applicable.",
               "status": "skipped",
               "start_time": ""
             }
@@ -8794,7 +9313,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86867r2_rule",
             "stigId": "RHEL-07-040350",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -8831,7 +9352,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86869r2_rule",
             "stigId": "RHEL-07-040360",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -8873,7 +9396,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86871r2_rule",
             "stigId": "RHEL-07-040370",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -8910,7 +9435,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86873r2_rule",
             "stigId": "RHEL-07-040380",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -8947,10 +9474,13 @@
             "groupId": "SRG-OS-000074-GPOS-00042",
             "ruleId": "SV-86875r3_rule",
             "stigId": "RHEL-07-040390",
-            "cci": "CCI-000197; CCI-000366",
+            "cci": [
+              "CCI-000197",
+              "CCI-000366"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "IA-5 (1) (c)",
+              "CM-6 b"
             ],
             "severity_override": "low",
             "weight": "10.0"
@@ -8974,7 +9504,7 @@
           "code": "{\n  \"status\": \"Not Applicable\",\n  \"findingDetails\": \"skipped\\nThe release is 7.6.1810\\nThe release is newer than 7.4; this control is Not Applicable.\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72251\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000074-GPOS-00042\",\n  \"ruleId\": \"SV-86875r3_rule\",\n  \"ruleVersion\": \"RHEL-07-040390\",\n  \"ruleTitle\": \"The SSH daemon must be configured to only use the SSHv2 protocol.\",\n  \"vulnDiscuss\": \"SSHv1 is an insecure implementation of the SSH protocol and has many\\nwell-known vulnerability exploits. Exploits of the SSH daemon could provide\\nimmediate root access to the system.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Check the version of the operating system with the following\\ncommand:\\n\\n# cat /etc/redhat-release\\n\\nIf the release is 7.4 or newer this requirement is Not Applicable.\\n\\nVerify the SSH daemon is configured to only use the SSHv2 protocol.\\n\\nCheck that the SSH daemon is configured to only use the SSHv2 protocol with the\\nfollowing command:\\n\\n# grep -i protocol /etc/ssh/sshd_config\\nProtocol 2\\n#Protocol 1,2\\n\\nIf any protocol line other than \\\"Protocol 2\\\" is uncommented, this is a\\nfinding.\",\n  \"fixText\": \"Remove all Protocol lines that reference version \\\"1\\\" in\\n\\\"/etc/ssh/sshd_config\\\" (this file may be named differently or be in a\\ndifferent location if using a version of SSH that is provided by a third-party\\nvendor). The \\\"Protocol\\\" line must be as follows:\\n\\nProtocol 2\\n\\nThe SSH service must be restarted for changes to take effect.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"855d1887-4be4-45fc-b8e1-7e6b55da20e8\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000197; CCI-000366\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "The release is 7.6.1810\nThe release is newer than 7.4; this control is Not Applicable.",
               "status": "skipped",
               "start_time": ""
             }
@@ -8985,7 +9515,9 @@
             "groupId": "SRG-OS-000250-GPOS-00093",
             "ruleId": "SV-86877r2_rule",
             "stigId": "RHEL-07-040400",
-            "cci": "CCI-001453",
+            "cci": [
+              "CCI-001453"
+            ],
             "nist": [
               "AC-17 (2)"
             ],
@@ -9022,7 +9554,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86879r1_rule",
             "stigId": "RHEL-07-040410",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9059,7 +9593,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86881r1_rule",
             "stigId": "RHEL-07-040420",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9196,10 +9732,19 @@
             "groupId": "SRG-OS-000364-GPOS-00151",
             "ruleId": "SV-86883r2_rule",
             "stigId": "RHEL-07-040430",
-            "cci": "CCI-000318; CCI-000368; CCI-001812; CCI-001813; CCI-001814",
+            "cci": [
+              "CCI-000318",
+              "CCI-000368",
+              "CCI-001812",
+              "CCI-001813",
+              "CCI-001814"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "CM-3 f",
+              "CM-6 c",
+              "CM-11 (2)",
+              "CM-5 (1) (a)",
+              "CM-5 (1)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -9234,10 +9779,19 @@
             "groupId": "SRG-OS-000364-GPOS-00151",
             "ruleId": "SV-86885r2_rule",
             "stigId": "RHEL-07-040440",
-            "cci": "CCI-000318; CCI-000368; CCI-001812; CCI-001813; CCI-001814",
+            "cci": [
+              "CCI-000318",
+              "CCI-000368",
+              "CCI-001812",
+              "CCI-001813",
+              "CCI-001814"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "CM-3 f",
+              "CM-6 c",
+              "CM-11 (2)",
+              "CM-5 (1) (a)",
+              "CM-5 (1)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -9272,7 +9826,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86887r2_rule",
             "stigId": "RHEL-07-040450",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9309,7 +9865,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86889r2_rule",
             "stigId": "RHEL-07-040460",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9351,7 +9909,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86891r2_rule",
             "stigId": "RHEL-07-040470",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9393,10 +9953,13 @@
             "groupId": "SRG-OS-000355-GPOS-00143",
             "ruleId": "SV-86893r2_rule",
             "stigId": "RHEL-07-040500",
-            "cci": "CCI-001891; CCI-002046",
+            "cci": [
+              "CCI-001891",
+              "CCI-002046"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AU-8 (1) (a)",
+              "AU-8 (1) (b)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -9446,7 +10009,9 @@
             "groupId": "SRG-OS-000420-GPOS-00186",
             "ruleId": "SV-86895r2_rule",
             "stigId": "RHEL-07-040510",
-            "cci": "CCI-002385",
+            "cci": [
+              "CCI-002385"
+            ],
             "nist": [
               "SC-5 a"
             ],
@@ -9498,7 +10063,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86897r1_rule",
             "stigId": "RHEL-07-040520",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9545,7 +10112,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86899r2_rule",
             "stigId": "RHEL-07-040530",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9592,7 +10161,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86901r1_rule",
             "stigId": "RHEL-07-040540",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9629,7 +10200,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86903r1_rule",
             "stigId": "RHEL-07-040550",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9666,7 +10239,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86905r1_rule",
             "stigId": "RHEL-07-040600",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9708,7 +10283,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86907r1_rule",
             "stigId": "RHEL-07-040610",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9745,7 +10322,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86909r1_rule",
             "stigId": "RHEL-07-040620",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9782,7 +10361,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86911r1_rule",
             "stigId": "RHEL-07-040630",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9819,7 +10400,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86913r2_rule",
             "stigId": "RHEL-07-040640",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9856,7 +10439,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86915r3_rule",
             "stigId": "RHEL-07-040650",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9893,7 +10478,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86917r2_rule",
             "stigId": "RHEL-07-040660",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9930,7 +10517,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86919r1_rule",
             "stigId": "RHEL-07-040670",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -9967,7 +10556,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86921r2_rule",
             "stigId": "RHEL-07-040680",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10019,7 +10610,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86923r2_rule",
             "stigId": "RHEL-07-040690",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10056,10 +10649,19 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86925r1_rule",
             "stigId": "RHEL-07-040700",
-            "cci": "CCI-000318; CCI-000368; CCI-001812; CCI-001813; CCI-001814",
+            "cci": [
+              "CCI-000318",
+              "CCI-000368",
+              "CCI-001812",
+              "CCI-001813",
+              "CCI-001814"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "CM-3 f",
+              "CM-6 c",
+              "CM-11 (2)",
+              "CM-5 (1) (a)",
+              "CM-5 (1)"
             ],
             "severity_override": "high",
             "weight": "10.0"
@@ -10094,7 +10696,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86927r3_rule",
             "stigId": "RHEL-07-040710",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10131,7 +10735,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86929r2_rule",
             "stigId": "RHEL-07-040720",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10157,7 +10763,7 @@
           "code": "{\n  \"status\": \"Not Applicable\",\n  \"findingDetails\": \"skipped\\nThe TFTP package is not installed\\nIf a TFTP server is not installed, this is Not Applicable.\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72305\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000480-GPOS-00227\",\n  \"ruleId\": \"SV-86929r2_rule\",\n  \"ruleVersion\": \"RHEL-07-040720\",\n  \"ruleTitle\": \"If the Trivial File Transfer Protocol (TFTP) server is required, the\\nTFTP daemon must be configured to operate in secure mode.\",\n  \"vulnDiscuss\": \"Restricting TFTP to a specific directory prevents remote users from\\ncopying, transferring, or overwriting system files.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the TFTP daemon is configured to operate in secure mode.\\n\\nCheck to see if a TFTP server has been installed with the following commands:\\n\\n# yum list installed | grep tftp-server\\ntftp-server.x86_64    x.x-x.el7    rhel-7-server-rpms\\n\\nIf a TFTP server is not installed, this is Not Applicable.\\n\\nIf a TFTP server is installed, check for the server arguments with the\\nfollowing command:\\n\\n# grep server_args /etc/xinetd.d/tftp\\nserver_args = -s /var/lib/tftpboot\\n\\nIf the \\\"server_args\\\" line does not have a \\\"-s\\\" option and a subdirectory is\\nnot assigned, this is a finding.\",\n  \"fixText\": \"Configure the TFTP daemon to operate in secure mode by adding the\\nfollowing line to \\\"/etc/xinetd.d/tftp\\\" (or modify the line to have the\\nrequired value):\\n\\nserver_args = -s /var/lib/tftpboot\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"e62e66c6-aa6f-4c7d-bf74-9103bc148477\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000366\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "The TFTP package is not installed\nIf a TFTP server is not installed, this is Not Applicable.",
               "status": "skipped",
               "start_time": ""
             }
@@ -10168,7 +10774,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86931r3_rule",
             "stigId": "RHEL-07-040730",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10205,7 +10813,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86933r1_rule",
             "stigId": "RHEL-07-040740",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10242,7 +10852,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86935r3_rule",
             "stigId": "RHEL-07-040750",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10279,7 +10891,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86937r1_rule",
             "stigId": "RHEL-07-040800",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10305,7 +10919,7 @@
           "code": "{\n  \"status\": \"Not Applicable\",\n  \"findingDetails\": \"skipped\\nThe `snmpd.conf` does not exist\\nThe snmpd.conf file does not exist, this control is Not Applicable\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72313\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000480-GPOS-00227\",\n  \"ruleId\": \"SV-86937r1_rule\",\n  \"ruleVersion\": \"RHEL-07-040800\",\n  \"ruleTitle\": \"SNMP community strings must be changed from the default.\",\n  \"vulnDiscuss\": \"Whether active or not, default Simple Network Management Protocol\\n(SNMP) community strings must be changed to maintain security. If the service\\nis running with the default authenticators, anyone can gather data about the\\nsystem and the network and use the information to potentially compromise the\\nintegrity of the system or network(s). It is highly recommended that SNMP\\nversion 3 user authentication and message encryption be used in place of the\\nversion 2 community strings.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify that a system using SNMP is not using default community\\nstrings.\\n\\nCheck to see if the \\\"/etc/snmp/snmpd.conf\\\" file exists with the following\\ncommand:\\n\\n# ls -al /etc/snmp/snmpd.conf\\n -rw-------   1 root root      52640 Mar 12 11:08 snmpd.conf\\n\\nIf the file does not exist, this is Not Applicable.\\n\\nIf the file does exist, check for the default community strings with the\\nfollowing commands:\\n\\n# grep public /etc/snmp/snmpd.conf\\n# grep private /etc/snmp/snmpd.conf\\n\\nIf either of these commands returns any output, this is a finding.\",\n  \"fixText\": \"If the \\\"/etc/snmp/snmpd.conf\\\" file exists, modify any lines\\nthat contain a community string value of \\\"public\\\" or \\\"private\\\" to another\\nstring value.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"045075c6-a76a-468f-99dd-7f3fa105b940\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000366\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "The `snmpd.conf` does not exist\nThe snmpd.conf file does not exist, this control is Not Applicable",
               "status": "skipped",
               "start_time": ""
             }
@@ -10316,7 +10930,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86939r2_rule",
             "stigId": "RHEL-07-040810",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10342,7 +10958,7 @@
           "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingDetails\": \"skipped\\nThis control must be reviewed manually\\nYou must review this control manually.\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72315\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000480-GPOS-00227\",\n  \"ruleId\": \"SV-86939r2_rule\",\n  \"ruleVersion\": \"RHEL-07-040810\",\n  \"ruleTitle\": \"The system access control program must be configured to grant or deny\\nsystem access to specific hosts and services.\",\n  \"vulnDiscuss\": \"If the systems access control program is not configured with\\nappropriate rules for allowing and denying access to system network resources,\\nservices may be accessible to unauthorized hosts.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"If the \\\"firewalld\\\" package is not installed, ask the System\\nAdministrator (SA) if another firewall application (such as iptables) is\\ninstalled. If an application firewall is not installed, this is a finding.\\n\\nVerify the system's access control program is configured to grant or deny\\nsystem access to specific hosts.\\n\\nCheck to see if \\\"firewalld\\\" is active with the following command:\\n\\n# systemctl status firewalld\\nfirewalld.service - firewalld - dynamic firewall daemon\\n   Loaded: loaded (/usr/lib/systemd/system/firewalld.service; enabled)\\n   Active: active (running) since Sun 2014-04-20 14:06:46 BST; 30s ago\\n\\nIf \\\"firewalld\\\" is active, check to see if it is configured to grant or deny\\naccess to specific hosts or services with the following commands:\\n\\n# firewall-cmd --get-default-zone\\npublic\\n\\n# firewall-cmd --list-all --zone=public\\npublic (default, active)\\n  interfaces: eth0\\n  sources:\\n  services: mdns ssh\\n  ports:\\n  masquerade: no\\n  forward-ports:\\n  icmp-blocks:\\n  rich rules:\\n rule family=\\\"ipv4\\\" source address=\\\"92.188.21.1/24\\\" accept\\n rule family=\\\"ipv4\\\" source address=\\\"211.17.142.46/32\\\" accept\\n\\nIf \\\"firewalld\\\" is not active, determine whether \\\"tcpwrappers\\\" is being used\\nby checking whether the \\\"hosts.allow\\\" and \\\"hosts.deny\\\" files are empty with\\nthe following commands:\\n\\n# ls -al /etc/hosts.allow\\nrw-r----- 1 root root 9 Aug  2 23:13 /etc/hosts.allow\\n\\n# ls -al /etc/hosts.deny\\n-rw-r----- 1 root root  9 Apr  9  2007 /etc/hosts.deny\\n\\nIf \\\"firewalld\\\" and \\\"tcpwrappers\\\" are not installed, configured, and active,\\nask the SA if another access control program (such as iptables) is installed\\nand active. Ask the SA to show that the running configuration grants or denies\\naccess to specific hosts or services.\\n\\nIf \\\"firewalld\\\" is active and is not configured to grant access to specific\\nhosts or \\\"tcpwrappers\\\" is not configured to grant or deny access to specific\\nhosts, this is a finding.\",\n  \"fixText\": \"If \\\"firewalld\\\" is installed and active on the system, configure\\nrules for allowing specific services and hosts.\\n\\nIf \\\"firewalld\\\" is not \\\"active\\\", enable \\\"tcpwrappers\\\" by configuring\\n\\\"/etc/hosts.allow\\\" and \\\"/etc/hosts.deny\\\" to allow or deny access to\\nspecific hosts.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"26760829-7e4f-4362-b981-2801e019957a\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000366\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "This control must be reviewed manually\nYou must review this control manually.",
               "status": "skipped",
               "start_time": ""
             }
@@ -10353,7 +10969,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86941r1_rule",
             "stigId": "RHEL-07-040820",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10379,7 +10997,7 @@
           "code": "{\n  \"status\": \"Not Applicable\",\n  \"findingDetails\": \"skipped\\nThe system does not have libreswan installed or the ipsec.service isn't running\\nThe system does not have libreswan installed or the ipsec.service isn't running, this requirement is Not Applicable.\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-72317\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000480-GPOS-00227\",\n  \"ruleId\": \"SV-86941r1_rule\",\n  \"ruleVersion\": \"RHEL-07-040820\",\n  \"ruleTitle\": \"The system must not have unauthorized IP tunnels configured.\",\n  \"vulnDiscuss\": \"IP tunneling mechanisms can be used to bypass network filtering. If\\ntunneling is required, it must be documented with the Information System\\nSecurity Officer (ISSO).\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the system does not have unauthorized IP tunnels\\nconfigured.\\n\\nCheck to see if \\\"libreswan\\\" is installed with the following command:\\n\\n# yum list installed libreswan\\nopenswan-2.6.32-27.el6.x86_64\\n\\nIf \\\"libreswan\\\" is installed, check to see if the \\\"IPsec\\\" service is active\\nwith the following command:\\n\\n# systemctl status ipsec\\nipsec.service - Internet Key Exchange (IKE) Protocol Daemon for IPsec\\n   Loaded: loaded (/usr/lib/systemd/system/ipsec.service; disabled)\\n   Active: inactive (dead)\\n\\nIf the \\\"IPsec\\\" service is active, check to see if any tunnels are configured\\nin \\\"/etc/ipsec.conf\\\" and \\\"/etc/ipsec.d/\\\" with the following commands:\\n\\n# grep -i conn /etc/ipsec.conf\\nconn mytunnel\\n\\n# grep -i conn /etc/ipsec.d/*.conf\\nconn mytunnel\\n\\nIf there are indications that a \\\"conn\\\" parameter is configured for a tunnel,\\nask the System Administrator if the tunnel is documented with the ISSO. If\\n\\\"libreswan\\\" is installed, \\\"IPsec\\\" is active, and an undocumented tunnel is\\nactive, this is a finding.\",\n  \"fixText\": \"Remove all unapproved tunnels from the system, or document them\\nwith the ISSO.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"f9d49c88-497f-417d-96d8-70483afced75\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000366\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "The system does not have libreswan installed or the ipsec.service isn't running\nThe system does not have libreswan installed or the ipsec.service isn't running, this requirement is Not Applicable.",
               "status": "skipped",
               "start_time": ""
             }
@@ -10390,7 +11008,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-86943r1_rule",
             "stigId": "RHEL-07-040830",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10427,10 +11047,14 @@
             "groupId": "SRG-OS-000375-GPOS-00160",
             "ruleId": "SV-87041r2_rule",
             "stigId": "RHEL-07-041001",
-            "cci": "CCI-001948; CCI-001953; CCI-001954",
+            "cci": [
+              "CCI-001948",
+              "CCI-001953",
+              "CCI-001954"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "IA-2 (11)",
+              "IA-2 (12)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -10475,10 +11099,14 @@
             "groupId": "SRG-OS-000375-GPOS-00160",
             "ruleId": "SV-87051r3_rule",
             "stigId": "RHEL-07-041002",
-            "cci": "CCI-001948; CCI-001953; CCI-001954",
+            "cci": [
+              "CCI-001948",
+              "CCI-001953",
+              "CCI-001954"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "IA-2 (11)",
+              "IA-2 (12)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -10513,10 +11141,14 @@
             "groupId": "SRG-OS-000375-GPOS-00160",
             "ruleId": "SV-87057r4_rule",
             "stigId": "RHEL-07-041003",
-            "cci": "CCI-001948; CCI-001953; CCI-001954",
+            "cci": [
+              "CCI-001948",
+              "CCI-001953",
+              "CCI-001954"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "IA-2 (11)",
+              "IA-2 (12)"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -10551,7 +11183,9 @@
             "groupId": "SRG-OS-000375-GPOS-00160",
             "ruleId": "SV-87059r2_rule",
             "stigId": "RHEL-07-041004",
-            "cci": "CCI-001954",
+            "cci": [
+              "CCI-001954"
+            ],
             "nist": [
               "IA-2 (12)"
             ],
@@ -10593,7 +11227,9 @@
             "groupId": "SRG-OS-000029-GPOS-00010",
             "ruleId": "SV-87807r3_rule",
             "stigId": "RHEL-07-010081",
-            "cci": "CCI-000057",
+            "cci": [
+              "CCI-000057"
+            ],
             "nist": [
               "AC-11 a"
             ],
@@ -10630,7 +11266,9 @@
             "groupId": "SRG-OS-000029-GPOS-00010",
             "ruleId": "SV-87809r3_rule",
             "stigId": "RHEL-07-010082",
-            "cci": "CCI-000057",
+            "cci": [
+              "CCI-000057"
+            ],
             "nist": [
               "AC-11 a"
             ],
@@ -10667,7 +11305,9 @@
             "groupId": "SRG-OS-000069-GPOS-00037",
             "ruleId": "SV-87811r3_rule",
             "stigId": "RHEL-07-010119",
-            "cci": "CCI-000192",
+            "cci": [
+              "CCI-000192"
+            ],
             "nist": [
               "IA-5 (1) (a)"
             ],
@@ -10714,7 +11354,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-87813r1_rule",
             "stigId": "RHEL-07-021021",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10751,7 +11393,9 @@
             "groupId": "SRG-OS-000342-GPOS-00133",
             "ruleId": "SV-87815r2_rule",
             "stigId": "RHEL-07-030321",
-            "cci": "CCI-001851",
+            "cci": [
+              "CCI-001851"
+            ],
             "nist": [
               "AU-4 (1)"
             ],
@@ -10777,7 +11421,7 @@
           "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingDetails\": \"skipped\\nParse Config File /etc/audisp/audisp-remote.conf\\nCan't find file: /etc/audisp/audisp-remote.conf\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-73163\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000342-GPOS-00133\",\n  \"ruleId\": \"SV-87815r2_rule\",\n  \"ruleVersion\": \"RHEL-07-030321\",\n  \"ruleTitle\": \"The audit system must take appropriate action when there is an error\\nsending audit records to a remote system.\",\n  \"vulnDiscuss\": \"Taking appropriate action when there is an error sending audit records\\nto a remote system will minimize the possibility of losing audit records.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the action the operating system takes if there is an\\nerror sending audit records to a remote system.\\n\\nCheck the action that takes place if there is an error sending audit records to\\na remote system with the following command:\\n\\n# grep -i network_failure_action /etc/audisp/audisp-remote.conf\\nnetwork_failure_action = stop\\n\\nIf the value of the \\\"network_failure_action\\\" option is not \\\"syslog\\\",\\n\\\"single\\\", or \\\"halt\\\", or the line is commented out, this is a finding.\",\n  \"fixText\": \"Configure the action the operating system takes if there is an\\nerror sending audit records to a remote system.\\n\\nUncomment the \\\"network_failure_action\\\" option in\\n\\\"/etc/audisp/audisp-remote.conf\\\" and set it to \\\"syslog\\\", \\\"single\\\", or\\n\\\"halt\\\".\\n\\nnetwork_failure_action = single\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"c236b518-2a5a-436c-9d39-c5215757322d\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001851\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "Parse Config File /etc/audisp/audisp-remote.conf\nCan't find file: /etc/audisp/audisp-remote.conf",
               "status": "skipped",
               "start_time": ""
             }
@@ -10788,10 +11432,15 @@
             "groupId": "SRG-OS-000004-GPOS-00004",
             "ruleId": "SV-87817r2_rule",
             "stigId": "RHEL-07-030871",
-            "cci": "CCI-000018; CCI-000172; CCI-001403; CCI-002130",
+            "cci": [
+              "CCI-000018",
+              "CCI-000172",
+              "CCI-001403",
+              "CCI-002130"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-2 (4)",
+              "AU-12 c"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -10831,10 +11480,15 @@
             "groupId": "SRG-OS-000004-GPOS-00004",
             "ruleId": "SV-87819r3_rule",
             "stigId": "RHEL-07-030872",
-            "cci": "CCI-000018; CCI-000172; CCI-001403; CCI-002130",
+            "cci": [
+              "CCI-000018",
+              "CCI-000172",
+              "CCI-001403",
+              "CCI-002130"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-2 (4)",
+              "AU-12 c"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -10874,10 +11528,15 @@
             "groupId": "SRG-OS-000004-GPOS-00004",
             "ruleId": "SV-87823r3_rule",
             "stigId": "RHEL-07-030873",
-            "cci": "CCI-000018; CCI-000172; CCI-001403; CCI-002130",
+            "cci": [
+              "CCI-000018",
+              "CCI-000172",
+              "CCI-001403",
+              "CCI-002130"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-2 (4)",
+              "AU-12 c"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -10917,10 +11576,15 @@
             "groupId": "SRG-OS-000004-GPOS-00004",
             "ruleId": "SV-87825r4_rule",
             "stigId": "RHEL-07-030874",
-            "cci": "CCI-000018; CCI-000172; CCI-001403; CCI-002130",
+            "cci": [
+              "CCI-000018",
+              "CCI-000172",
+              "CCI-001403",
+              "CCI-002130"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-2 (4)",
+              "AU-12 c"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -10960,7 +11624,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-87827r3_rule",
             "stigId": "RHEL-07-040641",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -10997,10 +11663,14 @@
             "groupId": "SRG-OS-000424-GPOS-00188",
             "ruleId": "SV-87829r1_rule",
             "stigId": "RHEL-07-041010",
-            "cci": "CCI-001443; CCI-001444; CCI-002418",
+            "cci": [
+              "CCI-001443",
+              "CCI-001444",
+              "CCI-002418"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "AC-18 (1)",
+              "SC-8"
             ],
             "severity_override": "medium",
             "weight": "10.0"
@@ -11035,10 +11705,14 @@
             "groupId": "SRG-OS-000375-GPOS-00160",
             "ruleId": "SV-92515r1_rule",
             "stigId": "RHEL-07-010061",
-            "cci": "CCI-001948; CCI-001953; CCI-001954",
+            "cci": [
+              "CCI-001948",
+              "CCI-001953",
+              "CCI-001954"
+            ],
             "nist": [
-              "SA-11",
-              "RA-5"
+              "IA-2 (11)",
+              "IA-2 (12)"
             ],
             "severity_override": "low",
             "weight": "10.0"
@@ -11062,7 +11736,7 @@
           "code": "{\n  \"status\": \"Not Applicable\",\n  \"findingDetails\": \"skipped\\nThe GNOME desktop is not installed\\nThe GNOME desktop is not installed, this control is Not Applicable.\",\n  \"comments\": \"\",\n  \"severityOverride\": \"\",\n  \"severityJustification\": \"\",\n  \"vulnNum\": \"V-77819\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000375-GPOS-00160\",\n  \"ruleId\": \"SV-92515r1_rule\",\n  \"ruleVersion\": \"RHEL-07-010061\",\n  \"ruleTitle\": \"The operating system must uniquely identify and must authenticate\\nusers using multifactor authentication via a graphical user logon.\",\n  \"vulnDiscuss\": \"To assure accountability and prevent unauthenticated access, users must be\\nidentified and authenticated to prevent potential misuse and compromise of the\\nsystem.\\n\\n    Multifactor solutions that require devices separate from information\\nsystems gaining access include, for example, hardware tokens providing\\ntime-based or challenge-response authenticators and smart cards such as the\\nU.S. Government Personal Identity Verification card and the DoD Common Access\\nCard.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the operating system uniquely identifies and\\nauthenticates users using multifactor authentication via a graphical user logon.\\n\\nNote: If the system does not have GNOME installed, this requirement is Not\\nApplicable.\\n\\nDetermine which profile the system database is using with the following command:\\n\\n# grep system-db /etc/dconf/profile/user\\n\\nsystem-db:local\\n\\nNote: The example is using the database local for the system, so the path is\\n\\\"/etc/dconf/db/local.d\\\". This path must be modified if a database other than\\nlocal is being used.\\n\\n# grep enable-smartcard-authentication /etc/dconf/db/local.d/*\\n\\nenable-smartcard-authentication=true\\n\\nIf \\\"enable-smartcard-authentication\\\" is set to \\\"false\\\" or the keyword is\\nmissing, this is a finding.\",\n  \"fixText\": \"Configure the operating system to uniquely identify and\\nauthenticate users using multifactor authentication via a graphical user logon.\\n\\nNote: If the system does not have GNOME installed, this requirement is Not\\nApplicable.\\n\\nCreate a database to contain the system-wide screensaver settings (if it does\\nnot already exist) with the following command:\\n\\nNote: The example is using the database local for the system, so if the system\\nis using another database in \\\"/etc/dconf/profile/user\\\", the file should be\\ncreated under the appropriate subdirectory.\\n\\n# touch /etc/dconf/db/local.d/00-defaults\\n\\nAdd the setting to enable smartcard login:\\nenable-smartcard-authentication=true\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"\",\n  \"stigRef\": \"disa_stig-el7 \",\n  \"targetKey\": \"0\",\n  \"stigUuid\": \"dc660e6b-e5bf-4d06-bb44-a70e4b0eaa70\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001948; CCI-001953; CCI-001954\"\n}",
           "results": [
             {
-              "code_desc": "skipped",
+              "code_desc": "The GNOME desktop is not installed\nThe GNOME desktop is not installed, this control is Not Applicable.",
               "status": "skipped",
               "start_time": ""
             }
@@ -11073,7 +11747,9 @@
             "groupId": "SRG-OS-000378-GPOS-00163",
             "ruleId": "SV-92517r1_rule",
             "stigId": "RHEL-07-020101",
-            "cci": "CCI-001958",
+            "cci": [
+              "CCI-001958"
+            ],
             "nist": [
               "IA-3"
             ],
@@ -11115,7 +11791,9 @@
             "groupId": "SRG-OS-000080-GPOS-00048",
             "ruleId": "SV-92519r1_rule",
             "stigId": "RHEL-07-010481",
-            "cci": "CCI-000213",
+            "cci": [
+              "CCI-000213"
+            ],
             "nist": [
               "AC-3"
             ],
@@ -11152,7 +11830,9 @@
             "groupId": "SRG-OS-000480-GPOS-00227",
             "ruleId": "SV-92521r1_rule",
             "stigId": "RHEL-07-040201",
-            "cci": "CCI-000366",
+            "cci": [
+              "CCI-000366"
+            ],
             "nist": [
               "CM-6 b"
             ],
@@ -11189,7 +11869,9 @@
             "groupId": "SRG-OS-000029-GPOS-00010",
             "ruleId": "SV-93701r1_rule",
             "stigId": "RHEL-07-010062",
-            "cci": "CCI-000057",
+            "cci": [
+              "CCI-000057"
+            ],
             "nist": [
               "AC-11 a"
             ],
@@ -11226,7 +11908,9 @@
             "groupId": "SRG-OS-000029-GPOS-00010",
             "ruleId": "SV-93703r1_rule",
             "stigId": "RHEL-07-010101",
-            "cci": "CCI-000057",
+            "cci": [
+              "CCI-000057"
+            ],
             "nist": [
               "AC-11 a"
             ],
@@ -11263,7 +11947,9 @@
             "groupId": "SRG-OS-000471-GPOS-00216",
             "ruleId": "SV-93705r1_rule",
             "stigId": "RHEL-07-030819",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -11315,7 +12001,9 @@
             "groupId": "SRG-OS-000471-GPOS-00216",
             "ruleId": "SV-93707r1_rule",
             "stigId": "RHEL-07-030821",
-            "cci": "CCI-000172",
+            "cci": [
+              "CCI-000172"
+            ],
             "nist": [
               "AU-12 c"
             ],
@@ -11363,7 +12051,7 @@
           ]
         }
       ],
-      "sha256": "ef4ef55e0646bcffa5f4ee07a888ab31bc6fc08b970ab166a3bba2763daa9a96"
+      "sha256": "00fa33a00e87bf2ac51c6ae1c82335d39aeaf61f12e68df957e3783cbfcc9389"
     }
   ],
   "passthrough": {}
