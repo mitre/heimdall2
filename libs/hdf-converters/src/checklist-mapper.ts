@@ -980,7 +980,8 @@ function parseFindingDetails(
       if (
         splitResults[0] === 'passed' ||
         splitResults[0] === 'failed' ||
-        splitResults[0] === 'skipped'
+        splitResults[0] === 'skipped' ||
+        splitResults[0] === 'error'
       ) {
         // TODO: this does not necessarily work when the code_desc has the work expected
         // will need to update the export to add a key word that can be used to split code_desc
@@ -995,7 +996,7 @@ function parseFindingDetails(
           status = splitResults[0];
         }
       } else {
-        codeDesc = splitResults[0];
+        codeDesc = details;
         status = input[0].status;
       }
       const hdfResult: ExecJSON.ControlResult = {
@@ -1019,7 +1020,7 @@ function parseFindingDetails(
 }
 
 /**
- * Inner function that returns appropriate enum value based on param
+ * Transformer function that returns appropriate enum value based on param
  * This is required because the status value of the ControlResult object
  * must be an ExecJSON.ControlResultStatus type
  * @param input - string
@@ -1028,10 +1029,14 @@ function parseFindingDetails(
 function getStatus(input: string): ExecJSON.ControlResultStatus {
   const status = input.toLowerCase();
   switch (status) {
+    case 'notafinding':
     case 'passed':
       return ExecJSON.ControlResultStatus.Passed;
+    case 'open':
     case 'failed':
       return ExecJSON.ControlResultStatus.Failed;
+    case 'error':
+      return ExecJSON.ControlResultStatus.Error;
     default:
       return ExecJSON.ControlResultStatus.Skipped;
   }
@@ -1107,7 +1112,10 @@ export class ChecklistMapper extends BaseConverter {
             results: [
               {
                 arrayTransformer: parseFindingDetails,
-                status: {path: 'status'},
+                status: {
+                  path: 'status',
+                  transformer: getStatus
+                },
                 code_desc: {path: 'findingDetails'},
                 start_time: ''
               }

@@ -14,7 +14,7 @@ HDF Converters supplies several methods to convert various types of security too
 7.  [**ionchannel-mapper**] - SBOM data from Ion Channel
 8.  [**jfrog-xray-mapper**] - JFrog Xray results JSON file
 9.  [**nessus-mapper**] - Nessus XML results file
-10.  [**netsparker-mapper**] - Netsparker XML results file
+10. [**netsparker-mapper**] - Netsparker XML results file
 11. [**nikto-mapper**] - Nikto results JSON file
 12. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
 13. [**sarif-mapper**] - SARIF JSON file
