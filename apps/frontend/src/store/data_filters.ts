@@ -37,6 +37,8 @@ const MAX_CACHE_ENTRIES = 20;
 
 export declare type ExtendedControlStatus = ControlStatus | 'Waived';
 
+export type FilterRecord = boolean | SearchEntry[] | undefined;
+
 /** Contains common filters on data from the store. */
 export interface Filter {
   // General
@@ -454,10 +456,7 @@ export class FilteredData extends VuexModule {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
 
-      const controlFilters: Record<
-        string,
-        boolean | SearchEntry[] | undefined
-      > = {
+      const controlFilters: Record<string, FilterRecord> = {
         'root.hdf.severity': filter.severity,
         'hdf.wraps.id': filter.ids,
         'hdf.wraps.title': filter.titleSearchTerms,
@@ -737,7 +736,7 @@ export function filter_cache_key(f: Filter) {
  */
 export function filterControlsBy(
   controls: readonly ContextualizedControl[],
-  filters: Record<string, boolean | SearchEntry[] | undefined>
+  filters: Record<string, FilterRecord>
 ): readonly ContextualizedControl[] {
   const activeFilters: typeof filters = _.pickBy(
     filters,
@@ -756,11 +755,11 @@ export function filterControlsBy(
       if (Array.isArray(value) && typeof item !== 'boolean') {
         return value?.some((term) => {
           if (!term.negated) {
-            return arrayOrStringIncludes(item, (compareValue) =>
+            return fieldIncludes(item, (compareValue) =>
               compareValue.toLowerCase().includes(term.value.toLowerCase())
             );
           } else {
-            return !arrayOrStringIncludes(item, (compareValue) =>
+            return !fieldIncludes(item, (compareValue) =>
               compareValue.toLowerCase().includes(term.value.toLowerCase())
             );
           }
@@ -812,7 +811,7 @@ export function filterControlsByKeywords(controls: ContextualizedControl[]) {
  */
 export function filterChecklistBy(
   rules: readonly ChecklistVuln[],
-  filters: Record<string, boolean | SearchEntry[] | undefined>
+  filters: Record<string, FilterRecord>
 ): readonly ChecklistVuln[] {
   const activeFilters: typeof filters = _.pickBy(
     filters,
@@ -828,11 +827,11 @@ export function filterChecklistBy(
       if (Array.isArray(value) && typeof item !== 'boolean') {
         return value?.some((term) => {
           if (!term.negated) {
-            return arrayOrStringIncludes(item, (compareValue) =>
+            return fieldIncludes(item, (compareValue) =>
               compareValue.toLowerCase().includes(term.value.toLowerCase())
             );
           } else {
-            return !arrayOrStringIncludes(item, (compareValue) =>
+            return !fieldIncludes(item, (compareValue) =>
               compareValue.toLowerCase().includes(term.value.toLowerCase())
             );
           }
@@ -862,29 +861,36 @@ export function filterRulesByKeywords(rules: ChecklistVuln[]) {
     SearchModule.keywordsSearchTerms.forEach((filter) => {
       if (!filter.negated) {
         result = rules.filter((rule) => {
-          return Object.entries(rule).some((item) => {
-            if (item[1]?.toLowerCase().includes(filter.value)) {
-              return true;
-            } else {
-              return false;
-            }
-          });
+          return rule_contains_term(rule, filter);
         });
       } else {
         result = rules.filter((rule) => {
-          return !Object.entries(rule).some((item) => {
-            if (item[1]?.toLowerCase().includes(filter.value)) {
-              return true;
-            } else {
-              return false;
-            }
-          });
+          return !rule_contains_term(rule, filter);
         });
       }
     });
   }
 
   return result;
+}
+
+/**
+ * Searches rule to see if term exists
+ *
+ * @param rule - Checklist rule to check
+ * @param filter - Filter object to search for
+ * @returns If term exists true, else false
+ *
+ */
+function rule_contains_term(rule: ChecklistVuln, filter: SearchEntry): boolean {
+  // See if any contain filter term
+  return Object.entries(rule).some((item) => {
+    if (item[1]?.toLowerCase().includes(filter.value)) {
+      return true;
+    } else {
+      return false;
+    }
+  });
 }
 
 /**
@@ -900,39 +906,38 @@ export function checklistRules(
   filters: Filter
 ): readonly ChecklistVuln[] {
   // If an attribute name changes in the checklist mapping, make sure it is reflected here
-  const checklistFilters: Record<string, boolean | SearchEntry[] | undefined> =
-    {
-      severity: filters.severity,
-      vulnNum: filters.vulidSearchTerms,
-      ruleId: filters.ruleidSearchTerms,
-      ruleVersion: filters.stigidSearchTerms,
-      class: filters.classificationSearchTerms,
-      groupTitle: filters.groupNameSearchTerms,
-      cciRef: filters.cciSearchTerms,
-      status: _.filter(
-        filters.status,
-        (status: SearchEntry) => status.value !== 'Waived'
-      )
-    };
+  const checklistFilters: Record<string, FilterRecord> = {
+    severity: filters.severity,
+    vulnNum: filters.vulidSearchTerms,
+    ruleId: filters.ruleidSearchTerms,
+    ruleVersion: filters.stigidSearchTerms,
+    class: filters.classificationSearchTerms,
+    groupTitle: filters.groupNameSearchTerms,
+    cciRef: filters.cciSearchTerms,
+    status: _.filter(
+      filters.status,
+      (status: SearchEntry) => status.value !== 'Waived'
+    )
+  };
   const filteredRules = filterChecklistBy(rules, checklistFilters);
   return filteredRules;
 }
 
 /**
- * Iterate over a string or array of strings and call the string compare function provided on every element
+ * Checks provided entry and calls the string compare function provided on every element
  *
- * @param arrayOrString - Value that is of type string or string array
+ * @param entry - Value of the entry
  * @param comparator - Function used to compare
  * @returns A boolean value returned from the comparator function passed
  *
  */
-function arrayOrStringIncludes(
-  arrayOrString: SearchEntry | SearchEntry[],
+function fieldIncludes(
+  entry: SearchEntry | SearchEntry[],
   comparator: (compareValue: string) => boolean
 ) {
-  if (typeof arrayOrString === 'string') {
-    return comparator(arrayOrString);
+  if (typeof entry === 'string') {
+    return comparator(entry);
   } else {
-    //return Array(arrayOrString).some((value) => comparator(value));
+    return false;
   }
 }
