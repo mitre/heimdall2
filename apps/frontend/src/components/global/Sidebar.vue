@@ -125,7 +125,6 @@
                 hide-details
                 @change="changeStatusToggle(item.name)"
               />
-              <!-- numStatus(item.value)  -->
             </v-col>
           </v-row>
           <v-row>
@@ -135,7 +134,6 @@
               :cols="3"
               >{{ item.name }}</v-col
             >
-            <!-- <v-col :cols="3">Short ID</v-col> -->
           </v-row>
           <v-row class="mt-n10">
             <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
@@ -148,17 +146,7 @@
                 hide-details
                 @change="changeSeverityToggle(item.name)"
               />
-              <!-- :label='numSeverity(item.value)'' -->
             </v-col>
-            <!--<v-switch
-            v-model="shortIdEnabled"
-            dense
-            justify="center"
-            inset
-            color="teal"
-            hide-details
-          />
-        </v-col> -->
           </v-row>
           <v-divider class="my-5" />
           <!-- Category Filters -->

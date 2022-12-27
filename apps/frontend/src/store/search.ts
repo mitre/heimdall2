@@ -132,9 +132,10 @@ class Search extends VuexModule implements ISearchState {
   /** Parse search bar to add strings to needed filter category */
   @Action
   parseSearch() {
-    this.clear(); // Look into if this is still needed
+    this.clear();
+    const gatherFreeText = true;
     const freeTextTransformer = (text: string) =>
-      true && {
+      gatherFreeText && {
         key: 'keywords',
         value: text
       };

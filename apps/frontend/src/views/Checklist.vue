@@ -45,11 +45,31 @@
             <!-- Data Table -->
             <v-card height="94vh" overflow-auto>
               <v-card-title class="pt-2">
-                <div>
-                  <strong
-                    >Rules ({{ numItems }} shown,
-                    {{ loadedRules.length - numItems }} hidden)</strong
-                  >
+                <div
+                  style="
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    width: 100%;
+                  "
+                >
+                  <div>
+                    <strong
+                      >Rules ({{ numItems }} shown,
+                      {{ loadedRules.length - numItems }} hidden)</strong
+                    >
+                  </div>
+                  <div style="width: fit-content">
+                    <v-switch
+                      v-model="shortIdEnabled"
+                      style="margin-top: 0; padding-top: 0"
+                      dense
+                      inset
+                      label="Short ID"
+                      color="teal"
+                      hide-details
+                    />
+                  </div>
                 </div>
                 <v-spacer class="mt-0 pt-0" />
                 <v-select
@@ -57,18 +77,32 @@
                   :items="headersList"
                   label="Select Columns"
                   class="mt-4 pt-0"
+                  dark
+                  item-color="white"
                   multiple
                   outlined
                   return-object
-                  height="5vh"
+                  height="8vh"
                 >
                   <template #selection="{item, index}">
-                    <v-chip v-if="index < 4" small>
-                      <span>{{ item.text }}</span>
-                    </v-chip>
-                    <span v-if="index === 4" class="grey--text caption"
-                      >(+{{ selectedHeaders.length - 4 }} others)</span
-                    >
+                    <div v-if="$vuetify.breakpoint.lgAndUp">
+                      <v-chip v-if="index < 4" small>
+                        <span>{{ item.text }}</span>
+                      </v-chip>
+                      <span
+                        v-if="index === 4"
+                        class="grey--text caption mt-0 pt-0"
+                        >(+{{ selectedHeaders.length - 4 }} others)</span
+                      >
+                    </div>
+                    <div v-else>
+                      <v-chip v-if="index < 3" small>
+                        <span>{{ item.text }}</span>
+                      </v-chip>
+                      <span v-if="index === 3" class="grey--text caption ml-2"
+                        >(+{{ selectedHeaders.length - 4 }} others)</span
+                      >
+                    </div>
                   </template>
                 </v-select>
               </v-card-title>
@@ -603,30 +637,6 @@ export default class Checklist extends RouteMixin {
   set searchTerm(term: string) {
     SearchModule.updateSearch(term);
   }
-
-  // get severityFilter(): Severity[] {
-  //   return SearchModule.severityFilter;
-  // }
-
-  // set severityFilter(severity: Severity[]) {
-  //   SearchModule.setSeverity(severity);
-  // }
-
-  // get ruleidSearchTerms(): string[] {
-  //   return SearchModule.ruleidSearchTerms;
-  // }
-
-  // set ruleidSearchTerms(ruleid: string[]) {
-  //   SearchModule.addRuleidFilter(ruleid);
-  // }
-
-  // get statusFilter(): ExtendedControlStatus[] {
-  //   return SearchModule.statusFilter;
-  // }
-
-  // set statusFilter(status: ExtendedControlStatus[]) {
-  //   SearchModule.setStatusFilter(status);
-  // }
 
   /**
    * The currently selected file, if one exists.
