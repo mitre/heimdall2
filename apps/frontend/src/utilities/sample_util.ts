@@ -21,6 +21,8 @@ const rhel8ChecklistPath = '/static/samples/rhel_8_checklist.ckl';
 const threeStigChecklistPath = '/static/samples/three_stig_checklist.ckl';
 const ubuntuProfile = '/static/samples/ubuntu_profile.json';
 const veracodeExecJson = '/static/samples/veracode.xml';
+const checklistExamplePath =
+  '/static/samples/Red_Hat_7_STIG_Baseline_Checklist.ckl';
 
 import axios from 'axios';
 
@@ -93,6 +95,7 @@ export const samples: Sample[] = [
     path: acmeOverlayPath
   },
   {
+<<<<<<< HEAD
     filename: 'Clean RHEL 8 Checklist',
     path: cleanRhel8ChecklistPath
   },
@@ -111,5 +114,10 @@ export const samples: Sample[] = [
   {
     filename: 'Veracode Exec JSON',
     path: veracodeExecJson
+=======
+    filename: 'Demo Checklist (Red Hat 7 STIG Baseline)',
+    data: () => fetch(checklistExamplePath),
+    path: checklistExamplePath
+>>>>>>> Checklist Testing
   }
 ];

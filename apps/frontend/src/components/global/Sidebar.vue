@@ -150,8 +150,7 @@
               />
               <!-- :label='numSeverity(item.value)'' -->
             </v-col>
-            <!-- <v-col :cols="3">
-          <v-switch
+            <!--<v-switch
             v-model="shortIdEnabled"
             dense
             justify="center"
@@ -208,7 +207,6 @@
               v-model="selectedFilters"
               dense
               show-select
-              single-select
               :headers="filterHeaders"
               :items="convertFilterData(currentFilters.conditionArray)"
               item-key="value"
@@ -284,20 +282,23 @@ export default class Sidebar extends mixins(RouteMixin) {
   selectedRadioButton = 'inclusive';
 
   selectedFilters = [];
+  /** Removes selected filters from data table */
   removeSelectedFilters() {
-    this.selectedFilters.forEach((item: any) => {
-      const field = item.keyword;
-      const value = item.value;
-      let negated = false;
-      if (item.negated === '-') {
-        negated = true;
+    this.selectedFilters.forEach(
+      (item: {keyword: string; value: string; negated: string}) => {
+        const field = item.keyword;
+        const value = item.value;
+        let negated = false;
+        if (item.negated === '-') {
+          negated = true;
+        }
+        SearchModule.removeSearchFilter({
+          field,
+          value,
+          negated
+        });
       }
-      SearchModule.removeSearchFilter({
-        field,
-        value,
-        negated
-      });
-    });
+    );
   }
 
   removeAllFilters() {
@@ -306,11 +307,21 @@ export default class Sidebar extends mixins(RouteMixin) {
     SearchModule.SET_SEARCH('');
   }
 
-  get controlStatusSwitches(): any {
+  get controlStatusSwitches(): {
+    name: string;
+    value: ExtendedControlStatus;
+    enabled: boolean;
+    color: string;
+  }[] {
     return FilteredDataModule.controlStatusSwitches;
   }
 
-  get severitySwitches(): any {
+  get severitySwitches(): {
+    name: string;
+    value: Severity;
+    enabled: boolean;
+    color: string;
+  }[] {
     return FilteredDataModule.severitySwitches;
   }
 
@@ -337,7 +348,9 @@ export default class Sidebar extends mixins(RouteMixin) {
   }
 
   /** Converts the active filters into array that can be ingested by selected filter data table */
-  convertFilterData(filters: any) {
+  convertFilterData(
+    filters: {keyword: string; value: string; negated: boolean}[]
+  ) {
     let temp: {keyword: string; value: string; negated: string}[] = [];
     filters.forEach(
       (item: {keyword: string; value: string; negated: boolean}) => {

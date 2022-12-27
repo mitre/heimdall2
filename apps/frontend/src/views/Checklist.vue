@@ -309,19 +309,13 @@ import Base from './Base.vue';
 import Component from 'vue-class-component';
 import RouteMixin from '@/mixins/RouteMixin';
 import {SearchModule} from '@/store/search';
-import {
-  ExtendedControlStatus,
-  Filter,
-  FilteredDataModule,
-  checklistRules
-} from '@/store/data_filters';
+import {Filter, FilteredDataModule, checklistRules} from '@/store/data_filters';
 import {
   FileID,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import {capitalize} from 'lodash';
-import {Severity} from 'inspecjs';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';

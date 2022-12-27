@@ -1,5 +1,6 @@
 import Store from '@/store/store';
 import {Severity} from 'inspecjs';
+//@ts-ignore
 import {parse} from 'search-string';
 import {
   Action,
@@ -139,7 +140,6 @@ class Search extends VuexModule implements ISearchState {
       };
     const searchResult = parse(this.searchTerm, [freeTextTransformer]);
     this.setCurrentSearchResult(searchResult);
-    console.log('Parse Result: ', searchResult);
     searchResult.conditionArray.forEach(
       (prop: {keyword: string; value: string; negated: boolean}): void => {
         const include: {value: string; negated: boolean} = {
@@ -290,7 +290,6 @@ class Search extends VuexModule implements ISearchState {
     if (this.currentSearchResult == undefined) {
       return;
     }
-    // TODO: Will need to add exclusive boolean later here and up in the payload
     // If coming from a category filter, else a quick filter
     if (!this.categoryToFilterMapping.get(searchPayload.field)) {
       this.currentSearchResult.addEntry(
@@ -322,7 +321,6 @@ class Search extends VuexModule implements ISearchState {
       return;
     }
 
-    // TODO: Will need to add exclusive boolean later here and up in the payload
     this.currentSearchResult.removeEntry(
       searchPayload.field,
       searchPayload.value,
@@ -658,27 +656,6 @@ class Search extends VuexModule implements ISearchState {
   @Mutation
   CLEAR_KEYWORDS() {
     this.keywordsSearchTerms = [];
-  }
-
-  ////   It is possible that keywords will replace below ////
-
-  // Freetext search
-
-  /** Sets the current fulltext search */
-  @Action
-  setFreesearch(search: string) {
-    this.context.commit('SET_FREESEARCH', search);
-  }
-
-  @Mutation
-  SET_FREESEARCH(text: string) {
-    this.freeSearch = text;
-  }
-
-  /** Removes the current fulltext search */
-  @Mutation
-  CLEAR_FREESEARCH() {
-    this.freeSearch = '';
   }
 }
 

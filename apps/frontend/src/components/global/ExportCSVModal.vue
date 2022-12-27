@@ -183,7 +183,7 @@ export default class ExportCSVModal extends Vue {
   ) {
     const controls = FilteredDataModule.controls({
       ...this.filter,
-      ids: [control.data.id],
+      ids: [{value: control.data.id, negated: false}],
       fromFile: [file.uniqueId]
     });
     return controls[0].full_code;

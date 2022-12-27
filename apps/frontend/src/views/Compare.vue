@@ -481,28 +481,28 @@ export default class Compare extends Vue {
       lowCounts.push(
         SeverityCountModule.low({
           fromFile: [file.uniqueId],
-          status: ['Failed'],
+          status: [{value: 'Failed', negated: false}],
           omit_overlayed_controls: true
         })
       );
       medCounts.push(
         SeverityCountModule.medium({
           fromFile: [file.uniqueId],
-          status: ['Failed'],
+          status: [{value: 'Failed', negated: false}],
           omit_overlayed_controls: true
         })
       );
       highCounts.push(
         SeverityCountModule.high({
           fromFile: [file.uniqueId],
-          status: ['Failed'],
+          status: [{value: 'Failed', negated: false}],
           omit_overlayed_controls: true
         })
       );
       critCounts.push(
         SeverityCountModule.critical({
           fromFile: [file.uniqueId],
-          status: ['Failed'],
+          status: [{value: 'Failed', negated: false}],
           omit_overlayed_controls: true
         })
       );
