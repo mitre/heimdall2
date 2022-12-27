@@ -585,7 +585,6 @@ export class FilteredData extends VuexModule {
             negated: false // Defaulted as false
           });
 
-          console.log('Temp value: ', temp);
           temp.conditionArray.forEach(
             (item: {keyword: string; value: string; negated: boolean}) => {
               if (
@@ -691,15 +690,12 @@ export class FilteredData extends VuexModule {
             negated: false // Defaulted as false
           });
 
-          console.log('Temp value: ', temp);
           temp.conditionArray.forEach(
             (item: {keyword: string; value: string; negated: boolean}) => {
-              console.log(item.value, ' : ', regex.exec(item.value) !== null);
               if (
                 item.keyword === 'severity' &&
                 regex.exec(item.value) !== null
               ) {
-                console.log('I am removing: ', item.value);
                 temp.removeEntry('severity', item.value, false);
               }
             }
@@ -777,21 +773,34 @@ export function filterControlsBy(
   });
 
   // Overall keywords filtering
-  let final = firstPass;
+  const final: ContextualizedControl[] = filterControlsByKeywords(firstPass);
+
+  return final;
+}
+
+/**
+ * Filters controls by keyword filters
+ *
+ * @param controls - Array of contextualized controls
+ * @returns Filtered array of controls
+ *
+ */
+export function filterControlsByKeywords(controls: ContextualizedControl[]) {
+  let results = controls;
   if (SearchModule.keywordsSearchTerms.length > 0) {
     SearchModule.keywordsSearchTerms.forEach((filter) => {
       if (!filter.negated) {
-        final = firstPass.filter((control) => {
+        results = controls.filter((control) => {
           return contains_term(control, filter.value);
         });
       } else {
-        final = firstPass.filter((control) => {
+        results = controls.filter((control) => {
           return !contains_term(control, filter.value);
         });
       }
     });
   }
-  return final;
+  return results;
 }
 
 /**
@@ -812,8 +821,7 @@ export function filterChecklistBy(
       (Array.isArray(value) && value.length > 0) ||
       (typeof value === 'boolean' && value)
   );
-  console.log('Filters here: ', filters);
-  console.log('Rules: ', rules);
+
   // Filter out specific categories
   const firstPass = rules.filter((rule) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
@@ -837,11 +845,24 @@ export function filterChecklistBy(
   });
 
   // Overall keywords filtering
-  let final: ChecklistVuln[] = firstPass;
+  const final: ChecklistVuln[] = filterRulesByKeywords(firstPass);
+
+  return final;
+}
+
+/**
+ * Filters checklist rules by keyword filters
+ *
+ * @param controls - Array of checklist rules
+ * @returns Filtered array of checklist rules
+ *
+ */
+export function filterRulesByKeywords(rules: ChecklistVuln[]) {
+  let result = rules;
   if (SearchModule.keywordsSearchTerms.length > 0) {
     SearchModule.keywordsSearchTerms.forEach((filter) => {
       if (!filter.negated) {
-        final = firstPass.filter((rule) => {
+        result = rules.filter((rule) => {
           return Object.entries(rule).some((item) => {
             if (item[1]?.toLowerCase().includes(filter.value)) {
               return true;
@@ -851,7 +872,7 @@ export function filterChecklistBy(
           });
         });
       } else {
-        final = firstPass.filter((rule) => {
+        result = rules.filter((rule) => {
           return !Object.entries(rule).some((item) => {
             if (item[1]?.toLowerCase().includes(filter.value)) {
               return true;
@@ -863,7 +884,8 @@ export function filterChecklistBy(
       }
     });
   }
-  return final;
+
+  return result;
 }
 
 /**
@@ -893,7 +915,6 @@ export function checklistRules(
         (status: SearchEntry) => status.value !== 'Waived'
       )
     };
-  console.log('Is this mapping correct: ', checklistFilters);
   const filteredRules = filterChecklistBy(rules, checklistFilters);
   return filteredRules;
 }
@@ -913,6 +934,6 @@ function arrayOrStringIncludes(
   if (typeof arrayOrString === 'string') {
     return comparator(arrayOrString);
   } else {
-    return Array(arrayOrString).some((value) => comparator(value));
+    //return Array(arrayOrString).some((value) => comparator(value));
   }
 }

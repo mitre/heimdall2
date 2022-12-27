@@ -14,7 +14,7 @@ import {Severity} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {SearchModule, valueToSeverity} from '../../store/search';
+import {SearchEntry, SearchModule, valueToSeverity} from '../../store/search';
 
 /**
  * Categories property must be of type Category
@@ -26,7 +26,7 @@ import {SearchModule, valueToSeverity} from '../../store/search';
   }
 })
 export default class SeverityChart extends Vue {
-  @Prop({type: Array}) readonly value!: Severity[];
+  @Prop({type: Array}) readonly value!: SearchEntry[];
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   categories: Category<Severity>[] = [
