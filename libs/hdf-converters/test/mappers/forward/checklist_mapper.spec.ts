@@ -19,9 +19,12 @@ describe('checklist_mapper', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );
@@ -74,9 +77,12 @@ describe('checklist_mapper', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/checklist_mapper/checklist-Red_Hat_7_STIG_Baseline-hdf.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/checklist_mapper/checklist-Red_Hat_7_STIG_Baseline-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );
@@ -129,9 +135,12 @@ describe('checklist_mapper', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/checklist_mapper/checklist-Three_Layer_RHEL7_Overlay_Example-hdf.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/checklist_mapper/checklist-Three_Layer_RHEL7_Overlay_Example-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );
