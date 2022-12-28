@@ -983,7 +983,7 @@ function parseFindingDetails(
         splitResults[0] === 'skipped' ||
         splitResults[0] === 'error'
       ) {
-        // TODO: this does not necessarily work when the code_desc has the work expected
+        // This does not necessarily work when the code_desc has the word expected
         // will need to update the export to add a key word that can be used to split code_desc
         // and message values easier - maybe *results* or *details*
         const indexOfExpected = splitResults[1].indexOf('expected');
