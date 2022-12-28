@@ -1,6 +1,7 @@
 export {ASFFResults} from './src/asff-mapper/asff-mapper';
 export * from './src/aws-config-mapper';
 export * from './src/burpsuite-mapper';
+export * from './src/checklist-mapper';
 export * from './src/converters-from-hdf/asff/reverse-asff-mapper';
 export * from './src/converters-from-hdf/splunk/reverse-splunk-mapper';
 export * from './src/converters-from-hdf/xccdf/reverse-xccdf-mapper';

@@ -11,7 +11,7 @@ import {
 import {CciNistMapping} from './mappings/CciNistMapping';
 import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
-type ChecklistFile = {
+export type ChecklistFile = {
   /**
    * Unique identifier for this file. Used to encode which file is currently selected, etc.
    *
@@ -1148,7 +1148,7 @@ export class ChecklistMapper extends BaseConverter {
   /**
    * Gets info for Checklist Viewer
    */
-  get getStigInfo(): unknown {
-    return this.data.stigs;
+  get getData(): unknown {
+    return this.data;
   }
 }

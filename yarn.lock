@@ -3178,10 +3178,10 @@
   resolved "https://registry.yarnpkg.com/@mdi/js/-/js-7.0.96.tgz#8e7a54d5cb38831e3150632cc19e380f54d9edd6"
   integrity sha512-lNqhkV3cpPfYb/Avh+vXLFukUTbHbyHoFo4Jdc7Oc9UvURGVhamFIpgOVvEf2bNA78zvjXTZeVWExUTR+DLBfQ==
 
-"@mitre/jsonix@^3.0.3":
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/@mitre/jsonix/-/jsonix-3.0.3.tgz#08aedf3ece35abd9ced0f2fdaf83d6ffa5d9032f"
-  integrity sha512-RH5poYIxFTN6BCyyhyN+wXpYfjDSCGlFJWSgYU19CAFziTZ2ekGoajJfKcFf61oa1T40pi9r/MEgcO78F5y9ow==
+"@mitre/jsonix@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@mitre/jsonix/-/jsonix-3.0.5.tgz#4c279db1385fad2bab4d123547b066d9bb9ca0e6"
+  integrity sha512-p82wvRjkMN4DrA8/S6ETDzFeYBkMRz8fQJgtOdnTnIr6OcOjujS9J1Ks6iFikZeG/dGoFJ4m32XtVdLb+rxQwA==
   dependencies:
     "@xmldom/xmldom" "^0.8.2"
     amdefine "^0.0.4"

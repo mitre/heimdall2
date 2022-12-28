@@ -3,6 +3,7 @@ import _ from 'lodash';
 export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
+  CHECKLIST = 'checklist',
   FORTIFY = 'fortify',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
@@ -53,6 +54,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.ZAP]: ['@generated', '@version', 'site'],
 
   [INPUT_TYPES.BURP]: [],
+  [INPUT_TYPES.CHECKLIST]: ['findingDetails', 'weight'],
   [INPUT_TYPES.NESSUS]: [],
   [INPUT_TYPES.PRISMA]: [],
   [INPUT_TYPES.DB_PROTECT]: [],
