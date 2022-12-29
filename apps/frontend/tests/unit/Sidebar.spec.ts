@@ -1,7 +1,9 @@
 import Sidebar from '@/components/global/Sidebar.vue';
-import {FilteredDataModule} from '@/store/data_filters';
+import {ExtendedControlStatus, FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
+import {SearchModule} from '@/store/search';
 import {createLocalVue, shallowMount, Wrapper} from '@vue/test-utils';
+import {Severity} from 'inspecjs';
 import 'jest';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
@@ -22,6 +24,90 @@ const wrapper: Wrapper<Vue> = shallowMount(Sidebar, {
 });
 
 describe('Sidebar tests', () => {
+  it('will properly toggle filters', () => {
+    // Toggle all status switches
+    const statuses: ExtendedControlStatus[] = [
+      'Passed',
+      'Failed',
+      'Not Applicable',
+      'Not Reviewed'
+    ];
+    statuses.forEach((status: ExtendedControlStatus) => {
+      (
+        wrapper.vm as Vue & {
+          changeStatusToggle: (name: ExtendedControlStatus) => void;
+        }
+      ).changeStatusToggle(status);
+    });
+
+    // Toggle all severity switches
+    const severities: Severity[] = ['critical', 'high', 'medium', 'low'];
+    severities.forEach((severity: Severity) => {
+      (
+        wrapper.vm as Vue & {
+          changeSeverityToggle: (name: Severity) => void;
+        }
+      ).changeSeverityToggle(severity);
+    });
+
+    // Add a category filter
+    (
+      wrapper.vm as Vue & {
+        addCategoryFilter: (field: string, value: string) => void;
+      }
+    ).addCategoryFilter('Rule ID', 'SV-864');
+
+    // Current search term
+    let search = SearchModule.searchTerm;
+    // Current filter from parsed search term
+    let currentFilters = (
+      wrapper.vm as Vue & {
+        currentFilters: Array<any>;
+      }
+    ).currentFilters;
+    // Items in the data table
+    let tableFilters = (
+      wrapper.vm as Vue & {
+        convertFilterData: (
+          filters: {keyword: string; value: string; negated: boolean}[]
+        ) => Array<{keyword: string; value: string; negated: string}>;
+      }
+    )
+      //@ts-ignore
+      .convertFilterData(currentFilters.conditionArray);
+
+    expect(search).toBe(
+      'status:passed,failed,"not applicable","not reviewed" severity:critical,high,medium,low ruleid:SV-864'
+    );
+    expect(tableFilters.length).toEqual(9);
+
+    // After remove all function is called from selected filters table
+    (
+      wrapper.vm as Vue & {
+        removeAllFilters: () => void;
+      }
+    ).removeAllFilters();
+    search = SearchModule.searchTerm;
+    SearchModule.parseSearch();
+    currentFilters = (
+      wrapper.vm as Vue & {
+        currentFilters: Array<any>;
+      }
+    ).currentFilters;
+    tableFilters = (
+      wrapper.vm as Vue & {
+        convertFilterData: (
+          filters: {keyword: string; value: string; negated: boolean}[]
+        ) => Array<{keyword: string; value: string; negated: string}>;
+      }
+    )
+      //@ts-ignore
+      .convertFilterData(currentFilters.conditionArray);
+
+    expect(search).toBe('');
+    expect(tableFilters.length).toBe(0);
+  });
+
   it('has the correct number of sidebar links', () => {
     loadAll();
     expect(

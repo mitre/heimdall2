@@ -268,13 +268,18 @@ class Search extends VuexModule implements ISearchState {
 
   /** Mapper for category input fields to valid filter values*/
   categoryToFilterMapping: Map<string, string> = new Map([
+    ['Keywords', 'keywords'],
+    ['ID', 'id'],
     ['Vul ID', 'vulid'],
     ['Rule ID', 'ruleid'],
+    ['Title', 'title'],
+    ['Nist', 'nist'],
+    ['Description', 'description'],
+    ['Code', 'code'],
     ['Stig ID', 'stigid'],
     ['Classification', 'classification'],
     ['Group Name', 'groupname'],
-    ['CCIs', 'cii'],
-    ['Keywords', 'keywords']
+    ['CCIs', 'cii']
   ]);
 
   /**
