@@ -113,11 +113,9 @@
             <v-col
               v-for="item in controlStatusSwitches"
               :key="item.name"
-              v-model="controlStatusSwitches"
               :cols="3"
             >
               <v-switch
-                v-model="item.enabled"
                 dense
                 justify="center"
                 inset
@@ -138,7 +136,6 @@
           <v-row class="mt-n10">
             <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
               <v-switch
-                v-model="item.enabled"
                 dense
                 justify="center"
                 inset
@@ -364,8 +361,13 @@ export default class Sidebar extends mixins(RouteMixin) {
   /** Free text filter category list for dropdown */
   categories = [
     'Keywords',
+    'ID',
     'Vul ID',
     'Rule ID',
+    'Title',
+    'Nist',
+    'Description',
+    'Code',
     'Stig ID',
     'Classification',
     'Group Name',

@@ -82,7 +82,7 @@
                   multiple
                   outlined
                   return-object
-                  height="8vh"
+                  height="8.5vh"
                 >
                   <template #selection="{item, index}">
                     <div v-if="$vuetify.breakpoint.lgAndUp">
@@ -100,7 +100,7 @@
                         <span>{{ item.text }}</span>
                       </v-chip>
                       <span v-if="index === 3" class="grey--text caption ml-2"
-                        >(+{{ selectedHeaders.length - 4 }} others)</span
+                        >(+{{ selectedHeaders.length - 3 }} others)</span
                       >
                     </div>
                   </template>

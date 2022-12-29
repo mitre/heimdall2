@@ -500,12 +500,6 @@ export class FilteredData extends VuexModule {
     };
   }
 
-  // Default Status Toggles
-  passedFilterEnabled = false;
-  failedFilterEnabled = false;
-  naFilterEnabled = false;
-  nrFilterEnabled = false;
-
   /** List of status switches */
   controlStatusSwitches: {
     name: string;
@@ -516,25 +510,25 @@ export class FilteredData extends VuexModule {
     {
       name: 'Passed',
       value: 'Passed',
-      enabled: this.passedFilterEnabled,
+      enabled: false,
       color: 'statusPassed'
     },
     {
       name: 'Failed',
       value: 'Failed',
-      enabled: this.failedFilterEnabled,
+      enabled: false,
       color: 'statusFailed'
     },
     {
       name: 'Not Applicable',
       value: 'Not Applicable',
-      enabled: this.naFilterEnabled,
+      enabled: false,
       color: 'statusNotApplicable'
     },
     {
       name: 'Not Reviewed',
       value: 'Not Reviewed',
-      enabled: this.nrFilterEnabled,
+      enabled: false,
       color: 'statusNotReviewed'
     }
   ];
@@ -570,7 +564,7 @@ export class FilteredData extends VuexModule {
       if (item.name == name.charAt(0).toUpperCase() + name.slice(1)) {
         this.controlStatusSwitches[itemIndex].enabled =
           !this.controlStatusSwitches[itemIndex].enabled;
-        if (!this.controlStatusSwitches[itemIndex].enabled) {
+        if (this.controlStatusSwitches[itemIndex].enabled) {
           SearchModule.addSearchFilter({
             field: 'status',
             value: name.toLowerCase(),
@@ -599,12 +593,6 @@ export class FilteredData extends VuexModule {
     });
   }
 
-  // Default Severity Toggles
-  criticalFilterEnabled = false;
-  highFilterEnabled = false;
-  mediumFilterEnabled = false;
-  lowFilterEnabled = false;
-
   /** List of severity switches */
   severitySwitches: {
     name: string;
@@ -615,35 +603,28 @@ export class FilteredData extends VuexModule {
     {
       name: 'Critical',
       value: 'critical',
-      enabled: this.criticalFilterEnabled,
+      enabled: false,
       color: 'teal'
     },
     {
       name: 'High',
       value: 'high',
-      enabled: this.highFilterEnabled,
+      enabled: false,
       color: 'teal'
     },
     {
       name: 'Medium',
       value: 'medium',
-      enabled: this.mediumFilterEnabled,
+      enabled: false,
       color: 'teal'
     },
     {
       name: 'Low',
       value: 'low',
-      enabled: this.lowFilterEnabled,
+      enabled: false,
       color: 'teal'
     }
   ];
-
-  severitySwitchToggles: {[key: string]: boolean} = {
-    Critical: this.criticalFilterEnabled,
-    High: this.highFilterEnabled,
-    Medium: this.mediumFilterEnabled,
-    Low: this.lowFilterEnabled
-  };
 
   @Mutation
   alterSeverityBoolean() {
@@ -675,7 +656,7 @@ export class FilteredData extends VuexModule {
       if (item.name == name.charAt(0).toUpperCase() + name.slice(1)) {
         this.severitySwitches[itemIndex].enabled =
           !this.severitySwitches[itemIndex].enabled;
-        if (!this.severitySwitches[itemIndex].enabled) {
+        if (this.severitySwitches[itemIndex].enabled) {
           SearchModule.addSearchFilter({
             field: 'severity',
             value: name.toLowerCase(),
