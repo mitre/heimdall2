@@ -4533,9 +4533,9 @@
   integrity sha512-RGZdFlzuj/3ARNTgrf/yJCKREZ2HGYP///wq3pxYWhsw47ImY0FFIBjyNcgdN9Us6lvIMdW6RfubpCAiJb65mg==
 
 "@types/papaparse@^5.3.2":
-  version "5.3.5"
-  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.3.5.tgz#e5ad94b1fe98e2a8ea0b03284b83d2cb252bbf39"
-  integrity sha512-R1icl/hrJPFRpuYj9PVG03WBAlghJj4JW9Py5QdR8FFSxaLmZRyu7xYDCCBZIJNfUv3MYaeBbhBoX958mUTAaw==
+  version "5.3.6"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.3.6.tgz#dd49c5b37e529d54ebef049829879d23ffc61db8"
+  integrity sha512-oEb7KM6q0CEjoi8OFXJk8nGqw25p+fT5q7/Z2WLk3WPthG4Hg1fDY9ifOdBo8H0kD94nbIasnU3O/dcsmaWHYw==
   dependencies:
     "@types/node" "*"
 
