@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",
-    "@mitre/jsonix": "^3.0.2",
+    "@mitre/jsonix": "^3.0.4",
     "@mitre/splunk-sdk-no-env": "^1.10.0",
     "@types/csv2json": "^1.4.2",
     "@types/ms": "^0.7.31",
