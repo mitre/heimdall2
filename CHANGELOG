@@ -1,3 +1,8 @@
+v2.6.34
+
+## Dependency Updates
+- Bump eslint-config-prettier from 8.5.0 to 8.6.0 @dependabot (#3919)
+
 v2.6.33
 
     - Gosecmapper @jweissm (#3838)
