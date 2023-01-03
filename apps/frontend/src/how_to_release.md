@@ -10,7 +10,7 @@ Obviously, before any of them make well sure that:
 5. You've done `npm run build`
 6. You've committed, pushed, and merged everything you want.
 
-Great! You'r ready to start publishing!
+Great! You're ready to start publishing!
 
 ## Publishing to NPM
 
