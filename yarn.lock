@@ -17442,10 +17442,10 @@ quick-lru@^4.0.1:
   resolved "https://registry.yarnpkg.com/quick-lru/-/quick-lru-4.0.1.tgz#5b8878f113a58217848c6482026c73e1ba57727f"
   integrity sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==
 
-quicktype@^15.0.260:
-  version "15.1.0"
-  resolved "https://registry.yarnpkg.com/quicktype/-/quicktype-15.1.0.tgz#710c8512eb64a86a37d9ccd4bca549442f019f15"
-  integrity sha512-hhOXV+XxOlA8UPmjRLEEjkfOcGvKiIXE5dlxv6byz+zx7BHXsYXKZGjgkDweJYf7ta0cGixKlo1qJdZSQOljiA==
+quicktype@^16.0.8:
+  version "16.0.8"
+  resolved "https://registry.yarnpkg.com/quicktype/-/quicktype-16.0.8.tgz#916c7629072a91c03a1b4dfd1549e39251af7e99"
+  integrity sha512-d7RgsCFyyPwXibnMuNdyJSTt3mToIaWcJQKicNhIs0nsc/JzDtVUq6RAeDX3v7QAB8JxvueqLVjxTcJruzqSew==
   dependencies:
     "@mark.probst/typescript-json-schema" "~0.32.0"
     "@mark.probst/unicode-properties" "~1.1.0"
@@ -17467,7 +17467,7 @@ quicktype@^15.0.260:
     stream-json "1.1.3"
     string-to-stream "^1.1.0"
     typescript "~3.2.1"
-    urijs "^1.19.6"
+    urijs "^1.19.11"
     uuid "^3.2.1"
     wordwrap "^1.0.0"
     yaml "^1.5.0"
@@ -20297,7 +20297,7 @@ uri-js@^4.2.2:
   dependencies:
     punycode "^2.1.0"
 
-urijs@^1.19.6:
+urijs@^1.19.11:
   version "1.19.11"
   resolved "https://registry.yarnpkg.com/urijs/-/urijs-1.19.11.tgz#204b0d6b605ae80bea54bea39280cdb7c9f923cc"
   integrity sha512-HXgFDgDommxn5/bIv0cnQZsPhHDA90NPHD6+c/v21U5+Sx5hoP8+dP9IZXBU1gIfvdRfhG8cel9QNPeionfcCQ==
