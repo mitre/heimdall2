@@ -34,10 +34,10 @@ jobs:
           SPLUNK_PASSWORD: Valid_password!
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Cache node modules
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         env:
           cache-name: cache-node-modules
         with:
@@ -50,9 +50,9 @@ jobs:
             ${{ runner.os }}-
 
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
+          node-version: "16.x"
 
       - name: Install project dependencies
         run: yarn install --frozen-lockfile
@@ -72,7 +72,7 @@ jobs:
           NODE_ENV: production
 
       - name: Cypress run
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@v5
         with:
           start: yarn start, yarn run cypress-test mock-json, yarn run cypress-test mock-openid
           wait-on: 'http://127.0.0.1:3000, http://127.0.0.1:3001'
