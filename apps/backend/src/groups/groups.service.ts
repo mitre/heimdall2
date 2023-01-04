@@ -125,7 +125,7 @@ export class GroupsService {
       this.findByName(group).then((existingGroup) => {
         // Check if the user is already in that group
         user.$get('groups', {include: [User]}).then((groups) => {
-          var groupMap = groups.map((group) => new GroupDto(group));
+          const groupMap = groups.map((group) => new GroupDto(group));
 
           if(!groupMap.includes(existingGroup)) {
             this.addUserToGroup(existingGroup, user, "member");
