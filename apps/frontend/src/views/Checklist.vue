@@ -349,7 +349,7 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
-import {capitalize} from 'lodash';
+import {capitalize,isEqual} from 'lodash';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
@@ -590,7 +590,17 @@ export default class Checklist extends RouteMixin {
   }
 
   get selectedRule() {
-    return FilteredDataModule.selectedRule;
+    let stillExists = false
+    // Checks to see if the selected rule still exists after filtering
+    this.rules.forEach((item) => {      
+      if(isEqual(FilteredDataModule.selectedRule, item)){
+        stillExists = true
+      }
+    })
+    if(stillExists){
+      return FilteredDataModule.selectedRule;
+    }
+    return FilteredDataModule.emptyRule
   }
 
   get selectedChecklistAsset() {
