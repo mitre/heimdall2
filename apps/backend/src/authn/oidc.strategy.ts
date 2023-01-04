@@ -4,9 +4,6 @@ import {Strategy} from 'passport-openidconnect';
 import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 import {GroupsService} from '../groups/groups.service';
-import {CreateGroupDto} from '../groups/dto/create-group.dto';
-import {GroupDto} from '../groups/dto/group.dto';
-import {User} from '../users/user.model';
 
 interface OIDCProfile {
   _json: {
@@ -55,38 +52,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
           ).then((user) => {
 
             if(configService.get('OIDC_EXTERNAL_GROUPS') === "true" && groups !== undefined) {
-
-              // Check if user is any existing groups that they should not be
-              user.$get('groups', {include: [User]}).then((currentGroups) => {
-                currentGroups.filter(group => !groups.includes(group.name)).forEach((groupToLeave) => {
-                  groupsService.removeUserFromGroup(groupToLeave, user);
-                })
-              })
-
-              groups.forEach((group) => {
-                groupsService.findByName(group).then((existingGroup) => {
-                  // Check if the user is already in that group
-                  user.$get('groups', {include: [User]}).then((groups) => {
-                    var groupMap = groups.map((group) => new GroupDto(group));
-
-                    if(!groupMap.includes(existingGroup)) {
-                      groupsService.addUserToGroup(existingGroup, user, "member");
-                    } 
-                  });
-                }).catch((err) => {
-                  if(err instanceof NotFoundException) {
-
-                    const createGroup: CreateGroupDto = {
-                      name: group,
-                      public: false
-                    };
-
-                    groupsService.create(createGroup).then((newGroup) => {
-                      groupsService.addUserToGroup(newGroup, user, "member");
-                    });
-                  }
-                });
-              });
+              groupsService.syncUserGroups(user, groups)
             }
 
             return done(null, user);

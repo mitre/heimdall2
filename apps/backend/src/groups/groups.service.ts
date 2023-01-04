@@ -9,6 +9,7 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {User} from '../users/user.model';
 import {CreateGroupDto} from './dto/create-group.dto';
 import {Group} from './group.model';
+import {GroupDto} from '../groups/dto/group.dto';
 import {FindOptions} from 'sequelize/types';
 
 @Injectable()
@@ -110,5 +111,39 @@ export class GroupsService {
     await groupToDelete.destroy();
 
     return groupToDelete;
+  }
+
+  syncUserGroups(user: User, groups: Array<string>) {
+    // Check if user is any existing groups that they should not be
+    user.$get('groups', {include: [User]}).then((currentGroups) => {
+      currentGroups.filter(group => !groups.includes(group.name)).forEach((groupToLeave) => {
+        this.removeUserFromGroup(groupToLeave, user);
+      })
+    })
+
+    groups.forEach((group) => {
+      this.findByName(group).then((existingGroup) => {
+        // Check if the user is already in that group
+        user.$get('groups', {include: [User]}).then((groups) => {
+          var groupMap = groups.map((group) => new GroupDto(group));
+
+          if(!groupMap.includes(existingGroup)) {
+            this.addUserToGroup(existingGroup, user, "member");
+          }
+        });
+      }).catch((err) => {
+        if(err instanceof NotFoundException) {
+
+          const createGroup: CreateGroupDto = {
+            name: group,
+            public: false
+          };
+
+          this.create(createGroup).then((newGroup) => {
+            this.addUserToGroup(newGroup, user, "member");
+          });
+        }
+      });
+    });
   }
 }
