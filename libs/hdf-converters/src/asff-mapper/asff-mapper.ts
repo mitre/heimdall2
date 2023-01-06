@@ -170,14 +170,13 @@ function handleIdGroup(
     'productName',
     encode(`${productInfo[1]}/${productInfo[2]}`)
   );
-  const hasNoTitlePrefix = externalProductHandler(
+  const titlePrefix = externalProductHandler(
     context,
     whichSpecialCase(findings[0]),
-    null,
-    'doesNotHaveFindingTitlePrefix',
-    false
+    findings,
+    'titlePrefix',
+    `${productName}: `
   );
-  const titlePrefix = hasNoTitlePrefix ? '' : `${productName}: `;
   const waiverData = externalProductHandler(
     context,
     whichSpecialCase(findings[0]),

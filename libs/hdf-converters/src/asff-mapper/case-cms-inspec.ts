@@ -5,13 +5,13 @@ function findingId(finding: Record<string, unknown>): string {
   return encode((_.get(finding, 'Id') as string).split('/').slice(-1)[0]);
 }
 
-function doesNotHaveFindingTitlePrefix(): boolean {
-  return true;
+function titlePrefix(): string {
+  return '';
 }
 
 export function getCMSInSpec(): Record<string, (...inputs: any) => any> {
   return {
     findingId,
-    doesNotHaveFindingTitlePrefix
+    titlePrefix
   };
 }
