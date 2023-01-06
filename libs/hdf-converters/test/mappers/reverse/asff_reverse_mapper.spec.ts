@@ -21,6 +21,15 @@ describe('ASFF Reverse Mapper', () => {
 
     const profileInformation = [converted[converted.length - 1] || {}];
 
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
+    //   JSON.stringify(converted, null, 2)
+    // );
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json.p0.json',
+    //   JSON.stringify(profileInformation, null, 2)
+    // );
+
     const expectedJSON = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/rhel7-results.asff.json',
@@ -63,6 +72,15 @@ describe('ASFF Reverse Mapper', () => {
 
     const profileInformation = [converted[converted.length - 1] || {}];
 
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json',
+    //   JSON.stringify(converted, null, 2)
+    // );
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json.p0.json',
+    //   JSON.stringify(profileInformation, null, 2)
+    // );
+
     const expectedJSON = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/example-3-layer-overlay_03062022.asff.json',
@@ -102,9 +120,46 @@ describe('ASFF Reverse Mapper', () => {
       region: 'us-east-2'
     }).toAsff();
 
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/snyk-no-results.asff.json',
+    //   JSON.stringify(converted, null, 2)
+    // );
+
     const expectedJSON = JSON.parse(
       fs.readFileSync(
         'sample_jsons/asff_reverse_mapper/snyk-no-results.asff.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    expect(omitASFFVersions(omitASFFTimes(omitASFFTitle(converted)))).toEqual(
+      omitASFFVersions(omitASFFTimes(omitASFFTitle(expectedJSON)))
+    );
+  });
+
+  it('Successfully processes and modifies HDF files to meet certain ASFF / AWS SecurityHub restrictions', () => {
+    const inputData = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/asff_reverse_mapper/sample_input_report/restrictions-test-rhel7-results.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    const converted = new FromHdfToAsffMapper(inputData, {
+      input: 'subset-results.json',
+      awsAccountId: '12345678910',
+      target: 'rhel7subset',
+      region: 'us-east-2'
+    }).toAsff();
+
+    // fs.writeFileSync(
+    //   'sample_jsons/asff_reverse_mapper/restrictions-test-results.asff.json',
+    //   JSON.stringify(converted, null, 2)
+    // );
+
+    const expectedJSON = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/asff_reverse_mapper/restrictions-test-results.asff.json',
         {encoding: 'utf-8'}
       )
     );

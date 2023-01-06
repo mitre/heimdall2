@@ -10,8 +10,8 @@ import {
 import {getCMSInSpec} from './case-cms-inspec';
 import {getFirewallManager} from './case-firewall-manager';
 import {getGuardDuty} from './case-guardduty';
-import {getHDF2ASFF} from './case-hdf2asff';
 import {getInspector} from './case-inspector';
+import {getPreviouslyHDF} from './case-previously-hdf';
 import {getProwler} from './case-prowler';
 import {getSecurityHub} from './case-security-hub';
 import {getTrivy} from './case-trivy';
@@ -32,11 +32,11 @@ export enum SpecialCasing {
   CMSInSpec = 'CMS Chef InSpec',
   FirewallManager = 'AWS Firewall Manager',
   GuardDuty = 'AWS GuardDuty',
-  HDF2ASFF = 'MITRE SAF HDF2ASFF',
   Inspector = 'AWS Inspector',
   Prowler = 'Prowler',
   SecurityHub = 'AWS Security Hub',
   Trivy = 'Aqua Trivy',
+  PreviouslyHDF = 'MITRE SAF HDF2ASFF',
   Default = 'Default'
 }
 
@@ -78,7 +78,7 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
       }
     )
   ) {
-    return SpecialCasing.HDF2ASFF;
+    return SpecialCasing.PreviouslyHDF;
   } else if (
     productArn.match(
       /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/inspector$/
@@ -116,11 +116,11 @@ const SPECIAL_CASE_MAPPING: Map<
   [SpecialCasing.CMSInSpec, getCMSInSpec()],
   [SpecialCasing.FirewallManager, getFirewallManager()],
   [SpecialCasing.GuardDuty, getGuardDuty()],
-  [SpecialCasing.HDF2ASFF, getHDF2ASFF()],
   [SpecialCasing.Inspector, getInspector()],
+  [SpecialCasing.PreviouslyHDF, getPreviouslyHDF()],
   [SpecialCasing.Prowler, getProwler()],
   [SpecialCasing.SecurityHub, getSecurityHub()],
-  [SpecialCasing.Trivy, getTrivy()]
+  [SpecialCasing.Trivy, getTrivy()],
 ]);
 
 function externalProductHandler<T>(
@@ -187,7 +187,7 @@ function handleIdGroup(
   ) as ExecJSON.ControlWaiverData;
 
   return {
-    // Add productName to ID if any ID's are the same across products
+    // Add titlePrefix to ID if any ID's are the same across products
     id: id,
     title: `${titlePrefix}${_.uniq(group.map((d) => d.title)).join(';')}`,
     tags: _.mergeWith(

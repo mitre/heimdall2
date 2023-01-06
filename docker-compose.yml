@@ -19,7 +19,7 @@ services:
       - NODE_ENV=production
       - DATABASE_HOST=database
       - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-    env_file: .env-prod
+    env_file: .env
     ports:
       - "3000"
     depends_on:

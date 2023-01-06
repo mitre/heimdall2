@@ -4,6 +4,7 @@ export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
   FORTIFY = 'fortify',
+  GOSEC = 'gosec',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
   NIKTO = 'nikto',
@@ -45,7 +46,10 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
     'results[0].complianceDistribution',
     'results[0].vulnerabilityDistribution',
     'results[0].collections',
-    'results[0].digest'
+    'results[0].digest',
+    'packages',
+    'complianceDistribution',
+    'vulnerabilityDistribution'
   ],
   [INPUT_TYPES.ZAP]: ['@generated', '@version', 'site'],
 
@@ -57,7 +61,8 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.NETSPARKER]: [],
   [INPUT_TYPES.SCOUTSUITE]: [],
   [INPUT_TYPES.NOT_FOUND]: [],
-  [INPUT_TYPES.VERACODE]: []
+  [INPUT_TYPES.VERACODE]: [],
+  [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues']
 };
 
 export function fingerprint(guessOptions: {
@@ -95,6 +100,8 @@ export function fingerprint(guessOptions: {
       return INPUT_TYPES.XCCDF;
     } else if (guessOptions.data.match(/<netsparker-.*generated.*>/)) {
       return INPUT_TYPES.NETSPARKER;
+    } else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {
+      return INPUT_TYPES.FORTIFY;
     } else if (
       guessOptions.data.indexOf('"AwsAccountId"') !== -1 &&
       guessOptions.data.indexOf('"SchemaVersion"') !== -1

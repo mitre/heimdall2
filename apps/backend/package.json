@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.6.27",
+  "version": "2.6.33",
   "description": "",
   "license": "Apache-2.0",
   "author": "",
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@casl/ability": "^6.0.0",
-    "@heimdall/interfaces": "^2.6.8",
+    "@heimdall/interfaces": "^2.6.32",
     "@heimdall/password-complexity": "^2.6.6",
     "@nestjs/cli": "^8.0.2",
     "@nestjs/common": "^8.0.2",
@@ -69,12 +69,12 @@
     "@types/passport-local": "^1.0.33",
     "@types/sequelize": "^4.28.9",
     "@types/supertest": "^2.0.9",
-    "@types/uuid": "^8.3.1",
+    "@types/uuid": "^9.0.0",
     "@types/validator": "^13.0.0",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.13.0",
-    "connect-pg-simple": "^7.0.0",
+    "connect-pg-simple": "^8.0.0",
     "dotenv": "^16.0.0",
     "eslint-plugin-import": "^2.20.1",
     "express-rate-limit": "^6.0.1",
@@ -105,7 +105,7 @@
     "ts-loader": "^9.1.0",
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^4.0.0",
-    "uuid": "^8.3.2",
+    "uuid": "^9.0.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {

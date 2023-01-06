@@ -12,9 +12,9 @@ import {version as HeimdallToolsVersion} from '../../../package.json';
 import {getDescription} from '../../utils/global';
 import {IFindingASFF, IOptions} from './asff-types';
 import {
+  escapeForwardSlashes,
   FromHdfToAsffMapper,
-  SegmentedControl,
-  TO_ASFF_TYPES_SLASH_REPLACEMENT
+  SegmentedControl
 } from './reverse-asff-mapper';
 
 //FromHdfToAsff mapper transformers
@@ -27,15 +27,6 @@ type Counts = {
   NotApplicable: number;
   NotReviewed: number;
 };
-
-export function escapeForwardSlashes<T>(s: T): T {
-  return _.isString(s)
-    ? (s.replace(/\//g, TO_ASFF_TYPES_SLASH_REPLACEMENT) as unknown as T)
-    : (JSON.stringify(s).replace(
-        /\//g,
-        TO_ASFF_TYPES_SLASH_REPLACEMENT
-      ) as unknown as T);
-}
 
 export function getRunTime(hdf: ExecJSON.Execution): string {
   let time = new Date().toISOString();
@@ -168,7 +159,7 @@ export function statusCount(evaluation: ContextualizedEvaluation): Counts {
 }
 
 export function createDescription(counts: Counts): string {
-  return `Passed: ${counts.Passed} (${
+  return `Result Set Status Summary -- Passed: ${counts.Passed} (${
     counts.PassedTests
   } individual checks passed) --- Failed: ${counts.Failed} (${
     counts.PassingTestsFailedControl
@@ -188,16 +179,6 @@ export function createAssumeRolePolicyDocument(
   const segmentOverview = createNote(segment);
   const code = layersOfControl.map((layer) => createCode(layer)).join('\n\n');
   return `${code}\n\n${segmentOverview}`;
-}
-
-// Slices an array into chunks, since AWS doesn't allow uploading more than 100 findings at a time
-export function sliceIntoChunks(arr: any[], chunkSize: number): any[][] {
-  const res = [];
-  for (let i = 0; i < arr.length; i += chunkSize) {
-    const chunk = arr.slice(i, i + chunkSize);
-    res.push(chunk);
-  }
-  return res;
 }
 
 // Gets rid of extra spacing + newlines as these aren't shown in Security Hub
@@ -387,8 +368,25 @@ function createControlMetadata(control: SegmentedControl) {
     `Control/ID/${escapeForwardSlashes(control.id)}`,
     `Control/Impact/${control.impact}`
   ];
+  if (control.title) {
+    types.push(`Control/Title/${escapeForwardSlashes(control.title)}`);
+  }
   if (control.desc) {
     types.push(`Control/Desc/${escapeForwardSlashes(control.desc)}`);
+  }
+  if (control.waiver_data && Object.keys(control.waiver_data).length > 0) {
+    types.push(
+      `Control/Waiver_Data/${escapeForwardSlashes(
+        JSON.stringify(control.waiver_data)
+      )}`
+    );
+  }
+  if (control.attestation_data) {
+    types.push(
+      `Control/Attestation_Data/${escapeForwardSlashes(
+        JSON.stringify(control.attestation_data)
+      )}`
+    );
   }
   if (control.refs && control.refs.length > 0) {
     types.push(
@@ -405,16 +403,6 @@ function createControlMetadata(control: SegmentedControl) {
       )}`
     );
   }
-  if (control.waiver_data && Object.keys(control.waiver_data).length > 0) {
-    types.push(
-      `Control/Waiver_Data/${escapeForwardSlashes(
-        JSON.stringify(control.waiver_data)
-      )}`
-    );
-  }
-  if (control.title) {
-    types.push(`Control/Title/${escapeForwardSlashes(control.title)}`);
-  }
   return types;
 }
 
@@ -428,20 +416,20 @@ function createProfileInfoFindingFields(
   hdf: ExecJSON.Execution,
   options: IOptions
 ): string[] {
-  let typesArr = [
+  const typesArr = [
     `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
     `File/Input/${getFilename(options)}`
   ];
-  const executionTargets = ['platform', 'statistics', 'version', 'passthrough'];
+  const executionTargets = ['platform', 'statistics', 'version'];
   executionTargets.forEach((target) => {
     const value = _.get(hdf, target);
-    if (typeof value === 'string' && value.trim()) {
+    if (_.isString(value) && value.trim()) {
       typesArr.push(
         `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
           value
         )}`
       );
-    } else if (typeof value === 'object') {
+    } else {
       typesArr.push(
         `Execution/${escapeForwardSlashes(target)}/${escapeForwardSlashes(
           JSON.stringify(value)
@@ -487,7 +475,16 @@ function createProfileInfoFindingFields(
       }
     });
   });
-  typesArr = typesArr.slice(0, 50);
+  const passthrough = _.get(hdf, 'passthrough');
+  if (_.isString(passthrough) && passthrough.trim()) {
+    typesArr.push(`Execution/passthrough/${escapeForwardSlashes(passthrough)}`);
+  } else if (passthrough !== undefined) {
+    typesArr.push(
+      `Execution/passthrough/${escapeForwardSlashes(
+        JSON.stringify(passthrough)
+      )}`
+    );
+  }
   return typesArr;
 }
 
@@ -563,17 +560,10 @@ export function setupFindingType(
   control: SegmentedControl,
   context?: FromHdfToAsffMapper
 ) {
+  // typesArr needs to be ordered so that attributes that are likely to be bloated and/or contain less necessary information end up at the bottom so that they don't expand and push more attributes outside of the list which is capped at 50 items
   const typesArr = [
     `MITRE/SAF/${HeimdallToolsVersion}-hdf2asff`,
-    `File/Input/${getFilename(context?.ioptions)}`,
-    `Control/Code/${escapeForwardSlashes(
-      control.layersOfControl
-        .map(
-          (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
-            createCode(layer)
-        )
-        .join('\n\n')
-    )}`
+    `File/Input/${getFilename(context?.ioptions)}`
   ];
 
   // Add control metadata to the Finding Provider Fields
@@ -582,8 +572,44 @@ export function setupFindingType(
   typesArr.push(...createSegmentInfo(control.result));
   // Add Tags to Finding Provider Fields
   typesArr.push(...createTagInfo(control));
-  // Add Descriptions to FindingProviderFields
-  typesArr.push(...createDescriptionInfo(control));
+
+  // nist tag, then subdescriptions, then remaining tags
+  const nistTagIndex = typesArr.findIndex((typeString) =>
+    typeString.startsWith('Tags/nist/')
+  );
+  const tagsIndex = typesArr.findIndex((typeString) =>
+    typeString.startsWith('Tags/')
+  );
+  if (nistTagIndex !== -1) {
+    typesArr.splice(tagsIndex, 0, typesArr.splice(nistTagIndex, 1)[0]);
+  }
+  typesArr.splice(
+    tagsIndex === -1 ? typesArr.length : tagsIndex + 1,
+    0,
+    // Add Descriptions to FindingProviderFields
+    ...createDescriptionInfo(control)
+  );
+
+  // description, then code, then code_desc
+  const desc = typesArr.splice(
+    typesArr.findIndex((typeString) => typeString.startsWith('Control/Desc/')),
+    1
+  )[0];
+  const code = `Control/Code/${escapeForwardSlashes(
+    control.layersOfControl
+      .map(
+        (layer: ExecJSON.Control & {profileInfo?: Record<string, unknown>}) =>
+          createCode(layer)
+      )
+      .join('\n\n')
+  )}`;
+  const codeDesc = typesArr.splice(
+    typesArr.findIndex((typeString) =>
+      typeString.startsWith('Segment/code_desc/')
+    ),
+    1
+  )[0];
+  typesArr.push(..._.compact([desc, code, codeDesc])); // [][0] can return undefined so use compact to deal with them
 
   return typesArr;
 }
