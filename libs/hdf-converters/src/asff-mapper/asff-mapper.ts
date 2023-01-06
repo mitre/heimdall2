@@ -120,7 +120,7 @@ const SPECIAL_CASE_MAPPING: Map<
   [SpecialCasing.PreviouslyHDF, getPreviouslyHDF()],
   [SpecialCasing.Prowler, getProwler()],
   [SpecialCasing.SecurityHub, getSecurityHub()],
-  [SpecialCasing.Trivy, getTrivy()],
+  [SpecialCasing.Trivy, getTrivy()]
 ]);
 
 function externalProductHandler<T>(
