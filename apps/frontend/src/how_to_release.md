@@ -19,7 +19,7 @@ Great! You're ready to start publishing!
 
 If this seems short, know that most of the work was done in the initial steps.
 
-## Publishing on github
+## Publishing on Github
 
 1. Go to https://github.com/mitre/heimdall-lite/releases
 2. I'm pretty sure you edit the most recently drafted release, and then... ???
