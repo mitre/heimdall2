@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 function findingId(finding: Record<string, unknown>): string {
   return encode(
-    (_.get(finding, 'Id') as string)
+    (_.get(finding, 'ProductFields.aws/securityhub/FindingId') as string)
       .split('/')
       .slice(-1)[0]
       .split('-')
@@ -36,8 +36,14 @@ function titlePrefix(): string {
   return '';
 }
 
-function filename() {
-  return 'cms.chef inspec.json';
+function filename(
+  findingInfo: [Record<string, unknown>, Record<string, unknown>[]]
+) {
+  return `cms.chef inspec-${encode(
+    (_.get(findingInfo[0], 'ProductFields.aws/securityhub/FindingId') as string)
+      .split('/')
+      .slice(-2)[0]
+  )}-.json`;
 }
 
 export function getCMSInSpec(): Record<string, (...inputs: any) => any> {
