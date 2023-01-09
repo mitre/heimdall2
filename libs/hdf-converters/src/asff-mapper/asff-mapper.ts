@@ -186,7 +186,6 @@ function handleIdGroup(
   ) as ExecJSON.ControlWaiverData;
 
   return {
-    // Add titlePrefix to ID if any ID's are the same across products
     id: id,
     title: `${titlePrefix}${_.uniq(group.map((d) => d.title)).join(';')}`,
     tags: _.mergeWith(
@@ -398,8 +397,14 @@ export class ASFFMapper extends BaseConverter {
                 )
             },
             desc: {
-              path: 'Description',
-              transformer: (input: string): string => encode(input)
+              transformer: (finding: Record<string, unknown>): string =>
+                externalProductHandler(
+                  this,
+                  whichSpecialCase(finding),
+                  finding,
+                  'findingDescription',
+                  encode(_.get(finding, 'Description') as string)
+                )
             },
             impact: {
               transformer: (finding: Record<string, unknown>): number => {
