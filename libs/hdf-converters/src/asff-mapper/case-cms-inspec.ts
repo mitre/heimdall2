@@ -2,11 +2,22 @@ import {encode} from 'html-entities';
 import _ from 'lodash';
 
 function findingId(finding: Record<string, unknown>): string {
-  return encode((_.get(finding, 'Id') as string).split('/').slice(-1)[0].split('-').slice(0, -1).join('-'));
+  return encode(
+    (_.get(finding, 'Id') as string)
+      .split('/')
+      .slice(-1)[0]
+      .split('-')
+      .slice(0, -1)
+      .join('-')
+  );
 }
 
 function findingTitle(finding: Record<string, unknown>): string {
-  return encode((_.get(finding, 'Description') as string).slice(`${(_.get(finding, 'Title') as string)} titled `.length).split(' : ')[0]);
+  return encode(
+    (_.get(finding, 'Description') as string)
+      .slice(`${_.get(finding, 'Title') as string} titled `.length)
+      .split(' : ')[0]
+  );
 }
 
 function findingDescription(finding: Record<string, unknown>): string {
@@ -14,7 +25,11 @@ function findingDescription(finding: Record<string, unknown>): string {
 }
 
 function subfindingsCodeDesc(finding: Record<string, unknown>): string {
-  return encode((_.get(finding, 'Description') as string).slice(`${(_.get(finding, 'Title') as string)} titled `.length).split(' : ')[1]);
+  return encode(
+    (_.get(finding, 'Description') as string)
+      .slice(`${_.get(finding, 'Title') as string} titled `.length)
+      .split(' : ')[1]
+  );
 }
 
 function titlePrefix(): string {
