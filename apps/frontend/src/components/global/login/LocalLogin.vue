@@ -160,7 +160,7 @@ interface LoginHash {
   email: string;
   password: string;
 }
-@Component({
+@Component<LocalLogin>({
   mixins: [UserValidatorMixin],
   validations: {
     email: {
