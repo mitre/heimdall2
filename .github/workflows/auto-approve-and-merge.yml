@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-20.04
     permissions:
       pull-requests: write
+      contents: write
     steps:
     - uses: hmarr/auto-approve-action@v3
       with:
