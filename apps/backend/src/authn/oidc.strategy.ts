@@ -3,7 +3,6 @@ import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from 'passport-openidconnect';
 import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
-import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
 interface OIDCProfile {
