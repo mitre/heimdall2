@@ -500,8 +500,8 @@ Reboot the system for the changes to take effect.</ATTRIBUTE_DATA>
 					<ATTRIBUTE_DATA>CCI-000068</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STATUS>Open</STATUS>
-				<FINDING_DETAILS>Failed
-Expected FIPS mode to be enabled and found it to be disabled</FINDING_DETAILS>
+				<FINDING_DETAILS>failed
+expected FIPS mode to be enabled and found it to be disabled</FINDING_DETAILS>
 				<COMMENTS></COMMENTS>
 				<SEVERITY_OVERRIDE></SEVERITY_OVERRIDE>
 				<SEVERITY_JUSTIFICATION></SEVERITY_JUSTIFICATION>
