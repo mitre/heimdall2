@@ -2,8 +2,9 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from 'passport-openidconnect';
 import {ConfigService} from '../config/config.service';
-import {AuthnService} from './authn.service';
 import {GroupsService} from '../groups/groups.service';
+import {User} from '../users/user.model';
+import {AuthnService} from './authn.service';
 
 interface OIDCProfile {
   _json: {
@@ -11,7 +12,7 @@ interface OIDCProfile {
     family_name: string;
     email: string;
     email_verified: boolean;
-    groups: Array<string>;
+    groups: string[];
   };
 }
 
@@ -34,7 +35,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         callbackURL: `${configService.get('EXTERNAL_URL')}/authn/oidc/callback`,
         scope: 'openid profile email'
       },
-      function (
+      async function (
         _accessToken: string,
         _refreshToken: string,
         profile: OIDCProfile,
@@ -42,21 +43,24 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         done: any
       ) {
         const userData = profile._json;
-        const {given_name, family_name, email, email_verified, groups} = userData;
+        const {given_name, family_name, email, email_verified, groups} =
+          userData;
         if (email_verified) {
-          authnService.validateOrCreateUser(
+          const user = await authnService.validateOrCreateUser(
             email,
             given_name,
             family_name,
             'oidc'
-          ).then((user) => {
+          );
 
-            if(configService.get('OIDC_EXTERNAL_GROUPS') === "true" && groups !== undefined) {
-              groupsService.syncUserGroups(user, groups)
-            }
+          if (
+            configService.get('OIDC_EXTERNAL_GROUPS') === 'true' &&
+            groups !== undefined
+          ) {
+            groupsService.syncUserGroups(user, groups);
+          }
 
-            return done(null, user);
-        })
+          return done(null, user);
         } else {
           throw new UnauthorizedException(
             'Please verify your email with your identity provider before logging into Heimdall.'

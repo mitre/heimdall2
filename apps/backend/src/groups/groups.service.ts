@@ -5,15 +5,24 @@ import {
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {Op} from 'sequelize';
+import {FindOptions} from 'sequelize/types';
+import winston from 'winston';
 import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupDto} from '../groups/dto/group.dto';
 import {User} from '../users/user.model';
 import {CreateGroupDto} from './dto/create-group.dto';
 import {Group} from './group.model';
-import {GroupDto} from '../groups/dto/group.dto';
-import {FindOptions} from 'sequelize/types';
-
 @Injectable()
 export class GroupsService {
+  public logger = winston.createLogger({
+    transports: [new winston.transports.Console()],
+    format: winston.format.combine(
+      winston.format.timestamp({
+        format: 'MMM-DD-YYYY HH:mm:ss Z'
+      }),
+      winston.format.printf((info) => `[${[info.timestamp]}] ${info.message}`)
+    )
+  });
   constructor(
     @InjectModel(Group)
     private readonly groupModel: typeof Group
@@ -27,14 +36,6 @@ export class GroupsService {
     return this.groupModel.count();
   }
 
-  async findByName(name: string): Promise<Group> {
-    return this.findOneBang({
-      where: {
-        name
-      }
-    });
-  }
-
   async findOneBang(options: FindOptions | undefined): Promise<Group> {
     const group = await this.groupModel.findOne<Group>(options);
     if (group === null) {
@@ -42,6 +43,16 @@ export class GroupsService {
     } else {
       return group;
     }
+  }
+
+  // This method is used to find groups by group name,
+  // primarily to create groups if they do not already exist.
+  async findByName(name: string): Promise<Group> {
+    return this.findOneBang({
+      where: {
+        name
+      }
+    });
   }
 
   async findByPkBang(id: string): Promise<Group> {
@@ -113,37 +124,54 @@ export class GroupsService {
     return groupToDelete;
   }
 
-  syncUserGroups(user: User, groups: Array<string>) {
-    // Check if user is any existing groups that they should not be
-    user.$get('groups', {include: [User]}).then((currentGroups) => {
-      currentGroups.filter(group => !groups.includes(group.name)).forEach((groupToLeave) => {
-        this.removeUserFromGroup(groupToLeave, user);
-      })
-    })
+  // This method ensures that the passed in user is in all of the
+  // passed in groups. It will additionally remove the user from any
+  // groups not in the list, and create any groups that do not already exist.
+  // Called from oidc.strategy.ts, if OIDC_EXTERNAL_GROUPS is enabled
+  async syncUserGroups(user: User, groups: string[]) {
+    const currentGroups = await user.$get('groups', {include: [User]});
+    const groupsToLeave = currentGroups.filter(
+      (group) => !groups.includes(group.name)
+    );
+    const userGroups: Group[] = [];
 
-    groups.forEach((group) => {
-      this.findByName(group).then((existingGroup) => {
-        // Check if the user is already in that group
-        user.$get('groups', {include: [User]}).then((groups) => {
-          const groupMap = groups.map((group) => new GroupDto(group));
+    // Remove user from any groups that they should not be in
+    for (const groupToLeave of groupsToLeave) {
+      try {
+        await this.removeUserFromGroup(groupToLeave, user);
+      } catch (err) {
+        this.logger.warn(`Failed to remove user from group: ${err}`);
+      }
+    }
 
-          if(!groupMap.includes(existingGroup)) {
-            this.addUserToGroup(existingGroup, user, "member");
-          }
-        });
-      }).catch((err) => {
-        if(err instanceof NotFoundException) {
-
+    // Create any groups that don't already exist
+    for (const group of groups) {
+      try {
+        const existingGroup = await this.findByName(group);
+        userGroups.push(existingGroup);
+      } catch (err) {
+        if (err instanceof NotFoundException) {
+          // Create new group and add user to it
           const createGroup: CreateGroupDto = {
             name: group,
             public: false
           };
 
-          this.create(createGroup).then((newGroup) => {
-            this.addUserToGroup(newGroup, user, "member");
-          });
+          const newGroup = await this.create(createGroup);
+          userGroups.push(newGroup);
+        } else {
+          this.logger.warn(err);
         }
-      });
-    });
+      }
+    }
+
+    // Add user to any groups that they aren't already in
+    for (const userGroup of userGroups) {
+      const currentGroupMap = currentGroups.map((group) => new GroupDto(group));
+
+      if (!currentGroupMap.includes(userGroup)) {
+        this.addUserToGroup(userGroup, user, 'member');
+      }
+    }
   }
 }
