@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { gunzipSync } from 'zlib';
 
 export enum INPUT_TYPES {
   ASFF = 'asff',
