@@ -11,7 +11,7 @@ const license = parsed.license || '';
 const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
-const NodePolyfillPlugin = require("node-polyfill-webpack-plugin")
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 // This grabs the js/css to allow for HTML export
 const files = {
@@ -45,10 +45,12 @@ module.exports = {
   },
   outputDir: '../../dist/frontend',
   configureWebpack: {
-    resolve:{fallback: {
-      "fs": false,
-      "stream": false
-    }},
+    resolve: {
+      fallback: {
+        fs: false,
+        stream: false
+      }
+    },
     module: {
       rules: [
         {

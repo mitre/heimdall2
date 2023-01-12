@@ -180,7 +180,7 @@ export interface SignupHash {
   }
 })
 export default class RegistrationModal extends Vue {
-[x: string]: any;
+  [x: string]: any;
   firstName = '';
   lastName = '';
   email = '';

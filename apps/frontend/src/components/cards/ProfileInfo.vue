@@ -106,7 +106,7 @@ export default class ProfileInfo extends Vue {
   }
 
   get version(): string | undefined {
-    return _.get(this.profile, 'data.version','');
+    return _.get(this.profile, 'data.version', '');
   }
 
   get sha256_hash(): string | undefined {
@@ -114,26 +114,26 @@ export default class ProfileInfo extends Vue {
   }
 
   get maintainer(): string | undefined {
-    return _.get(this.profile, 'data.maintainer','');
+    return _.get(this.profile, 'data.maintainer', '');
   }
 
   get copyright(): string | undefined {
-    return _.get(this.profile, 'data.copyright','');
+    return _.get(this.profile, 'data.copyright', '');
   }
 
   get copyright_email(): string | undefined {
-    return _.get(this.profile, 'data.copyright_email','');
+    return _.get(this.profile, 'data.copyright_email', '');
   }
 
   get control_count(): string | undefined {
-    return _.get(this.profile, 'data.controls','').length.toString();
+    return _.get(this.profile, 'data.controls', '').length.toString();
   }
 
   get inputs(): Attribute[] {
     if (this.profile?.data.hasOwnProperty('attributes')) {
-      return _.get(this.profile, 'data.attributes',[]);
+      return _.get(this.profile, 'data.attributes', []);
     } else {
-      return _.get(this.profile, 'data.inputs',[]);
+      return _.get(this.profile, 'data.inputs', []);
     }
   }
 }

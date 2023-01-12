@@ -278,7 +278,7 @@ import {email, required, requiredIf} from 'vuelidate/lib/validators';
   }
 })
 export default class UserModal extends Vue {
-[x: string]: any;
+  [x: string]: any;
   @Prop({type: Object, required: true}) readonly user!: IUser;
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
 

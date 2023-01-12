@@ -50,7 +50,7 @@ function findingId(
     // CIS
     return encode(_.get(finding, 'ProductFields.RuleId'));
   } else {
-    return encode(_.get(finding, 'GeneratorId','').split('/').slice(-1)[0]);
+    return encode(_.get(finding, 'GeneratorId', '').split('/').slice(-1)[0]);
   }
 }
 
@@ -64,12 +64,12 @@ function findingImpact(
     controls !== null &&
     (control = correspondingControl(controls, finding)) !== null
   ) {
-    impact = _.get(control, 'SeverityRating','');
+    impact = _.get(control, 'SeverityRating', '');
   } else {
     // severity is required, but can be either 'label' or 'normalized' internally with 'label' being preferred.  other values can be in here too such as the original severity rating.
     impact =
       _.get(finding, 'Severity.Label') ||
-      _.get(finding, 'Severity.Normalized',0) / 100.0;
+      _.get(finding, 'Severity.Normalized', 0) / 100.0;
     // securityhub asff file does not contain accurate severity information by setting things that shouldn't be informational to informational: when additional context, i.e. standards, is not provided, set informational to medium.
     if (typeof impact === 'string' && impact === 'INFORMATIONAL') {
       impact = 'MEDIUM';
@@ -89,7 +89,7 @@ function findingNistTag(
     return [];
   }
   return awsConfigMapping.searchNIST([
-    _.get(finding, 'ProductFields.RelatedAWSResources:0/name','')
+    _.get(finding, 'ProductFields.RelatedAWSResources:0/name', '')
   ]);
 }
 

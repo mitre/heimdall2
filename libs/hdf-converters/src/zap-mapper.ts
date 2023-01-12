@@ -15,16 +15,16 @@ import {
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 
-function filterSite<T>(input: Array<T>, name?: string) {
+function filterSite<T extends unknown[]>(input: Array<T>, name?: string) {
   // Choose passed site if provided
   if (name) {
-    return input.find((element) => _.get(element, '@name') === name);
+    return input.find((element: unknown) => _.get(element, '@name') === name);
   }
   // Otherwise choose the site with the most alerts
   else {
-    return input.reduce((a, b) =>
-      _.get(a, 'alerts').length > _.get(b, 'alerts').length ? a : b
-    );
+    return (input as unknown[]).reduce((a, b) =>
+      _.get(a, 'alerts', []).length > _.get(b, 'alerts', []).length ? a : b
+    ) as Array<T>;
   }
 }
 function impactMapping(input: unknown): number {

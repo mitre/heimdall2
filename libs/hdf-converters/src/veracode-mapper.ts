@@ -248,9 +248,9 @@ function formatSourceLocation(input: Record<string, unknown>[]): string {
 
 function componentListCreate(input: unknown): Record<string, unknown>[] {
   const componentList: Record<string, unknown>[] = [];
-  let component = _.get(input, 'component');
+  const component = _.get(input, 'component');
   if (!Array.isArray(component)) {
-    component?[component]:[];
+    component ? [component] : [];
   }
   for (const value of component as unknown as Record<string, unknown>[]) {
     if (_.get(value, `vulnerabilities`) !== '') {
