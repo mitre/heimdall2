@@ -32,6 +32,7 @@ jobs:
        uses: actions/setup-node@v3
        with:
         node-version: '16.x'
+        cache: 'yarn'
 
      - name: Remove frontend and backend code to ensure the proper dependencies are declared in the hdf-converters package.json
        run: |

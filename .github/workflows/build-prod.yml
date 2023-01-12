@@ -24,6 +24,7 @@ jobs:
        uses: actions/setup-node@v3
        with:
         node-version: '16.x'
+        cache: 'yarn'
 
      - name: Remove all test code from the application
        run: rm -rf apps/frontend/tests apps/backend/test test
