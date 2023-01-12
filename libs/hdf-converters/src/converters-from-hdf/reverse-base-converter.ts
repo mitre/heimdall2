@@ -32,8 +32,8 @@ export class FromHdfBaseConverter {
 
   //Called over and over to iterate through objects assigned to keys too
   convertInternal<T>(file: object, fields: T): MappedReform<T, ILookupPathFH> {
-    const result = this.objectMap(fields, (v: ObjectEntryValue<T>) =>
-      this.evaluate(file, v)
+    const result = this.objectMap(fields as T[], (v) =>
+      this.evaluate(file, v as T & object & ILookupPathFH)
     );
     return result as MappedReform<T, ILookupPathFH>;
   }

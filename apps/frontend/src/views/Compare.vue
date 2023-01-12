@@ -376,7 +376,7 @@ export default class Compare extends Vue {
     this.files.forEach((file) => {
       if ('passthrough' in file.evaluation.data) {
         const passthroughData = _.get(file.evaluation.data, 'passthrough');
-        if (typeof passthroughData === 'object') {
+        if (passthroughData !== null && typeof passthroughData === 'object') {
           this.compareItems = this.compareItems.concat(
             Object.keys(passthroughData)
               .filter(

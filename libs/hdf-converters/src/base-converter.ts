@@ -189,9 +189,7 @@ export class BaseConverter {
       >;
     }
 
-    const result = this.objectMap(fields, (v: ObjectEntryValue<T>) =>
-      this.evaluate(file, v)
-    );
+    const result = this.objectMap(fields as T[], (v) => this.evaluate(file, v));
     return result as MappedReform<T, ILookupPath>;
   }
 
@@ -203,7 +201,7 @@ export class BaseConverter {
       _.has(v, 'transformer') && _.isFunction(_.get(v, 'transformer'));
     let transformer = (val: unknown) => val;
     if (hasTransformer) {
-      transformer = _.get(v, 'transformer');
+      transformer = _.get(v, 'transformer') as (val: unknown) => typeof val;
       v = _.omit(v as object, 'transformer') as T;
     }
 
@@ -215,7 +213,7 @@ export class BaseConverter {
       f?: Record<string, unknown>
     ) => T | T[] = (val: T | T[]) => val;
     if (haspathTransform) {
-      pathTransform = _.get(v, 'pathTransform');
+      pathTransform = _.get(v, 'pathTransform') as (val: T | T[]) => typeof val;
       v = _.omit(v as object, 'pathTransform') as T;
     }
 
@@ -241,7 +239,7 @@ export class BaseConverter {
     if (Array.isArray(pathV)) {
       return hasTransformer
         ? (transformer(pathV) as T[])
-        : this.handleArray(file, pathV);
+        : this.handleArray(file, pathV as (T & ILookupPath)[]);
     }
 
     if (_.keys(v).length > 0 && hasTransformer) {
@@ -317,7 +315,7 @@ export class BaseConverter {
                 'key',
                 'pathTransform'
               ]) as unknown as T;
-            });
+            }) as (T & ILookupPath)[];
             if (arrayTransformer !== undefined) {
               if (Array.isArray(arrayTransformer)) {
                 v = arrayTransformer[0].apply(arrayTransformer[1], [
@@ -325,7 +323,8 @@ export class BaseConverter {
                   this.data
                 ]);
               } else {
-                v = arrayTransformer.apply(null, [v, this.data]) as T[];
+                v = arrayTransformer.apply(null, [v, this.data]) as (T &
+                  ILookupPath)[];
               }
             }
             if (key !== undefined) {
