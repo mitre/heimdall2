@@ -97,7 +97,7 @@
     "mustache": "^4.2.0",
     "objects-to-csv": "^1.3.6",
     "prismjs": "^1.21.0",
-    "rimraf": "^3.0.2",
+    "rimraf": "^4.0.4",
     "roboto-fontface": "*",
     "sanitize-html": "^2.3.3",
     "sass": "~1.32.6",
