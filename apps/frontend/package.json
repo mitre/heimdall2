@@ -34,6 +34,9 @@
       "js",
       "json"
     ],
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    },
     "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
     "transform": {
       ".*\\.(vue)$": "vue-jest",
