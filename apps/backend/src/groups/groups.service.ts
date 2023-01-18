@@ -8,7 +8,6 @@ import {Op} from 'sequelize';
 import {FindOptions} from 'sequelize/types';
 import winston from 'winston';
 import {Evaluation} from '../evaluations/evaluation.model';
-import {GroupDto} from '../groups/dto/group.dto';
 import {User} from '../users/user.model';
 import {CreateGroupDto} from './dto/create-group.dto';
 import {Group} from './group.model';
@@ -36,7 +35,7 @@ export class GroupsService {
     return this.groupModel.count();
   }
 
-  async findOneBang(options: FindOptions | undefined): Promise<Group> {
+  async findOneBang(options?: FindOptions): Promise<Group> {
     const group = await this.groupModel.findOne<Group>(options);
     if (group === null) {
       throw new NotFoundException('Group with given name not found');
@@ -46,7 +45,7 @@ export class GroupsService {
   }
 
   // This method is used to find groups by group name,
-  // primarily to create groups if they do not already exist.
+  // primarily to sync user roles from an external provider
   async findByName(name: string): Promise<Group> {
     return this.findOneBang({
       where: {
@@ -125,15 +124,15 @@ export class GroupsService {
   }
 
   // This method ensures that the passed in user is in all of the
-  // passed in groups. It will additionally remove the user from any
-  // groups not in the list, and create any groups that do not already exist.
+  // passed in groups, as long as the group already exists.
+  // It will additionally remove the user from any groups not in the list.
   // Called from oidc.strategy.ts, if OIDC_EXTERNAL_GROUPS is enabled
   async syncUserGroups(user: User, groups: string[]) {
     const currentGroups = await user.$get('groups', {include: [User]});
     const groupsToLeave = currentGroups.filter(
       (group) => !groups.includes(group.name)
     );
-    const userGroups: Group[] = [];
+    const existingGroups: Group[] = [];
 
     // Remove user from any groups that they should not be in
     for (const groupToLeave of groupsToLeave) {
@@ -144,33 +143,24 @@ export class GroupsService {
       }
     }
 
-    // Create any groups that don't already exist
+    // Find existing groups to add user to
     for (const group of groups) {
       try {
         const existingGroup = await this.findByName(group);
-        userGroups.push(existingGroup);
+        existingGroups.push(existingGroup);
       } catch (err) {
         if (err instanceof NotFoundException) {
-          // Create new group and add user to it
-          const createGroup: CreateGroupDto = {
-            name: group,
-            public: false
-          };
-
-          const newGroup = await this.create(createGroup);
-          userGroups.push(newGroup);
+          this.logger.info('External group does not exist locally, skipping..');
         } else {
           this.logger.warn(err);
         }
       }
     }
 
-    // Add user to any groups that they aren't already in
-    for (const userGroup of userGroups) {
-      const currentGroupMap = currentGroups.map((group) => new GroupDto(group));
-
-      if (!currentGroupMap.includes(userGroup)) {
-        this.addUserToGroup(userGroup, user, 'member');
+    // Add user to existing groups that they aren't in yet
+    for (const existingGroup of existingGroups) {
+      if (!currentGroups.some((group) => group.name === existingGroup.name)) {
+        this.addUserToGroup(existingGroup, user, 'member');
       }
     }
   }
