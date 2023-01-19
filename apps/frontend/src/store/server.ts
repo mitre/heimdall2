@@ -35,6 +35,7 @@ export interface IServerState {
   ldap: boolean;
   localLoginEnabled: boolean;
   userInfo: IUser;
+  disableUpdateCheck: boolean;
 }
 
 interface LoginData {
@@ -53,6 +54,7 @@ class Server extends VuexModule implements IServerState {
   classificationBannerColor = '';
   classificationBannerText = '';
   classificationBannerTextColor = '';
+  disableUpdateCheck = false;
   ldap = false;
   serverUrl = '';
   serverMode = false;
@@ -104,6 +106,7 @@ class Server extends VuexModule implements IServerState {
     this.oidcName = settings.oidcName;
     this.ldap = settings.ldap;
     this.localLoginEnabled = settings.localLoginEnabled;
+    this.disableUpdateCheck = settings.disableUpdateCheck;
   }
 
   @Mutation

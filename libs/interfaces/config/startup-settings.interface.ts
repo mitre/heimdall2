@@ -8,4 +8,5 @@ export interface IStartupSettings {
   readonly ldap: boolean;
   readonly registrationEnabled: boolean;
   readonly localLoginEnabled: boolean;
+  readonly disableUpdateCheck: boolean;
 }
