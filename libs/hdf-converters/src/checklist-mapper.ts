@@ -1,6 +1,7 @@
 import {Jsonix} from '@mitre/jsonix';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import { threadId } from 'worker_threads';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -235,6 +236,9 @@ function getStatus(input: string): ExecJSON.ControlResultStatus {
 
 export class ChecklistMapper extends BaseConverter {
   withRaw: boolean;
+  filename: string;
+  wrapper: boolean;
+  editMode: boolean;
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -317,11 +321,14 @@ export class ChecklistMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+      transformer: (data: Record<string,unknown>): Record<string,unknown> => {
         return {
-          ...(this.withRaw && {raw: data})
-        };
+          ...(this.withRaw && {raw: data.raw}),
+          ...(this.editMode && {mutableChecklists: data.stigs})
+        }
       }
+      // intChecklistObj: this.data.stigs,
+      // raw: this.data.raw
     }
   };
 
@@ -330,16 +337,43 @@ export class ChecklistMapper extends BaseConverter {
    * @param checklistXLM - XML string using checklist schema 2.5
    * @param [withRaw] - boolean
    */
-  constructor(checklistXLM: string, withRaw = false) {
+  constructor(
+    checklistXLM: string,
+    filename: string,
+    withRaw?: boolean,
+    wrapper?: boolean,
+    editMode?: boolean
+    ) {
     super(parseXmlToJsonix(checklistXLM, jsonixMapping));
-    this.withRaw = withRaw;
-    this.data = createChecklistObject(this.data);
+    this.withRaw = withRaw || false;
+    this.filename = filename || "";
+    this.wrapper = wrapper || false;
+    this.editMode = editMode || true;
+    this.data = createChecklistObject(this.data, filename);
   }
 
-  /**
-   * Gets info for Checklist Viewer
-   */
-  get getData(): unknown {
-    return this.data;
+  toHdf(): ExecJSON.Execution {
+    const original = super.toHdf();
+    if (this.wrapper) {
+      console.log(original)
+      const parent_profile: ExecJSON.Profile = {
+        name: this.filename,
+        version: "1",
+        title: this.filename,
+        summary: "",
+        license: "terms-of-use",
+        supports: [],
+        attributes: [],
+        groups: [],
+        status: "loaded",
+        controls: [],
+        sha256: ""
+      }
+      for (let i in original.profiles) {
+        original.profiles[i].parent_profile = this.filename;
+      }
+      original.profiles.push(parent_profile);
+    }
+    return original;
   }
 }

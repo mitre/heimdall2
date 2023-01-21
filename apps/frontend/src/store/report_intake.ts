@@ -263,16 +263,20 @@ export class InspecIntake extends VuexModule {
         return new FortifyMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.CHECKLIST:
         if ((convertOptions.data.match(new RegExp("<iSTIG>", "g")) || []).length > 1) {
-          const returnArray = []
-          const splitString = convertOptions.data.split(new RegExp('<iSTIG>|</iSTIG>', 'g'));
-          for (let i = 1; i < splitString.length; i += 2) {
-            const checklist = splitString[0] + "<iSTIG>" + splitString[i] + "</iSTIG>" + splitString[splitString.length - 1];
-            convertOptions.fileOptions.filename = "New Name????"
-            returnArray.push(new ChecklistMapper(checklist).toHdf())
-          }
-          return returnArray;
+          console.log(convertOptions)
+          // let filename: string = "";
+          // if (convertOptions.fileOptions.file) filename = convertOptions.fileOptions.file.name;
+          return new ChecklistMapper(convertOptions.data, filename, undefined, true).toHdf()
+          
+          // const returnArray = []
+          // const splitString = convertOptions.data.split(new RegExp('<iSTIG>|</iSTIG>', 'g'));
+          // for (let i = 1; i < splitString.length; i += 2) {
+          //   const checklist = splitString[0] + "<iSTIG>" + splitString[i] + "</iSTIG>" + splitString[splitString.length - 1];
+          //   returnArray.push(new ChecklistMapper(checklist).toHdf())
+          // }
+          // return returnArray;
         } else {
-          return new ChecklistMapper(convertOptions.data).toHdf()
+          return new ChecklistMapper(convertOptions.data, filename).toHdf()
         }
       default:
         return SnackbarModule.failure(

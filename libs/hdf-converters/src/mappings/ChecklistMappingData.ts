@@ -144,7 +144,7 @@ const STATUS_MAPPING: Map<string | undefined, string> = new Map([
  * @param raw
  * @returns - newChecklistObject
  */
-export function createChecklistObject(raw: Record<string, any>) {
+export function createChecklistObject(raw: Record<string, any>, filename: string) {
   const asset: ChecklistAsset = {
     role: _.get(raw, 'value.asset.role'),
     assettype: _.get(raw, 'value.asset.assettype'),
@@ -231,7 +231,7 @@ export function createChecklistObject(raw: Record<string, any>) {
   });
 
   const newChecklist: Omit<ChecklistFile, 'uniqueId'> = {
-    filename: stigs[0].header.filename,
+    filename: filename,
     asset: asset,
     stigs: stigs,
     raw: raw
