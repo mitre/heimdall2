@@ -28,7 +28,7 @@ export class AppService
     this.logger.info({
       message: `Started Heimdall Enterprise Server on ${os.hostname()} (${os.platform()} ${os.release()}) with PID ${
         process.pid
-      } and UID ${process.getuid()}`
+      } and UID ${process.getuid?.()}`
     });
   }
 
