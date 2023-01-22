@@ -36,14 +36,21 @@ function titlePrefix(): string {
   return '';
 }
 
-function filename(
-  findingInfo: [Record<string, unknown>, Record<string, unknown>[]]
-) {
-  return `cms.chef inspec-${encode(
-    (_.get(findingInfo[0], 'ProductFields.aws/securityhub/FindingId') as string)
+function productName(
+  findings: Record<string, unknown> | Record<string, unknown>[]
+): string {
+  const finding = Array.isArray(findings) ? findings[0] : findings;
+  return `cms_chef_inspec-${encode(
+    (_.get(finding, 'ProductFields.aws/securityhub/FindingId') as string)
       .split('/')
       .slice(-2)[0]
-  )}-.json`;
+  )}`;
+}
+
+function filename(
+  findingInfo: [Record<string, unknown>, Record<string, unknown>[]]
+): string {
+  return `${productName(findingInfo[0])}.json`;
 }
 
 export function getCMSInSpec(): Record<string, (...inputs: any) => any> {
@@ -53,6 +60,7 @@ export function getCMSInSpec(): Record<string, (...inputs: any) => any> {
     findingDescription,
     subfindingsCodeDesc,
     titlePrefix,
+    productName,
     filename
   };
 }
