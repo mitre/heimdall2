@@ -1,3 +1,8 @@
+v2.6.35
+
+## Dependency Updates
+- Remove console log message in gosec-mapper.ts @Amndeep7 (#3901)
+
 v2.6.34
 
 ## Dependency Updates
