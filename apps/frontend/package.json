@@ -40,6 +40,9 @@
       "^.+\\.tsx?$": "ts-jest"
     }
   },
+  "resolution": {
+    "webpack": "5.75.0"
+  },
   "dependencies": {
     "@heimdall/interfaces": "^2.6.14",
     "@mdi/font": "^7.0.96",
@@ -141,7 +144,8 @@
     "jest-useragent-mock": "^0.1.1",
     "sinon": "^14.0.0",
     "ts-jest": "^27.0.2",
-    "vue-jest": "^3.0.7"
+    "vue-jest": "^3.0.7",
+    "webpack": "5.75.0"
   },
   "engines": {
     "node": "^18.10.0"

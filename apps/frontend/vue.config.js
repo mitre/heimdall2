@@ -1,4 +1,5 @@
 var webpack = require('webpack');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 // Lookup constants
 const fs = require('fs');
@@ -11,7 +12,7 @@ const license = parsed.license || '';
 const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
-const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
+
 
 // This grabs the js/css to allow for HTML export
 const files = {
@@ -67,7 +68,9 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
-      new NodePolyfillPlugin(),
+      new NodePolyfillPlugin({
+        includeAliases:['crypto','path','http','https','os','zlib','process',"Buffer"]
+      }),
       new webpack.DefinePlugin({
         'process.env': {
           PACKAGE_VERSION: `"${version}"`,
