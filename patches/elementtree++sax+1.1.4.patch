@@ -1,0 +1,13 @@
+diff --git a/node_modules/elementtree/node_modules/sax/lib/sax.js b/node_modules/elementtree/node_modules/sax/lib/sax.js
+index 5c08d5f..3b349b0 100644
+--- a/node_modules/elementtree/node_modules/sax/lib/sax.js
++++ b/node_modules/elementtree/node_modules/sax/lib/sax.js
+@@ -217,7 +217,7 @@
+       })
+     })
+   }
+-
++  if(!Stream) Stream = function(){}
+   SAXStream.prototype = Object.create(Stream.prototype, {
+     constructor: {
+       value: SAXStream
