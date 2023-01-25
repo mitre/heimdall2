@@ -7,7 +7,10 @@ import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   getCCIsForNISTTags
 } from '../utils/global';
+import {getCMSInSpec} from './case-cms-inspec';
 import {getFirewallManager} from './case-firewall-manager';
+import {getGuardDuty} from './case-guardduty';
+import {getInspector} from './case-inspector';
 import {getPreviouslyHDF} from './case-previously-hdf';
 import {getProwler} from './case-prowler';
 import {getSecurityHub} from './case-security-hub';
@@ -26,7 +29,10 @@ const COMPLIANCE_STATUS = 'Compliance.Status';
 
 // Sometimes certain ASFF file types require massaging in order to generate good HDF files.  These are the supported special cases and a catchall 'Default'.  'Default' files and non-special cased methods for otherwise special cased files do the pre-defined default behaviors when generating the HDF file.
 export enum SpecialCasing {
+  CMSInSpec = 'CMS Chef InSpec',
   FirewallManager = 'AWS Firewall Manager',
+  GuardDuty = 'AWS GuardDuty',
+  Inspector = 'AWS Inspector',
   Prowler = 'Prowler',
   SecurityHub = 'AWS Security Hub',
   Trivy = 'Aqua Trivy',
@@ -37,6 +43,11 @@ export enum SpecialCasing {
 function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   const productArn = _.get(finding, 'ProductArn') as string;
   if (
+    _.get(finding, 'ProductName') === 'Default' &&
+    _.get(finding, 'GeneratorId') === 'cms.Chef Inspec'
+  ) {
+    return SpecialCasing.CMSInSpec;
+  } else if (
     productArn.match(
       /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/firewall-manager$/
     )
@@ -44,22 +55,10 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     return SpecialCasing.FirewallManager;
   } else if (
     productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/guardduty$/
     )
   ) {
-    return SpecialCasing.Prowler;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/
-    )
-  ) {
-    return SpecialCasing.SecurityHub;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/
-    )
-  ) {
-    return SpecialCasing.Trivy;
+    return SpecialCasing.GuardDuty;
   } else if (
     _.some(
       _.get(finding, 'FindingProviderFields.Types') as string[],
@@ -80,6 +79,30 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     )
   ) {
     return SpecialCasing.PreviouslyHDF;
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/inspector$/
+    )
+  ) {
+    return SpecialCasing.Inspector;
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
+    )
+  ) {
+    return SpecialCasing.Prowler;
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/
+    )
+  ) {
+    return SpecialCasing.SecurityHub;
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/
+    )
+  ) {
+    return SpecialCasing.Trivy;
   } else {
     return SpecialCasing.Default;
   }
@@ -90,11 +113,14 @@ const SPECIAL_CASE_MAPPING: Map<
   // eslint-disable-next-line @typescript-eslint/ban-types
   Record<string, Function>
 > = new Map([
+  [SpecialCasing.CMSInSpec, getCMSInSpec()],
   [SpecialCasing.FirewallManager, getFirewallManager()],
+  [SpecialCasing.GuardDuty, getGuardDuty()],
+  [SpecialCasing.Inspector, getInspector()],
+  [SpecialCasing.PreviouslyHDF, getPreviouslyHDF()],
   [SpecialCasing.Prowler, getProwler()],
   [SpecialCasing.SecurityHub, getSecurityHub()],
-  [SpecialCasing.Trivy, getTrivy()],
-  [SpecialCasing.PreviouslyHDF, getPreviouslyHDF()]
+  [SpecialCasing.Trivy, getTrivy()]
 ]);
 
 function externalProductHandler<T>(
@@ -144,14 +170,13 @@ function handleIdGroup(
     'productName',
     encode(`${productInfo[1]}/${productInfo[2]}`)
   );
-  const hasNoTitlePrefix = externalProductHandler(
+  const titlePrefix = externalProductHandler(
     context,
     whichSpecialCase(findings[0]),
-    null,
-    'doesNotHaveFindingTitlePrefix',
-    false
+    findings,
+    'titlePrefix',
+    `${productName}: `
   );
-  const titlePrefix = hasNoTitlePrefix ? '' : `${productName}: `;
   const waiverData = externalProductHandler(
     context,
     whichSpecialCase(findings[0]),
@@ -161,7 +186,6 @@ function handleIdGroup(
   ) as ExecJSON.ControlWaiverData;
 
   return {
-    // Add productName to ID if any ID's are the same across products
     id: id,
     title: `${titlePrefix}${_.uniq(group.map((d) => d.title)).join(';')}`,
     tags: _.mergeWith(
@@ -373,8 +397,14 @@ export class ASFFMapper extends BaseConverter {
                 )
             },
             desc: {
-              path: 'Description',
-              transformer: (input: string): string => encode(input)
+              transformer: (finding: Record<string, unknown>): string =>
+                externalProductHandler(
+                  this,
+                  whichSpecialCase(finding),
+                  finding,
+                  'findingDescription',
+                  encode(_.get(finding, 'Description') as string)
+                )
             },
             impact: {
               transformer: (finding: Record<string, unknown>): number => {
@@ -504,8 +534,8 @@ export class ASFFMapper extends BaseConverter {
                             return ExecJSON.ControlResultStatus.Error;
                         }
                       } else {
-                        // if no compliance status is provided which is a weird but possible case, then skip
-                        return ExecJSON.ControlResultStatus.Skipped;
+                        // if no compliance status is provided which is a weird but possible case, then fail
+                        return ExecJSON.ControlResultStatus.Failed;
                       }
                     };
                     return externalProductHandler(

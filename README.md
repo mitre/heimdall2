@@ -105,7 +105,7 @@ Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Li
 | :------------------------------------------------------: | :------------------------------------------------------: |
 | Just-in-Time Use | Multiple Teams |
 | Minimal Footprint & Deployment Time  | Timeline and Report History |
-| Local or disconnected Use | Centralized Deployment Model |
+| Local or Disconnected Use | Centralized Deployment Model |
 | Minimal Authorization & Approval Time |  |
 
 ## Getting Started / Installation

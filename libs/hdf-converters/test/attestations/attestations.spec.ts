@@ -106,8 +106,8 @@ describe('attestations', () => {
   });
 
   it('Should parse words for durations correctly', () => {
-    expect(advanceDate(moment(1662758942522), 'fortnightly').format()).toEqual(
-      '2022-09-23T21:29:02+00:00'
-    );
+    expect(
+      advanceDate(moment.utc(1662758942000), 'fortnightly').toISOString(true)
+    ).toEqual('2022-09-23T21:29:02.000+00:00');
   });
 });
