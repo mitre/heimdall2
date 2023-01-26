@@ -48,8 +48,7 @@ module.exports = {
   configureWebpack: {
     resolve: {
       fallback: {
-        fs: false,
-        stream: false
+        fs: false
       }
     },
     module: {
@@ -69,7 +68,7 @@ module.exports = {
     devtool: 'source-map',
     plugins: [
       new NodePolyfillPlugin({
-        includeAliases:['crypto','path','http','https','os','zlib','process',"Buffer"]
+        includeAliases:['crypto','path','http','https','os','zlib','process',"Buffer","stream"]
       }),
       new webpack.DefinePlugin({
         'process.env': {
