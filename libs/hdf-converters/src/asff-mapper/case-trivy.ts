@@ -55,8 +55,8 @@ function productName() {
   return 'Aqua Security - Trivy';
 }
 
-function doesNotHaveFindingTitlePrefix() {
-  return true;
+function titlePrefix() {
+  return '';
 }
 
 function filename() {
@@ -73,7 +73,7 @@ export function getTrivy(): Record<string, (...inputs: any) => any> {
     findingNistTag,
     subfindingsStatus,
     subfindingsMessage,
-    doesNotHaveFindingTitlePrefix,
+    titlePrefix,
     productName,
     filename,
     meta

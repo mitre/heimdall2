@@ -4,7 +4,7 @@
     "libs/*",
     "test"
   ],
-  "version": "2.6.31",
+  "version": "2.6.36",
   "npmClient": "yarn",
   "useWorkspaces": true
 }

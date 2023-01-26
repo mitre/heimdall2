@@ -34,6 +34,9 @@
               item.filename
             }}</span>
           </template>
+          <template #[`item.groups`]="{item}">
+            <GroupRow v-if="item.id" :evaluation="item" />
+          </template>
           <template #[`item.evaluationTags`]="{item}">
             <TagRow v-if="item.id" :evaluation="item" />
           </template>
@@ -92,6 +95,7 @@
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import CopyButton from '@/components/generic/CopyButton.vue';
+import GroupRow from '@/components/global/groups/GroupRow.vue';
 import TagRow from '@/components/global/tags/TagRow.vue';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 import {EvaluationModule} from '@/store/evaluations';
@@ -107,6 +111,7 @@ import {Prop} from 'vue-property-decorator';
     ActionDialog,
     EditEvaluationModal,
     CopyButton,
+    GroupRow,
     TagRow
   }
 })
@@ -163,6 +168,18 @@ export default class LoadFileList extends Vue {
     return result;
   }
 
+  filterEvaluationGroups(file: IEvaluation | Sample, search: string) {
+    let result = false;
+    if ('groups' in file) {
+      file.groups?.forEach((group) => {
+        if (group.name.toLowerCase().includes(search)) {
+          result = true;
+        }
+      });
+    }
+    return result;
+  }
+
   async deleteItemConfirm(): Promise<void> {
     EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
       SnackbarModule.notify('Deleted evaluation successfully.');
@@ -182,6 +199,7 @@ export default class LoadFileList extends Vue {
         async (item: IEvaluation | Sample) => {
           if (
             this.filterEvaluationTags(item, searchToLower) ||
+            this.filterEvaluationGroups(item, searchToLower) ||
             item.filename.toLowerCase().includes(searchToLower)
           ) {
             matches.push(item);
