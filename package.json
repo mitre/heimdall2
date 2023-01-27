@@ -7,7 +7,7 @@
     "test"
   ],
   "scripts": {
-    "postinstall": "patch-package",
+    "postinstall": "yarn patch-package",
     "backend": "yarn workspace heimdall-server",
     "build": "lerna run build",
     "cypress-test": "yarn workspace @heimdall/cypress-tests",
