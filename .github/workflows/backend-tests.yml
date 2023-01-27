@@ -2,7 +2,7 @@ name: Run Backend Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, updateNodeVersionTo18 ]
   pull_request:
     branches: [ master ]
 
@@ -23,7 +23,7 @@ jobs:
      - name: Setup Node.js
        uses: actions/setup-node@v3
        with:
-        node-version: '16.x'
+        node-version: '18.10.0'
         cache: 'yarn'
 
      - name: Remove frontend code to ensure the proper dependencies are declared in the backend package.json

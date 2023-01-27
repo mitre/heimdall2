@@ -2,9 +2,9 @@ name: Build in production mode
 
 on:
   push:
-    branches: [ master ]
+    branches: [master, updateNodeVersionTo18]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
@@ -18,19 +18,19 @@ jobs:
           - 5432:5432
 
     steps:
-     - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-     - name: Setup Node.js
-       uses: actions/setup-node@v3
-       with:
-        node-version: '16.x'
-        cache: 'yarn'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.10.0'
+          cache: 'yarn'
 
-     - name: Remove all test code from the application
-       run: rm -rf apps/frontend/tests apps/backend/test test
+      - name: Remove all test code from the application
+        run: rm -rf apps/frontend/tests apps/backend/test test
 
-     - name: Install project dependencies
-       run: yarn install --frozen-lockfile --production
+      - name: Install project dependencies
+        run: yarn install --frozen-lockfile --production
 
-     - name: Ensure the app builds cleanly with only production dependencies
-       run: yarn build
+      - name: Ensure the app builds cleanly with only production dependencies
+        run: yarn build
