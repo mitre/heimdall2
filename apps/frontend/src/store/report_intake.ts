@@ -9,7 +9,6 @@ import {read_file_async} from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
-  ChecklistMapper,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -41,6 +40,7 @@ import {
 import _ from 'lodash';
 import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
+import {ChecklistSupplementalInfoModule} from './checklist_supplemental';
 import {FilteredDataModule} from './data_filters';
 import {SnackbarModule} from './snackbar';
 
@@ -262,22 +262,11 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.FORTIFY:
         return new FortifyMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.CHECKLIST:
-        if ((convertOptions.data.match(new RegExp("<iSTIG>", "g")) || []).length > 1) {
-          console.log(convertOptions)
-          // let filename: string = "";
-          // if (convertOptions.fileOptions.file) filename = convertOptions.fileOptions.file.name;
-          return new ChecklistMapper(convertOptions.data, filename, undefined, true).toHdf()
-          
-          // const returnArray = []
-          // const splitString = convertOptions.data.split(new RegExp('<iSTIG>|</iSTIG>', 'g'));
-          // for (let i = 1; i < splitString.length; i += 2) {
-          //   const checklist = splitString[0] + "<iSTIG>" + splitString[i] + "</iSTIG>" + splitString[splitString.length - 1];
-          //   returnArray.push(new ChecklistMapper(checklist).toHdf())
-          // }
-          // return returnArray;
-        } else {
-          return new ChecklistMapper(convertOptions.data, filename).toHdf()
-        }
+        const checklistInfo = {
+          fname: filename,
+          data: convertOptions.data
+        };
+        return ChecklistSupplementalInfoModule.show(checklistInfo);
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`

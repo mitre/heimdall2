@@ -1,10 +1,10 @@
 import {Jsonix} from '@mitre/jsonix';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import { threadId } from 'worker_threads';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
+  generateHash,
   ILookupPath,
   MappedTransform,
   parseXmlToJsonix
@@ -234,11 +234,92 @@ function getStatus(input: string): ExecJSON.ControlResultStatus {
   }
 }
 
+export type checklistSupplementalInfo = {
+  filename: string;
+  intakeType: 'split' | 'wrapper' | 'default';
+  mode?: 'view' | 'edit';
+};
+
+export class ChecklistResults {
+  checklistXml: string;
+  withRaw: boolean;
+  supplementalInfo: checklistSupplementalInfo;
+
+  constructor(
+    checklistXml: string,
+    supplementalInfo: checklistSupplementalInfo,
+    withRaw?: boolean
+  ) {
+    this.checklistXml = checklistXml;
+    this.supplementalInfo = supplementalInfo;
+    this.withRaw = withRaw || false;
+  }
+
+  toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
+    console.log(this.supplementalInfo);
+    switch (this.supplementalInfo.intakeType) {
+      case 'default':
+        const result = new ChecklistMapper(
+          this.checklistXml,
+          this.supplementalInfo.filename,
+          this.withRaw
+        );
+        return result.toHdf();
+      case 'split':
+        const returnArray: ExecJSON.Execution[] = [];
+        const splitString = this.checklistXml.split(
+          new RegExp('<iSTIG>|</iSTIG>', 'g')
+        );
+        for (let i = 1; i < splitString.length; i += 2) {
+          const checklist =
+            splitString[0] +
+            '<iSTIG>' +
+            splitString[i] +
+            '</iSTIG>' +
+            splitString[splitString.length - 1];
+          returnArray.push(
+            new ChecklistMapper(
+              checklist,
+              this.supplementalInfo.filename
+            ).toHdf()
+          );
+        }
+        return returnArray;
+      case 'wrapper':
+        const checklist = new ChecklistMapper(
+          this.checklistXml,
+          this.supplementalInfo.filename,
+          this.withRaw
+        );
+        const original = checklist.toHdf();
+        const parentProfileName = this.supplementalInfo.filename.replace(
+          /\.ckl/gi,
+          ''
+        );
+        const parent_profile: ExecJSON.Profile = {
+          name: parentProfileName,
+          supports: [],
+          attributes: [],
+          groups: [],
+          controls: [],
+          sha256: ''
+        };
+        parent_profile.sha256 = generateHash(JSON.stringify(parent_profile));
+        for (const i in original.profiles) {
+          original.profiles[i].parent_profile = parentProfileName;
+          original.profiles[i].sha256 = generateHash(
+            JSON.stringify(original.profiles[i])
+          );
+        }
+        original.profiles.push(parent_profile);
+        return original;
+    }
+  }
+}
+
 export class ChecklistMapper extends BaseConverter {
   withRaw: boolean;
   filename: string;
-  wrapper: boolean;
-  editMode: boolean;
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -321,11 +402,11 @@ export class ChecklistMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      transformer: (data: Record<string,unknown>): Record<string,unknown> => {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
         return {
           ...(this.withRaw && {raw: data.raw}),
-          ...(this.editMode && {mutableChecklists: data.stigs})
-        }
+          ...{mutableChecklist: data.stigs}
+        };
       }
       // intChecklistObj: this.data.stigs,
       // raw: this.data.raw
@@ -335,45 +416,15 @@ export class ChecklistMapper extends BaseConverter {
   /**
    * Creates an instance of checklist mapper.
    * @param checklistXLM - XML string using checklist schema 2.5
-   * @param [withRaw] - boolean
+   * @param filename - string of file name passed required for checklist viewer
+   * @param withRaw - boolean to include raw data in passthrough
+   * @param wrapper - boolean to create a wrapper profile for results viewer
+   * @param editMode - boolean to include checklist object for checklist viewer
    */
-  constructor(
-    checklistXLM: string,
-    filename: string,
-    withRaw?: boolean,
-    wrapper?: boolean,
-    editMode?: boolean
-    ) {
-    super(parseXmlToJsonix(checklistXLM, jsonixMapping));
+  constructor(checklistXml: string, filename: string, withRaw?: boolean) {
+    super(parseXmlToJsonix(checklistXml, jsonixMapping));
     this.withRaw = withRaw || false;
-    this.filename = filename || "";
-    this.wrapper = wrapper || false;
-    this.editMode = editMode || true;
-    this.data = createChecklistObject(this.data, filename);
-  }
-
-  toHdf(): ExecJSON.Execution {
-    const original = super.toHdf();
-    if (this.wrapper) {
-      console.log(original)
-      const parent_profile: ExecJSON.Profile = {
-        name: this.filename,
-        version: "1",
-        title: this.filename,
-        summary: "",
-        license: "terms-of-use",
-        supports: [],
-        attributes: [],
-        groups: [],
-        status: "loaded",
-        controls: [],
-        sha256: ""
-      }
-      for (let i in original.profiles) {
-        original.profiles[i].parent_profile = this.filename;
-      }
-      original.profiles.push(parent_profile);
-    }
-    return original;
+    this.filename = filename;
+    this.data = createChecklistObject(this.data, this.filename);
   }
 }
