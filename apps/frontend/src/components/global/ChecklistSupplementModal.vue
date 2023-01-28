@@ -37,7 +37,11 @@
           color="primary"
           text
           :disabled="
-            importType == 'split' || importType == 'wrapper' ? false : true
+            importType == 'split' ||
+            importType == 'wrapper' ||
+            importType == 'default'
+            ? false
+            : true
           "
           @click="view"
         >
@@ -122,7 +126,8 @@ export default class ChecklistSupplementModal extends Vue {
         filename: this.filename
       });
     }
-    this.$emit('close-modal');
+    ChecklistSupplementalInfoModule.resetState();
+    ChecklistSupplementalInfoModule.close();
   }
 }
 </script>

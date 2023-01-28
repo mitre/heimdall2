@@ -58,6 +58,11 @@ export class ChecklistSupplementalInfo extends VuexModule {
     this.context.commit('SET_NUMOFOBJ', 0);
   }
 
+  @Action
+  close(): void {
+    this.context.commit('SET_SHOW', false);
+  }
+
   @Mutation
   SET_FILENAME(name: string) {
     this.filename = name;

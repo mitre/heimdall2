@@ -256,7 +256,6 @@ export class ChecklistResults {
   }
 
   toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
-    console.log(this.supplementalInfo);
     switch (this.supplementalInfo.intakeType) {
       case 'default':
         const result = new ChecklistMapper(
