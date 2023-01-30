@@ -12,6 +12,7 @@ import {
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
+  GoSecMapper,
   INPUT_TYPES,
   IonChannelMapper,
   JfrogXrayMapper,
@@ -267,6 +268,8 @@ export class InspecIntake extends VuexModule {
           data: convertOptions.data
         };
         return ChecklistSupplementalInfoModule.show(checklistInfo);
+      case INPUT_TYPES.GOSEC:
+        return new GoSecMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
