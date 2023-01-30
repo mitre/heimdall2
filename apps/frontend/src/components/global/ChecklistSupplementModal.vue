@@ -114,12 +114,12 @@ export default class ChecklistSupplementModal extends Vue {
       false
     ).toHdf();
     if (Array.isArray(results)) {
-      results.map((evaluation, index) => {
+      results.forEach((evaluation, index) => {
         InspecIntakeModule.loadExecJson({
           data: evaluation,
           filename: `${this.filename.replace(/\.ckl/gi, '')}-${index + 1}.ckl`
         });
-      });
+      })
     } else if (results) {
       InspecIntakeModule.loadExecJson({
         data: results,
