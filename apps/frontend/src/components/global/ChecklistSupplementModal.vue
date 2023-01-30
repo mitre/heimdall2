@@ -18,14 +18,14 @@
               >
               <v-spacer />
               <v-radio
-                label="Separate HDF Files"
-                value="split"
-                @click="importType = 'split'"
-              />
-              <v-radio
                 label="Create Wrapper"
                 value="wrapper"
                 @click="importType = 'wrapper'"
+              />
+              <v-radio
+                label="Separate HDF Files"
+                value="split"
+                @click="importType = 'split'"
               />
             </v-radio-group>
           </v-col>
@@ -33,23 +33,19 @@
       </v-card-text>
       <v-divider />
       <v-card-actions class="justify-space-between">
-        <v-btn
-          color="primary"
-          text
-          :disabled="
-            importType == 'split' ||
-            importType == 'wrapper' ||
-            importType == 'default'
-            ? false
-            : true
-          "
-          @click="view"
-        >
+        <v-btn color="primary" text :disabled="false" @click="view">
           View
         </v-btn>
-        <v-btn color="primary" text :disabled="true" @click="view">
-          Edit
-        </v-btn>
+        <v-tooltip bottom>
+          <template #activator="{on}">
+            <div v-on="on">
+              <v-btn color="primary" text :disabled="true" @click="view">
+                Edit
+              </v-btn>
+            </div>
+          </template>
+          <span>Coming Soon!</span>
+        </v-tooltip>
         <v-btn text @click="show = false"> Cancel </v-btn>
       </v-card-actions>
     </v-card>
@@ -98,6 +94,9 @@ export default class ChecklistSupplementModal extends Vue {
   }
 
   get multiple(): boolean {
+    if (ChecklistSupplementalInfoModule.multiple) {
+      ChecklistSupplementalInfoModule.SET_INTAKE('wrapper');
+    }
     return ChecklistSupplementalInfoModule.multiple;
   }
 
@@ -119,7 +118,7 @@ export default class ChecklistSupplementModal extends Vue {
           data: evaluation,
           filename: `${this.filename.replace(/\.ckl/gi, '')}-${index + 1}.ckl`
         });
-      })
+      });
     } else if (results) {
       InspecIntakeModule.loadExecJson({
         data: results,
