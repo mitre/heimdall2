@@ -1,3 +1,79 @@
+v2.6.37
+
+- Update Converters List @Amndeep7 (#4019)
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1303.0 to 2.1304.0 @dependabot (#4017)
+- Bump pg from 8.8.0 to 8.9.0 @dependabot (#4016)
+- Bump aws-sdk from 2.1302.0 to 2.1303.0 @dependabot (#4015)
+- Bump @vue/test-utils from 1.3.0 to 1.3.4 @dependabot (#4014)
+- Bump @aws-sdk/client-config-service from 3.258.0 to 3.259.0 @dependabot (#4013)
+- Bump aws-sdk from 2.1299.0 to 2.1302.0 @dependabot (#4010)
+- Bump @aws-sdk/client-config-service from 3.256.0 to 3.258.0 @dependabot (#4009)
+- Bump rimraf from 4.1.1 to 4.1.2 @dependabot (#4005)
+- Bump @typescript-eslint/eslint-plugin from 5.48.2 to 5.49.0 @dependabot (#4000)
+- Bump cookiejar from 2.1.3 to 2.1.4 @dependabot (#3994)
+- Bump @types/validator from 13.7.10 to 13.7.11 @dependabot (#4001)
+- Bump @typescript-eslint/parser from 5.48.2 to 5.49.0 @dependabot (#3999)
+- Bump @aws-sdk/client-config-service from 3.254.0 to 3.256.0 @dependabot (#3996)
+
+v2.6.36
+
+- Adding new ASFF mapper special casings @charleshu-8 (#3325)
+- removed puppeteer dependencies since it was no longer being used @Amndeep7 (#3977)
+- Workflow updates @wdower (#3927)
+
+## Dependency Updates
+
+- Bump jsonwebtoken from 8.5.1 to 9.0.0 @dependabot (#3885)
+- Bump aws-sdk from 2.1295.0 to 2.1299.0 @dependabot (#3991)
+- Bump @types/node from 17.0.39 to 18.11.18 @dependabot (#3895)
+- Bump typedoc from 0.23.21 to 0.23.24 @dependabot (#3944)
+- Bump core-js from 3.27.1 to 3.27.2 @dependabot (#3985)
+- Bump dotenv-cli from 6.0.0 to 7.0.0 @dependabot (#3989)
+- Bump diff2html from 3.4.29 to 3.4.31 @dependabot (#3990)
+- Bump @aws-sdk/client-config-service from 3.252.0 to 3.254.0 @dependabot (#3987)
+- Bump d3 from 7.8.1 to 7.8.2 @dependabot (#3984)
+- Bump activesupport from 7.0.3.1 to 7.0.4.1 in /libs/inspecjs @dependabot (#3982)
+- Bump @aws-sdk/client-config-service from 3.245.0 to 3.252.0 @dependabot (#3976)
+- Bump rimraf from 4.1.0 to 4.1.1 @dependabot (#3978)
+- Bump @typescript-eslint/parser from 5.48.1 to 5.48.2 @dependabot (#3972)
+- Bump @typescript-eslint/eslint-plugin from 5.45.1 to 5.48.2 @dependabot (#3971)
+- Bump eslint from 8.31.0 to 8.32.0 @dependabot (#3969)
+- Bump rimraf from 4.0.4 to 4.1.0 @dependabot (#3973)
+- Bump prettier from 2.8.2 to 2.8.3 @dependabot (#3974)
+- Bump eslint-plugin-import from 2.27.4 to 2.27.5 @dependabot (#3970)
+- Bump prettier-plugin-organize-imports from 3.2.1 to 3.2.2 @dependabot (#3968)
+- Bump aws-sdk from 2.1294.0 to 2.1295.0 @dependabot (#3967)
+- Bump rimraf from 3.0.2 to 4.0.4 @dependabot (#3964)
+- Bump prettier from 2.8.1 to 2.8.2 @dependabot (#3947)
+- Bump @types/papaparse from 5.3.5 to 5.3.7 @dependabot (#3915)
+- Bump jquery from 3.6.0 to 3.6.3 @dependabot (#3912)
+- Bump aws-sdk from 2.1269.0 to 2.1294.0 @dependabot (#3962)
+- Bump tsconfig-paths from 4.1.1 to 4.1.2 @dependabot (#3914)
+- Bump @typescript-eslint/parser from 5.45.1 to 5.48.1 @dependabot (#3940)
+- Bump @types/passport-local from 1.0.34 to 1.0.35 @dependabot (#3946)
+- Bump @nestjs/jwt from 9.0.0 to 10.0.1 @dependabot (#3897)
+- Bump diff2html from 3.4.22 to 3.4.29 @dependabot (#3936)
+- Bump @aws-sdk/client-config-service from 3.226.0 to 3.245.0 @dependabot (#3932)
+- Bump core-js from 3.26.1 to 3.27.1 @dependabot (#3903)
+- Bump passport-jwt from 4.0.0 to 4.0.1 @dependabot (#3892)
+- Bump eslint-plugin-import from 2.26.0 to 2.27.4 @dependabot (#3959)
+- Bump @types/express from 4.17.14 to 4.17.15 @dependabot (#3852)
+- Bump yaml from 2.1.3 to 2.2.1 @dependabot (#3911)
+- Bump @nestjs/schematics from 9.0.3 to 9.0.4 @dependabot (#3896)
+- Bump eslint from 8.29.0 to 8.31.0 @dependabot (#3918)
+- Bump @mdi/js from 7.0.96 to 7.1.96 @dependabot (#3839)
+- Bump d3 from 7.7.0 to 7.8.1 @dependabot (#3955)
+- Bump class-validator from 0.13.2 to 0.14.0 @dependabot (#3836)
+- Bump luxon from 3.0.1 to 3.2.1 @dependabot (#3938)
+- Bump rxjs from 7.6.0 to 7.8.0 @dependabot (#3863)
+- Bump @casl/ability from 6.3.2 to 6.3.3 @dependabot (#3830)
+- Bump sinon from 15.0.0 to 15.0.1 @dependabot (#3865)
+- Bump vuetify from 2.6.12 to 2.6.14 @dependabot (#3952)
+- Bump @mdi/font from 7.0.96 to 7.1.96 @dependabot (#3846)
+
 v2.6.35
 
 ## Dependency Updates
