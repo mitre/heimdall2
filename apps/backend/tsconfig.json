@@ -1,11 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "CommonJS",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
-    "esModuleInterop": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
@@ -13,10 +12,8 @@
     "lib": [
       "es2020"
     ],
-    "paths": {}
-  },
-  "ts-node":{
-    "esm":true,
+    "paths": {},
+    "moduleResolution": "Node"
   },
   "exclude": [
     "node_modules",

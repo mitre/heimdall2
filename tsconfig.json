@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "CommonJS",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "sourceMap": true,
     "target": "ES2019",
-    "esModuleInterop": true,
     "noImplicitAny": true,
     "resolveJsonModule": true
   },
