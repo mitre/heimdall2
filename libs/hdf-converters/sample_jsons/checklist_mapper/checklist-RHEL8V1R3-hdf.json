@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.32"
+    "release": "2.6.36"
   },
-  "version": "2.6.32",
+  "version": "2.6.36",
   "statistics": {},
   "profiles": [
     {
@@ -15182,7 +15182,7 @@
     }
   ],
   "passthrough": {
-    "intermediaryFormat": [
+    "mutableChecklist": [
       {
         "header": {
           "version": "1",
