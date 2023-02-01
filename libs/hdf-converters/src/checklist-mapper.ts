@@ -268,19 +268,15 @@ export class ChecklistResults {
         const returnArray: ExecJSON.Execution[] = [];
         const splitString = this.checklistXml.split(/<iSTIG>|<\/iSTIG>/g);
         for (let i = 1; i < splitString.length; i += 2) {
-          const checklist =
-            splitString[0] +
-            '<iSTIG>' +
-            splitString[i] +
-            '</iSTIG>' +
-            splitString[splitString.length - 1];
-          returnArray.push(
-            new ChecklistMapper(
-              checklist,
-              this.supplementalInfo.filename,
-              this.withRaw
-            ).toHdf()
+          const checklist = `${splitString[0]}<iSTIG>${splitString[i]}</iSTIG>${
+            splitString[splitString.length - 1]
+          }`;
+          const entry = new ChecklistMapper(
+            checklist,
+            this.supplementalInfo.filename,
+            this.withRaw
           );
+          returnArray.push(entry.toHdf());
         }
         return returnArray;
       case 'wrapper':
