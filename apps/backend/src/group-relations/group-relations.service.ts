@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op } from 'sequelize';
+import { CreateGroupRelationDto } from './dto/create-group-relation.dto';
 import { GroupRelation } from './group-relation.model';
 
 @Injectable()
@@ -15,7 +16,7 @@ export class GroupRelationsService {
   ) { }
 
   async findAll(): Promise<GroupRelation[]> {
-    return this.groupRelationModel.findAll<GroupRelation>({ include: 'users' });
+    return this.groupRelationModel.findAll<GroupRelation>();
   }
 
   async count(): Promise<number> {
@@ -25,30 +26,29 @@ export class GroupRelationsService {
   async findByPkBang(id: string): Promise<GroupRelation> {
     // Users must be included for determining permissions on the group.
     // Other assocations should be called by their ID separately and not eagerly loaded.
-    const group = await this.groupRelationModel.findByPk(id, { include: 'users' });
-    if (group === null) {
-      throw new NotFoundException('Group with given id not found');
+    const groupRelation = await this.groupRelationModel.findByPk(id);
+    if (groupRelation === null) {
+      throw new NotFoundException('Group relation with given id not found');
     } else {
-      return group;
+      return groupRelation;
     }
   }
 
   async findByIds(id: string[]): Promise<GroupRelation[]> {
     return this.groupRelationModel.findAll({
-      where: { id: { [Op.in]: id } },
-      include: 'users'
+      where: { id: { [Op.in]: id } }
     });
   }
 
-  async create(createGroupDto: CreateGroupDto): Promise<Group> {
-    const group = new Group(createGroupDto);
+  async create(createGroupRelationDto: CreateGroupRelationDto): Promise<GroupRelation> {
+    const group = new GroupRelation(createGroupRelationDto);
     return group.save();
   }
 
-  async update(groupToUpdate: GroupRelation, groupDto: CreateGroupDto): Promise<Group> {
-    groupToUpdate.update(groupDto);
+  async update(groupRelationToUpdate: GroupRelation, groupRelationDto: CreateGroupRelationDto): Promise<GroupRelation> {
+    groupRelationToUpdate.update(groupRelationDto);
 
-    return groupToUpdate.save();
+    return groupRelationToUpdate.save();
   }
 
   async remove(groupRelationToDelete: GroupRelation): Promise<GroupRelation> {

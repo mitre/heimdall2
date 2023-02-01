@@ -1,4 +1,4 @@
-import { IGroupRelation } from '../../../../../libs/interfaces/group-relations/group-relation'; // TODO: Change to '@heimdall/interfaces'
+import { IGroupRelation } from '@heimdall/interfaces/group-relations/group-relation.interface'; // TODO: Change to '@heimdall/interfaces'
 import { GroupRelation } from '../group-relation.model';
 
 export class GroupRelationDto implements IGroupRelation {
