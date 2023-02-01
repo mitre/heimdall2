@@ -42,7 +42,7 @@ export class ChecklistSupplementalInfo extends VuexModule {
 
   @Action
   detectMultipleStigs(data: string) {
-    const numberOfObj = data.match(new RegExp('<iSTIG>', 'g')) || [];
+    const numberOfObj = data.match(/<iSTIG>|<\/iSTIG>/g) || [];
     if (numberOfObj.length > 1) {
       this.context.commit('SET_NUMOFOBJ', numberOfObj.length);
       this.context.commit('SET_MULTIPLE', true);

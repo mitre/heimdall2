@@ -266,9 +266,7 @@ export class ChecklistResults {
         return result.toHdf();
       case 'split':
         const returnArray: ExecJSON.Execution[] = [];
-        const splitString = this.checklistXml.split(
-          new RegExp('<iSTIG>|</iSTIG>', 'g')
-        );
+        const splitString = this.checklistXml.split(/<iSTIG>|<\/iSTIG>/g);
         for (let i = 1; i < splitString.length; i += 2) {
           const checklist =
             splitString[0] +
@@ -279,7 +277,8 @@ export class ChecklistResults {
           returnArray.push(
             new ChecklistMapper(
               checklist,
-              this.supplementalInfo.filename
+              this.supplementalInfo.filename,
+              this.withRaw
             ).toHdf()
           );
         }
