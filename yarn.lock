@@ -3295,9 +3295,9 @@
     jsonwebtoken "9.0.0"
 
 "@nestjs/passport@^9.0.0":
-  version "9.0.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-9.0.0.tgz#0571bb08f8043456bc6df44cd4f59ca5f10c9b9f"
-  integrity sha512-Gnh8n1wzFPOLSS/94X1sUP4IRAoXTgG4odl7/AO5h+uwscEGXxJFercrZfqdAwkWhqkKWbsntM3j5mRy/6ZQDA==
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-9.0.1.tgz#6c02ff8daee98ae280a388b48cde98ff3f40bce4"
+  integrity sha512-WhT0yhpMp1B8b1OdQdPv/rd2O8V0HUmoGsWFzJKPsALuaxozjem2WotUEy1GV/TT8kvfC4ok7tECjRAArO+I8Q==
 
 "@nestjs/platform-express@^8.0.2":
   version "8.4.7"
@@ -6289,9 +6289,9 @@ available-typed-arrays@^1.0.5:
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
 aws-sdk@^2.1046.0, aws-sdk@^2.573.0:
-  version "2.1306.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1306.0.tgz#33a5f8d732c2bfb8bb0d8dd946163814f294242d"
-  integrity sha512-t3M04Nx+uHVYcRGZXoI0Dr24I722oslwkwGT/gFPR2+Aub5dQ88+BetCPBvg24sZDg2RNWNxepYk5YHuKV5Hrg==
+  version "2.1307.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1307.0.tgz#387e0ca566d135a28b1fa0397edfd1a3f45e8ea6"
+  integrity sha512-fRGMLrFrndcl7VXp6ynbFry4S+eO360cIw5sdfI2ZdC86aQlg7vSh5WAdARMExnwKCeaoiGhRe1fTBS3WoLwAw==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
