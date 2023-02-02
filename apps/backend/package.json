@@ -117,6 +117,5 @@
     "supertest": "^6.0.0",
     "ts-jest": "^27.0.2",
     "webpack": "5.75.0"
-  },
-  "type": "module"
+  }
 }
