@@ -13,10 +13,10 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from '../authn/authn.service';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
+import {GroupsService} from '../groups/groups.service';
 import {APIKeysEnabled} from '../guards/api-keys-enabled.guard';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
@@ -79,15 +79,12 @@ export class ApiKeyController {
     if (createApiKeyDto.userId) {
       target = await this.usersService.findById(createApiKeyDto.userId);
     } else if (createApiKeyDto.groupId) {
-      console.log('hoi');
       target = await this.groupsService.findByPkBang(createApiKeyDto.groupId);
     } else if (createApiKeyDto.userEmail) {
       target = await this.usersService.findByEmail(createApiKeyDto.userEmail);
     } else {
       target = request.user;
     }
-
-    console.log(target);
 
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, target);
     if (request.user.creationMethod === 'local') {
