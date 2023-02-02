@@ -53,7 +53,19 @@
       <v-divider />
 
       <v-card-actions>
-        <v-col class="text-right">
+        <GroupAPIKeysModal :group="group">
+          <template #clickable="{on, attrs}">
+            <v-btn
+              data-cy="groupAPIKeys"
+              color="primary"
+              text
+              v-bind="attrs"
+              v-on="on"
+              >Manage API Keys</v-btn
+            >
+          </template>
+        </GroupAPIKeysModal>
+        <v-spacer></v-spacer>
           <v-btn
             data-cy="closeAndDiscardChanges"
             color="primary"
@@ -68,7 +80,6 @@
             @click="save"
             >Save</v-btn
           >
-        </v-col>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -76,6 +87,7 @@
 
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
+import GroupAPIKeysModal from '@/components/global/groups/GroupAPIKeysModal.vue'
 import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
 import {SnackbarModule} from '@/store/snackbar';
@@ -107,6 +119,7 @@ function newGroup(): IGroup {
   validations: {},
   components: {
     ActionDialog,
+    GroupAPIKeysModal,
     Users
   }
 })

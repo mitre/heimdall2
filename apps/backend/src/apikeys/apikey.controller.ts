@@ -1,5 +1,6 @@
 import {ForbiddenError} from '@casl/ability';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -12,6 +13,7 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
+import { GroupsService } from 'src/groups/groups.service';
 import {AuthnService} from '../authn/authn.service';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
@@ -34,21 +36,34 @@ export class ApiKeyController {
     private readonly authnService: AuthnService,
     private readonly apiKeyService: ApiKeyService,
     private readonly authz: AuthzService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly groupsService: GroupsService
   ) {}
 
   @UseGuards(JwtAuthGuard)
   @Get()
   async findAPIKeys(
     @Request() request: {user: User},
-    @Query('userId') userId: string
+    @Query('userId') userId: string,
+    @Query('groupId') groupId: string
   ): Promise<APIKeyDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
-    const user = userId
-      ? await this.usersService.findById(userId)
-      : request.user;
-    ForbiddenError.from(abac).throwUnlessCan(Action.Read, user);
-    return this.apiKeyService.findAllForUser(user);
+    
+    if (userId && groupId) {
+      throw new BadRequestException('Cannot specify both userId and groupId')
+    }
+
+    if (groupId) {
+      const group = await this.groupsService.findById(groupId);
+      ForbiddenError.from(abac).throwUnlessCan(Action.Read, group);
+      return this.apiKeyService.findAllForGroup(group);
+    } else {
+      const user = userId
+        ? await this.usersService.findById(userId)
+        : request.user;
+      ForbiddenError.from(abac).throwUnlessCan(Action.Read, user);
+      return this.apiKeyService.findAllForUser(user);
+    }
   }
 
   @UseGuards(JwtAuthGuard)
@@ -59,21 +74,27 @@ export class ApiKeyController {
   ): Promise<{id: string; apiKey: string}> {
     const abac = this.authz.abac.createForUser(request.user);
 
-    let user;
+    let target;
 
     if (createApiKeyDto.userId) {
-      user = await this.usersService.findById(createApiKeyDto.userId);
-    } else if (createApiKeyDto.userEmail) {
-      user = await this.usersService.findByEmail(createApiKeyDto.userEmail);
+      target = await this.usersService.findById(createApiKeyDto.userId);
+    } else if (createApiKeyDto.groupId) {
+      console.log('hoi')
+      target = await this.groupsService.findById(createApiKeyDto.groupId)
+    }  else if (createApiKeyDto.userEmail) {
+      target = await this.usersService.findByEmail(createApiKeyDto.userEmail);
     } else {
-      user = request.user;
+      target = request.user;
     }
 
-    ForbiddenError.from(abac).throwUnlessCan(Action.Update, user);
+    console.log(target)
+
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, target);
     if (request.user.creationMethod === 'local') {
       await this.authnService.testPassword(createApiKeyDto, request.user);
     }
-    return this.apiKeyService.create(user, createApiKeyDto);
+    
+    return this.apiKeyService.create(target, createApiKeyDto);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -9,7 +9,8 @@ export class EvaluationDto implements IEvaluation {
   readonly data?: Record<string, unknown>;
   readonly evaluationTags: EvaluationTagDto[];
   readonly groups: GroupDto[];
-  readonly userId: string;
+  readonly userId?: string;
+  readonly groupId?: string;
   readonly public: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
