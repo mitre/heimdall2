@@ -13,7 +13,6 @@ const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
-
 // This grabs the js/css to allow for HTML export
 const files = {
   [require.resolve('bootstrap/dist/css/bootstrap.min.css')]:
@@ -68,7 +67,17 @@ module.exports = {
     devtool: 'source-map',
     plugins: [
       new NodePolyfillPlugin({
-        includeAliases:['crypto','path','http','https','os','zlib','process',"Buffer","stream"]
+        includeAliases: [
+          'crypto',
+          'path',
+          'http',
+          'https',
+          'os',
+          'zlib',
+          'process',
+          'Buffer',
+          'stream'
+        ]
       }),
       new webpack.DefinePlugin({
         'process.env': {
