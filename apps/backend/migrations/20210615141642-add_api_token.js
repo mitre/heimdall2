@@ -18,15 +18,6 @@ module.exports = {
         onUpdate: 'CASCADE',
         onDelete: 'SET NULL'
       },
-      groupId: {
-        type: Sequelize.BIGINT,
-        references: {
-          model: 'Groups',
-          key: 'id'
-        },
-        onUpdate: 'CASCADE',
-        onDelete: 'SET NULL'
-      },
       name: {
         type: Sequelize.STRING
       },

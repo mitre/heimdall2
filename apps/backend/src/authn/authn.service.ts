@@ -10,7 +10,7 @@ import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 import moment from 'moment';
 import ms from 'ms';
-import { Group } from 'src/groups/group.model';
+import {Group} from 'src/groups/group.model';
 import winston from 'winston';
 import {ApiKeyService} from '../apikeys/apikey.service';
 import {ConfigService} from '../config/config.service';
@@ -70,7 +70,7 @@ export class AuthnService {
           );
           if (await compare(JWTSignature, matchingKey.apiKey)) {
             if (matchingKey.type === 'user') {
-              return matchingKey.user ;
+              return matchingKey.user;
             } else if (matchingKey.type === 'group') {
               return matchingKey.group;
             } else {

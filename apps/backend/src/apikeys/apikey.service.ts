@@ -2,7 +2,7 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {hash} from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { Group } from 'src/groups/group.model';
+import {Group} from 'src/groups/group.model';
 import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
 import {ConfigService} from '../config/config.service';
 import {User} from '../users/user.model';
@@ -31,7 +31,7 @@ export class ApiKeyService {
       userId: target instanceof User ? target.id : undefined,
       groupId: target instanceof Group ? target.id : undefined,
       name: createApiKeyDto.name,
-      type: target instanceof User ? 'user' : 'group',
+      type: target instanceof User ? 'user' : 'group'
     });
     await newApiKey.save();
     const newJWT = jwt.sign(

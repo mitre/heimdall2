@@ -13,7 +13,7 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import { GroupsService } from 'src/groups/groups.service';
+import {GroupsService} from 'src/groups/groups.service';
 import {AuthnService} from '../authn/authn.service';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
@@ -48,9 +48,9 @@ export class ApiKeyController {
     @Query('groupId') groupId: string
   ): Promise<APIKeyDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
-    
+
     if (userId && groupId) {
-      throw new BadRequestException('Cannot specify both userId and groupId')
+      throw new BadRequestException('Cannot specify both userId and groupId');
     }
 
     if (groupId) {
@@ -79,21 +79,21 @@ export class ApiKeyController {
     if (createApiKeyDto.userId) {
       target = await this.usersService.findById(createApiKeyDto.userId);
     } else if (createApiKeyDto.groupId) {
-      console.log('hoi')
-      target = await this.groupsService.findById(createApiKeyDto.groupId)
-    }  else if (createApiKeyDto.userEmail) {
+      console.log('hoi');
+      target = await this.groupsService.findById(createApiKeyDto.groupId);
+    } else if (createApiKeyDto.userEmail) {
       target = await this.usersService.findByEmail(createApiKeyDto.userEmail);
     } else {
       target = request.user;
     }
 
-    console.log(target)
+    console.log(target);
 
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, target);
     if (request.user.creationMethod === 'local') {
       await this.authnService.testPassword(createApiKeyDto, request.user);
     }
-    
+
     return this.apiKeyService.create(target, createApiKeyDto);
   }
 

@@ -41,6 +41,7 @@ export class EvaluationDto implements IEvaluation {
       this.groups = evaluation.groups.map((tag) => new GroupDto(tag));
     }
     this.userId = evaluation.userId;
+    this.groupId = evaluation.groupId;
     this.public = evaluation.public;
     this.createdAt = evaluation.createdAt;
     this.updatedAt = evaluation.updatedAt;

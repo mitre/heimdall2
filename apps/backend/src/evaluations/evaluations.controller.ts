@@ -1,5 +1,6 @@
 import {ForbiddenError} from '@casl/ability';
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -92,8 +93,9 @@ export class EvaluationsController {
   async create(
     @Body() createEvaluationDto: CreateEvaluationDto,
     @UploadedFiles() data: Express.Multer.File[],
-    @Request() request: {user: User}
+    @Request() request: {user: User | Group}
   ): Promise<EvaluationDto | EvaluationDto[]> {
+    console.log(request.user);
     const uploadedFiles = data.map(async (file) => {
       let serializedDta: Record<string, unknown>;
       try {
@@ -102,7 +104,33 @@ export class EvaluationsController {
         serializedDta = {originalResultsData: file.buffer.toString('utf8')};
       }
 
-      let groups: Group[] = createEvaluationDto.groups
+      // If the "user" is a group, we'll add the evaluation to the group, and ignore any other groups
+      if (request.user instanceof Group) {
+        const evaluation = await this.evaluationsService
+          .create({
+            // Only respect custom file names for single file uploads
+            filename:
+              data.length > 1
+                ? file.originalname
+                : createEvaluationDto.filename, // lgtm [js/type-confusion-through-parameter-tampering]
+            evaluationTags: createEvaluationDto.evaluationTags || [],
+            public: createEvaluationDto.public,
+            data: serializedDta,
+            groupId: request.user.id
+          }).then(async (evaluation) => {
+            const group = await this.groupsService.findByPkBang(request.user.id)
+            this.groupsService.addEvaluationToGroup(group, evaluation)
+            return evaluation
+          })
+          .catch((err) => {
+            throw new BadRequestException(err.message);
+          });
+
+        const createdDto = new EvaluationDto(evaluation, true);
+
+        return _.omit(createdDto, 'data');
+      } else {
+        let groups: Group[] = createEvaluationDto.groups
         ? await this.groupsService.findByIds(createEvaluationDto.groups)
         : [];
       // Make sure the user can add evaluations to each group
@@ -134,6 +162,9 @@ export class EvaluationsController {
         }`
       );
       return _.omit(createdDto, 'data');
+      }
+
+      
     });
     if (uploadedFiles.length === 1) {
       return uploadedFiles[0];

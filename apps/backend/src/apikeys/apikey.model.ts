@@ -11,7 +11,7 @@ import {
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
-import { Group } from 'src/groups/group.model';
+import {Group} from 'src/groups/group.model';
 import {User} from '../users/user.model';
 
 @Table

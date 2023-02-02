@@ -1,7 +1,7 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
-import { Group } from 'src/groups/group.model';
-import { GroupsService } from 'src/groups/groups.service';
+import {Group} from 'src/groups/group.model';
+import {GroupsService} from 'src/groups/groups.service';
 import {AuthnService} from '../authn/authn.service';
 import {AuthzModule} from '../authz/authz.module';
 import {ConfigModule} from '../config/config.module';
@@ -21,7 +21,13 @@ import {ApiKeyService} from './apikey.service';
     ApiKeyModule,
     TokenModule
   ],
-  providers: [ConfigService, AuthnService, UsersService, GroupsService, ApiKeyService],
+  providers: [
+    ConfigService,
+    AuthnService,
+    UsersService,
+    GroupsService,
+    ApiKeyService
+  ],
   exports: [SequelizeModule, ApiKeyService],
   controllers: [ApiKeyController]
 })
