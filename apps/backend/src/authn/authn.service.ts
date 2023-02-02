@@ -10,7 +10,7 @@ import jwt from 'jsonwebtoken';
 import _ from 'lodash';
 import moment from 'moment';
 import ms from 'ms';
-import {Group} from 'src/groups/group.model';
+import {Group} from '../groups/group.model';
 import winston from 'winston';
 import {ApiKeyService} from '../apikeys/apikey.service';
 import {ConfigService} from '../config/config.service';

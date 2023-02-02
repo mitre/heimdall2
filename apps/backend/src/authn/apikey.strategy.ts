@@ -1,7 +1,7 @@
 import {ForbiddenException, Injectable} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import HeaderAPIKeyStrategy from 'passport-headerapikey';
-import {Group} from 'src/groups/group.model';
+import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 

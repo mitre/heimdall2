@@ -13,7 +13,7 @@ import {
   UseGuards,
   UseInterceptors
 } from '@nestjs/common';
-import {GroupsService} from 'src/groups/groups.service';
+import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from '../authn/authn.service';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';

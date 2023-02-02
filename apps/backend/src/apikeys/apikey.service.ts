@@ -2,7 +2,7 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {hash} from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import {Group} from 'src/groups/group.model';
+import {Group} from '../groups/group.model';
 import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
 import {ConfigService} from '../config/config.service';
 import {User} from '../users/user.model';
