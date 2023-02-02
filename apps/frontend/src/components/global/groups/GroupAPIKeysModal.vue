@@ -91,22 +91,9 @@ import Users from '@/components/global/groups/Users.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {IApiKey, IGroup} from '@heimdall/interfaces';
 import axios from 'axios';
-import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {
-  VDialog,
-  VCard,
-  VCardTitle,
-  VCardText,
-  VIcon,
-  VDataTable,
-  VDivider,
-  VCardActions,
-  VCol,
-  VBtn
-} from 'vuetify/lib';
 
 @Component({
   validations: {},

@@ -36,15 +36,6 @@ export class GroupsService {
     }
   }
 
-  async findById(id: string): Promise<Group> {
-    const group = await this.groupModel.findByPk(id, {include: 'users'});
-    if (group === null) {
-      throw new NotFoundException('Group with given id not found');
-    } else {
-      return group;
-    }
-  }
-
   async findByIds(id: string[]): Promise<Group[]> {
     return this.groupModel.findAll({
       where: {id: {[Op.in]: id}},

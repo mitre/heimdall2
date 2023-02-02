@@ -90,7 +90,6 @@ export class AuthnService {
         'API Keys have been disabled as the API-Key secret is not set'
       );
     }
-    return null;
   }
 
   async validateOrCreateUser(

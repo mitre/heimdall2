@@ -54,7 +54,7 @@ export class ApiKeyController {
     }
 
     if (groupId) {
-      const group = await this.groupsService.findById(groupId);
+      const group = await this.groupsService.findByPkBang(groupId);
       ForbiddenError.from(abac).throwUnlessCan(Action.Read, group);
       return this.apiKeyService.findAllForGroup(group);
     } else {
@@ -80,7 +80,7 @@ export class ApiKeyController {
       target = await this.usersService.findById(createApiKeyDto.userId);
     } else if (createApiKeyDto.groupId) {
       console.log('hoi');
-      target = await this.groupsService.findById(createApiKeyDto.groupId);
+      target = await this.groupsService.findByPkBang(createApiKeyDto.groupId);
     } else if (createApiKeyDto.userEmail) {
       target = await this.usersService.findByEmail(createApiKeyDto.userEmail);
     } else {
