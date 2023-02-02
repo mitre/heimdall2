@@ -78,7 +78,7 @@ export class GroupsService {
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
-    const group = new Group(createGroupDto);
+    const group = new Group({...createGroupDto});
     return group.save();
   }
 
