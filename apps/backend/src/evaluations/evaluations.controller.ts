@@ -95,7 +95,6 @@ export class EvaluationsController {
     @UploadedFiles() data: Express.Multer.File[],
     @Request() request: {user: User | Group}
   ): Promise<EvaluationDto | EvaluationDto[]> {
-    console.log(request.user);
     const uploadedFiles = data.map(async (file) => {
       let serializedDta: Record<string, unknown>;
       try {

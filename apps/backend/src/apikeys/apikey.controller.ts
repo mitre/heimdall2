@@ -106,10 +106,21 @@ export class ApiKeyController {
   ): Promise<APIKeyDto> {
     const apiKeyToDelete = await this.apiKeyService.findById(id);
     const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(
-      Action.Update,
-      apiKeyToDelete.user
-    );
+
+    if (apiKeyToDelete.type === 'user') {
+      ForbiddenError.from(abac).throwUnlessCan(
+        Action.Update,
+        apiKeyToDelete.user
+      );
+    } else if (apiKeyToDelete.type === 'group') {
+      const group = await this.groupsService.findByPkBang(
+        apiKeyToDelete.groupId
+      );
+      ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
+    } else {
+      throw new BadRequestException('Unknown API key type');
+    }
+
     if (request.user.creationMethod === 'local') {
       await this.authnService.testPassword(deleteApiKeyDto, request.user);
     }
@@ -125,10 +136,20 @@ export class ApiKeyController {
   ): Promise<APIKeyDto> {
     const apiKeyToUpdate = await this.apiKeyService.findById(id);
     const abac = this.authz.abac.createForUser(request.user);
-    ForbiddenError.from(abac).throwUnlessCan(
-      Action.Update,
-      apiKeyToUpdate.user
-    );
+    if (apiKeyToUpdate.type === 'group') {
+      const group = await this.groupsService.findByPkBang(
+        apiKeyToUpdate.groupId
+      );
+      ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
+    } else if (apiKeyToUpdate.type === 'user') {
+      ForbiddenError.from(abac).throwUnlessCan(
+        Action.Update,
+        apiKeyToUpdate.user
+      );
+    } else {
+      throw new BadRequestException('Unknown API key type');
+    }
+
     if (request.user.creationMethod === 'local') {
       await this.authnService.testPassword(updateApiKeyDto, request.user);
     }

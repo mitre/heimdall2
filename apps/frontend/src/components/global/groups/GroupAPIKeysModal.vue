@@ -43,7 +43,21 @@
               item.apiKey || 'Only Shown on Creation'
             }}</span></template
           >
+
           <template #[`item.action`]="{item}">
+            <v-tooltip left>
+              <template #activator="{on, attrs}">
+                <v-icon
+                  class="mr-2"
+                  small
+                  v-bind="attrs"
+                  @click="refreshAPIKey(item)"
+                  v-on="on"
+                  >mdi-refresh</v-icon
+                >
+              </template>
+              <span>Recreate this API Key</span>
+            </v-tooltip>
             <v-tooltip right>
               <template #activator="{on, attrs}">
                 <v-icon
@@ -56,6 +70,14 @@
                 >
               </template>
               <span>Delete this API Key</span>
+            </v-tooltip>
+            <v-tooltip top>
+              <template #activator="{on, attrs}">
+                <span v-bind="attrs" v-on="on">
+                  <CopyButton v-if="item.apiKey" :text="item.apiKey" />
+                </span>
+              </template>
+              <span>Copy this API Key</span>
             </v-tooltip>
           </template>
         </v-data-table>
@@ -88,6 +110,7 @@
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import Users from '@/components/global/groups/Users.vue';
+import CopyButton from '@/components/generic/CopyButton.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {IApiKey, IGroup} from '@heimdall/interfaces';
 import axios from 'axios';
@@ -99,6 +122,7 @@ import {Prop} from 'vue-property-decorator';
   validations: {},
   components: {
     ActionDialog,
+    CopyButton,
     Users
   }
 })
@@ -160,6 +184,42 @@ export default class GroupAPIKeysModal extends Vue {
       });
   }
 
+  refreshAPIKey(item: IApiKey) {
+    this.loading = true;
+    axios
+      .delete<IApiKey>(`/apikeys/${item.id}`, {
+        data: {
+          currentPassword: this.password
+        }
+      })
+      .then(() => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
+
+        // Re-create the key
+        axios
+          .post('/apikeys', {
+            groupId: this.group.id,
+            name: item.name,
+            currentPassword: this.password
+          })
+          .then(({data}) => {
+            this.apiKeys.push(data);
+            SnackbarModule.notify('API Key recreated successfully');
+            this.loading = false;
+          })
+          .catch((error) => {
+            this.loading = false;
+            // Default error handling works fine
+            throw error;
+          });
+      })
+      .catch((error) => {
+        this.loading = false;
+        // Default error handling works fine
+        throw error;
+      });
+  }
+
   addAPIKey() {
     this.loading = true;
     axios
@@ -179,12 +239,42 @@ export default class GroupAPIKeysModal extends Vue {
       });
   }
 
-  setKeyName() {
-    console.log('setKeyName');
+  setKeyName(item: IApiKey) {
+    this.loading = true;
+    axios
+      .put(`/apikeys/${item.id}`, {
+        name: item.name,
+        currentPassword: this.password
+      })
+      .then(() => {
+        SnackbarModule.notify('API Key name updated successfully');
+        this.loading = false;
+      })
+      .catch((error) => {
+        this.loading = false;
+        // Default error handling works fine
+        throw error;
+      });
   }
 
-  deleteAPIKey() {
-    console.log('deleteAPIKey');
+  deleteAPIKey(item: IApiKey) {
+    this.loading = true;
+    axios
+      .delete<IApiKey>(`/apikeys/${item.id}`, {
+        data: {
+          currentPassword: this.password
+        }
+      })
+      .then(({data}) => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id);
+        SnackbarModule.notify('API Key deleted successfully');
+        this.loading = false;
+      })
+      .catch((error) => {
+        this.loading = false;
+        // Default error handling works fine
+        throw error;
+      });
   }
 }
 </script>
