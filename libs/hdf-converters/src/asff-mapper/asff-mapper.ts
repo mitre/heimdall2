@@ -661,14 +661,18 @@ export class ASFFMapper extends BaseConverter {
   };
 
   statusReason(finding: unknown): string | undefined {
-    return _.get(finding, 'Compliance.StatusReasons')
-      ?.map((reason: Record<string, string>) =>
-        Object.entries(reason || {}).map(([key, value]: [string, string]) => {
-          return `${encode(key)}: ${encode(value)}`;
-        })
-      )
-      .flat()
-      .join('\n');
+    const statusReasons = _.get(finding, 'Compliance.StatusReasons') as Record<string, string>[] | unknown;
+    if(statusReasons !== undefined && statusReasons !== null && _.isArray(statusReasons)) {
+      return statusReasons.map((reason: Record<string, string>) =>
+          Object.entries(reason || {}).map(([key, value]: [string, string]) => {
+            return `${encode(key)}: ${encode(value)}`;
+          })
+        )
+        .flat()
+        .join('\n');
+    } else {
+      return undefined;
+    }
   }
 
   setMappings(): void {
