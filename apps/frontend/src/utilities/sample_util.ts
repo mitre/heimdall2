@@ -18,6 +18,7 @@ const ubuntu1604BaselineResultsPath =
 const acmeOverlayPath = '/static/samples/wrapper-acme-run.json';
 const cleanRhel8ChecklistPath = '/static/samples/clean_rhel_8_checklist.ckl';
 const rhel8ChecklistPath = '/static/samples/rhel_8_checklist.ckl';
+const threeStigChecklistPath = '/static/samples/three_stig_checklist.ckl';
 
 import axios from 'axios';
 
@@ -111,5 +112,10 @@ export const samples: Sample[] = [
     filename: 'RHEL 8 Checklist',
     data: () => fetch(rhel8ChecklistPath),
     path: rhel8ChecklistPath
+  },
+  {
+    filename: 'Three Stig Checklist',
+    data: () => fetch(threeStigChecklistPath),
+    path: threeStigChecklistPath
   }
 ];
