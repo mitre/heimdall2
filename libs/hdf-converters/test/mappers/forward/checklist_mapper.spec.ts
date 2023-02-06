@@ -97,30 +97,32 @@ describe('checklist_mapper_multi_stig_split', () => {
     );
 
     const results = mapper.toHdf();
-    // if (Array.isArray(results)) {
-    //   results.forEach((result, index) => {
-    //     fs.writeFileSync(
-    //       `sample_jsons/checklist_mapper/sample_input_report/three_stig_checklist-hdf-${index + 1}.json`,
-    //       JSON.stringify(result, null, 2)
-    //     )
-    //   })
-    // }
+    if (Array.isArray(results)) {
+      results.forEach((result, index) => {
+        fs.writeFileSync(
+          `sample_jsons/checklist_mapper/three_stig_checklist-hdf-${
+            index + 1
+          }.json`,
+          JSON.stringify(result, null, 2)
+        );
+      });
+    }
     const expectedSet = [
       JSON.parse(
         fs.readFileSync(
-          'sample_jsons/checklist_mapper/sample_input_report/three_stig_checklist-hdf-1.json',
+          'sample_jsons/checklist_mapper/three_stig_checklist-hdf-1.json',
           {encoding: 'utf-8'}
         )
       ),
       JSON.parse(
         fs.readFileSync(
-          'sample_jsons/checklist_mapper/sample_input_report/three_stig_checklist-hdf-2.json',
+          'sample_jsons/checklist_mapper/three_stig_checklist-hdf-2.json',
           {encoding: 'utf-8'}
         )
       ),
       JSON.parse(
         fs.readFileSync(
-          'sample_jsons/checklist_mapper/sample_input_report/three_stig_checklist-hdf-3.json',
+          'sample_jsons/checklist_mapper/three_stig_checklist-hdf-3.json',
           {encoding: 'utf-8'}
         )
       )

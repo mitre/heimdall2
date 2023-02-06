@@ -234,62 +234,84 @@ function getStatus(input: string): ExecJSON.ControlResultStatus {
   }
 }
 
+/**
+ * Object for checklistResults constructor
+ *
+ */
 export type checklistSupplementalInfo = {
   filename: string;
   intakeType: 'split' | 'wrapper' | 'default';
-  mode?: 'view' | 'edit';
 };
 
+/**
+ * ChecklistResults is a wrapper for ChecklistMapper using the intakeType
+ *  default returns a single hdf object without any modifications
+ *  split returns multiple hdf object based on number of iSTIG objects in checklist
+ *  wrapper returns a single hdf object with an additional profile created using file name as profile name and adds parent_profile key to each mapped profile
+ */
 export class ChecklistResults {
   checklistXml: string;
   withRaw: boolean;
-  supplementalInfo: checklistSupplementalInfo;
+  suppInfo: checklistSupplementalInfo;
 
+  /**
+   * Creates instance of ChecklistResult object because baseConverter does not return ExecJSON.Execution[] type
+   * Constructor takes an addtional (optional) param object supplementalInfo
+   * @param checklistXml - string of xml data
+   * @param supplementalInfo - object containing filename and intakeType
+   * @param withRaw - optional boolean to include the raw data in passthrough
+   */
   constructor(
     checklistXml: string,
-    supplementalInfo: checklistSupplementalInfo,
+    supplementalInfo?: checklistSupplementalInfo,
     withRaw?: boolean
   ) {
     this.checklistXml = checklistXml;
-    this.supplementalInfo = supplementalInfo;
+    this.suppInfo = supplementalInfo || {
+      filename: 'checklist.ckl',
+      intakeType: 'default'
+    };
     this.withRaw = withRaw || false;
   }
 
   toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
-    switch (this.supplementalInfo.intakeType) {
+    switch (this.suppInfo.intakeType) {
       case 'default':
         const result = new ChecklistMapper(
           this.checklistXml,
-          this.supplementalInfo.filename,
+          this.suppInfo.filename,
           this.withRaw
         );
         return result.toHdf();
       case 'split':
         const returnArray: ExecJSON.Execution[] = [];
         const splitString = this.checklistXml.split(/<iSTIG>|<\/iSTIG>/g);
+        let fileNumber = 1;
         for (let i = 1; i < splitString.length; i += 2) {
           const checklist = `${splitString[0]}<iSTIG>${splitString[i]}</iSTIG>${
             splitString[splitString.length - 1]
           }`;
+          const extIndex = this.suppInfo.filename.lastIndexOf('.');
           const entry = new ChecklistMapper(
             checklist,
-            this.supplementalInfo.filename,
+            `${this.suppInfo.filename.substring(
+              0,
+              extIndex
+            )}-${fileNumber}${this.suppInfo.filename.substring(extIndex)}`,
             this.withRaw
           );
           returnArray.push(entry.toHdf());
+          fileNumber++;
         }
         return returnArray;
       case 'wrapper':
         const checklist = new ChecklistMapper(
           this.checklistXml,
-          this.supplementalInfo.filename,
+          this.suppInfo.filename,
           this.withRaw
         );
         const original = checklist.toHdf();
-        const parentProfileName = this.supplementalInfo.filename.replace(
-          /\.ckl/gi,
-          ''
-        );
+        const parentProfileName = this.suppInfo.filename.replace(/\.ckl/gi, '');
         const parent_profile: ExecJSON.Profile = {
           name: parentProfileName,
           supports: [],
@@ -311,6 +333,9 @@ export class ChecklistResults {
   }
 }
 
+/**
+ * Checklist mapper
+ */
 export class ChecklistMapper extends BaseConverter {
   withRaw: boolean;
   filename: string;
@@ -399,7 +424,13 @@ export class ChecklistMapper extends BaseConverter {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
         return {
           ...(this.withRaw && {raw: data.raw}),
-          ...{mutableChecklist: data.stigs}
+          ...{
+            mutableChecklist: {
+              filename: data.filename,
+              asset: data.asset,
+              stigs: data.stigs
+            }
+          }
         };
       }
       // intChecklistObj: this.data.stigs,

@@ -11,7 +11,7 @@
       <v-card-text>
         <v-row>
           <v-col>
-            <v-radio-group v-if="multiple" v-model="importType">
+            <v-radio-group v-if="multiple" v-model="intakeType">
               <v-card-text
                 >{{ numberOfObj }} iSTIG objects found during
                 evaluation</v-card-text
@@ -20,12 +20,12 @@
               <v-radio
                 label="Create Wrapper"
                 value="wrapper"
-                @click="importType = 'wrapper'"
+                @click="intakeType = 'wrapper'"
               />
               <v-radio
                 label="Separate HDF Files"
                 value="split"
-                @click="importType = 'split'"
+                @click="intakeType = 'split'"
               />
             </v-radio-group>
           </v-col>
@@ -39,7 +39,7 @@
         <v-tooltip bottom>
           <template #activator="{on}">
             <div v-on="on">
-              <v-btn color="primary" text :disabled="true" @click="view">
+              <v-btn color="primary" text :disabled="true" @click="edit">
                 Edit
               </v-btn>
             </div>
@@ -58,25 +58,25 @@ import {
   ChecklistResults,
   checklistSupplementalInfo
 } from '@mitre/hdf-converters';
+import RouteMixin from '@/mixins/RouteMixin';
 import {InspecIntakeModule} from '@/store/report_intake';
 import {ChecklistSupplementalInfoModule} from '@/store/checklist_supplemental';
-import Vue from 'vue';
 import Component from 'vue-class-component';
 
 @Component({
   components: {Modal}
 })
-export default class ChecklistSupplementModal extends Vue {
+export default class ChecklistSupplementModal extends RouteMixin {
   defaultMultipleOption: checklistSupplementalInfo['intakeType'] = 'split';
   get numberOfObj(): number {
     return ChecklistSupplementalInfoModule.numOfObj;
   }
 
-  get importType(): checklistSupplementalInfo['intakeType'] {
+  get intakeType(): checklistSupplementalInfo['intakeType'] {
     return ChecklistSupplementalInfoModule.intakeType;
   }
 
-  set importType(type: checklistSupplementalInfo['intakeType']) {
+  set intakeType(type: checklistSupplementalInfo['intakeType']) {
     ChecklistSupplementalInfoModule.SET_INTAKE(type);
   }
 
@@ -101,10 +101,26 @@ export default class ChecklistSupplementModal extends Vue {
   }
 
   async view(): Promise<void> {
+    await this.importChecklistAction();
+    this.navigateWithNoErrors('/results');
+  }
+
+  async edit(): Promise<void> {
+    await this.importChecklistAction();
+    this.navigateWithNoErrors('/checklist');
+  }
+
+  async importChecklistAction(): Promise<void> {
+    await this.createAndAddChecklist();
+    ChecklistSupplementalInfoModule.resetState();
+    ChecklistSupplementalInfoModule.close();
+  }
+
+  async createAndAddChecklist(): Promise<void> {
     const checklistXml = ChecklistSupplementalInfoModule.xmlString;
     const checklistInfo = {
       filename: this.filename,
-      intakeType: this.importType,
+      intakeType: this.intakeType,
       mode: await ChecklistSupplementalInfoModule.mode
     };
     const results = new ChecklistResults(
@@ -118,15 +134,15 @@ export default class ChecklistSupplementModal extends Vue {
           data: evaluation,
           filename: `${this.filename.replace(/\.ckl/gi, '')}-${index + 1}.ckl`
         });
+        // InspecIntakeModule.addChecklist({});
       });
     } else if (results) {
       InspecIntakeModule.loadExecJson({
         data: results,
         filename: this.filename
       });
+      // InspecIntakeModule.addChecklist({});
     }
-    ChecklistSupplementalInfoModule.resetState();
-    ChecklistSupplementalInfoModule.close();
   }
 }
 </script>
