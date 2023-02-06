@@ -7,7 +7,6 @@
   >
     <v-card>
       <v-card-title> Checklist Detected</v-card-title>
-      <!-- <div class="Subtitle 2">How would you like to open {{ filename }}?</div> -->
       <v-card-subtitle class="text-subtitle-2 mt-0 pl-6">
         How would you like to open {{ filename }}?
       </v-card-subtitle>
