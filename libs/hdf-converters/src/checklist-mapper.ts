@@ -251,65 +251,68 @@ export type checklistSupplementalInfo = {
  */
 export class ChecklistResults {
   checklistXml: string;
-  withRaw: boolean;
   suppInfo: checklistSupplementalInfo;
 
   /**
-   * Creates instance of ChecklistResult object because baseConverter does not return ExecJSON.Execution[] type
+   * Creates instance of ChecklistResult object because baseConverter does not return ExecJSON.Execution[] type.
    * Constructor takes an addtional (optional) param object supplementalInfo
    * @param checklistXml - string of xml data
    * @param supplementalInfo - object containing filename and intakeType
-   * @param withRaw - optional boolean to include the raw data in passthrough
+   * @param supplementalInfo.filename - string of checklist filename
+   * @param supplementalInfo.intakeType - string to determine default, split into multiple objects, wrapper creates a wrapper profile.
    */
   constructor(
     checklistXml: string,
-    supplementalInfo?: checklistSupplementalInfo,
-    withRaw?: boolean
+    supplementalInfo?: checklistSupplementalInfo
   ) {
     this.checklistXml = checklistXml;
     this.suppInfo = supplementalInfo || {
       filename: 'checklist.ckl',
       intakeType: 'default'
     };
-    this.withRaw = withRaw || false;
   }
 
   toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
+    const fullChecklistJsonix = parseXmlToJsonix(
+      this.checklistXml,
+      jsonixMapping
+    );
+    const fullChecklistObject = createChecklistObject(
+      fullChecklistJsonix,
+      this.suppInfo.filename
+    );
     switch (this.suppInfo.intakeType) {
       case 'default':
-        const result = new ChecklistMapper(
-          this.checklistXml,
-          this.suppInfo.filename,
-          this.withRaw
-        );
-        return result.toHdf();
+        const defaultChecklist = new ChecklistMapper(fullChecklistObject);
+        return defaultChecklist.toHdf();
       case 'split':
         const returnArray: ExecJSON.Execution[] = [];
         const splitString = this.checklistXml.split(/<iSTIG>|<\/iSTIG>/g);
         let fileNumber = 1;
         for (let i = 1; i < splitString.length; i += 2) {
-          const checklist = `${splitString[0]}<iSTIG>${splitString[i]}</iSTIG>${
-            splitString[splitString.length - 1]
-          }`;
+          const checklistXmlString = `${splitString[0]}<iSTIG>${
+            splitString[i]
+          }</iSTIG>${splitString[splitString.length - 1]}`;
           const extIndex = this.suppInfo.filename.lastIndexOf('.');
-          const entry = new ChecklistMapper(
-            checklist,
-            `${this.suppInfo.filename.substring(
-              0,
-              extIndex
-            )}-${fileNumber}${this.suppInfo.filename.substring(extIndex)}`,
-            this.withRaw
+          const filename = `${this.suppInfo.filename.substring(
+            0,
+            extIndex
+          )}-${fileNumber}${this.suppInfo.filename.substring(extIndex)}`;
+          const checklistJsonix = parseXmlToJsonix(
+            checklistXmlString,
+            jsonixMapping
           );
+          const checklistObject = createChecklistObject(
+            checklistJsonix,
+            filename
+          );
+          const entry = new ChecklistMapper(checklistObject);
           returnArray.push(entry.toHdf());
           fileNumber++;
         }
         return returnArray;
       case 'wrapper':
-        const checklist = new ChecklistMapper(
-          this.checklistXml,
-          this.suppInfo.filename,
-          this.withRaw
-        );
+        const checklist = new ChecklistMapper(fullChecklistObject);
         const original = checklist.toHdf();
         const parentProfileName = this.suppInfo.filename.replace(/\.ckl/gi, '');
         const parent_profile: ExecJSON.Profile = {
@@ -337,8 +340,6 @@ export class ChecklistResults {
  * Checklist mapper
  */
 export class ChecklistMapper extends BaseConverter {
-  withRaw: boolean;
-  filename: string;
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -423,33 +424,24 @@ export class ChecklistMapper extends BaseConverter {
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
         return {
-          ...(this.withRaw && {raw: data.raw}),
           ...{
             mutableChecklist: {
               filename: data.filename,
               asset: data.asset,
-              stigs: data.stigs
+              stigs: data.stigs,
+              raw: data.raw
             }
           }
         };
       }
-      // intChecklistObj: this.data.stigs,
-      // raw: this.data.raw
     }
   };
 
   /**
-   * Creates an instance of checklist mapper.
-   * @param checklistXLM - XML string using checklist schema 2.5
-   * @param filename - string of file name passed required for checklist viewer
-   * @param withRaw - boolean to include raw data in passthrough
-   * @param wrapper - boolean to create a wrapper profile for results viewer
-   * @param editMode - boolean to include checklist object for checklist viewer
+   *
+   * @param checklistObject - ChecklistFile object (omitting the uniqueId)
    */
-  constructor(checklistXml: string, filename: string, withRaw?: boolean) {
-    super(parseXmlToJsonix(checklistXml, jsonixMapping));
-    this.withRaw = withRaw || false;
-    this.filename = filename;
-    this.data = createChecklistObject(this.data, this.filename);
+  constructor(checklistObject: Omit<ChecklistFile, 'uniqueId'>) {
+    super(checklistObject);
   }
 }

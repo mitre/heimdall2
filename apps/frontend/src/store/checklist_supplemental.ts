@@ -94,6 +94,11 @@ export class ChecklistSupplementalInfo extends VuexModule {
   }
 }
 
+/**
+ * Store Module for Supplemental Information for creation of
+ * Checklist hdf object. Show function will display the
+ * ChecklistSupplementModal
+ */
 export const ChecklistSupplementalInfoModule = getModule(
   ChecklistSupplementalInfo
 );

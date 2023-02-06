@@ -7,23 +7,23 @@
   >
     <v-card>
       <v-card-title> Checklist Detected</v-card-title>
-      <v-card-text> How would you like to open {{ filename }} </v-card-text>
-      <v-card-text>
+      <!-- <div class="Subtitle 2">How would you like to open {{ filename }}?</div> -->
+      <v-card-subtitle class="text-subtitle-2 mt-0 pl-6">
+        How would you like to open {{ filename }}?
+      </v-card-subtitle>
+      <v-card-text v-if="multiple">
+        {{ numberOfObj }} iSTIG objects found during evaluation
         <v-row>
           <v-col>
             <v-radio-group v-if="multiple" v-model="intakeType">
-              <v-card-text
-                >{{ numberOfObj }} iSTIG objects found during
-                evaluation</v-card-text
-              >
               <v-spacer />
               <v-radio
-                label="Create Wrapper"
+                label="Import as One File"
                 value="wrapper"
                 @click="intakeType = 'wrapper'"
               />
               <v-radio
-                label="Separate HDF Files"
+                :label="`Create ${numberOfObj} Separate Files`"
                 value="split"
                 @click="intakeType = 'split'"
               />
@@ -123,25 +123,19 @@ export default class ChecklistSupplementModal extends RouteMixin {
       intakeType: this.intakeType,
       mode: await ChecklistSupplementalInfoModule.mode
     };
-    const results = new ChecklistResults(
-      checklistXml,
-      checklistInfo,
-      false
-    ).toHdf();
+    const results = new ChecklistResults(checklistXml, checklistInfo).toHdf();
     if (Array.isArray(results)) {
       results.forEach((evaluation, index) => {
         InspecIntakeModule.loadExecJson({
           data: evaluation,
           filename: `${this.filename.replace(/\.ckl/gi, '')}-${index + 1}.ckl`
         });
-        // InspecIntakeModule.addChecklist({});
       });
     } else if (results) {
       InspecIntakeModule.loadExecJson({
         data: results,
         filename: this.filename
       });
-      // InspecIntakeModule.addChecklist({});
     }
   }
 }
