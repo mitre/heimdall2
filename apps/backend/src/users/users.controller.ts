@@ -151,6 +151,6 @@ export class UsersController {
   @UseGuards(TestGuard)
   @Post('/clear')
   async clear(): Promise<void> {
-    User.truncate();
+    User.truncate({cascade: true});
   }
 }
