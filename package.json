@@ -37,6 +37,7 @@
     "dotenv-cli": "^7.0.0"
   },
   "resolutions": {
+    "prismjs": "1.25.0",
     "vue": "2.6.14"
   },
   "engines": {
