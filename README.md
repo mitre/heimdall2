@@ -283,7 +283,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    - ```bash
      # grab nodesource for recent version of nodejs
      sudo curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh
-     sudo /tmp/nodesource_setup.sh
+     sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
      sudo apt install postgresql nodejs nano git
