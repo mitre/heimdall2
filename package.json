@@ -41,5 +41,8 @@
   },
   "engines": {
     "node": "^18.10.0"
+  },
+  "resolutions": {
+    "prismjs": "1.25.0"
   }
 }
