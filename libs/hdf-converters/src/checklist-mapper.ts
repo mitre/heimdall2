@@ -47,48 +47,48 @@ const STATUS_MAPPING: Map<string | undefined, string> = new Map([
  * conjunction with revertChecklist (also experimental)
  * @experimental
  */
-// export class ChecklistConverter {
-//   static toChecklist(data: ChecklistFile): string {
-//     // Updating assets
-//     const asset = {...data.asset, TYPE_NAME: 'Checklist.ASSET'};
-//     _.set(data, 'raw.value.asset', asset);
+export class ChecklistConverter {
+  static toChecklist(data: ChecklistFile): string {
+    // Updating assets
+    const asset = {...data.asset, TYPE_NAME: 'Checklist.ASSET'};
+    _.set(data, 'raw.value.asset', asset);
 
-//     // Updating marked-up rule data
-//     _.get(data.raw as unknown, 'value.stigs.istig').forEach(
-//       (stig: any, stig_index: number) => {
-//         _.get(stig, 'vuln').forEach((vuln: any, vuln_index: number) => {
-//           _.set(
-//             vuln,
-//             'status',
-//             STATUS_MAPPING.get(data.stigs[stig_index].vulns[vuln_index].status)
-//           );
-//           _.set(
-//             vuln,
-//             'findingdetails',
-//             data.stigs[stig_index].vulns[vuln_index].findingDetails
-//           );
-//           _.set(
-//             vuln,
-//             'comments',
-//             data.stigs[stig_index].vulns[vuln_index].comments
-//           );
-//           _.set(
-//             vuln,
-//             'severityoverride',
-//             data.stigs[stig_index].vulns[vuln_index].severityOverride
-//           );
-//           _.set(
-//             vuln,
-//             'severityjustification',
-//             data.stigs[stig_index].vulns[vuln_index].severityJustification
-//           );
-//         });
-//       }
-//     );
+    // Updating marked-up rule data
+    _.get(data.raw as unknown, 'value.stigs.istig').forEach(
+      (stig: any, stig_index: number) => {
+        _.get(stig, 'vuln').forEach((vuln: any, vuln_index: number) => {
+          _.set(
+            vuln,
+            'status',
+            STATUS_MAPPING.get(data.stigs[stig_index].vulns[vuln_index].status)
+          );
+          _.set(
+            vuln,
+            'findingdetails',
+            data.stigs[stig_index].vulns[vuln_index].findingDetails
+          );
+          _.set(
+            vuln,
+            'comments',
+            data.stigs[stig_index].vulns[vuln_index].comments
+          );
+          _.set(
+            vuln,
+            'severityoverride',
+            data.stigs[stig_index].vulns[vuln_index].severityOverride
+          );
+          _.set(
+            vuln,
+            'severityjustification',
+            data.stigs[stig_index].vulns[vuln_index].severityJustification
+          );
+        });
+      }
+    );
 
-//     return revertChecklist(data.raw);
-//   }
-// }
+    return revertChecklist(data.raw);
+  }
+}
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
