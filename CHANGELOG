@@ -1,3 +1,27 @@
+v2.3.38
+
+- Add API Key to Groups @georgedias (#4035)
+
+## Dependency Updates
+
+- Bump @types/validator from 13.7.11 to 13.7.12 @dependabot (#4055)
+- Bump @typescript-eslint/eslint-plugin from 5.50.0 to 5.51.0 @dependabot (#4054)
+- Bump aws-sdk from 2.1309.0 to 2.1310.0 @dependabot (#4053)
+- Bump @aws-sdk/client-config-service from 3.264.0 to 3.266.0 @dependabot (#4050)
+- Bump apexcharts from 3.36.0 to 3.37.0 @dependabot (#4052)
+- Bump @types/node from 18.11.18 to 18.11.19 @dependabot (#4049)
+- Bump aws-sdk from 2.1308.0 to 2.1309.0 @dependabot (#4046)
+- Bump @aws-sdk/client-config-service from 3.262.0 to 3.264.0 @dependabot (#4042)
+- Bump @types/express from 4.17.15 to 4.17.17 @dependabot (#4044)
+- Bump aws-sdk from 2.1307.0 to 2.1308.0 @dependabot (#4039)
+- Bump aws-sdk from 2.1306.0 to 2.1307.0 @dependabot (#4037)
+- Bump @nestjs/passport from 9.0.0 to 9.0.1 @dependabot (#4036)
+- Bump aws-sdk from 2.1304.0 to 2.1306.0 @dependabot (#4030)
+- Bump @typescript-eslint/eslint-plugin from 5.49.0 to 5.50.0 @dependabot (#4033)
+- Bump @aws-sdk/client-config-service from 3.261.0 to 3.262.0 @dependabot (#4032)
+- Bump @aws-sdk/client-config-service from 3.259.0 to 3.261.0 @dependabot (#4025)
+- Bump eslint from 8.32.0 to 8.33.0 @dependabot (#4024)
+
 v2.6.37
 
 - Update Converters List @Amndeep7 (#4019)
