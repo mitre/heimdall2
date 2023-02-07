@@ -11,6 +11,7 @@ import {
   Table,
   UpdatedAt
 } from 'sequelize-typescript';
+import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 
 @Table
@@ -25,14 +26,28 @@ export class ApiKey extends Model {
   @Column(DataType.BIGINT)
   userId!: string;
 
-  @BelongsTo(() => User)
+  @ForeignKey(() => Group)
+  @Column(DataType.BIGINT)
+  groupId!: string;
+
+  @BelongsTo(() => User, {
+    constraints: false
+  })
   user!: User;
+
+  @BelongsTo(() => Group, {
+    constraints: false
+  })
+  group!: Group;
 
   @Column(DataType.STRING)
   name!: string;
 
   @Column(DataType.STRING)
   apiKey!: string;
+
+  @Column(DataType.STRING)
+  type!: string;
 
   @CreatedAt
   @AllowNull(false)

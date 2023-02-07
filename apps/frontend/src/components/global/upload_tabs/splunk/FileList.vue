@@ -123,7 +123,7 @@ export default class FileList extends Vue {
         if (hdf) {
           return InspecIntakeModule.loadText({
             text: JSON.stringify(hdf),
-            filename: _.get(hdf, 'meta.filename')
+            filename: _.get(hdf, 'meta.filename') as unknown as string
           }).catch((err) => {
             SnackbarModule.failure(String(err));
           });

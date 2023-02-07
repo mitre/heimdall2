@@ -31,7 +31,7 @@ export function omitASFFVersions(
   return input.map((finding) => {
     if (_.has(finding, 'FindingProviderFields.Types')) {
       const typesArray = _.reject(
-        _.get(finding, 'FindingProviderFields.Types'),
+        _.get(finding, 'FindingProviderFields.Types') as unknown as string[],
         (type) => _.startsWith(type, 'MITRE/SAF/')
       );
       _.set(finding, 'FindingProviderFields.Types', typesArray);
