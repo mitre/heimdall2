@@ -4,6 +4,7 @@ import {hash} from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
 import {ConfigService} from '../config/config.service';
+import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 import {ApiKey} from './apikey.model';
 import {APIKeyDto} from './dto/apikey.dto';
@@ -22,13 +23,15 @@ export class ApiKeyService {
   }
 
   async create(
-    user: User,
+    target: User | Group,
     createApiKeyDto: CreateApiKeyDto
   ): Promise<{id: string; name: string; apiKey: string}> {
     const APIKeySecret = this.configService.get('API_KEY_SECRET') || '';
     const newApiKey = new ApiKey({
-      userId: user.id,
-      name: createApiKeyDto.name
+      userId: target instanceof User ? target.id : undefined,
+      groupId: target instanceof Group ? target.id : undefined,
+      name: createApiKeyDto.name,
+      type: target instanceof User ? 'user' : 'group'
     });
     await newApiKey.save();
     const newJWT = jwt.sign(
@@ -59,7 +62,7 @@ export class ApiKeyService {
 
   async findById(id: string): Promise<ApiKey> {
     const apiKey = await this.apiKeyModel.findByPk<ApiKey>(id, {
-      include: [User]
+      include: [User, Group]
     });
     if (apiKey === null) {
       throw new NotFoundException('API key with given id not found');
@@ -71,6 +74,13 @@ export class ApiKeyService {
   async findAllForUser(user: User): Promise<APIKeyDto[]> {
     const apiKeys = await this.apiKeyModel.findAll({
       where: {userId: user.id}
+    });
+    return apiKeys.map((key) => new APIKeyDto(key));
+  }
+
+  async findAllForGroup(group: Group): Promise<APIKeyDto[]> {
+    const apiKeys = await this.apiKeyModel.findAll({
+      where: {groupId: group.id}
     });
     return apiKeys.map((key) => new APIKeyDto(key));
   }
