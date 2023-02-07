@@ -25,7 +25,7 @@ import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
 import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
 import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
-import {User} from '../users/user.model';
+import {User} from './user.model';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
 import {SlimUserDto} from './dto/slim-user.dto';
@@ -151,6 +151,6 @@ export class UsersController {
   @UseGuards(TestGuard)
   @Post('/clear')
   async clear(): Promise<void> {
-    User.destroy({where: {}});
+    User.truncate();
   }
 }
