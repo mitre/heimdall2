@@ -49,7 +49,7 @@ function processEntry(input: unknown): string {
   output.push(`\nPath: ${_.get(input, 'File')}\n`);
   output.push(`StartLine: ${_.get(input, 'StartLine')}, `);
   output.push(`EndLine: ${_.get(input, 'EndLine')}\n`);
-  output.push(`Code:\n${_.get(input, 'Text').trim()}`);
+  output.push(`Code:\n${(_.get(input, 'Text') as unknown as string).trim()}`);
 
   return output.join('');
 }
@@ -66,17 +66,17 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
       _.set(
         element,
         'results',
-        _.get(element, 'results').filter((result: ExecJSON.ControlResult) => {
+        (_.get(element, 'results') as any).filter((result: ExecJSON.ControlResult) => {
           const codedesc = _.get(result, 'code_desc').split('<=SNIPPET');
           const snippetid = codedesc[0];
           const classid = _.get(element, 'id');
           _.set(result, 'code_desc', codedesc[1]);
 
           let isMatch = false;
-          const matches = _.get(
+          const matches = (_.get(
             file,
             'FVDL.Vulnerabilities.Vulnerability'
-          ).filter((subElement: Record<string, unknown>) => {
+          ) as any).filter((subElement: Record<string, unknown>) => {
             return _.get(subElement, 'ClassInfo.ClassID') === classid;
           });
           matches.forEach((match: Record<string, unknown>) => {
@@ -103,7 +103,7 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
       _.set(
         element,
         'impact',
-        impactMapping(_.get(element, 'impact'), _.get(element, 'id'))
+        impactMapping(_.get(element, 'impact') as unknown as Record<string, unknown>, _.get(element, 'id') as unknown as string)
       );
     }
     return element;

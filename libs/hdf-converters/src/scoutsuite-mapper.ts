@@ -84,7 +84,7 @@ function getMessage(input: unknown): string {
     return `${_.get(input, 'flagged_items')} flagged items out of ${_.get(
       input,
       'checked_items'
-    )} checked items:\n${_.get(input, 'items').join('\n')}`;
+    )} checked items:\n${(_.get(input, 'items') as unknown as string[]).join('\n')}`;
   }
 }
 function nistTag(rule: string): string[] {
@@ -105,7 +105,7 @@ function collapseServices(
   );
   const findings: Record<string, unknown>[] = [];
   services.forEach((element) => {
-    findings.push(_.get(element, 'findings'));
+    findings.push(_.get(element, 'findings') as unknown as Record<string, unknown>);
   });
   const entries: [string, unknown][] = [];
   Object.values(findings).forEach((element) => {

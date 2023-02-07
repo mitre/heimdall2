@@ -33,7 +33,7 @@ function subfindingsMessage(finding: unknown): string | undefined {
     const patchedPackage = _.get(
       finding,
       'Resources[0].Details.Other.Patched Package'
-    );
+    ) as unknown as string;
     const patchedVersionMessage =
       patchedPackage.length === 0
         ? 'There is no patched version of the package.'
