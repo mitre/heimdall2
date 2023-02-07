@@ -149,7 +149,7 @@ export class UsersController {
   }
 
   @UseGuards(TestGuard)
-  @Post('clear')
+  @Post('/clear')
   async clear(): Promise<void> {
     User.destroy({where: {}});
   }
