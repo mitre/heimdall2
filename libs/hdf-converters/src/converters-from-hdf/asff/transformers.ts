@@ -243,7 +243,8 @@ export function createCode(
   control: ExecJSON.Control & {profileInfo?: Record<string, unknown>}
 ) {
   const noCodeValue =
-    ((_.get(control, 'profileInfo.depends') || []) as Record<string, unknown>[]).length > 0
+    ((_.get(control, 'profileInfo.depends') || []) as Record<string, unknown>[])
+      .length > 0
       ? ''
       : JSON.stringify(
           _.omitBy(

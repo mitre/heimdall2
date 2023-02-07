@@ -50,7 +50,11 @@ function findingId(
     // CIS
     return encode(_.get(finding, 'ProductFields.RuleId'));
   } else {
-    return encode((_.get(finding, 'GeneratorId') as unknown as string).split('/').slice(-1)[0]);
+    return encode(
+      (_.get(finding, 'GeneratorId') as unknown as string)
+        .split('/')
+        .slice(-1)[0]
+    );
   }
 }
 
@@ -89,7 +93,10 @@ function findingNistTag(
     return [];
   }
   return awsConfigMapping.searchNIST([
-    _.get(finding, 'ProductFields.RelatedAWSResources:0/name') as unknown as string
+    _.get(
+      finding,
+      'ProductFields.RelatedAWSResources:0/name'
+    ) as unknown as string
   ]);
 }
 

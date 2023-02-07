@@ -661,9 +661,16 @@ export class ASFFMapper extends BaseConverter {
   };
 
   statusReason(finding: unknown): string | undefined {
-    const statusReasons = _.get(finding, 'Compliance.StatusReasons') as Record<string, string>[] | unknown;
-    if(statusReasons !== undefined && statusReasons !== null && _.isArray(statusReasons)) {
-      return statusReasons.map((reason: Record<string, string>) =>
+    const statusReasons = _.get(finding, 'Compliance.StatusReasons') as
+      | Record<string, string>[]
+      | unknown;
+    if (
+      statusReasons !== undefined &&
+      statusReasons !== null &&
+      _.isArray(statusReasons)
+    ) {
+      return statusReasons
+        .map((reason: Record<string, string>) =>
           Object.entries(reason || {}).map(([key, value]: [string, string]) => {
             return `${encode(key)}: ${encode(value)}`;
           })

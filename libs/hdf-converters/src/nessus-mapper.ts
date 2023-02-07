@@ -41,7 +41,10 @@ function getVersion(): string {
 
 function getId(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'Vuln-ID')[0];
+    return parseRef(
+      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      'Vuln-ID'
+    )[0];
   } else {
     return _.get(item, 'pluginID') as unknown as string;
   }
@@ -84,7 +87,9 @@ function parseRef(input: string, key: string): string[] {
 function getImpact(item: unknown): number {
   if (_.has(item, COMPLIANCE_PATH)) {
     return impactMapping(IMPACT_MAPPING)(
-      parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'CAT').join('')
+      parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'CAT').join(
+        ''
+      )
     );
   } else {
     return impactMapping(IMPACT_MAPPING)(_.get(item, 'severity'));
@@ -123,14 +128,20 @@ function getCci(item: unknown): string[] {
 }
 function getRid(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'Rule-ID').join(',');
+    return parseRef(
+      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      'Rule-ID'
+    ).join(',');
   } else {
     return _.get(item, 'pluginID') as unknown as string;
   }
 }
 function getStig(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'STIG-ID').join(',');
+    return parseRef(
+      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      'STIG-ID'
+    ).join(',');
   } else {
     return '';
   }
