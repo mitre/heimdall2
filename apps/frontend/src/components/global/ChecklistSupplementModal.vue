@@ -55,12 +55,14 @@
 import Modal from '@/components/global/Modal.vue';
 import {
   ChecklistResults,
-  checklistSupplementalInfo
+  checklistSupplementalInfo,
+  ChecklistFile
 } from '@mitre/hdf-converters';
 import RouteMixin from '@/mixins/RouteMixin';
 import {InspecIntakeModule} from '@/store/report_intake';
 import {ChecklistSupplementalInfoModule} from '@/store/checklist_supplemental';
 import Component from 'vue-class-component';
+import _ from 'lodash';
 
 @Component({
   components: {Modal}
@@ -119,15 +121,26 @@ export default class ChecklistSupplementModal extends RouteMixin {
     const checklistXml = ChecklistSupplementalInfoModule.xmlString;
     const checklistInfo = {
       filename: this.filename,
-      intakeType: this.intakeType,
-      mode: await ChecklistSupplementalInfoModule.mode
+      intakeType: this.intakeType
     };
     const results = new ChecklistResults(checklistXml, checklistInfo).toHdf();
     if (Array.isArray(results)) {
       results.forEach((evaluation, index) => {
+        let newFilename = '';
+        if ('passthrough.mutableChecklist' in evaluation) {
+          const mutableChecklistObject: Omit<ChecklistFile, 'uniqueId'> = _.get(
+            evaluation,
+            'passthrough.mutableChecklist'
+          ) as ChecklistFile;
+          newFilename = mutableChecklistObject.filename;
+        } else {
+          newFilename = `${this.filename.replace(/\.ckl/gi, '')}-${
+            index + 1
+          }.ckl`;
+        }
         InspecIntakeModule.loadExecJson({
           data: evaluation,
-          filename: `${this.filename.replace(/\.ckl/gi, '')}-${index + 1}.ckl`
+          filename: newFilename
         });
       });
     } else if (results) {
