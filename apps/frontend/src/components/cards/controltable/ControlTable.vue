@@ -358,7 +358,10 @@ export default class ControlTable extends Vue {
         severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
           d.root.hdf.severity
         ),
-        filename: _.get(d, 'sourcedFrom.sourcedFrom.from_file.filename')
+        filename: _.get(
+          d,
+          'sourcedFrom.sourcedFrom.from_file.filename'
+        ) as unknown as string
       };
     });
   }

@@ -112,7 +112,6 @@ function newGroup(): IGroup {
 }
 
 @Component({
-  validations: {},
   components: {
     ActionDialog,
     GroupAPIKeysModal,
