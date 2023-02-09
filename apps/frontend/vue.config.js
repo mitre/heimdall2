@@ -79,17 +79,6 @@ module.exports = {
           'stream'
         ]
       }),
-      new webpack.DefinePlugin({
-        'process.env': {
-          PACKAGE_VERSION: `"${version}"`,
-          DESCRIPTION: `"${description}"`,
-          REPOSITORY: `"${repository}"`,
-          LICENSE: `"${license}"`,
-          CHANGELOG: `"${changelog}"`,
-          BRANCH: `"${branch}"`,
-          ISSUES: `"${issues}"`
-        }
-      })
     ]
   },
   chainWebpack: (config) => {

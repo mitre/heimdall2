@@ -243,7 +243,8 @@ export function createCode(
   control: ExecJSON.Control & {profileInfo?: Record<string, unknown>}
 ) {
   const noCodeValue =
-    (_.get(control, 'profileInfo.depends', []) as string[]).length > 0
+    ((_.get(control, 'profileInfo.depends') || []) as Record<string, unknown>[])
+      .length > 0
       ? ''
       : JSON.stringify(
           _.omitBy(
@@ -475,9 +476,8 @@ function createProfileInfoFindingFields(
       }
     });
   });
-  let passthrough = _.get(hdf, 'passthrough', '');
-  if (_.isString(passthrough)) {
-    passthrough = passthrough.trim();
+  const passthrough = _.get(hdf, 'passthrough');
+  if (_.isString(passthrough) && (passthrough as string).trim()) {
     typesArr.push(`Execution/passthrough/${escapeForwardSlashes(passthrough)}`);
   } else if (passthrough !== undefined) {
     typesArr.push(

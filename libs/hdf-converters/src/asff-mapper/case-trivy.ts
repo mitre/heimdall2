@@ -32,9 +32,8 @@ function subfindingsMessage(finding: unknown): string | undefined {
   if (typeof cveId === 'string') {
     const patchedPackage = _.get(
       finding,
-      'Resources[0].Details.Other.Patched Package',
-      ''
-    );
+      'Resources[0].Details.Other.Patched Package'
+    ) as unknown as string;
     const patchedVersionMessage =
       patchedPackage.length === 0
         ? 'There is no patched version of the package.'
