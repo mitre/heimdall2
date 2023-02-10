@@ -35,7 +35,7 @@ type ChecklistAsset = {
   webdbinstance: string;
 };
 
-type ChecklistStig = {
+export type ChecklistStig = {
   header: StigHeader;
   vulns: ChecklistVuln[];
 };
@@ -100,7 +100,7 @@ function getAttributeData(stigdata: unknown[], tag: string): string {
     return _.get(attribute, 'vulnattribute') === tag;
   });
   if (results.length === 1) {
-    return _.get(results[0], 'attributedata');
+    return _.get(results[0], 'attributedata') as unknown as string;
   } else {
     return results
       .map((result: unknown) => _.get(result, 'attributedata'))
@@ -119,7 +119,7 @@ function getSiData(stiginfo: unknown[], tag: string): string {
     return _.get(attribute, 'sidname') === tag;
   });
   if (results.length === 1) {
-    return _.get(results[0], 'siddata');
+    return _.get(results[0], 'siddata') as unknown as string;
   } else {
     return results
       .map((result: unknown) => _.get(result, 'siddata'))
@@ -165,7 +165,7 @@ export function createChecklistObject(raw: Record<string, any>, filename: string
   const stigs: ChecklistStig[] = [];
 
   rawStigs.forEach((stig: unknown) => {
-    const stigInfo = _.get(stig, 'stiginfo.sidata');
+    const stigInfo: unknown[] = _.get(stig, 'stiginfo.sidata') as unknown as unknown[];
     const header: StigHeader = {
       version: getSiData(stigInfo, 'version'),
       classification: getSiData(stigInfo, 'classification'),
@@ -181,15 +181,15 @@ export function createChecklistObject(raw: Record<string, any>, filename: string
     };
 
     const checklistVulns: ChecklistVuln[] = [];
-    const vulns: unknown[] = _.get(stig, 'vuln');
+    const vulns: unknown[] = _.get(stig, 'vuln') as unknown as unknown[];
     vulns.forEach((vuln: unknown) => {
-      const stigdata: unknown[] = _.get(vuln, 'stigdata');
+      const stigdata: unknown[] = _.get(vuln, 'stigdata') as unknown as unknown[];
       const checklistVuln: ChecklistVuln = {
         status: STATUS_MAPPING.get(_.get(vuln, 'status')),
-        findingDetails: _.get(vuln, 'findingdetails'),
-        comments: _.get(vuln, 'comments'),
-        severityOverride: _.get(vuln, 'severityoverride'),
-        severityJustification: _.get(vuln, 'severityjustification'),
+        findingDetails: _.get(vuln, 'findingdetails') as unknown as string,
+        comments: _.get(vuln, 'comments') as unknown as string,
+        severityOverride: _.get(vuln, 'severityoverride') as unknown as string,
+        severityJustification: _.get(vuln, 'severityjustification') as unknown as string,
         vulnNum: getAttributeData(stigdata, 'Vuln_Num'),
         severity: getAttributeData(stigdata, 'Severity'),
         groupTitle: getAttributeData(stigdata, 'Group_Title'),

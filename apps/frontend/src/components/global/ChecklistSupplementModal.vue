@@ -131,7 +131,7 @@ export default class ChecklistSupplementModal extends RouteMixin {
           const mutableChecklistObject: Omit<ChecklistFile, 'uniqueId'> = _.get(
             evaluation,
             'passthrough.mutableChecklist'
-          ) as ChecklistFile;
+          ) as unknown as ChecklistFile;
           newFilename = mutableChecklistObject.filename;
         } else {
           newFilename = `${this.filename.replace(/\.ckl/gi, '')}-${

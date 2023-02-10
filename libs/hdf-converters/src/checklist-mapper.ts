@@ -13,6 +13,7 @@ import {CciNistMapping} from './mappings/CciNistMapping';
 import {jsonixMapping} from './mappings/ChecklistMapping';
 import {
   ChecklistFile,
+  ChecklistStig,
   createChecklistObject
 } from './mappings/ChecklistMappingData';
 import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
@@ -54,7 +55,8 @@ export class ChecklistConverter {
     _.set(data, 'raw.value.asset', asset);
 
     // Updating marked-up rule data
-    _.get(data.raw as unknown, 'value.stigs.istig').forEach(
+    const iStigs: ChecklistStig[] = _.get(data.raw, 'value.stigs.istig') as ChecklistStig[]
+    iStigs.forEach(
       (stig: any, stig_index: number) => {
         _.get(stig, 'vuln').forEach((vuln: any, vuln_index: number) => {
           _.set(
