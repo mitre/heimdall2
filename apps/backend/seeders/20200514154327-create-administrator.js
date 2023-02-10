@@ -16,7 +16,7 @@ module.exports = {
       envConfig = dotenv.parse(fs.readFileSync('.env'));
       console.log('Read config!');
     } catch (error) {
-      if (error.code === 'ENOENT') {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
         // File probably does not exist
         console.log('Unable to read configuration file `.env`!');
         console.log('Falling back to environment or undefined values!');
