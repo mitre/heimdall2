@@ -55,38 +55,39 @@ export class ChecklistConverter {
     _.set(data, 'raw.value.asset', asset);
 
     // Updating marked-up rule data
-    const iStigs: ChecklistStig[] = _.get(data.raw, 'value.stigs.istig') as ChecklistStig[]
-    iStigs.forEach(
-      (stig: any, stig_index: number) => {
-        _.get(stig, 'vuln').forEach((vuln: any, vuln_index: number) => {
-          _.set(
-            vuln,
-            'status',
-            STATUS_MAPPING.get(data.stigs[stig_index].vulns[vuln_index].status)
-          );
-          _.set(
-            vuln,
-            'findingdetails',
-            data.stigs[stig_index].vulns[vuln_index].findingDetails
-          );
-          _.set(
-            vuln,
-            'comments',
-            data.stigs[stig_index].vulns[vuln_index].comments
-          );
-          _.set(
-            vuln,
-            'severityoverride',
-            data.stigs[stig_index].vulns[vuln_index].severityOverride
-          );
-          _.set(
-            vuln,
-            'severityjustification',
-            data.stigs[stig_index].vulns[vuln_index].severityJustification
-          );
-        });
-      }
-    );
+    const iStigs: ChecklistStig[] = _.get(
+      data.raw,
+      'value.stigs.istig'
+    ) as ChecklistStig[];
+    iStigs.forEach((stig: any, stig_index: number) => {
+      _.get(stig, 'vuln').forEach((vuln: any, vuln_index: number) => {
+        _.set(
+          vuln,
+          'status',
+          STATUS_MAPPING.get(data.stigs[stig_index].vulns[vuln_index].status)
+        );
+        _.set(
+          vuln,
+          'findingdetails',
+          data.stigs[stig_index].vulns[vuln_index].findingDetails
+        );
+        _.set(
+          vuln,
+          'comments',
+          data.stigs[stig_index].vulns[vuln_index].comments
+        );
+        _.set(
+          vuln,
+          'severityoverride',
+          data.stigs[stig_index].vulns[vuln_index].severityOverride
+        );
+        _.set(
+          vuln,
+          'severityjustification',
+          data.stigs[stig_index].vulns[vuln_index].severityJustification
+        );
+      });
+    });
 
     return revertChecklist(data.raw);
   }
