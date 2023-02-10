@@ -35,6 +35,7 @@ test/videos
 # Editor - Vim
 .*.un~
 .*.swp
+.*.swo
 
 # IDE - VSCode
 .vscode/*
