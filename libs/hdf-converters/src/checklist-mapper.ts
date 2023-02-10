@@ -10,7 +10,7 @@ import {
   parseXmlToJsonix
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
-import {jsonixMapping} from './mappings/ChecklistMapping';
+import * as checklistMapping from './mappings/ChecklistMapping';
 import {
   ChecklistFile,
   ChecklistStig,
@@ -25,7 +25,7 @@ import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
  * @experimental
  */
 function revertChecklist(data: Record<string, unknown>): string {
-  const context = new Jsonix.Context([jsonixMapping]);
+  const context = new Jsonix.Context([checklistMapping.jsonixMapping]);
 
   const marshaller = context.createMarshaller();
   return marshaller.marshalString(data);
@@ -278,7 +278,7 @@ export class ChecklistResults {
   toHdf(): ExecJSON.Execution[] | ExecJSON.Execution {
     const fullChecklistJsonix = parseXmlToJsonix(
       this.checklistXml,
-      jsonixMapping
+      checklistMapping.jsonixMapping
     );
     const fullChecklistObject = createChecklistObject(
       fullChecklistJsonix,
@@ -303,7 +303,7 @@ export class ChecklistResults {
           )}-${fileNumber}${this.suppInfo.filename.substring(extIndex)}`;
           const checklistJsonix = parseXmlToJsonix(
             checklistXmlString,
-            jsonixMapping
+            checklistMapping.jsonixMapping
           );
           const checklistObject = createChecklistObject(
             checklistJsonix,
