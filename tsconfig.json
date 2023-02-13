@@ -3,7 +3,6 @@
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
-    "strict": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "moduleResolution": "node",
@@ -11,13 +10,8 @@
     "target": "ES2019",
     "esModuleInterop": true,
     "noImplicitAny": true,
-    "resolveJsonModule": true,
-    "noImplicitUseStrict": true,
+    "resolveJsonModule": true
   },
-  "include": [
-    "types/**/*.d.ts"
-  ],
-  "exclude": [
-    "**/node_modules"
-  ]
+  "include": ["types/**/*.d.ts"],
+  "exclude": ["**/node_modules"]
 }
