@@ -118,6 +118,7 @@ export default class FileReader extends mixins(ServerMixin) {
     Promise.all(
       files.map((file) => {
         return InspecIntakeModule.loadFile({file}).catch((err) => {
+          console.log(`file failed: ${file}`)
           SnackbarModule.failure(String(err));
         });
       })
