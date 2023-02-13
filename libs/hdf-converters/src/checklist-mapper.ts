@@ -444,7 +444,7 @@ export class ChecklistMapper extends BaseConverter {
    *
    * @param checklistObject - ChecklistFile object (omitting the uniqueId)
    */
-  constructor(checklistObject: Omit<ChecklistFile, 'uniqueId'>) {
+  constructor(checklistObject: Record<string, unknown>) {
     super(checklistObject);
   }
 }
