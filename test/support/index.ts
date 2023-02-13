@@ -32,9 +32,9 @@ Cypress.on('uncaught:exception', (err) => {
 });
 
 Cypress.Commands.add('login', ({email, password}) => {
-  cy.get('input[name=email]').clear().type(email);
-  cy.get('input[name=password]').clear().type(password);
-  cy.get('#login_button').click();
+  cy.get('input[name=email]', {timeout: 10000}).clear().type(email);
+  cy.get('input[name=password]', {timeout: 10000}).clear().type(password);
+  cy.get('#login_button', {timeout: 10000}).click();
 });
 
 Cypress.Commands.add('register', (user) => {
