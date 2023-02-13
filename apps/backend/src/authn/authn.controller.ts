@@ -1,5 +1,6 @@
 import {
   Controller,
+  ForbiddenException,
   Get,
   Post,
   Req,
@@ -9,6 +10,7 @@ import {
 } from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
 import {Request} from 'express';
+import {ConfigService} from '../config/config.service';
 import {AuthenticationExceptionFilter} from '../filters/authentication-exception.filter';
 import {LocalAuthGuard} from '../guards/local-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
@@ -18,14 +20,23 @@ import {AuthnService} from './authn.service';
 @UseInterceptors(LoggingInterceptor)
 @Controller('authn')
 export class AuthnController {
-  constructor(private readonly authnService: AuthnService) {}
+  constructor(
+    private readonly authnService: AuthnService,
+    private readonly configService: ConfigService
+  ) {}
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
     @Req() req: Request
   ): Promise<{userID: string; accessToken: string}> {
-    return this.authnService.login(req.user as User);
+    if (!this.configService.isLocalLoginAllowed()) {
+      throw new ForbiddenException(
+        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
+      );
+    } else {
+      return this.authnService.login(req.user as User);
+    }
   }
 
   @UseGuards(AuthGuard('ldap'))
@@ -114,6 +125,7 @@ export class AuthnController {
 
   @Get('oidc/callback')
   @UseGuards(AuthGuard('oidc'))
+  @UseFilters(new AuthenticationExceptionFilter())
   async getUserFromOIDC(@Req() req: Request): Promise<void> {
     const session = await this.authnService.login(req.user as User);
     await this.setSessionCookies(req, session);
@@ -126,8 +138,12 @@ export class AuthnController {
       accessToken: string;
     }
   ): Promise<void> {
-    req.res?.cookie('userID', session.userID);
-    req.res?.cookie('accessToken', session.accessToken);
+    req.res?.cookie('userID', session.userID, {
+      secure: this.configService.isInProductionMode()
+    });
+    req.res?.cookie('accessToken', session.accessToken, {
+      secure: this.configService.isInProductionMode()
+    });
     req.res?.redirect('/');
   }
 }

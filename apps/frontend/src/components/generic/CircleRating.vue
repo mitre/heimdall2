@@ -10,13 +10,13 @@
 </template>
 
 <script lang="ts">
+import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import Vue from 'vue';
 
 @Component({})
 export default class CircleRating extends Vue {
-    @Prop({type: Number, default: false}) readonly filledCount!: number;
-    @Prop({type: Number, default: false}) readonly totalCount!: number;
+  @Prop({type: Number, default: false}) readonly filledCount!: number;
+  @Prop({type: Number, default: false}) readonly totalCount!: number;
 }
 </script>

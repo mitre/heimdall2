@@ -1,0 +1,190 @@
+{
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "statistics",
+    "controls",
+    "version"
+  ],
+  "properties": {
+    "statistics": {
+      "$ref": "#/definitions/Statistics",
+      "description": "Statistics for the run(s) from the tool that generated the findings.  Example: the runtime duration."
+    },
+    "version": {
+      "type": "string",
+      "description": "Version number of the tool that generated the findings.  Example: '4.18.108' is a version of Chef Inspec."
+    },
+    "controls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/Exec_JSON-MIN_Control"
+      },
+      "description": "The set of controls including any findings as reported by the tool."
+    }
+  },
+  "title": "Exec JSON-MIN Output",
+  "definitions": {
+    "Exec_JSON-MIN_Control": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "id",
+        "profile_sha256",
+        "status",
+        "code_desc"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The id."
+        },
+        "profile_id": {
+          "type": [
+            "null",
+            "string"
+          ],
+          "description": "The name of the profile that can uniquely identify it - is nullable."
+        },
+        "profile_sha256": {
+          "type": "string",
+          "description": "The checksum of the profile."
+        },
+        "status": {
+          "type": "string",
+          "description": "The status of the control.  Example: 'failed'."
+        },
+        "code_desc": {
+          "type": "string",
+          "description": "A description of the control.  Example: 'limits.conf * is expected to include ['hard', 'maxlogins', '10']."
+        },
+        "message": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "An explanation of the control status - usually only provided when the control fails."
+        },
+        "skip_message": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "An explanation of the status if the status was 'skipped'."
+        },
+        "resource": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The resource used in the test.  Example: in Inspec, you can use the 'File' resource."
+        },
+        "exception": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "The type of exception if an exception was thrown."
+        },
+        "backtrace": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          },
+          "description": "The stacktrace/backtrace of the exception if one occurred."
+        }
+      },
+      "description": "The set of all tests within the control and their results and findings.",
+      "title": "Exec JSON-MIN Control"
+    },
+    "Statistic_Block": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "total"
+      ],
+      "properties": {
+        "total": {
+          "type": "number",
+          "description": "The total.  Example: the total number of controls in a given category for a run."
+        }
+      },
+      "description": "Statistics for a given item, such as the total.",
+      "title": "Statistic Block"
+    },
+    "Statistic_Hash": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [],
+      "properties": {
+        "passed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block",
+              "description": "Statistics for the controls that passed."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "skipped": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block",
+              "description": "Statistics for the controls that were skipped."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "failed": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Block",
+              "description": "Statistics for the controls that failed."
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "description": "Statistics for the control results.",
+      "title": "Statistic Hash"
+    },
+    "Statistics": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "duration"
+      ],
+      "properties": {
+        "duration": {
+          "type": "number",
+          "description": "How long (in seconds) this run by the tool was."
+        },
+        "controls": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Statistic_Hash",
+              "description": "Breakdowns of control statistics by result"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "description": "Statistics for the run(s) such as how long it took.",
+      "title": "Statistics"
+    },
+    "Source_Location": {
+      "required": []
+    }
+  }
+}

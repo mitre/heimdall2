@@ -3,7 +3,7 @@
     :value="value"
     :clipped="$vuetify.breakpoint.lgAndUp"
     app
-    style="margin-top: 48px; z-index: 11"
+    :style="{'margin-top': classification ? '5em' : '3.5em', 'z-index': 11}"
     disable-resize-watcher
     disable-route-watcher
     fixed
@@ -35,16 +35,15 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {InspecDataModule} from '@/store/data_store';
-import {FilteredDataModule} from '@/store/data_filters';
-import RouteMixin from '@/mixins/RouteMixin';
-
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
-import {Prop} from 'vue-property-decorator';
-
 import {Trinary} from '@/enums/Trinary';
+import RouteMixin from '@/mixins/RouteMixin';
+import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
+import {ServerModule} from '../../store/server';
 
 @Component({
   components: {
@@ -58,14 +57,12 @@ export default class Sidebar extends mixins(RouteMixin) {
   get active_path() {
     if (this.current_route === 'profiles') {
       return 1;
-      }
-    else if (
+    } else if (
       this.current_route === 'results' ||
       this.current_route === 'compare'
     ) {
       return 0;
-    }
-    else {
+    } else {
       return -1;
     }
   }
@@ -76,8 +73,7 @@ export default class Sidebar extends mixins(RouteMixin) {
     // 1 -> profile view
     if (id === 0) {
       this.navigateWithNoErrors(`/results`);
-    }
-    else if (id === 1) {
+    } else if (id === 1) {
       this.navigateWithNoErrors(`/profiles`);
     }
   }
@@ -104,6 +100,10 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   get compareViewActive(): boolean {
     return this.current_route === 'compare';
+  }
+
+  get classification(): string {
+    return ServerModule.classificationBannerText;
   }
 
   // toggle the "select all" for profiles

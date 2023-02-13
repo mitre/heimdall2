@@ -3,7 +3,7 @@
   const server = new OAuth2Server();
 
   // Generate a new RSA key and add it to the keystore
-  await server.issuer.keys.generateRSA();
+  await server.issuer.keys.generate("RS256");
 
   // Start the server
   await server.start(8082, 'localhost');

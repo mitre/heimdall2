@@ -1,27 +1,47 @@
 <template>
-  <v-stepper-content step="1">
-    <v-form v-model="valid">
-      <v-text-field v-model="username" label="Username" :rules="[reqRule]" />
+  <div>
+    <v-form>
+      <v-text-field
+        v-model="username"
+        label="Username"
+        for="username_field"
+        data-cy="splunkusername"
+      />
       <v-text-field
         v-model="password"
         label="Password"
+        for="password_field"
         type="password"
-        :rules="[reqRule]"
+        data-cy="splunkpassword"
       />
-      <v-text-field
-        v-model="hostname"
-        label="Hostname"
-        :rules="[reqRule]"
-        hint="Ex: https://my.website.com:8089"
-      />
+      <v-container style="margin: 0; padding: 0" grid-list-md text-xs-center>
+        <v-layout row wrap>
+          <v-flex xs10>
+            <v-text-field
+              v-model="hostname"
+              label="Hostname"
+              for="hostname_field"
+              hint="https://yourdomain.com:8089"
+              data-cy="splunkhostname"
+            />
+          </v-flex>
+          <v-flex xs2>
+            <v-text-field
+              v-model="index"
+              label="Index"
+              for="index_field"
+              data-cy="splunkindex"
+            />
+          </v-flex>
+        </v-layout>
+      </v-container>
     </v-form>
     <v-row class="mx-1">
       <v-btn
         color="primary"
-        :disabled="!valid || loggingIn"
-        :loading="loggingIn"
-        class="my-2"
-        @click="try_login"
+        class="my-4 mt-4"
+        data-cy="splunkLoginButton"
+        @click="login"
       >
         Login
       </v-btn>
@@ -31,74 +51,86 @@
         <v-icon class="ml-2"> mdi-help-circle </v-icon>
       </v-btn>
     </v-row>
-  </v-stepper-content>
+  </div>
 </template>
 
 <script lang="ts">
+import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {SnackbarModule} from '@/store/snackbar';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import {checkSplunkCredentials} from '@mitre/hdf-converters/src/splunk-mapper';
+import {SplunkConfig} from '@mitre/splunk-sdk-no-env';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {LocalStorageVal} from '@/utilities/helper_util';
-
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {SplunkEndpoint} from '@/utilities/splunk_util';
+import {Prop} from 'vue-property-decorator';
 
 // Our saved fields
 const localUsername = new LocalStorageVal<string>('splunk_username');
 const localPassword = new LocalStorageVal<string>('splunk_password');
+const localSplunk2HDFIndex = new LocalStorageVal<string>('splunk2hdf_index');
+const localHDF2SplunkIndex = new LocalStorageVal<string>('hdf2splunk_index');
 const localHostname = new LocalStorageVal<string>('splunk_hostname');
 
-/**
- *
- */
 @Component({
   components: {
     FileList
   }
 })
 export default class AuthStep extends Vue {
-  /** Models if currently displayed form is valid.
-   * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
-   */
-  valid = false;
-
-  /** State of input fields */
+  @Prop({type: String, required: false}) indexToShow?: string;
   username = '';
+
   password = '';
   hostname = '';
+  index = '';
 
-  /** Whether we are currently authenticating */
-  loggingIn = false;
-  try_login() {
-    // Save credentials
-    localUsername.set(this.username);
-    localPassword.set(this.password);
-    localHostname.set(this.hostname);
+  async login(): Promise<void> {
+    if (!/^https?:\/\//.test(this.hostname)) {
+      this.hostname = `https://${this.hostname}`;
+    }
 
-    // Check splunk
-    const s = new SplunkEndpoint(this.hostname, this.username, this.password);
+    const parsedURL = new URL(this.hostname);
 
-    this.loggingIn = true;
-    s.check_auth()
+    const config: SplunkConfig = {
+      host: parsedURL.hostname,
+      username: this.username,
+      password: this.password,
+      port: parseInt(parsedURL.port) || 8089,
+      index: this.index,
+      scheme: parsedURL.protocol.split(':')[0] || 'https'
+    };
+
+    await checkSplunkCredentials(config, true)
       .then(() => {
-        // all goes well, proceed
-        this.$emit('authenticated', s);
-        this.loggingIn = false;
+        localUsername.set(this.username);
+        localPassword.set(this.password);
+        localHostname.set(this.hostname);
+        if (this.indexToShow === undefined) {
+          localSplunk2HDFIndex.set(this.index);
+        } else {
+          localHDF2SplunkIndex.set(this.index);
+        }
+        SnackbarModule.notify('You have successfully signed in');
+        this.$emit('authenticated', config);
       })
-      .catch((err) => {
-        this.loggingIn = false;
-        this.$emit('error', err);
+      .catch((error) => {
+        if (error !== 'Incorrect Username or Password') {
+          this.$emit('error');
+        }
+        SnackbarModule.failure(error);
       });
   }
-
-  /** Form required field rules. Maybe eventually expand to other stuff */
-  reqRule = (v: string | null | undefined) =>
-    (v || '').trim().length > 0 || 'Field is Required';
 
   /** Init our fields */
   mounted() {
     this.username = localUsername.get_default('');
     this.password = localPassword.get_default('');
     this.hostname = localHostname.get_default('');
+    if (this.indexToShow === undefined) {
+      this.index = localSplunk2HDFIndex.get_default('*');
+    } else {
+      this.index = localSplunk2HDFIndex.get_default(this.indexToShow);
+    }
   }
 }
 </script>

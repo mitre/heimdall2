@@ -1,0 +1,125 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.29",
+    "target_id": "Prowler"
+  },
+  "version": "2.6.29",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Prowler",
+      "version": "",
+      "title": "Prowler Findings",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "check11",
+          "title": "Prowler: [check11] Avoid the use of the root account (Scored)",
+          "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": " ",
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"prowler-1.1-123456789123-us-east-1-Root_user_in_the_account_was_last_accessed_1_day_ago\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/prowler/prowler\",\n      \"RecordState\": \"ACTIVE\",\n      \"ProductFields\": {\n        \"ProviderName\": \"Prowler\",\n        \"ProviderVersion\": \"2.4.0-07042021\"\n      },\n      \"GeneratorId\": \"prowler-check11\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"Software and Configuration Checks\"\n      ],\n      \"FirstObservedAt\": \"2021-05-17T23:07:02Z\",\n      \"UpdatedAt\": \"2021-05-17T23:07:02Z\",\n      \"CreatedAt\": \"2021-05-17T23:07:02Z\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"[check11] Avoid the use of the root account (Scored)\",\n      \"Description\": \"Root user in the account was last accessed 1 day ago\",\n      \"Resources\": [\n        {\n          \"Type\": \"AwsAccount\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\",\n        \"RelatedRequirements\": [\n          \"Software and Configuration Checks\"\n        ]\n      }\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Root user in the account was last accessed 1 day ago; Resources: [Type: AwsAccount, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-05-17T23:07:02Z"
+            }
+          ]
+        },
+        {
+          "id": "check12",
+          "title": "Prowler: [check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)",
+          "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": " ",
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"prowler-1.2-123456789123-us-east-1-User_name1_has_Password_enabled_but_MFA_disabled\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/prowler/prowler\",\n      \"RecordState\": \"ACTIVE\",\n      \"ProductFields\": {\n        \"ProviderName\": \"Prowler\",\n        \"ProviderVersion\": \"2.4.0-07042021\"\n      },\n      \"GeneratorId\": \"prowler-check12\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"ens-op.acc.5.aws.iam.1\"\n      ],\n      \"FirstObservedAt\": \"2021-05-17T23:07:02Z\",\n      \"UpdatedAt\": \"2021-05-17T23:07:02Z\",\n      \"CreatedAt\": \"2021-05-17T23:07:02Z\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"[check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)\",\n      \"Description\": \"User name1 has Password enabled but MFA disabled\",\n      \"Resources\": [\n        {\n          \"Type\": \"AwsIamUser\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\",\n        \"RelatedRequirements\": [\n          \"ens-op.acc.5.aws.iam.1\"\n        ]\n      }\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"prowler-1.2-123456789123-us-east-1-User_name2_has_Password_enabled_but_MFA_disabled\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/prowler/prowler\",\n      \"RecordState\": \"ACTIVE\",\n      \"ProductFields\": {\n        \"ProviderName\": \"Prowler\",\n        \"ProviderVersion\": \"2.4.0-07042021\"\n      },\n      \"GeneratorId\": \"prowler-check12\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"ens-op.acc.5.aws.iam.1\"\n      ],\n      \"FirstObservedAt\": \"2021-05-17T23:07:02Z\",\n      \"UpdatedAt\": \"2021-05-17T23:07:02Z\",\n      \"CreatedAt\": \"2021-05-17T23:07:02Z\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"[check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)\",\n      \"Description\": \"User name2 has Password enabled but MFA disabled\",\n      \"Resources\": [\n        {\n          \"Type\": \"AwsIamUser\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\",\n        \"RelatedRequirements\": [\n          \"ens-op.acc.5.aws.iam.1\"\n        ]\n      }\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"prowler-1.2-123456789123-us-east-1-User_name3_has_Password_enabled_but_MFA_disabled\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/prowler/prowler\",\n      \"RecordState\": \"ACTIVE\",\n      \"ProductFields\": {\n        \"ProviderName\": \"Prowler\",\n        \"ProviderVersion\": \"2.4.0-07042021\"\n      },\n      \"GeneratorId\": \"prowler-check12\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"ens-op.acc.5.aws.iam.1\"\n      ],\n      \"FirstObservedAt\": \"2021-05-17T23:07:03Z\",\n      \"UpdatedAt\": \"2021-05-17T23:07:03Z\",\n      \"CreatedAt\": \"2021-05-17T23:07:03Z\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"[check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)\",\n      \"Description\": \"User name3 has Password enabled but MFA disabled\",\n      \"Resources\": [\n        {\n          \"Type\": \"AwsIamUser\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\",\n        \"RelatedRequirements\": [\n          \"ens-op.acc.5.aws.iam.1\"\n        ]\n      }\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"prowler-1.2-123456789123-us-east-1-User_name4_has_Password_enabled_but_MFA_disabled\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/prowler/prowler\",\n      \"RecordState\": \"ACTIVE\",\n      \"ProductFields\": {\n        \"ProviderName\": \"Prowler\",\n        \"ProviderVersion\": \"2.4.0-07042021\"\n      },\n      \"GeneratorId\": \"prowler-check12\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"ens-op.acc.5.aws.iam.1\"\n      ],\n      \"FirstObservedAt\": \"2021-05-17T23:07:03Z\",\n      \"UpdatedAt\": \"2021-05-17T23:07:03Z\",\n      \"CreatedAt\": \"2021-05-17T23:07:03Z\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"[check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)\",\n      \"Description\": \"User name4 has Password enabled but MFA disabled\",\n      \"Resources\": [\n        {\n          \"Type\": \"AwsIamUser\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\",\n        \"RelatedRequirements\": [\n          \"ens-op.acc.5.aws.iam.1\"\n        ]\n      }\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"prowler-1.2-123456789123-us-east-1-User_name5_has_Password_enabled_but_MFA_disabled\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/prowler/prowler\",\n      \"RecordState\": \"ACTIVE\",\n      \"ProductFields\": {\n        \"ProviderName\": \"Prowler\",\n        \"ProviderVersion\": \"2.4.0-07042021\"\n      },\n      \"GeneratorId\": \"prowler-check12\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"ens-op.acc.5.aws.iam.1\"\n      ],\n      \"FirstObservedAt\": \"2021-05-17T23:07:03Z\",\n      \"UpdatedAt\": \"2021-05-17T23:07:03Z\",\n      \"CreatedAt\": \"2021-05-17T23:07:03Z\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"[check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)\",\n      \"Description\": \"User name5 has Password enabled but MFA disabled\",\n      \"Resources\": [\n        {\n          \"Type\": \"AwsIamUser\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\",\n        \"RelatedRequirements\": [\n          \"ens-op.acc.5.aws.iam.1\"\n        ]\n      }\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"prowler-1.2-123456789123-us-east-1-User_name6_has_Password_enabled_but_MFA_disabled\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/prowler/prowler\",\n      \"RecordState\": \"ACTIVE\",\n      \"ProductFields\": {\n        \"ProviderName\": \"Prowler\",\n        \"ProviderVersion\": \"2.4.0-07042021\"\n      },\n      \"GeneratorId\": \"prowler-check12\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"ens-op.acc.5.aws.iam.1\"\n      ],\n      \"FirstObservedAt\": \"2021-05-17T23:07:03Z\",\n      \"UpdatedAt\": \"2021-05-17T23:07:03Z\",\n      \"CreatedAt\": \"2021-05-17T23:07:03Z\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"[check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)\",\n      \"Description\": \"User name6 has Password enabled but MFA disabled\",\n      \"Resources\": [\n        {\n          \"Type\": \"AwsIamUser\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\",\n        \"RelatedRequirements\": [\n          \"ens-op.acc.5.aws.iam.1\"\n        ]\n      }\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"prowler-1.2-123456789123-us-east-1-User_name7_has_Password_enabled_but_MFA_disabled\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/prowler/prowler\",\n      \"RecordState\": \"ACTIVE\",\n      \"ProductFields\": {\n        \"ProviderName\": \"Prowler\",\n        \"ProviderVersion\": \"2.4.0-07042021\"\n      },\n      \"GeneratorId\": \"prowler-check12\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"ens-op.acc.5.aws.iam.1\"\n      ],\n      \"FirstObservedAt\": \"2021-05-17T23:07:03Z\",\n      \"UpdatedAt\": \"2021-05-17T23:07:03Z\",\n      \"CreatedAt\": \"2021-05-17T23:07:03Z\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"[check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)\",\n      \"Description\": \"User name7 has Password enabled but MFA disabled\",\n      \"Resources\": [\n        {\n          \"Type\": \"AwsIamUser\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\",\n        \"RelatedRequirements\": [\n          \"ens-op.acc.5.aws.iam.1\"\n        ]\n      }\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"prowler-1.2-123456789123-us-east-1-User_name8_has_Password_enabled_but_MFA_disabled\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/prowler/prowler\",\n      \"RecordState\": \"ACTIVE\",\n      \"ProductFields\": {\n        \"ProviderName\": \"Prowler\",\n        \"ProviderVersion\": \"2.4.0-07042021\"\n      },\n      \"GeneratorId\": \"prowler-check12\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"ens-op.acc.5.aws.iam.1\"\n      ],\n      \"FirstObservedAt\": \"2021-05-17T23:07:03Z\",\n      \"UpdatedAt\": \"2021-05-17T23:07:03Z\",\n      \"CreatedAt\": \"2021-05-17T23:07:03Z\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"[check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)\",\n      \"Description\": \"User name8 has Password enabled but MFA disabled\",\n      \"Resources\": [\n        {\n          \"Type\": \"AwsIamUser\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\",\n        \"RelatedRequirements\": [\n          \"ens-op.acc.5.aws.iam.1\"\n        ]\n      }\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"prowler-1.2-123456789123-us-east-1-User_name9_has_Password_enabled_but_MFA_disabled\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/prowler/prowler\",\n      \"RecordState\": \"ACTIVE\",\n      \"ProductFields\": {\n        \"ProviderName\": \"Prowler\",\n        \"ProviderVersion\": \"2.4.0-07042021\"\n      },\n      \"GeneratorId\": \"prowler-check12\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"ens-op.acc.5.aws.iam.1\"\n      ],\n      \"FirstObservedAt\": \"2021-05-17T23:07:04Z\",\n      \"UpdatedAt\": \"2021-05-17T23:07:04Z\",\n      \"CreatedAt\": \"2021-05-17T23:07:04Z\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"[check12] Ensure multi-factor authentication (MFA) is enabled for all IAM users that have a console password (Scored)\",\n      \"Description\": \"User name9 has Password enabled but MFA disabled\",\n      \"Resources\": [\n        {\n          \"Type\": \"AwsIamUser\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\",\n        \"RelatedRequirements\": [\n          \"ens-op.acc.5.aws.iam.1\"\n        ]\n      }\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "User name1 has Password enabled but MFA disabled; Resources: [Type: AwsIamUser, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-05-17T23:07:02Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "User name2 has Password enabled but MFA disabled; Resources: [Type: AwsIamUser, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-05-17T23:07:02Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "User name3 has Password enabled but MFA disabled; Resources: [Type: AwsIamUser, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-05-17T23:07:03Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "User name4 has Password enabled but MFA disabled; Resources: [Type: AwsIamUser, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-05-17T23:07:03Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "User name5 has Password enabled but MFA disabled; Resources: [Type: AwsIamUser, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-05-17T23:07:03Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "User name6 has Password enabled but MFA disabled; Resources: [Type: AwsIamUser, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-05-17T23:07:03Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "User name7 has Password enabled but MFA disabled; Resources: [Type: AwsIamUser, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-05-17T23:07:03Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "User name8 has Password enabled but MFA disabled; Resources: [Type: AwsIamUser, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-05-17T23:07:03Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "User name9 has Password enabled but MFA disabled; Resources: [Type: AwsIamUser, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-05-17T23:07:04Z"
+            }
+          ]
+        }
+      ],
+      "sha256": "3b20f394ea8a31946642407f38ff6ffb3c79db748ed026055eb9dd8f20638a43"
+    }
+  ]
+}

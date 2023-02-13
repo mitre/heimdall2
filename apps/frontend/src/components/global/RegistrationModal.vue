@@ -1,7 +1,7 @@
 <template>
   <Modal
     :visible="visible"
-    :max-width="'500px'"
+    :max-width="'600px'"
     :persistent="true"
     @close-modal="$emit('close-modal')"
     @update-user-table="$emit('update-user-table')"
@@ -57,29 +57,38 @@
           <v-text-field
             id="password"
             v-model="password"
-            :error-messages="requiredFieldError($v.password, 'Password')"
             prepend-icon="mdi-lock"
             name="password"
             label="Password"
-            loading
             :type="showPassword ? 'text' : 'password'"
             tabindex="4"
             @blur="$v.password.$touch()"
           >
-            <template #progress>
-              <v-progress-linear
-                :value="passwordStrengthPercent"
-                :color="passwordStrengthColor"
-                absolute
-                height="7"
-              />
-            </template>
             <template #append>
               <v-icon @click="showPassword = !showPassword">{{
                 showPassword ? 'mdi-eye' : 'mdi-eye-off'
               }}</v-icon>
             </template>
           </v-text-field>
+          <v-row
+            v-for="(validator, i) in validatorList"
+            :key="i"
+            :class="
+              validator.check(password)
+                ? 'd-flex success--text'
+                : 'd-flex error--text'
+            "
+          >
+            <v-icon
+              class="pl-9"
+              :color="validator.check(password) ? 'success' : 'error'"
+              small
+              >{{
+                validator.check(password) ? 'mdi-check' : 'mdi-close'
+              }}</v-icon
+            >
+            <small class="pl-1" color="red">{{ validator.name }}</small>
+          </v-row>
           <br />
           <v-text-field
             id="passwordConfirmation"
@@ -101,7 +110,7 @@
             id="register"
             depressed
             large
-            :disabled="$v.$invalid"
+            :disabled="registrationDisabled"
             color="primary"
             type="submit"
             :loading="buttonLoading"
@@ -124,16 +133,18 @@
 </template>
 
 <script lang="ts">
+import Modal from '@/components/global/Modal.vue';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
+import {
+  validatePasswordBoolean,
+  validators
+} from '@heimdall/password-complexity';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-import {ServerModule} from '@/store/server';
-import {required, email, sameAs} from 'vuelidate/lib/validators';
-
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import Modal from '@/components/global/Modal.vue';
-import {SnackbarModule} from '@/store/snackbar';
 import {Prop} from 'vue-property-decorator';
+import {email, required, sameAs} from 'vuelidate/lib/validators';
 
 export interface SignupHash {
   firstName: string;
@@ -175,6 +186,7 @@ export default class RegistrationModal extends Vue {
   password = '';
   passwordConfirmation = '';
   showPassword = false;
+  validatorList = validators;
   buttonLoading = false;
 
   @Prop({type: Boolean, default: false}) readonly adminRegisterMode!: boolean;
@@ -200,44 +212,35 @@ export default class RegistrationModal extends Vue {
 
       ServerModule.Register(creds)
         .then(() => {
-            if(this.adminRegisterMode) {
-                SnackbarModule.notify(
-                    'You have successfully registered a new user'
-                );
-                this.$emit('close-modal')
-                this.$emit('update-user-table')
-            } else {
-                this.$router.push('/login');
-                SnackbarModule.notify(
-                    'You have successfully registered, please sign in'
-                );
-            }
-
-        }).finally(() => {
-          this.buttonLoading = false;
+          if (this.adminRegisterMode) {
+            SnackbarModule.notify(
+              'You have successfully registered a new user'
+            );
+            this.$emit('close-modal');
+            this.$emit('update-user-table');
+          } else {
+            this.$router.push('/login');
+            SnackbarModule.notify(
+              'You have successfully registered, please sign in'
+            );
+          }
         })
+        .finally(() => {
+          this.buttonLoading = false;
+        });
     }
   }
 
-  // password strength bar expects a percentage
-  get passwordStrengthPercent() {
-    // Minimum length is 15. 100/15 = 6.67 so each char is 6.67% of the way to acceptable
-    return this.password.length * 6.67;
-  }
-
-  // Since there are 3 colors available, 0-49% displays red, 50% displays yellow, and 51-100% displays green
-  get passwordStrengthColor() {
-    return ['error', 'warning', 'success'][
-      Math.floor(this.passwordStrengthPercent / 50)
-    ];
+  get registrationDisabled(): boolean {
+    return this.$v.$invalid || !validatePasswordBoolean(this.password);
   }
 
   get passwordConfirmationErrors() {
-    const errors: Array<string> = [];
+    const errors: string[] = [];
     if (!this.$v.passwordConfirmation.$dirty) {
       return errors;
     }
-    if(!this.$v.passwordConfirmation.sameAsPassword) {
+    if (!this.$v.passwordConfirmation.sameAsPassword) {
       errors.push('Password and password confirmation must match.');
     }
     return errors;

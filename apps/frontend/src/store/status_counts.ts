@@ -28,7 +28,7 @@ export type StatusHash = ControlStatusHash & {
 function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   // Remove the status filter from the control filter
   const newFilter: Filter = {
-    status: undefined,
+    status: [],
     ...filter
   };
 
@@ -67,6 +67,20 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
   });
   // And we're done
   return hash;
+}
+
+export function calculateCompliance(filter: Filter) {
+  const passed = StatusCountModule.countOf(filter, 'Passed');
+  const total =
+    passed +
+    StatusCountModule.countOf(filter, 'Failed') +
+    StatusCountModule.countOf(filter, 'Profile Error') +
+    StatusCountModule.countOf(filter, 'Not Reviewed');
+  if (total === 0) {
+    return 0;
+  } else {
+    return Math.round((100.0 * passed) / total);
+  }
 }
 
 @Module({

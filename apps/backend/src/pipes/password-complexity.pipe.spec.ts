@@ -1,4 +1,5 @@
 import {ArgumentMetadata, BadRequestException} from '@nestjs/common';
+import {validators} from '../../../../libs/password-complexity';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
@@ -6,7 +7,10 @@ import {
   UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD,
   UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
 } from '../../test/constants/users-test.constant';
-import {PasswordComplexityPipe} from './password-complexity.pipe';
+import {
+  PasswordComplexityPipe,
+  validatePassword
+} from './password-complexity.pipe';
 
 describe('PasswordComplexityPipe', () => {
   let passwordComplexityPipe: PasswordComplexityPipe;
@@ -21,81 +25,90 @@ describe('PasswordComplexityPipe', () => {
   });
 
   describe('Helper Function Tests', () => {
-    describe('hasClasses', () => {
-      it('should fail because the password length is less than 15 characters and it has all character classes', () => {
-        expect(passwordComplexityPipe.hasClasses('$7aB')).toBeFalsy();
+    describe('checkLength', () => {
+      it('should fail because the password has less than 15 characters', () => {
+        expect(validatePassword('ShortPassword')).toContain(validators[0].name);
       });
+      it('should pass because the password has more than 15 characters', () => {
+        expect(validatePassword('NotAShortPassword')).not.toContain(
+          validators[0].name
+        );
+      });
+    });
 
+    describe('hasClasses', () => {
       it('should fail because the password does not contain a special character', () => {
-        expect(
-          passwordComplexityPipe.hasClasses('Testpasswordwithoutspecialchar7')
-        ).toBeFalsy();
+        expect(validatePassword('Testpasswordwithoutspecialchar7')).toContain(
+          validators[1].name
+        );
       });
 
       it('should fail because the password does not contain a number', () => {
-        expect(
-          passwordComplexityPipe.hasClasses('Testpasswordwithoutnumber$')
-        ).toBeFalsy();
+        expect(validatePassword('Testpasswordwithoutanumber')).toContain(
+          validators[1].name
+        );
       });
 
       it('should fail because the password does not contain an uppercase letter', () => {
-        expect(
-          passwordComplexityPipe.hasClasses('testpasswordwithoutuppercase7$')
-        ).toBeFalsy();
+        expect(validatePassword('testpasswordwithoutuppercase7$')).toContain(
+          validators[1].name
+        );
       });
 
       it('should fail because the password does not contain a lowercase letter', () => {
-        expect(
-          passwordComplexityPipe.hasClasses('TESTPASSWORDWITHOUTLOWERCASE7$')
-        ).toBeFalsy();
+        expect(validatePassword('TESTPASSWORDWITHOUTLOWERCASE7$')).toContain(
+          validators[1].name
+        );
       });
 
       it('should pass because the password has all character classes and is at least 15 characters', () => {
-        expect(
-          passwordComplexityPipe.hasClasses('Atestpassword7$')
-        ).toBeTruthy();
+        expect(validatePassword('Atestpassword7$')).not.toContain(
+          validators[1].name
+        );
       });
     });
 
     describe('noRepeats', () => {
       it('should fail because there is more than 3 consecutive repeating lowercase characters in the password', () => {
-        expect(passwordComplexityPipe.noRepeats('aaaa')).toBeFalsy();
+        expect(validatePassword('aaaa')).toContain(validators[2].name);
       });
 
       it('should fail because there is more than 3 lowercase characters back-to-back in the password', () => {
-        expect(passwordComplexityPipe.noRepeats('test')).toBeFalsy();
+        expect(validatePassword('test')).toContain(validators[2].name);
       });
 
       it('should fail because there is more than 3 consecutive repeating uppercase characters in the password', () => {
-        expect(passwordComplexityPipe.noRepeats('AAAA')).toBeFalsy();
+        expect(validatePassword('AAAA')).toContain(validators[2].name);
       });
 
       it('should fail because there is more than 3 uppercase characters back-to-back in the password', () => {
-        expect(passwordComplexityPipe.noRepeats('TEST')).toBeFalsy();
+        expect(validatePassword('TEST')).toContain(validators[2].name);
       });
 
       it('should fail because there is more than 3 consecutive repeating numbers in the password', () => {
-        expect(passwordComplexityPipe.noRepeats('7777')).toBeFalsy();
+        expect(validatePassword('7777')).toContain(validators[2].name);
       });
 
       it('should fail because there is more than 3 numbers back-to-back in the password', () => {
-        expect(passwordComplexityPipe.noRepeats('1078')).toBeFalsy();
+        expect(validatePassword('1078')).toContain(validators[2].name);
       });
 
       it('should fail because there is more than 3 consecutive repeating numbers in the password', () => {
-        expect(passwordComplexityPipe.noRepeats('$$$$')).toBeFalsy();
+        expect(validatePassword('$$$$')).toContain(validators[2].name);
       });
 
       it('should fail because there is more than 3 special characters back-to-back in the password', () => {
-        expect(passwordComplexityPipe.noRepeats('!@#$')).toBeFalsy();
+        expect(validatePassword('!@#$')).toContain(validators[2].name);
       });
 
       it('should fail because there is more than 3 consecutive white spaces in the password', () => {
-        expect(passwordComplexityPipe.noRepeats('spa    ce')).toBeFalsy();
+        expect(validatePassword('spa    ce')).toContain(validators[2].name);
       });
 
       it('should pass because the password meets all the minimum requirements', () => {
-        expect(passwordComplexityPipe.noRepeats('aaaBBB111$$$')).toBeTruthy();
+        expect(validatePassword('aaaBBB111$$$')).not.toContain(
+          validators[2].name
+        );
       });
     });
   });
@@ -131,7 +144,7 @@ describe('PasswordComplexityPipe', () => {
   /* Tests that when a password does not meet all the minimum requirements,
     a BadRequestException is thrown */
   describe('Test Invalid Password', () => {
-    it('should throw a BadRequestException for CreateUserDto', () => {
+    it('should throw a BadRequestException for CreateUserDto with missing password', () => {
       expect(() =>
         passwordComplexityPipe.transform(
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
@@ -143,15 +156,10 @@ describe('PasswordComplexityPipe', () => {
           CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
           metaData
         )
-      ).toThrowError(
-        'Password does not meet complexity requirements. Passwords are a minimum of 15' +
-          ' characters in length. Passwords must contain at least one special character, number, upper-case letter, and' +
-          ' lower-case letter. Passwords cannot contain more than three consecutive repeating characters.' +
-          ' Passwords cannot contain more than four repeating characters from the same character class.'
-      );
+      ).toThrowError('Password must be of type string');
     });
 
-    it('should throw a BadRequestException for UpdateUserDto', () => {
+    it('should throw a BadRequestException for UpdateUserDto with missing password', () => {
       expect(() =>
         passwordComplexityPipe.transform(
           UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD,
@@ -163,12 +171,7 @@ describe('PasswordComplexityPipe', () => {
           UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD,
           metaData
         )
-      ).toThrowError(
-        'Password does not meet complexity requirements. Passwords are a minimum of 15' +
-          ' characters in length. Passwords must contain at least one special character, number, upper-case letter, and' +
-          ' lower-case letter. Passwords cannot contain more than three consecutive repeating characters.' +
-          ' Passwords cannot contain more than four repeating characters from the same character class.'
-      );
+      ).toThrowError('Password must be of type string');
     });
   });
 });

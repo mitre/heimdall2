@@ -20,8 +20,8 @@
           <br />
           <span class="subtitle-2">
             <strong>Changelog:</strong>
-            <a :href="'' + repository + branch + changelog + ''">
-              {{ repository }}{{ branch }}{{ changelog }}
+            <a :href="'' + repository + changelog + ''">
+              {{ repository }}{{ changelog }}
             </a>
           </span>
           <br />
@@ -52,10 +52,9 @@
 </template>
 
 <script lang="ts">
+import {AppInfoModule} from '@/store/app_info';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-import {AppInfoModule} from '@/store/app_info';
 
 @Component
 export default class AboutModal extends Vue {

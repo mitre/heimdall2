@@ -15,38 +15,50 @@
         :rules="[reqRule]"
         @input="change_secret_token"
       />
+      <v-text-field
+        :value="region"
+        label="Bucket Region (Default: us-east-1)"
+        type="text"
+        @input="change_region"
+      />
     </v-form>
-    <v-btn
-      color="primary"
-      :disabled="!valid"
-      class="my-2 mr-3"
-      @click="$emit('auth-basic')"
-    >
-      Basic Login
-    </v-btn>
-    <v-btn
-      color="green"
-      :disabled="!valid"
-      class="my-2 mr-3"
-      @click="$emit('goto-mfa')"
-    >
-      MFA Login
-    </v-btn>
+    <v-row class="mx-1 mb-2">
+      <v-btn
+        color="primary"
+        :disabled="!valid"
+        class="my-2 mr-3"
+        @click="$emit('auth-basic')"
+      >
+        Basic Login
+      </v-btn>
+      <v-btn
+        color="green"
+        :disabled="!valid"
+        class="my-2"
+        @click="$emit('goto-mfa')"
+      >
+        MFA Login
+      </v-btn>
+      <v-spacer />
+      <v-btn @click="$emit('show-help')">
+        Help
+        <v-icon class="ml-2"> mdi-help-circle </v-icon>
+      </v-btn>
+    </v-row>
   </v-stepper-content>
 </template>
 
 <script lang="ts">
+import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {LocalStorageVal} from '@/utilities/helper_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-
-import {LocalStorageVal} from '@/utilities/helper_util';
-
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import {Prop} from 'vue-property-decorator';
 
 /** Localstorage keys */
 const localAccessToken = new LocalStorageVal<string>('aws_s3_access_token');
 const localSecretToken = new LocalStorageVal<string>('aws_s3_secret_token');
+const localRegion = new LocalStorageVal<string>('aws_s3_region');
 
 /**
  * File reader component for taking in inspec JSON data.
@@ -61,6 +73,7 @@ const localSecretToken = new LocalStorageVal<string>('aws_s3_secret_token');
 export default class S3Reader extends Vue {
   @Prop({type: String}) readonly accessToken!: string;
   @Prop({type: String}) readonly secretToken!: string;
+  @Prop({type: String}) readonly region!: string;
 
   /** Models if currently displayed form is valid.
    * Shouldn't be used to interpret literally anything else as valid - just checks fields filled
@@ -83,11 +96,17 @@ export default class S3Reader extends Vue {
     this.$emit('update:secretToken', token);
   }
 
+  change_region(region: string) {
+    localRegion.set(region);
+    this.$emit('update:region', region);
+  }
+
   /** On mount, try to look up stored auth info */
   mounted() {
     // Load our credentials
     this.change_access_token(localAccessToken.get_default(''));
     this.change_secret_token(localSecretToken.get_default(''));
+    this.change_region(localRegion.get_default(''));
   }
 }
 </script>

@@ -3,11 +3,11 @@
 Up to date as of Sept 16
 
 
-## UploadNexus Component
+## Upload Nexus Component
 
 The entry point to our data flow is the UploadNexus.vue component.
 This acts as a multiplexer between various sub-components, which all individually handle submitting their selected files to the report intake module.
-These readers don't typically actually do any data handling on their own; it simply accepts files and routes them to an appropraite location.
+These readers don't typically actually do any data handling on their own; it simply accepts files and routes them to an appropriate location.
 This is achieved by dispatching a "loadFile" action with the file as a payload.
 Upon success, they report the newly filled file ids as an array via the "got-files" event
 
@@ -29,7 +29,7 @@ There is little we can do at this point; the file simply isn't compatible, and w
 
 ### InspecJS recognizes the schema -- but we don't know what to do with it.
 
-The only case where this currently happens is if the data is in the JSON-MIN output format, in which controls are cut down to a very minimal dataform.
+The only case where this currently happens is if the data is in the JSON-MIN output format, in which controls are cut down to a very minimal data-form.
 We might eventually add support for it, but for now we just error out.
 
 ### InspecJS recognizes and successfully parses the schema.
@@ -73,10 +73,10 @@ Our type signature for a list of these things would end up looking like `Array<[
 As our solution, we introduce the concept of a `ContextualizedItem` (see typing in data_store).
 Essentially, a contextualized item is a simplified graph node wrapper around a type of data with the following elements:
  - `data` is, self-evidently, the wrapped data.
- - `sourced_from` is the object or resource from which a piece of data originates. A control is sourced from a Profile, a Profile an Execution or a File, etc.
- - `contains` is the inverse edge of `sourced_from`. It is what a resource contains as its contextual descendants.
- - `extends_from` is the set of objects that this data builds on. This is more explicitly used to relate Profiles by which overlays which. An overlay profile "extends_from" the base profile. Any controls modified by an overlay have an "extends" relationship with the base profile's corresponding control.
- - `extended_by` is the inverse edge of `extends_from`. A base profile is "extended_by" its overlay.
+ - `sourcedFrom` is the object or resource from which a piece of data originates. A control is sourced from a Profile, a Profile an Execution or a File, etc.
+ - `contains` is the inverse edge of `sourcedFrom`. It is what a resource contains as its contextual descendants.
+ - `extendsFrom` is the set of objects that this data builds on. This is more explicitly used to relate Profiles by which overlays which. An overlay profile "extendsFrom" the base profile. Any controls modified by an overlay have an "extends" relationship with the base profile's corresponding control.
+ - `extendedBy` is the inverse edge of `extendsFrom`. A base profile is "extendedBy" its overlay.
 
 Contextualized Controls, Profiles, and Executions are accessible in three interconnected array getters in the data_store module.
 They can be accessed as a group by the (private) method `getContextStore`, but are better accessed individually via getters `contextualExecutions`, `contextualProfiles`, and `contextualControls`.
@@ -89,8 +89,8 @@ See the `Filter` type for possible filter values.
 > I have a control; how do I know if another control overrides it in an overlay?
 
 Given a ContextualControl `ctrl`, you can check
-    if(ctrl.extended_by.length) {}
-        // It has been overridden! Access ctrl.extended_by to see which control has done so.
+    if(ctrl.extendedBy.length) {}
+        // It has been overridden! Access ctrl.extendedBy to see which control has done so.
     }
 
 > I plan on accessing \[data\] frequently, using some lookup criteria \[criteria\] and I need to be able to quickly access it! Add this to data_store please!

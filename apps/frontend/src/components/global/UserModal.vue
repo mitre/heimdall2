@@ -28,6 +28,8 @@
                 v-model="userInfo.firstName"
                 :disabled="update_unavailable"
                 label="First Name"
+                aria-autocomplete="both"
+                autocomplete="given-name"
               />
             </v-col>
             <v-col>
@@ -36,6 +38,8 @@
                 v-model="userInfo.lastName"
                 :disabled="update_unavailable"
                 label="Last Name"
+                aria-autocomplete="both"
+                autocomplete="family-name"
               />
             </v-col>
           </v-row>
@@ -47,7 +51,7 @@
                 :disabled="update_unavailable"
                 :error-messages="emailErrors($v.userInfo.email)"
                 label="Email"
-                type="text"
+                type="email"
                 required
                 @blur="$v.userInfo.email.$touch()"
               />
@@ -75,6 +79,80 @@
             </v-col>
           </v-row>
 
+          <div v-show="showAPIKeys">
+            <div
+              class="d-flex flex-row-reverse"
+              style="cursor: pointer"
+              @click="addAPIKey"
+            >
+              <span class="pt-1">Add API Key</span>
+              <v-icon>mdi-plus</v-icon>
+            </div>
+            <InputDialog
+              :show-modal="inputPasswordDialog"
+              title="Please enter your current password to update API keys"
+              text-field-label="Current Password"
+              :is-password="true"
+              @update-value="updateCurrentPassword"
+              @cancel="inputPasswordDialog = false"
+              @confirm="updateCallback"
+            />
+            <v-data-table
+              :headers="apiKeyHeaders"
+              :items="apiKeys"
+              :loading="apiKeyTableLoading"
+              dense
+              style="max-height: 300px"
+              class="overflow-y-auto"
+            >
+              <template #[`item.name`]="{item}"
+                ><v-text-field v-model="item.name" @change="updateAPIKey(item)"
+              /></template>
+              <template #[`item.apiKey`]="{item}"
+                ><span class="break-lines">{{
+                  item.apiKey || 'Only Shown on Creation'
+                }}</span></template
+              >
+              <template #[`item.action`]="{item}">
+                <v-tooltip left>
+                  <template #activator="{on, attrs}">
+                    <v-icon
+                      class="mr-2"
+                      small
+                      v-bind="attrs"
+                      @click="refreshAPIKey(item)"
+                      v-on="on"
+                      >mdi-refresh</v-icon
+                    >
+                  </template>
+                  <span>Recreate this API Key</span>
+                </v-tooltip>
+                <v-tooltip top>
+                  <template #activator="{on, attrs}">
+                    <span v-bind="attrs" v-on="on">
+                      <CopyButton v-if="item.apiKey" :text="item.apiKey" />
+                    </span>
+                  </template>
+                  <span>Copy this API Key</span>
+                </v-tooltip>
+
+                <v-tooltip right>
+                  <template #activator="{on, attrs}">
+                    <v-icon
+                      class="mr-2"
+                      small
+                      v-bind="attrs"
+                      @click="deleteAPIKey(item)"
+                      v-on="on"
+                      >mdi-delete</v-icon
+                    >
+                  </template>
+                  <span>Delete this API Key</span>
+                </v-tooltip>
+              </template>
+            </v-data-table>
+          </div>
+
           <div v-if="!admin && userInfo.creationMethod === 'local'">
             <v-divider />
             <v-text-field
@@ -86,7 +164,7 @@
                 requiredFieldError($v.currentPassword, 'Current Password')
               "
               type="password"
-              label="Please provide your current password to save changes to your profile"
+              label="Please provide your current password to make changes to your profile"
               @blur="$v.currentPassword.$touch()"
             />
           </div>
@@ -96,6 +174,13 @@
             :disabled="update_unavailable"
             @click="changePasswordDialog"
             >Change Password</v-btn
+          >
+          <v-btn
+            v-if="!apiKeysDisabled"
+            id="toggleAPIKeys"
+            class="ml-2"
+            @click="toggleShowAPIKeys"
+            >{{ showAPIKeys ? 'Hide API Keys' : 'Show API Keys' }}</v-btn
           >
           <div v-show="changePassword">
             <v-text-field
@@ -144,7 +229,7 @@
             id="closeAndSaveChanges"
             color="primary"
             text
-            :disabled="update_unavailable"
+            :disabled="!admin && update_unavailable"
             :loading="buttonLoading"
             @click="updateUserInfo"
             >Save Changes</v-btn
@@ -156,16 +241,21 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import ActionDialog from '@/components/generic/ActionDialog.vue';
+import CopyButton from '@/components/generic/CopyButton.vue';
+import InputDialog from '@/components/generic/InputDialog.vue';
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
-import {IUser, IUpdateUser} from '@heimdall/interfaces';
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {required, email, requiredIf} from 'vuelidate/lib/validators';
+import {IApiKey, IUpdateUser, IUser} from '@heimdall/interfaces';
+import axios from 'axios';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {email, required, requiredIf} from 'vuelidate/lib/validators';
 
 @Component({
+  components: {ActionDialog, CopyButton, InputDialog},
   mixins: [UserValidatorMixin],
   validations: {
     userInfo: {
@@ -175,9 +265,9 @@ import {Prop} from 'vue-property-decorator';
       }
     },
     currentPassword: {
-      required: requiredIf(function(userInfo){
-        	return (userInfo.user.role === 'admin')
-        })
+      required: requiredIf(function (userInfo) {
+        return userInfo.user.role === 'admin';
+      })
     },
     newPassword: {
       required: requiredIf('changePassword')
@@ -187,12 +277,38 @@ import {Prop} from 'vue-property-decorator';
     }
   }
 })
-
 export default class UserModal extends Vue {
   @Prop({type: Object, required: true}) readonly user!: IUser;
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
 
   roles: string[] = ['user', 'admin'];
+
+  showAPIKeys = false;
+  apiKeyHeaders = [
+    {
+      text: 'Name',
+      value: 'name',
+      filterable: true,
+      width: '20%',
+      align: 'start'
+    },
+    {
+      text: 'Value',
+      value: 'apiKey',
+      sortable: false
+    },
+    {
+      text: 'Action',
+      value: 'action',
+      sortable: false
+    }
+  ];
+
+  apiKeys: IApiKey[] = [];
+  apiKeysDisabled = false;
+  apiKeyTableLoading = false;
+  activeAPIKey: IApiKey | null = null;
+  inputPasswordDialog = false;
 
   dialog = false;
   changePassword = false;
@@ -202,55 +318,219 @@ export default class UserModal extends Vue {
   newPassword = '';
   passwordConfirmation = '';
   buttonLoading = false;
+  updateCallback = () => {
+    return;
+  };
+
+  mounted() {
+    this.getAPIKeys();
+  }
 
   async updateUserInfo(): Promise<void> {
     this.buttonLoading = true;
-    this.$v.$touch()
-    if (this.userInfo != null && !this.$v.$invalid) {
+    this.$v.$touch();
+    if (this.userInfo != null && (this.admin || !this.$v.$invalid)) {
       var updateUserInfo: IUpdateUser = {
         ...this.userInfo,
         password: undefined,
         passwordConfirmation: undefined,
-        forcePasswordChange: undefined,
+        forcePasswordChange: undefined
       };
-      if(!this.admin) {
+      if (!this.admin) {
         updateUserInfo = {
           ...updateUserInfo,
-          currentPassword: this.currentPassword,
-        }
+          currentPassword: this.currentPassword
+        };
       }
-      if(this.changePassword){
+      if (this.changePassword) {
         updateUserInfo = {
           ...updateUserInfo,
           password: this.newPassword,
-          passwordConfirmation: this.passwordConfirmation,
-        }
+          passwordConfirmation: this.passwordConfirmation
+        };
       }
       ServerModule.updateUserInfo({id: this.user.id, info: updateUserInfo})
         .then((data) => {
           SnackbarModule.notify('User updated successfully.');
           this.$emit('update-user', data);
           this.dialog = false;
-        }).finally(() => {
-          this.buttonLoading = false;
         })
+        .finally(() => {
+          this.buttonLoading = false;
+        });
     }
   }
 
   changePasswordDialog() {
-    this.changePassword = !this.changePassword
+    this.changePassword = !this.changePassword;
+  }
+
+  toggleShowAPIKeys() {
+    this.showAPIKeys = !this.showAPIKeys;
+  }
+
+  getAPIKeys() {
+    this.apiKeyTableLoading = true;
+    axios
+      .create()
+      .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}})
+      .then(({data}) => {
+        this.apiKeys = data;
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.apiKeysDisabled = true;
+            return;
+          }
+        }
+      });
+    this.apiKeyTableLoading = false;
+  }
+
+  addAPIKey() {
+    this.inputPasswordDialog = false;
+    this.apiKeyTableLoading = true;
+    axios
+      .post<IApiKey>(`/apikeys`, {
+        userId: this.user.id,
+        name: this.activeAPIKey?.name,
+        currentPassword: this.currentPassword
+      })
+      .then(({data}) => this.apiKeys.push(data))
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.updateCallback = this.addAPIKey;
+            this.inputPasswordDialog = true;
+          }
+        }
+        throw error;
+      })
+      .finally(() => {
+        this.activeAPIKey = null;
+        this.apiKeyTableLoading = false;
+      });
+  }
+
+  deleteAPIKey(item: IApiKey) {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
+    this.inputPasswordDialog = false;
+    axios
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
+        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
+      })
+      .then(() => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.updateCallback = this.deleteAPIKeyConfirm;
+            this.inputPasswordDialog = true;
+          }
+        }
+        throw error;
+      });
+    this.activeAPIKey = null;
+  }
+
+  deleteAPIKeyConfirm() {
+    this.inputPasswordDialog = false;
+    axios
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
+        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
+      })
+      .then(({data}) => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== data.id);
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.inputPasswordDialog = true;
+          }
+        }
+        throw error;
+      });
+  }
+
+  updateAPIKey(item?: IApiKey) {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
+    this.inputPasswordDialog = false;
+    axios
+      .put<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
+        name: this.activeAPIKey?.name,
+        currentPassword: this.currentPassword
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.updateCallback = this.updateAPIKey;
+            this.inputPasswordDialog = true;
+          }
+        }
+        throw error;
+      });
+    this.activeAPIKey = null;
+  }
+
+  refreshAPIKey(item: IApiKey) {
+    if (typeof item === 'object') {
+      this.activeAPIKey = item;
+    }
+    this.inputPasswordDialog = false;
+    axios
+      .delete<IApiKey>(`/apikeys/${this.activeAPIKey?.id}`, {
+        data: {...this.activeAPIKey, currentPassword: this.currentPassword}
+      })
+      .then(() => {
+        this.apiKeys = this.apiKeys.filter((key) => key.id !== item.id);
+        this.addAPIKey();
+      })
+      .catch((error) => {
+        if (error.response) {
+          if (error.response.status === 403) {
+            this.updateCallback = this.refreshAPIKeyConfirm;
+            this.inputPasswordDialog = true;
+          }
+        }
+        throw error;
+      });
+    this.activeAPIKey = null;
+  }
+
+  refreshAPIKeyConfirm() {
+    this.deleteAPIKeyConfirm();
+    this.addAPIKey();
+  }
+
+  updateCurrentPassword(password: string): void {
+    this.currentPassword = password;
   }
 
   get update_unavailable() {
-    return this.userInfo.creationMethod === 'ldap' || ServerModule.enabledOAuth.includes(this.userInfo.creationMethod);
+    return (
+      this.userInfo.creationMethod === 'ldap' ||
+      ServerModule.enabledOAuth.includes(this.userInfo.creationMethod)
+    );
   }
 
   get title(): string {
-    if(this.admin) {
-      return `Update account information for ${this.user.email}`
+    if (this.admin) {
+      return `Update account information for ${this.user.email}`;
     } else {
-      return 'Update your account information'
+      return 'Update your account information';
     }
   }
 }
 </script>
+
+<style scoped>
+.break-lines {
+  overflow-wrap: anywhere;
+}
+</style>

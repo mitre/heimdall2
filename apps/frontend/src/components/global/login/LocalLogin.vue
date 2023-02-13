@@ -2,6 +2,7 @@
   <v-card class="elevation-12 rounded-t-0">
     <v-card-text>
       <v-form
+        v-if="localLoginEnabled"
         id="login_form"
         ref="form"
         name="login_form"
@@ -46,11 +47,20 @@
           </v-btn>
         </v-container>
       </v-form>
+      <v-banner v-else>
+        <v-layout>
+          NOTE: This Heimdall instance is in an external-authentication only
+          mode.
+          <v-icon class="mr-3" @click="openExternalAuthModeDocumentation"
+            >mdi-help-circle-outline</v-icon
+          >
+        </v-layout>
+      </v-banner>
     </v-card-text>
     <v-card-actions>
       <v-container fluid>
         <div
-          v-if="registrationEnabled"
+          v-if="registrationEnabled && localLoginEnabled"
           class="d-flex align-end flex-column mb-2"
         >
           <router-link to="/signup">
@@ -59,7 +69,9 @@
         </div>
         <v-spacer />
         <div v-show="showAlternateAuth">
-          <v-row align="center"> <v-divider />OR<v-divider /> </v-row>
+          <v-row v-if="localLoginEnabled" align="center">
+            <v-divider />OR<v-divider />
+          </v-row>
           <div class="d-flex justify-content-center flex-wrap">
             <v-btn
               v-if="authStrategySupported('oidc')"
@@ -137,20 +149,20 @@
   </v-card>
 </template>
 <script lang="ts">
+import UserValidatorMixin from '@/mixins/UserValidatorMixin';
+import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {ServerModule} from '@/store/server';
-import {required, email} from 'vuelidate/lib/validators';
-import UserValidatorMixin from '@/mixins/UserValidatorMixin';
-import {SnackbarModule} from '@/store/snackbar';
+import {email, required} from 'vuelidate/lib/validators';
 
 interface LoginHash {
   email: string;
   password: string;
 }
 @Component({
-    mixins: [UserValidatorMixin],
-    validations: {
+  mixins: [UserValidatorMixin],
+  validations: {
     email: {
       required,
       email
@@ -163,7 +175,7 @@ interface LoginHash {
 export default class LocalLogin extends Vue {
   email = '';
   password = '';
-  buttonLoading = false
+  buttonLoading = false;
 
   login() {
     this.buttonLoading = true;
@@ -175,17 +187,28 @@ export default class LocalLogin extends Vue {
       .then(() => {
         this.$router.push('/');
         SnackbarModule.notify('You have successfully signed in.');
-      }).finally(() => {
-        this.buttonLoading = false;
       })
+      .finally(() => {
+        this.buttonLoading = false;
+      });
   }
 
   get showAlternateAuth() {
     return ServerModule.enabledOAuth.length !== 0;
   }
 
+  get localLoginEnabled() {
+    return ServerModule.localLoginEnabled;
+  }
+
+  openExternalAuthModeDocumentation() {
+    window.open(
+      'https://github.com/mitre/heimdall2/wiki/External-Authentication-Only'
+    );
+  }
+
   authStrategySupported(strategy: string) {
-    return ServerModule.enabledOAuth.includes(strategy)
+    return ServerModule.enabledOAuth.includes(strategy);
   }
 
   oauthLogin(site: string) {

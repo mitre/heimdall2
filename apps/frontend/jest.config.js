@@ -13,6 +13,7 @@ module.exports = {
   },
   moduleDirectories: ['node_modules', 'src'],
   moduleNameMapper: {
+    '^d3$': '<rootDir>/tests/util/d3.js',
     '^@[/](.+)': '<rootDir>/src/$1',
     '^.+\\.(css)$': '<rootDir>/tests/util/cssTransform.js'
   }

@@ -10,19 +10,21 @@
       </v-card>
     </v-col>
 
-    <v-col class="pa-0" :cols="7">
+    <v-col class="pa-0" :cols="6">
       <v-card tile flat class="fill-height">
         <slot name="title" />
       </v-card>
     </v-col>
 
-    <v-col class="pa-0" :cols="2">
+    <v-col class="pa-0" :cols="3">
       <v-card tile flat class="d-flex flex-column fill-height">
         <slot name="id" />
         <v-divider />
         <slot name="tags" />
         <v-divider />
         <slot name="runTime" />
+        <v-divider />
+        <slot name="viewed" />
       </v-card>
     </v-col>
   </v-row>

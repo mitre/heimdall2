@@ -1,5 +1,11 @@
 <template>
   <v-app id="inspire">
+    <v-snackbar
+      v-model="logoffSnackbar"
+      :color="logoffFailure ? 'red' : 'success'"
+    >
+      {{ logoffMessage }}</v-snackbar
+    >
     <v-main>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
@@ -18,7 +24,10 @@
                 color="primary-visible"
                 show-arrows
               >
-                <v-tab id="select-tab-standard-login" href="#login-standard"
+                <v-tab
+                  v-if="anyAuthProvidersAvailable"
+                  id="select-tab-standard-login"
+                  href="#login-standard"
                   >Heimdall Login</v-tab
                 >
                 <v-tab
@@ -43,13 +52,13 @@
   </v-app>
 </template>
 <script lang="ts">
+import LDAPLogin from '@/components/global/login/LDAPLogin.vue';
+import LocalLogin from '@/components/global/login/LocalLogin.vue';
+import {ServerModule} from '@/store/server';
+import {SnackbarModule} from '@/store/snackbar';
+import {LocalStorageVal} from '@/utilities/helper_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import {ServerModule} from '@/store/server';
-import LocalLogin from '@/components/global/login/LocalLogin.vue'
-import LDAPLogin from '@/components/global/login/LDAPLogin.vue'
-import {SnackbarModule} from '../store/snackbar';
 
 const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
 
@@ -60,7 +69,11 @@ const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
   }
 })
 export default class Login extends Vue {
-  activeTab: string = lastLoginTab.get_default('logintab-standard');
+  activeTab: string = lastLoginTab.get_default(
+    this.anyAuthProvidersAvailable ? 'logintab-standard' : 'login-ldap'
+  );
+
+  logoffMessage = 'You have successfully logged off';
 
   mounted() {
     this.checkLoggedIn();
@@ -75,7 +88,11 @@ export default class Login extends Vue {
 
   checkForAuthenticationError() {
     if (this.$cookies.get('authenticationError')) {
-      SnackbarModule.failure(`Sorry, an problem occurred while signing you in. The reason given was: ${this.$cookies.get('authenticationError')}`);
+      SnackbarModule.failure(
+        `Sorry, an problem occurred while signing you in. The reason given was: ${this.$cookies.get(
+          'authenticationError'
+        )}`
+      );
       this.$cookies.remove('authenticationError');
     }
   }
@@ -84,8 +101,59 @@ export default class Login extends Vue {
     this.$router.push('/signup');
   }
 
+  get anyAuthProvidersAvailable() {
+    return (
+      ServerModule.localLoginEnabled || ServerModule.enabledOAuth.length !== 0
+    );
+  }
+
   get ldapenabled() {
     return ServerModule.ldap;
+  }
+
+  get localLoginEnabled() {
+    return ServerModule.localLoginEnabled;
+  }
+
+  get logoffFailure() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    return (
+      urlParams.get('logoff')?.toLowerCase() === 'true' &&
+      (ServerModule.token !== '' || urlParams.get('error'))
+    );
+  }
+
+  get logoffSnackbar() {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (
+      !this.logoffFailure &&
+      urlParams.get('logoff')?.toLowerCase() === 'true'
+    ) {
+      return true;
+    } else {
+      if (urlParams.get('error')) {
+        // If the token has expired or the user has changed their JWT secret
+        if (urlParams.get('error') === 'Unauthorized') {
+          this.logoffMessage = `Your session was invalid, please sign in again.`;
+        } else {
+          this.logoffMessage = `An error occurred while signing you out: ${urlParams.get(
+            'error'
+          )}`;
+        }
+        return true;
+      } else if (
+        urlParams.get('logoff')?.toLowerCase() === 'true' &&
+        ServerModule.token !== ''
+      ) {
+        this.logoffMessage =
+          'An error occurred during the logout process, your token has not been discarded. Please clear your browser data.';
+        return false;
+      } else {
+        return false;
+      }
+    }
   }
 }
 </script>

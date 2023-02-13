@@ -1,6 +1,5 @@
 import {InspecDataModule} from '@/store/data_store';
 import {InspecIntakeModule} from '@/store/report_intake';
-import {StatusCountModule} from '@/store/status_counts';
 import {Sample, samples} from '@/utilities/sample_util';
 import {readFileSync} from 'fs';
 import 'jest';
@@ -44,20 +43,6 @@ export function addElemWithDataAppToBody() {
   const app = document.createElement('div');
   app.setAttribute('data-app', 'true');
   document.body.append(app);
-}
-
-export function fileCompliance(fileId: string) {
-  const filter = {fromFile: [fileId]};
-  const passed = StatusCountModule.countOf(filter, 'Passed');
-  const total =
-    passed +
-    StatusCountModule.countOf(filter, 'Failed') +
-    StatusCountModule.countOf(filter, 'Profile Error') +
-    StatusCountModule.countOf(filter, 'Not Reviewed');
-  if (total === 0) {
-    return 0;
-  }
-  return Math.round((100.0 * passed) / total);
 }
 
 export function expectedCount(

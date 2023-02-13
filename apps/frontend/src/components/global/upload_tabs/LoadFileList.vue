@@ -8,7 +8,7 @@
         label="Search"
         hide-details
       />
-      <DeleteDialog
+      <ActionDialog
         v-model="deleteItemDialog"
         type="file"
         @cancel="deleteItemDialog = false"
@@ -34,8 +34,11 @@
               item.filename
             }}</span>
           </template>
+          <template #[`item.groups`]="{item}">
+            <GroupRow v-if="item.id" :evaluation="item" />
+          </template>
           <template #[`item.evaluationTags`]="{item}">
-            <TagRow :evaluation="item" />
+            <TagRow v-if="item.id" :evaluation="item" />
           </template>
           <template #[`item.createdAt`]="{item}">
             <span>{{ new Date(item.createdAt).toLocaleString() }}</span>
@@ -50,7 +53,10 @@
                 @updateEvaluations="updateEvaluations"
                 @close="editEvaluationDialog = false"
               />
-              <ShareEvaluationButton title="Share Result" :evaluation="item" />
+              <CopyButton
+                :text="createShareLink(item)"
+                icon="mdi-share-variant"
+              />
               <div v-if="item.editable">
                 <v-icon
                   data-cy="edit"
@@ -87,23 +93,25 @@
 </template>
 
 <script lang="ts">
+import ActionDialog from '@/components/generic/ActionDialog.vue';
+import CopyButton from '@/components/generic/CopyButton.vue';
+import GroupRow from '@/components/global/groups/GroupRow.vue';
+import TagRow from '@/components/global/tags/TagRow.vue';
+import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
+import {EvaluationModule} from '@/store/evaluations';
+import {SnackbarModule} from '@/store/snackbar';
+import {Sample} from '@/utilities/sample_util';
+import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
-import ShareEvaluationButton from '@/components/generic/ShareEvaluationButton.vue'
-import TagRow from '@/components/global/tags/TagRow.vue';
-import {SnackbarModule} from '@/store/snackbar';
-import {EvaluationModule} from '@/store/evaluations'
-import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
-import {Sample} from '@/utilities/sample_util';
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
 
 @Component({
   components: {
-    DeleteDialog,
+    ActionDialog,
     EditEvaluationModal,
-    ShareEvaluationButton,
+    CopyButton,
+    GroupRow,
     TagRow
   }
 })
@@ -148,39 +156,60 @@ export default class LoadFileList extends Vue {
     this.deleteTagDialog = true;
   }
 
- filterEvaluationTags(file: IEvaluation | Sample, search: string) {
+  filterEvaluationTags(file: IEvaluation | Sample, search: string) {
     let result = false;
-    if('evaluationTags' in file)
-    {
+    if ('evaluationTags' in file) {
       file.evaluationTags?.forEach((tag) => {
         if (tag.value.toLowerCase().includes(search)) {
           result = true;
         }
-      })
+      });
     }
-    return result
+    return result;
   }
 
-  async deleteItemConfirm(): Promise<void>{
+  filterEvaluationGroups(file: IEvaluation | Sample, search: string) {
+    let result = false;
+    if ('groups' in file) {
+      file.groups?.forEach((group) => {
+        if (group.name.toLowerCase().includes(search)) {
+          result = true;
+        }
+      });
+    }
+    return result;
+  }
+
+  async deleteItemConfirm(): Promise<void> {
     EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
-      SnackbarModule.notify("Deleted evaluation successfully.")
-    })
+      SnackbarModule.notify('Deleted evaluation successfully.');
+    });
     this.deleteItemDialog = false;
   }
 
+  createShareLink(item: IEvaluation) {
+    return `${window.location.origin}/results/${item.id}`;
+  }
+
   get filteredFiles() {
-    const matches: Array<IEvaluation | Sample> = []
+    const matches: Array<IEvaluation | Sample> = [];
     if (this.search !== '') {
       const searchToLower = this.search.toLowerCase();
-      (this.files as Array<IEvaluation | Sample>).forEach(async (item: IEvaluation | Sample) => {
-          if (this.filterEvaluationTags(item, searchToLower) || item.filename.toLowerCase().includes(searchToLower)) {
-          matches.push(item)
+      (this.files as Array<IEvaluation | Sample>).forEach(
+        async (item: IEvaluation | Sample) => {
+          if (
+            this.filterEvaluationTags(item, searchToLower) ||
+            this.filterEvaluationGroups(item, searchToLower) ||
+            item.filename.toLowerCase().includes(searchToLower)
+          ) {
+            matches.push(item);
+          }
         }
-      })
+      );
     } else {
       return this.files;
     }
-    return matches
+    return matches;
   }
 }
 </script>

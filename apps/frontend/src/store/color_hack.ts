@@ -1,5 +1,5 @@
 import Store from '@/store/store';
-import {nist} from 'inspecjs';
+import {ControlGroupStatus} from 'inspecjs';
 import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 /**
@@ -25,7 +25,7 @@ function calculateColor(colorName: string): string {
     // Make a (padded) integer representing the hex code
     const value = (1 << 24) + (colors[0] << 16) + (colors[1] << 8) + colors[2];
     // Parse it as hex, and replace the leading 1 with a #
-    return `#${value.toString(16).substr(1)}`;
+    return `#${value.toString(16).substring(1)}`;
   } else {
     throw new Error(`Error generating color ${colorName}`);
   }
@@ -76,8 +76,8 @@ export class ColorHack extends VuexModule {
   /**
    * Parameterized getter that returns an appropriate rgb color code for a given control (group) status
    */
-  get colorForStatus(): (status: nist.ControlGroupStatus) => string {
-    return (status: nist.ControlGroupStatus) => {
+  get colorForStatus(): (status: ControlGroupStatus) => string {
+    return (status: ControlGroupStatus) => {
       switch (status) {
         case 'Passed':
           return this.lookupColor('statusPassed');

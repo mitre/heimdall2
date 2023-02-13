@@ -27,6 +27,9 @@
           <template #runTime>
             <slot name="runTime" />
           </template>
+          <template #viewed>
+            <slot name="viewed" />
+          </template>
         </ResponsiveRowSmall>
 
         <ResponsiveRowMedium v-else-if="$vuetify.breakpoint.mdAndDown">
@@ -50,6 +53,9 @@
           </template>
           <template #runTime>
             <slot name="runTime" />
+          </template>
+          <template #viewed>
+            <slot name="viewed" />
           </template>
         </ResponsiveRowMedium>
 
@@ -75,6 +81,9 @@
           <template #runTime>
             <slot name="runTime" />
           </template>
+          <template #viewed>
+            <slot name="viewed" />
+          </template>
         </ResponsiveRowLarge>
       </v-card>
     </v-col>
@@ -82,12 +91,11 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-
 import ResponsiveRowLarge from '@/components/cards/controltable/ResponsiveRowLarge.vue';
 import ResponsiveRowMedium from '@/components/cards/controltable/ResponsiveRowMedium.vue';
 import ResponsiveRowSmall from '@/components/cards/controltable/ResponsiveRowSmall.vue';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
 @Component({

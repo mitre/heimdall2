@@ -93,18 +93,17 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import Modal from '@/components/global/Modal.vue'
-import {Prop} from 'vue-property-decorator';
-import {EvaluationModule} from '@/store/evaluations';
-import {IEvaluation, IEvaluationGroup} from '@heimdall/interfaces';
-import {GroupsModule} from '@/store/groups';
 import GroupModal from '@/components/global/groups/GroupModal.vue';
-import axios from 'axios';
+import Modal from '@/components/global/Modal.vue';
+import {EvaluationModule} from '@/store/evaluations';
+import {GroupsModule} from '@/store/groups';
 import {SnackbarModule} from '@/store/snackbar';
 import {IVuetifyItems} from '@/utilities/helper_util';
+import {IEvaluation, IEvaluationGroup} from '@heimdall/interfaces';
+import axios from 'axios';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 import EvaluationMixin from '../../../mixins/EvaluationMixin';
-
 
 @Component({
   components: {
@@ -123,14 +122,14 @@ export default class EditEvaluationModal extends mixins(EvaluationMixin) {
 
   visibilityOptions: IVuetifyItems[] = [
     {
-      text: "Public (all authenticated users on this server)",
+      text: 'Public (all authenticated users on this server)',
       value: true
     },
     {
-      text: "Private (owners & groups)",
+      text: 'Private (owners & groups)',
       value: false
     }
-  ]
+  ];
 
   mounted() {
     this.getGroupsForEvaluation();
@@ -141,39 +140,50 @@ export default class EditEvaluationModal extends mixins(EvaluationMixin) {
   }
 
   async getGroupsForEvaluation(): Promise<void> {
-    this.originalGroups = this.groups = this.convertGroupsToIVuetifyItems(this.active.groups);
+    this.originalGroups = this.groups = this.convertGroupsToIVuetifyItems(
+      this.active.groups
+    );
   }
 
   async update(): Promise<void> {
-    Promise.all([EvaluationModule.updateEvaluation(this.activeEvaluation), this.updateGroups()]).then(() => {
+    Promise.all([
+      EvaluationModule.updateEvaluation(this.activeEvaluation),
+      this.updateGroups()
+    ]).then(() => {
       SnackbarModule.notify('Evaluation Updated Successfully');
-      EvaluationModule.loadEvaluation(this.active.id)
-    })
-    this.$emit('close')
+      EvaluationModule.loadEvaluation(this.active.id);
+    });
+    this.$emit('close');
   }
 
   cancel(): void {
-    this.$emit('close')
+    this.$emit('close');
     this.groups = this.originalGroups;
     this.activeEvaluation = {...this.active};
   }
 
   async updateGroups(): Promise<void> {
-    const toAdd: IVuetifyItems[] = this.groups.filter(group => !this.originalGroups.includes(group));
-    const toRemove: IVuetifyItems[] = this.originalGroups.filter(group => !this.groups.includes(group));
+    const toAdd: IVuetifyItems[] = this.groups.filter(
+      (group) => !this.originalGroups.includes(group)
+    );
+    const toRemove: IVuetifyItems[] = this.originalGroups.filter(
+      (group) => !this.groups.includes(group)
+    );
     const evaluationGroup: IEvaluationGroup = {
       id: this.active.id
-    }
+    };
 
     const addedGroupPromises = toAdd.map((group) => {
-      return axios.post(`/groups/${group.value}/evaluation`, evaluationGroup)
+      return axios.post(`/groups/${group.value}/evaluation`, evaluationGroup);
     });
 
     const removeGroupPromises = toRemove.map((group) => {
-      return axios.delete(`/groups/${group.value}/evaluation`, {data: evaluationGroup})
+      return axios.delete(`/groups/${group.value}/evaluation`, {
+        data: evaluationGroup
+      });
     });
 
-    Promise.all(addedGroupPromises.concat(removeGroupPromises))
+    Promise.all(addedGroupPromises.concat(removeGroupPromises));
   }
 }
 </script>

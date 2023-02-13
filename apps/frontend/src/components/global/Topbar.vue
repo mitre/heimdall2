@@ -8,6 +8,9 @@
   >
     <!-- The title and nav bar -->
     <v-toolbar-title id="toolbar_title" class="pr-2">
+      <v-app-bar-nav-icon v-if="showBackButton" @click.stop="goBack">
+        <v-icon>mdi-arrow-left</v-icon>
+      </v-app-bar-nav-icon>
       <v-app-bar-nav-icon
         v-if="!minimalTopbar"
         data-cy="openSidebar"
@@ -28,12 +31,11 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
 import TopbarDropdown from '@/components/global/TopbarDropdown.vue';
-
 import ServerMixin from '@/mixins/ServerMixin';
-import {Prop} from 'vue-property-decorator';
 import {HeightsModule} from '@/store/heights';
+import Component, {mixins} from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -43,6 +45,7 @@ import {HeightsModule} from '@/store/heights';
 export default class Topbar extends mixins(ServerMixin) {
   @Prop({type: String, required: true}) readonly title!: string;
   @Prop({default: false}) readonly minimalTopbar!: boolean;
+  @Prop({default: false}) readonly showBackButton!: boolean;
 
   mounted() {
     this.onResize();
@@ -51,11 +54,15 @@ export default class Topbar extends mixins(ServerMixin) {
   onResize() {
     this.$nextTick(() => {
       // Allow the page to settle before checking the topbar height
-    // (this is what $nextTick is supposed to do but it's firing too quickly)
+      // (this is what $nextTick is supposed to do but it's firing too quickly)
       setTimeout(() => {
         HeightsModule.setTopbarHeight(this.$el.clientHeight);
       }, 2000);
     });
+  }
+
+  goBack() {
+    this.$router.go(-1);
   }
 
   /** Submits an event to clear all filters */
@@ -64,7 +71,9 @@ export default class Topbar extends mixins(ServerMixin) {
   }
 
   get elipsisTitle() {
-    return this.title.length > 50 ? `${this.title.substring(0, 50)}...` : this.title;
+    return this.title.length > 50
+      ? `${this.title.substring(0, 50)}...`
+      : this.title;
   }
 }
 </script>

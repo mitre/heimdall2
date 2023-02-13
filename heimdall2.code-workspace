@@ -8,6 +8,15 @@
       "name": "Backend",
       "path": "apps/backend"
     },
+
+    {
+      "name": "HDF Converters",
+      "path": "libs/hdf-converters"
+    },
+    {
+      "name": "InspecJS",
+      "path": "libs/inspecjs"
+    },
     {
       "name": "Heimdall",
       "path": "."
@@ -19,7 +28,9 @@
     "typescript.preferences.importModuleSpecifier": "relative",
     "search.exclude": {
       "**/dist": true,
-      "**/samples": true
-    }
+      "**/samples": true,
+      "**/parse_testbed": true
+    },
+    "xml.downloadExternalResources.enabled": true
   }
 }

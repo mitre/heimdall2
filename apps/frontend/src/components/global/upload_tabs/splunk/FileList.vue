@@ -1,27 +1,26 @@
 <template>
-  <v-stepper-content step="2">
+  <span>
+    <div
+      class="d-flex flex-row-reverse"
+      style="cursor: pointer"
+      @click="logout"
+    >
+      <v-btn icon @click="updateSearch">
+        <v-icon>mdi-refresh</v-icon>
+      </v-btn>
+      <span class="pt-2 pr-4">Sign Out</span>
+      <v-icon color="red" class="pr-2">mdi-logout</v-icon>
+    </div>
+
     <div class="d-flex flex-column">
       <v-data-table
+        v-model="selectedExecutions"
         :headers="headers"
         item-key="guid"
-        :items="items"
-        :search="search"
-        :items-per-page="5"
+        :items="executions"
+        :loading="loading"
+        show-select
       >
-        <template #top>
-          <v-toolbar>
-            <v-toolbar-title>Splunk Executions</v-toolbar-title>
-            <v-divider class="mx-4" inset vertical />
-            <v-spacer />
-            <v-text-field
-              v-model="search"
-              append-icon="search"
-              label="Search"
-              single-line
-              hide-details
-            />
-          </v-toolbar>
-        </template>
         <template #[`item.actions`]="{item}">
           <v-icon @click="load_event(item)"> mdi-plus-circle </v-icon>
         </template>
@@ -30,33 +29,38 @@
           range.
         </template>
       </v-data-table>
-      <v-btn color="red" class="my-2" @click="logout"> Logout </v-btn>
+      <v-btn block class="card-outter" @click="loadResults">
+        Load Selected
+        <v-icon class="pl-2"> mdi-file-download</v-icon>
+      </v-btn>
     </div>
-  </v-stepper-content>
+  </span>
 </template>
 
 <script lang="ts">
+import {InspecIntakeModule} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
+import {FileMetaData, SplunkConfig} from '@mitre/hdf-converters';
+import {SplunkReport} from '@mitre/hdf-converters/src/converters-from-hdf/splunk/splunk-report-types';
+import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
+import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {
-  EvaluationFile,
-  SourcedContextualizedEvaluation
-} from '@/store/report_intake';
-import {v4 as uuid} from 'uuid';
-import {SplunkEndpoint, ExecutionMetaInfo} from '@/utilities/splunk_util';
-import {InspecDataModule} from '@/store/data_store';
-import {contextualizeEvaluation} from 'inspecjs/dist/context';
-import {Prop} from 'vue-property-decorator';
+import {Prop, Watch} from 'vue-property-decorator';
 
-const SEARCH_INTERVAL = 10000;
-
-@Component({
-  components: {}
-})
+@Component({})
 export default class FileList extends Vue {
-  @Prop({type: Object}) readonly endpoint!: SplunkEndpoint;
-  /** The name written in the form */
+  @Prop({type: Object, required: true}) readonly splunkConfig!: SplunkConfig;
+
+  splunkConverter?: SplunkMapper;
+
+  executions: Omit<FileMetaData, 'profile_sha256'>[] = [];
+  selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
+
   search = '';
+  awaitingSearch = false;
+  initalSearchDone = false;
+  loading = false;
 
   /** Table info */
   headers = [
@@ -68,117 +72,74 @@ export default class FileList extends Vue {
     },
     {
       text: 'Time',
-      value: 'startTime'
-    },
-    {
-      text: 'Action',
-      value: 'action',
-      sortable: false
+      value: 'parse_time'
     }
   ];
 
-  /** Currently fetch'd executions */
-  items: ExecutionMetaInfo[] = [];
-
-  /** Callback for when user selects a file.
-   * Loads it into our system.
-   * We assume we're auth'd if this is called
-   */
-  async load_event(event: ExecutionMetaInfo): Promise<void> {
-    // Get it out of the list
-    //let event = (null as unknown) as ExecutionMetaInfo;
-
-    // Get its full event list and reconstruct
-    return this.endpoint
-      .get_execution(event.guid)
-      .then((exec) => {
-        const uniqueId = uuid();
-        const file = {
-          uniqueId,
-          filename: `${event.filename} (Splunk)`
-          // execution: contextualized
-        } as EvaluationFile;
-        const contextualized: SourcedContextualizedEvaluation = {
-          ...contextualizeEvaluation(exec),
-          from_file: file
-        };
-        file.evaluation = contextualized;
-        Object.freeze(contextualized);
-
-        InspecDataModule.addExecution(file);
-        this.$emit('got-files', [uniqueId]);
-      })
-      .catch((fail) => {
-        this.$emit('error', fail);
-      });
+  @Watch('search')
+  async onUpdateSearch() {
+    // On first load we update the search field which triggers this function, instead of waiting this time we can just search right away
+    if (!this.initalSearchDone) {
+      this.initalSearchDone = true;
+      this.updateSearch();
+    } else if (!this.awaitingSearch) {
+      setTimeout(() => {
+        this.updateSearch();
+        this.awaitingSearch = false;
+      }, 1000); // Wait for user input for 1 second before executing our query
+      this.awaitingSearch = true;
+    }
   }
 
-  /** Passively searches */
-  searcher!: NodeJS.Timeout;
+  async updateSearch() {
+    this.loading = true;
+    this.splunkConverter = new SplunkMapper(this.splunkConfig, true);
+    const results = await this.splunkConverter.queryData(this.search);
+    this.executions = [];
+    results.forEach((result: SplunkReport) => {
+      // Only get header objects
+      if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
+        this.executions.push(result.meta);
+      }
+    });
+    this.loading = false;
+  }
 
-  /** When we should next search. If curr time > this, then search*/
-  nextSearchTime = 0;
+  async mounted() {
+    this.search = `search index="${this.splunkConfig.index}" meta.subtype="header"`;
+  }
 
-  /** Are we already searching? Track here */
-  alreadySearching = false;
-
-  /** Updates search results, if it is appropriate to do so */
-  search_poller() {
-    if (!this.endpoint) {
-      return;
-    }
-
-    const currTime = new Date().getTime();
-    if (currTime > this.nextSearchTime && !this.alreadySearching) {
-      // As an initial venture, try again in 60 seconds. See below for our actual expected search
-      this.nextSearchTime = currTime + 60000;
-
-      // Then do the search
-      this.alreadySearching = true;
-      this.endpoint
-        .fetch_execution_list()
-        .then((l) => {
-          // On success, save the items
-          this.items = l;
-
-          // Mark search done
-          this.alreadySearching = false;
-
-          // And make the next try sometime sooner than the previous attempt
-          this.nextSearchTime = Math.min(
-            currTime + SEARCH_INTERVAL,
-            this.nextSearchTime
-          );
-        })
-        .catch((error) => {
-          this.items = [];
-          this.alreadySearching = false;
-          this.$emit('error', error);
-        });
-    }
+  async loadResults() {
+    this.loading = true;
+    const files = this.selectedExecutions.map(
+      async (execution: Partial<FileMetaData>) => {
+        const hdf = await this.splunkConverter
+          ?.toHdf(execution.guid || '')
+          .catch((error) => {
+            SnackbarModule.failure(error);
+            this.loading = false;
+            throw error;
+          });
+        if (hdf) {
+          return InspecIntakeModule.loadText({
+            text: JSON.stringify(hdf),
+            filename: _.get(hdf, 'meta.filename') as unknown as string
+          }).catch((err) => {
+            SnackbarModule.failure(String(err));
+          });
+        } else {
+          SnackbarModule.failure('Attempted to load an undefined execution');
+          throw new Error('Attempted to load an undefined execution');
+        }
+      }
+    );
+    await Promise.all(files);
+    this.loading = false;
+    this.$emit('got-files', files);
   }
 
   logout() {
-    this.$emit('exit-list');
-    this.items = [];
-  }
-
-  /** Used for timer functions */
-  lastSearchTime = 0;
-  time_since_last_search(): number {
-    return new Date().getTime();
-  }
-
-  // Init search timers
-  mounted() {
-    this.searcher = setInterval(this.search_poller, 1000);
-  }
-
-  // Clear timer on destroy as well
-  beforeDestroy() {
-    if (this.searcher) {
-      clearInterval(this.searcher);
-    }
+    this.$emit('signOut');
   }
 }
 </script>

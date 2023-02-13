@@ -18,13 +18,21 @@
             </v-btn>
           </template>
         </HelpModal>
+        <v-btn :href="repository + '/wiki'" target="_blank" text small>
+          <v-icon small>mdi-information</v-icon>
+          <span class="d-none d-sm-inline pl-3">Docs</span>
+        </v-btn>
         <v-btn :href="repository" target="_blank" text small>
           <v-icon small>mdi-github</v-icon>
           <span class="d-none d-sm-inline pl-3">Github</span>
         </v-btn>
-        <v-btn :href="repository" target="_blank" text small>
-          <v-icon small>mdi-information</v-icon>
-          <span class="d-none d-sm-inline pl-3">Docs</span>
+        <v-btn href="https://www.netlify.com/" target="_blank" text small>
+          <img
+            :src="require('@/assets/netlify-light.svg')"
+            style="width: 1.15rem; height: 1.15rem"
+            alt="Netlify.com"
+          />
+          <span class="d-none d-sm-inline pl-3">Netlify</span>
         </v-btn>
         <v-btn :href="repository + changelog" target="_blank" text small>
           <v-icon small>mdi-alpha-v-circle</v-icon>
@@ -36,10 +44,10 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import HelpModal from '@/components/global/HelpModal.vue';
 import AboutModal from '@/components/global/AboutModal.vue';
-import AppInfoMixin from '@/mixins/AppInfoMixin'
+import HelpModal from '@/components/global/HelpModal.vue';
+import AppInfoMixin from '@/mixins/AppInfoMixin';
+import Component, {mixins} from 'vue-class-component';
 
 @Component({
   components: {

@@ -14,10 +14,10 @@
 </template>
 
 <script lang="ts">
-import Component, {mixins} from 'vue-class-component';
-import ServerMixin from '@/mixins/ServerMixin';
 import UploadNexus from '@/components/global/UploadNexus.vue';
+import ServerMixin from '@/mixins/ServerMixin';
 import Base from '@/views/Base.vue';
+import Component, {mixins} from 'vue-class-component';
 @Component({
   components: {
     UploadNexus,

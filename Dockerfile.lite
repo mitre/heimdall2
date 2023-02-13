@@ -1,5 +1,5 @@
-ARG BUILD_CONTAINER=node:lts-alpine
-ARG BASE_CONTAINER=nginx:1.18.0-alpine
+ARG BUILD_CONTAINER=node:16-alpine
+ARG BASE_CONTAINER=nginx:alpine
 
 FROM $BUILD_CONTAINER as builder
 
@@ -12,7 +12,10 @@ USER 0
 COPY package.json yarn.lock lerna.json tsconfig.json .prettierrc ./
 COPY apps/frontend ./apps/frontend
 COPY libs ./libs
+RUN chmod 0400 package.json yarn.lock lerna.json tsconfig.json .prettierrc
+RUN chmod 0500 -R apps libs
 
+RUN apk add python3 make g++
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
 RUN yarn --frozen-lockfile --production --network-timeout 600000
 

@@ -29,11 +29,10 @@
 </template>
 
 <script lang="ts">
+import {LocalStorageVal} from '@/utilities/helper_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {PropSync} from 'vue-property-decorator';
-
-import {LocalStorageVal} from '@/utilities/helper_util';
 
 /** Localstorage keys */
 const localMFASerial = new LocalStorageVal<string>('aws_s3_mfa_serial');

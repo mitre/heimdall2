@@ -1,21 +1,29 @@
 <template>
-  <v-stepper v-model="step" vertical class="elevation-0">
-    <v-stepper-step step="1"> Login Credentials </v-stepper-step>
-    <v-stepper-step step="2"> Search Execution Events </v-stepper-step>
-
-    <AuthStep
-      @authenticated="handle_login"
-      @error="handle_error"
-      @show-help="errorCount = -1"
-    />
-
-    <FileList
-      :endpoint="splunkState"
-      @exit-list="handle_logout"
-      @got-files="got_files"
-      @error="handle_error"
-    />
-
+  <v-stepper v-model="step">
+    <v-stepper-header class="elevation-0">
+      <v-stepper-step id="step-1" step="1"> Login Credentials </v-stepper-step>
+      <v-divider />
+      <v-stepper-step id="step-2" step="2">
+        Search Execution Events
+      </v-stepper-step>
+    </v-stepper-header>
+    <v-stepper-items>
+      <v-stepper-content step="1">
+        <AuthStep
+          @authenticated="onAuthenticationComplete"
+          @error="errorCount += 1"
+          @show-help="errorCount = -1"
+        />
+      </v-stepper-content>
+      <v-stepper-content step="2">
+        <FileList
+          v-if="splunkConfig"
+          :splunk-config="splunkConfig"
+          @signOut="onSignOut"
+          @got-files="got_files"
+        />
+      </v-stepper-content>
+    </v-stepper-items>
     <v-overlay
       :opacity="50"
       absolute="absolute"
@@ -24,7 +32,7 @@
       <div class="text-center">
         <p>
           <span v-if="errorCount > 0">
-            It seems you may be having trouble using the Splunk toolkit. Are you
+            It seems you may be having trouble connecting to Splunk. Are you
             sure that you have configured it properly?
           </span>
           <br />
@@ -33,13 +41,13 @@
           </span>
           <v-btn
             target="_blank"
-            href="https://github.com/mitre/hdf-json-to-splunk/"
+            href="https://github.com/mitre/saf/wiki/Splunk-Configuration"
             text
             color="info"
             px-0
           >
             <v-icon pr-2>mdi-github-circle</v-icon>
-            Splunk HDF Plugin
+            Splunk Configuration
           </v-btn>
         </p>
         <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
@@ -47,21 +55,13 @@
     </v-overlay>
   </v-stepper>
 </template>
-
 <script lang="ts">
+import {FileID} from '@/store/report_intake';
+import {SplunkConfigNoIndex} from '@mitre/hdf-converters/src/splunk-mapper';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {FileID} from '@/store/report_intake';
-import {SnackbarModule} from '@/store/snackbar';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
-import {SplunkEndpoint, SplunkErrorCode} from '@/utilities/splunk_util';
-
-/**
- * File reader component for taking in inspec JSON data.
- * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
- * Emits "got-files" with a list of the unique_ids of the loaded files.
- */
 @Component({
   components: {
     AuthStep,
@@ -69,87 +69,22 @@ import {SplunkEndpoint, SplunkErrorCode} from '@/utilities/splunk_util';
   }
 })
 export default class SplunkReader extends Vue {
-  /** Our session information, saved iff valid */
-  splunkState: SplunkEndpoint | null = null;
-
-  /** Current step. 1 for login, 2 for search */
   step = 1;
-
-  /** Count errors to know if we should show overlay */
   errorCount = 0;
+  splunkConfig: SplunkConfigNoIndex | null = null;
 
-  /** When login is clicked - save credentials, verify that they work, then proceed if they do*/
-  handle_login(newEndpoint: SplunkEndpoint) {
-    // Store the state
-    this.splunkState = newEndpoint;
-
-    // Move the carousel
+  onAuthenticationComplete(splunkConfig: SplunkConfigNoIndex) {
+    this.splunkConfig = splunkConfig;
     this.step = 2;
   }
 
-  /** When cancel/logout is clicked from the search window */
-  handle_logout() {
-    this.step = 1;
-    this.splunkState = null;
-  }
-
-  /** Callback to handle a splunk error.
-   * Sets shown error.
-   */
-  handle_error(error: SplunkErrorCode): void {
-    this.step = 1;
-    switch (error) {
-      case SplunkErrorCode.BadNetwork:
-        this.errorCount += 1;
-        // https://docs.splunk.com/Documentation/Splunk/8.0.1/Admin/Serverconf
-        this.show_error_message(
-          'Connection to host failed. Please ensure that the hostname is correct, and that your splunk server has been properly configured to allow CORS requests. Please see https://docs.splunk.com/Documentation/Splunk/8.0.1/Admin/Serverconf for information on how to enable CORS.'
-        );
-        break;
-      case SplunkErrorCode.PageNotFound:
-        this.errorCount += 1;
-        this.show_error_message(
-          'Connection made with errors. Please ensure your hostname is formatted as shown in the example.'
-        );
-        break;
-      case SplunkErrorCode.BadAuth:
-        this.show_error_message('Bad username or password.');
-        break;
-      case SplunkErrorCode.SearchFailed:
-        this.show_error_message('Internal splunk error while searching');
-        break;
-      case SplunkErrorCode.ConsolidationFailed:
-      case SplunkErrorCode.SchemaViolation:
-        this.errorCount += 1;
-        this.show_error_message('Error creating execution from splunk events.');
-        break;
-      case SplunkErrorCode.InvalidGUID:
-        this.show_error_message(
-          'Duplicate execution GUID detected. The odds of this happening should be astronomically low. Please file a bug report.'
-        );
-        break;
-      case SplunkErrorCode.BadUrl:
-        this.show_error_message(
-          'Invalid URL. Please ensure you have typed it correctly.'
-        );
-        break;
-      case SplunkErrorCode.UnknownError:
-        this.show_error_message(
-          "Something went wrong, but we're not sure what. Please file a bug report."
-        );
-        break;
-    }
-  }
-
-  /** Give our error tooltip the message */
-  show_error_message(msg: string) {
-    // Toast whatever error we got
-    SnackbarModule.failure(msg);
-  }
-
-  /** Callback on got files */
-  got_files(files: Array<FileID>) {
+  got_files(files: FileID[]) {
     this.$emit('got-files', files);
+  }
+
+  onSignOut() {
+    this.step = 1;
+    this.splunkConfig = null;
   }
 }
 </script>

@@ -19,13 +19,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import {FileID, InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-
-import {samples, Sample} from '@/utilities/sample_util';
+import {Sample, samples} from '@/utilities/sample_util';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 
 @Component({
   components: {
@@ -62,7 +61,8 @@ export default class SampleList extends Vue {
       })
       .catch((err) => {
         SnackbarModule.failure(String(err));
-      }).finally(() => {
+      })
+      .finally(() => {
         this.loading = false;
       });
   }

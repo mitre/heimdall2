@@ -1,0 +1,916 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.27",
+    "target_id": "Aqua Security - Trivy"
+  },
+  "version": "2.6.27",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "Trivy",
+      "version": "",
+      "title": "Trivy Findings",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "Trivy/CVE-2021-36159",
+          "title": "Trivy found a vulnerability to CVE-2021-36159 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.9,
+          "desc": "libfetch before 2021-07-26, as used in apk-tools, xbps, and other products, mishandles numeric strings for the FTP and HTTP protocols. The FTP passive mode implementation allows an out-of-bounds read because strtol is used to parse the relevant numbers into address bytes. It does not check if the line ends prematurely. If it does, the for-loop condition checks for the &amp;#39;\\0&amp;#39; terminator one byte too late.",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-36159",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-36159\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.938789-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.938817-05:00\",\n      \"Severity\": {\n        \"Label\": \"CRITICAL\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-36159 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"libfetch before 2021-07-26, as used in apk-tools, xbps, and other products, mishandles numeric strings for the FTP and HTTP protocols. The FTP passive mode implementation allows an out-of-bounds read because strtol is used to parse the relevant numbers into address bytes. It does not check if the line ends prematurely. If it does, the for-loop condition checks for the &#39;\\\\0&#39; terminator one byte too late.\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-36159\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-36159\",\n              \"CVE Title\": \"\",\n              \"PkgName\": \"apk-tools\",\n              \"Installed Package\": \"2.10.4-r3\",\n              \"Patched Package\": \"2.10.7-r0\",\n              \"NvdCvssScoreV3\": \"9.1\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"6.4\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:N/C:P/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.938817-05:00",
+              "message": "For package apk-tools, the current version that is installed is 2.10.4-r3.  The package has been patched since version(s): 2.10.7-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-30139",
+          "title": "Trivy found a vulnerability to CVE-2021-30139 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "In Alpine Linux apk-tools before 2.12.5, the tarball parser allows a buffer overflow and crash.",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-30139",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-30139\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.939264-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.939283-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-30139 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"In Alpine Linux apk-tools before 2.12.5, the tarball parser allows a buffer overflow and crash.\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-30139\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-30139\",\n              \"CVE Title\": \"\",\n              \"PkgName\": \"apk-tools\",\n              \"Installed Package\": \"2.10.4-r3\",\n              \"Patched Package\": \"2.10.6-r0\",\n              \"NvdCvssScoreV3\": \"7.5\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.939283-05:00",
+              "message": "For package apk-tools, the current version that is installed is 2.10.4-r3.  The package has been patched since version(s): 2.10.6-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-28831",
+          "title": "Trivy found a vulnerability to CVE-2021-28831 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "decompress_gunzip.c in BusyBox through 1.32.1 mishandles the error bit on the huft_build result pointer, with a resultant invalid free or segmentation fault, via malformed gzip data.",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-28831",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-28831\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.939735-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.939749-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-28831 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"decompress_gunzip.c in BusyBox through 1.32.1 mishandles the error bit on the huft_build result pointer, with a resultant invalid free or segmentation fault, via malformed gzip data.\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-28831\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-28831\",\n              \"CVE Title\": \"busybox: invalid free or segmentation fault via malformed gzip data\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r10\",\n              \"NvdCvssScoreV3\": \"7.5\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-28831\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.947859-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.94787-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-28831 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"decompress_gunzip.c in BusyBox through 1.32.1 mishandles the error bit on the huft_build result pointer, with a resultant invalid free or segmentation fault, via malformed gzip data.\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-28831\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-28831\",\n              \"CVE Title\": \"busybox: invalid free or segmentation fault via malformed gzip data\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r10\",\n              \"NvdCvssScoreV3\": \"7.5\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.939749-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r10."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.94787-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r10."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-42378",
+          "title": "Trivy found a vulnerability to CVE-2021-42378 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "A use-after-free in Busybox&amp;#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_i function",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-42378",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42378\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.939999-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.94001-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42378 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_i function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42378\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42378\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_i()\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42378\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.948095-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.948105-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42378 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_i function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42378\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42378\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_i()\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.94001-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.948105-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-42379",
+          "title": "Trivy found a vulnerability to CVE-2021-42379 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "A use-after-free in Busybox&amp;#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the next_input_file function",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-42379",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42379\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.940267-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.940279-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42379 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the next_input_file function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42379\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42379\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the next_input_file()\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42379\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.948334-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.948345-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42379 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the next_input_file function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42379\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42379\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the next_input_file()\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.940279-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.948345-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-42380",
+          "title": "Trivy found a vulnerability to CVE-2021-42380 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "A use-after-free in Busybox&amp;#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the clrvar function",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-42380",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42380\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.940513-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.940524-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42380 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the clrvar function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42380\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42380\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the clrvar()\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42380\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.948574-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.948585-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42380 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the clrvar function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42380\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42380\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the clrvar()\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.940524-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.948585-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-42381",
+          "title": "Trivy found a vulnerability to CVE-2021-42381 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "A use-after-free in Busybox&amp;#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the hash_init function",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-42381",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42381\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.940781-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.940792-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42381 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the hash_init function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42381\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42381\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the hash_init()\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42381\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.948823-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.948835-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42381 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the hash_init function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42381\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42381\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the hash_init()\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.940792-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.948835-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-42382",
+          "title": "Trivy found a vulnerability to CVE-2021-42382 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "A use-after-free in Busybox&amp;#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_s function",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-42382",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42382\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.941027-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.941038-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42382 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_s function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42382\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42382\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_s()\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42382\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.949072-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.949084-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42382 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_s function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42382\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42382\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the getvar_s()\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.941038-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.949084-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-42383",
+          "title": "Trivy found a vulnerability to CVE-2021-42383 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "A use-after-free in Busybox&amp;#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate function",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-42383",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42383\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.941291-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.941302-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42383 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42383\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42383\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate()\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42383\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.949319-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.94933-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42383 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42383\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42383\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate()\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.941302-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.94933-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-42384",
+          "title": "Trivy found a vulnerability to CVE-2021-42384 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "A use-after-free in Busybox&amp;#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the handle_special function",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-42384",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42384\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.941549-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.941561-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42384 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the handle_special function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42384\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42384\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the handle_special()\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42384\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.949571-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.949583-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42384 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the handle_special function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42384\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42384\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the handle_special()\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.941561-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.949583-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-42385",
+          "title": "Trivy found a vulnerability to CVE-2021-42385 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "A use-after-free in Busybox&amp;#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate function",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-42385",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42385\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.941804-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.941815-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42385 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42385\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42385\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate()\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42385\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.94982-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.949831-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42385 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42385\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42385\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the evaluate()\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.941815-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.949831-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-42386",
+          "title": "Trivy found a vulnerability to CVE-2021-42386 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "A use-after-free in Busybox&amp;#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the nvalloc function",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-42386",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42386\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.942066-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.942077-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42386 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the nvalloc function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42386\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42386\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the nvalloc()\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42386\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.95006-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.950071-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42386 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"A use-after-free in Busybox&#39;s awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the nvalloc function\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42386\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42386\",\n              \"CVE Title\": \"busybox: use-after-free in awk applet leads to denial of service and possibly code execution when processing a crafted awk pattern in the nvalloc()\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"7.2\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"6.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:S/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.942077-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.950071-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-42374",
+          "title": "Trivy found a vulnerability to CVE-2021-42374 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.5,
+          "desc": "An out-of-bounds heap read in Busybox&amp;#39;s unlzma applet leads to information leak and denial of service when crafted LZMA-compressed input is decompressed. This can be triggered by any applet/format that",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-42374",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42374\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.942317-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.942328-05:00\",\n      \"Severity\": {\n        \"Label\": \"MEDIUM\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42374 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"An out-of-bounds heap read in Busybox&#39;s unlzma applet leads to information leak and denial of service when crafted LZMA-compressed input is decompressed. This can be triggered by any applet/format that\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42374\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42374\",\n              \"CVE Title\": \"busybox: out-of-bounds read in unlzma applet leads to information leak and denial of service when crafted LZMA-compressed input is decompressed\",\n              \"PkgName\": \"busybox\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"5.3\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"3.3\",\n              \"NvdCvssVectorV2\": \"AV:L/AC:M/Au:N/C:P/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-42374\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.950295-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.950306-05:00\",\n      \"Severity\": {\n        \"Label\": \"MEDIUM\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-42374 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"An out-of-bounds heap read in Busybox&#39;s unlzma applet leads to information leak and denial of service when crafted LZMA-compressed input is decompressed. This can be triggered by any applet/format that\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-42374\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-42374\",\n              \"CVE Title\": \"busybox: out-of-bounds read in unlzma applet leads to information leak and denial of service when crafted LZMA-compressed input is decompressed\",\n              \"PkgName\": \"ssl_client\",\n              \"Installed Package\": \"1.31.1-r9\",\n              \"Patched Package\": \"1.31.1-r11\",\n              \"NvdCvssScoreV3\": \"5.3\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"3.3\",\n              \"NvdCvssVectorV2\": \"AV:L/AC:M/Au:N/C:P/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.942328-05:00",
+              "message": "For package busybox, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.950306-05:00",
+              "message": "For package ssl_client, the current version that is installed is 1.31.1-r9.  The package has been patched since version(s): 1.31.1-r11."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-3711",
+          "title": "Trivy found a vulnerability to CVE-2021-3711 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.9,
+          "desc": "In order to decrypt SM2 encrypted data an application is expected to call the API function EVP_PKEY_decrypt(). Typically an application will call this function twice. The first time, on entry, the &amp;#34;out&amp;#34; parameter can be NULL and, on exit, the &amp;#34;outlen&amp;#34; parameter is populated with the buffer size required to hold the decrypted plaintext. The application can then allocate a sufficiently sized buffer and call EVP_PKEY_decrypt() again, but this time passing a non-NULL value for the &amp;#34;out&amp;#34; parameter. A bug in the implementation of the SM2 decryption code means that the calculation of the buffer size required to hold the plaintext returned by the first call to EVP_PKEY_decrypt() can be smaller than the actual size required by the second call. This can lead to a buffer overflow when EVP_PKEY_decrypt() is called by the application a second time with a buffer that is too small. A malicious attacker who is able present SM2 content for decryption to an application could cause attacker chosen data to overflow the buffer ..",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-3711",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-3711\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.942596-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.942607-05:00\",\n      \"Severity\": {\n        \"Label\": \"CRITICAL\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-3711 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"In order to decrypt SM2 encrypted data an application is expected to call the API function EVP_PKEY_decrypt(). Typically an application will call this function twice. The first time, on entry, the &#34;out&#34; parameter can be NULL and, on exit, the &#34;outlen&#34; parameter is populated with the buffer size required to hold the decrypted plaintext. The application can then allocate a sufficiently sized buffer and call EVP_PKEY_decrypt() again, but this time passing a non-NULL value for the &#34;out&#34; parameter. A bug in the implementation of the SM2 decryption code means that the calculation of the buffer size required to hold the plaintext returned by the first call to EVP_PKEY_decrypt() can be smaller than the actual size required by the second call. This can lead to a buffer overflow when EVP_PKEY_decrypt() is called by the application a second time with a buffer that is too small. A malicious attacker who is able present SM2 content for decryption to an application could cause attacker chosen data to overflow the buffer ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-3711\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-3711\",\n              \"CVE Title\": \"openssl: SM2 Decryption Buffer Overflow\",\n              \"PkgName\": \"libcrypto1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1l-r0\",\n              \"NvdCvssScoreV3\": \"9.8\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"7.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:N/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-3711\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.945044-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.945056-05:00\",\n      \"Severity\": {\n        \"Label\": \"CRITICAL\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-3711 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"In order to decrypt SM2 encrypted data an application is expected to call the API function EVP_PKEY_decrypt(). Typically an application will call this function twice. The first time, on entry, the &#34;out&#34; parameter can be NULL and, on exit, the &#34;outlen&#34; parameter is populated with the buffer size required to hold the decrypted plaintext. The application can then allocate a sufficiently sized buffer and call EVP_PKEY_decrypt() again, but this time passing a non-NULL value for the &#34;out&#34; parameter. A bug in the implementation of the SM2 decryption code means that the calculation of the buffer size required to hold the plaintext returned by the first call to EVP_PKEY_decrypt() can be smaller than the actual size required by the second call. This can lead to a buffer overflow when EVP_PKEY_decrypt() is called by the application a second time with a buffer that is too small. A malicious attacker who is able present SM2 content for decryption to an application could cause attacker chosen data to overflow the buffer ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-3711\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-3711\",\n              \"CVE Title\": \"openssl: SM2 Decryption Buffer Overflow\",\n              \"PkgName\": \"libssl1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1l-r0\",\n              \"NvdCvssScoreV3\": \"9.8\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H\",\n              \"NvdCvssScoreV2\": \"7.5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:N/C:P/I:P/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.942607-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.945056-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2020-1967",
+          "title": "Trivy found a vulnerability to CVE-2020-1967 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "Server or client applications that call the SSL_check_chain() function during or after a TLS 1.3 handshake may crash due to a NULL pointer dereference as a result of incorrect handling of the &amp;#34;signature_algorithms_cert&amp;#34; TLS extension. The crash occurs if an invalid or unrecognised signature algorithm is received from the peer. This could be exploited by a malicious peer in a Denial of Service attack. OpenSSL version 1.1.1d, 1.1.1e, and 1.1.1f are affected by this issue. This issue did not affect OpenSSL versions prior to 1.1.1d. Fixed in OpenSSL 1.1.1g (Affected 1.1.1d-1.1.1f).",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2020-1967",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2020-1967\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.942873-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.942885-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2020-1967 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"Server or client applications that call the SSL_check_chain() function during or after a TLS 1.3 handshake may crash due to a NULL pointer dereference as a result of incorrect handling of the &#34;signature_algorithms_cert&#34; TLS extension. The crash occurs if an invalid or unrecognised signature algorithm is received from the peer. This could be exploited by a malicious peer in a Denial of Service attack. OpenSSL version 1.1.1d, 1.1.1e, and 1.1.1f are affected by this issue. This issue did not affect OpenSSL versions prior to 1.1.1d. Fixed in OpenSSL 1.1.1g (Affected 1.1.1d-1.1.1f).\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2020-1967\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2020-1967\",\n              \"CVE Title\": \"openssl: Segmentation fault in SSL_check_chain causes denial of service\",\n              \"PkgName\": \"libcrypto1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1g-r0\",\n              \"NvdCvssScoreV3\": \"7.5\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2020-1967\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.945309-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.94532-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2020-1967 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"Server or client applications that call the SSL_check_chain() function during or after a TLS 1.3 handshake may crash due to a NULL pointer dereference as a result of incorrect handling of the &#34;signature_algorithms_cert&#34; TLS extension. The crash occurs if an invalid or unrecognised signature algorithm is received from the peer. This could be exploited by a malicious peer in a Denial of Service attack. OpenSSL version 1.1.1d, 1.1.1e, and 1.1.1f are affected by this issue. This issue did not affect OpenSSL versions prior to 1.1.1d. Fixed in OpenSSL 1.1.1g (Affected 1.1.1d-1.1.1f).\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2020-1967\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2020-1967\",\n              \"CVE Title\": \"openssl: Segmentation fault in SSL_check_chain causes denial of service\",\n              \"PkgName\": \"libssl1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1g-r0\",\n              \"NvdCvssScoreV3\": \"7.5\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.942885-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1g-r0."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.94532-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1g-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-23840",
+          "title": "Trivy found a vulnerability to CVE-2021-23840 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "Calls to EVP_CipherUpdate, EVP_EncryptUpdate and EVP_DecryptUpdate may overflow the output length argument in some cases where the input length is close to the maximum permissable length for an integer on the platform. In such cases the return value from the function call will be 1 (indicating success), but the output length value will be negative. This could cause applications to behave incorrectly or crash. OpenSSL versions 1.1.1i and below are affected by this issue. Users of these versions should upgrade to OpenSSL 1.1.1j. OpenSSL versions 1.0.2x and below are affected by this issue. However OpenSSL 1.0.2 is out of support and no longer receiving public updates. Premium support customers of OpenSSL 1.0.2 should upgrade to 1.0.2y. Other users should upgrade to 1.1.1j. Fixed in OpenSSL 1.1.1j (Affected 1.1.1-1.1.1i). Fixed in OpenSSL 1.0.2y (Affected 1.0.2-1.0.2x).",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-23840",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-23840\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.943143-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.943155-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-23840 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"Calls to EVP_CipherUpdate, EVP_EncryptUpdate and EVP_DecryptUpdate may overflow the output length argument in some cases where the input length is close to the maximum permissable length for an integer on the platform. In such cases the return value from the function call will be 1 (indicating success), but the output length value will be negative. This could cause applications to behave incorrectly or crash. OpenSSL versions 1.1.1i and below are affected by this issue. Users of these versions should upgrade to OpenSSL 1.1.1j. OpenSSL versions 1.0.2x and below are affected by this issue. However OpenSSL 1.0.2 is out of support and no longer receiving public updates. Premium support customers of OpenSSL 1.0.2 should upgrade to 1.0.2y. Other users should upgrade to 1.1.1j. Fixed in OpenSSL 1.1.1j (Affected 1.1.1-1.1.1i). Fixed in OpenSSL 1.0.2y (Affected 1.0.2-1.0.2x).\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-23840\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-23840\",\n              \"CVE Title\": \"openssl: integer overflow in CipherUpdate\",\n              \"PkgName\": \"libcrypto1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1j-r0\",\n              \"NvdCvssScoreV3\": \"7.5\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-23840\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.945568-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.94558-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-23840 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"Calls to EVP_CipherUpdate, EVP_EncryptUpdate and EVP_DecryptUpdate may overflow the output length argument in some cases where the input length is close to the maximum permissable length for an integer on the platform. In such cases the return value from the function call will be 1 (indicating success), but the output length value will be negative. This could cause applications to behave incorrectly or crash. OpenSSL versions 1.1.1i and below are affected by this issue. Users of these versions should upgrade to OpenSSL 1.1.1j. OpenSSL versions 1.0.2x and below are affected by this issue. However OpenSSL 1.0.2 is out of support and no longer receiving public updates. Premium support customers of OpenSSL 1.0.2 should upgrade to 1.0.2y. Other users should upgrade to 1.1.1j. Fixed in OpenSSL 1.1.1j (Affected 1.1.1-1.1.1i). Fixed in OpenSSL 1.0.2y (Affected 1.0.2-1.0.2x).\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-23840\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-23840\",\n              \"CVE Title\": \"openssl: integer overflow in CipherUpdate\",\n              \"PkgName\": \"libssl1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1j-r0\",\n              \"NvdCvssScoreV3\": \"7.5\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"5\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:L/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.943155-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.94558-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-3450",
+          "title": "Trivy found a vulnerability to CVE-2021-3450 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "The X509_V_FLAG_X509_STRICT flag enables additional security checks of the certificates present in a certificate chain. It is not set by default. Starting from OpenSSL version 1.1.1h a check to disallow certificates in the chain that have explicitly encoded elliptic curve parameters was added as an additional strict check. An error in the implementation of this check meant that the result of a previous check to confirm that certificates in the chain are valid CA certificates was overwritten. This effectively bypasses the check that non-CA certificates must not be able to issue other certificates. If a &amp;#34;purpose&amp;#34; has been configured then there is a subsequent opportunity for checks that the certificate is a valid CA. All of the named &amp;#34;purpose&amp;#34; values implemented in libcrypto perform this check. Therefore, where a purpose is set the certificate chain will still be rejected even when the strict flag has been used. A purpose is set by default in libssl client and server certificate verification routines, but it ..",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-3450",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-3450\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.943427-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.943438-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-3450 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"The X509_V_FLAG_X509_STRICT flag enables additional security checks of the certificates present in a certificate chain. It is not set by default. Starting from OpenSSL version 1.1.1h a check to disallow certificates in the chain that have explicitly encoded elliptic curve parameters was added as an additional strict check. An error in the implementation of this check meant that the result of a previous check to confirm that certificates in the chain are valid CA certificates was overwritten. This effectively bypasses the check that non-CA certificates must not be able to issue other certificates. If a &#34;purpose&#34; has been configured then there is a subsequent opportunity for checks that the certificate is a valid CA. All of the named &#34;purpose&#34; values implemented in libcrypto perform this check. Therefore, where a purpose is set the certificate chain will still be rejected even when the strict flag has been used. A purpose is set by default in libssl client and server certificate verification routines, but it ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-3450\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-3450\",\n              \"CVE Title\": \"openssl: CA certificate check bypass with X509_V_FLAG_X509_STRICT\",\n              \"PkgName\": \"libcrypto1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1k-r0\",\n              \"NvdCvssScoreV3\": \"7.4\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N\",\n              \"NvdCvssScoreV2\": \"5.8\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:P/I:P/A:N\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-3450\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.945826-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.945838-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-3450 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"The X509_V_FLAG_X509_STRICT flag enables additional security checks of the certificates present in a certificate chain. It is not set by default. Starting from OpenSSL version 1.1.1h a check to disallow certificates in the chain that have explicitly encoded elliptic curve parameters was added as an additional strict check. An error in the implementation of this check meant that the result of a previous check to confirm that certificates in the chain are valid CA certificates was overwritten. This effectively bypasses the check that non-CA certificates must not be able to issue other certificates. If a &#34;purpose&#34; has been configured then there is a subsequent opportunity for checks that the certificate is a valid CA. All of the named &#34;purpose&#34; values implemented in libcrypto perform this check. Therefore, where a purpose is set the certificate chain will still be rejected even when the strict flag has been used. A purpose is set by default in libssl client and server certificate verification routines, but it ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-3450\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-3450\",\n              \"CVE Title\": \"openssl: CA certificate check bypass with X509_V_FLAG_X509_STRICT\",\n              \"PkgName\": \"libssl1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1k-r0\",\n              \"NvdCvssScoreV3\": \"7.4\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N\",\n              \"NvdCvssScoreV2\": \"5.8\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:P/I:P/A:N\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.943438-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.945838-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-3712",
+          "title": "Trivy found a vulnerability to CVE-2021-3712 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.7,
+          "desc": "ASN.1 strings are represented internally within OpenSSL as an ASN1_STRING structure which contains a buffer holding the string data and a field holding the buffer length. This contrasts with normal C strings which are repesented as a buffer for the string data which is terminated with a NUL (0) byte. Although not a strict requirement, ASN.1 strings that are parsed using OpenSSL&amp;#39;s own &amp;#34;d2i&amp;#34; functions (and other similar parsing functions) as well as any string whose value has been set with the ASN1_STRING_set() function will additionally NUL terminate the byte array in the ASN1_STRING structure. However, it is possible for applications to directly construct valid ASN1_STRING structures which do not NUL terminate the byte array by directly setting the &amp;#34;data&amp;#34; and &amp;#34;length&amp;#34; fields in the ASN1_STRING array. This can also happen by using the ASN1_STRING_set0() function. Numerous OpenSSL functions that print ASN.1 data have been found to assume that the ASN1_STRING byte array will be NUL terminated, even though thi ..",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-3712",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-3712\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.943699-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.94371-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-3712 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"ASN.1 strings are represented internally within OpenSSL as an ASN1_STRING structure which contains a buffer holding the string data and a field holding the buffer length. This contrasts with normal C strings which are repesented as a buffer for the string data which is terminated with a NUL (0) byte. Although not a strict requirement, ASN.1 strings that are parsed using OpenSSL&#39;s own &#34;d2i&#34; functions (and other similar parsing functions) as well as any string whose value has been set with the ASN1_STRING_set() function will additionally NUL terminate the byte array in the ASN1_STRING structure. However, it is possible for applications to directly construct valid ASN1_STRING structures which do not NUL terminate the byte array by directly setting the &#34;data&#34; and &#34;length&#34; fields in the ASN1_STRING array. This can also happen by using the ASN1_STRING_set0() function. Numerous OpenSSL functions that print ASN.1 data have been found to assume that the ASN1_STRING byte array will be NUL terminated, even though thi ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-3712\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-3712\",\n              \"CVE Title\": \"openssl: Read buffer overruns processing ASN.1 strings\",\n              \"PkgName\": \"libcrypto1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1l-r0\",\n              \"NvdCvssScoreV3\": \"7.4\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"5.8\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:P/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-3712\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.9461-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.946111-05:00\",\n      \"Severity\": {\n        \"Label\": \"HIGH\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-3712 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"ASN.1 strings are represented internally within OpenSSL as an ASN1_STRING structure which contains a buffer holding the string data and a field holding the buffer length. This contrasts with normal C strings which are repesented as a buffer for the string data which is terminated with a NUL (0) byte. Although not a strict requirement, ASN.1 strings that are parsed using OpenSSL&#39;s own &#34;d2i&#34; functions (and other similar parsing functions) as well as any string whose value has been set with the ASN1_STRING_set() function will additionally NUL terminate the byte array in the ASN1_STRING structure. However, it is possible for applications to directly construct valid ASN1_STRING structures which do not NUL terminate the byte array by directly setting the &#34;data&#34; and &#34;length&#34; fields in the ASN1_STRING array. This can also happen by using the ASN1_STRING_set0() function. Numerous OpenSSL functions that print ASN.1 data have been found to assume that the ASN1_STRING byte array will be NUL terminated, even though thi ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-3712\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-3712\",\n              \"CVE Title\": \"openssl: Read buffer overruns processing ASN.1 strings\",\n              \"PkgName\": \"libssl1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1l-r0\",\n              \"NvdCvssScoreV3\": \"7.4\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"5.8\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:P/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.94371-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.946111-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1l-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2020-1971",
+          "title": "Trivy found a vulnerability to CVE-2020-1971 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.5,
+          "desc": "The X.509 GeneralName type is a generic type for representing different types of names. One of those name types is known as EDIPartyName. OpenSSL provides a function GENERAL_NAME_cmp which compares different instances of a GENERAL_NAME to see if they are equal or not. This function behaves incorrectly when both GENERAL_NAMEs contain an EDIPARTYNAME. A NULL pointer dereference and a crash may occur leading to a possible denial of service attack. OpenSSL itself uses the GENERAL_NAME_cmp function for two purposes: 1) Comparing CRL distribution point names between an available CRL and a CRL distribution point embedded in an X509 certificate 2) When verifying that a timestamp response token signer matches the timestamp authority name (exposed via the API functions TS_RESP_verify_response and TS_RESP_verify_token) If an attacker can control both items being compared then that attacker could trigger a crash. For example if the attacker can trick a client or server into checking a malicious certificate against a m ..",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2020-1971",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2020-1971\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.943965-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.943977-05:00\",\n      \"Severity\": {\n        \"Label\": \"MEDIUM\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2020-1971 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"The X.509 GeneralName type is a generic type for representing different types of names. One of those name types is known as EDIPartyName. OpenSSL provides a function GENERAL_NAME_cmp which compares different instances of a GENERAL_NAME to see if they are equal or not. This function behaves incorrectly when both GENERAL_NAMEs contain an EDIPARTYNAME. A NULL pointer dereference and a crash may occur leading to a possible denial of service attack. OpenSSL itself uses the GENERAL_NAME_cmp function for two purposes: 1) Comparing CRL distribution point names between an available CRL and a CRL distribution point embedded in an X509 certificate 2) When verifying that a timestamp response token signer matches the timestamp authority name (exposed via the API functions TS_RESP_verify_response and TS_RESP_verify_token) If an attacker can control both items being compared then that attacker could trigger a crash. For example if the attacker can trick a client or server into checking a malicious certificate against a m ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2020-1971\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2020-1971\",\n              \"CVE Title\": \"openssl: EDIPARTYNAME NULL pointer de-reference\",\n              \"PkgName\": \"libcrypto1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1i-r0\",\n              \"NvdCvssScoreV3\": \"5.9\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"4.3\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2020-1971\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.946379-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.94639-05:00\",\n      \"Severity\": {\n        \"Label\": \"MEDIUM\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2020-1971 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"The X.509 GeneralName type is a generic type for representing different types of names. One of those name types is known as EDIPartyName. OpenSSL provides a function GENERAL_NAME_cmp which compares different instances of a GENERAL_NAME to see if they are equal or not. This function behaves incorrectly when both GENERAL_NAMEs contain an EDIPARTYNAME. A NULL pointer dereference and a crash may occur leading to a possible denial of service attack. OpenSSL itself uses the GENERAL_NAME_cmp function for two purposes: 1) Comparing CRL distribution point names between an available CRL and a CRL distribution point embedded in an X509 certificate 2) When verifying that a timestamp response token signer matches the timestamp authority name (exposed via the API functions TS_RESP_verify_response and TS_RESP_verify_token) If an attacker can control both items being compared then that attacker could trigger a crash. For example if the attacker can trick a client or server into checking a malicious certificate against a m ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2020-1971\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2020-1971\",\n              \"CVE Title\": \"openssl: EDIPARTYNAME NULL pointer de-reference\",\n              \"PkgName\": \"libssl1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1i-r0\",\n              \"NvdCvssScoreV3\": \"5.9\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"4.3\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.943977-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1i-r0."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.94639-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1i-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-23841",
+          "title": "Trivy found a vulnerability to CVE-2021-23841 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.5,
+          "desc": "The OpenSSL public API function X509_issuer_and_serial_hash() attempts to create a unique hash value based on the issuer and serial number data contained within an X509 certificate. However it fails to correctly handle any errors that may occur while parsing the issuer field (which might occur if the issuer field is maliciously constructed). This may subsequently result in a NULL pointer deref and a crash leading to a potential denial of service attack. The function X509_issuer_and_serial_hash() is never directly called by OpenSSL itself so applications are only vulnerable if they use this function directly and they use it on certificates that may have been obtained from untrusted sources. OpenSSL versions 1.1.1i and below are affected by this issue. Users of these versions should upgrade to OpenSSL 1.1.1j. OpenSSL versions 1.0.2x and below are affected by this issue. However OpenSSL 1.0.2 is out of support and no longer receiving public updates. Premium support customers of OpenSSL 1.0.2 should upgrade to ..",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-23841",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-23841\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.944234-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.944245-05:00\",\n      \"Severity\": {\n        \"Label\": \"MEDIUM\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-23841 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"The OpenSSL public API function X509_issuer_and_serial_hash() attempts to create a unique hash value based on the issuer and serial number data contained within an X509 certificate. However it fails to correctly handle any errors that may occur while parsing the issuer field (which might occur if the issuer field is maliciously constructed). This may subsequently result in a NULL pointer deref and a crash leading to a potential denial of service attack. The function X509_issuer_and_serial_hash() is never directly called by OpenSSL itself so applications are only vulnerable if they use this function directly and they use it on certificates that may have been obtained from untrusted sources. OpenSSL versions 1.1.1i and below are affected by this issue. Users of these versions should upgrade to OpenSSL 1.1.1j. OpenSSL versions 1.0.2x and below are affected by this issue. However OpenSSL 1.0.2 is out of support and no longer receiving public updates. Premium support customers of OpenSSL 1.0.2 should upgrade to ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-23841\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-23841\",\n              \"CVE Title\": \"openssl: NULL pointer dereference in X509_issuer_and_serial_hash()\",\n              \"PkgName\": \"libcrypto1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1j-r0\",\n              \"NvdCvssScoreV3\": \"5.9\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"4.3\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-23841\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.946648-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.946659-05:00\",\n      \"Severity\": {\n        \"Label\": \"MEDIUM\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-23841 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"The OpenSSL public API function X509_issuer_and_serial_hash() attempts to create a unique hash value based on the issuer and serial number data contained within an X509 certificate. However it fails to correctly handle any errors that may occur while parsing the issuer field (which might occur if the issuer field is maliciously constructed). This may subsequently result in a NULL pointer deref and a crash leading to a potential denial of service attack. The function X509_issuer_and_serial_hash() is never directly called by OpenSSL itself so applications are only vulnerable if they use this function directly and they use it on certificates that may have been obtained from untrusted sources. OpenSSL versions 1.1.1i and below are affected by this issue. Users of these versions should upgrade to OpenSSL 1.1.1j. OpenSSL versions 1.0.2x and below are affected by this issue. However OpenSSL 1.0.2 is out of support and no longer receiving public updates. Premium support customers of OpenSSL 1.0.2 should upgrade to ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-23841\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-23841\",\n              \"CVE Title\": \"openssl: NULL pointer dereference in X509_issuer_and_serial_hash()\",\n              \"PkgName\": \"libssl1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1j-r0\",\n              \"NvdCvssScoreV3\": \"5.9\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"4.3\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.944245-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.946659-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-3449",
+          "title": "Trivy found a vulnerability to CVE-2021-3449 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.5,
+          "desc": "An OpenSSL TLS server may crash if sent a maliciously crafted renegotiation ClientHello message from a client. If a TLSv1.2 renegotiation ClientHello omits the signature_algorithms extension (where it was present in the initial ClientHello), but includes a signature_algorithms_cert extension then a NULL pointer dereference will result, leading to a crash and a denial of service attack. A server is only vulnerable if it has TLSv1.2 and renegotiation enabled (which is the default configuration). OpenSSL TLS clients are not impacted by this issue. All OpenSSL 1.1.1 versions are affected by this issue. Users of these versions should upgrade to OpenSSL 1.1.1k. OpenSSL 1.0.2 is not impacted by this issue. Fixed in OpenSSL 1.1.1k (Affected 1.1.1-1.1.1j).",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-3449",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-3449\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.944512-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.944524-05:00\",\n      \"Severity\": {\n        \"Label\": \"MEDIUM\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-3449 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"An OpenSSL TLS server may crash if sent a maliciously crafted renegotiation ClientHello message from a client. If a TLSv1.2 renegotiation ClientHello omits the signature_algorithms extension (where it was present in the initial ClientHello), but includes a signature_algorithms_cert extension then a NULL pointer dereference will result, leading to a crash and a denial of service attack. A server is only vulnerable if it has TLSv1.2 and renegotiation enabled (which is the default configuration). OpenSSL TLS clients are not impacted by this issue. All OpenSSL 1.1.1 versions are affected by this issue. Users of these versions should upgrade to OpenSSL 1.1.1k. OpenSSL 1.0.2 is not impacted by this issue. Fixed in OpenSSL 1.1.1k (Affected 1.1.1-1.1.1j).\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-3449\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-3449\",\n              \"CVE Title\": \"openssl: NULL pointer dereference in signature_algorithms processing\",\n              \"PkgName\": \"libcrypto1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1k-r0\",\n              \"NvdCvssScoreV3\": \"5.9\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"4.3\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-3449\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.946892-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.946902-05:00\",\n      \"Severity\": {\n        \"Label\": \"MEDIUM\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-3449 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"An OpenSSL TLS server may crash if sent a maliciously crafted renegotiation ClientHello message from a client. If a TLSv1.2 renegotiation ClientHello omits the signature_algorithms extension (where it was present in the initial ClientHello), but includes a signature_algorithms_cert extension then a NULL pointer dereference will result, leading to a crash and a denial of service attack. A server is only vulnerable if it has TLSv1.2 and renegotiation enabled (which is the default configuration). OpenSSL TLS clients are not impacted by this issue. All OpenSSL 1.1.1 versions are affected by this issue. Users of these versions should upgrade to OpenSSL 1.1.1k. OpenSSL 1.0.2 is not impacted by this issue. Fixed in OpenSSL 1.1.1k (Affected 1.1.1-1.1.1j).\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-3449\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-3449\",\n              \"CVE Title\": \"openssl: NULL pointer dereference in signature_algorithms processing\",\n              \"PkgName\": \"libssl1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1k-r0\",\n              \"NvdCvssScoreV3\": \"5.9\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"4.3\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.944524-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.946902-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1k-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2021-23839",
+          "title": "Trivy found a vulnerability to CVE-2021-23839 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.3,
+          "desc": "OpenSSL 1.0.2 supports SSLv2. If a client attempts to negotiate SSLv2 with a server that is configured to support both SSLv2 and more recent SSL and TLS versions then a check is made for a version rollback attack when unpadding an RSA signature. Clients that support SSL or TLS versions greater than SSLv2 are supposed to use a special form of padding. A server that supports greater than SSLv2 is supposed to reject connection attempts from a client where this special form of padding is present, because this indicates that a version rollback has occurred (i.e. both client and server support greater than SSLv2, and yet this is the version that is being requested). The implementation of this padding check inverted the logic so that the connection attempt is accepted if the padding is present, and rejected if it is absent. This means that such as server will accept a connection if a version rollback attack has occurred. Further the server will erroneously reject a connection if a normal SSLv2 connection attempt  ..",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2021-23839",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-23839\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.944771-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.944783-05:00\",\n      \"Severity\": {\n        \"Label\": \"LOW\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-23839 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"OpenSSL 1.0.2 supports SSLv2. If a client attempts to negotiate SSLv2 with a server that is configured to support both SSLv2 and more recent SSL and TLS versions then a check is made for a version rollback attack when unpadding an RSA signature. Clients that support SSL or TLS versions greater than SSLv2 are supposed to use a special form of padding. A server that supports greater than SSLv2 is supposed to reject connection attempts from a client where this special form of padding is present, because this indicates that a version rollback has occurred (i.e. both client and server support greater than SSLv2, and yet this is the version that is being requested). The implementation of this padding check inverted the logic so that the connection attempt is accepted if the padding is present, and rejected if it is absent. This means that such as server will accept a connection if a version rollback attack has occurred. Further the server will erroneously reject a connection if a normal SSLv2 connection attempt  ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-23839\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-23839\",\n              \"CVE Title\": \"openssl: incorrect SSLv2 rollback protection\",\n              \"PkgName\": \"libcrypto1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1j-r0\",\n              \"NvdCvssScoreV3\": \"3.7\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N\",\n              \"NvdCvssScoreV2\": \"4.3\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:N/I:P/A:N\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2021-23839\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.947138-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.947149-05:00\",\n      \"Severity\": {\n        \"Label\": \"LOW\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2021-23839 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"OpenSSL 1.0.2 supports SSLv2. If a client attempts to negotiate SSLv2 with a server that is configured to support both SSLv2 and more recent SSL and TLS versions then a check is made for a version rollback attack when unpadding an RSA signature. Clients that support SSL or TLS versions greater than SSLv2 are supposed to use a special form of padding. A server that supports greater than SSLv2 is supposed to reject connection attempts from a client where this special form of padding is present, because this indicates that a version rollback has occurred (i.e. both client and server support greater than SSLv2, and yet this is the version that is being requested). The implementation of this padding check inverted the logic so that the connection attempt is accepted if the padding is present, and rejected if it is absent. This means that such as server will accept a connection if a version rollback attack has occurred. Further the server will erroneously reject a connection if a normal SSLv2 connection attempt  ..\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2021-23839\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2021-23839\",\n              \"CVE Title\": \"openssl: incorrect SSLv2 rollback protection\",\n              \"PkgName\": \"libssl1.1\",\n              \"Installed Package\": \"1.1.1d-r3\",\n              \"Patched Package\": \"1.1.1j-r0\",\n              \"NvdCvssScoreV3\": \"3.7\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N\",\n              \"NvdCvssScoreV2\": \"4.3\",\n              \"NvdCvssVectorV2\": \"AV:N/AC:M/Au:N/C:N/I:P/A:N\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.944783-05:00",
+              "message": "For package libcrypto1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.947149-05:00",
+              "message": "For package libssl1.1, the current version that is installed is 1.1.1d-r3.  The package has been patched since version(s): 1.1.1j-r0."
+            }
+          ]
+        },
+        {
+          "id": "Trivy/CVE-2020-28928",
+          "title": "Trivy found a vulnerability to CVE-2020-28928 in container golang:1.12-alpine (alpine 3.11.3)",
+          "tags": {
+            "cci": [
+              "CCI-002605",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "impact": 0.5,
+          "desc": "In musl libc through 1.2.1, wcsnrtombs mishandles particular combinations of destination buffer size and source character limit, as demonstrated by an invalid write access (buffer overflow).",
+          "descriptions": [
+            {
+              "data": "More information on this vulnerability is provided in the hyperlink\nhttps://avd.aquasec.com/nvd/cve-2020-28928",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2020-28928\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.947382-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.947393-05:00\",\n      \"Severity\": {\n        \"Label\": \"MEDIUM\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2020-28928 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"In musl libc through 1.2.1, wcsnrtombs mishandles particular combinations of destination buffer size and source character limit, as demonstrated by an invalid write access (buffer overflow).\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2020-28928\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2020-28928\",\n              \"CVE Title\": \"\",\n              \"PkgName\": \"musl\",\n              \"Installed Package\": \"1.1.24-r0\",\n              \"Patched Package\": \"1.1.24-r3\",\n              \"NvdCvssScoreV3\": \"5.5\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"2.1\",\n              \"NvdCvssVectorV2\": \"AV:L/AC:L/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    },\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"golang:1.12-alpine (alpine 3.11.3)/CVE-2020-28928\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aquasecurity/aquasecurity\",\n      \"GeneratorId\": \"Trivy\",\n      \"AwsAccountId\": \"123456789012\",\n      \"Types\": [\n        \"Software and Configuration Checks/Vulnerabilities/CVE\"\n      ],\n      \"CreatedAt\": \"2022-02-07T23:51:26.947623-05:00\",\n      \"UpdatedAt\": \"2022-02-07T23:51:26.947634-05:00\",\n      \"Severity\": {\n        \"Label\": \"MEDIUM\"\n      },\n      \"Title\": \"Trivy found a vulnerability to CVE-2020-28928 in container golang:1.12-alpine (alpine 3.11.3)\",\n      \"Description\": \"In musl libc through 1.2.1, wcsnrtombs mishandles particular combinations of destination buffer size and source character limit, as demonstrated by an invalid write access (buffer overflow).\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"More information on this vulnerability is provided in the hyperlink\",\n          \"Url\": \"https://avd.aquasec.com/nvd/cve-2020-28928\"\n        }\n      },\n      \"ProductFields\": {\n        \"Product Name\": \"Trivy\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"Container\",\n          \"Id\": \"golang:1.12-alpine (alpine 3.11.3)\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"Container\": {\n              \"ImageName\": \"golang:1.12-alpine (alpine 3.11.3)\"\n            },\n            \"Other\": {\n              \"CVE ID\": \"CVE-2020-28928\",\n              \"CVE Title\": \"\",\n              \"PkgName\": \"musl-utils\",\n              \"Installed Package\": \"1.1.24-r0\",\n              \"Patched Package\": \"1.1.24-r3\",\n              \"NvdCvssScoreV3\": \"5.5\",\n              \"NvdCvssVectorV3\": \"CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H\",\n              \"NvdCvssScoreV2\": \"2.1\",\n              \"NvdCvssVectorV2\": \"AV:L/AC:L/Au:N/C:N/I:N/A:P\"\n            }\n          }\n        }\n      ],\n      \"RecordState\": \"ACTIVE\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.947393-05:00",
+              "message": "For package musl, the current version that is installed is 1.1.24-r0.  The package has been patched since version(s): 1.1.24-r3."
+            },
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: Container, Id: golang:1.12-alpine (alpine 3.11.3), Partition: aws, Region: us-east-1]",
+              "start_time": "2022-02-07T23:51:26.947634-05:00",
+              "message": "For package musl-utils, the current version that is installed is 1.1.24-r0.  The package has been patched since version(s): 1.1.24-r3."
+            }
+          ]
+        }
+      ],
+      "sha256": "c6ec1716a630a64135af648ebc6f955aea7c0b5c5fc576b8e3a271105e1f2a65"
+    }
+  ]
+}

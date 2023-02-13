@@ -9,9 +9,14 @@
     "sourceMap": true,
     "target": "ES2019",
     "esModuleInterop": true,
-    "noImplicitAny": true
+    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "useUnknownInCatchVariables": false
   },
-  "exclude": [
-    "node_modules",
+  "include": [
+    "types/**/*.d.ts"
   ],
+  "exclude": [
+    "**/node_modules"
+  ]
 }

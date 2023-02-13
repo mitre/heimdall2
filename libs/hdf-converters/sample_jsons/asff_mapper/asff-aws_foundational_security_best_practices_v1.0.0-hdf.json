@@ -1,0 +1,101 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.29",
+    "target_id": "AWS Foundational Security Best Practices v1.0.0"
+  },
+  "version": "2.6.29",
+  "statistics": {
+    "duration": null
+  },
+  "profiles": [
+    {
+      "name": "AWS Security Finding Format",
+      "version": "",
+      "title": "ASFF Findings",
+      "maintainer": null,
+      "summary": "",
+      "license": null,
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "Config.1",
+          "title": "AWS Foundational Security Best Practices v1.0.0: Config.1 AWS Config should be enabled",
+          "tags": {
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
+          },
+          "impact": 0.5,
+          "desc": "This AWS control checks whether the Config service is enabled in the account for the local region and is recording all resources.",
+          "descriptions": [
+            {
+              "data": "For directions on how to fix this issue, please consult the AWS Security Hub Foundational Security Best Practices documentation.\nhttps://docs.aws.amazon.com/console/securityhub/Config.1/remediation",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"arn:aws:securityhub:us-east-1:123456789123:subscription/aws-foundational-security-best-practices/v/1.0.0/Config.1/finding/9ffec6a3-3ce8-4011-bf90-17dbe94bf1d3\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aws/securityhub\",\n      \"ProductName\": \"Security Hub\",\n      \"CompanyName\": \"AWS\",\n      \"Region\": \"us-east-1\",\n      \"GeneratorId\": \"aws-foundational-security-best-practices/v/1.0.0/Config.1\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"Software and Configuration Checks/Industry and Regulatory Standards/AWS-Foundational-Security-Best-Practices\"\n      ],\n      \"FirstObservedAt\": \"2021-07-23T23:40:39.455Z\",\n      \"LastObservedAt\": \"2021-08-09T11:21:11.282Z\",\n      \"CreatedAt\": \"2021-07-23T23:40:39.455Z\",\n      \"UpdatedAt\": \"2021-08-09T11:21:09.408Z\",\n      \"Severity\": {\n        \"Product\": 40,\n        \"Label\": \"MEDIUM\",\n        \"Normalized\": 40,\n        \"Original\": \"MEDIUM\"\n      },\n      \"Title\": \"Config.1 AWS Config should be enabled\",\n      \"Description\": \"This AWS control checks whether the Config service is enabled in the account for the local region and is recording all resources.\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"For directions on how to fix this issue, please consult the AWS Security Hub Foundational Security Best Practices documentation.\",\n          \"Url\": \"https://docs.aws.amazon.com/console/securityhub/Config.1/remediation\"\n        }\n      },\n      \"ProductFields\": {\n        \"StandardsArn\": \"arn:aws:securityhub:::standards/aws-foundational-security-best-practices/v/1.0.0\",\n        \"StandardsSubscriptionArn\": \"arn:aws:securityhub:us-east-1:123456789123:subscription/aws-foundational-security-best-practices/v/1.0.0\",\n        \"ControlId\": \"Config.1\",\n        \"RecommendationUrl\": \"https://docs.aws.amazon.com/console/securityhub/Config.1/remediation\",\n        \"StandardsControlArn\": \"arn:aws:securityhub:us-east-1:123456789123:control/aws-foundational-security-best-practices/v/1.0.0/Config.1\",\n        \"aws/securityhub/ProductName\": \"Security Hub\",\n        \"aws/securityhub/CompanyName\": \"AWS\",\n        \"Resources:0/Id\": \"arn:aws:iam::123456789123:root\",\n        \"aws/securityhub/FindingId\": \"arn:aws:securityhub:us-east-1::product/aws/securityhub/arn:aws:securityhub:us-east-1:123456789123:subscription/aws-foundational-security-best-practices/v/1.0.0/Config.1/finding/9ffec6a3-3ce8-4011-bf90-17dbe94bf1d3\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"AwsAccount\",\n          \"Id\": \"AWS::::Account:123456789123\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\"\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"FAILED\"\n      },\n      \"WorkflowState\": \"NEW\",\n      \"Workflow\": {\n        \"Status\": \"NEW\"\n      },\n      \"RecordState\": \"ACTIVE\",\n      \"FindingProviderFields\": {\n        \"Severity\": {\n          \"Label\": \"MEDIUM\",\n          \"Original\": \"MEDIUM\"\n        },\n        \"Types\": [\n          \"Software and Configuration Checks/Industry and Regulatory Standards/AWS-Foundational-Security-Best-Practices\"\n        ]\n      }\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Resources: [Type: AwsAccount, Id: AWS::::Account:123456789123, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-08-09T11:21:11.282Z"
+            }
+          ]
+        },
+        {
+          "id": "S3.2",
+          "title": "AWS Foundational Security Best Practices v1.0.0: S3.2 S3 buckets should prohibit public read access",
+          "tags": {
+            "cci": [
+              "CCI-000213",
+              "CCI-001368",
+              "CCI-001414",
+              "CCI-000225"
+            ],
+            "nist": [
+              "AC-3",
+              "AC-4",
+              "AC-6",
+              "AC-21(b)",
+              "SC-7",
+              "SC-7(3)"
+            ]
+          },
+          "impact": 0.5,
+          "desc": "This AWS control checks whether your S3 buckets allow public read access by evaluating the Block Public Access settings, the bucket policy, and the bucket access control list (ACL).",
+          "descriptions": [
+            {
+              "data": "For directions on how to fix this issue, please consult the AWS Security Hub Foundational Security Best Practices documentation.\nhttps://docs.aws.amazon.com/console/securityhub/S3.2/remediation",
+              "label": "fix"
+            }
+          ],
+          "refs": [],
+          "source_location": {},
+          "code": "{\n  \"Findings\": [\n    {\n      \"SchemaVersion\": \"2018-10-08\",\n      \"Id\": \"arn:aws:securityhub:us-east-1:123456789123:subscription/aws-foundational-security-best-practices/v/1.0.0/S3.2/finding/5fd36ec6-3f98-4d5b-a9cb-5f82e389a8e9\",\n      \"ProductArn\": \"arn:aws:securityhub:us-east-1::product/aws/securityhub\",\n      \"GeneratorId\": \"aws-foundational-security-best-practices/v/1.0.0/S3.2\",\n      \"AwsAccountId\": \"123456789123\",\n      \"Types\": [\n        \"Effects/Data Exposure/AWS-Foundational-Security-Best-Practices\"\n      ],\n      \"FirstObservedAt\": \"2021-04-28T14:57:54.547Z\",\n      \"LastObservedAt\": \"2021-07-02T16:02:48.476Z\",\n      \"CreatedAt\": \"2021-04-28T14:57:54.547Z\",\n      \"UpdatedAt\": \"2021-07-02T16:02:46.396Z\",\n      \"Severity\": {\n        \"Product\": 0,\n        \"Label\": \"INFORMATIONAL\",\n        \"Normalized\": 0,\n        \"Original\": \"INFORMATIONAL\"\n      },\n      \"Title\": \"S3.2 S3 buckets should prohibit public read access\",\n      \"Description\": \"This AWS control checks whether your S3 buckets allow public read access by evaluating the Block Public Access settings, the bucket policy, and the bucket access control list (ACL).\",\n      \"Remediation\": {\n        \"Recommendation\": {\n          \"Text\": \"For directions on how to fix this issue, please consult the AWS Security Hub Foundational Security Best Practices documentation.\",\n          \"Url\": \"https://docs.aws.amazon.com/console/securityhub/S3.2/remediation\"\n        }\n      },\n      \"ProductFields\": {\n        \"StandardsArn\": \"arn:aws:securityhub:::standards/aws-foundational-security-best-practices/v/1.0.0\",\n        \"StandardsSubscriptionArn\": \"arn:aws:securityhub:us-east-1:123456789123:subscription/aws-foundational-security-best-practices/v/1.0.0\",\n        \"ControlId\": \"S3.2\",\n        \"RecommendationUrl\": \"https://docs.aws.amazon.com/console/securityhub/S3.2/remediation\",\n        \"RelatedAWSResources:0/name\": \"securityhub-s3-bucket-public-read-prohibited-491148b1\",\n        \"RelatedAWSResources:0/type\": \"AWS::Config::ConfigRule\",\n        \"StandardsControlArn\": \"arn:aws:securityhub:us-east-1:123456789123:control/aws-foundational-security-best-practices/v/1.0.0/S3.2\",\n        \"aws/securityhub/ProductName\": \"Security Hub\",\n        \"aws/securityhub/CompanyName\": \"AWS\",\n        \"Resources:0/Id\": \"arn:aws:s3:::example-bucket-123456789123-us-east-1\",\n        \"aws/securityhub/FindingId\": \"arn:aws:securityhub:us-east-1::product/aws/securityhub/arn:aws:securityhub:us-east-1:123456789123:subscription/aws-foundational-security-best-practices/v/1.0.0/S3.2/finding/5fd36ec6-3f98-4d5b-a9cb-5f82e389a8e9\"\n      },\n      \"Resources\": [\n        {\n          \"Type\": \"AwsS3Bucket\",\n          \"Id\": \"arn:aws:s3:::example-bucket-123456789123-us-east-1\",\n          \"Partition\": \"aws\",\n          \"Region\": \"us-east-1\",\n          \"Details\": {\n            \"AwsS3Bucket\": {\n              \"OwnerId\": \"abe813ee284239446607ac88bf580a6f7348abec9053fd187e6234b58102e826\",\n              \"CreatedAt\": \"2021-03-12T20:14:09.000Z\"\n            }\n          }\n        }\n      ],\n      \"Compliance\": {\n        \"Status\": \"PASSED\"\n      },\n      \"WorkflowState\": \"NEW\",\n      \"Workflow\": {\n        \"Status\": \"RESOLVED\"\n      },\n      \"RecordState\": \"ACTIVE\",\n      \"FindingProviderFields\": {\n        \"Severity\": {\n          \"Label\": \"INFORMATIONAL\",\n          \"Original\": \"INFORMATIONAL\"\n        },\n        \"Types\": [\n          \"Effects/Data Exposure/AWS-Foundational-Security-Best-Practices\"\n        ]\n      }\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "Resources: [Type: AwsS3Bucket, Id: arn:aws:s3:::example-bucket-123456789123-us-east-1, Partition: aws, Region: us-east-1]",
+              "start_time": "2021-07-02T16:02:48.476Z"
+            }
+          ]
+        }
+      ],
+      "sha256": "7a54e62e4326166cd6eba7a73a9b887cec5d0eef872295f205ba7be251ec6d68"
+    }
+  ]
+}

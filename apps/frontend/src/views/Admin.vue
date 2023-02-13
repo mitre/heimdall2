@@ -1,5 +1,9 @@
 <template>
-  <Base title="Heimdall - Admin Panel">
+  <Base
+    :show-back-button="true"
+    :minimal-topbar="true"
+    title="Heimdall - Admin Panel"
+  >
     <template #main-content>
       <v-tabs v-model="activeTab" fixed-tabs dark>
         <v-tab key="users"> User Management </v-tab>
@@ -26,10 +30,10 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
+import Statistics from '@/components/global/admin/Statistics.vue';
+import UserManagement from '@/components/global/admin/UserManagement.vue';
 import Base from '@/views/Base.vue';
-import UserManagement from '@/components/global/admin/UserManagement.vue'
-import Statistics from '@/components/global/admin/Statistics.vue'
+import Vue from 'vue';
 import {Component} from 'vue-property-decorator';
 
 @Component({

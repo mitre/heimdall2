@@ -51,38 +51,53 @@
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <v-col class="text-right">
-          <v-btn
-            data-cy="closeAndDiscardChanges"
-            color="primary"
-            text
-            @click="dialog = false"
-            >Cancel</v-btn
-          >
-          <v-btn
-            data-cy="closeAndSaveChanges"
-            color="primary"
-            text
-            @click="save"
-            >Save</v-btn
-          >
-        </v-col>
+        <GroupAPIKeysModal v-if="!create" :group="group">
+          <template #clickable="{on, attrs}">
+            <v-btn
+              data-cy="groupAPIKeys"
+              color="primary"
+              text
+              v-bind="attrs"
+              v-on="on"
+              >Manage API Keys</v-btn
+            >
+          </template>
+        </GroupAPIKeysModal>
+        <v-spacer />
+        <v-btn
+          data-cy="closeAndDiscardChanges"
+          color="primary"
+          text
+          @click="dialog = false"
+          >Cancel</v-btn
+        >
+        <v-btn data-cy="closeAndSaveChanges" color="primary" text @click="save"
+          >Save</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script lang="ts">
+import ActionDialog from '@/components/generic/ActionDialog.vue';
+import GroupAPIKeysModal from '@/components/global/groups/GroupAPIKeysModal.vue';
+import Users from '@/components/global/groups/Users.vue';
+import {GroupsModule} from '@/store/groups';
+import {SnackbarModule} from '@/store/snackbar';
+import {
+  IAddUserToGroup,
+  ICreateGroup,
+  IGroup,
+  IRemoveUserFromGroup,
+  ISlimUser,
+  IUpdateGroupUser
+} from '@heimdall/interfaces';
+import axios, {AxiosResponse} from 'axios';
+import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {SnackbarModule} from '@/store/snackbar';
-import {IAddUserToGroup, ICreateGroup, IGroup, IRemoveUserFromGroup, ISlimUser, IUpdateGroupUser} from '@heimdall/interfaces';
 import {Prop} from 'vue-property-decorator';
-import axios, {AxiosResponse} from 'axios';
-import {GroupsModule} from '@/store/groups';
-import Users from '@/components/global/groups/Users.vue';
-import DeleteDialog from '@/components/generic/DeleteDialog.vue';
-import _ from 'lodash';
 
 function newGroup(): IGroup {
   return {
@@ -92,13 +107,13 @@ function newGroup(): IGroup {
     createdAt: new Date(),
     updatedAt: new Date(),
     users: []
-  }
+  };
 }
 
 @Component({
-  validations: {},
   components: {
-    DeleteDialog,
+    ActionDialog,
+    GroupAPIKeysModal,
     Users
   }
 })
@@ -107,81 +122,100 @@ export default class GroupModal extends Vue {
     type: Object,
     required: false,
     default: () => {
-      return newGroup()
+      return newGroup();
     }
-    }) readonly group!: IGroup;
+  })
+  readonly group!: IGroup;
 
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
   @Prop({type: Boolean, default: false}) readonly create!: boolean;
   dialog = false;
   changePassword = false;
   groupInfo: IGroup = _.cloneDeep(this.group);
+
   currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';
   get title(): string {
-    if(this.create) {
-      return 'Create a New Group'
-    }
-    else {
-      return 'Update Group'
+    if (this.create) {
+      return 'Create a New Group';
+    } else {
+      return 'Update Group';
     }
   }
 
   async save(): Promise<void> {
     const groupInfo: ICreateGroup = {
-      ...this.groupInfo,
+      ...this.groupInfo
     };
-    const response = this.create ? this.createGroup(groupInfo) : this.updateExistingGroup(groupInfo);
+
+    const response = this.create
+      ? this.createGroup(groupInfo)
+      : this.updateExistingGroup(groupInfo);
     response.then(({data}) => {
       this.syncUsersWithGroup(data).then(() => {
         GroupsModule.GetGroupById(data.id);
         SnackbarModule.notify(`Group Successfully Saved`);
         // This clears when creating a new Group.
         // Calling clear on edit makes it impossible to edit the same group twice.
-        if(this.create) {
+        if (this.create) {
           this.groupInfo = newGroup();
         }
         this.dialog = false;
       });
-    })
+    });
   }
 
   async createGroup(createGroup: ICreateGroup): Promise<AxiosResponse<IGroup>> {
-    return axios.post<IGroup>('/groups', createGroup)
+    return axios.post<IGroup>('/groups', createGroup);
   }
 
-  async updateExistingGroup(groupToUpdate: ICreateGroup): Promise<AxiosResponse<IGroup>> {
+  async updateExistingGroup(
+    groupToUpdate: ICreateGroup
+  ): Promise<AxiosResponse<IGroup>> {
     return axios.put<IGroup>(`/groups/${this.groupInfo.id}`, groupToUpdate);
   }
 
   async syncUsersWithGroup(group: IGroup) {
     const originalIds = this.group.users.map((user) => user.id);
     const changedIds = this.groupInfo.users.map((user) => user.id);
-    const toAdd: ISlimUser[] = this.groupInfo.users.filter(user => !originalIds.includes(user.id));
-    const toRemove: ISlimUser[] = this.group.users.filter(user => !changedIds.includes(user.id));
-    const toUpdate = this.groupInfo.users.filter((newUser) => this.group.users.some((user) =>(user.id === newUser.id && user.groupRole !== newUser.groupRole)))
+    const toAdd: ISlimUser[] = this.groupInfo.users.filter(
+      (user) => !originalIds.includes(user.id)
+    );
+    const toRemove: ISlimUser[] = this.group.users.filter(
+      (user) => !changedIds.includes(user.id)
+    );
+    const toUpdate = this.groupInfo.users.filter((newUser) =>
+      this.group.users.some(
+        (user) => user.id === newUser.id && user.groupRole !== newUser.groupRole
+      )
+    );
     const addedUserPromises = toAdd.map((user) => {
       const addUserDto: IAddUserToGroup = {
         userId: user.id,
         groupRole: 'member'
-      }
+      };
       return axios.post(`/groups/${group.id}/user`, addUserDto);
     });
     const removedUserPromises = toRemove.map((user) => {
       const removeUserDto: IRemoveUserFromGroup = {
         userId: user.id
-      }
+      };
       return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
     });
     const updateUserPromises = toUpdate.map((user) => {
       const updateGroupUserRole: IUpdateGroupUser = {
         userId: user.id,
         groupRole: user.groupRole || 'member'
-      }
-      return axios.put(`/groups/${group.id}/updateGroupUserRole`, updateGroupUserRole);
-    })
-    return Promise.all(addedUserPromises.concat(removedUserPromises, updateUserPromises))
+      };
+      return axios.put(
+        `/groups/${group.id}/updateGroupUserRole`,
+        updateGroupUserRole
+      );
+    });
+    return Promise.all(
+      addedUserPromises.concat(removedUserPromises, updateUserPromises)
+    );
   }
 }
 </script>

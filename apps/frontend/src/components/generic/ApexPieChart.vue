@@ -10,12 +10,12 @@
 </template>
 
 <script lang="ts">
-import Vue from 'vue';
-import Component from 'vue-class-component';
-import VueApexCharts from 'vue-apexcharts';
-import {ApexOptions} from 'apexcharts';
-import {Prop} from 'vue-property-decorator';
 import {ColorHackModule} from '@/store/color_hack';
+import {ApexOptions} from 'apexcharts';
+import Vue from 'vue';
+import VueApexCharts from 'vue-apexcharts';
+import Component from 'vue-class-component';
+import {Prop} from 'vue-property-decorator';
 
 // Represents a slice of the pie.
 export interface Category<C extends string> {

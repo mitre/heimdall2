@@ -1,10 +1,6 @@
 {
-  "packages": [
-    "apps/*",
-    "libs/*",
-    "test"
-  ],
-  "version": "2.4.8",
+  "packages": ["apps/*", "libs/*", "test"],
+  "version": "2.6.38",
   "npmClient": "yarn",
   "useWorkspaces": true
 }

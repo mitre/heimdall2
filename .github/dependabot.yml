@@ -1,5 +1,12 @@
 version: 2
 updates:
+- package-ecosystem: bundler
+  directory: "/libs/inspecjs"
+  schedule:
+    interval: daily
+    time: "20:00"
+    timezone: America/New_York
+  open-pull-requests-limit: 99
 - package-ecosystem: npm
   directory: "/"
   schedule:
@@ -54,6 +61,10 @@ updates:
   - dependency-name: cypress
     versions:
     - 7.x
+    - 8.x
+  - dependency-name: xlsx
+    versions:
+    - 0.18.x
   - dependency-name: sass-loader
     versions:
     - 11.0.0

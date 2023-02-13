@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -24,12 +25,12 @@ import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {PasswordChangePipe} from '../pipes/password-change.pipe';
 import {PasswordComplexityPipe} from '../pipes/password-complexity.pipe';
 import {PasswordsMatchPipe} from '../pipes/passwords-match.pipe';
-import {User} from '../users/user.model';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
 import {SlimUserDto} from './dto/slim-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {UserDto} from './dto/user.dto';
+import {User} from './user.model';
 import {UsersService} from './users.service';
 
 @UseInterceptors(LoggingInterceptor)
@@ -87,6 +88,12 @@ export class UsersController {
     const abac = request.user
       ? this.authz.abac.createForUser(request.user)
       : this.authz.abac.createForAnonymous();
+    // There should be no need to create users if user login is disabled
+    if (!this.configService.isLocalLoginAllowed()) {
+      throw new ForbiddenException(
+        'Local user login is disabled. Please disable LOCAL_LOGIN_DISABLED to use this feature.'
+      );
+    }
     // If registration is not allowed then validate the current user has the permission to bypass this check
     if (!this.configService.isRegistrationAllowed()) {
       ForbiddenError.from(abac)
@@ -135,9 +142,15 @@ export class UsersController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('/logout')
+  async logOut(@Request() request: {user: User}): Promise<void> {
+    return this.usersService.updateUserSecret(request.user);
+  }
+
   @UseGuards(TestGuard)
-  @Post('clear')
+  @Post('/clear')
   async clear(): Promise<void> {
-    User.destroy({where: {}});
+    User.truncate({cascade: true});
   }
 }

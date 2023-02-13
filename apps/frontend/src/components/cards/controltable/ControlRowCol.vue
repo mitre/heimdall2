@@ -44,10 +44,10 @@
 </template>
 
 <script lang="ts">
+import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
+import {HDFControlSegment} from 'inspecjs';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {HDFControlSegment} from 'inspecjs';
-import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 
 @Component({})
 export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
@@ -60,7 +60,7 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
   }
 
   get resultMessage(): string | undefined {
-    return this.result.message || this.result.skip_message
+    return this.result.message || this.result.skip_message;
   }
 }
 </script>

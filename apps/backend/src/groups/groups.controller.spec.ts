@@ -12,6 +12,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ_2
 } from '../../test/constants/users-test.constant';
 import {AuthzService} from '../authz/authz.service';
+import {ConfigModule} from '../config/config.module';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -40,6 +41,7 @@ describe('GroupsController', () => {
     module = await Test.createTestingModule({
       controllers: [GroupsController],
       imports: [
+        ConfigModule,
         DatabaseModule,
         SequelizeModule.forFeature([
           Group,

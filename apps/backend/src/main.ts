@@ -14,6 +14,7 @@ import passport = require('passport');
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
+  app.enableShutdownHooks();
   app.use(helmet());
   app.use(
     helmet.contentSecurityPolicy({
@@ -45,25 +46,31 @@ async function bootstrap() {
     })
   );
   app.use(json({limit: '50mb'}));
-  app.use(
-    session({
-      secret: configService.get('JWT_SECRET') || generateDefault(),
-      store: new (postgresSessionStore(session))({
-        conObject: {
-          ...configService.getDbConfig(),
-          /* The pg conObject takes mostly the same parameters as Sequelize, except the ssl options,
-          those are equal to the dialectOptions passed to sequelize */
-          ssl: configService.getSSLConfig()
-        },
-        tableName: 'session'
-      }),
-      cookie: {maxAge: 30 * 24 * 60 * 60 * 1000},
-      saveUninitialized: true,
-      resave: false
-    })
-  );
   app.use(passport.initialize());
-  app.use(passport.session());
+  // Sessions are only used for oauth callbacks
+  if (configService.enabledOauthStrategies().length) {
+    app.use(
+      session({
+        secret: generateDefault(),
+        store: new (postgresSessionStore(session))({
+          conObject: {
+            ...configService.getDbConfig(),
+            /* The pg conObject takes mostly the same parameters as Sequelize, except the ssl options,
+          those are equal to the dialectOptions passed to sequelize */
+            ssl: configService.getSSLConfig()
+          },
+          tableName: 'session'
+        }),
+        proxy: configService.isInProductionMode() ? true : undefined,
+        cookie: {
+          maxAge: 60 * 60,
+          secure: configService.isInProductionMode()
+        }, // 1 hour
+        saveUninitialized: true,
+        resave: false
+      })
+    );
+  }
   app.use(
     '/authn/login',
     rateLimit({

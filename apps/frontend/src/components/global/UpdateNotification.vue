@@ -29,7 +29,10 @@ import Component, {mixins} from 'vue-class-component';
 @Component({})
 export default class UpdateNotification extends mixins(AppInfoMixin) {
   get updateAvailable(): boolean {
-    return (!ServerModule.serverMode || ServerModule.userInfo.role === 'admin') && AppInfoModule.updateNotification;
+    return (
+      (!ServerModule.serverMode || ServerModule.userInfo.role === 'admin') &&
+      AppInfoModule.updateNotification
+    );
   }
 
   set updateAvailable(visible: boolean) {
