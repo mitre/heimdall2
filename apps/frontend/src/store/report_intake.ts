@@ -151,6 +151,7 @@ export class InspecIntake extends VuexModule {
         fileOptions: options,
         data: read
       });
+      console.log('got passed convertToHdf function')
       if (Array.isArray(converted)) {
         const originalFileSplit = filename.split('.');
         // Default to .json if not found
