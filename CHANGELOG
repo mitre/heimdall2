@@ -1,3 +1,19 @@
+v2.6.39
+
+- Fix sequelize cli typescript compilation issue @Amndeep7 (#4070)
+- Setup script fixes @Amndeep7 (#4071)
+
+## Dependency Updates
+
+- Bump @nestjs/jwt from 10.0.1 to 10.0.2 @dependabot (#4067)
+- Bump aws-sdk from 2.1311.0 to 2.1312.0 @dependabot (#4068)
+- Bump @nestjs/passport from 9.0.2 to 9.0.3 @dependabot (#4069)
+- Bump @nestjs/passport from 9.0.1 to 9.0.2 @dependabot (#4061)
+- Bump @aws-sdk/client-config-service from 3.266.0 to 3.267.0 @dependabot (#4063)
+- Bump prettier from 2.8.3 to 2.8.4 @dependabot (#4059)
+- Bump @types/chroma-js from 2.1.4 to 2.1.5 @dependabot (#4062)
+- Bump aws-sdk from 2.1310.0 to 2.1311.0 @dependabot (#4060)
+
 v2.3.38
 
 - Add API Key to Groups @georgedias (#4035)
