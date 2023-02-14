@@ -70,7 +70,7 @@ function findingImpact(
   ) {
     impact = _.get(control, 'SeverityRating') as unknown as string;
   } else {
-    // severity is required, but can be either 'label' or 'normalized' internally with 'label' being preferred.  other values can be in here too such as the original severity rating.
+    // severity is required, but must include either 'label' or 'normalized' internally with 'label' being preferred.  other values can be in here too such as the original severity rating.
     impact =
       _.get(finding, 'Severity.Label') ||
       (_.get(finding, 'Severity.Normalized') as unknown as number) / 100.0;

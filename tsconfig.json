@@ -10,7 +10,8 @@
     "target": "ES2019",
     "esModuleInterop": true,
     "noImplicitAny": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "useUnknownInCatchVariables": false
   },
   "include": ["types/**/*.d.ts"],
   "exclude": ["**/node_modules"]

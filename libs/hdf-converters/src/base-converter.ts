@@ -221,7 +221,10 @@ export class BaseConverter {
     let pathV = v;
     if (hasPath) {
       pathV = pathTransform(
-        this.handlePath(file, _.get(v, 'path') as string | string[]) as T | T[],
+        this.handlePath(
+          file,
+          _.get(v, 'path') as unknown as string | string[]
+        ) as T | T[],
         file
       );
       v = _.omit(v as object, 'path') as T;

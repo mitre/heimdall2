@@ -41,16 +41,19 @@ function getVersion(): string {
 
 function getId(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH, ''), 'Vuln-ID')[0];
+    return parseRef(
+      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      'Vuln-ID'
+    )[0];
   } else {
-    return _.get(item, 'pluginID', '');
+    return _.get(item, 'pluginID') as unknown as string;
   }
 }
 function getTitle(item: unknown): string {
   if (_.has(item, 'cm:compliance-check-name')) {
-    return _.get(item, 'cm:compliance-check-name', '');
+    return _.get(item, 'cm:compliance-check-name') as unknown as string;
   } else {
-    return _.get(item, 'pluginName', '');
+    return _.get(item, 'pluginName') as unknown as string;
   }
 }
 function getDesc(item: unknown): string {
@@ -68,8 +71,8 @@ function formatDesc(issue: unknown): string {
   return desc.join('; ') + ';';
 }
 function pluginNistTag(item: unknown): string[] {
-  const family = _.get(item, 'pluginFamily', '');
-  const id = _.get(item, 'pluginID', '');
+  const family = _.get(item, 'pluginFamily') as unknown as string;
+  const id = _.get(item, 'pluginID') as unknown as string;
   return NESSUS_PLUGINS_NIST_MAPPING.nistFilter(family, id, DEFAULT_NIST_TAG);
 }
 function cciNistTag(input: string): string[] {
@@ -84,7 +87,9 @@ function parseRef(input: string, key: string): string[] {
 function getImpact(item: unknown): number {
   if (_.has(item, COMPLIANCE_PATH)) {
     return impactMapping(IMPACT_MAPPING)(
-      parseRef(_.get(item, COMPLIANCE_PATH, ''), 'CAT').join('')
+      parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'CAT').join(
+        ''
+      )
     );
   } else {
     return impactMapping(IMPACT_MAPPING)(_.get(item, 'severity'));
@@ -109,37 +114,40 @@ function getFix(item: unknown): string {
 
 function getNist(item: unknown): string[] {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return cciNistTag(_.get(item, COMPLIANCE_PATH, ''));
+    return cciNistTag(_.get(item, COMPLIANCE_PATH) as unknown as string);
   } else {
     return pluginNistTag(item);
   }
 }
 function getCci(item: unknown): string[] {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH, ''), 'CCI');
+    return parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'CCI');
   } else {
     return [];
   }
 }
 function getRid(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH, ''), 'Rule-ID').join(',');
+    return parseRef(
+      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      'Rule-ID'
+    ).join(',');
   } else {
-    return _.get(item, 'pluginID', '');
+    return _.get(item, 'pluginID') as unknown as string;
   }
 }
 function getStig(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH, ''), 'STIG-ID').join(',');
+    return parseRef(
+      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      'STIG-ID'
+    ).join(',');
   } else {
     return '';
   }
 }
 function getStatus(item: unknown): ExecJSON.ControlResultStatus {
-  const result = _.get(item, 'cm:compliance-result');
-  if (result == undefined) {
-    return ExecJSON.ControlResultStatus.Failed;
-  }
+  const result: string = _.get(item, 'cm:compliance-result', '');
   switch (result) {
     case 'PASSED':
       return ExecJSON.ControlResultStatus.Passed;
@@ -167,7 +175,7 @@ function getStartTime(tag: unknown): string {
       'text'
     );
   } else {
-    return _.get(tag, 'text', '');
+    return _.get(tag, 'text') as unknown as string;
   }
 }
 

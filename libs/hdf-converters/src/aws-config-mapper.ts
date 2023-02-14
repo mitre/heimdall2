@@ -205,14 +205,12 @@ export class AwsConfigMapper {
     evaluationResults.forEach((result) => {
       const resourceType: string = _.get(
         result,
-        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceType',
-        ''
-      );
+        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceType'
+      ) as unknown as string;
       const resourceId: string = _.get(
         result,
-        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId',
-        ''
-      );
+        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId'
+      ) as unknown as string;
       if (!(resourceType in resourceMap)) {
         resourceMap[resourceType] = [resourceId];
       } else {
@@ -333,7 +331,11 @@ export class AwsConfigMapper {
       defaultMatch = AWS_CONFIG_MAPPING.searchNIST([sourceIdentifier]);
     }
     if (Array.isArray(defaultMatch) && defaultMatch.length !== 0) {
-      result = _.set(result, 'nist', defaultMatch);
+      result = _.set(
+        result,
+        'nist',
+        (_.get(result, 'nist') as unknown as string[]).concat(defaultMatch)
+      );
     }
     return result;
   }

@@ -12,17 +12,18 @@ if ! grep -qF "NODE_ENV" .env; then
 fi
 
 if ! grep -qF "DATABASE_USERNAME" .env; then
-  	read -p "Enter DATABASE_USERNAME (leave blank to use default 'postgres': " usr
+	read -p "Enter DATABASE_USERNAME (leave blank to use default 'postgres'): " usr
 	echo "DATABASE_USERNAME=$usr" >> .env
 fi
 
 if ! grep -qF "DATABASE_PASSWORD" .env; then
-  	read -p 'Enter DATABASE_PASSWORD (leave blank to not set a password): ' psswd
+	read -s -p 'Enter DATABASE_PASSWORD (leave blank to not set a password): ' psswd
+	echo ""
 	echo "DATABASE_PASSWORD=$psswd" >> .env
 fi
 
 if ! grep -qF "JWT_EXPIRE_TIME" .env; then
-  	read -p 'Enter JWT_EXPIRE_TIME ex. 1d or 25m: ' expire
+	read -p 'Enter JWT_EXPIRE_TIME ex. 1d or 25m: ' expire
 	echo "JWT_EXPIRE_TIME=$expire" >> .env
 fi
 
@@ -32,6 +33,7 @@ fi
 
 if ! grep -qF "API_KEY_SECRET" .env; then
 	read -p ".env does not contain API_KEY_SECRET, would you like to enable API Keys? [Y/n]" -n 1 -r
+	echo ""
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		echo "API_KEY_SECRET=$(openssl rand -hex 33)" >> .env

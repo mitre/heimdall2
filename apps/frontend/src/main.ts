@@ -10,11 +10,16 @@ import 'roboto-fontface/css/roboto/roboto-fontface.css';
 import Vue from 'vue';
 import VueCookies from 'vue-cookies';
 import Vuetify from 'vuetify/lib';
+import {Resize} from 'vuetify/lib/directives';
 
 Vue.config.productionTip = false;
 
 Vue.use(VueCookies);
-Vue.use(Vuetify);
+Vue.use(Vuetify, {
+  directives: {
+    Resize
+  }
+});
 
 new Vue({
   router,

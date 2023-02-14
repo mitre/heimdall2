@@ -18,13 +18,18 @@ const CWE_NIST_MAPPING = new CweNistMapping();
 function filterSite<T extends unknown[]>(input: Array<T>, name?: string) {
   // Choose passed site if provided
   if (name) {
-    return input.find((element: unknown) => _.get(element, '@name') === name);
+    return input.find(
+      (element) => (_.get(element, '@name') as unknown as string) === name
+    );
   }
   // Otherwise choose the site with the most alerts
   else {
-    return (input as unknown[]).reduce((a, b) =>
-      _.get(a, 'alerts', []).length > _.get(b, 'alerts', []).length ? a : b
-    ) as Array<T>;
+    return input.reduce((a, b) =>
+      (_.get(a, 'alerts') as unknown as Record<string, unknown>[]).length >
+      (_.get(b, 'alerts') as unknown as Record<string, unknown>[]).length
+        ? a
+        : b
+    );
   }
 }
 function impactMapping(input: unknown): number {

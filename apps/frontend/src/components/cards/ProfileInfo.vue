@@ -102,38 +102,53 @@ export default class ProfileInfo extends Vue {
   ];
 
   get from_file(): string | undefined {
-    return _.get(this.profile, 'sourcedFrom.from_file.filename');
+    return _.get(this.profile, 'sourcedFrom.from_file.filename') as unknown as
+      | string
+      | undefined;
   }
 
   get version(): string | undefined {
-    return _.get(this.profile, 'data.version', '');
+    return _.get(this.profile, 'data.version') as unknown as string | undefined;
   }
 
   get sha256_hash(): string | undefined {
-    return _.get(this.profile, 'data.sha256');
+    return _.get(this.profile, 'data.sha256') as unknown as string | undefined;
   }
 
   get maintainer(): string | undefined {
-    return _.get(this.profile, 'data.maintainer', '');
+    return _.get(this.profile, 'data.maintainer') as unknown as
+      | string
+      | undefined;
   }
 
   get copyright(): string | undefined {
-    return _.get(this.profile, 'data.copyright', '');
+    return _.get(this.profile, 'data.copyright') as unknown as
+      | string
+      | undefined;
   }
 
   get copyright_email(): string | undefined {
-    return _.get(this.profile, 'data.copyright_email', '');
+    return _.get(this.profile, 'data.copyright_email') as unknown as
+      | string
+      | undefined;
   }
 
   get control_count(): string | undefined {
-    return _.get(this.profile, 'data.controls', '').length.toString();
+    return `${
+      (
+        _.get(this.profile, 'data.controls') as unknown as Record<
+          string,
+          unknown
+        >[]
+      ).length
+    }`;
   }
 
   get inputs(): Attribute[] {
     if (this.profile?.data.hasOwnProperty('attributes')) {
-      return _.get(this.profile, 'data.attributes', []);
+      return _.get(this.profile, 'data.attributes') as unknown as Attribute[];
     } else {
-      return _.get(this.profile, 'data.inputs', []);
+      return _.get(this.profile, 'data.inputs') as unknown as Attribute[];
     }
   }
 }

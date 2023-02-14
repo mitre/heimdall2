@@ -183,17 +183,19 @@ export default class ExportCaat extends Vue {
   // Create Test Result Description
   createTestResultDescription(hdf: HDFControl): string {
     let testResult = `${hdf.status}:\r\n\r\n`;
-    _.get(hdf, 'wraps.results', []).forEach((result: HDFControlSegment) => {
-      if (result.message) {
-        testResult += `${result.status.toUpperCase()} -- Test: ${
-          result.code_desc
-        }\r\nMessage: ${result.message}\r\n\r\n`;
-      } else {
-        testResult += `${result.status.toUpperCase()} -- Test: ${
-          result.code_desc
-        }\r\n\r\n`;
+    (_.get(hdf, 'wraps.results') as unknown as HDFControlSegment[]).forEach(
+      (result: HDFControlSegment) => {
+        if (result.message) {
+          testResult += `${result.status.toUpperCase()} -- Test: ${
+            result.code_desc
+          }\r\nMessage: ${result.message}\r\n\r\n`;
+        } else {
+          testResult += `${result.status.toUpperCase()} -- Test: ${
+            result.code_desc
+          }\r\n\r\n`;
+        }
       }
-    });
+    );
     return testResult;
   }
 
