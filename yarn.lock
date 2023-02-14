@@ -4656,9 +4656,9 @@
   integrity sha512-YVtyAPqpefU+Mm/qqnOANW6IkqKpCSrarcyV269C8MA8Ux0dbkEuQwM/4CjL47kVEM2LgBef/ETfkH+c6+moFA==
 
 "@types/vuelidate@^0.7.13":
-  version "0.7.15"
-  resolved "https://registry.yarnpkg.com/@types/vuelidate/-/vuelidate-0.7.15.tgz#f88b1d89081ea8e54d33ca83ead034a9619b2eb4"
-  integrity sha512-U3uabs0vVuRmxx4+cwa5Hhq1edxWuMODEf/u98PQ4+EJtZCs4TZep9q6zrGuqWmVImUc2DlKD33kXmSZqakV/A==
+  version "0.7.16"
+  resolved "https://registry.yarnpkg.com/@types/vuelidate/-/vuelidate-0.7.16.tgz#90cc49d73dabc597a0b7247ff9f07f108ad8b3a3"
+  integrity sha512-yatsSHkTSucAOX7HJCdgjegK3TGS+LJ9GNMSxdGp3HEoPabP3XYUWGL+RhtjaYHcEsD51cwOSMbhrud8MR+b6g==
   dependencies:
     vue "^2.6.11"
 
