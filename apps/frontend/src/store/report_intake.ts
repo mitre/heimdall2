@@ -130,6 +130,7 @@ export class InspecIntake extends VuexModule {
    */
   @Action
   async loadFile(options: FileLoadOptions): Promise<FileID | FileID[]> {
+    console.log('loadFile executed')
     let read: string;
     const filename =
       options.file?.name || options.filename || 'Missing Filename';
@@ -185,6 +186,7 @@ export class InspecIntake extends VuexModule {
   async isHDF(
     data: string | Record<string, unknown> | undefined
   ): Promise<boolean> {
+    console.log('isHDF executed')
     if (typeof data === 'string') {
       try {
         // If our data loads correctly it could be HDF
@@ -216,6 +218,7 @@ export class InspecIntake extends VuexModule {
     fileOptions: FileLoadOptions;
     data: string;
   }): Promise<ExecJSON.Execution | ExecJSON.Execution[] | void> {
+    console.log('convertToHdf executed')
     const filename =
       convertOptions.fileOptions.file?.name ||
       convertOptions.fileOptions.filename ||
@@ -279,6 +282,7 @@ export class InspecIntake extends VuexModule {
 
   @Action
   async detectAndLoadPredefinedJSON() {
+    console.log('detectAndLoadPredefinedJSON executed')
     // On page load, check for the flag to load the preloaded JSON file
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -310,6 +314,7 @@ export class InspecIntake extends VuexModule {
 
   @Action
   async loadText(options: TextLoadOptions): Promise<FileID> {
+    console.log('loadText executed')
     // Convert it
     const fileID: FileID = uuid();
     const result: ConversionResult = convertFile(options.text, true);
@@ -368,6 +373,7 @@ export class InspecIntake extends VuexModule {
   // Instead of re-stringifying converted evaluations, add the allow loading the ExecJSON directly.
   @Action
   async loadExecJson(options: ExecJSONLoadOptions) {
+    console.log('loadExecJson executed')
     // Convert it
     const fileID: FileID = uuid();
     // A bit of chicken and egg here, this will be our circular JSON structure

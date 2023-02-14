@@ -121,7 +121,8 @@ function nistTag(input: string): string[] {
   const identifiers: string[] = input.split('; ');
   return CCI_NIST_MAPPING.nistFilter(
     identifiers,
-    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+    false
   );
 }
 
