@@ -27,7 +27,7 @@
     <v-row>
       <v-col>
         <v-data-table
-          :headers="headers"
+          :headers="displayedHeaders"
           :items="currentUsers"
           :items-per-page="5"
         >
@@ -37,8 +37,8 @@
           <template #[`item.groupRole`]="{item}">
             <v-select
               v-if="editable"
+              v-model="item.groupRole"
               :items="['owner', 'member']"
-              :value="item.groupRole"
               @click="editedUser = item"
               @change="onUpdateGroupUserRole"
             />
