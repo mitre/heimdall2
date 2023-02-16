@@ -30,7 +30,7 @@ context('Results', () => {
 
   // The test
   describe('Results', () => {
-    it('displays correct data for the Acme Overlay Example sample', () => {
+    it('displays correct data for the Acme Overlay Example sample', async () => {
       // Load first sample
       uploadModal.loadSample('Acme Overlay Example');
       // Open profile info
@@ -43,7 +43,7 @@ context('Results', () => {
   });
 
   describe('User Modal', () => {
-    it('successfully opens and displays the user modal and allows users to change their data', () => {
+    it('successfully opens and displays the user modal and allows users to change their data', async () => {
       // Open the user modal
       dropdown.openUserModal();
       // Make sure all the fields exist
