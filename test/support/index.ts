@@ -38,6 +38,8 @@ Cypress.Commands.add('login', ({email, password}) => {
 });
 
 Cypress.Commands.add('register', (user) => {
+  cy.visit('/signup');
+
   const registrationPage = new RegistrationPage();
 
   registrationPage.register(user);

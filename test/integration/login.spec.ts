@@ -7,7 +7,6 @@ import {
 } from '../../apps/backend/test/constants/users-test.constant';
 import Dropdown from '../support/components/Dropdown';
 import LoginPage from '../support/pages/LoginPage';
-import RegistrationPage from '../support/pages/RegistrationPage';
 import LoginPageVerifier from '../support/verifiers/LoginPageVerifier';
 import ToastVerifier from '../support/verifiers/ToastVerifier';
 import UserModalVerifier from '../support/verifiers/UserModalVerifier';
@@ -19,13 +18,10 @@ context('Login', () => {
   const loginPageVerifier = new LoginPageVerifier();
   const toastVerifier = new ToastVerifier();
   const userModalVerifier = new UserModalVerifier();
-  const registrationPage = new RegistrationPage();
 
   // Run before each test
   beforeEach(() => {
-    cy.visit('/signup');
-    registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
-
+    cy.register(CREATE_USER_DTO_TEST_OBJ);
     cy.visit('/login');
   });
 
