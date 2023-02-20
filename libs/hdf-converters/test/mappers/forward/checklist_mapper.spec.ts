@@ -20,11 +20,6 @@ describe('checklist_mapper_single_stig_default', () => {
       supplementalInfo
     );
 
-    fs.writeFileSync(
-      'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
-
     const results = mapper.toHdf();
 
     expect(Array.isArray(results)).toBe(false);
@@ -56,11 +51,6 @@ describe('checklist_mapper_multi_stig_wrapper', () => {
         {encoding: 'utf-8'}
       ),
       supplementalInfo
-    );
-
-    fs.writeFileSync(
-      'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
     );
 
     const results = mapper.toHdf();
@@ -97,16 +87,7 @@ describe('checklist_mapper_multi_stig_split', () => {
     );
 
     const results = mapper.toHdf();
-    if (Array.isArray(results)) {
-      results.forEach((result, index) => {
-        fs.writeFileSync(
-          `sample_jsons/checklist_mapper/three_stig_checklist-hdf-${
-            index + 1
-          }.json`,
-          JSON.stringify(result, null, 2)
-        );
-      });
-    }
+    
     const expectedSet = [
       JSON.parse(
         fs.readFileSync(
