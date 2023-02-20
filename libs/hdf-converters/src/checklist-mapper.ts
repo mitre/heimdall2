@@ -320,7 +320,7 @@ export class ChecklistResults {
         const parentProfileName = this.suppInfo.filename.replace(/\.ckl/gi, '');
         const parent_profile: ExecJSON.Profile = {
           name: parentProfileName,
-          version: "1",
+          version: '1',
           supports: [],
           attributes: [],
           groups: [],
@@ -329,8 +329,8 @@ export class ChecklistResults {
           sha256: ''
         };
         for (const i in original.profiles) {
-          parent_profile.depends?.push({name: original.profiles[i].name})
-          parent_profile.controls.push(...original.profiles[i].controls)
+          parent_profile.depends?.push({name: original.profiles[i].name});
+          parent_profile.controls.push(...original.profiles[i].controls);
           original.profiles[i].parent_profile = parentProfileName;
           original.profiles[i].sha256 = generateHash(
             JSON.stringify(original.profiles[i])

@@ -87,7 +87,7 @@ describe('checklist_mapper_multi_stig_split', () => {
     );
 
     const results = mapper.toHdf();
-    
+
     const expectedSet = [
       JSON.parse(
         fs.readFileSync(
