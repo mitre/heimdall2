@@ -35,8 +35,8 @@
     <v-main>
       <UpdateNotification />
       <slot name="main-content" />
+      <ChecklistSupplementModal />
     </v-main>
-
     <slot>
       <!-- The default slot -->
     </slot>
@@ -44,6 +44,7 @@
 </template>
 
 <script lang="ts">
+import ChecklistSupplementModal from '@/components/global/ChecklistSupplementModal.vue';
 import SearchBar from '@/components/global/SearchBar.vue';
 import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
 import Sidebar from '@/components/global/Sidebar.vue';
@@ -59,6 +60,7 @@ import {SnackbarModule} from '../store/snackbar';
 
 @Component({
   components: {
+    ChecklistSupplementModal,
     SearchBar,
     SearchHelpModal,
     Sidebar,

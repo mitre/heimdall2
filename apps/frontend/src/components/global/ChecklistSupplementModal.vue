@@ -1,0 +1,147 @@
+<template>
+  <Modal
+    :visible="show"
+    :max-width="'500px'"
+    :persistent="true"
+    @close-modal="show = false"
+  >
+    <v-card>
+      <v-card-title> Checklist Detected</v-card-title>
+      <v-card-subtitle class="text-subtitle-2 mt-0 pl-6">
+        How would you like to open {{ filename }}?
+      </v-card-subtitle>
+      <v-card-text v-if="multiple">
+        {{ numberOfObj }} iSTIG objects found during evaluation
+        <v-row>
+          <v-col>
+            <v-radio-group v-if="multiple" v-model="intakeType">
+              <v-spacer />
+              <v-radio
+                label="Import as One File"
+                value="wrapper"
+                @click="intakeType = 'wrapper'"
+              />
+              <v-radio
+                :label="`Create ${numberOfObj} Separate Files`"
+                value="split"
+                @click="intakeType = 'split'"
+              />
+            </v-radio-group>
+          </v-col>
+        </v-row>
+      </v-card-text>
+      <v-divider />
+      <v-card-actions class="justify-space-between">
+        <v-btn color="primary" text :disabled="false" @click="view">
+          View
+        </v-btn>
+        <v-btn color="primary" text :disabled="false" @click="edit">
+          Edit
+        </v-btn>
+        <v-btn text @click="show = false"> Cancel </v-btn>
+      </v-card-actions>
+    </v-card>
+  </Modal>
+</template>
+
+<script lang="ts">
+import Modal from '@/components/global/Modal.vue';
+import {
+  ChecklistResults,
+  checklistSupplementalInfo,
+  ChecklistFile
+} from '@mitre/hdf-converters';
+import RouteMixin from '@/mixins/RouteMixin';
+import {InspecIntakeModule} from '@/store/report_intake';
+import {ChecklistSupplementalInfoModule} from '@/store/checklist_supplemental';
+import Component from 'vue-class-component';
+import _ from 'lodash';
+
+@Component({
+  components: {Modal}
+})
+export default class ChecklistSupplementModal extends RouteMixin {
+  defaultMultipleOption: checklistSupplementalInfo['intakeType'] = 'split';
+  get numberOfObj(): number {
+    return ChecklistSupplementalInfoModule.numOfObj;
+  }
+
+  get intakeType(): checklistSupplementalInfo['intakeType'] {
+    return ChecklistSupplementalInfoModule.intakeType;
+  }
+
+  set intakeType(type: checklistSupplementalInfo['intakeType']) {
+    ChecklistSupplementalInfoModule.SET_INTAKE(type);
+  }
+
+  get show(): boolean {
+    return ChecklistSupplementalInfoModule.visibility;
+  }
+
+  set show(visibility) {
+    ChecklistSupplementalInfoModule.resetState();
+    ChecklistSupplementalInfoModule.SET_SHOW(visibility);
+  }
+
+  get filename(): string {
+    return ChecklistSupplementalInfoModule.filename;
+  }
+
+  get multiple(): boolean {
+    if (ChecklistSupplementalInfoModule.multiple) {
+      ChecklistSupplementalInfoModule.SET_INTAKE('wrapper');
+    }
+    return ChecklistSupplementalInfoModule.multiple;
+  }
+
+  async view(): Promise<void> {
+    await this.importChecklistAction();
+    this.navigateWithNoErrors('/results');
+  }
+
+  async edit(): Promise<void> {
+    await this.importChecklistAction();
+    this.navigateWithNoErrors('/checklists');
+  }
+
+  async importChecklistAction(): Promise<void> {
+    await this.createAndAddChecklist();
+    ChecklistSupplementalInfoModule.resetState();
+    ChecklistSupplementalInfoModule.close();
+  }
+
+  async createAndAddChecklist(): Promise<void> {
+    const checklistXml = ChecklistSupplementalInfoModule.xmlString;
+    const checklistInfo = {
+      filename: this.filename,
+      intakeType: this.intakeType
+    };
+    const results = new ChecklistResults(checklistXml, checklistInfo).toHdf();
+    if (Array.isArray(results)) {
+      results.forEach((evaluation, index) => {
+        let newFilename = '';
+        if ('passthrough' in evaluation) {
+          const mutableChecklistObject: Omit<ChecklistFile, 'uniqueId'> = _.get(
+            evaluation,
+            'passthrough.mutableChecklist'
+          ) as unknown as ChecklistFile;
+          newFilename = mutableChecklistObject.filename;
+        } else {
+          newFilename = `${this.filename.replace(/\.ckl/gi, '')}-${
+            index + 1
+          }.ckl`;
+        }
+        InspecIntakeModule.loadExecJson({
+          data: evaluation,
+          filename: newFilename
+        });
+      });
+    } else if (results) {
+      InspecIntakeModule.loadExecJson({
+        data: results,
+        filename: this.filename
+      });
+    }
+  }
+}
+</script>
