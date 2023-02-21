@@ -13,7 +13,7 @@ COPY apps ./apps
 COPY libs ./libs
 RUN apk add python3 make g++
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
-RUN yarn --frozen-lockfile --production --network-timeout 600000
+RUN yarn install --frozen-lockfile --production --network-timeout 600000
 
 RUN yarn run build
 
