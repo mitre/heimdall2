@@ -22,14 +22,14 @@ context('Groups', () => {
   });
 
   describe('CRUD', () => {
-    it('allows a user to create a group', async () => {
+    it('allows a user to create a group', () => {
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName);
       toastVerifier.toastTextContains('Group Successfully Saved');
       dataTableVerifier.verifyTextPresent(groupName);
     });
 
-    it('allows a user to update a group', async () => {
+    it('allows a user to update a group', () => {
       const updatedGroupName = 'Updated Test Group';
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName);
@@ -38,7 +38,7 @@ context('Groups', () => {
       dataTableVerifier.verifyTextPresent(updatedGroupName);
     });
 
-    it('allows a user to delete a group', async () => {
+    it('allows a user to delete a group', () => {
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName);
       groupPage.deleteGroup(groupName);

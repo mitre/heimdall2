@@ -27,7 +27,7 @@ context('Database results', () => {
   });
 
   describe('CRUD', () => {
-    it('allows a user to save a result', async () => {
+    it('allows a user to save a result', () => {
       uploadModal.loadSample(sampleToLoad);
       sidebar.save(sampleToLoad);
       toastVerifier.toastTextContains('File saved successfully');
@@ -36,7 +36,7 @@ context('Database results', () => {
       dataTableVerifier.verifyTextPresent(sampleToLoad);
     });
 
-    it('allows a user to load a result', async () => {
+    it('allows a user to load a result', () => {
       uploadModal.loadSample(sampleToLoad);
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
@@ -45,7 +45,7 @@ context('Database results', () => {
       resultsPageVerifier.resultsFilenameCorrect(sampleToLoad);
     });
 
-    it('allows a user to update a result', async () => {
+    it('allows a user to update a result', () => {
       const updatedName = 'Updated Filename';
       uploadModal.loadSample(sampleToLoad);
       sidebar.save(sampleToLoad);
@@ -56,7 +56,7 @@ context('Database results', () => {
       dataTableVerifier.verifyTextPresent(updatedName);
     });
 
-    it('allows a user to delete a result', async () => {
+    it('allows a user to delete a result', () => {
       uploadModal.loadSample(sampleToLoad);
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);

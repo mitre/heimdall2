@@ -20,7 +20,7 @@ context('Registration', () => {
 
   // The test
   describe('Registration Form', () => {
-    it('allows a user to create an account', async () => {
+    it('allows a user to create an account', () => {
       registrationVerifier.registerFormPresent();
       registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
       toastVerifier.toastTextContains(
@@ -34,9 +34,9 @@ context('Registration', () => {
       toastVerifier.toastTextContains('Email must be unique');
     });
 
-    it('rejects a weak password', async () => {
+    it('rejects a weak password', () => {
       cy.on('uncaught:exception', (err) => {
-        //expect(err.response.status).to.equal(400);
+        expect(err.response.status).to.equal(400);
 
         // return false to prevent the error from
         // failing this test

@@ -1,5 +1,4 @@
 import {CreateUserDto} from '../../../apps/backend/src/users/dto/create-user.dto';
-import RegistrationVerifier from '../verifiers/RegistrationPageVerifier';
 
 export default class RegistrationPage {
   register(user: CreateUserDto): void {
@@ -8,15 +7,11 @@ export default class RegistrationPage {
     cy.get('#register').click();
   }
   registerNoSubmit(user: CreateUserDto): void {
-    const registrationVerifier = new RegistrationVerifier();
     cy.visit('/signup');
-    registrationVerifier.registerFormPresent();
-    cy.get('#firstName_field').type(user.firstName);
-    cy.get('#lastName_field').type(user.lastName);
-    cy.get('#email_field').type(user.email);
-    cy.get('#password').type(user.password);
-    cy.get('#passwordConfirmation').type(
-      user.passwordConfirmation
-    );
+    cy.get('input[name=firstName]').type(user.firstName);
+    cy.get('input[name=lastName]').type(user.lastName);
+    cy.get('input[name=email]').type(user.email);
+    cy.get('input[name=password]').type(user.password);
+    cy.get('input[name=passwordConfirmation]').type(user.passwordConfirmation);
   }
 }

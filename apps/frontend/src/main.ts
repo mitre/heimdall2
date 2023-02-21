@@ -49,7 +49,7 @@ new Vue({
 // the Prism library variables, and not the Prism component variables
 //@ts-ignore
 Prism.languages['rb'] = {
-  string: {
+  'token-name': {
     pattern: /("|')(\1|(?:(?![^\\]\1)[\s\S])*[^\\]\1)/g
   }
 };

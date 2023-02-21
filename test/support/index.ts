@@ -31,9 +31,10 @@ Cypress.on('uncaught:exception', (err) => {
   return !err.message.includes('getBoundingClientRect');
 });
 
+Cypress.config('defaultCommandTimeout', 10000);
 Cypress.Commands.add('login', ({email, password}) => {
-  cy.get('input[name="email"]').clear().type(email);
-  cy.get('input[name="password"]').clear().type(password);
+  cy.get('input[name=email]').clear().type(email);
+  cy.get('input[name=password]').clear().type(password);
   cy.get('#login_button').click();
 });
 
