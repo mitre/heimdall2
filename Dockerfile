@@ -41,7 +41,7 @@ COPY --from=builder --chown= --chmod=0500 /src/apps/backend/seeders /app/apps/ba
 
 EXPOSE 3000
 
-COPY --chmod=755 cmd.sh /usr/local/bin/
+COPY --chmod=555 cmd.sh /usr/local/bin/
 
 USER node
 
