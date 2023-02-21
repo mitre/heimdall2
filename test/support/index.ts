@@ -37,9 +37,7 @@ Cypress.Commands.add('login', ({email, password}) => {
   cy.get('#login_button').click();
 });
 
-Cypress.Commands.add('register', (user) => {
-  cy.visit('/signup');
-
+Cypress.Commands.add('register', async (user) => {
   const registrationPage = new RegistrationPage();
 
   registrationPage.register(user);
