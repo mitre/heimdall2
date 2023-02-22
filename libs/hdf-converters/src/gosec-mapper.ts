@@ -9,7 +9,6 @@ const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
 
 function nistTag(input: Record<string, unknown>): string[] {
   const cwe = [`${_.get(input, 'id')}`];
-  console.log(cwe);
   return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG);
 }
 

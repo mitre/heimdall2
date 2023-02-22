@@ -18,25 +18,13 @@ jobs:
           - 5432:5432
 
     steps:
-     - uses: actions/checkout@v2
-
-     - name: Cache node modules
-       uses: actions/cache@v2
-       env:
-         cache-name: cache-node-modules
-       with:
-         # npm cache files are stored in `~/.npm` on Linux/macOS
-         path: ~/.npm
-         key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-         restore-keys: |
-           ${{ runner.os }}-build-${{ env.cache-name }}-
-           ${{ runner.os }}-build-
-           ${{ runner.os }}-
+     - uses: actions/checkout@v3
 
      - name: Setup Node.js
-       uses: actions/setup-node@v1
+       uses: actions/setup-node@v3
        with:
-        node-version: '14.x'
+        node-version: '16.x'
+        cache: 'yarn'
 
      - name: Remove backend code to ensure the proper dependencies are declared in the frontend package.json
        run: rm -rf apps/backend

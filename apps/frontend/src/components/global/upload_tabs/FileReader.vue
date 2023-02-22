@@ -12,19 +12,26 @@
           <span>Supported Formats:</span>
           <ul>
             <li>InSpec/Heimdall Data Format</li>
+            <li>AWS Security Finding Format (ASFF)</li>
             <li>Burp Suite</li>
             <li>DBProtect</li>
+            <li>Fortify</li>
+            <li>Golang Security Checker (GoSec)</li>
+            <li>Ion Channel</li>
             <li>JFrog Xray</li>
             <li>Nessus</li>
             <li>Netsparker</li>
             <li>Nikto</li>
+            <li>OWASP ZAP</li>
+            <li>Prisma</li>
             <li>Static Analysis Results Interchange Format (SARIF)</li>
             <li>Scoutsuite</li>
             <li>Snyk</li>
+            <li>Twistlock</li>
+            <li>Veracode</li>
             <li>
               XCCDF Results (Supports native OpenSCAP output and SCC output)
             </li>
-            <li>OWASP ZAP</li>
           </ul>
         </v-tooltip>
       </v-row>

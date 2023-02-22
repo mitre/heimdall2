@@ -10,10 +10,11 @@ jobs:
       - uses: actions/checkout@master
 
       - name: setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
+          node-version: "16.x"
           registry-url: 'https://registry.npmjs.org'
+          cache: 'yarn'
 
       - name: Install project dependencies
         run: yarn install --frozen-lockfile
@@ -40,7 +41,7 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Setup .npmrc file to publish to GitHub Packages
-      - uses: actions/setup-node@v1
+      - uses: actions/setup-node@v3
         if: always()
         with:
           registry-url: 'https://npm.pkg.github.com'
