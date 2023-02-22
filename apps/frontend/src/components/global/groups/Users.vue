@@ -37,7 +37,7 @@
           <template #[`item.groupRole`]="{item}">
             <v-select
               v-if="editable"
-              v-model="item.groupRole"
+              :value="item.groupRole"
               :items="['owner', 'member']"
               @click="editedUser = item"
               @change="onUpdateGroupUserRole"

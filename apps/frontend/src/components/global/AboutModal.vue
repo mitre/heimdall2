@@ -2,7 +2,7 @@
   <v-dialog v-model="dialog" width="75%">
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
-    <template #activator="{ on }">
+    <template #activator="{on}">
       <slot name="clickable" :on="on" />
     </template>
     <v-card>
@@ -56,10 +56,18 @@
 
 <script lang="ts">
 import ServerMixin from '@/mixins/ServerMixin';
-import { AppInfoModule } from '@/store/app_info';
-import { version } from 'os';
-import Component, { mixins } from 'vue-class-component';
-import { VDialog, VCard, VCardTitle, VCardText, VDivider, VCardActions, VBtn } from 'vuetify/lib';
+import {AppInfoModule} from '@/store/app_info';
+import {version} from 'os';
+import Component, {mixins} from 'vue-class-component';
+import {
+  VDialog,
+  VCard,
+  VCardTitle,
+  VCardText,
+  VDivider,
+  VCardActions,
+  VBtn
+} from 'vuetify/lib';
 
 @Component
 export default class AboutModal extends mixins(ServerMixin) {
