@@ -14785,7 +14785,7 @@ modify-values@^1.0.0:
   resolved "https://registry.yarnpkg.com/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
   integrity sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==
 
-moment-timezone@^0.5.34:
+moment-timezone@^0.5.35:
   version "0.5.40"
   resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.40.tgz#c148f5149fd91dd3e29bf481abc8830ecba16b89"
   integrity sha512-tWfmNkRYmBkPJz5mr9GVDn9vRlVZOTe6yqY92rFxiOdWXbjaR0+9LwQnZGGuNR63X456NqmEkbskte8tWL5ePg==
@@ -18020,9 +18020,9 @@ sequelize-typescript@^2.0.0:
     glob "7.2.0"
 
 sequelize@^6.4.0:
-  version "6.28.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.28.0.tgz#d6bc4e36647e8501635467c0777c45a33f5d5ba8"
-  integrity sha512-+WHqvUQgTp19GLkt+gyQ+F6qg+FIEO2O5F9C0TOYV/PjZ2a/XwWvVkL1NCkS4VSIjVVvAUutiW6Wv9ofveGaVw==
+  version "6.28.1"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.28.1.tgz#67d52edc63c0f697d793b2c897248e0d1ce44252"
+  integrity sha512-5595Wq9zjHrQaNMr+tYg33Cw1AcBnOySvGIfNdjoqH9PeT+v6TWem5JIkAyWkIjZMM7dDkUASteRbe4xvbpLVA==
   dependencies:
     "@types/debug" "^4.1.7"
     "@types/validator" "^13.7.1"
@@ -18031,7 +18031,7 @@ sequelize@^6.4.0:
     inflection "^1.13.2"
     lodash "^4.17.21"
     moment "^2.29.1"
-    moment-timezone "^0.5.34"
+    moment-timezone "^0.5.35"
     pg-connection-string "^2.5.0"
     retry-as-promised "^7.0.3"
     semver "^7.3.5"
