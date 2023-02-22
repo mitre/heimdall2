@@ -57,17 +57,7 @@
 <script lang="ts">
 import ServerMixin from '@/mixins/ServerMixin';
 import {AppInfoModule} from '@/store/app_info';
-import {version} from 'os';
 import Component, {mixins} from 'vue-class-component';
-import {
-  VDialog,
-  VCard,
-  VCardTitle,
-  VCardText,
-  VDivider,
-  VCardActions,
-  VBtn
-} from 'vuetify/lib';
 
 @Component
 export default class AboutModal extends mixins(ServerMixin) {
