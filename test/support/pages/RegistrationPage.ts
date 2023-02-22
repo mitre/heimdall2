@@ -6,7 +6,7 @@ export default class RegistrationPage {
     cy.waitUntil(() => cy.get('#register').should('not.be.disabled'));
     cy.get('#register').click();
   }
-  registerNoSubmit(user: CreateUserDto): void {
+  async registerNoSubmit(user: CreateUserDto): Promise<void> {
     cy.visit('/signup');
     cy.get('input[name=firstName]').type(user.firstName);
     cy.get('input[name=lastName]').type(user.lastName);
