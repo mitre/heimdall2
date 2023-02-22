@@ -23,7 +23,6 @@ FROM $BASE_CONTAINER as app
 
 WORKDIR /app
 # The permissions setting is to ensure that the user cannot modify the files accidentally and can't be read, executed or changed by another account.  Removing these permissions doesn't improve image size or performance meaningfully, but keeping them adds a potential safeguard.
-#Removing these permissions doesn't improve image size or performance meaningfully, but keeping them adds a potential safeguard.
 COPY --from-builder --chown= --chmod=0400 ./package.json ./
 COPY --from=builder --chown= --chmod=0400 /src/apps/frontend/package.json apps/frontend/
 COPY --from=builder --chown= --chmod=0400 /src/libs/interfaces/package.json libs/interfaces/
