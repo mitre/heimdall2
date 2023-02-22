@@ -30,7 +30,7 @@ COPY --from=builder --chown= --chmod=0500 /src/libs/password-complexity/ libs/pa
 COPY --from=builder --chown= --chmod=0500 /src/apps/backend/package.json apps/backend/
 COPY --from=builder --chown= --chmod=0500 /src/apps/backend/node_modules apps/backend/node_modules
 COPY --from=builder --chown= --chmod=0500 /src/apps/backend/dist apps/backend/dist
-COPY --from=builder --chown= /src/dist/ dist/
+COPY --from=builder --chown --chmod=0500= /src/dist/ dist/
 COPY --from=builder --chown= --chmod=0500 /src/apps/backend/.sequelizerc /app/apps/backend/
 COPY --from=builder --chown= --chmod=0500 /src/apps/backend/db /app/apps/backend/db
 COPY --from=builder --chown= --chmod=0500 /src/apps/backend/config /app/apps/backend/config
