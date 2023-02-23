@@ -16,25 +16,28 @@ context('Splunk', () => {
   const splunkTabVerifier = new SplunkTabVerifier();
   const splunkPage = new SplunkPage();
 
-  // Run before each test
-  beforeEach(() => {
-    cy.register(CREATE_USER_DTO_TEST_OBJ);
-    cy.visit('/login');
-    cy.login(LOGIN_AUTHENTICATION);
-    toastVerifier.toastTextContains('You have successfully signed in.');
-    cy.get('#hide-snackbar').click();
-  });
-
   // The test
   describe('Splunk Form', () => {
-    it('authenticates a user with valid Splunk credentials', () => {
+    it('authenticates a user with valid Splunk credentials', async () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ);
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION);
+      toastVerifier.toastTextContains('You have successfully signed in.');
+      cy.get('#hide-snackbar').click();
+
       uploadModal.switchToTab('splunk');
       splunkTabVerifier.splunkPresent();
       splunkPage.splunkLogin(SPLUNK_AUTHENTICATION);
       toastVerifier.toastTextContains('You have successfully signed in');
     });
 
-    it('fails to authenticate a Splunk user with invalid credentials', () => {
+    it('fails to authenticate a Splunk user with invalid credentials', async () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ);
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION);
+      toastVerifier.toastTextContains('You have successfully signed in.');
+      cy.get('#hide-snackbar').click();
+
       uploadModal.switchToTab('splunk');
       splunkTabVerifier.splunkPresent();
       splunkPage.splunkLogin(BAD_SPLUNK_AUTHENTICATION);
