@@ -1,3 +1,5 @@
+/*eslint-disable cypress/no-async-tests*/
+
 import {
   BAD_LDAP_AUTHENTICATION,
   BAD_LOGIN_AUTHENTICATION,
@@ -60,7 +62,7 @@ context('Login', () => {
     describe('Authentication Failures', () => {
       // Ignore 401 errors on authentication failure tests
       beforeEach(async () => {
-        cy.on('uncaught:exception', (err) => {
+        cy.on('uncaught:exception', () => {
           //expect(err.response.status).to.equal(401);
 
           // return false to prevent the error from

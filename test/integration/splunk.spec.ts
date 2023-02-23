@@ -1,3 +1,5 @@
+/*eslint-disable cypress/no-async-tests*/
+
 import {
   BAD_SPLUNK_AUTHENTICATION,
   CREATE_USER_DTO_TEST_OBJ,

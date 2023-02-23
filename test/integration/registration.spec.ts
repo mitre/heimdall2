@@ -1,3 +1,5 @@
+/*eslint-disable cypress/no-async-tests*/
+
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD,
@@ -35,7 +37,7 @@ context('Registration', () => {
     });
 
     it('rejects a weak password', async () => {
-      cy.on('uncaught:exception', (err) => {
+      cy.on('uncaught:exception', () => {
         //expect(err.response.status).to.equal(400);
 
         // return false to prevent the error from
