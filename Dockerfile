@@ -33,11 +33,10 @@ COPY --from=builder --chown=node --chmod=0400 --link /src/package.json ./
 COPY --from=builder --chown=node --chmod=0400 --link /src/apps/frontend/package.json apps/frontend/
 COPY --from=builder --chown=node --chmod=0400 --link /src/libs/interfaces/package.json libs/interfaces/
 COPY --from=builder --chown=node --chmod=0500 --link /src/libs/password-complexity/ libs/password-complexity/
-COPY --from=builder --chown=node --chmod=0500 --link /src/apps/backend/package.json apps/backend/
+COPY --from=builder --chown=node --chmod=0500 --link /src/apps/backend/package.json /src/apps/backend/.sequelizerc apps/backend/
 COPY --from=builder --chown=node --chmod=0500 --link /src/apps/backend/node_modules apps/backend/node_modules
 COPY --from=builder --chown=node --chmod=0500 --link /src/apps/backend/dist apps/backend/dist
 COPY --from=builder --chown=node --link /src/dist/ dist/
-COPY --from=builder --chown=node --chmod=0500 --link /src/apps/backend/.sequelizerc apps/backend/
 COPY --from=builder --chown=node --chmod=0500 --link /src/apps/backend/db apps/backend/db
 COPY --from=builder --chown=node --chmod=0500 --link /src/apps/backend/config apps/backend/config
 COPY --from=builder --chown=node --chmod=0500 --link /src/apps/backend/migrations apps/backend/migrations
