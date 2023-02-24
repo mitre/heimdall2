@@ -248,9 +248,7 @@ function formatSourceLocation(input: Record<string, unknown>[]): string {
 
 function componentListCreate(input: unknown): Record<string, unknown>[] {
   const componentList: Record<string, unknown>[] = [];
-  let component = _.get(input, 'component') as unknown as
-    | Record<string, unknown>
-    | Record<string, unknown>[];
+  let component = _.get(input, 'component');
   if (!Array.isArray(component)) {
     component = [component];
   }
@@ -426,17 +424,10 @@ export class VeracodeMapper extends BaseConverter {
       passthrough: {
         components: {
           path: 'detailedreport.software_composition_analysis.vulnerable_components',
-          transformer: (value: Record<string, unknown>) => {
-            if (_.get(value, 'component') as Record<string, unknown>[]) {
-              return (
-                _.get(value, 'component') as Record<string, unknown>[]
-              ).map((component: Record<string, unknown>) =>
-                componentPass(component)
-              );
-            } else {
-              return '';
-            }
-          }
+          transformer: (value: Record<string, unknown>) =>
+            (_.get(value, 'component') as Record<string, unknown>[]).map(
+              (component: Record<string, unknown>) => componentPass(component)
+            )
         },
         auxiliary_data: [
           {

@@ -95,10 +95,10 @@ export default class EvaluationInfo extends Vue {
   }
 
   get platform(): string | undefined {
-    return `${_.get(this.file_object, 'evaluation.data.platform.name')}${_.get(
-      this.file_object,
-      'evaluation.data.platform.release'
-    )}`;
+    return (
+      _.get(this.file_object, 'evaluation.data.platform.name') +
+      _.get(this.file_object, 'evaluation.data.platform.release')
+    );
   }
 
   get duration(): string | undefined {

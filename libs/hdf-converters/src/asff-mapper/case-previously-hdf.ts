@@ -99,8 +99,8 @@ function productName(
   return encode(name.split('/').slice(0, 2).join(' - '));
 }
 
-function titlePrefix(): string {
-  return '';
+function doesNotHaveFindingTitlePrefix(): boolean {
+  return true;
 }
 
 function code(group: ExecJSON.Control[]): string {
@@ -382,7 +382,7 @@ export function getPreviouslyHDF(): Record<string, (...inputs: any) => any> {
     preprocessingASFF,
     supportingDocs,
     productName,
-    titlePrefix,
+    doesNotHaveFindingTitlePrefix,
     code,
     waiverData,
     filename,

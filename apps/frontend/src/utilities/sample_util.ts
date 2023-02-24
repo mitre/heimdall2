@@ -16,9 +16,8 @@ const threeOverlayProfilePath = '/static/samples/example-3-layer-overlay.json';
 const ubuntu1604BaselineResultsPath =
   '/static/samples/ubuntu-16.04-baseline-results.json';
 const acmeOverlayPath = '/static/samples/wrapper-acme-run.json';
-const cleanRhel8ChecklistPath = '/static/samples/clean_rhel_8_checklist.ckl';
-const rhel8ChecklistPath = '/static/samples/rhel_8_checklist.ckl';
-const threeStigChecklistPath = '/static/samples/three_stig_checklist.ckl';
+const checklistExamplePath =
+  '/static/samples/Red_Hat_7_STIG_Baseline_Checklist.ckl';
 
 import axios from 'axios';
 
@@ -104,18 +103,8 @@ export const samples: Sample[] = [
     path: acmeOverlayPath
   },
   {
-    filename: 'Clean RHEL 8 Checklist',
-    data: () => fetch(cleanRhel8ChecklistPath),
-    path: cleanRhel8ChecklistPath
-  },
-  {
-    filename: 'RHEL 8 Checklist',
-    data: () => fetch(rhel8ChecklistPath),
-    path: rhel8ChecklistPath
-  },
-  {
-    filename: 'Three Stig Checklist',
-    data: () => fetch(threeStigChecklistPath),
-    path: threeStigChecklistPath
+    filename: 'Demo Checklist (Red Hat 7 STIG Baseline)',
+    data: () => fetch(checklistExamplePath),
+    path: checklistExamplePath
   }
 ];

@@ -405,23 +405,16 @@ export default class Compare extends Vue {
     const field = this.sortControlSetsBy.split('Passthrough Field: ')[1];
     const aPassthroughField = _.get(a.data, `passthrough.${field}`);
     const bPassthroughField = _.get(b.data, `passthrough.${field}`);
-    if (
-      aPassthroughField !== null &&
-      bPassthroughField !== null &&
-      aPassthroughField !== undefined &&
-      bPassthroughField !== undefined &&
-      aPassthroughField === typeof bPassthroughField
-    ) {
+    if (typeof aPassthroughField === typeof bPassthroughField) {
       if (typeof aPassthroughField === 'string') {
-        return (aPassthroughField as string).localeCompare(
-          bPassthroughField as string
-        );
+        return aPassthroughField.localeCompare(bPassthroughField);
       } else if (typeof aPassthroughField === 'number') {
         return aPassthroughField - bPassthroughField;
       } else if (typeof aPassthroughField === 'boolean') {
         return Number(aPassthroughField) - Number(bPassthroughField);
       }
     }
+
     return 0;
   }
 

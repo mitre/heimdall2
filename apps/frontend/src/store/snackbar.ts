@@ -43,15 +43,8 @@ export class Snackbar extends VuexModule {
 
   @Action
   HTTPFailure(error: unknown) {
-    const nestedError = _.get(error, 'response.data.message') as
-      | string[]
-      | undefined
-      | null;
-    if (
-      nestedError !== null &&
-      nestedError !== undefined &&
-      _.isArray(nestedError)
-    ) {
+    const nestedError = _.get(error, 'response.data.message');
+    if (typeof nestedError === 'object') {
       this.failure(
         nestedError
           .map(function capitalize(c: string) {
@@ -60,7 +53,7 @@ export class Snackbar extends VuexModule {
           .join(', ')
       );
     } else {
-      this.failure(`${nestedError || error}`);
+      this.failure(nestedError || error);
     }
   }
 

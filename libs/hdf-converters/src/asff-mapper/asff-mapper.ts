@@ -1,6 +1,3 @@
-// ASFF (AWS Security Finding Format) is intended as being another data exchange format to be used in displaying data within AWS SecurityHub - in this regard, it is analogous to HDF and Heimdall.
-// Like in every scenario where there is an open specification, people interpret the intent of each of the attributes in slightly different ways.  Consequently, while many products provide 'ASFF' output, providing a mapper back to HDF can be complicated.
-
 import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
@@ -10,10 +7,7 @@ import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   getCCIsForNISTTags
 } from '../utils/global';
-import {getCMSInSpec} from './case-cms-inspec';
 import {getFirewallManager} from './case-firewall-manager';
-import {getGuardDuty} from './case-guardduty';
-import {getInspector} from './case-inspector';
 import {getPreviouslyHDF} from './case-previously-hdf';
 import {getProwler} from './case-prowler';
 import {getSecurityHub} from './case-security-hub';
@@ -32,10 +26,7 @@ const COMPLIANCE_STATUS = 'Compliance.Status';
 
 // Sometimes certain ASFF file types require massaging in order to generate good HDF files.  These are the supported special cases and a catchall 'Default'.  'Default' files and non-special cased methods for otherwise special cased files do the pre-defined default behaviors when generating the HDF file.
 export enum SpecialCasing {
-  CMSInSpec = 'CMS Chef InSpec',
   FirewallManager = 'AWS Firewall Manager',
-  GuardDuty = 'AWS GuardDuty',
-  Inspector = 'AWS Inspector',
   Prowler = 'Prowler',
   SecurityHub = 'AWS Security Hub',
   Trivy = 'Aqua Trivy',
@@ -43,15 +34,9 @@ export enum SpecialCasing {
   Default = 'Default'
 }
 
-// typically you can just look at the ProductArn field to get information on the product type but we also support some custom formats/products that require alternative means of identification
 function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
   const productArn = _.get(finding, 'ProductArn') as string;
   if (
-    _.get(finding, 'ProductName') === 'Default' &&
-    _.get(finding, 'GeneratorId') === 'cms.Chef Inspec'
-  ) {
-    return SpecialCasing.CMSInSpec;
-  } else if (
     productArn.match(
       /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/firewall-manager$/
     )
@@ -59,10 +44,22 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     return SpecialCasing.FirewallManager;
   } else if (
     productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/guardduty$/
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
     )
   ) {
-    return SpecialCasing.GuardDuty;
+    return SpecialCasing.Prowler;
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/
+    )
+  ) {
+    return SpecialCasing.SecurityHub;
+  } else if (
+    productArn.match(
+      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/
+    )
+  ) {
+    return SpecialCasing.Trivy;
   } else if (
     _.some(
       _.get(finding, 'FindingProviderFields.Types') as string[],
@@ -83,30 +80,6 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     )
   ) {
     return SpecialCasing.PreviouslyHDF;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/inspector$/
-    )
-  ) {
-    return SpecialCasing.Inspector;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/prowler\/prowler$/
-    )
-  ) {
-    return SpecialCasing.Prowler;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aws\/securityhub$/
-    )
-  ) {
-    return SpecialCasing.SecurityHub;
-  } else if (
-    productArn.match(
-      /^arn:[^:]+:securityhub:[^:]+:[^:]*:product\/aquasecurity\/aquasecurity$/
-    )
-  ) {
-    return SpecialCasing.Trivy;
   } else {
     return SpecialCasing.Default;
   }
@@ -117,17 +90,13 @@ const SPECIAL_CASE_MAPPING: Map<
   // eslint-disable-next-line @typescript-eslint/ban-types
   Record<string, Function>
 > = new Map([
-  [SpecialCasing.CMSInSpec, getCMSInSpec()],
   [SpecialCasing.FirewallManager, getFirewallManager()],
-  [SpecialCasing.GuardDuty, getGuardDuty()],
-  [SpecialCasing.Inspector, getInspector()],
-  [SpecialCasing.PreviouslyHDF, getPreviouslyHDF()],
   [SpecialCasing.Prowler, getProwler()],
   [SpecialCasing.SecurityHub, getSecurityHub()],
-  [SpecialCasing.Trivy, getTrivy()]
+  [SpecialCasing.Trivy, getTrivy()],
+  [SpecialCasing.PreviouslyHDF, getPreviouslyHDF()]
 ]);
 
-// If a special casing has a function override, then do the override, otherwise return the default value.  This is how the 'massaging' described above is implemented.
 function externalProductHandler<T>(
   context: ASFFMapper | ASFFResults,
   product: SpecialCasing,
@@ -156,7 +125,6 @@ function externalProductHandler<T>(
   }
 }
 
-// helper function to take all the controls that have the same id and turn them into results/subtests within an overarching control
 function handleIdGroup(
   context: ASFFMapper,
   idGroup: [string, [ExecJSON.Control, Record<string, unknown>][]]
@@ -176,13 +144,14 @@ function handleIdGroup(
     'productName',
     encode(`${productInfo[1]}/${productInfo[2]}`)
   );
-  const titlePrefix = externalProductHandler(
+  const hasNoTitlePrefix = externalProductHandler(
     context,
     whichSpecialCase(findings[0]),
-    findings,
-    'titlePrefix',
-    `${productName}: `
+    null,
+    'doesNotHaveFindingTitlePrefix',
+    false
   );
+  const titlePrefix = hasNoTitlePrefix ? '' : `${productName}: `;
   const waiverData = externalProductHandler(
     context,
     whichSpecialCase(findings[0]),
@@ -192,6 +161,7 @@ function handleIdGroup(
   ) as ExecJSON.ControlWaiverData;
 
   return {
+    // Add productName to ID if any ID's are the same across products
     id: id,
     title: `${titlePrefix}${_.uniq(group.map((d) => d.title)).join(';')}`,
     tags: _.mergeWith(
@@ -258,7 +228,6 @@ function handleIdGroup(
 }
 
 // consolidate the array of controls which were generated 1:1 with findings in order to have subfindings/results
-// the way it does this is to group by HDF id which by default is the ASFF GeneratorId field
 export function consolidate(
   context: ASFFMapper,
   input: unknown[],
@@ -290,7 +259,6 @@ export function consolidate(
   );
 }
 
-// the schema specifies that the file should be `{ "Findings": [... findings array ...] }` but sometimes only the array or even a single finding is provided so this function corrects for those cases
 function wrapWithFindingsObject(
   output:
     | Record<string, unknown>
@@ -306,8 +274,6 @@ function wrapWithFindingsObject(
   }
   return output as Record<string, Record<string, unknown>[]>;
 }
-
-// some applications (like Prowler) give us new line seperated JSON objects (see JSON Lines or ndjson) but we need regular JSON
 function fixFileInput(
   asffJson: string
 ): Record<string, Record<string, unknown>[]> {
@@ -315,6 +281,7 @@ function fixFileInput(
   try {
     output = JSON.parse(asffJson);
   } catch {
+    // Prowler gives us JSON Lines format but we need regular JSON
     const fixedInput = `[${asffJson
       .trim()
       .replace(/}\n/g, '},\n')
@@ -406,14 +373,8 @@ export class ASFFMapper extends BaseConverter {
                 )
             },
             desc: {
-              transformer: (finding: Record<string, unknown>): string =>
-                externalProductHandler(
-                  this,
-                  whichSpecialCase(finding),
-                  finding,
-                  'findingDescription',
-                  encode(_.get(finding, 'Description') as string)
-                )
+              path: 'Description',
+              transformer: (input: string): string => encode(input)
             },
             impact: {
               transformer: (finding: Record<string, unknown>): number => {
@@ -543,8 +504,8 @@ export class ASFFMapper extends BaseConverter {
                             return ExecJSON.ControlResultStatus.Error;
                         }
                       } else {
-                        // if no compliance status is provided which is a weird but possible case, then fail
-                        return ExecJSON.ControlResultStatus.Failed;
+                        // if no compliance status is provided which is a weird but possible case, then skip
+                        return ExecJSON.ControlResultStatus.Skipped;
                       }
                     };
                     return externalProductHandler(
@@ -661,25 +622,14 @@ export class ASFFMapper extends BaseConverter {
   };
 
   statusReason(finding: unknown): string | undefined {
-    const statusReasons = _.get(finding, 'Compliance.StatusReasons') as
-      | Record<string, string>[]
-      | unknown;
-    if (
-      statusReasons !== undefined &&
-      statusReasons !== null &&
-      _.isArray(statusReasons)
-    ) {
-      return statusReasons
-        .map((reason: Record<string, string>) =>
-          Object.entries(reason || {}).map(([key, value]: [string, string]) => {
-            return `${encode(key)}: ${encode(value)}`;
-          })
-        )
-        .flat()
-        .join('\n');
-    } else {
-      return undefined;
-    }
+    return _.get(finding, 'Compliance.StatusReasons')
+      ?.map((reason: Record<string, string>) =>
+        Object.entries(reason || {}).map(([key, value]: [string, string]) => {
+          return `${encode(key)}: ${encode(value)}`;
+        })
+      )
+      .flat()
+      .join('\n');
   }
 
   setMappings(): void {
@@ -706,8 +656,6 @@ export class ASFFMapper extends BaseConverter {
   }
 }
 
-// sometimes there is a need to change certain meta level information such as the profile name to make it clearer that the original ASFF file came from an external tool instead of SecHub
-// some special cases can take in additional files aside from findings, ex. the guidelines which contain correct severity information
 export class ASFFResults {
   data: Record<string, Record<string, unknown>[]>;
   meta: Record<string, string | undefined> | undefined;
@@ -734,8 +682,6 @@ export class ASFFResults {
         }
       )(securityhubStandardsJsonArray)
     );
-
-    // split input findings via product, each of which will get their own resultant HDF file
     const findings = _.get(fixFileInput(asffJson), 'Findings');
     this.data = _.groupBy(findings, (finding) => {
       const productInfo = (_.get(finding, 'ProductArn') as string)

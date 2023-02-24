@@ -79,6 +79,11 @@ describe('UsersService', () => {
     return databaseService.cleanAll();
   });
 
+  afterAll(async () => {
+    await databaseService.cleanAll();
+    await databaseService.closeConnection();
+  });
+
   describe('Create', () => {
     it('should create a valid User', async () => {
       expect.assertions(8);

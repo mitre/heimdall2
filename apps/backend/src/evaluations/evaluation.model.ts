@@ -44,13 +44,7 @@ export class Evaluation extends Model {
   @Column(DataType.BIGINT)
   userId!: string;
 
-  @ForeignKey(() => Group)
-  @Column(DataType.BIGINT)
-  groupId!: string;
-
-  @BelongsTo(() => User, {
-    constraints: false
-  })
+  @BelongsTo(() => User)
   user!: User;
 
   @CreatedAt

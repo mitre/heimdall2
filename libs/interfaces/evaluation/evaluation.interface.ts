@@ -7,8 +7,7 @@ export interface IEvaluation {
   readonly data?: Record<string, any>;
   evaluationTags: IEvaluationTag[];
   groups: IGroup[];
-  readonly userId?: string;
-  readonly groupId?: string;
+  readonly userId: string;
   readonly public: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;

@@ -8,7 +8,7 @@ function subfindingsCodeDesc(finding: unknown) {
 }
 
 function findingId(finding: unknown) {
-  const generatorId = _.get(finding, 'GeneratorId') as unknown as string;
+  const generatorId = _.get(finding, 'GeneratorId');
   const hyphenIndex = generatorId.indexOf('-');
   return encode(generatorId.slice(hyphenIndex + 1));
 }

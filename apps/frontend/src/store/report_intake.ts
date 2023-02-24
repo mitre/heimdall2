@@ -9,11 +9,10 @@ import {read_file_async} from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
-  ChecklistFile,
+  ChecklistIntermediaryConverter,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
-  GoSecMapper,
   INPUT_TYPES,
   IonChannelMapper,
   JfrogXrayMapper,
@@ -42,7 +41,6 @@ import {
 import _ from 'lodash';
 import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
-import {ChecklistSupplementalInfoModule} from './checklist_supplemental';
 import {FilteredDataModule} from './data_filters';
 import {SnackbarModule} from './snackbar';
 
@@ -155,14 +153,12 @@ export class InspecIntake extends VuexModule {
         text: read,
         filename: filename
       });
-    } 
-    // else if (await this.isChecklist(read)) {
-    //   return this.loadChecklist({
-    //     text: read,
-    //     filename: filename
-    //   });
-    // } 
-    else {
+    } else if (await this.isChecklist(read)) {
+      return this.loadChecklist({
+        text: read,
+        filename: filename
+      });
+    } else {
       const converted = await this.convertToHdf({
         fileOptions: options,
         data: read
@@ -198,18 +194,18 @@ export class InspecIntake extends VuexModule {
     }
   }
 
-  // @Action
-  // async isChecklist(
-  //   data: string | Record<string, unknown> | undefined
-  // ): Promise<boolean> {
-  //   if (
-  //     typeof data === 'string' &&
-  //     data.toLowerCase().includes('<checklist>')
-  //   ) {
-  //     return true;
-  //   }
-  //   return false;
-  // }
+  @Action
+  async isChecklist(
+    data: string | Record<string, unknown> | undefined
+  ): Promise<boolean> {
+    if (
+      typeof data === 'string' &&
+      data.toLowerCase().includes('<checklist>')
+    ) {
+      return true;
+    }
+    return false;
+  }
 
   @Action
   async isHDF(
@@ -292,14 +288,6 @@ export class InspecIntake extends VuexModule {
         return new VeracodeMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.FORTIFY:
         return new FortifyMapper(convertOptions.data).toHdf();
-      case INPUT_TYPES.CHECKLIST:
-        const checklistInfo = {
-          fname: filename,
-          data: convertOptions.data
-        };
-        return ChecklistSupplementalInfoModule.show(checklistInfo);
-      case INPUT_TYPES.GOSEC:
-        return new GoSecMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
@@ -421,27 +409,20 @@ export class InspecIntake extends VuexModule {
     Object.freeze(evaluation);
     InspecDataModule.addExecution(evalFile);
     FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
-    if ('passthrough' in evalFile.evaluation.data) {
-      const passthroughObject: Record<string, unknown> = _.get(
-        evalFile.evaluation.data,
-        'passthrough') as unknown as Record<string, unknown>
-      if ('mutableChecklist' in passthroughObject) {
-      const mutableChecklistObject: Omit<ChecklistFile, 'unigueId'> = _.get(
-        evalFile.evaluation.data,
-        'passthrough.mutableChecklist'
-      ) as unknown as Omit<ChecklistFile, 'unigueId'>;
-      await this.loadChecklist(mutableChecklistObject)
-      }
-    }
 
     return fileID;
   }
 
   @Action
-  async loadChecklist(options: Omit<ChecklistFile, 'unigueId'>) {
+  async loadChecklist(options: ChecklistLoadOptions) {
     const fileID: FileID = uuid();
 
-    InspecDataModule.addChecklist({...options, uniqueId: fileID});
+    const newChecklist = ChecklistIntermediaryConverter.toIntermediary({
+      text: options.text,
+      filename: options.filename
+    });
+
+    InspecDataModule.addChecklist({uniqueId: fileID, ...newChecklist});
     FilteredDataModule.toggle_checklist(fileID);
 
     return fileID;

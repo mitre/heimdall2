@@ -33,7 +33,7 @@ function subfindingsMessage(finding: unknown): string | undefined {
     const patchedPackage = _.get(
       finding,
       'Resources[0].Details.Other.Patched Package'
-    ) as unknown as string;
+    );
     const patchedVersionMessage =
       patchedPackage.length === 0
         ? 'There is no patched version of the package.'
@@ -54,8 +54,8 @@ function productName() {
   return 'Aqua Security - Trivy';
 }
 
-function titlePrefix() {
-  return '';
+function doesNotHaveFindingTitlePrefix() {
+  return true;
 }
 
 function filename() {
@@ -72,7 +72,7 @@ export function getTrivy(): Record<string, (...inputs: any) => any> {
     findingNistTag,
     subfindingsStatus,
     subfindingsMessage,
-    titlePrefix,
+    doesNotHaveFindingTitlePrefix,
     productName,
     filename,
     meta

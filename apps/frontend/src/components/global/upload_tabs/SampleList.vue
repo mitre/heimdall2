@@ -48,18 +48,11 @@ export default class SampleList extends Vue {
     this.loading = true;
     Promise.all(
       sampleArray.map((arrayItem) => {
-        return arrayItem.data().then((data: JSON | string) => {
-          if (typeof data === 'string') {
-            return InspecIntakeModule.loadFile({
-              data: data,
-              filename: arrayItem.filename
-            });
-          } else {
-            return InspecIntakeModule.loadText({
-              text: JSON.stringify(data),
-              filename: arrayItem.filename
-            });
-          }
+        return arrayItem.data().then((data: JSON) => {
+          return InspecIntakeModule.loadText({
+            text: JSON.stringify(data),
+            filename: arrayItem.filename
+          });
         });
       })
     )

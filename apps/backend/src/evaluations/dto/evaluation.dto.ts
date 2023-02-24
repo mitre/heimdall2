@@ -9,8 +9,7 @@ export class EvaluationDto implements IEvaluation {
   readonly data?: Record<string, unknown>;
   readonly evaluationTags: EvaluationTagDto[];
   readonly groups: GroupDto[];
-  readonly userId?: string;
-  readonly groupId?: string;
+  readonly userId: string;
   readonly public: boolean;
   readonly createdAt: Date;
   readonly updatedAt: Date;
@@ -41,7 +40,6 @@ export class EvaluationDto implements IEvaluation {
       this.groups = evaluation.groups.map((tag) => new GroupDto(tag));
     }
     this.userId = evaluation.userId;
-    this.groupId = evaluation.groupId;
     this.public = evaluation.public;
     this.createdAt = evaluation.createdAt;
     this.updatedAt = evaluation.updatedAt;

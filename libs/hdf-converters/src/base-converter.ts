@@ -1,4 +1,3 @@
-import {Jsonix} from '@mitre/jsonix';
 import {createHash} from 'crypto';
 import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
@@ -62,16 +61,6 @@ export function parseXml(xml: string): Record<string, unknown> {
     ignoreAttributes: false
   };
   return parser.parse(xml, options);
-}
-
-export function parseXmlToJsonix(
-  xml: string,
-  mapping: object
-): Record<string, any> {
-  const context = new Jsonix.Context([mapping]);
-  const unmarshaller = context.createUnmarshaller();
-  const jsonix_unmarshalled = unmarshaller.unmarshalString(xml);
-  return jsonix_unmarshalled;
 }
 
 export function parseCsv(csv: string): unknown[] {
@@ -214,7 +203,7 @@ export class BaseConverter {
       _.has(v, 'transformer') && _.isFunction(_.get(v, 'transformer'));
     let transformer = (val: unknown) => val;
     if (hasTransformer) {
-      transformer = _.get(v, 'transformer') as any;
+      transformer = _.get(v, 'transformer');
       v = _.omit(v as object, 'transformer') as T;
     }
 
@@ -226,7 +215,7 @@ export class BaseConverter {
       f?: Record<string, unknown>
     ) => T | T[] = (val: T | T[]) => val;
     if (haspathTransform) {
-      pathTransform = _.get(v, 'pathTransform') as any;
+      pathTransform = _.get(v, 'pathTransform');
       v = _.omit(v as object, 'pathTransform') as T;
     }
 
@@ -234,10 +223,7 @@ export class BaseConverter {
     let pathV = v;
     if (hasPath) {
       pathV = pathTransform(
-        this.handlePath(
-          file,
-          _.get(v, 'path') as unknown as string | string[]
-        ) as T | T[],
+        this.handlePath(file, _.get(v, 'path') as string | string[]) as T | T[],
         file
       );
       v = _.omit(v as object, 'path') as T;
@@ -255,7 +241,7 @@ export class BaseConverter {
     if (Array.isArray(pathV)) {
       return hasTransformer
         ? (transformer(pathV) as T[])
-        : this.handleArray(file, pathV as any);
+        : this.handleArray(file, pathV);
     }
 
     if (_.keys(v).length > 0 && hasTransformer) {
@@ -331,7 +317,7 @@ export class BaseConverter {
                 'key',
                 'pathTransform'
               ]) as unknown as T;
-            }) as any;
+            });
             if (arrayTransformer !== undefined) {
               if (Array.isArray(arrayTransformer)) {
                 v = arrayTransformer[0].apply(arrayTransformer[1], [
@@ -339,7 +325,7 @@ export class BaseConverter {
                   this.data
                 ]);
               } else {
-                v = arrayTransformer.apply(null, [v, this.data]) as any;
+                v = arrayTransformer.apply(null, [v, this.data]) as T[];
               }
             }
             if (key !== undefined) {

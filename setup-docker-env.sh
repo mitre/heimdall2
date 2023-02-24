@@ -1,8 +1,7 @@
 #!/bin/bash
 
 if [ -f .env ]; then
-	echo ".env already exists, if you would like to regenerate your secrets, please delete this file and re-run the script. WARNING: Re-running this script will cause the database password to be reset within the .env file, but the database will still be expecting the old password.  If this happens, you can 1) change DATABASE_PASSWORD in the .env file back to the old password, 2) connect to the database directly and reset the password to the newly generated one, or 3) remove the 'data/' folder (which will delete all data)."
-	
+	echo ".env already exists, if you would like to regenerate your secrets, please delete this file and re-run the script."
 else
 	echo ".env does not exist, creating..."
 	(umask 066; touch .env)
@@ -24,7 +23,6 @@ fi
 
 if ! grep -qF "API_KEY_SECRET" .env; then
 	read -p ".env does not contain API_KEY_SECRET, would you like to enable API Keys? [Y/n]" -n 1 -r
-	echo ""
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
 		echo "API_KEY_SECRET=$(openssl rand -hex 33)" >> .env

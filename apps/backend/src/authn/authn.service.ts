@@ -13,7 +13,6 @@ import ms from 'ms';
 import winston from 'winston';
 import {ApiKeyService} from '../apikeys/apikey.service';
 import {ConfigService} from '../config/config.service';
-import {Group} from '../groups/group.model';
 import {limitJWTTime} from '../token/token.providers';
 import {CreateUserDto} from '../users/dto/create-user.dto';
 import {User} from '../users/user.model';
@@ -54,7 +53,7 @@ export class AuthnService {
     }
   }
 
-  async validateApiKey(apikey: string): Promise<User | Group | null> {
+  async validateApiKey(apikey: string): Promise<User | null> {
     const APIKeySecret = this.configService.get('API_KEY_SECRET');
     if (APIKeySecret) {
       try {
@@ -69,18 +68,10 @@ export class AuthnService {
             jwtPayload.keyId
           );
           if (await compare(JWTSignature, matchingKey.apiKey)) {
-            if (matchingKey.type === 'user') {
-              return matchingKey.user;
-            } else if (matchingKey.type === 'group') {
-              return matchingKey.group;
-            } else {
-              return null;
-            }
+            return matchingKey.user;
           } else {
             return null;
           }
-        } else {
-          return null;
         }
       } catch {
         return null;
@@ -90,6 +81,7 @@ export class AuthnService {
         'API Keys have been disabled as the API-Key secret is not set'
       );
     }
+    return null;
   }
 
   async validateOrCreateUser(

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 /** Simple script that hosts index.html
- * Not particularly robust, but facilitates running via npx.
+ * Not particularly robust, but facillitates running via npx.
  *
  * Can specify port using the first command line argument.
  */

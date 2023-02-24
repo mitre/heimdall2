@@ -8,14 +8,6 @@ export class CreateApiKeyDto implements ICreateApiKey {
 
   @IsString()
   @IsOptional()
-  readonly groupId?: string;
-
-  @IsString()
-  @IsOptional()
-  readonly userEmail?: string;
-
-  @IsString()
-  @IsOptional()
   readonly name?: string;
 
   @IsString()

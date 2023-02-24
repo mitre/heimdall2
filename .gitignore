@@ -35,7 +35,6 @@ test/videos
 # Editor - Vim
 .*.un~
 .*.swp
-.*.swo
 
 # IDE - VSCode
 .vscode/*
@@ -69,6 +68,3 @@ apps/frontend/public/static/export/jquery.min.js
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
-
-# Database Content
-data/*

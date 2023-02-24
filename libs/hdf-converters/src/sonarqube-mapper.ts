@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
@@ -146,50 +146,54 @@ export class SonarQubeResults {
           page += 1;
         });
     }
-
     // Get code snippets for each issue
-    await Promise.all(
-      this.data.issues?.map((issue) =>
-        axios
-          .get(`${this.sonarQubeHost}/api/sources/raw`, {
-            auth: {username: this.userToken, password: ''},
-            params: {
-              key: issue.component,
-              ...(this.branchName && {branch: this.branchName})
-            }
-          })
-          .then(
-            (response) =>
-              (issue.snip = response.data
-                .split('\n')
-                .slice(
-                  // api does care if we request lines before the start of the file (returns an empty string)
-                  Math.max((issue.textRange?.startLine as number) - 3, 0),
-                  // api doesn't care if we request lines past end of file
-                  (issue.textRange?.endLine as number) + 3
-                )
-                .join('\n')
-                .trim())
-          )
-      )
+    let requests: Promise<AxiosResponse>[] = [];
+    this.data.issues?.forEach((issue) => {
+      requests.push(
+        axios.get(`${this.sonarQubeHost}/api/sources/raw`, {
+          auth: {username: this.userToken, password: ''},
+          params: {
+            key: issue.component
+          }
+        })
+      );
+    });
+    // Wait for all requests
+    await axios.all(requests).then(
+      axios.spread((...responses) => {
+        // Extract code snippets from SonarQube
+        responses.forEach((response, index) => {
+          this.data.issues[index].snip = response.data
+            .split('\n')
+            .slice(
+              (this.data.issues[index].textRange?.startLine as number) - 3,
+              // api doesn't care if we request lines past end of file
+              (this.data.issues[index].textRange?.endLine as number) + 3
+            )
+            .join('\n');
+        });
+      })
     );
-
     // Get all rules
-    await Promise.all(
-      this.data.issues?.map((issue) =>
-        axios
-          .get(`${this.sonarQubeHost}/api/rules/show`, {
-            auth: {username: this.userToken, password: ''},
-            params: {
-              key: issue.rule
-            }
-          })
-          .then((response) => {
-            issue.sysTags = response.data.rule.sysTags;
-            issue.name = response.data.rule.name;
-            issue.summary = response.data.rule.htmlDesc;
-          })
-      )
+    requests = [];
+    this.data.issues?.forEach((issue) => {
+      requests.push(
+        axios.get(`${this.sonarQubeHost}/api/rules/show`, {
+          auth: {username: this.userToken, password: ''},
+          params: {
+            key: issue.rule
+          }
+        })
+      );
+    });
+    await axios.all(requests).then(
+      axios.spread((...responses) => {
+        responses.forEach((response, index) => {
+          this.data.issues[index].sysTags = response.data.rule.sysTags;
+          this.data.issues[index].name = response.data.rule.name;
+          this.data.issues[index].summary = response.data.rule.htmlDesc;
+        });
+      })
     );
 
     const result = new SonarQubeMapper(

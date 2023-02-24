@@ -195,15 +195,9 @@ export default class ExportHTMLModal extends Vue {
   addFiledata(file: EvaluationFile | ProfileFile) {
     this.outputData.files.push({
       filename: file.filename,
-      toolVersion: _.get(file, 'evaluation.data.version') as unknown as string,
-      platform: _.get(
-        file,
-        'evaluation.data.platform.name'
-      ) as unknown as string,
-      duration: _.get(
-        file,
-        'evaluation.data.statistics.duration'
-      ) as unknown as string
+      toolVersion: _.get(file, 'evaluation.data.version'),
+      platform: _.get(file, 'evaluation.data.platform.name'),
+      duration: _.get(file, 'evaluation.data.statistics.duration')
     });
     this.outputData.exportType = _.capitalize(this.exportType);
     const allControlLevels = FilteredDataModule.controls({

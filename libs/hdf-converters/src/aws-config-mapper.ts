@@ -206,11 +206,11 @@ export class AwsConfigMapper {
       const resourceType: string = _.get(
         result,
         'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceType'
-      ) as unknown as string;
+      );
       const resourceId: string = _.get(
         result,
         'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId'
-      ) as unknown as string;
+      );
       if (!(resourceType in resourceMap)) {
         resourceMap[resourceType] = [resourceId];
       } else {
@@ -334,7 +334,7 @@ export class AwsConfigMapper {
       result = _.set(
         result,
         'nist',
-        (_.get(result, 'nist') as unknown as string[]).concat(defaultMatch)
+        _.get(result, 'nist').concat(defaultMatch)
       );
     }
     return result;

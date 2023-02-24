@@ -6,48 +6,37 @@ This repository contains the source code for Heimdall's [Backend](https://github
 
 ## Contents
 
-- [Heimdall](#heimdall)
-  - [Contents](#contents)
-  - [Demos](#demos)
-    - [Video](#video)
-    - [Hosted](#hosted)
-      - [*These demos are only intended to show the functionality of Heimdall, please do not upload any sensitive data to them.*](#these-demos-are-only-intended-to-show-the-functionality-of-heimdall-please-do-not-upload-any-sensitive-data-to-them)
-      - [Released Previews](#released-previews)
-      - [Current *Development Master Branch* Preview](#current-development-master-branch-preview)
-  - [Heimdall (Lite) vs Heimdall with Backend (Server)](#heimdall-lite-vs-heimdall-with-backend-server)
-    - [Heimdall-Lite](#heimdall-lite)
-    - [Heimdall with Backend (Server)](#heimdall-with-backend-server)
-    - [Features](#features)
-    - [Use Cases](#use-cases)
-  - [Getting Started / Installation](#getting-started--installation)
-    - [Heimdall Lite](#heimdall-lite-1)
-      - [Running via npm](#running-via-npm)
-      - [Running via Docker](#running-via-docker)
-    - [Heimdall Server - Docker](#heimdall-server---docker)
-      - [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
-      - [Updating Docker Container](#updating-docker-container)
-      - [Stopping the Container](#stopping-the-container)
-      - [Helm Chart](#helm-chart)
-      - [Running via Cloud.gov](#running-via-cloudgov)
-  - [External Data Sources](#external-data-sources)
-    - [AWS S3](#aws-s3)
-  - [API Usage](#api-usage)
-  - [For Developers](#for-developers)
-    - [How to Install](#how-to-install)
-    - [Debugging Heimdall Server](#debugging-heimdall-server)
-    - [Developing Heimdall Lite Standalone](#developing-heimdall-lite-standalone)
-    - [Lint and fix files](#lint-and-fix-files)
-    - [Compile and minify the frontend and backend for production](#compile-and-minify-the-frontend-and-backend-for-production)
-    - [Run tests](#run-tests)
-      - [Run Cypress End to End Tests](#run-cypress-end-to-end-tests)
-    - [Creating a Release](#creating-a-release)
-  - [Versioning and State of Development](#versioning-and-state-of-development)
-  - [Contributing, Issues and Support](#contributing-issues-and-support)
-    - [Contributing](#contributing)
-    - [Issues and Support](#issues-and-support)
-    - [NOTICE](#notice)
-    - [NOTICE](#notice-1)
-    - [NOTICE](#notice-2)
+* [Demos](#demos)
+    * [Video](#video)
+    * [Hosted](#hosted)
+* [Heimdall (Lite) vs Heimdall with Backend (Server)](#heimdall-lite-vs-heimdall-with-backend-server)
+    * [Features](#features)
+    * [Use Cases](#use-cases)
+* [Getting Started / Installation](#getting-started--installation)
+    * [Heimdall Lite](#heimdall-lite)
+        * [Running via npm](#running-via-npm)
+        * [Running via Docker](#running-via-docker)
+    * [Heimdall Server - Docker](#heimdall-server---docker)
+        * [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
+        * [Running Docker Container](#running-docker-container)
+        * [Updating Docker Container](#updating-docker-container)
+        * [Stopping the Container](#stopping-the-container)
+        * [Helm Chart](#helm-chart)
+        * [Running via Cloud.gov](#running-via-cloudgov)
+* [External Data Sources](#external-data-sources)
+    * [AWS S3](#aws-s3)
+* [API Usage](#api-usage)
+* [For Developers](#for-developers)
+    * [How to Install](#how-to-install)
+    * [Debugging Heimdall Server](#debugging-heimdall-server)
+    * [Developing Heimdall Lite Standalone](#developing-heimdall-lite-standalone)
+    * [Lint and fix files](#lint-and-fix-files)
+    * [Compile and minify the frontend and backend for production](#compile-and-minify-the-frontend-and-backend-for-production)
+    * [Run tests](#run-tests)
+        * [Run Cypress End to End Tests](#run-cypress-end-to-end-tests)
+    * [Creating a Release](#creating-a-release)
+* [Versioning and State of Development](#versioning-and-state-of-development)
+* [Contributing, Issues and Support](#contributing-issues-and-support)
 
 ## Demos
 
@@ -107,7 +96,6 @@ Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Li
 | View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF) | :white_check_mark: | :white_check_mark: |
 | Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | :white_check_mark: | :white_check_mark: |
 | Authenticated REST API       |   | :white_check_mark: |
-| CRUD Capabilities            |   | :white_check_mark: |
 | Users & Roles & multi-team support    |   | :white_check_mark: |
 | Authentication & Authorization        | Hosting Webserver | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
 
@@ -117,7 +105,7 @@ Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Li
 | :------------------------------------------------------: | :------------------------------------------------------: |
 | Just-in-Time Use | Multiple Teams |
 | Minimal Footprint & Deployment Time  | Timeline and Report History |
-| Local or Disconnected Use | Centralized Deployment Model |
+| Local or disconnected Use | Centralized Deployment Model |
 | Minimal Authorization & Approval Time |  |
 
 ## Getting Started / Installation
@@ -168,15 +156,13 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 
 3. Navigate to the base folder where `docker-compose.yml` is located
 
-4. By default Heimdall will generate self-signed certificates that will last for 7 days. For production use, place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively. For development use, you can use the default generated certificates which means you do not need to put any certificate files in the `./nginx/certs/` folder.
-
-*NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
+4. By default Heimdall will generate self-signed certificates that will last for 7 days. Place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively.
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
    - ```bash
      ./setup-docker-env.sh
      # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
-     docker-compose up
+     docker-compose up -d
      ```
 
 6. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.) 
@@ -272,7 +258,7 @@ In order to allow Heimdall to Connect to your AWS S3 bucket, you need to [add a 
 
 API usage only works when using Heimdall Enterprise Server (AKA "Server Mode").
 
-Heimdall API documentation is being compiled and it is located in this  [wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-API-Documentation) page. In the meantime here are quick instructions for uploading evaluations to Heimdall Server.
+Proper API documentation does not exist yet. In the meantime here are quick instructions for uploading evaluations to Heimdall Server.
 
 ```sh
 # To use API Keys, ensure you have set the API_KEY_SECRET environment variable. To create a secret run: openssl rand -hex 33
@@ -295,7 +281,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    - ```bash
      # grab nodesource for recent version of nodejs
      sudo curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh
-     sudo bash /tmp/nodesource_setup.sh
+     sudo /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
      sudo apt install postgresql nodejs nano git
@@ -360,7 +346,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      yarn install
      ```
 
-5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
+5. Edit your apps/backend/.env file using the provided `start-dev-env.sh` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
 
 You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 

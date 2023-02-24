@@ -1,6 +1,5 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
-import {ApiKeyModule} from '../apikeys/apikeys.module';
 import {AuthzModule} from '../authz/authz.module';
 import {ConfigModule} from '../config/config.module';
 import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
@@ -13,7 +12,6 @@ import {GroupsService} from './groups.service';
 @Module({
   imports: [
     SequelizeModule.forFeature([Group]),
-    ApiKeyModule,
     AuthzModule,
     ConfigModule,
     UsersModule,

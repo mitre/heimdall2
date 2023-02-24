@@ -29,6 +29,7 @@ import Component from 'vue-class-component';
 import {Prop, VModel} from 'vue-property-decorator';
 
 @Component({
+  validations: {},
   components: {
     Users
   }

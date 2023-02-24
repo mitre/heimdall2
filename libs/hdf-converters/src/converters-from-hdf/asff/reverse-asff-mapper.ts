@@ -192,12 +192,10 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
       _.set(
         finding,
         'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
-        (
-          _.get(
-            finding,
-            'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
-            ''
-          ) as unknown as string
+        _.get(
+          finding,
+          'Resources[1].Details.AwsIamRole.AssumeRolePolicyDocument',
+          ''
         ).slice(0, ATTRIBUTE_CHARACTER_LIMIT)
       );
       // no need for truncation warning since AssumeRolePolicyDocument is only used to look nice in the GUI - FindingProviderFields.Types contains all the information

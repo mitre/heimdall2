@@ -1,7 +1,6 @@
 import {ForbiddenException, Injectable} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import HeaderAPIKeyStrategy from 'passport-headerapikey';
-import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 import {AuthnService} from './authn.service';
 
@@ -18,14 +17,14 @@ export class APIKeyStrategy extends PassportStrategy(
         apikey: string,
         done: (
           exception: null | ForbiddenException,
-          user: Promise<User | Group | null> | boolean
+          user: Promise<User | null> | boolean
         ) => unknown
       ) => {
-        const auth = this.authnService.validateApiKey(apikey);
-        if (await auth) {
-          return done(null, auth);
+        const user = this.authnService.validateApiKey(apikey);
+        if (await user) {
+          return done(null, user);
         } else {
-          return done(new ForbiddenException('Bad Api-Key'), auth);
+          return done(new ForbiddenException('Bad Api-Key'), user);
         }
       }
     );

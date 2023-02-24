@@ -49,7 +49,7 @@ function processEntry(input: unknown): string {
   output.push(`\nPath: ${_.get(input, 'File')}\n`);
   output.push(`StartLine: ${_.get(input, 'StartLine')}, `);
   output.push(`EndLine: ${_.get(input, 'EndLine')}\n`);
-  output.push(`Code:\n${(_.get(input, 'Text') as unknown as string).trim()}`);
+  output.push(`Code:\n${_.get(input, 'Text').trim()}`);
 
   return output.join('');
 }
@@ -66,50 +66,44 @@ function filterVuln(input: unknown[], file: unknown): ExecJSON.Control[] {
       _.set(
         element,
         'results',
-        (_.get(element, 'results') as any).filter(
-          (result: ExecJSON.ControlResult) => {
-            const codedesc = _.get(result, 'code_desc').split('<=SNIPPET');
-            const snippetid = codedesc[0];
-            const classid = _.get(element, 'id');
-            _.set(result, 'code_desc', codedesc[1]);
+        _.get(element, 'results').filter((result: ExecJSON.ControlResult) => {
+          const codedesc = _.get(result, 'code_desc').split('<=SNIPPET');
+          const snippetid = codedesc[0];
+          const classid = _.get(element, 'id');
+          _.set(result, 'code_desc', codedesc[1]);
 
-            let isMatch = false;
-            const matches = (
-              _.get(file, 'FVDL.Vulnerabilities.Vulnerability') as any
-            ).filter((subElement: Record<string, unknown>) => {
-              return _.get(subElement, 'ClassInfo.ClassID') === classid;
-            });
-            matches.forEach((match: Record<string, unknown>) => {
-              const traces: unknown[] = makeArray(
-                _.get(match, 'AnalysisInfo.Unified.Trace')
+          let isMatch = false;
+          const matches = _.get(
+            file,
+            'FVDL.Vulnerabilities.Vulnerability'
+          ).filter((subElement: Record<string, unknown>) => {
+            return _.get(subElement, 'ClassInfo.ClassID') === classid;
+          });
+          matches.forEach((match: Record<string, unknown>) => {
+            const traces: unknown[] = makeArray(
+              _.get(match, 'AnalysisInfo.Unified.Trace')
+            );
+            traces.forEach((trace: unknown) => {
+              const entries: unknown[] = makeArray(
+                _.get(trace, 'Primary.Entry')
               );
-              traces.forEach((trace: unknown) => {
-                const entries: unknown[] = makeArray(
-                  _.get(trace, 'Primary.Entry')
-                );
-                const filteredEntries = entries.filter((entry: unknown) => {
-                  return _.has(entry, 'Node.SourceLocation.snippet');
-                });
-                filteredEntries.forEach((entry: unknown) => {
-                  if (
-                    _.get(entry, 'Node.SourceLocation.snippet') === snippetid
-                  ) {
-                    isMatch = true;
-                  }
-                });
+              const filteredEntries = entries.filter((entry: unknown) => {
+                return _.has(entry, 'Node.SourceLocation.snippet');
+              });
+              filteredEntries.forEach((entry: unknown) => {
+                if (_.get(entry, 'Node.SourceLocation.snippet') === snippetid) {
+                  isMatch = true;
+                }
               });
             });
-            return isMatch;
-          }
-        )
+          });
+          return isMatch;
+        })
       );
       _.set(
         element,
         'impact',
-        impactMapping(
-          _.get(element, 'impact') as unknown as Record<string, unknown>,
-          _.get(element, 'id') as unknown as string
-        )
+        impactMapping(_.get(element, 'impact'), _.get(element, 'id'))
       );
     }
     return element;
