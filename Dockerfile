@@ -9,11 +9,10 @@ WORKDIR /src
 
 RUN apk update && apk upgrade
 
-##find a way to add these into a folder and extract its contents to root
 COPY --link apps ./apps
 COPY --link libs ./libs
 COPY  package.json yarn.lock lerna.json tsconfig.json .prettierrc ./
-##run all of these together?
+
 RUN apk add python3 make g++
 RUN sed -i s^https://registry.yarnpkg.com^$YARNREPO^g yarn.lock
 RUN yarn install --frozen-lockfile --production --network-timeout 600000
