@@ -3,6 +3,7 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "strict": true,
+    "alwaysStrict": false,
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
