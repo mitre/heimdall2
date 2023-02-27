@@ -4,24 +4,6 @@
       <v-row class="mt-0">
         <v-col>
           <v-autocomplete
-            v-model="usersToAdd"
-            :items="availableUsers"
-            chips
-            label="Add Users"
-            full-width
-            hide-selected
-            deletable-chips
-            multiple
-            single-line
-          >
-            <template slot="append-outer">
-              <v-btn @click="addUsers">
-                <v-icon left>mdi-plus</v-icon>
-                Add
-              </v-btn>
-            </template>
-          </v-autocomplete>
-          <v-autocomplete
             v-model="ownersToAdd"
             :items="availableUsers"
             chips
@@ -34,6 +16,24 @@
           >
             <template slot="append-outer">
               <v-btn @click="addOwners">
+                <v-icon left>mdi-plus</v-icon>
+                Add
+              </v-btn>
+            </template>
+          </v-autocomplete>
+          <v-autocomplete
+            v-model="usersToAdd"
+            :items="availableUsers"
+            chips
+            label="Add Users"
+            full-width
+            hide-selected
+            deletable-chips
+            multiple
+            single-line
+          >
+            <template slot="append-outer">
+              <v-btn @click="addUsers">
                 <v-icon left>mdi-plus</v-icon>
                 Add
               </v-btn>
@@ -148,7 +148,13 @@ export default class Users extends Vue {
   addUsers() {
     ServerModule.allUsers.forEach((user) => {
       if (this.usersToAdd.includes(user.id)) {
-        this.currentUsers.push(user);
+        this.currentUsers.push({
+          ...user,
+          groupRole: 'member'
+        });
+      }
+      if (this.ownersToAdd.includes(user.id)) {
+        this.ownersToAdd.splice(this.ownersToAdd.indexOf(user.id), 1);
       }
     });
     this.usersToAdd = [];
@@ -161,6 +167,9 @@ export default class Users extends Vue {
           ...user,
           groupRole: 'owner'
         });
+      }
+      if (this.usersToAdd.includes(user.id)) {
+        this.usersToAdd.splice(this.usersToAdd.indexOf(user.id), 1);
       }
     });
     this.ownersToAdd = [];
