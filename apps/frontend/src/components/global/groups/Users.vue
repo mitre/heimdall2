@@ -22,10 +22,10 @@
             </template>
           </v-autocomplete>
           <v-autocomplete
-            v-model="usersToAdd"
+            v-model="membersToAdd"
             :items="availableUsers"
             chips
-            label="Add Users"
+            label="Add Members"
             full-width
             hide-selected
             deletable-chips
@@ -33,7 +33,7 @@
             single-line
           >
             <template slot="append-outer">
-              <v-btn @click="addUsers">
+              <v-btn @click="addMembers">
                 <v-icon left>mdi-plus</v-icon>
                 Add
               </v-btn>
@@ -110,7 +110,7 @@ export default class Users extends Vue {
   @Prop({type: Boolean, required: false, default: true})
   readonly editable!: boolean;
 
-  usersToAdd: string[] = [];
+  membersToAdd: string[] = [];
   ownersToAdd: string[] = [];
   editedUser: ISlimUser = {id: '0', email: ''};
   dialogDelete = false;
@@ -145,9 +145,9 @@ export default class Users extends Vue {
     return this.headers;
   }
 
-  addUsers() {
+  addMembers() {
     ServerModule.allUsers.forEach((user) => {
-      if (this.usersToAdd.includes(user.id)) {
+      if (this.membersToAdd.includes(user.id)) {
         this.currentUsers.push({
           ...user,
           groupRole: 'member'
@@ -157,7 +157,7 @@ export default class Users extends Vue {
         this.ownersToAdd.splice(this.ownersToAdd.indexOf(user.id), 1);
       }
     });
-    this.usersToAdd = [];
+    this.membersToAdd = [];
   }
 
   addOwners() {
@@ -168,8 +168,8 @@ export default class Users extends Vue {
           groupRole: 'owner'
         });
       }
-      if (this.usersToAdd.includes(user.id)) {
-        this.usersToAdd.splice(this.usersToAdd.indexOf(user.id), 1);
+      if (this.membersToAdd.includes(user.id)) {
+        this.membersToAdd.splice(this.membersToAdd.indexOf(user.id), 1);
       }
     });
     this.ownersToAdd = [];
