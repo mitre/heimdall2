@@ -11,7 +11,7 @@ export default class AppConfig {
       this.envConfig = dotenv.parse(fs.readFileSync('.env'));
       console.log('Read config!');
     } catch (error) {
-      if (error.code === 'ENOENT') {
+      if ((error as NodeJS.ErrnoException).code === 'ENOENT') {
         this.envConfig = {};
         // File probably does not exist
         console.log('Unable to read configuration file `.env`!');
@@ -102,7 +102,7 @@ export default class AppConfig {
     return {
       rejectUnauthorized:
         this.get('DATABASE_SSL_INSECURE') &&
-        this.get('DATABASE_SSL_INSECURE')?.toLowerCase() === 'true',
+        this.get('DATABASE_SSL_INSECURE')?.toLowerCase() !== 'true',
       key: sslKey,
       cert: sslCert,
       ca: sslCA

@@ -13,6 +13,7 @@ import {
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
+  GoSecMapper,
   INPUT_TYPES,
   IonChannelMapper,
   JfrogXrayMapper,
@@ -288,6 +289,8 @@ export class InspecIntake extends VuexModule {
         return new VeracodeMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.FORTIFY:
         return new FortifyMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.GOSEC:
+        return new GoSecMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`

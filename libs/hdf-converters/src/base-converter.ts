@@ -203,7 +203,7 @@ export class BaseConverter {
       _.has(v, 'transformer') && _.isFunction(_.get(v, 'transformer'));
     let transformer = (val: unknown) => val;
     if (hasTransformer) {
-      transformer = _.get(v, 'transformer');
+      transformer = _.get(v, 'transformer') as any;
       v = _.omit(v as object, 'transformer') as T;
     }
 
@@ -215,7 +215,7 @@ export class BaseConverter {
       f?: Record<string, unknown>
     ) => T | T[] = (val: T | T[]) => val;
     if (haspathTransform) {
-      pathTransform = _.get(v, 'pathTransform');
+      pathTransform = _.get(v, 'pathTransform') as any;
       v = _.omit(v as object, 'pathTransform') as T;
     }
 
@@ -223,7 +223,10 @@ export class BaseConverter {
     let pathV = v;
     if (hasPath) {
       pathV = pathTransform(
-        this.handlePath(file, _.get(v, 'path') as string | string[]) as T | T[],
+        this.handlePath(
+          file,
+          _.get(v, 'path') as unknown as string | string[]
+        ) as T | T[],
         file
       );
       v = _.omit(v as object, 'path') as T;
@@ -241,7 +244,7 @@ export class BaseConverter {
     if (Array.isArray(pathV)) {
       return hasTransformer
         ? (transformer(pathV) as T[])
-        : this.handleArray(file, pathV);
+        : this.handleArray(file, pathV as any);
     }
 
     if (_.keys(v).length > 0 && hasTransformer) {
@@ -317,7 +320,7 @@ export class BaseConverter {
                 'key',
                 'pathTransform'
               ]) as unknown as T;
-            });
+            }) as any;
             if (arrayTransformer !== undefined) {
               if (Array.isArray(arrayTransformer)) {
                 v = arrayTransformer[0].apply(arrayTransformer[1], [
@@ -325,7 +328,7 @@ export class BaseConverter {
                   this.data
                 ]);
               } else {
-                v = arrayTransformer.apply(null, [v, this.data]) as T[];
+                v = arrayTransformer.apply(null, [v, this.data]) as any;
               }
             }
             if (key !== undefined) {
