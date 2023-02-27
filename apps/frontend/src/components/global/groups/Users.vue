@@ -21,6 +21,24 @@
               </v-btn>
             </template>
           </v-autocomplete>
+          <v-autocomplete
+            v-model="ownersToAdd"
+            :items="availableUsers"
+            chips
+            label="Add Owners"
+            full-width
+            hide-selected
+            deletable-chips
+            multiple
+            single-line
+          >
+            <template slot="append-outer">
+              <v-btn @click="addOwners">
+                <v-icon left>mdi-plus</v-icon>
+                Add
+              </v-btn>
+            </template>
+          </v-autocomplete>
         </v-col>
       </v-row>
     </div>
@@ -93,6 +111,7 @@ export default class Users extends Vue {
   readonly editable!: boolean;
 
   usersToAdd: string[] = [];
+  ownersToAdd: string[] = [];
   editedUser: ISlimUser = {id: '0', email: ''};
   dialogDelete = false;
   headers: Object[] = [
@@ -133,6 +152,18 @@ export default class Users extends Vue {
       }
     });
     this.usersToAdd = [];
+  }
+
+  addOwners() {
+    ServerModule.allUsers.forEach((user) => {
+      if (this.ownersToAdd.includes(user.id)) {
+        this.currentUsers.push({
+          ...user,
+          groupRole: 'owner'
+        });
+      }
+    });
+    this.ownersToAdd = [];
   }
 
   onUpdateGroupUserRole(newValue: string) {

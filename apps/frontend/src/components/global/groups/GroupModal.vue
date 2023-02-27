@@ -193,7 +193,7 @@ export default class GroupModal extends Vue {
     const addedUserPromises = toAdd.map((user) => {
       const addUserDto: IAddUserToGroup = {
         userId: user.id,
-        groupRole: 'member'
+        groupRole: user.groupRole || 'member'
       };
       return axios.post(`/groups/${group.id}/user`, addUserDto);
     });
