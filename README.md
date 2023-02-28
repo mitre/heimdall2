@@ -339,10 +339,12 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    OSX:
 
     - ```sql
-      # Start the server
+      # Start the postgres server corresponding to your installation method
       pg_ctl -D /opt/homebrew/var/postgres start
       # Alternatively, you may find postgres in another location like the following:
       pg_ctl -D /usr/local/var/postgres start
+      # Brew method
+      brew services start postgresql@13
 
       # Start the Postgres terminal
       psql postgres
