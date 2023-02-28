@@ -341,6 +341,8 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
     - ```sql
       # Start the server
       pg_ctl -D /opt/homebrew/var/postgres start
+      # Alternatively, you may find postgres in another location like the following:
+      pg_ctl -D /usr/local/var/postgres start
 
       # Start the Postgres terminal
       psql postgres
