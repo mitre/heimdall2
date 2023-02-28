@@ -288,7 +288,7 @@ curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evalua
 
 If you would like to change Heimdall to your needs, you can use Heimdall's 'Development Mode' to ease the development process. The benefit to using this mode is that it will automatically rebuild itself and use those changes as soon as you make them. Please note that you should not run development mode when deploying Heimdall for general usage.
 
-1. Install system dependencies with your system's package manager.
+1. Install system dependencies with your system's package manager. NodeJS is required and can be installed via your system's package manager, or an alternative method if desired. Documented below is the installation via your system's package manager.
 
    Ubuntu:
 
@@ -298,14 +298,16 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
-     sudo apt install postgresql nodejs nano git
+     sudo apt install postgresql nodejs git
+     sudo apt install nano                        # recommended installation
      sudo npm install -g yarn
      ```
      
    OSX:
    
    - ```bash
-     brew install postgresql node@16 nano git
+     brew install postgresql node@16 git      
+     brew install nano                        # recommended installation
      sudo npm install -g yarn
      ```
 
