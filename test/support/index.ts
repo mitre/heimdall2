@@ -18,11 +18,6 @@ beforeEach(function () {
   databaseHelper.clear();
 });
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-Cypress.on('uncaught:exception', (err, runnable) => {
-  return false;
-});
-
 // There seems to be an issue with v-slide-group that causes it to throw
 // "Uncaught TypeError: Cannot read property 'getBoundingClientRect' of undefined"
 // On a null-obj
