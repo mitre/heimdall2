@@ -12,7 +12,8 @@
     "noImplicitAny": true,
     "resolveJsonModule": true,
     "useUnknownInCatchVariables": false,
-    "alwaysStrict": false
+    "alwaysStrict": false,
+    "noImplicitUseStrict": true
   },
   "include": ["types/**/*.d.ts"],
   "exclude": ["**/node_modules"]
