@@ -1,3 +1,24 @@
+v2.6.40
+
+- Remove advanced codeql configuration @Amndeep7 (#4114)
+- updating notices, moving them to a file @wdower (#3908)
+
+## Dependency Updates
+
+- Bump @types/uuid from 9.0.0 to 9.0.1 @dependabot (#4113)
+- Bump sequelize from 6.28.0 to 6.28.1 @dependabot (#4111)
+- Bump aws-sdk from 2.1318.0 to 2.1320.0 @dependabot (#4112)
+- Bump @vue/eslint-config-prettier from 7.0.0 to 7.1.0 @dependabot (#4110)
+- Bump @aws-sdk/client-config-service from 3.272.0 to 3.276.0 @dependabot (#4108)
+- Bump @typescript-eslint/parser from 5.52.0 to 5.53.0 @dependabot (#4106)
+- Bump oauth2-mock-server from 5.0.1 to 5.0.2 @dependabot (#4105)
+- Bump @typescript-eslint/eslint-plugin from 5.52.0 to 5.53.0 @dependabot (#4104)
+- Bump aws-sdk from 2.1316.0 to 2.1318.0 @dependabot (#4096)
+- Bump @types/chroma-js from 2.1.5 to 2.4.0 @dependabot (#4097)
+- Bump @types/node from 18.11.19 to 18.14.0 @dependabot (#4095)
+- Bump aws-sdk from 2.1315.0 to 2.1316.0 @dependabot (#4089)
+- Bump @aws-sdk/client-config-service from 3.267.0 to 3.272.0 @dependabot (#4090)
+
 v2.6.39
 
 - Fix sequelize cli typescript compilation issue @Amndeep7 (#4070)
