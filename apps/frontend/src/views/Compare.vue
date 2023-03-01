@@ -325,8 +325,6 @@ export default class Compare extends Vue {
       // If the number of controls with information loaded about them is different than the number of files
       // loaded then something has been added/removed and should be displayed.
       return controls.some((control) => control !== controls[0]);
-      // ||
-      // controls.length !== FilteredDataModule.selected_file_ids.length
     });
   }
 
