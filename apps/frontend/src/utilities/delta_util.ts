@@ -155,9 +155,11 @@ export function get_eval_start_time(
   ev: ContextualizedEvaluation
 ): string | null {
   for (const prof of ev.contains) {
-    for (const ctrl of prof.contains) {
-      if (ctrl.hdf.segments!.length) {
-        return ctrl.hdf.segments![0].start_time;
+    if ('contains' in prof) {
+      for (const ctrl of prof.contains) {
+        if (ctrl.hdf.segments!.length) {
+          return ctrl.hdf.segments![0].start_time;
+        }
       }
     }
   }
