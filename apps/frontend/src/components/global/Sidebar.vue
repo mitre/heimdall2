@@ -383,6 +383,7 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   /** Returns the current parsed search result */
   get currentFilters(): any {
+    console.log('What is this: ', SearchModule.currentSearchResult);
     return SearchModule.currentSearchResult;
   }
 

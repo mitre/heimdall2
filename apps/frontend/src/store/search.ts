@@ -121,11 +121,11 @@ class Search extends VuexModule implements ISearchState {
   }
 
   /** Current value of the parsed query string */
-  currentSearchResult: any = parse('');
+  currentSearchResult = parse('');
 
   /** Parse search bar to add strings to needed filter category */
   @Mutation
-  setCurrentSearchResult(value: any) {
+  setCurrentSearchResult(value: object) {
     this.currentSearchResult = value;
   }
 

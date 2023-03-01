@@ -62,7 +62,7 @@ describe('Sidebar tests', () => {
     // Current filter from parsed search term
     let currentFilters = (
       wrapper.vm as Vue & {
-        currentFilters: Array<any>;
+        currentFilters: Array<object>;
       }
     ).currentFilters;
     // Items in the data table
@@ -91,7 +91,7 @@ describe('Sidebar tests', () => {
     SearchModule.parseSearch();
     currentFilters = (
       wrapper.vm as Vue & {
-        currentFilters: Array<any>;
+        currentFilters: Array<object>;
       }
     ).currentFilters;
     tableFilters = (
