@@ -33,7 +33,7 @@ describe('Datatable', () => {
     // Get example checklist file and count
     const countFilename = `tests/hdf_data/counts/Red_Hat_7_STIG_Baseline_Checklist.ckl.info.counts`;
     const countFileContent = readFileSync(countFilename, 'utf-8');
-    const counts: Record<string, any> = JSON.parse(countFileContent);
+    const counts: Record<string, {total: number;}> = JSON.parse(countFileContent);
 
     total_count += counts.failed.total;
     total_count += counts.passed.total;

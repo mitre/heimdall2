@@ -168,59 +168,58 @@ export class InspecData extends VuexModule {
   UPDATE_CHECKLISTS() {
     this.checklistFiles.forEach((checklistFile) => {
       // Setting assets
-      _.set(checklistFile.raw, 'value.asset.role', checklistFile.asset.role);
       _.set(
-        checklistFile.raw,
+        checklistFile.raw as Record<string, unknown>,
+        'value.asset.role',
+        checklistFile.asset.role
+      );
+      _.set(
+        checklistFile.raw as Record<string, unknown>,
         'value.asset.assettype',
         checklistFile.asset.assettype
       );
       _.set(
-        checklistFile.raw,
+        checklistFile.raw as Record<string, unknown>,
         'value.asset.marking',
         checklistFile.asset.marking
       );
       _.set(
-        checklistFile.raw,
+        checklistFile.raw as Record<string, unknown>,
         'value.asset.hostname',
         checklistFile.asset.hostname
       );
       _.set(
-        checklistFile.raw,
+        checklistFile.raw as Record<string, unknown>,
         'value.asset.hostip',
         checklistFile.asset.hostip
       );
       _.set(
-        checklistFile.raw,
+        checklistFile.raw as Record<string, unknown>,
         'value.asset.hostmac',
         checklistFile.asset.hostmac
       );
       _.set(
-        checklistFile.raw,
+        checklistFile.raw as Record<string, unknown>,
         'value.asset.hostfqdn',
         checklistFile.asset.hostfqdn
       );
       _.set(
-        checklistFile.raw,
-        'value.asset.targetcomment',
-        checklistFile.asset.targetcomment
-      );
-      _.set(
-        checklistFile.raw,
+        checklistFile.raw as Record<string, unknown>,
         'value.asset.techarea',
         checklistFile.asset.techarea
       );
       _.set(
-        checklistFile.raw,
+        checklistFile.raw as Record<string, unknown>,
         'value.asset.webordatabase',
         checklistFile.asset.webordatabase
       );
       _.set(
-        checklistFile.raw,
+        checklistFile.raw as Record<string, unknown>,
         'value.asset.webdbsite',
         checklistFile.asset.webdbsite
       );
       _.set(
-        checklistFile.raw,
+        checklistFile.raw as Record<string, unknown>,
         'value.asset.webdbinstance',
         checklistFile.asset.webdbinstance
       );
