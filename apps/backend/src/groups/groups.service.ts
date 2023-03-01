@@ -55,11 +55,10 @@ export class GroupsService {
     group: Group,
     updateGroupUser: UpdateGroupUserRoleDto
   ): Promise<GroupUser | undefined> {
-    return group.users
-      .find((userToUpdate) => updateGroupUser.userId === userToUpdate.id)
-      ?.GroupUser.update({
-        role: updateGroupUser.groupRole
-      });
+    const groupUser = await GroupUser.findOne({
+      where: {groupId: group.id, userId: updateGroupUser.userId}
+    });
+    return groupUser?.update({role: updateGroupUser.groupRole});
   }
 
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {

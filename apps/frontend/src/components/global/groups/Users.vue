@@ -4,6 +4,7 @@
       <v-row class="mt-0">
         <v-col>
           <v-autocomplete
+            v-if="editable"
             v-model="ownersToAdd"
             :items="availableUsers"
             chips
@@ -22,6 +23,7 @@
             </template>
           </v-autocomplete>
           <v-autocomplete
+            v-if="editable"
             v-model="membersToAdd"
             :items="availableUsers"
             chips
