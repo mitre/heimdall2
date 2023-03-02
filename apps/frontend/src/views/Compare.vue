@@ -358,6 +358,7 @@ export default class Compare extends Vue {
     );
   }
 
+  // TODO: Check this for compare bug
   get show_sets(): [string, ControlSeries][] {
     const sets: [string, ControlSeries][] = Array.from(
       this.changedOnly ? this.delta_sets : this.searched_sets
