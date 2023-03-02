@@ -11,9 +11,7 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false,
-    "alwaysStrict": false,
-    "noImplicitUseStrict": true
+    "useUnknownInCatchVariables": false
   },
   "include": ["types/**/*.d.ts"],
   "exclude": ["**/node_modules"]
