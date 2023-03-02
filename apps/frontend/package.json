@@ -78,6 +78,7 @@
     "apexcharts": "^3.10.1",
     "aws-sdk": "^2.573.0",
     "axios": "^0.27.2",
+    "babel-plugin-transform-remove-strict-mode": "^0.0.2",
     "bootstrap": "^5.0.2",
     "chroma-js": "^2.1.0",
     "class-transformer": "^0.5.1",
