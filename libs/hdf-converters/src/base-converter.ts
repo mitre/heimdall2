@@ -67,7 +67,7 @@ export function parseXml(xml: string): Record<string, unknown> {
 export function parseXmlToJsonix(
   xml: string,
   mapping: object
-): Record<string, any> {
+): Record<string, unknown> {
   const context = new Jsonix.Context([mapping]);
   const unmarshaller = context.createUnmarshaller();
   const jsonix_unmarshalled = unmarshaller.unmarshalString(xml);
