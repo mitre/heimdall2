@@ -10,17 +10,11 @@
     "baseUrl": "./",
     "incremental": true,
     "strict": true,
-    "lib": [
-      "es2020",
-      "DOM"
-    ],
-    "paths": {}
+    "lib": ["es2020", "DOM"],
+    "paths": {},
+    "alwaysStrict": false,
+    "noImplicitUseStrict": true
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*",
-    "test/**/*"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*", "test/**/*"]
 }
