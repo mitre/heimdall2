@@ -25,7 +25,7 @@ export class Evaluation extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: string;
+  declare id: string;
 
   @AllowNull(false)
   @Column
@@ -56,12 +56,12 @@ export class Evaluation extends Model {
   @CreatedAt
   @AllowNull(false)
   @Column
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column
-  updatedAt!: Date;
+  declare updatedAt: Date;
 
   @HasMany(() => EvaluationTag)
   evaluationTags!: EvaluationTag[];

@@ -45,5 +45,6 @@
   },
   "engines": {
     "node": "^18.10.0"
-  }
+  },
+  "type": "module"
 }
