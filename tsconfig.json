@@ -9,13 +9,17 @@
     "sourceMap": true,
     "target": "ES2022",
     "allowSyntheticDefaultImports": true,
-    "lib":["ES2022"],
+    "lib": ["ES2022"],
     "esModuleInterop": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
     "useUnknownInCatchVariables": false,
     "skipLibCheck": true
   },
-  "include": ["types/**/*.d.ts"],
+  "include": [
+    "types/**/*.d.ts",
+    "apps/frontend/src/*.ts",
+    "apps/backend/src/*.ts"
+  ],
   "exclude": ["**/node_modules"]
 }
