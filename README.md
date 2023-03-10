@@ -288,7 +288,7 @@ curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evalua
 
 If you would like to change Heimdall to your needs, you can use Heimdall's 'Development Mode' to ease the development process. The benefit to using this mode is that it will automatically rebuild itself and use those changes as soon as you make them. Please note that you should not run development mode when deploying Heimdall for general usage.
 
-1. Install system dependencies with your system's package manager.
+1. Install system dependencies with your system's package manager. NodeJS is required and can be installed via your system's package manager, or an alternative method if desired. Documented below is the installation via your system's package manager.
 
    Ubuntu:
 
@@ -298,14 +298,16 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
-     sudo apt install postgresql nodejs nano git
+     sudo apt install postgresql nodejs git
+     sudo apt install nano                        # recommended installation
      sudo npm install -g yarn
      ```
      
    OSX:
    
    - ```bash
-     brew install postgresql node@16 nano git
+     brew install postgresql node@16 git      
+     brew install nano                        # recommended installation
      sudo npm install -g yarn
      ```
 
@@ -337,8 +339,12 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    OSX:
 
     - ```sql
-      # Start the server
+      # Start the postgres server corresponding to your installation method
       pg_ctl -D /opt/homebrew/var/postgres start
+      # Alternatively, you may find postgres in another location like the following:
+      pg_ctl -D /usr/local/var/postgres start
+      # Brew method
+      brew services start postgresql@13
 
       # Start the Postgres terminal
       psql postgres
@@ -443,21 +449,3 @@ Please feel free to look through our issues, make a fork and submit _PRs_ and im
 ### Issues and Support
 
 Please feel free to contact us by **opening an issue** on the issue board, or, at [inspec@mitre.org](mailto:inspec@mitre.org) should you have any suggestions, questions or issues. If you have more general questions about the use of our software or other concerns, please contact us at [opensource@mitre.org](mailto:opensource@mitre.org).
-
-### NOTICE
-
-© 2019-2021 The MITRE Corporation.
-
-Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
-
-### NOTICE
-
-MITRE hereby grants express written permission to use, reproduce, distribute, modify, and otherwise leverage this software to the extent permitted by the licensed terms provided in the LICENSE.md file included with this project.
-
-### NOTICE
-
-This software was produced for the U. S. Government under Contract Number HHSM-500-2012-00008I, and is subject to Federal Acquisition Regulation Clause 52.227-14, Rights in Data-General.
-
-No other use other than that granted to the U. S. Government, or to those acting on behalf of the U. S. Government under that Clause is authorized without the express written permission of The MITRE Corporation.
-
-For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA 22102-7539, (703) 983-6000.

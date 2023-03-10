@@ -1,6 +1,6 @@
 {
   "packages": ["apps/*", "libs/*", "test"],
-  "version": "2.6.38",
+  "version": "2.6.41",
   "npmClient": "yarn",
   "useWorkspaces": true
 }
