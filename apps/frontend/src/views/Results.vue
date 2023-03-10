@@ -334,7 +334,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     | SourcedContextualizedEvaluation
     | SourcedContextualizedProfile
   )[] {
-    return this.is_result_view ? this.evaluationFiles : this.profiles;
+    return this.evaluationFiles;
   }
 
   getFile(fileID: FileID) {
@@ -513,6 +513,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 .glow {
   box-shadow: 0px 0px 8px 6px #5a5;
 }
+
 .bottom-right {
   position: absolute;
   bottom: 0;
