@@ -111,14 +111,14 @@
                   :single-select="true"
                   disable-pagination
                   dense
-                  fixed-header
+                  mobile-breakpoint="0"
                   :items="rules"
                   :search="searchValue"
                   :item-class="checkSelected"
                   :headers="headers"
                   hide-default-footer
                   class="overflow-auto"
-                  height="72vh"
+                  height="68vh"
                   @current-items="getFiltered"
                   @click:row="showRule"
                 >
