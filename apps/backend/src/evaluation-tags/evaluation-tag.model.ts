@@ -15,7 +15,6 @@ import {Evaluation} from '../evaluations/evaluation.model';
 export class EvaluationTag extends Model {
   @PrimaryKey
   @AutoIncrement
-  @AllowNull(false)
   @Column(DataType.BIGINT)
   declare id: string;
 
@@ -23,11 +22,9 @@ export class EvaluationTag extends Model {
   @Column
   value!: string;
 
-  @AllowNull(false)
   @Column
   declare createdAt: Date;
 
-  @AllowNull(false)
   @Column
   declare updatedAt: Date;
 

@@ -1,5 +1,4 @@
 import {
-  AllowNull,
   AutoIncrement,
   Column,
   CreatedAt,
@@ -17,7 +16,6 @@ import {Group} from '../groups/group.model';
 export class GroupEvaluation extends Model {
   @PrimaryKey
   @AutoIncrement
-  @AllowNull(false)
   @Column(DataType.BIGINT)
   declare id: string;
 
@@ -30,12 +28,10 @@ export class GroupEvaluation extends Model {
   evaluationId!: string;
 
   @CreatedAt
-  @AllowNull(false)
   @Column(DataType.DATE)
   declare createdAt: Date;
 
   @UpdatedAt
-  @AllowNull(false)
   @Column(DataType.DATE)
   declare updatedAt: Date;
 }

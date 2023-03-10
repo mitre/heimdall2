@@ -23,7 +23,6 @@ import {User} from '../users/user.model';
 export class Evaluation extends Model {
   @PrimaryKey
   @AutoIncrement
-  @AllowNull(false)
   @Column(DataType.BIGINT)
   declare id: string;
 
@@ -54,12 +53,10 @@ export class Evaluation extends Model {
   user!: User;
 
   @CreatedAt
-  @AllowNull(false)
   @Column
   declare createdAt: Date;
 
   @UpdatedAt
-  @AllowNull(false)
   @Column
   declare updatedAt: Date;
 

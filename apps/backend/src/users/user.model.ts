@@ -20,7 +20,6 @@ import {Group} from '../groups/group.model';
 export class User extends Model {
   @PrimaryKey
   @AutoIncrement
-  @AllowNull(false)
   @Column(DataType.BIGINT)
   declare id: string;
 
@@ -81,12 +80,10 @@ export class User extends Model {
   jwtSecret!: string;
 
   @CreatedAt
-  @AllowNull(false)
   @Column(DataType.DATE)
   declare createdAt: Date;
 
   @UpdatedAt
-  @AllowNull(false)
   @Column(DataType.DATE)
   declare updatedAt: Date;
 
