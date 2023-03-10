@@ -25,7 +25,7 @@ export class User extends Model {
 
   @Unique
   @IsEmail
-  @AllowNull(false)
+  @AllowNull(true)
   @Column(DataType.STRING)
   email!: string;
 
@@ -45,7 +45,7 @@ export class User extends Model {
   @Column(DataType.STRING)
   title!: string | undefined;
 
-  @AllowNull(false)
+  @AllowNull(true)
   @Column(DataType.STRING)
   encryptedPassword!: string;
 
@@ -71,7 +71,7 @@ export class User extends Model {
   @Column(DataType.STRING)
   role!: string;
 
-  @AllowNull(false)
+  @AllowNull(true)
   @Column(DataType.STRING)
   creationMethod!: string;
 
