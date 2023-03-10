@@ -1,6 +1,5 @@
 import Store from '@/store/store';
 import {Severity} from 'inspecjs';
-//@ts-ignore
 import {parse} from 'search-string';
 import {
   Action,

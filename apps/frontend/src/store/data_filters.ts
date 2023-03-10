@@ -47,10 +47,10 @@ export interface Filter {
 
   // Control specific
   /** What status the controls can have. Undefined => any */
-  status?: SearchEntry[]; //ExtendedControlStatus[];
+  status?: SearchEntry[];
 
   /** What severity the controls can have. Undefined => any */
-  severity?: SearchEntry[]; //Severity[];
+  severity?: SearchEntry[];
 
   /** Whether or not to allow/include overlayed controls */
   omit_overlayed_controls?: boolean;
