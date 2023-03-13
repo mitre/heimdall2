@@ -24,4 +24,5 @@ jobs:
           context: .
           file: Dockerfile.lite
           push: true
+          platforms: "linux/amd64,linux/arm64"
           tags: mitre/heimdall-lite:latest
