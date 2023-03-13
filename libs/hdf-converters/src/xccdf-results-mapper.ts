@@ -520,10 +520,12 @@ export class XCCDFResultsMapper extends BaseConverter {
   };
   constructor(scapXml: string) {
     super(
-      preprocessXCCDFJSON(parseXml(scapXml) as {
-        Benchmark: {Group: Group[]};
-        'cdf:Benchmark': {'cdf:Group': Group[]};
-      })
+      preprocessXCCDFJSON(
+        parseXml(scapXml) as {
+          Benchmark: {Group: Group[]};
+          'cdf:Benchmark': {'cdf:Group': Group[]};
+        }
+      )
     );
   }
 }
