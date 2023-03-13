@@ -107,7 +107,8 @@ export class GroupsService {
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
-    const group = new Group(createGroupDto);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const group = new Group(createGroupDto as any);
     return group.save();
   }
 

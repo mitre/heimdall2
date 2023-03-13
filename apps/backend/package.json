@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.6.36",
+  "version": "2.6.39",
   "description": "",
   "license": "Apache-2.0",
   "author": "",
@@ -15,7 +15,7 @@
     "build": "nest build",
     "lint": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --fix",
     "lint:ci": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --max-warnings 0",
-    "sequelize-cli": "ts-node node_modules/.bin/sequelize",
+    "sequelize-cli": "ts-node --esm node_modules/.bin/sequelize",
     "start": "node dist/src/main",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@casl/ability": "^6.0.0",
-    "@heimdall/interfaces": "^2.6.32",
+    "@heimdall/interfaces": "^2.6.38",
     "@heimdall/password-complexity": "^2.6.6",
     "@nestjs/cli": "^8.0.2",
     "@nestjs/common": "^8.0.2",
@@ -69,6 +69,7 @@
     "@types/passport-local": "^1.0.33",
     "@types/sequelize": "^4.28.9",
     "@types/supertest": "^2.0.9",
+    "@types/triple-beam": "^1.3.2",
     "@types/uuid": "^9.0.0",
     "@types/validator": "^13.0.0",
     "bcryptjs": "^2.4.3",

@@ -53,7 +53,7 @@ export class FromHdfBaseConverter {
     file: object,
     v: T | Array<T>
   ): T | Array<T> | MappedReform<T, ILookupPathFH> {
-    const transformer = _.get(v, 'transformer');
+    const transformer = _.get(v, 'transformer') as any;
     if (Array.isArray(v)) {
       return this.handleArray(file, v);
     }
