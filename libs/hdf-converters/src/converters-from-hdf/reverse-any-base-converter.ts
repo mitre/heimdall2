@@ -3,7 +3,7 @@ import {FromHdfBaseConverter, ILookupPathFH} from './reverse-base-converter';
 
 // Base converter used to support conversions from HDF to Any Format
 export class FromAnyBaseConverter extends FromHdfBaseConverter {
-  declare data: any;
+  data: any;
 
   constructor(data: any, collapseResults = false) {
     super(data, collapseResults);

@@ -15,18 +15,21 @@ import {Evaluation} from '../evaluations/evaluation.model';
 export class EvaluationTag extends Model {
   @PrimaryKey
   @AutoIncrement
+  @AllowNull(false)
   @Column(DataType.BIGINT)
-  declare id: string;
+  id!: string;
 
   @AllowNull(false)
   @Column
   value!: string;
 
+  @AllowNull(false)
   @Column
-  declare createdAt: Date;
+  createdAt!: Date;
 
+  @AllowNull(false)
   @Column
-  declare updatedAt: Date;
+  updatedAt!: Date;
 
   @ForeignKey(() => Evaluation)
   @Column(DataType.BIGINT)

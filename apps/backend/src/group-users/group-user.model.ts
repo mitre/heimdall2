@@ -18,8 +18,9 @@ import {User} from '../users/user.model';
 export class GroupUser extends Model {
   @PrimaryKey
   @AutoIncrement
+  @AllowNull(false)
   @Column(DataType.BIGINT)
-  declare id: string;
+  id!: string;
 
   @AllowNull(false)
   @Default('member')
@@ -35,10 +36,12 @@ export class GroupUser extends Model {
   userId!: string;
 
   @CreatedAt
+  @AllowNull(false)
   @Column(DataType.DATE)
-  declare createdAt: Date;
+  createdAt!: Date;
 
   @UpdatedAt
+  @AllowNull(false)
   @Column(DataType.DATE)
-  declare updatedAt: Date;
+  updatedAt!: Date;
 }

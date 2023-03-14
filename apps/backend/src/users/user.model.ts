@@ -20,12 +20,13 @@ import {Group} from '../groups/group.model';
 export class User extends Model {
   @PrimaryKey
   @AutoIncrement
+  @AllowNull(false)
   @Column(DataType.BIGINT)
-  declare id: string;
+  id!: string;
 
   @Unique
   @IsEmail
-  @AllowNull(true)
+  @AllowNull(false)
   @Column(DataType.STRING)
   email!: string;
 
@@ -45,7 +46,7 @@ export class User extends Model {
   @Column(DataType.STRING)
   title!: string | undefined;
 
-  @AllowNull(true)
+  @AllowNull(false)
   @Column(DataType.STRING)
   encryptedPassword!: string;
 
@@ -71,7 +72,7 @@ export class User extends Model {
   @Column(DataType.STRING)
   role!: string;
 
-  @AllowNull(true)
+  @AllowNull(false)
   @Column(DataType.STRING)
   creationMethod!: string;
 
@@ -80,12 +81,14 @@ export class User extends Model {
   jwtSecret!: string;
 
   @CreatedAt
+  @AllowNull(false)
   @Column(DataType.DATE)
-  declare createdAt: Date;
+  createdAt!: Date;
 
   @UpdatedAt
+  @AllowNull(false)
   @Column(DataType.DATE)
-  declare updatedAt: Date;
+  updatedAt!: Date;
 
   @BelongsToMany(() => Group, () => GroupUser)
   groups!: Array<Group & {GroupUser: GroupUser}>;

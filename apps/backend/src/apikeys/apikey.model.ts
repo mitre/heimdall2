@@ -1,4 +1,5 @@
 import {
+  AllowNull,
   AutoIncrement,
   BelongsTo,
   Column,
@@ -17,8 +18,9 @@ import {User} from '../users/user.model';
 export class ApiKey extends Model {
   @PrimaryKey
   @AutoIncrement
+  @AllowNull(false)
   @Column(DataType.BIGINT)
-  declare id: string;
+  id!: string;
 
   @ForeignKey(() => User)
   @Column(DataType.BIGINT)
@@ -48,10 +50,12 @@ export class ApiKey extends Model {
   type!: string;
 
   @CreatedAt
+  @AllowNull(false)
   @Column(DataType.DATE)
-  declare createdAt: Date;
+  createdAt!: Date;
 
   @UpdatedAt
+  @AllowNull(false)
   @Column(DataType.DATE)
-  declare updatedAt: Date;
+  updatedAt!: Date;
 }

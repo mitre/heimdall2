@@ -7,19 +7,13 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "target": "ES2022",
-    "allowSyntheticDefaultImports": true,
-    "lib": ["ES2022"],
+    "target": "ES2019",
     "esModuleInterop": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
     "useUnknownInCatchVariables": false,
     "skipLibCheck": true
   },
-  "include": [
-    "types/**/*.d.ts",
-    "apps/frontend/src/*.ts",
-    "apps/backend/src/*.ts"
-  ],
+  "include": ["types/**/*.d.ts"],
   "exclude": ["**/node_modules"]
 }

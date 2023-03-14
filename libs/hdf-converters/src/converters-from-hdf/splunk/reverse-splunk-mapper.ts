@@ -289,7 +289,7 @@ export class FromHDFControlToSplunkControlMapper extends FromAnyBaseConverter {
 }
 
 export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
-  declare mappings?: MappedTransform<SplunkData, ILookupPathFH>;
+  mappings?: MappedTransform<SplunkData, ILookupPathFH>;
   contextualizedEvaluation?: ContextualizedEvaluation;
 
   constructor(

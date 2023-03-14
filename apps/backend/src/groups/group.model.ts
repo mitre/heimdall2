@@ -21,8 +21,9 @@ import {User} from '../users/user.model';
 export class Group extends Model {
   @PrimaryKey
   @AutoIncrement
+  @AllowNull(false)
   @Column(DataType.BIGINT)
-  declare id: string;
+  id!: string;
 
   @Unique
   @AllowNull(false)
@@ -35,12 +36,14 @@ export class Group extends Model {
   public!: boolean;
 
   @CreatedAt
+  @AllowNull(false)
   @Column(DataType.DATE)
-  declare createdAt: Date;
+  createdAt!: Date;
 
   @UpdatedAt
+  @AllowNull(false)
   @Column(DataType.DATE)
-  declare updatedAt: Date;
+  updatedAt!: Date;
 
   @BelongsToMany(() => User, () => GroupUser)
   users!: Array<User & {GroupUser: GroupUser}>;

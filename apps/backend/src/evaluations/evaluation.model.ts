@@ -23,8 +23,9 @@ import {User} from '../users/user.model';
 export class Evaluation extends Model {
   @PrimaryKey
   @AutoIncrement
+  @AllowNull(false)
   @Column(DataType.BIGINT)
-  declare id: string;
+  id!: string;
 
   @AllowNull(false)
   @Column
@@ -53,12 +54,14 @@ export class Evaluation extends Model {
   user!: User;
 
   @CreatedAt
+  @AllowNull(false)
   @Column
-  declare createdAt: Date;
+  createdAt!: Date;
 
   @UpdatedAt
+  @AllowNull(false)
   @Column
-  declare updatedAt: Date;
+  updatedAt!: Date;
 
   @HasMany(() => EvaluationTag)
   evaluationTags!: EvaluationTag[];
