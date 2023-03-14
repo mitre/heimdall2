@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "module": "CommonJS",
+    "module": "commonjs",
     "resolveJsonModule": true,
     "strict": true,
     "jsx": "preserve",

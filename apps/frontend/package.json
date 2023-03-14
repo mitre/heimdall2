@@ -44,6 +44,7 @@
     "webpack": "5.75.0"
   },
   "dependencies": {
+    "@babel/core": "7.20.12",
     "@heimdall/interfaces": "^2.6.38",
     "@mdi/font": "^7.0.96",
     "@mdi/js": "^7.0.96",
@@ -78,6 +79,7 @@
     "apexcharts": "^3.10.1",
     "aws-sdk": "^2.573.0",
     "axios": "^0.27.2",
+    "babel-core": "7.0.0-bridge.0",
     "bootstrap": "^5.0.2",
     "chroma-js": "^2.1.0",
     "class-transformer": "^0.5.1",
@@ -134,6 +136,7 @@
     "yazl": "^2.5.1"
   },
   "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.21.2",
     "@types/chai": "^4.2.5",
     "@types/chai-as-promised": "^7.1.2",
     "@types/jest": "^27.0.0",
