@@ -191,7 +191,6 @@ export default class Users extends Vue {
       ...editedUser,
       groupRole: newValue
     };
-    // this.currentUsers[userToUpdate].groupRole = newValue;
     this.currentUsers[userToUpdate] = updatedGroupUser;
   }
 
