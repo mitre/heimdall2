@@ -148,7 +148,6 @@ export default class Users extends Vue {
   }
 
   addMembers() {
-    console.log('before add', this.currentUsers);
     ServerModule.allUsers.forEach((user) => {
       if (this.membersToAdd.includes(user.id)) {
         this.currentUsers.push({
@@ -161,7 +160,6 @@ export default class Users extends Vue {
       }
     });
     this.membersToAdd = [];
-    console.log('after add', this.currentUsers);
   }
 
   addOwners() {
@@ -180,7 +178,6 @@ export default class Users extends Vue {
   }
 
   onUpdateGroupUserRole(newValue: string) {
-    console.log('before edit', this.currentUsers);
     // If a role is being changed to member, check that there is at least 1 owner.
     if (newValue === 'member') {
       if (this.numberOfOwners() <= 1) {
@@ -188,8 +185,7 @@ export default class Users extends Vue {
         return;
       }
     }
-    console.log('editedUser', this.editedUserID);
-    const editedUser = this.getEditedUser(this.editedUserID);
+    const editedUser = this.getEditedUser();
     const userToUpdate = this.currentUsers.indexOf(editedUser);
     const updatedGroupUser: ISlimUser = {
       ...editedUser,
@@ -197,7 +193,6 @@ export default class Users extends Vue {
     };
     // this.currentUsers[userToUpdate].groupRole = newValue;
     this.currentUsers[userToUpdate] = updatedGroupUser;
-    console.log('after edit', this.currentUsers);
   }
 
   numberOfOwners(): number {
@@ -223,14 +218,14 @@ export default class Users extends Vue {
   deleteUserConfirm(): void {
     if (this.editedUserID != '0') {
       this.currentUsers.splice(
-        this.currentUsers.indexOf(this.getEditedUser(this.editedUserID)),
+        this.currentUsers.indexOf(this.getEditedUser()),
         1
       );
     }
     this.closeActionDialog();
   }
 
-  getEditedUser(id: string): ISlimUser {
+  getEditedUser(): ISlimUser {
     return (
       this.currentUsers.find((user) => user.id == this.editedUserID) || {
         id: '0',
