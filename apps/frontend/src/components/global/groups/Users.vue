@@ -215,7 +215,7 @@ export default class Users extends Vue {
   }
 
   deleteUserConfirm(): void {
-    if (this.editedUserID != '0') {
+    if (this.editedUserID !== '0') {
       this.currentUsers.splice(
         this.currentUsers.indexOf(this.getEditedUser()),
         1
@@ -226,7 +226,7 @@ export default class Users extends Vue {
 
   getEditedUser(): ISlimUser {
     return (
-      this.currentUsers.find((user) => user.id == this.editedUserID) || {
+      this.currentUsers.find((user) => user.id === this.editedUserID) || {
         id: '0',
         email: ''
       }
