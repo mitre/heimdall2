@@ -1,5 +1,5 @@
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
-
+const path = require('path');
 // Lookup constants
 const fs = require('fs');
 
@@ -42,6 +42,11 @@ module.exports = {
     },
     module: {
       rules: [
+        {
+          test: /\.(t|j)sx?$/,
+          enforce: 'post',
+          use: [{loader: path.resolve('./stripStrictLoader.js')}]
+        },
         {
           test: /\.m?js$/,
           exclude: /(node_modules|bower_components)/,
