@@ -59,7 +59,7 @@
               v-if="editable"
               :value="item.groupRole"
               :items="['owner', 'member']"
-              @click="editedUser = item"
+              @click="editedUserID = item.id"
               @change="onUpdateGroupUserRole"
             />
             <span v-else> {{ item.groupRole }} </span>
@@ -114,7 +114,7 @@ export default class Users extends Vue {
 
   membersToAdd: string[] = [];
   ownersToAdd: string[] = [];
-  editedUser: ISlimUser = {id: '0', email: ''};
+  editedUserID: string = '0';
   dialogDelete = false;
   headers: Object[] = [
     {
@@ -148,6 +148,7 @@ export default class Users extends Vue {
   }
 
   addMembers() {
+    console.log('before add', this.currentUsers);
     ServerModule.allUsers.forEach((user) => {
       if (this.membersToAdd.includes(user.id)) {
         this.currentUsers.push({
@@ -160,6 +161,7 @@ export default class Users extends Vue {
       }
     });
     this.membersToAdd = [];
+    console.log('after add', this.currentUsers);
   }
 
   addOwners() {
@@ -178,6 +180,7 @@ export default class Users extends Vue {
   }
 
   onUpdateGroupUserRole(newValue: string) {
+    console.log('before edit', this.currentUsers);
     // If a role is being changed to member, check that there is at least 1 owner.
     if (newValue === 'member') {
       if (this.numberOfOwners() <= 1) {
@@ -185,12 +188,16 @@ export default class Users extends Vue {
         return;
       }
     }
-    const userToUpdate = this.currentUsers.indexOf(this.editedUser);
+    console.log('editedUser', this.editedUserID);
+    const editedUser = this.getEditedUser(this.editedUserID);
+    const userToUpdate = this.currentUsers.indexOf(editedUser);
     const updatedGroupUser: ISlimUser = {
-      ...this.editedUser,
+      ...editedUser,
       groupRole: newValue
     };
+    // this.currentUsers[userToUpdate].groupRole = newValue;
     this.currentUsers[userToUpdate] = updatedGroupUser;
+    console.log('after edit', this.currentUsers);
   }
 
   numberOfOwners(): number {
@@ -204,20 +211,32 @@ export default class Users extends Vue {
   }
 
   deleteUserDialog(user: ISlimUser): void {
-    this.editedUser = user;
+    this.editedUserID = user.id;
     this.dialogDelete = true;
   }
 
   closeActionDialog() {
     this.dialogDelete = false;
-    this.editedUser = {id: '0', email: ''};
+    this.editedUserID = '0';
   }
 
   deleteUserConfirm(): void {
-    if (this.editedUser) {
-      this.currentUsers.splice(this.currentUsers.indexOf(this.editedUser), 1);
+    if (this.editedUserID != '0') {
+      this.currentUsers.splice(
+        this.currentUsers.indexOf(this.getEditedUser(this.editedUserID)),
+        1
+      );
     }
     this.closeActionDialog();
+  }
+
+  getEditedUser(id: string): ISlimUser {
+    return (
+      this.currentUsers.find((user) => user.id == this.editedUserID) || {
+        id: '0',
+        email: ''
+      }
+    );
   }
 
   // Filter out users that are already in the group from the user search
