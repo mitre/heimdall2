@@ -16,7 +16,7 @@
             single-line
           >
             <template slot="append-outer">
-              <v-btn @click="addUsers('owner')">
+              <v-btn @click="addOwners">
                 <v-icon left>mdi-plus</v-icon>
                 Add
               </v-btn>
@@ -35,7 +35,7 @@
             single-line
           >
             <template slot="append-outer">
-              <v-btn @click="addUsers('member')">
+              <v-btn @click="addMembers">
                 <v-icon left>mdi-plus</v-icon>
                 Add
               </v-btn>
@@ -105,14 +105,15 @@ export default class Users extends Vue {
   @VModel({
     type: Array,
     required: false,
-    default() {
+    default(): ISlimUser[] {
       return [];
     }
   })
+  currentUsers!: ISlimUser[];
+
   @Prop({type: Boolean, required: false, default: true})
   readonly editable!: boolean;
 
-  currentUsers!: ISlimUser[];
   editedUserID: string = '0';
   usersToAdd: Record<'member' | 'owner', string[]> = {
     member: [],
@@ -138,6 +139,9 @@ export default class Users extends Vue {
       value: 'groupRole'
     }
   ];
+
+  addOwners = this.addUsers('owner');
+  addMembers = this.addUsers('member');
 
   get displayedHeaders() {
     // If the user is editing the group, then display the actions column.
@@ -233,7 +237,7 @@ export default class Users extends Vue {
   get availableUsers(): IVuetifyItems[] {
     const currentUserIds: string[] = this.currentUsers.map((user) => user.id);
     const users: IVuetifyItems[] = [];
-    ServerModule.allUsers.forEach(async (user) => {
+    for (const user of ServerModule.allUsers) {
       if (
         !currentUserIds.includes(user.id) &&
         user.id !== ServerModule.userInfo.id
@@ -245,7 +249,7 @@ export default class Users extends Vue {
           value: user.id
         });
       }
-    });
+    }
     return users;
   }
 }
