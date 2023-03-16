@@ -109,7 +109,6 @@ export default class Users extends Vue {
       return [];
     }
   })
-
   @Prop({type: Boolean, required: false, default: true})
   readonly editable!: boolean;
 
