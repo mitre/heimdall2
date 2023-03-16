@@ -1,7 +1,7 @@
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const path = require('path');
 // Lookup constants
-const fs = require('fs');
+const fs = require('node:fs/promises');
 
 // This grabs the js/css to allow for HTML export
 const files = {
@@ -14,7 +14,7 @@ const files = {
 };
 
 for (const file in files) {
-  fs.copyFile(file, files[file], (err) => {
+  fs.copyFile(file, files[file], 0, (err) => {
     if (err) {
       throw err;
     }
