@@ -5,7 +5,7 @@
         <v-col>
           <v-autocomplete
             v-if="editable"
-            v-model="ownersToAdd"
+            v-model="usersToAdd['owner']"
             :items="availableUsers"
             chips
             label="Add Owners"
@@ -16,7 +16,7 @@
             single-line
           >
             <template slot="append-outer">
-              <v-btn @click="addOwners">
+              <v-btn @click="addUsers('owner')">
                 <v-icon left>mdi-plus</v-icon>
                 Add
               </v-btn>
@@ -24,7 +24,7 @@
           </v-autocomplete>
           <v-autocomplete
             v-if="editable"
-            v-model="membersToAdd"
+            v-model="usersToAdd['member']"
             :items="availableUsers"
             chips
             label="Add Members"
@@ -35,7 +35,7 @@
             single-line
           >
             <template slot="append-outer">
-              <v-btn @click="addMembers">
+              <v-btn @click="addUsers('member')">
                 <v-icon left>mdi-plus</v-icon>
                 Add
               </v-btn>
@@ -93,6 +93,8 @@ import {Prop, VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import {SnackbarModule} from '../../../store/snackbar';
+import {DataTableHeader} from 'vuetify';
+import _ from 'lodash';
 
 @Component({
   components: {
@@ -107,16 +109,19 @@ export default class Users extends Vue {
       return [];
     }
   })
-  currentUsers!: ISlimUser[];
 
   @Prop({type: Boolean, required: false, default: true})
   readonly editable!: boolean;
 
-  membersToAdd: string[] = [];
-  ownersToAdd: string[] = [];
+  currentUsers!: ISlimUser[];
   editedUserID: string = '0';
+  usersToAdd: Record<'member' | 'owner', string[]> = {
+    member: [],
+    owner: []
+  };
+
   dialogDelete = false;
-  headers: Object[] = [
+  headers: DataTableHeader[] = [
     {
       text: 'Name',
       value: 'full-name'
@@ -147,34 +152,26 @@ export default class Users extends Vue {
     return this.headers;
   }
 
-  addMembers() {
-    ServerModule.allUsers.forEach((user) => {
-      if (this.membersToAdd.includes(user.id)) {
-        this.currentUsers.push({
-          ...user,
-          groupRole: 'member'
-        });
+  addUsers(role: 'member' | 'owner') {
+    return () => {
+      for (const user of ServerModule.allUsers) {
+        if (this.usersToAdd[role].includes(user.id)) {
+          this.currentUsers.push({
+            ...user,
+            groupRole: role
+          });
+        }
+        for (const users of Object.values(
+          _.omit(this.usersToAdd, role) as Record<'member' | 'owner', string[]>
+        )) {
+          const index = users.indexOf(user.id);
+          if (index !== -1) {
+            users.splice(index, 1);
+          }
+        }
       }
-      if (this.ownersToAdd.includes(user.id)) {
-        this.ownersToAdd.splice(this.ownersToAdd.indexOf(user.id), 1);
-      }
-    });
-    this.membersToAdd = [];
-  }
-
-  addOwners() {
-    ServerModule.allUsers.forEach((user) => {
-      if (this.ownersToAdd.includes(user.id)) {
-        this.currentUsers.push({
-          ...user,
-          groupRole: 'owner'
-        });
-      }
-      if (this.membersToAdd.includes(user.id)) {
-        this.membersToAdd.splice(this.membersToAdd.indexOf(user.id), 1);
-      }
-    });
-    this.ownersToAdd = [];
+      this.usersToAdd[role] = [];
+    };
   }
 
   onUpdateGroupUserRole(newValue: string) {
