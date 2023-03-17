@@ -89,7 +89,7 @@ import ActionDialog from '@/components/generic/ActionDialog.vue';
 import {ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, VModel} from 'vue-property-decorator';
+import {Emit, Prop, VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import {SnackbarModule} from '../../../store/snackbar';
@@ -177,12 +177,13 @@ export default class Users extends Vue {
     };
   }
 
+  @Emit()
   onUpdateGroupUserRole(newValue: string) {
     // If a role is being changed to member, check that there is at least 1 owner.
     if (newValue === 'member') {
       if (this.numberOfOwners() <= 1) {
         SnackbarModule.failure(`Must have at least 1 owner`);
-        return;
+        return false;
       }
     }
     const editedUser = this.getEditedUser();
@@ -192,6 +193,7 @@ export default class Users extends Vue {
       groupRole: newValue
     };
     this.currentUsers[userToUpdate] = updatedGroupUser;
+    return true;
   }
 
   numberOfOwners(): number {

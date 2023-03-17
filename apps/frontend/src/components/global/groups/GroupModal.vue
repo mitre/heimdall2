@@ -46,7 +46,11 @@
               </v-tooltip>
             </v-col>
           </v-row>
-          <Users v-model="groupInfo.users" :editable="true" />
+          <Users
+            v-model="groupInfo.users"
+            :editable="true"
+            @on-update-group-user-role="updateSaveState"
+          />
         </v-form>
       </v-card-text>
       <v-divider />
@@ -71,7 +75,12 @@
           @click="dialog = false"
           >Cancel</v-btn
         >
-        <v-btn data-cy="closeAndSaveChanges" color="primary" text @click="save"
+        <v-btn
+          data-cy="closeAndSaveChanges"
+          color="primary"
+          text
+          :disabled="!saveable"
+          @click="save"
           >Save</v-btn
         >
       </v-card-actions>
@@ -142,6 +151,12 @@ export default class GroupModal extends Vue {
     } else {
       return 'Update Group';
     }
+  }
+
+  // Upon user role update, the child component will emit whether the current state is acceptable
+  saveable = true;
+  updateSaveState(saveable: boolean) {
+    return (this.saveable = saveable);
   }
 
   async save(): Promise<void> {
