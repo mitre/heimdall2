@@ -156,7 +156,7 @@ export default class GroupModal extends Vue {
   // Upon user role update, the child component will emit whether the current state is acceptable
   saveable = true;
   updateSaveState(saveable: boolean) {
-    return (this.saveable = saveable);
+    this.saveable = saveable;
   }
 
   async save(): Promise<void> {
