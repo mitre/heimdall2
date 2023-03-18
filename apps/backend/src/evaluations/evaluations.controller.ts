@@ -174,7 +174,7 @@ export class EvaluationsController {
     return Promise.all(uploadedFiles);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(APIKeyOrJwtAuthGuard)
   @Put(':id')
   async update(
     @Param('id') id: string,

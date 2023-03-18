@@ -5,6 +5,7 @@ export interface IGroup {
   readonly public: boolean;
   readonly role?: string;
   readonly users: ISlimUser[];
+  readonly subGroups: IGroup[];
   readonly createdAt: Date;
   readonly updatedAt: Date;
 }
