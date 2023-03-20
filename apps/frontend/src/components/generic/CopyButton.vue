@@ -3,13 +3,11 @@
 </template>
 
 <script lang="ts">
-import {SnackbarModule} from '@/store/snackbar';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import VueClipboard from 'vue-clipboard2';
 import {Prop} from 'vue-property-decorator';
-
-Vue.use(VueClipboard);
+import {Clipboard} from 'v-clipboard';
+import {SnackbarModule} from '@/store/snackbar';
 
 @Component({})
 export default class CopyButton extends Vue {
@@ -17,10 +15,13 @@ export default class CopyButton extends Vue {
   @Prop({required: false, default: 'mdi-clipboard-outline'})
   readonly icon!: string;
 
-  copy() {
-    this.$copyText(this.text, document.querySelector('.v-dialog') || undefined)
-      .then(() => SnackbarModule.notify('Text copied to your clipboard'))
-      .catch(() => SnackbarModule.failure('Failed to copy to your clipboard'));
+  async copy() {
+    try {
+      await Clipboard.copy(this.text);
+      SnackbarModule.notify('Text copied to your clipboard');
+    } catch (e) {
+      SnackbarModule.failure('Failed to copy to your clipboard');
+    }
   }
 }
 </script>
