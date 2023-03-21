@@ -1,5 +1,7 @@
 v2.6.42
 
+- netsparker is now invicti @Amndeep7 (#4243)
+- swap clipboard library @Amndeep7 (#4242)
 - Build M1 Mac Images @spencer-cdw (#4100)
 
 ## Dependency Updates
