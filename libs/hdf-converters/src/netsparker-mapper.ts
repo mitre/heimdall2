@@ -142,6 +142,9 @@ export class NetsparkerMapper extends BaseConverter {
   defineMappings(
     toolname: string
   ): MappedTransform<ExecJSON.Execution, ILookupPath> {
+    const capitalizedToolname = toolname.replace(/^./, (firstLetter) =>
+      firstLetter.toUpperCase()
+    );
     return {
       platform: {
         name: 'Heimdall Tools',
@@ -152,9 +155,7 @@ export class NetsparkerMapper extends BaseConverter {
       statistics: {},
       profiles: [
         {
-          name: `${toolname.replace(/^./, (firstLetter) =>
-            firstLetter.toUpperCase()
-          )} Enterprise Scan`,
+          name: `${capitalizedToolname} Enterprise Scan`,
           version: '',
           title: {
             path: `${toolname}-enterprise.target`,
@@ -167,9 +168,7 @@ export class NetsparkerMapper extends BaseConverter {
               )}`;
             }
           },
-          summary: `${toolname.replace(/^./, (firstLetter) =>
-            firstLetter.toUpperCase()
-          )} Enterprise Scan`,
+          summary: `${capitalizedToolname} Enterprise Scan`,
           supports: [],
           attributes: [],
           groups: [],
