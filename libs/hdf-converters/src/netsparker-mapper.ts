@@ -139,87 +139,102 @@ function formatMessage(response: unknown): string {
   return text.join('\n');
 }
 export class NetsparkerMapper extends BaseConverter {
-  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
-    platform: {
-      name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: {path: 'netsparker-enterprise.target.url'}
-    },
-    version: HeimdallToolsVersion,
-    statistics: {
-      duration: null
-    },
-    profiles: [
-      {
-        name: 'Netsparker Enterprise Scan',
-        version: '',
-        title: {
-          path: 'netsparker-enterprise.target',
-          transformer: (input: unknown): string => {
-            return `Netsparker Enterprise Scan ID: ${_.get(
-              input,
-              'scan-id'
-            )} URL: ${_.get(input, 'url')}`;
-          }
-        },
-        maintainer: null,
-        summary: 'Netsparker Enterprise Scan',
-        license: null,
-        copyright: null,
-        copyright_email: null,
-        supports: [],
-        attributes: [],
-        depends: [],
-        groups: [],
-        status: 'loaded',
-        controls: [
-          {
-            path: 'netsparker-enterprise.vulnerabilities.vulnerability',
-            key: 'id',
-            id: {path: 'LookupId'},
-            title: {path: 'name'},
-            desc: {transformer: formatControlDesc},
-            impact: {
-              path: 'severity',
-              transformer: impactMapping(IMPACT_MAPPING)
-            },
-            tags: {
-              cci: {
-                path: 'classification',
-                transformer: (data: Record<string, unknown>) =>
-                  getCCIsForNISTTags(nistTag(data))
+  defineMappings(
+    toolname: string
+  ): MappedTransform<ExecJSON.Execution, ILookupPath> {
+    return {
+      platform: {
+        name: 'Heimdall Tools',
+        release: HeimdallToolsVersion,
+        target_id: {path: `${toolname}-enterprise.target.url`}
+      },
+      version: HeimdallToolsVersion,
+      statistics: {},
+      profiles: [
+        {
+          name: `${toolname.replace(/^./, (firstLetter) =>
+            firstLetter.toUpperCase()
+          )} Enterprise Scan`,
+          version: '',
+          title: {
+            path: `${toolname}-enterprise.target`,
+            transformer: (input: unknown): string => {
+              return `${toolname.replace(/^./, (firstLetter) =>
+                firstLetter.toUpperCase()
+              )} Enterprise Scan ID: ${_.get(input, 'scan-id')} URL: ${_.get(
+                input,
+                'url'
+              )}`;
+            }
+          },
+          summary: `${toolname.replace(/^./, (firstLetter) =>
+            firstLetter.toUpperCase()
+          )} Enterprise Scan`,
+          supports: [],
+          attributes: [],
+          groups: [],
+          status: 'loaded',
+          controls: [
+            {
+              path: `${toolname}-enterprise.vulnerabilities.vulnerability`,
+              key: 'id',
+              id: {path: 'LookupId'},
+              title: {path: 'name'},
+              desc: {transformer: formatControlDesc},
+              impact: {
+                path: 'severity',
+                transformer: impactMapping(IMPACT_MAPPING)
               },
-              nist: {path: 'classification', transformer: nistTag}
-            },
-            descriptions: [
-              {
-                data: {transformer: formatCheck},
-                label: 'check'
+              tags: {
+                cci: {
+                  path: 'classification',
+                  transformer: (data: Record<string, unknown>) =>
+                    getCCIsForNISTTags(nistTag(data))
+                },
+                nist: {path: 'classification', transformer: nistTag}
               },
-              {
-                data: {transformer: formatFix},
-                label: 'fix'
-              }
-            ],
-            refs: [],
-            source_location: {},
-            code: '',
-            results: [
-              {
-                status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: {path: 'http-request', transformer: formatCodeDesc},
-                message: {path: 'http-response', transformer: formatMessage},
-                run_time: 0,
-                start_time: {path: '$.netsparker-enterprise.target.initiated'}
-              }
-            ]
-          }
-        ],
-        sha256: ''
-      }
-    ]
-  };
+              descriptions: [
+                {
+                  data: {transformer: formatCheck},
+                  label: 'check'
+                },
+                {
+                  data: {transformer: formatFix},
+                  label: 'fix'
+                }
+              ],
+              refs: [],
+              source_location: {},
+              code: '',
+              results: [
+                {
+                  status: ExecJSON.ControlResultStatus.Failed,
+                  code_desc: {
+                    path: 'http-request',
+                    transformer: formatCodeDesc
+                  },
+                  message: {path: 'http-response', transformer: formatMessage},
+                  run_time: 0,
+                  start_time: {
+                    path: `$.${toolname}-enterprise.target.initiated`
+                  }
+                }
+              ]
+            }
+          ],
+          sha256: ''
+        }
+      ]
+    };
+  }
   constructor(netsparkerXml: string) {
     super(parseXml(netsparkerXml));
+    this.setMappings(
+      this.defineMappings(
+        Object.keys(this.data).some((k) => k.includes('netsparker'))
+          ? 'netsparker'
+          : 'invicti'
+      )
+    );
   }
 }
