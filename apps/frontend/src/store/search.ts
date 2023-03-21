@@ -278,7 +278,7 @@ class Search extends VuexModule implements ISearchState {
     ['Stig ID', 'stigid'],
     ['Classification', 'classification'],
     ['Group Name', 'groupname'],
-    ['CCIs', 'cii']
+    ['CCIs', 'cci']
   ]);
 
   /**
