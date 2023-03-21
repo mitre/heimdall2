@@ -326,14 +326,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     );
   }
 
-  get profiles(): SourcedContextualizedProfile[] {
-    return Array.from(FilteredDataModule.profiles(this.file_filter));
-  }
-
-  get activeFiles(): (
-    | SourcedContextualizedEvaluation
-    | SourcedContextualizedProfile
-  )[] {
+  get activeFiles(): SourcedContextualizedEvaluation[] {
     return this.evaluationFiles;
   }
 
