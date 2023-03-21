@@ -9,6 +9,7 @@ import {read_file_async} from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
+  ChecklistResults,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -41,7 +42,6 @@ import {
 import _ from 'lodash';
 import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
-import {ChecklistSupplementalInfoModule} from './checklist_supplemental';
 import {FilteredDataModule} from './data_filters';
 import {SnackbarModule} from './snackbar';
 
@@ -263,11 +263,7 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.FORTIFY:
         return new FortifyMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.CHECKLIST:
-        const checklistInfo = {
-          fname: filename,
-          data: convertOptions.data
-        };
-        return ChecklistSupplementalInfoModule.show(checklistInfo);
+        return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
         return new GoSecMapper(convertOptions.data).toHdf();
       default:
