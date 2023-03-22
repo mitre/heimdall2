@@ -1,4 +1,4 @@
-import {ExtendedControlStatus, FilteredDataModule} from '@/store/data_filters';
+import {ExtendedControlStatus, FilteredDataModule, GenericSearchEntryValue} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {SearchEntry, SearchModule} from '@/store/search';
 import Checklist from '@/views/Checklist.vue';
@@ -80,7 +80,7 @@ describe('Datatable', () => {
         wrapper.vm as Vue & {
           rules: Array<ChecklistVuln>;
           all_filters: Array<
-            SearchEntry<string | ExtendedControlStatus | Severity>
+            SearchEntry<GenericSearchEntryValue>
           >;
         }
       ).rules.length
