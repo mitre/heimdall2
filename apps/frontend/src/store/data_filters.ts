@@ -49,9 +49,11 @@ const MAX_CACHE_ENTRIES = 20;
 
 export declare type ExtendedControlStatus = ControlStatus | 'Waived';
 
+export type GenericSearchEntryValue = string | ExtendedControlStatus | Severity
+
 export type FilterRecord =
   | boolean
-  | SearchEntry<string | ExtendedControlStatus | Severity>[]
+  | SearchEntry<GenericSearchEntryValue>[]
   | undefined;
 
 /** Contains common filters on data from the store. */
@@ -736,8 +738,8 @@ export function filterControlsBy(
   const firstPass = controls.filter((control) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
       const item:
-        | SearchEntry<string | ExtendedControlStatus | Severity>
-        | SearchEntry<string | ExtendedControlStatus | Severity>[]
+        | SearchEntry<GenericSearchEntryValue>
+        | SearchEntry<GenericSearchEntryValue>[]
         | boolean = _.get(control, filter);
       if (Array.isArray(value) && typeof item !== 'boolean') {
         return value?.some((term) => {
@@ -811,8 +813,8 @@ export function filterChecklistBy(
   const firstPass = rules.filter((rule) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
       const item:
-        | SearchEntry<string | ExtendedControlStatus | Severity>
-        | SearchEntry<string | ExtendedControlStatus | Severity>[]
+        | SearchEntry<GenericSearchEntryValue>
+        | SearchEntry<GenericSearchEntryValue>[]
         | boolean = _.get(rule, filter);
       if (Array.isArray(value) && typeof item !== 'boolean') {
         return value?.some((term) => {
@@ -874,7 +876,7 @@ export function filterRulesByKeywords(rules: ChecklistVuln[]) {
  */
 function rule_contains_term(
   rule: ChecklistVuln,
-  filter: SearchEntry<string | ExtendedControlStatus | Severity>
+  filter: SearchEntry<GenericSearchEntryValue>
 ): boolean {
   // See if any contain filter term
   return Object.entries(rule).some((item) => {
@@ -926,8 +928,8 @@ export function checklistRules(
  */
 function fieldIncludes(
   entry:
-    | SearchEntry<string | ExtendedControlStatus | Severity>
-    | SearchEntry<string | ExtendedControlStatus | Severity>[],
+    | SearchEntry<GenericSearchEntryValue>
+    | SearchEntry<GenericSearchEntryValue>[],
   comparator: (compareValue: string) => boolean
 ) {
   if (typeof entry === 'string') {
