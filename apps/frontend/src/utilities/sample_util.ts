@@ -28,94 +28,130 @@ export interface Sample {
   path: string;
 }
 
-function fetch(sample: string) {
-  return axios.get(sample).then(({data}) => data);
+function fetch(sample: Sample) {
+  return axios
+    .get(sample.path, {responseType: 'blob'})
+    .then(({data}) => new File([data], sample.filename));
 }
 
 export const samples: Sample[] = [
   {
     filename: 'Sonarqube Java Heimdall_tools Sample',
-    data: () => fetch(sonarqubeJavaSamplePath),
+    data: function () {
+      return fetch(this);
+    },
     path: sonarqubeJavaSamplePath
   },
   {
     filename: 'OWASP ZAP Webgoat Heimdall_tools Sample',
-    data: () => fetch(owaspZapWebgoatPath),
+    data: function () {
+      return fetch(this);
+    },
     path: owaspZapWebgoatPath
   },
   {
     filename: 'OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample',
-    data: () => fetch(owaspZapZeroPath),
+    data: function () {
+      return fetch(this);
+    },
     path: owaspZapZeroPath
   },
   {
     filename: 'Fortify Heimdall_tools Sample',
-    data: () => fetch(fortifyHToolsConvWebgoatPath),
+    data: function () {
+      return fetch(this);
+    },
     path: fortifyHToolsConvWebgoatPath
   },
   {
     filename: 'AWS S3 Permissions Check',
-    data: () => fetch(awsS3BaselinePath),
+    data: function () {
+      return fetch(this);
+    },
     path: awsS3BaselinePath
   },
   {
     filename: 'AWS CIS Foundations Baseline',
-    data: () => fetch(cisAwsFoundationsBaselinePath),
+    data: function () {
+      return fetch(this);
+    },
     path: cisAwsFoundationsBaselinePath
   },
   {
     filename: 'NGINX Clean Sample',
-    data: () => fetch(goodNginxResultsPath),
+    data: function () {
+      return fetch(this);
+    },
     path: goodNginxResultsPath
   },
   {
     filename: 'NGINX With Failing Tests',
-    data: () => fetch(badNginxPath),
+    data: function () {
+      return fetch(this);
+    },
     path: badNginxPath
   },
   {
     filename: 'Red Hat CVE Vulnerability Scan',
-    data: () => fetch(rhelCveVulnerabilityScanBaselineWithFailuresPath),
+    data: function () {
+      return fetch(this);
+    },
     path: rhelCveVulnerabilityScanBaselineWithFailuresPath
   },
   {
     filename: 'Red Hat 7 STIG Baseline',
-    data: () => fetch(rhel7ResultsPath),
+    data: function () {
+      return fetch(this);
+    },
     path: rhel7ResultsPath
   },
   {
     filename: 'Ubuntu STIG Baseline',
-    data: () => fetch(ubuntu1604BaselineResultsPath),
+    data: function () {
+      return fetch(this);
+    },
     path: ubuntu1604BaselineResultsPath
   },
   {
     filename: 'Red Hat With Failing Tests',
-    data: () => fetch(redhatBadPath),
+    data: function () {
+      return fetch(this);
+    },
     path: redhatBadPath
   },
   {
     filename: 'Three Layer RHEL7 Overlay Example',
-    data: () => fetch(threeOverlayProfilePath),
+    data: function () {
+      return fetch(this);
+    },
     path: threeOverlayProfilePath
   },
   {
     filename: 'Acme Overlay Example',
-    data: () => fetch(acmeOverlayPath),
+    data: function () {
+      return fetch(this);
+    },
     path: acmeOverlayPath
   },
   {
     filename: 'Clean RHEL 8 Checklist',
-    data: () => fetch(cleanRhel8ChecklistPath),
+    data: function () {
+      return fetch(this);
+    },
     path: cleanRhel8ChecklistPath
   },
   {
     filename: 'RHEL 8 Checklist',
-    data: () => fetch(rhel8ChecklistPath),
+    data: function () {
+      return fetch(this);
+    },
     path: rhel8ChecklistPath
   },
   {
     filename: 'Three Stig Checklist',
-    data: () => fetch(threeStigChecklistPath),
+    data: function () {
+      return fetch(this);
+    },
     path: threeStigChecklistPath
   }
 ];
