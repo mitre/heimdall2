@@ -38,7 +38,7 @@
     "csv2json": "^2.0.2",
     "fast-xml-parser": "^3.21.1",
     "html-entities": "^2.3.2",
-    "htmlparser2": "^6.1.0",
+    "htmlparser2": "^8.0.1",
     "inspecjs": "^2.6.42",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
