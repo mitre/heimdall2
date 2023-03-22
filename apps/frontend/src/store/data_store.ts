@@ -11,7 +11,6 @@ import {
 } from '@/store/report_intake';
 import Store from '@/store/store';
 import {ChecklistFile} from '@mitre/hdf-converters';
-import _ from 'lodash';
 import {
   Action,
   getModule,
@@ -75,7 +74,7 @@ export class InspecData extends VuexModule {
 
   get loadedDatabaseIds(): string[] {
     const ids: string[] = [];
-    for (const file of this.allFiles){
+    for (const file of this.allFiles) {
       if (file.database_id) {
         ids.push(file.database_id.toString());
       }
@@ -159,9 +158,10 @@ export class InspecData extends VuexModule {
 
   @Mutation
   REMOVE_CHECKLIST(fileId: FileID) {
-    this.checklistFiles = this.checklistFiles.filter(
-      (cf) => cf.uniqueId !== fileId
-    );
+    const index = this.checklistFiles.findIndex((cf) => cf.uniqueId !== fileId);
+    if (index > -1) {
+      this.checklistFiles.splice(index, 1);
+    }
   }
 
   /**
