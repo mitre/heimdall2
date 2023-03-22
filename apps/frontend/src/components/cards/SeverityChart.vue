@@ -26,7 +26,7 @@ import {SearchEntry, SearchModule, valueToSeverity} from '../../store/search';
   }
 })
 export default class SeverityChart extends Vue {
-  @Prop({type: Array}) readonly value!: SearchEntry[];
+  @Prop({type: Array}) readonly value!: SearchEntry<Severity>[];
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   categories: Category<Severity>[] = [

@@ -349,7 +349,6 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
-import {capitalize, isEqual} from 'lodash';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
@@ -593,7 +592,7 @@ export default class Checklist extends RouteMixin {
     let stillExists = false;
     // Checks to see if the selected rule still exists after filtering
     this.rules.forEach((item) => {
-      if (isEqual(FilteredDataModule.selectedRule, item)) {
+      if (_.isEqual(FilteredDataModule.selectedRule, item)) {
         stillExists = true;
       }
     });
@@ -820,7 +819,7 @@ export default class Checklist extends RouteMixin {
    * The title to override with
    */
   get curr_title(): string {
-    let returnText = `${capitalize(this.current_route_name)} View`;
+    let returnText = `${_.capitalize(this.current_route_name)} View`;
     if (this.file_filter.length === 1) {
       const file = this.getChecklist(this.file_filter);
       if (file) {
