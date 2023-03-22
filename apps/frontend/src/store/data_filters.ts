@@ -535,18 +535,18 @@ export class FilteredData extends VuexModule {
 
   @Mutation
   alterStatusBoolean() {
-    this.controlStatusSwitches.forEach((item, itemIndex) => {
+    for (const item of this.controlStatusSwitches) {
       if (
         SearchModule.statusFilter.some(
           (statusFilter) =>
             statusFilter.value.toLowerCase() === item.value.toLowerCase()
         )
       ) {
-        this.controlStatusSwitches[itemIndex].enabled = true;
+        item.enabled = true;
       } else {
-        this.controlStatusSwitches[itemIndex].enabled = false;
+        item.enabled = false;
       }
-    });
+    }
   }
 
   /**
@@ -557,14 +557,12 @@ export class FilteredData extends VuexModule {
    */
   @Action
   changeStatusSwitch(name: ExtendedControlStatus) {
-    //  Commented code is for testing the removal of all values no matter case sensitivity //
     const regex = new RegExp(name, 'i');
     const temp = SearchModule.currentSearchResult.clone();
-    this.controlStatusSwitches.forEach((item, itemIndex) => {
+    for (const item of this.controlStatusSwitches) {
       if (item.name == name.charAt(0).toUpperCase() + name.slice(1)) {
-        this.controlStatusSwitches[itemIndex].enabled =
-          !this.controlStatusSwitches[itemIndex].enabled;
-        if (this.controlStatusSwitches[itemIndex].enabled) {
+        item.enabled = !item.enabled;
+        if (item.enabled) {
           SearchModule.addSearchFilter({
             field: 'status',
             value: name.toLowerCase(),
@@ -577,20 +575,15 @@ export class FilteredData extends VuexModule {
             negated: false // Defaulted as false
           });
 
-          temp.conditionArray.forEach(
-            (item: {keyword: string; value: string; negated: boolean}) => {
-              if (
-                item.keyword === 'status' &&
-                regex.exec(item.value) !== null
-              ) {
-                temp.removeEntry('status', item.value, false);
-              }
+          for (const item of temp.conditionArray) {
+            if (item.keyword === 'status' && regex.exec(item.value) !== null) {
+              temp.removeEntry('status', item.value, false);
             }
-          );
+          }
           SearchModule.SET_SEARCH(temp.toString());
         }
       }
-    });
+    }
   }
 
   /** List of severity switches */
@@ -628,18 +621,18 @@ export class FilteredData extends VuexModule {
 
   @Mutation
   alterSeverityBoolean() {
-    this.severitySwitches.forEach((item, itemIndex) => {
+    for (const item of this.severitySwitches) {
       if (
         SearchModule.severityFilter.some(
           (severityFilter) =>
             severityFilter.value.toLowerCase() === item.value.toLowerCase()
         )
       ) {
-        this.severitySwitches[itemIndex].enabled = true;
+        item.enabled = true;
       } else {
-        this.severitySwitches[itemIndex].enabled = false;
+        item.enabled = false;
       }
-    });
+    }
   }
 
   /**
@@ -652,11 +645,10 @@ export class FilteredData extends VuexModule {
   changeSeveritySwitch(name: Severity) {
     const regex = new RegExp(name, 'i');
     const temp = SearchModule.currentSearchResult.clone();
-    this.severitySwitches.forEach((item, itemIndex) => {
+    for (const item of this.severitySwitches) {
       if (item.name == name.charAt(0).toUpperCase() + name.slice(1)) {
-        this.severitySwitches[itemIndex].enabled =
-          !this.severitySwitches[itemIndex].enabled;
-        if (this.severitySwitches[itemIndex].enabled) {
+        item.enabled = !item.enabled;
+        if (item.enabled) {
           SearchModule.addSearchFilter({
             field: 'severity',
             value: name.toLowerCase(),
@@ -669,20 +661,18 @@ export class FilteredData extends VuexModule {
             negated: false // Defaulted as false
           });
 
-          temp.conditionArray.forEach(
-            (item: {keyword: string; value: string; negated: boolean}) => {
-              if (
-                item.keyword === 'severity' &&
-                regex.exec(item.value) !== null
-              ) {
-                temp.removeEntry('severity', item.value, false);
-              }
+          for (const item of temp.conditionArray) {
+            if (
+              item.keyword === 'severity' &&
+              regex.exec(item.value) !== null
+            ) {
+              temp.removeEntry('severity', item.value, false);
             }
-          );
+          }
           SearchModule.SET_SEARCH(temp.toString());
         }
       }
-    });
+    }
   }
 }
 
@@ -767,7 +757,7 @@ export function filterControlsBy(
 export function filterControlsByKeywords(controls: ContextualizedControl[]) {
   let results = controls;
   if (SearchModule.keywordsSearchTerms.length > 0) {
-    SearchModule.keywordsSearchTerms.forEach((filter) => {
+    for (const filter of SearchModule.keywordsSearchTerms) {
       if (!filter.negated) {
         results = controls.filter((control) => {
           return contains_term(control, filter.value);
@@ -777,7 +767,7 @@ export function filterControlsByKeywords(controls: ContextualizedControl[]) {
           return !contains_term(control, filter.value);
         });
       }
-    });
+    }
   }
   return results;
 }
@@ -839,7 +829,7 @@ export function filterChecklistBy(
 export function filterRulesByKeywords(rules: ChecklistVuln[]) {
   let result = rules;
   if (SearchModule.keywordsSearchTerms.length > 0) {
-    SearchModule.keywordsSearchTerms.forEach((filter) => {
+    for (const filter of SearchModule.keywordsSearchTerms) {
       if (!filter.negated) {
         result = rules.filter((rule) => {
           return rule_contains_term(rule, filter);
@@ -849,7 +839,7 @@ export function filterRulesByKeywords(rules: ChecklistVuln[]) {
           return !rule_contains_term(rule, filter);
         });
       }
-    });
+    }
   }
 
   return result;

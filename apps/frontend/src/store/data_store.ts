@@ -11,7 +11,6 @@ import {
 } from '@/store/report_intake';
 import Store from '@/store/store';
 import {ChecklistFile} from '@mitre/hdf-converters';
-import _ from 'lodash';
 import {
   Action,
   getModule,
@@ -75,11 +74,11 @@ export class InspecData extends VuexModule {
 
   get loadedDatabaseIds(): string[] {
     const ids: string[] = [];
-    this.allFiles.forEach((file) => {
+    for (const file of this.allFiles) {
       if (file.database_id) {
         ids.push(file.database_id.toString());
       }
-    });
+    }
     return ids;
   }
 
@@ -162,71 +161,6 @@ export class InspecData extends VuexModule {
     this.checklistFiles = this.checklistFiles.filter(
       (cf) => cf.uniqueId !== fileId
     );
-  }
-
-  @Mutation
-  UPDATE_CHECKLISTS() {
-    this.checklistFiles.forEach((checklistFile) => {
-      // Setting assets
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.role',
-        checklistFile.asset.role
-      );
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.assettype',
-        checklistFile.asset.assettype
-      );
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.marking',
-        checklistFile.asset.marking
-      );
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.hostname',
-        checklistFile.asset.hostname
-      );
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.hostip',
-        checklistFile.asset.hostip
-      );
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.hostmac',
-        checklistFile.asset.hostmac
-      );
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.hostfqdn',
-        checklistFile.asset.hostfqdn
-      );
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.techarea',
-        checklistFile.asset.techarea
-      );
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.webordatabase',
-        checklistFile.asset.webordatabase
-      );
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.webdbsite',
-        checklistFile.asset.webdbsite
-      );
-      _.set(
-        checklistFile.raw as Record<string, unknown>,
-        'value.asset.webdbinstance',
-        checklistFile.asset.webdbinstance
-      );
-
-      // Setting STIGs
-      // _.set(checklistFile.raw, '')
-    });
   }
 
   /**
