@@ -1,11 +1,10 @@
-import {ExtendedControlStatus, FilteredDataModule, GenericSearchEntryValue} from '@/store/data_filters';
+import {FilteredDataModule, GenericSearchEntryValue} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {SearchEntry, SearchModule} from '@/store/search';
 import Checklist from '@/views/Checklist.vue';
 import {ChecklistVuln} from '@mitre/hdf-converters';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import {readFileSync} from 'fs';
-import {Severity} from 'inspecjs';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
