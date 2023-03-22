@@ -31,13 +31,28 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {SearchEntry, SearchModule} from './search';
+import {SearchEntry, SearchModule,
+  TitleSearchTerm,
+  DescriptionSearchTerm,
+  ControlIdSearchTerm,
+  CodeSearchTerm,
+  RuleIdSearchTerm,
+  VulIdSearchTerm,
+  StigIdSearchTerm,
+  ClassificationSearchTerm,
+  GroupNameSearchTerm,
+  CciSearchTerm,
+  NistIdFilter,
+  KeywordsSearchTerm,} from './search';
 
 const MAX_CACHE_ENTRIES = 20;
 
 export declare type ExtendedControlStatus = ControlStatus | 'Waived';
 
-export type FilterRecord = boolean | SearchEntry[] | undefined;
+export type FilterRecord =
+  | boolean
+  | SearchEntry<string | ExtendedControlStatus | Severity>[]
+  | undefined;
 
 /** Contains common filters on data from the store. */
 export interface Filter {
@@ -47,49 +62,49 @@ export interface Filter {
 
   // Control specific
   /** What status the controls can have. Undefined => any */
-  status?: SearchEntry[];
+  status?: SearchEntry<ExtendedControlStatus>[];
 
   /** What severity the controls can have. Undefined => any */
-  severity?: SearchEntry[];
+  severity?: SearchEntry<Severity>[];
 
   /** Whether or not to allow/include overlayed controls */
   omit_overlayed_controls?: boolean;
 
   /** Control IDs to search for */
-  ids?: SearchEntry[];
+  ids?: SearchEntry<ControlIdSearchTerm>[];
 
   /** Titles to search for */
-  titleSearchTerms?: SearchEntry[];
+  titleSearchTerms?: SearchEntry<TitleSearchTerm>[];
 
   /** Descriptions to search for */
-  descriptionSearchTerms?: SearchEntry[];
+  descriptionSearchTerms?: SearchEntry<DescriptionSearchTerm>[];
 
   /** Code to search for */
-  codeSearchTerms?: SearchEntry[];
+  codeSearchTerms?: SearchEntry<CodeSearchTerm>[];
 
   /** CCIs to search for */
-  nistIdFilter?: SearchEntry[];
+  nistIdFilter?: SearchEntry<NistIdFilter>[];
 
   /** Ruleid to search for */
-  ruleidSearchTerms?: SearchEntry[];
+  ruleidSearchTerms?: SearchEntry<RuleIdSearchTerm>[];
 
   /** Vulid to search for */
-  vulidSearchTerms?: SearchEntry[];
+  vulidSearchTerms?: SearchEntry<VulIdSearchTerm>[];
 
   /** Stigid to search for */
-  stigidSearchTerms?: SearchEntry[];
+  stigidSearchTerms?: SearchEntry<StigIdSearchTerm>[];
 
   /** Classification to search for */
-  classificationSearchTerms?: SearchEntry[];
+  classificationSearchTerms?: SearchEntry<ClassificationSearchTerm>[];
 
   /** Groupname to search for */
-  groupNameSearchTerms?: SearchEntry[];
+  groupNameSearchTerms?: SearchEntry<GroupNameSearchTerm>[];
 
   /** Checklist CCIs to search for */
-  cciSearchTerms?: SearchEntry[];
+  cciSearchTerms?: SearchEntry<CciSearchTerm>[];
 
   /** Checklist keywords to search for */
-  keywordsSearchTerms?: SearchEntry[];
+  keywordsSearchTerms?: SearchEntry<KeywordsSearchTerm>[];
 
   /** A search term string, case insensitive
    * We look for this in
@@ -719,10 +734,10 @@ export function filterControlsBy(
   // Filter out specific categories
   const firstPass = controls.filter((control) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
-      const item: SearchEntry | SearchEntry[] | boolean = _.get(
-        control,
-        filter
-      );
+      const item:
+        | SearchEntry<string | ExtendedControlStatus | Severity>
+        | SearchEntry<string | ExtendedControlStatus | Severity>[]
+        | boolean = _.get(control, filter);
       if (Array.isArray(value) && typeof item !== 'boolean') {
         return value?.some((term) => {
           if (!term.negated) {
@@ -794,7 +809,10 @@ export function filterChecklistBy(
   // Filter out specific categories
   const firstPass = rules.filter((rule) => {
     return Object.entries(activeFilters).every(([filter, value]) => {
-      const item: SearchEntry | SearchEntry[] | boolean = _.get(rule, filter);
+      const item:
+        | SearchEntry<string | ExtendedControlStatus | Severity>
+        | SearchEntry<string | ExtendedControlStatus | Severity>[]
+        | boolean = _.get(rule, filter);
       if (Array.isArray(value) && typeof item !== 'boolean') {
         return value?.some((term) => {
           if (!term.negated) {
@@ -853,7 +871,10 @@ export function filterRulesByKeywords(rules: ChecklistVuln[]) {
  * @returns If term exists true, else false
  *
  */
-function rule_contains_term(rule: ChecklistVuln, filter: SearchEntry): boolean {
+function rule_contains_term(
+  rule: ChecklistVuln,
+  filter: SearchEntry<string | ExtendedControlStatus | Severity>
+): boolean {
   // See if any contain filter term
   return Object.entries(rule).some((item) => {
     if (item[1]?.toLowerCase().includes(filter.value)) {
@@ -887,7 +908,7 @@ export function checklistRules(
     cciRef: filters.cciSearchTerms,
     status: _.filter(
       filters.status,
-      (status: SearchEntry) => status.value !== 'Waived'
+      (status: SearchEntry<ExtendedControlStatus>) => status.value !== 'Waived'
     )
   };
   const filteredRules = filterChecklistBy(rules, checklistFilters);
@@ -903,7 +924,9 @@ export function checklistRules(
  *
  */
 function fieldIncludes(
-  entry: SearchEntry | SearchEntry[],
+  entry:
+    | SearchEntry<string | ExtendedControlStatus | Severity>
+    | SearchEntry<string | ExtendedControlStatus | Severity>[],
   comparator: (compareValue: string) => boolean
 ) {
   if (typeof entry === 'string') {

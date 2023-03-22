@@ -1,10 +1,11 @@
-import {FilteredDataModule} from '@/store/data_filters';
+import {ExtendedControlStatus, FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {SearchEntry, SearchModule} from '@/store/search';
 import Checklist from '@/views/Checklist.vue';
 import {ChecklistVuln} from '@mitre/hdf-converters';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import {readFileSync} from 'fs';
+import {Severity} from 'inspecjs';
 import 'jest';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
@@ -78,7 +79,9 @@ describe('Datatable', () => {
       (
         wrapper.vm as Vue & {
           rules: Array<ChecklistVuln>;
-          all_filters: Array<SearchEntry>;
+          all_filters: Array<
+            SearchEntry<string | ExtendedControlStatus | Severity>
+          >;
         }
       ).rules.length
     ).toBe(total_count);

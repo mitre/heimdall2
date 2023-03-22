@@ -236,6 +236,7 @@ import {SearchEntry, SearchModule} from '@/store/search';
 import {ServerModule} from '@/store/server';
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/interfaces';
+import {Severity} from 'inspecjs';
 import {capitalize} from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '../mixins/ServerMixin';
@@ -294,19 +295,19 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     SearchModule.updateSearch(term);
   }
 
-  get severityFilter(): SearchEntry[] {
+  get severityFilter(): SearchEntry<Severity>[] {
     return SearchModule.severityFilter;
   }
 
-  set severityFilter(severity: SearchEntry[]) {
+  set severityFilter(severity: SearchEntry<Severity>[]) {
     SearchModule.setSeverity(severity);
   }
 
-  get statusFilter(): SearchEntry[] {
+  get statusFilter(): SearchEntry<ExtendedControlStatus>[] {
     return SearchModule.statusFilter;
   }
 
-  set statusFilter(status: SearchEntry[]) {
+  set statusFilter(status: SearchEntry<ExtendedControlStatus>[]) {
     SearchModule.setStatusFilter(status);
   }
 
