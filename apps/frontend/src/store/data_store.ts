@@ -158,9 +158,10 @@ export class InspecData extends VuexModule {
 
   @Mutation
   REMOVE_CHECKLIST(fileId: FileID) {
-    this.checklistFiles = this.checklistFiles.filter(
-      (cf) => cf.uniqueId !== fileId
-    );
+    const index = this.checklistFiles.findIndex((cf) => cf.uniqueId !== fileId);
+    if (index > -1) {
+      this.checklistFiles.splice(index, 1);
+    }
   }
 
   /**
