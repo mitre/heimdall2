@@ -12,7 +12,7 @@ import {
   parseXml
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS, createWinstonLogger} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -27,6 +27,8 @@ const RULE_RESULT_PATHS = ['cdf:rule-result', 'rule-result'];
 
 let idTracker = '';
 let valueIdTracker: string | undefined = undefined;
+
+let logger = createWinstonLogger('xccdf_results2hdf', 'INFO');
 
 function getRuleResultItem(
   testResult: Record<string, unknown>,
@@ -187,8 +189,12 @@ function extractCci(input: IIdent | IIdent[]): string[] {
   const output: string[] = [];
   inputArray.forEach((element) => {
     const text = _.get(element, 'text');
-    if (text.match(CCI_REGEX)) {
-      output.push(text);
+    if(text) {
+      if (text.match(CCI_REGEX)) {
+        output.push(text);
+      }
+    } else {
+      logger.info(`No CCI text found for element: ${element}.`)
     }
   });
   return output;
