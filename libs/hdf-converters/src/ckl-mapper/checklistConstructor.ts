@@ -23,7 +23,7 @@ export type ChecklistStig = {
 
 type StigHeader = {
   version: string;
-  classification: string;
+  classification: 'UNCLASSIFIED' | 'UNCLASSIFIED//FOR OFFICIAL USE ONLY' | 'CUI';
   customname?: string;
   stigid: string;
   description: string;
@@ -35,6 +35,7 @@ type StigHeader = {
   source?: string;
 };
 
+// omit status to overwrite possible HDF status values
 export type ChecklistVuln = Omit<
   ChecklistJsonixVuln,
   'TYPE_NAME' | 'stigdata' | 'status'
@@ -52,7 +53,7 @@ export type ChecklistVuln = Omit<
   fixText: string;
   falsePositives: string;
   falseNegatives: string;
-  documentable: string;
+  documentable: boolean;
   mitigations: string;
   potentialImpact: string;
   thirdPartyTools: string;
@@ -61,7 +62,7 @@ export type ChecklistVuln = Omit<
   securityOverrideGuidance: string;
   checkContentRef: string;
   weight: string;
-  class: string;
+  class: 'Unclass' | 'FOUO' | 'CUI';
   stigRef: string;
   targetKey: string;
   stigUuid: string;
@@ -75,7 +76,7 @@ export type ChecklistVuln = Omit<
  * @param tag - attribute name
  * @returns attribute data
  */
-function getAttributeData(
+export function getAttributeData(
   stigdata: ChecklistJsonixStigData[],
   tag: string
 ): string {
@@ -93,7 +94,7 @@ function getAttributeData(
  * @param tag - attribute name
  * @returns si data
  */
-function getSiData(stiginfo: ChecklistJsonixSidata[], tag: string): string {
+export function getSiData(stiginfo: ChecklistJsonixSidata[], tag: string): string {
   const results = stiginfo.filter((attribute: ChecklistJsonixSidata) => {
     return _.get(attribute, 'sidname') === tag;
   });
@@ -138,7 +139,7 @@ export function createChecklistObject(raw: ChecklistJSONIX): ChecklistObject {
     const stigInfo: ChecklistJsonixSidata[] = _.get(stig, 'stiginfo.sidata');
     const header: StigHeader = {
       version: getSiData(stigInfo, 'version'),
-      classification: getSiData(stigInfo, 'classification'),
+      classification: getSiData(stigInfo, 'classification') as unknown as StigHeader['classification'],
       customname: getSiData(stigInfo, 'customname'),
       stigid: getSiData(stigInfo, 'stigid'),
       description: getSiData(stigInfo, 'description'),
@@ -173,7 +174,7 @@ export function createChecklistObject(raw: ChecklistJSONIX): ChecklistObject {
         fixText: getAttributeData(stigdata, 'Fix_Text'),
         falsePositives: getAttributeData(stigdata, 'False_Positives'),
         falseNegatives: getAttributeData(stigdata, 'False_Negatives'),
-        documentable: getAttributeData(stigdata, 'Documentable'),
+        documentable: getAttributeData(stigdata, 'Documentable') as unknown as boolean,
         mitigations: getAttributeData(stigdata, 'Mitigations'),
         potentialImpact: getAttributeData(stigdata, 'Potential_Impact'),
         thirdPartyTools: getAttributeData(stigdata, 'Third_Party_Tools'),
@@ -185,7 +186,7 @@ export function createChecklistObject(raw: ChecklistJSONIX): ChecklistObject {
         ),
         checkContentRef: getAttributeData(stigdata, 'Check_Content_Ref'),
         weight: getAttributeData(stigdata, 'Weight'),
-        class: getAttributeData(stigdata, 'Class'),
+        class: getAttributeData(stigdata, 'Class') as unknown as ChecklistVuln['class'],
         stigRef: getAttributeData(stigdata, 'STIGRef'),
         targetKey: getAttributeData(stigdata, 'TargetKey'),
         stigUuid: getAttributeData(stigdata, 'STIG_UUID'),

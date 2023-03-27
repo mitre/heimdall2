@@ -188,6 +188,7 @@ export class ChecklistResults {
       this.checklistXml,
       checklistMapping.jsonixMapping
     ) as ChecklistJSONIX;
+    console.log(this.raw)
     this.checklistObject = createChecklistObject(
       this.raw,
     );
