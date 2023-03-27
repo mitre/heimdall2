@@ -180,6 +180,7 @@ export default class GroupModal extends Vue {
           this.groupInfo = newGroup();
         }
         this.dialog = false;
+        location.reload();
       });
     });
   }
