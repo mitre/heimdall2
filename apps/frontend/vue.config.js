@@ -1,18 +1,20 @@
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 const path = require('path');
 // Lookup constants
-const fs = require('node:fs/promises');
+const fs = require('fs');
 
 // This grabs the js/css to allow for HTML export
 const files = {
   [require.resolve('bootstrap/dist/css/bootstrap.min.css')]:
     'public/static/export/bootstrap.min.css',
   [require.resolve('bootstrap/dist/js/bootstrap.min.js')]:
-    'public/static/export/bootstrap.min.js'
+    'public/static/export/bootstrap.min.js',
+  [require.resolve('jquery/dist/jquery.min.js')]:
+    'public/static/export/jquery.min.js'
 };
 
 for (const file in files) {
-  fs.copyFile(file, files[file], 0, (err) => {
+  fs.copyFile(file, files[file], (err) => {
     if (err) {
       throw err;
     }

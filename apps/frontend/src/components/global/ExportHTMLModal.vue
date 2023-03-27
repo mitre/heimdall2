@@ -326,9 +326,7 @@ export default class ExportHTMLModal extends Vue {
     const bootstrapJSRequest = axios.get<string>(
       `/static/export/bootstrap.min.js`
     );
-    const jqueryRequest = axios.get<string>(
-      `https://code.jquery.com/jquery-3.6.4.min.js`
-    );
+    const jqueryRequest = axios.get<string>(`/static/export/jquery.min.js`);
 
     axios
       .all([
