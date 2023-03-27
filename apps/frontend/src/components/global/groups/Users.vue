@@ -5,42 +5,17 @@
         <v-col>
           <v-autocomplete
             v-if="editable"
-            v-model="usersToAdd['owner']"
+            v-model="usersToAdd"
             :items="availableUsers"
             chips
-            label="Add Owners"
+            label="Add Users"
             full-width
             hide-selected
             deletable-chips
             multiple
             single-line
-          >
-            <template slot="append-outer">
-              <v-btn @click="addOwners">
-                <v-icon left>mdi-plus</v-icon>
-                Add
-              </v-btn>
-            </template>
-          </v-autocomplete>
-          <v-autocomplete
-            v-if="editable"
-            v-model="usersToAdd['member']"
-            :items="availableUsers"
-            chips
-            label="Add Members"
-            full-width
-            hide-selected
-            deletable-chips
-            multiple
-            single-line
-          >
-            <template slot="append-outer">
-              <v-btn @click="addMembers">
-                <v-icon left>mdi-plus</v-icon>
-                Add
-              </v-btn>
-            </template>
-          </v-autocomplete>
+            @blur="addUsers"
+          />
         </v-col>
       </v-row>
     </div>
@@ -93,7 +68,6 @@ import {Emit, Prop, VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import {DataTableHeader} from 'vuetify';
-import _ from 'lodash';
 
 @Component({
   components: {
@@ -114,10 +88,7 @@ export default class Users extends Vue {
   readonly editable!: boolean;
 
   editedUserID: string = '0';
-  usersToAdd: Record<'member' | 'owner', string[]> = {
-    member: [],
-    owner: []
-  };
+  usersToAdd: string[] = [];
 
   dialogDelete = false;
   headers: DataTableHeader[] = [
@@ -139,9 +110,6 @@ export default class Users extends Vue {
     }
   ];
 
-  addOwners = this.addUsers('owner');
-  addMembers = this.addUsers('member');
-
   get displayedHeaders() {
     // If the user is editing the group, then display the actions column.
     if (this.editable) {
@@ -154,26 +122,16 @@ export default class Users extends Vue {
     return this.headers;
   }
 
-  addUsers(role: 'member' | 'owner') {
-    return () => {
-      for (const user of ServerModule.allUsers) {
-        if (this.usersToAdd[role].includes(user.id)) {
-          this.currentUsers.push({
-            ...user,
-            groupRole: role
-          });
-        }
-        for (const users of Object.values(
-          _.omit(this.usersToAdd, role) as Record<'member' | 'owner', string[]>
-        )) {
-          const index = users.indexOf(user.id);
-          if (index !== -1) {
-            users.splice(index, 1);
-          }
-        }
+  addUsers() {
+    ServerModule.allUsers.forEach((user) => {
+      if (this.usersToAdd.includes(user.id)) {
+        this.currentUsers.push({
+          ...user,
+          groupRole: 'member'
+        });
       }
-      this.usersToAdd[role] = [];
-    };
+    });
+    this.usersToAdd = [];
   }
 
   @Emit()
