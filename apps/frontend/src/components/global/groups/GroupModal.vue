@@ -170,9 +170,9 @@ export default class GroupModal extends Vue {
     const response = this.create
       ? this.createGroup(groupInfo)
       : this.updateExistingGroup(groupInfo);
-    response.then(({data}) => {
-      this.syncUsersWithGroup(data).then(() => {
-        GroupsModule.GetGroupById(data.id);
+    response.then(({data: group}) => {
+      this.syncUsersWithGroup(group).then(() => {
+        GroupsModule.UpdateGroupById(group.id);
         SnackbarModule.notify(`Group Successfully Saved`);
         // This clears when creating a new Group.
         // Calling clear on edit makes it impossible to edit the same group twice.
