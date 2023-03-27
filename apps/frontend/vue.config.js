@@ -35,9 +35,10 @@ module.exports = {
   },
   outputDir: '../../dist/frontend',
   configureWebpack: {
+    target: "node",
     resolve: {
       fallback: {
-        fs: false
+        fs: require.resolve('fs')
       }
     },
     module: {

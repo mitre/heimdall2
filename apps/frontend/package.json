@@ -93,6 +93,7 @@
     "eslint-plugin-vue": "^8.0.3",
     "express": "^4.17.1",
     "file-saver": "^2.0.2",
+    "fs": "^0.0.1-security",
     "highlight.js": "^11.0.0",
     "html-loader": "^4.1.0",
     "inspecjs": "^2.6.36",
