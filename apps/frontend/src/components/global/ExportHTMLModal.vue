@@ -97,7 +97,6 @@ interface Icons {
 interface OutputData {
   bootstrapCSS: string;
   bootstrapJS: string;
-  jquery: string;
   files: FileInfo[];
   statistics: Statistics;
   controlSets: ControlSet[];
@@ -124,7 +123,6 @@ export default class ExportHTMLModal extends Vue {
   outputData: OutputData = {
     bootstrapCSS: '',
     bootstrapJS: '',
-    jquery: '',
     statistics: {
       passed: 0,
       failed: 0,
@@ -326,49 +324,40 @@ export default class ExportHTMLModal extends Vue {
     const bootstrapJSRequest = axios.get<string>(
       `/static/export/bootstrap.min.js`
     );
-    const jqueryRequest = axios.get<string>(`/static/export/jquery.min.js`);
 
-    axios
-      .all([
-        templateRequest,
-        bootstrapCSSRequest,
-        bootstrapJSRequest,
-        jqueryRequest
-      ])
-      .then(
-        axios.spread((...responses) => {
-          const template = responses[0].data;
-          this.outputData.bootstrapCSS = responses[1].data
-            .replace('220,53,69', '243,67,53') // bg-danger
-            .replace('25,135,84', '76,176,79') // bg-success
-            .replace('13,202,240', '3,169,244') // bg-info
-            .replace('255,193,7', '254,153,0'); // bg-warning
+    axios.all([templateRequest, bootstrapCSSRequest, bootstrapJSRequest]).then(
+      axios.spread((...responses) => {
+        const template = responses[0].data;
+        this.outputData.bootstrapCSS = responses[1].data
+          .replace('220,53,69', '243,67,53') // bg-danger
+          .replace('25,135,84', '76,176,79') // bg-success
+          .replace('13,202,240', '3,169,244') // bg-info
+          .replace('255,193,7', '254,153,0'); // bg-warning
 
-          this.outputData.bootstrapJS = responses[2].data;
-          this.outputData.jquery = responses[3].data;
-          this.outputData.complianceCards = [
-            {html: document.getElementById('statusCounts')?.innerHTML},
-            {html: document.getElementById('severityCounts')?.innerHTML},
-            {html: document.getElementById('complianceLevel')?.innerHTML}
-          ];
+        this.outputData.bootstrapJS = responses[2].data;
+        this.outputData.complianceCards = [
+          {html: document.getElementById('statusCounts')?.innerHTML},
+          {html: document.getElementById('severityCounts')?.innerHTML},
+          {html: document.getElementById('complianceLevel')?.innerHTML}
+        ];
 
-          this.filter.fromFile.forEach(async (fileId) => {
-            const file = InspecDataModule.allFiles.find(
-              (f) => f.uniqueId === fileId
-            );
-            if (file) {
-              this.addFiledata(file);
-            }
-          });
-          const body = Mustache.render(template, this.outputData);
-          saveAs(
-            new Blob([s2ab(body)], {type: 'application/octet-stream'}),
-            `${_.capitalize(
-              this.exportType
-            )}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
+        this.filter.fromFile.forEach(async (fileId) => {
+          const file = InspecDataModule.allFiles.find(
+            (f) => f.uniqueId === fileId
           );
-        })
-      );
+          if (file) {
+            this.addFiledata(file);
+          }
+        });
+        const body = Mustache.render(template, this.outputData);
+        saveAs(
+          new Blob([s2ab(body)], {type: 'application/octet-stream'}),
+          `${_.capitalize(
+            this.exportType
+          )}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
+        );
+      })
+    );
     this.closeModal();
   }
 }
