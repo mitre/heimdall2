@@ -551,6 +551,9 @@ export class FilteredData extends VuexModule {
     }
   ];
 
+  /**
+   * Used at the end of the parseSearch function to make sure that status switches are updated with search bar text filters 
+   */
   @Mutation
   alterStatusBoolean() {
     for (const item of this.controlStatusSwitches) {
@@ -575,6 +578,7 @@ export class FilteredData extends VuexModule {
    */
   @Action
   changeStatusSwitch(name: ExtendedControlStatus) {
+    // Regex is used to make sure correct filter is removed 
     const regex = new RegExp(name, 'i');
     const temp = SearchModule.currentSearchResult.clone();
     for (const item of this.controlStatusSwitches) {
@@ -584,13 +588,13 @@ export class FilteredData extends VuexModule {
           SearchModule.addSearchFilter({
             field: 'status',
             value: name.toLowerCase(),
-            negated: false // Defaulted as false
+            negated: false // Defaulted as false due to switch limitation
           });
         } else {
           SearchModule.removeSearchFilter({
             field: 'status',
             value: item.value.toLowerCase(),
-            negated: false // Defaulted as false
+            negated: false // Defaulted as false due to switch limitation
           });
 
           for (const item of temp.conditionArray) {
@@ -637,6 +641,9 @@ export class FilteredData extends VuexModule {
     }
   ];
 
+  /**
+   * Used at the end of the parseSearch function to make sure that severity switches are updated with search bar text filters 
+   */
   @Mutation
   alterSeverityBoolean() {
     for (const item of this.severitySwitches) {
@@ -661,6 +668,7 @@ export class FilteredData extends VuexModule {
    */
   @Action
   changeSeveritySwitch(name: Severity) {
+    // Regex is used to make sure correct filter is removed 
     const regex = new RegExp(name, 'i');
     const temp = SearchModule.currentSearchResult.clone();
     for (const item of this.severitySwitches) {
@@ -670,13 +678,13 @@ export class FilteredData extends VuexModule {
           SearchModule.addSearchFilter({
             field: 'severity',
             value: name.toLowerCase(),
-            negated: false // Defaulted as false
+            negated: false // Defaulted as false due to switch limitation
           });
         } else {
           SearchModule.removeSearchFilter({
             field: 'severity',
             value: item.value.toLowerCase(),
-            negated: false // Defaulted as false
+            negated: false // Defaulted as false due to switch limitation
           });
 
           for (const item of temp.conditionArray) {
