@@ -188,7 +188,6 @@ export class ChecklistResults {
       this.checklistXml,
       checklistMapping.jsonixMapping
     ) as ChecklistJSONIX;
-    console.log(this.raw)
     this.checklistObject = createChecklistObject(
       this.raw,
     );
@@ -288,10 +287,10 @@ export class ChecklistMapper extends BaseConverter {
                   ['severity_justification', 'severityJustification']
                 ];
                 const fullTags: Record<string, unknown> = {};
-                for (const path of tags) {
-                    const tagValue = _.get(input, path[1]);
+                for (const [key, path] of tags) {
+                    const tagValue = _.get(input, path);
                     if (tagValue && tagValue !== '; ') {
-                      fullTags[path[0]] = tagValue;
+                      fullTags[key] = tagValue;
                     }
                 }
                 return fullTags;

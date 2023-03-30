@@ -1,5 +1,4 @@
 import fs from 'fs';
-import {ExecJSON} from 'inspecjs';
 import {
   ChecklistResults
 } from '../../../src/ckl-mapper/checklist-mapper';
@@ -14,10 +13,10 @@ describe('checklist_mapper_single_stig', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -43,10 +42,10 @@ describe('checklist_mapper_multi_stig_wrapper', () => {
 
     const results = mapper.toHdf();
 
-    fs.writeFileSync(
-      'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(results)).toEqual(
       omitVersions(
