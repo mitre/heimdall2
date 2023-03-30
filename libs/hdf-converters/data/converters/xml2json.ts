@@ -23,7 +23,7 @@ export interface ICCIList {
 }
 
 if (!pathToInfile || !pathToOutfile) {
-  console.error(`You must provide the path to botn an input and ouput file.`);
+  console.error(`You must provide the path to both an input and ouput file.`);
 } else {
   fs.readFile(pathToInfile, function (readFileError, data) {
     if (readFileError) {
@@ -41,7 +41,7 @@ if (!pathToInfile || !pathToOutfile) {
             // Get the latest reference
             const newestReference = _.maxBy(
               cciItem.references[0].reference,
-              '$.version'
+              (item) => _.get(item, '$.version')
             );
             if (newestReference) {
               result[cciItem.$.id] = newestReference.$.index;
