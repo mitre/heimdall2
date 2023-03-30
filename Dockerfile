@@ -11,7 +11,8 @@ ENV YARNREPO=$YARNREPO_MIRROR
 USER 0
 WORKDIR /src
 
-RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*
+# python3/make/compiler is a requirement for node-gyp
+RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y python3 make gcc-c++ yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*
 
 COPY package.json yarn.lock lerna.json tsconfig.json postcss.config.js ./
 COPY apps/backend/package.json apps/backend/tsconfig.* ./apps/backend/
