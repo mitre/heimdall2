@@ -2,46 +2,87 @@
   <v-dialog v-model="dialog" max-width="700px">
     <!-- clickable slot passes the activator prop up to parent
         This allows the parent to pass in a clickable icon -->
-    <template #activator="{ on, attrs }">
+    <template #activator="{on, attrs}">
       <slot name="clickable" :on="on" :attrs="attrs" />
     </template>
-    <v-card class="rounded-t-0" :data-cy="create ? 'createGroupForm' : 'updateGroupForm'">
-      <v-card-title data-cy="groupModalTitle" class="headline mitreSecondaryBlue" primary-title>{{
-        title
-      }}</v-card-title>
+    <v-card
+      class="rounded-t-0"
+      :data-cy="create ? 'createGroupForm' : 'updateGroupForm'"
+    >
+      <v-card-title
+        data-cy="groupModalTitle"
+        class="headline mitreSecondaryBlue"
+        primary-title
+        >{{ title }}</v-card-title
+      >
       <v-card-text>
         <br />
         <v-form @submit.prevent>
           <v-row>
             <v-col cols="8">
-              <v-text-field v-model="groupInfo.name" data-cy="name" label="Group Name" @keyup.enter="save" />
+              <v-text-field
+                v-model="groupInfo.name"
+                data-cy="name"
+                label="Group Name"
+                @keyup.enter="save"
+              />
             </v-col>
             <v-col>
               <v-tooltip bottom>
-                <template #activator="{ on }">
+                <template #activator="{on}">
                   <span v-on="on">
-                    <v-checkbox v-model="groupInfo.public" data-cy="public" label="Make Publicly Visible?" />
+                    <v-checkbox
+                      v-model="groupInfo.public"
+                      data-cy="public"
+                      label="Make Publicly Visible?"
+                    />
                   </span>
                 </template>
-                <span>This will make the group name visible to all logged in users.
+                <span
+                  >This will make the group name visible to all logged in users.
                   It will not expose any results or profiles added to the
-                  group.</span>
+                  group.</span
+                >
               </v-tooltip>
             </v-col>
           </v-row>
-          <Users v-model="groupInfo.users" :editable="true" @on-update-group-user-role="updateSaveState" />
+          <Users
+            v-model="groupInfo.users"
+            :editable="true"
+            @on-update-group-user-role="updateSaveState"
+          />
         </v-form>
       </v-card-text>
       <v-divider />
       <v-card-actions>
         <GroupAPIKeysModal v-if="!create" :group="group">
-          <template #clickable="{ on, attrs }">
-            <v-btn data-cy="groupAPIKeys" color="primary" text v-bind="attrs" v-on="on">Manage API Keys</v-btn>
+          <template #clickable="{on, attrs}">
+            <v-btn
+              data-cy="groupAPIKeys"
+              color="primary"
+              text
+              v-bind="attrs"
+              v-on="on"
+              >Manage API Keys</v-btn
+            >
           </template>
         </GroupAPIKeysModal>
         <v-spacer />
-        <v-btn data-cy="closeAndDiscardChanges" color="primary" text @click="dialog = false">Cancel</v-btn>
-        <v-btn data-cy="closeAndSaveChanges" color="primary" text :disabled="!saveable" @click="save">Save</v-btn>
+        <v-btn
+          data-cy="closeAndDiscardChanges"
+          color="primary"
+          text
+          @click="dialog = false"
+          >Cancel</v-btn
+        >
+        <v-btn
+          data-cy="closeAndSaveChanges"
+          color="primary"
+          text
+          :disabled="!saveable"
+          @click="save"
+          >Save</v-btn
+        >
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -51,8 +92,8 @@
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import GroupAPIKeysModal from '@/components/global/groups/GroupAPIKeysModal.vue';
 import Users from '@/components/global/groups/Users.vue';
-import { GroupsModule } from '@/store/groups';
-import { SnackbarModule } from '@/store/snackbar';
+import {GroupsModule} from '@/store/groups';
+import {SnackbarModule} from '@/store/snackbar';
 import {
   IAddUserToGroup,
   ICreateGroup,
@@ -61,11 +102,11 @@ import {
   ISlimUser,
   IUpdateGroupUser
 } from '@heimdall/interfaces';
-import axios, { AxiosResponse } from 'axios';
+import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
+import {Prop} from 'vue-property-decorator';
 
 function newGroup(): IGroup {
   return {
@@ -95,8 +136,8 @@ export default class GroupModal extends Vue {
   })
   readonly group!: IGroup;
 
-  @Prop({ type: Boolean, default: false }) readonly admin!: boolean;
-  @Prop({ type: Boolean, default: false }) readonly create!: boolean;
+  @Prop({type: Boolean, default: false}) readonly admin!: boolean;
+  @Prop({type: Boolean, default: false}) readonly create!: boolean;
   dialog = false;
   changePassword = false;
   groupInfo: IGroup = _.cloneDeep(this.group);
@@ -129,7 +170,7 @@ export default class GroupModal extends Vue {
     const response = this.create
       ? this.createGroup(groupInfo)
       : this.updateExistingGroup(groupInfo);
-    response.then(({ data: group }) => {
+    response.then(({data: group}) => {
       this.syncUsersWithGroup(group).then(() => {
         GroupsModule.UpdateGroupById(group.id);
         SnackbarModule.notify(`Group Successfully Saved`);
@@ -179,7 +220,7 @@ export default class GroupModal extends Vue {
       const removeUserDto: IRemoveUserFromGroup = {
         userId: user.id
       };
-      return axios.delete(`/groups/${group.id}/user`, { data: removeUserDto });
+      return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
     });
     const updatedUserPromises = toUpdate.map((user) => {
       const updateGroupUserRole: IUpdateGroupUser = {
@@ -191,9 +232,11 @@ export default class GroupModal extends Vue {
         updateGroupUserRole
       );
     });
-    return Promise.all(
-      [...addedUserPromises, ...removedUserPromises, ...updatedUserPromises]
-    );
+    return Promise.all([
+      ...addedUserPromises,
+      ...removedUserPromises,
+      ...updatedUserPromises
+    ]);
   }
 }
 </script>
