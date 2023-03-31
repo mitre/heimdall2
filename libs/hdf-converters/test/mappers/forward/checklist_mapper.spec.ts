@@ -1,7 +1,5 @@
 import fs from 'fs';
-import {
-  ChecklistResults
-} from '../../../src/ckl-mapper/checklist-mapper';
+import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {omitVersions} from '../../utils';
 
 describe('checklist_mapper_single_stig', () => {

@@ -1,7 +1,7 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
-import { ChecklistJSONIX } from '../../types/checklistJsonix';
+import {ChecklistJSONIX} from '../../types/checklistJsonix';
 import {
   BaseConverter,
   generateHash,
@@ -11,12 +11,12 @@ import {
 } from '../base-converter';
 import {CciNistMapping} from '../mappings/CciNistMapping';
 import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
-import * as checklistMapping from './jsonixMapping';
 import {
   ChecklistObject,
   ChecklistVuln,
   createChecklistObject
 } from './checklistConstructor';
+import * as checklistMapping from './jsonixMapping';
 
 /**
  * Tranformer function that splits a string and return array
@@ -47,7 +47,7 @@ enum ImpactMapping {
   high = 0.7,
   medium = 0.5,
   low = 0.3
-};
+}
 
 /**
  * Transformer function that checks if the status is 'Not Applicable' returning a 0.
@@ -55,12 +55,14 @@ enum ImpactMapping {
  * @param vuln - checklist vulnerability object
  * @returns impact - number 0.3, 0.5, or 0.7
  */
-function transformImpact(vuln: ChecklistVuln): number {  
+function transformImpact(vuln: ChecklistVuln): number {
   if (vuln.status === 'Not Applicable') return 0.0;
   const severity = findSeverity(vuln);
   // check if severity does not exists within ImpactMapping throw new Error
   //throw new Error("Mapping does not exist");
-  return ImpactMapping[severity.toString().toLowerCase() as keyof typeof ImpactMapping];
+  return ImpactMapping[
+    severity.toString().toLowerCase() as keyof typeof ImpactMapping
+  ];
 }
 
 /**
@@ -107,61 +109,51 @@ function getStatus(input: string): ExecJSON.ControlResultStatus {
  * @returns ExecJSON.ControlResult
  */
 function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
+  const findings = input as unknown as ExecJSON.ControlResult[];
   const results: ExecJSON.ControlResult[] = [];
-  if (Array.isArray(input)) {
-    const findings: string = input[0].code_desc;
-    if (findings.length !== 0) {
-      const splitFindings: string[] = findings.split(
-        '--------------------------------\n' // join variable identified from cklResults function in ExportCKLModal.vue
-      );
-      splitFindings.forEach((details) => {
-        let codeDesc = '';
-        let status = '';
+  const statusSet = ['passed', 'failed', 'skipped', 'error'];
+
+  for (const finding of findings) {
+    if (finding.code_desc) {
+      // split into multiple findings details using heimdall2 CKLExport functionality
+      for (const details of finding.code_desc.split(
+        '--------------------------------\n'
+      )) {
+        let code_desc: string;
+        let status: ExecJSON.ControlResultStatus;
         let message = '';
-        const splitResults: string[] = details.split(/\n(.*)/s, 2); // split using the first new line character only
-        if (
-          splitResults[0] === 'passed' ||
-          splitResults[0] === 'failed' ||
-          splitResults[0] === 'skipped' ||
-          splitResults[0] === 'error'
-        ) {
+        // split details for status
+        const [findingStatus, descAndMessage] = details.split(/\n(.*)/s, 2);
+        if (statusSet.includes(findingStatus)) {
+          // split desc and message
           // This does not necessarily work when the code_desc has the word expected
           // will need to update the export to add a key word that can be used to split code_desc
           // and message values easier - maybe *results* or *details*
-          const indexOfExpected = splitResults[1].indexOf('expected');
+          const indexOfExpected = descAndMessage.indexOf('\nexpected');
           if (indexOfExpected > 0) {
-            codeDesc = splitResults[1].slice(0, indexOfExpected - 1);
-            message = splitResults[1].slice(indexOfExpected);
-            status = splitResults[0];
+            code_desc = descAndMessage.slice(0, indexOfExpected - 1);
+            message = descAndMessage.slice(indexOfExpected);
+            status = getStatus(findingStatus);
           } else {
-            codeDesc = splitResults[1];
-            status = splitResults[0];
+            code_desc = descAndMessage;
+            status = getStatus(findingStatus);
           }
         } else {
-          codeDesc = details;
-          status = input[0].status;
+          code_desc = details;
+          status = finding.status as ExecJSON.ControlResultStatus;
         }
-        const hdfResult: ExecJSON.ControlResult = {
-          code_desc: codeDesc,
-          status: getStatus(status),
-          start_time: '',
-          message: message
-        };
-        results.push(hdfResult);
-      });
-      return results;
-    } else {
-      return [
-        {
-          code_desc: input[0].code_desc,
-          status: getStatus(input[0].status),
+        results.push({
+          code_desc,
+          status,
+          message: message ? message : null,
           start_time: ''
-        }
-      ] as ExecJSON.ControlResult[];
+        });
+      }
+    } else {
+      results.push(finding);
     }
-  } else {
-    return input as ExecJSON.ControlResult[];
   }
+  return results;
 }
 
 /**
@@ -180,21 +172,17 @@ export class ChecklistResults {
    * Constructor takes an addtional (optional) param object supplementalInfo
    * @param checklistXml - string of xml data
    */
-  constructor(
-    checklistXml: string,
-  ) {
+  constructor(checklistXml: string) {
     this.checklistXml = checklistXml;
     this.raw = parseXmlToJsonix(
       this.checklistXml,
       checklistMapping.jsonixMapping
     ) as ChecklistJSONIX;
-    this.checklistObject = createChecklistObject(
-      this.raw,
-    );
+    this.checklistObject = createChecklistObject(this.raw);
   }
 
   toHdf(): ExecJSON.Execution {
-    const numberOfStigs = this.checklistObject.stigs.length
+    const numberOfStigs = this.checklistObject.stigs.length;
     if (numberOfStigs === 1) {
       const defaultChecklist = new ChecklistMapper(this.checklistObject);
       return defaultChecklist.toHdf();
@@ -216,9 +204,7 @@ export class ChecklistResults {
         parent_profile.depends?.push({name: profile.name});
         parent_profile.controls.push(...profile.controls);
         profile.parent_profile = parentProfileName;
-        profile.sha256 = generateHash(
-          JSON.stringify(profile)
-        );
+        profile.sha256 = generateHash(JSON.stringify(profile));
       }
       parent_profile.sha256 = generateHash(JSON.stringify(parent_profile));
       original.profiles.push(parent_profile);
@@ -288,10 +274,10 @@ export class ChecklistMapper extends BaseConverter {
                 ];
                 const fullTags: Record<string, unknown> = {};
                 for (const [key, path] of tags) {
-                    const tagValue = _.get(input, path);
-                    if (tagValue && tagValue !== '; ') {
-                      fullTags[key] = tagValue;
-                    }
+                  const tagValue = _.get(input, path);
+                  if (tagValue && tagValue !== '; ') {
+                    fullTags[key] = tagValue;
+                  }
                 }
                 return fullTags;
               }
@@ -348,7 +334,7 @@ export class ChecklistMapper extends BaseConverter {
               stigs: data.stigs
             }
           },
-          ...(this.withRaw) && {raw: data.raw}
+          ...(this.withRaw && {raw: data.raw})
         };
       }
     }
@@ -356,7 +342,7 @@ export class ChecklistMapper extends BaseConverter {
 
   /**
    *
-   * @param checklistObject - 
+   * @param checklistObject -
    */
   constructor(checklistObject: ChecklistObject, withRaw = false) {
     super(checklistObject);
