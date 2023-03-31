@@ -3,43 +3,21 @@
     <div>
       <v-row class="mt-0">
         <v-col>
-          <v-autocomplete
-            v-if="editable"
-            v-model="usersToAdd"
-            :items="availableUsers"
-            chips
-            label="Add Users"
-            full-width
-            hide-selected
-            deletable-chips
-            multiple
-            single-line
-            @blur="addUsers"
-          />
+          <v-autocomplete v-if="editable" v-model="usersToAdd" :items="availableUsers" chips label="Add Users"
+            full-width hide-selected deletable-chips multiple single-line @blur="addUsers" />
         </v-col>
       </v-row>
     </div>
     <v-row>
       <v-col>
-        <v-data-table
-          :headers="displayedHeaders"
-          :items="currentUsers"
-          :items-per-page="5"
-        >
-          <template #[`item.full-name`]="{item}"
-            >{{ item.firstName }} {{ item.lastName }}</template
-          >
-          <template #[`item.groupRole`]="{item}">
-            <v-select
-              v-if="editable"
-              :value="item.groupRole"
-              :items="['owner', 'member']"
-              @click="editedUserID = item.id"
-              @change="onUpdateGroupUserRole"
-            />
+        <v-data-table :headers="displayedHeaders" :items="currentUsers" :items-per-page="5">
+          <template #[`item.full-name`]="{ item }">{{ item.firstName }} {{ item.lastName }}</template>
+          <template #[`item.groupRole`]="{ item }">
+            <v-select v-if="editable" :value="item.groupRole" :items="['owner', 'member']"
+              @click="editedUserID = item.id" @change="onUpdateGroupUserRole" />
             <span v-else> {{ item.groupRole }} </span>
           </template>
-          <template #[`item.actions`]="{item}">
+          <template #[`item.actions`]="{ item }">
             <v-icon small title="Delete" @click="deleteUserDialog(item)">
               mdi-delete
             </v-icon>
@@ -50,24 +28,19 @@
         </v-data-table>
       </v-col>
     </v-row>
-    <ActionDialog
-      v-model="dialogDelete"
-      type="user"
-      @cancel="closeActionDialog"
-      @confirm="deleteUserConfirm"
-    />
+    <ActionDialog v-model="dialogDelete" type="user" @cancel="closeActionDialog" @confirm="deleteUserConfirm" />
   </div>
 </template>
 
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
-import {ISlimUser} from '@heimdall/interfaces';
+import { ISlimUser } from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Emit, Prop, VModel} from 'vue-property-decorator';
-import {ServerModule} from '@/store/server';
-import {IVuetifyItems} from '@/utilities/helper_util';
-import {DataTableHeader} from 'vuetify';
+import { Emit, Prop, VModel } from 'vue-property-decorator';
+import { ServerModule } from '@/store/server';
+import { IVuetifyItems } from '@/utilities/helper_util';
+import { DataTableHeader } from 'vuetify';
 
 @Component({
   components: {
@@ -84,7 +57,7 @@ export default class Users extends Vue {
   })
   currentUsers!: ISlimUser[];
 
-  @Prop({type: Boolean, required: false, default: true})
+  @Prop({ type: Boolean, required: false, default: true })
   readonly editable!: boolean;
 
   editedUserID: string = '0';
@@ -135,10 +108,10 @@ export default class Users extends Vue {
   }
 
   @Emit()
-  onUpdateGroupUserRole(newValue: string) {
+  onUpdateGroupUserRole(newRole: string) {
     let saveable = true;
     // If a role is being changed to member, check that there is at least 1 owner.
-    if (newValue === 'member') {
+    if (newRole === 'member') {
       if (this.numberOfOwners() <= 1) {
         saveable = false;
       }
@@ -147,20 +120,14 @@ export default class Users extends Vue {
     const userToUpdate = this.currentUsers.indexOf(editedUser);
     const updatedGroupUser: ISlimUser = {
       ...editedUser,
-      groupRole: newValue
+      groupRole: newRole
     };
     this.currentUsers[userToUpdate] = updatedGroupUser;
     return saveable;
   }
 
   numberOfOwners(): number {
-    let numberOfOwners = 0;
-    this.currentUsers.forEach((user) => {
-      if (user.groupRole === 'owner') {
-        ++numberOfOwners;
-      }
-    });
-    return numberOfOwners;
+    return this.currentUsers.filter((user) => user.groupRole === 'owner').length;
   }
 
   deleteUserDialog(user: ISlimUser): void {
@@ -202,9 +169,8 @@ export default class Users extends Vue {
         user.id !== ServerModule.userInfo.id
       ) {
         users.push({
-          text: `${user.firstName || ''} ${user.lastName || ''} (${
-            user.email
-          })`,
+          text: `${user.firstName || ''} ${user.lastName || ''} (${user.email
+            })`,
           value: user.id
         });
       }
