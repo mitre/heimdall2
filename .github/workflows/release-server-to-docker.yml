@@ -31,5 +31,5 @@ jobs:
         with:
           context: .
           push: true
-          platforms: "linux/amd64,linux/arm64"
+          platforms: "linux/amd64"
           tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced }}
