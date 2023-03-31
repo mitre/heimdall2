@@ -326,7 +326,7 @@ export default class Compare extends Vue {
       // loaded then something has been added/removed and should be displayed.
       return (
         controls.some((control) => control !== controls[0]) ||
-        controls.length !== FilteredDataModule.selected_file_ids.length
+        controls.length !== this.files.length
       );
     });
   }

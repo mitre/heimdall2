@@ -23,4 +23,5 @@ jobs:
         with:
           context: .
           push: true
+          platforms: "linux/amd64"
           tags: mitre/heimdall2:latest

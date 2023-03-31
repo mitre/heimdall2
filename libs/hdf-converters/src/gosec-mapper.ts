@@ -67,7 +67,7 @@ export class GoSecMapper extends BaseConverter {
               },
               cwe: {path: 'cwe'},
               nosec: {path: 'nosec'},
-              suppressions: {path: 'supressions'},
+              suppressions: {path: 'suppressions'},
               severity: {path: 'severity'},
               confidence: {path: 'confidence'}
             },
