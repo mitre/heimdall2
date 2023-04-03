@@ -173,7 +173,6 @@ export default class GroupModal extends Vue {
     response.then(({data: group}) => {
       this.syncUsersWithGroup(group).then(() => {
         GroupsModule.UpdateGroupById(group.id);
-        SnackbarModule.notify(`Group Successfully Saved`);
         // This clears when creating a new Group.
         // Calling clear on edit makes it impossible to edit the same group twice.
         if (this.create) {
@@ -181,6 +180,7 @@ export default class GroupModal extends Vue {
         }
         this.dialog = false;
         location.reload();
+        SnackbarModule.notify(`Group Successfully Saved`);
       });
     });
   }
