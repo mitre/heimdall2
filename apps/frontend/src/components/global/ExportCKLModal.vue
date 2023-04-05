@@ -73,7 +73,7 @@ import {
   Severity
 } from 'inspecjs';
 import {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
-import _ from 'lodash';
+import _, {ValueIteratee} from 'lodash';
 import Mustache from 'mustache';
 import {v4} from 'uuid';
 import Vue from 'vue';
@@ -222,9 +222,10 @@ export default class ExportCKLModal extends Vue {
       fromFile: [file.uniqueId]
     });
 
-    const rootControls = _.uniqBy(controls, 'root.hdf.wraps.id').map(
-      ({root}) => root
-    );
+    const rootControls = _.uniqBy(
+      controls,
+      'root.hdf.wraps.id' as ValueIteratee<ContextualizedControl>
+    ).map(({root}) => root);
 
     this.outputData.controlSets.push({
       fileName: file.filename,
@@ -239,7 +240,7 @@ export default class ExportCKLModal extends Vue {
       profileInfo: this.getProfileInfo(file),
       uuid: v4(),
       controls: rootControls.map((control) =>
-        this.getDetails(control, profileName)
+        this.getDetails(control as ContextualizedControl, profileName)
       )
     });
   }
