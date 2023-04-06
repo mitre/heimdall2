@@ -334,6 +334,22 @@ class Search extends VuexModule implements ISearchState {
       searchPayload.value,
       searchPayload.negated
     );
+
+    ////// TODO: Remove all occurances of the same filter string //////
+    // Regex is used to make sure correct filter is removed
+    // const regex = new RegExp(name, 'i');
+    // const temp = SearchModule.currentSearchResult.clone();
+
+    // for (const item of temp.conditionArray) {
+    //   if (
+    //     item.keyword === 'severity' &&
+    //     regex.exec(item.value) !== null
+    //   ) {
+    //     temp.removeEntry('severity', item.value, false);
+    //   }
+    // }
+    // SearchModule.SET_SEARCH(temp.toString());
+
     this.context.commit('SET_SEARCH', this.currentSearchResult.toString());
   }
 

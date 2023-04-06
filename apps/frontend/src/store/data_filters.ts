@@ -3,6 +3,7 @@
  */
 
 import {Trinary} from '@/enums/Trinary';
+import {severities, statuses} from '@/plugins/vuetify';
 import {InspecDataModule} from '@/store/data_store';
 import {
   FileID,
@@ -152,6 +153,24 @@ function controlContainsTerm(
   ].filter(_.isString);
 
   return searchables.some((s) => s.toLowerCase().includes(term));
+}
+
+/**
+ * Searches rule to see if term exists
+ *
+ * @param rule - Checklist rule to check
+ * @param filter - Filter object to search for
+ * @returns If term exists true, else false
+ *
+ */
+function ruleContainsTerm(
+  rule: ChecklistVuln,
+  filter: SearchEntry<GenericSearchEntryValue>
+): boolean {
+  // See if any contain filter term
+  return Object.values(rule).some((value) => {
+    return value?.toLowerCase().includes(filter.value);
+  });
 }
 
 @Module({
@@ -525,7 +544,7 @@ export class FilteredData extends VuexModule {
     name: string;
     value: ExtendedControlStatus;
     enabled: boolean;
-    color: string;
+    color: keyof typeof statuses;
   }[] = [
     {
       name: 'Passed',
@@ -553,6 +572,39 @@ export class FilteredData extends VuexModule {
     }
   ];
 
+  /** List of severity switches */
+  severitySwitches: {
+    name: string;
+    value: Severity;
+    enabled: boolean;
+    color: keyof typeof severities;
+  }[] = [
+    {
+      name: 'Low',
+      value: 'low',
+      enabled: false,
+      color: 'severityLow'
+    },
+    {
+      name: 'Medium',
+      value: 'medium',
+      enabled: false,
+      color: 'severityMedium'
+    },
+    {
+      name: 'High',
+      value: 'high',
+      enabled: false,
+      color: 'severityHigh'
+    },
+    {
+      name: 'Critical',
+      value: 'critical',
+      enabled: false,
+      color: 'severityCritical'
+    }
+  ];
+
   /**
    * Used at the end of the parseSearch function to make sure that status switches are updated with search bar text filters
    */
@@ -563,6 +615,25 @@ export class FilteredData extends VuexModule {
         SearchModule.statusFilter.some(
           (statusFilter) =>
             statusFilter.value.toLowerCase() === item.value.toLowerCase()
+        )
+      ) {
+        item.enabled = true;
+      } else {
+        item.enabled = false;
+      }
+    }
+  }
+
+  /**
+   * Used at the end of the parseSearch function to make sure that severity switches are updated with search bar text filters
+   */
+  @Mutation
+  alterSeverityBoolean() {
+    for (const item of this.severitySwitches) {
+      if (
+        SearchModule.severityFilter.some(
+          (severityFilter) =>
+            severityFilter.value.toLowerCase() === item.value.toLowerCase()
         )
       ) {
         item.enabled = true;
@@ -601,58 +672,6 @@ export class FilteredData extends VuexModule {
     }
   }
 
-  /** List of severity switches */
-  severitySwitches: {
-    name: string;
-    value: Severity;
-    enabled: boolean;
-    color: string;
-  }[] = [
-    {
-      name: 'Low',
-      value: 'low',
-      enabled: false,
-      color: 'severityLow'
-    },
-    {
-      name: 'Medium',
-      value: 'medium',
-      enabled: false,
-      color: 'severityMedium'
-    },
-    {
-      name: 'High',
-      value: 'high',
-      enabled: false,
-      color: 'severityHigh'
-    },
-    {
-      name: 'Critical',
-      value: 'critical',
-      enabled: false,
-      color: 'severityCritical'
-    }
-  ];
-
-  /**
-   * Used at the end of the parseSearch function to make sure that severity switches are updated with search bar text filters
-   */
-  @Mutation
-  alterSeverityBoolean() {
-    for (const item of this.severitySwitches) {
-      if (
-        SearchModule.severityFilter.some(
-          (severityFilter) =>
-            severityFilter.value.toLowerCase() === item.value.toLowerCase()
-        )
-      ) {
-        item.enabled = true;
-      } else {
-        item.enabled = false;
-      }
-    }
-  }
-
   /**
    * Handles the condition change when a severity switch is clicked
    *
@@ -686,6 +705,37 @@ export class FilteredData extends VuexModule {
 export const FilteredDataModule = getModule(FilteredData);
 
 /**
+ * Get checklist rules that should be displayed.
+ *
+ * @param rules - Array of checklist rules
+ * @param filters - Any filters that should be applied
+ * @returns Array of checklist rules after processing
+ *
+ */
+export function checklistRules(
+  rules: readonly ChecklistVuln[],
+  filters: Filter
+): readonly ChecklistVuln[] {
+  // If an attribute name changes in the checklist mapping, make sure it is reflected here
+  const checklistFilters: Record<string, FilterRecord> = {
+    severity: filters.severity,
+    vulnNum: filters.vulidSearchTerms,
+    ruleId: filters.ruleidSearchTerms,
+    ruleVersion: filters.stigidSearchTerms,
+    class: filters.classificationSearchTerms,
+    groupTitle: filters.groupNameSearchTerms,
+    cciRef: filters.cciSearchTerms,
+    status: _.filter(
+      filters.status,
+      (status: SearchEntry<ExtendedControlStatus>) => status.value !== 'Waived'
+    ),
+    keywords: filters.keywordsSearchTerms
+  };
+  const filteredRules = filterChecklistBy(rules, checklistFilters);
+  return filteredRules;
+}
+
+/**
  * Generates a unique string to represent a filter.
  * Does some minor "acceleration" techniques such as
  * - annihilating empty search terms
@@ -702,6 +752,58 @@ export function filterCacheKey(f: Filter) {
     ...f
   };
   return JSON.stringify(newFilter);
+}
+
+/**
+ * Filters controls by keyword filters
+ *
+ * @param controls - Array of contextualized controls
+ * @returns Filtered array of controls
+ *
+ */
+export function filterControlsByKeywords(
+  controls: ContextualizedControl[],
+  keywords: FilterRecord
+) {
+  let results = controls;
+  if (keywords && Array.isArray(keywords)) {
+    for (const filter of keywords) {
+      results = !filter.negated
+        ? controls.filter((control) => {
+            return controlContainsTerm(control, filter.value);
+          })
+        : controls.filter((control) => {
+            return !controlContainsTerm(control, filter.value);
+          });
+    }
+  }
+  return results;
+}
+
+/**
+ * Filters checklist rules by keyword filters
+ *
+ * @param controls - Array of checklist rules
+ * @returns Filtered array of checklist rules
+ *
+ */
+export function filterRulesByKeywords(
+  rules: ChecklistVuln[],
+  keywords: FilterRecord
+) {
+  let result = rules;
+  if (keywords && Array.isArray(keywords)) {
+    for (const filter of keywords) {
+      result = !filter.negated
+        ? (result = rules.filter((rule) => {
+            return ruleContainsTerm(rule, filter);
+          }))
+        : (result = rules.filter((rule) => {
+            return !ruleContainsTerm(rule, filter);
+          }));
+    }
+  }
+  return result;
 }
 
 /**
@@ -754,32 +856,6 @@ export function filterControlsBy(
 }
 
 /**
- * Filters controls by keyword filters
- *
- * @param controls - Array of contextualized controls
- * @returns Filtered array of controls
- *
- */
-export function filterControlsByKeywords(
-  controls: ContextualizedControl[],
-  keywords: FilterRecord
-) {
-  let results = controls;
-  if (keywords && Array.isArray(keywords)) {
-    for (const filter of keywords) {
-      results = !filter.negated
-        ? controls.filter((control) => {
-            return controlContainsTerm(control, filter.value);
-          })
-        : controls.filter((control) => {
-            return !controlContainsTerm(control, filter.value);
-          });
-    }
-  }
-  return results;
-}
-
-/**
  * Filters checklist rules by given filters
  *
  * @param rules - Array of checklist rules
@@ -829,81 +905,6 @@ export function filterChecklistBy(
 }
 
 /**
- * Filters checklist rules by keyword filters
- *
- * @param controls - Array of checklist rules
- * @returns Filtered array of checklist rules
- *
- */
-export function filterRulesByKeywords(
-  rules: ChecklistVuln[],
-  keywords: FilterRecord
-) {
-  let result = rules;
-  if (keywords && Array.isArray(keywords)) {
-    for (const filter of keywords) {
-      result = !filter.negated
-        ? (result = rules.filter((rule) => {
-            return ruleContainsTerm(rule, filter);
-          }))
-        : (result = rules.filter((rule) => {
-            return !ruleContainsTerm(rule, filter);
-          }));
-    }
-  }
-  return result;
-}
-
-/**
- * Searches rule to see if term exists
- *
- * @param rule - Checklist rule to check
- * @param filter - Filter object to search for
- * @returns If term exists true, else false
- *
- */
-function ruleContainsTerm(
-  rule: ChecklistVuln,
-  filter: SearchEntry<GenericSearchEntryValue>
-): boolean {
-  // See if any contain filter term
-  return Object.values(rule).some((value) => {
-    return value?.toLowerCase().includes(filter.value);
-  });
-}
-
-/**
- * Get checklist rules that should be displayed.
- *
- * @param rules - Array of checklist rules
- * @param filters - Any filters that should be applied
- * @returns Array of checklist rules after processing
- *
- */
-export function checklistRules(
-  rules: readonly ChecklistVuln[],
-  filters: Filter
-): readonly ChecklistVuln[] {
-  // If an attribute name changes in the checklist mapping, make sure it is reflected here
-  const checklistFilters: Record<string, FilterRecord> = {
-    severity: filters.severity,
-    vulnNum: filters.vulidSearchTerms,
-    ruleId: filters.ruleidSearchTerms,
-    ruleVersion: filters.stigidSearchTerms,
-    class: filters.classificationSearchTerms,
-    groupTitle: filters.groupNameSearchTerms,
-    cciRef: filters.cciSearchTerms,
-    status: _.filter(
-      filters.status,
-      (status: SearchEntry<ExtendedControlStatus>) => status.value !== 'Waived'
-    ),
-    keywords: filters.keywordsSearchTerms
-  };
-  const filteredRules = filterChecklistBy(rules, checklistFilters);
-  return filteredRules;
-}
-
-/**
  * Checks provided entry and calls the string compare function provided on every element
  *
  * @param entry - Value of the entry
@@ -917,6 +918,10 @@ function fieldIncludes(
 ) {
   if (typeof entry === 'string') {
     return comparator(entry);
+  } else if (_.isBoolean(entry)) {
+    return entry;
+  } else if (Array.isArray(entry)) {
+    return entry.some((value) => comparator(value));
   } else {
     return false;
   }

@@ -2,7 +2,7 @@ import {gen_variants, gen_visibilities} from '@/utilities/color_util';
 import '@mdi/font/css/materialdesignicons.css';
 import Vuetify, {colors} from 'vuetify/lib';
 
-const statuses = {
+export const statuses = {
   statusPassed: colors.green.base,
   statusFailed: colors.red.base,
   statusNotApplicable: colors.lightBlue.base,
@@ -43,7 +43,7 @@ const branding = {
   mitreCardShadow: '#d6d6d6'
 };
 
-const severities = {
+export const severities = {
   severityNone: colors.lightBlue.base,
   severityLow: colors.yellow.base,
   severityMedium: colors.orange.base,
