@@ -1,4 +1,7 @@
-import {FilteredDataModule, GenericSearchEntryValue} from '@/store/data_filters';
+import {
+  FilteredDataModule,
+  GenericSearchEntryValue
+} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {SearchEntry, SearchModule} from '@/store/search';
 import Checklist from '@/views/Checklist.vue';
@@ -78,9 +81,7 @@ describe('Datatable', () => {
       (
         wrapper.vm as Vue & {
           rules: Array<ChecklistVuln>;
-          all_filters: Array<
-            SearchEntry<GenericSearchEntryValue>
-          >;
+          all_filters: Array<SearchEntry<GenericSearchEntryValue>>;
         }
       ).rules.length
     ).toBe(total_count);

@@ -1,5 +1,5 @@
 import Store from '@/store/store';
-import {Severity} from 'inspecjs';
+import {severities, Severity} from 'inspecjs';
 import {parse} from 'search-string';
 import {
   Action,
@@ -43,17 +43,9 @@ export type CciSearchTerm = string;
 export type NistIdFilter = string;
 export type KeywordsSearchTerm = string;
 
-/** (Unknown)  */
-export interface SearchQuery {
-  [key: string]: {
-    include?: string;
-    exclude?: string;
-  };
-}
-
 /** Type used to represent a parsed value and negated pair from query string  */
 export type SearchEntry<T> = {
-  value: T; //string | ExtendedControlStatus | Severity;
+  value: T; // ex: string, ExtendedControlStatus, Severity, etc.
   negated: boolean;
 };
 
@@ -67,9 +59,6 @@ export const statusTypes = [
   'Not Reviewed',
   'Waived'
 ];
-
-/** List of possible severity types  */
-export const severityTypes = ['none', 'low', 'medium', 'high', 'critical'];
 
 /**
  * Will lowercase a string or array of strings.
@@ -93,7 +82,7 @@ export function lowercaseAll(input: string | string[]): string | string[] {
  * @returns The severity string as a Severity
  */
 export function valueToSeverity(severity: string): Severity {
-  if (severityTypes.includes(severity.toLowerCase())) {
+  if (severities.includes(severity.toLowerCase() as Severity)) {
     return severity as Severity;
   } else {
     return 'none';
@@ -448,12 +437,16 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds control id to filter */
   @Action
-  addIdFilter(id: SearchEntry<ControlIdSearchTerm> | SearchEntry<ControlIdSearchTerm>[]) {
+  addIdFilter(
+    id: SearchEntry<ControlIdSearchTerm> | SearchEntry<ControlIdSearchTerm>[]
+  ) {
     this.context.commit('ADD_ID', id);
   }
 
   @Mutation
-  ADD_ID(id: SearchEntry<ControlIdSearchTerm> | SearchEntry<ControlIdSearchTerm>[]) {
+  ADD_ID(
+    id: SearchEntry<ControlIdSearchTerm> | SearchEntry<ControlIdSearchTerm>[]
+  ) {
     this.controlIdSearchTerms = this.controlIdSearchTerms.concat(id);
   }
 
@@ -473,12 +466,16 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds a title filter */
   @Action
-  addTitleFilter(title: SearchEntry<TitleSearchTerm> | SearchEntry<TitleSearchTerm>[]) {
+  addTitleFilter(
+    title: SearchEntry<TitleSearchTerm> | SearchEntry<TitleSearchTerm>[]
+  ) {
     this.context.commit('ADD_TITLE', title);
   }
 
   @Mutation
-  ADD_TITLE(title: SearchEntry<TitleSearchTerm> | SearchEntry<TitleSearchTerm>[]) {
+  ADD_TITLE(
+    title: SearchEntry<TitleSearchTerm> | SearchEntry<TitleSearchTerm>[]
+  ) {
     this.titleSearchTerms = this.titleSearchTerms.concat(title);
   }
 
@@ -498,7 +495,9 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds NIST ID to filter */
   @Action
-  addNISTIdFilter(NISTId: SearchEntry<NistIdFilter> | SearchEntry<NistIdFilter>[]) {
+  addNISTIdFilter(
+    NISTId: SearchEntry<NistIdFilter> | SearchEntry<NistIdFilter>[]
+  ) {
     this.context.commit('ADD_NIST', NISTId);
   }
 
@@ -518,14 +517,20 @@ class Search extends VuexModule implements ISearchState {
   /** Calls the description mutator to add a description to the filter */
   @Action
   addDescriptionFilter(
-    description: SearchEntry<DescriptionSearchTerm> | SearchEntry<DescriptionSearchTerm>[]
+    description:
+      | SearchEntry<DescriptionSearchTerm>
+      | SearchEntry<DescriptionSearchTerm>[]
   ) {
     this.context.commit('ADD_DESCRIPTION', description);
   }
 
   /** Adds a description to the filter */
   @Mutation
-  ADD_DESCRIPTION(description: SearchEntry<DescriptionSearchTerm> | SearchEntry<DescriptionSearchTerm>[]) {
+  ADD_DESCRIPTION(
+    description:
+      | SearchEntry<DescriptionSearchTerm>
+      | SearchEntry<DescriptionSearchTerm>[]
+  ) {
     this.descriptionSearchTerms =
       this.descriptionSearchTerms.concat(description);
   }
@@ -540,7 +545,9 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds code to filter */
   @Action
-  addCodeFilter(code: SearchEntry<CodeSearchTerm> | SearchEntry<CodeSearchTerm>[]) {
+  addCodeFilter(
+    code: SearchEntry<CodeSearchTerm> | SearchEntry<CodeSearchTerm>[]
+  ) {
     this.context.commit('ADD_CODE', code);
   }
 
@@ -559,12 +566,16 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds Ruleid to filter */
   @Action
-  addRuleidFilter(ruleid: SearchEntry<RuleIdSearchTerm> | SearchEntry<RuleIdSearchTerm>[]) {
+  addRuleidFilter(
+    ruleid: SearchEntry<RuleIdSearchTerm> | SearchEntry<RuleIdSearchTerm>[]
+  ) {
     this.context.commit('ADD_RULEID', ruleid);
   }
 
   @Mutation
-  ADD_RULEID(ruleid: SearchEntry<RuleIdSearchTerm> | SearchEntry<RuleIdSearchTerm>[]) {
+  ADD_RULEID(
+    ruleid: SearchEntry<RuleIdSearchTerm> | SearchEntry<RuleIdSearchTerm>[]
+  ) {
     this.ruleidSearchTerms = this.ruleidSearchTerms.concat(ruleid);
   }
 
@@ -578,12 +589,16 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds Vulid to filter */
   @Action
-  addVulidFilter(vulid: SearchEntry<VulIdSearchTerm> | SearchEntry<VulIdSearchTerm>[]) {
+  addVulidFilter(
+    vulid: SearchEntry<VulIdSearchTerm> | SearchEntry<VulIdSearchTerm>[]
+  ) {
     this.context.commit('ADD_VULID', vulid);
   }
 
   @Mutation
-  ADD_VULID(vulid: SearchEntry<VulIdSearchTerm> | SearchEntry<VulIdSearchTerm>[]) {
+  ADD_VULID(
+    vulid: SearchEntry<VulIdSearchTerm> | SearchEntry<VulIdSearchTerm>[]
+  ) {
     this.vulidSearchTerms = this.vulidSearchTerms.concat(vulid);
   }
 
@@ -597,12 +612,16 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds Stigid to filter */
   @Action
-  addStigidFilter(stigid: SearchEntry<StigIdSearchTerm> | SearchEntry<StigIdSearchTerm>[]) {
+  addStigidFilter(
+    stigid: SearchEntry<StigIdSearchTerm> | SearchEntry<StigIdSearchTerm>[]
+  ) {
     this.context.commit('ADD_STIGID', stigid);
   }
 
   @Mutation
-  ADD_STIGID(stigid: SearchEntry<StigIdSearchTerm> | SearchEntry<StigIdSearchTerm>[]) {
+  ADD_STIGID(
+    stigid: SearchEntry<StigIdSearchTerm> | SearchEntry<StigIdSearchTerm>[]
+  ) {
     this.stigidSearchTerms = this.stigidSearchTerms.concat(stigid);
   }
 
@@ -617,14 +636,18 @@ class Search extends VuexModule implements ISearchState {
   /** Adds Classification to filter */
   @Action
   addClassificationFilter(
-    classification: SearchEntry<ClassificationSearchTerm> | SearchEntry<ClassificationSearchTerm>[]
+    classification:
+      | SearchEntry<ClassificationSearchTerm>
+      | SearchEntry<ClassificationSearchTerm>[]
   ) {
     this.context.commit('ADD_CLASSIFICATION', classification);
   }
 
   @Mutation
   ADD_CLASSIFICATION(
-    classification: SearchEntry<ClassificationSearchTerm> | SearchEntry<ClassificationSearchTerm>[]
+    classification:
+      | SearchEntry<ClassificationSearchTerm>
+      | SearchEntry<ClassificationSearchTerm>[]
   ) {
     this.classificationSearchTerms =
       this.classificationSearchTerms.concat(classification);
@@ -640,12 +663,20 @@ class Search extends VuexModule implements ISearchState {
 
   /** Adds Groupname to filter */
   @Action
-  addGroupnameFilter(groupname: SearchEntry<GroupNameSearchTerm> | SearchEntry<GroupNameSearchTerm>[]) {
+  addGroupnameFilter(
+    groupname:
+      | SearchEntry<GroupNameSearchTerm>
+      | SearchEntry<GroupNameSearchTerm>[]
+  ) {
     this.context.commit('ADD_GROUPNAME', groupname);
   }
 
   @Mutation
-  ADD_GROUPNAME(groupname: SearchEntry<GroupNameSearchTerm> | SearchEntry<GroupNameSearchTerm>[]) {
+  ADD_GROUPNAME(
+    groupname:
+      | SearchEntry<GroupNameSearchTerm>
+      | SearchEntry<GroupNameSearchTerm>[]
+  ) {
     this.groupNameSearchTerms = this.groupNameSearchTerms.concat(groupname);
   }
 

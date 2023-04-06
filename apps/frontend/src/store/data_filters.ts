@@ -31,25 +31,28 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {SearchEntry, SearchModule,
-  TitleSearchTerm,
-  DescriptionSearchTerm,
-  ControlIdSearchTerm,
-  CodeSearchTerm,
-  RuleIdSearchTerm,
-  VulIdSearchTerm,
-  StigIdSearchTerm,
-  ClassificationSearchTerm,
-  GroupNameSearchTerm,
+import {
   CciSearchTerm,
+  ClassificationSearchTerm,
+  CodeSearchTerm,
+  ControlIdSearchTerm,
+  DescriptionSearchTerm,
+  GroupNameSearchTerm,
+  KeywordsSearchTerm,
   NistIdFilter,
-  KeywordsSearchTerm,} from './search';
+  RuleIdSearchTerm,
+  SearchEntry,
+  SearchModule,
+  StigIdSearchTerm,
+  TitleSearchTerm,
+  VulIdSearchTerm
+} from './search';
 
 const MAX_CACHE_ENTRIES = 20;
 
 export declare type ExtendedControlStatus = ControlStatus | 'Waived';
 
-export type GenericSearchEntryValue = string | ExtendedControlStatus | Severity
+export type GenericSearchEntryValue = string | ExtendedControlStatus | Severity;
 
 export type FilterRecord =
   | boolean
@@ -68,9 +71,6 @@ export interface Filter {
 
   /** What severity the controls can have. Undefined => any */
   severity?: SearchEntry<Severity>[];
-
-  /** Whether or not to allow/include overlayed controls */
-  omit_overlayed_controls?: boolean;
 
   /** Control IDs to search for */
   ids?: SearchEntry<ControlIdSearchTerm>[];
@@ -119,6 +119,9 @@ export interface Filter {
    */
   searchTerm?: string;
 
+  /** Whether or not to allow/include overlayed controls */
+  omit_overlayed_controls?: boolean;
+
   /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
   treeFilters?: TreeMapState;
 
@@ -133,7 +136,7 @@ export type TreeMapState = string[]; // Representing the current path spec, from
  * @param term The string to search with
  * @param contextControl The control to search for term in
  */
-function contains_term(
+function controlContainsTerm(
   contextControl: ContextualizedControl,
   term: string
 ): boolean {
@@ -448,7 +451,7 @@ export class FilteredData extends VuexModule {
     return (filter: Filter) => {
       // Generate a hash for cache purposes.
       // If the "searchTerm" string is not null, we don't cache - no need to pollute
-      const id: string = filter_cache_key(filter);
+      const id: string = filterCacheKey(filter);
 
       // Check if we have this cached:
       const cached = localCache.get(id);
@@ -551,7 +554,7 @@ export class FilteredData extends VuexModule {
   ];
 
   /**
-   * Used at the end of the parseSearch function to make sure that status switches are updated with search bar text filters 
+   * Used at the end of the parseSearch function to make sure that status switches are updated with search bar text filters
    */
   @Mutation
   alterStatusBoolean() {
@@ -577,32 +580,23 @@ export class FilteredData extends VuexModule {
    */
   @Action
   changeStatusSwitch(name: ExtendedControlStatus) {
-    // Regex is used to make sure correct filter is removed 
-    const regex = new RegExp(name, 'i');
-    const temp = SearchModule.currentSearchResult.clone();
-    for (const item of this.controlStatusSwitches) {
-      if (item.name == name.charAt(0).toUpperCase() + name.slice(1)) {
-        item.enabled = !item.enabled;
-        if (item.enabled) {
-          SearchModule.addSearchFilter({
-            field: 'status',
-            value: name.toLowerCase(),
-            negated: false // Defaulted as false due to switch limitation
-          });
-        } else {
-          SearchModule.removeSearchFilter({
-            field: 'status',
-            value: item.value.toLowerCase(),
-            negated: false // Defaulted as false due to switch limitation
-          });
-
-          for (const item of temp.conditionArray) {
-            if (item.keyword === 'status' && regex.exec(item.value) !== null) {
-              temp.removeEntry('status', item.value, false);
-            }
-          }
-          SearchModule.SET_SEARCH(temp.toString());
-        }
+    const statusSwitch = this.controlStatusSwitches.find(
+      (data) => data.name.toLowerCase() === name.toLowerCase()
+    );
+    if (statusSwitch) {
+      statusSwitch.enabled = !statusSwitch.enabled;
+      if (statusSwitch.enabled) {
+        SearchModule.addSearchFilter({
+          field: 'status',
+          value: name.toLowerCase(),
+          negated: false // Defaulted as false due to switch limitation
+        });
+      } else {
+        SearchModule.removeSearchFilter({
+          field: 'status',
+          value: statusSwitch.value.toLowerCase(),
+          negated: false // Defaulted as false due to switch limitation
+        });
       }
     }
   }
@@ -615,33 +609,33 @@ export class FilteredData extends VuexModule {
     color: string;
   }[] = [
     {
-      name: 'Critical',
-      value: 'critical',
+      name: 'Low',
+      value: 'low',
       enabled: false,
-      color: 'teal'
-    },
-    {
-      name: 'High',
-      value: 'high',
-      enabled: false,
-      color: 'teal'
+      color: 'severityLow'
     },
     {
       name: 'Medium',
       value: 'medium',
       enabled: false,
-      color: 'teal'
+      color: 'severityMedium'
     },
     {
-      name: 'Low',
-      value: 'low',
+      name: 'High',
+      value: 'high',
       enabled: false,
-      color: 'teal'
+      color: 'severityHigh'
+    },
+    {
+      name: 'Critical',
+      value: 'critical',
+      enabled: false,
+      color: 'severityCritical'
     }
   ];
 
   /**
-   * Used at the end of the parseSearch function to make sure that severity switches are updated with search bar text filters 
+   * Used at the end of the parseSearch function to make sure that severity switches are updated with search bar text filters
    */
   @Mutation
   alterSeverityBoolean() {
@@ -667,35 +661,23 @@ export class FilteredData extends VuexModule {
    */
   @Action
   changeSeveritySwitch(name: Severity) {
-    // Regex is used to make sure correct filter is removed 
-    const regex = new RegExp(name, 'i');
-    const temp = SearchModule.currentSearchResult.clone();
-    for (const item of this.severitySwitches) {
-      if (item.name == name.charAt(0).toUpperCase() + name.slice(1)) {
-        item.enabled = !item.enabled;
-        if (item.enabled) {
-          SearchModule.addSearchFilter({
-            field: 'severity',
-            value: name.toLowerCase(),
-            negated: false // Defaulted as false due to switch limitation
-          });
-        } else {
-          SearchModule.removeSearchFilter({
-            field: 'severity',
-            value: item.value.toLowerCase(),
-            negated: false // Defaulted as false due to switch limitation
-          });
-
-          for (const item of temp.conditionArray) {
-            if (
-              item.keyword === 'severity' &&
-              regex.exec(item.value) !== null
-            ) {
-              temp.removeEntry('severity', item.value, false);
-            }
-          }
-          SearchModule.SET_SEARCH(temp.toString());
-        }
+    const severitySwitch = this.severitySwitches.find(
+      (data) => data.name.toLowerCase() === name.toLowerCase()
+    );
+    if (severitySwitch) {
+      severitySwitch.enabled = !severitySwitch.enabled;
+      if (severitySwitch.enabled) {
+        SearchModule.addSearchFilter({
+          field: 'severity',
+          value: name.toLowerCase(),
+          negated: false // Defaulted as false due to switch limitation
+        });
+      } else {
+        SearchModule.removeSearchFilter({
+          field: 'severity',
+          value: severitySwitch.value.toLowerCase(),
+          negated: false // Defaulted as false due to switch limitation
+        });
       }
     }
   }
@@ -713,7 +695,7 @@ export const FilteredDataModule = getModule(FilteredData);
  * @returns Converted newFilter to a JSON string.
  *
  */
-export function filter_cache_key(f: Filter) {
+export function filterCacheKey(f: Filter) {
   const newFilter: Filter = {
     searchTerm: f.searchTerm?.trim() || '',
     omit_overlayed_controls: f.omit_overlayed_controls || false,
@@ -734,40 +716,39 @@ export function filterControlsBy(
   controls: readonly ContextualizedControl[],
   filters: Record<string, FilterRecord>
 ): readonly ContextualizedControl[] {
-  const activeFilters: typeof filters = _.pickBy(
+  const activeFilters: Record<string, FilterRecord> = _.pickBy(
     filters,
-    (value, _key) =>
+    (value) =>
       (Array.isArray(value) && value.length > 0) ||
-      (typeof value === 'boolean' && value)
+      (_.isBoolean(value) && value)
   );
 
   // Filter out specific categories
   const firstPass = controls.filter((control) => {
-    return Object.entries(activeFilters).every(([filter, value]) => {
-      const item:
-        | SearchEntry<GenericSearchEntryValue>
-        | SearchEntry<GenericSearchEntryValue>[]
-        | boolean = _.get(control, filter);
-      if (Array.isArray(value) && typeof item !== 'boolean') {
-        return value?.some((term) => {
-          if (!term.negated) {
-            return fieldIncludes(item, (compareValue) =>
-              compareValue.toLowerCase().includes(term.value.toLowerCase())
-            );
-          } else {
-            return !fieldIncludes(item, (compareValue) =>
-              compareValue.toLowerCase().includes(term.value.toLowerCase())
-            );
-          }
+    return Object.entries(activeFilters).every(([path, filter]) => {
+      // Skip keywords for now
+      if (path === 'keywords') {
+        return true;
+      }
+      const item: unknown = _.get(control, path);
+      if (Array.isArray(filter) && !_.isBoolean(item)) {
+        return filter.some((term) => {
+          const isIncluded = fieldIncludes(item, (compareValue) =>
+            compareValue.toLowerCase().includes(term.value.toLowerCase())
+          );
+          return !term.negated ? isIncluded : !isIncluded;
         });
       } else {
-        return item === value;
+        return item === filter;
       }
     });
   });
 
   // Overall keywords filtering
-  const final: ContextualizedControl[] = filterControlsByKeywords(firstPass);
+  const final: ContextualizedControl[] = filterControlsByKeywords(
+    firstPass,
+    activeFilters.keywords
+  );
 
   return final;
 }
@@ -779,19 +760,20 @@ export function filterControlsBy(
  * @returns Filtered array of controls
  *
  */
-export function filterControlsByKeywords(controls: ContextualizedControl[]) {
+export function filterControlsByKeywords(
+  controls: ContextualizedControl[],
+  keywords: FilterRecord
+) {
   let results = controls;
-  if (SearchModule.keywordsSearchTerms.length > 0) {
-    for (const filter of SearchModule.keywordsSearchTerms) {
-      if (!filter.negated) {
-        results = controls.filter((control) => {
-          return contains_term(control, filter.value);
-        });
-      } else {
-        results = controls.filter((control) => {
-          return !contains_term(control, filter.value);
-        });
-      }
+  if (keywords && Array.isArray(keywords)) {
+    for (const filter of keywords) {
+      results = !filter.negated
+        ? controls.filter((control) => {
+            return controlContainsTerm(control, filter.value);
+          })
+        : controls.filter((control) => {
+            return !controlContainsTerm(control, filter.value);
+          });
     }
   }
   return results;
@@ -811,38 +793,37 @@ export function filterChecklistBy(
 ): readonly ChecklistVuln[] {
   const activeFilters: typeof filters = _.pickBy(
     filters,
-    (value, _key) =>
+    (value) =>
       (Array.isArray(value) && value.length > 0) ||
-      (typeof value === 'boolean' && value)
+      (_.isBoolean(value) && value)
   );
 
   // Filter out specific categories
   const firstPass = rules.filter((rule) => {
-    return Object.entries(activeFilters).every(([filter, value]) => {
-      const item:
-        | SearchEntry<GenericSearchEntryValue>
-        | SearchEntry<GenericSearchEntryValue>[]
-        | boolean = _.get(rule, filter);
-      if (Array.isArray(value) && typeof item !== 'boolean') {
-        return value?.some((term) => {
-          if (!term.negated) {
-            return fieldIncludes(item, (compareValue) =>
-              compareValue.toLowerCase().includes(term.value.toLowerCase())
-            );
-          } else {
-            return !fieldIncludes(item, (compareValue) =>
-              compareValue.toLowerCase().includes(term.value.toLowerCase())
-            );
-          }
+    return Object.entries(activeFilters).every(([path, filter]) => {
+      // Skip keywords for now
+      if (path === 'keywords') {
+        return true;
+      }
+      const item: unknown = _.get(rule, path);
+      if (Array.isArray(filter) && !_.isBoolean(item)) {
+        return filter.some((term) => {
+          const isIncluded = fieldIncludes(item, (compareValue) =>
+            compareValue.toLowerCase().includes(term.value.toLowerCase())
+          );
+          return !term.negated ? isIncluded : !isIncluded;
         });
       } else {
-        return item === value;
+        return item === filter;
       }
     });
   });
 
   // Overall keywords filtering
-  const final: ChecklistVuln[] = filterRulesByKeywords(firstPass);
+  const final: ChecklistVuln[] = filterRulesByKeywords(
+    firstPass,
+    filters.keywords
+  );
 
   return final;
 }
@@ -854,22 +835,22 @@ export function filterChecklistBy(
  * @returns Filtered array of checklist rules
  *
  */
-export function filterRulesByKeywords(rules: ChecklistVuln[]) {
+export function filterRulesByKeywords(
+  rules: ChecklistVuln[],
+  keywords: FilterRecord
+) {
   let result = rules;
-  if (SearchModule.keywordsSearchTerms.length > 0) {
-    for (const filter of SearchModule.keywordsSearchTerms) {
-      if (!filter.negated) {
-        result = rules.filter((rule) => {
-          return rule_contains_term(rule, filter);
-        });
-      } else {
-        result = rules.filter((rule) => {
-          return !rule_contains_term(rule, filter);
-        });
-      }
+  if (keywords && Array.isArray(keywords)) {
+    for (const filter of keywords) {
+      result = !filter.negated
+        ? (result = rules.filter((rule) => {
+            return ruleContainsTerm(rule, filter);
+          }))
+        : (result = rules.filter((rule) => {
+            return !ruleContainsTerm(rule, filter);
+          }));
     }
   }
-
   return result;
 }
 
@@ -881,17 +862,13 @@ export function filterRulesByKeywords(rules: ChecklistVuln[]) {
  * @returns If term exists true, else false
  *
  */
-function rule_contains_term(
+function ruleContainsTerm(
   rule: ChecklistVuln,
   filter: SearchEntry<GenericSearchEntryValue>
 ): boolean {
   // See if any contain filter term
-  return Object.entries(rule).some((item) => {
-    if (item[1]?.toLowerCase().includes(filter.value)) {
-      return true;
-    } else {
-      return false;
-    }
+  return Object.values(rule).some((value) => {
+    return value?.toLowerCase().includes(filter.value);
   });
 }
 
@@ -919,7 +896,8 @@ export function checklistRules(
     status: _.filter(
       filters.status,
       (status: SearchEntry<ExtendedControlStatus>) => status.value !== 'Waived'
-    )
+    ),
+    keywords: filters.keywordsSearchTerms
   };
   const filteredRules = filterChecklistBy(rules, checklistFilters);
   return filteredRules;
@@ -934,9 +912,7 @@ export function checklistRules(
  *
  */
 function fieldIncludes(
-  entry:
-    | SearchEntry<GenericSearchEntryValue>
-    | SearchEntry<GenericSearchEntryValue>[],
+  entry: unknown,
   comparator: (compareValue: string) => boolean
 ) {
   if (typeof entry === 'string') {

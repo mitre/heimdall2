@@ -4,9 +4,9 @@
 
 import {
   Filter,
+  filterCacheKey,
   FilteredData,
-  FilteredDataModule,
-  filter_cache_key
+  FilteredDataModule
 } from '@/store/data_filters';
 import Store from '@/store/store';
 import {ControlStatus} from 'inspecjs';
@@ -95,7 +95,7 @@ export class StatusCount extends VuexModule {
     const cache: LRUCache<string, StatusHash> = new LRUCache({max: 30});
 
     return (filter: Filter) => {
-      const id = filter_cache_key(filter);
+      const id = filterCacheKey(filter);
       const cached = cache.get(id);
       // If cache hits, just return
       if (cached !== undefined) {

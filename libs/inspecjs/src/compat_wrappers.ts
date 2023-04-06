@@ -38,7 +38,14 @@ export type ControlStatus =
  * [0.7, 0.9) => High impact
  * [0.9, 1.0] => Critical impact
  */
-export type Severity = 'none' | 'low' | 'medium' | 'high' | 'critical';
+export const severities = [
+  'none',
+  'low',
+  'medium',
+  'high',
+  'critical'
+] as const;
+export type Severity = (typeof severities)[number];
 
 /** The statuses that a segment of a control (IE a describe block) might have. */
 export type SegmentStatus =
