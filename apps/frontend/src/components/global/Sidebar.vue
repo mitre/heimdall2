@@ -121,6 +121,8 @@
                 inset
                 :color="item.color"
                 hide-details
+                :value="false"
+                :input-value="item.enabled"
                 @change="changeStatusToggle(item.name)"
               />
             </v-col>
@@ -141,6 +143,8 @@
                 inset
                 :color="item.color"
                 hide-details
+                :value="false"
+                :input-value="item.enabled"
                 @change="changeSeverityToggle(item.name)"
               />
             </v-col>
@@ -370,6 +374,7 @@ export default class Sidebar extends mixins(RouteMixin) {
     'Code',
     'Stig ID',
     'Classification',
+    'IA Control',
     'Group Name',
     'CCIs'
   ];

@@ -106,6 +106,9 @@ export interface Filter {
   /** Checklist CCIs to search for */
   cciSearchTerms?: SearchEntry<CciSearchTerm>[];
 
+  /** Checklist CCIs to search for */
+  iaControlsSearchTerms?: SearchEntry<CciSearchTerm>[];
+
   /** Checklist keywords to search for */
   keywordsSearchTerms?: SearchEntry<KeywordsSearchTerm>[];
 
@@ -716,6 +719,7 @@ export function checklistRules(
   rules: readonly ChecklistVuln[],
   filters: Filter
 ): readonly ChecklistVuln[] {
+  
   // If an attribute name changes in the checklist mapping, make sure it is reflected here
   const checklistFilters: Record<string, FilterRecord> = {
     severity: filters.severity,
@@ -725,6 +729,7 @@ export function checklistRules(
     class: filters.classificationSearchTerms,
     groupTitle: filters.groupNameSearchTerms,
     cciRef: filters.cciSearchTerms,
+    iaControls: filters.iaControlsSearchTerms,
     status: _.filter(
       filters.status,
       (status: SearchEntry<ExtendedControlStatus>) => status.value !== 'Waived'
