@@ -867,7 +867,7 @@ export function filterChecklistBy(
   rules: readonly ChecklistVuln[],
   filters: Record<string, FilterRecord>
 ): readonly ChecklistVuln[] {
-  const activeFilters: typeof filters = _.pickBy(
+  const activeFilters: Record<string, FilterRecord> = _.pickBy(
     filters,
     (value) =>
       (Array.isArray(value) && value.length > 0) ||
