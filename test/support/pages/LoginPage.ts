@@ -4,8 +4,11 @@ export default class LoginPage {
   }
 
   ldapLogin(user: {username: string; password: string}): void {
-    cy.get('[data-cy=ldapusername]').clear().type(user.username);
-    cy.get('[data-cy=ldappassword]').clear().type(user.password);
+    cy.get('[data-cy=ldapusername]').clear();
+    cy.get('[data-cy=ldappassword]').clear();
+
+    cy.get('[data-cy=ldapusername]').type(user.username);
+    cy.get('[data-cy=ldappassword]').type(user.password);
     cy.get('[data-cy=ldapLoginButton]').click();
   }
 
