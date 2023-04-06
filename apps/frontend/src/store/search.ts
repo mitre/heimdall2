@@ -10,25 +10,6 @@ import {
 } from 'vuex-module-decorators';
 import {ExtendedControlStatus, FilteredDataModule} from './data_filters';
 
-export interface ISearchState {
-  searchTerm: string;
-  freeSearch: string;
-  titleSearchTerms: SearchEntry<TitleSearchTerm>[];
-  descriptionSearchTerms: SearchEntry<DescriptionSearchTerm>[];
-  controlIdSearchTerms: SearchEntry<ControlIdSearchTerm>[];
-  codeSearchTerms: SearchEntry<CodeSearchTerm>[];
-  ruleidSearchTerms: SearchEntry<RuleIdSearchTerm>[];
-  vulidSearchTerms: SearchEntry<VulIdSearchTerm>[];
-  stigidSearchTerms: SearchEntry<StigIdSearchTerm>[];
-  classificationSearchTerms: SearchEntry<ClassificationSearchTerm>[];
-  groupNameSearchTerms: SearchEntry<GroupNameSearchTerm>[];
-  cciSearchTerms: SearchEntry<CciSearchTerm>[];
-  NISTIdFilter: SearchEntry<NistIdFilter>[];
-  statusFilter: SearchEntry<ExtendedControlStatus>[];
-  severityFilter: SearchEntry<Severity>[];
-  keywordsSearchTerms: SearchEntry<KeywordsSearchTerm>[];
-}
-
 // Alias types for all the search capabilities (minus status and severity as they already have a type)
 export type TitleSearchTerm = string;
 export type DescriptionSearchTerm = string;
@@ -40,6 +21,7 @@ export type StigIdSearchTerm = string;
 export type ClassificationSearchTerm = string;
 export type GroupNameSearchTerm = string;
 export type CciSearchTerm = string;
+export type iaControlsSearchTerm = string;
 export type NistIdFilter = string;
 export type KeywordsSearchTerm = string;
 
@@ -94,7 +76,7 @@ export function valueToSeverity(severity: string): Severity {
   store: Store,
   name: 'SearchModule'
 })
-class Search extends VuexModule implements ISearchState {
+class Search extends VuexModule {
   controlIdSearchTerms: SearchEntry<ControlIdSearchTerm>[] = [];
   codeSearchTerms: SearchEntry<CodeSearchTerm>[] = [];
   ruleidSearchTerms: SearchEntry<RuleIdSearchTerm>[] = [];
@@ -103,6 +85,7 @@ class Search extends VuexModule implements ISearchState {
   classificationSearchTerms: SearchEntry<ClassificationSearchTerm>[] = [];
   groupNameSearchTerms: SearchEntry<GroupNameSearchTerm>[] = [];
   cciSearchTerms: SearchEntry<CciSearchTerm>[] = [];
+  iaControlsSearchTerms: SearchEntry<iaControlsSearchTerm>[] = [];
   NISTIdFilter: SearchEntry<NistIdFilter>[] = [];
   descriptionSearchTerms: SearchEntry<DescriptionSearchTerm>[] = [];
   freeSearch = '';
@@ -228,6 +211,9 @@ class Search extends VuexModule implements ISearchState {
           case 'cci':
             this.addCciFilter({value: include.value, negated: include.negated});
             break;
+          case 'iaControl':
+            this.addIaControlsFilter({value: include.value, negated: include.negated});
+            break;
           case 'keywords':
             this.addKeywordsFilter({
               value: include.value,
@@ -265,6 +251,7 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_GROUPNAME');
     this.context.commit('CLEAR_RULEID');
     this.context.commit('CLEAR_CCI');
+    this.context.commit('CLEAR_IA_CONTROLS');
     this.context.commit('CLEAR_KEYWORDS');
   }
 
@@ -280,6 +267,7 @@ class Search extends VuexModule implements ISearchState {
     ['Code', 'code'],
     ['Stig ID', 'stigid'],
     ['Classification', 'classification'],
+    ['IA Control', 'iaControl'],
     ['Group Name', 'groupname'],
     ['CCIs', 'cci']
   ]);
@@ -719,6 +707,25 @@ class Search extends VuexModule implements ISearchState {
   @Mutation
   CLEAR_CCI() {
     this.cciSearchTerms = [];
+  }
+
+  // IA Controls filtering
+
+  /** Adds IA Controls to filter */
+  @Action
+  addIaControlsFilter(iaControl: SearchEntry<iaControlsSearchTerm> | SearchEntry<iaControlsSearchTerm>[]) {
+    this.context.commit('ADD_IA_CONTROL', iaControl);
+  }
+
+  @Mutation
+  ADD_IA_CONTROL(iaControl: SearchEntry<iaControlsSearchTerm> | SearchEntry<iaControlsSearchTerm>[]) {
+    this.iaControlsSearchTerms = this.iaControlsSearchTerms.concat(iaControl);
+  }
+
+  /** Clears all CCI filters */
+  @Mutation
+  CLEAR_IA_CONTROLS() {
+    this.iaControlsSearchTerms = [];
   }
 
   /** Adds Keywords to filter */
