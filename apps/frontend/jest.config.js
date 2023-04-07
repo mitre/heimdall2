@@ -3,9 +3,10 @@ module.exports = {
   setupFilesAfterEnv: ['<rootDir>/tests/setup.ts'],
   testMatch: ['<rootDir>/tests/unit/*.spec.ts'],
   testPathIgnorePatterns: ['<rootDir>/src/__mocks__/*'],
-  moduleFileExtensions: ['vue', 'ts', 'tsx', 'js', 'jsx'],
+  moduleFileExtensions: ['vue', 'ts', 'tsx', 'js', 'jsx', 'json'],
   testEnvironment: 'jsdom',
   cacheDirectory: '<rootDir>/.cache/unit',
+  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
   transform: {
     '.*\\.(vue)$': 'vue-jest',
     '^.+\\.tsx?$': 'ts-jest',
@@ -15,6 +16,7 @@ module.exports = {
   moduleNameMapper: {
     '^d3$': '<rootDir>/tests/util/d3.js',
     '^@[/](.+)': '<rootDir>/src/$1',
-    '^.+\\.(css)$': '<rootDir>/tests/util/cssTransform.js'
+    '^.+\\.(css)$': '<rootDir>/tests/util/cssTransform.js',
+    '^axios$': 'axios/dist/node/axios.cjs'
   }
 };

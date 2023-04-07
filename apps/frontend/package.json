@@ -27,22 +27,6 @@
     "start:dev": "vue-cli-service serve",
     "test": "jest"
   },
-  "jest": {
-    "moduleFileExtensions": [
-      "vue",
-      "ts",
-      "js",
-      "json"
-    ],
-    "moduleNameMapper": {
-      "axios": "axios/dist/node/axios.cjs"
-    },
-    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
-    "transform": {
-      ".*\\.(vue)$": "vue-jest",
-      "^.+\\.tsx?$": "ts-jest"
-    }
-  },
   "dependencies": {
     "@heimdall/interfaces": "^2.6.38",
     "@mdi/font": "^7.0.96",
