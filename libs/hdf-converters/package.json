@@ -62,6 +62,9 @@
     "typedoc": "^0.23.2"
   },
   "jest": {
+    "moduleNameMapper": {
+      "axios": "axios/dist/node/axios.cjs"
+    },
     "rootDir": ".",
     "testTimeout": 10000000,
     "transform": {
