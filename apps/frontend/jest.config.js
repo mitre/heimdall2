@@ -6,7 +6,6 @@ module.exports = {
   moduleFileExtensions: ['vue', 'ts', 'tsx', 'js', 'jsx', 'json'],
   testEnvironment: 'jsdom',
   cacheDirectory: '<rootDir>/.cache/unit',
-  testRegex: '(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$',
   transform: {
     '.*\\.(vue)$': 'vue-jest',
     '^.+\\.tsx?$': 'ts-jest',
