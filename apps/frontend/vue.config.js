@@ -20,6 +20,9 @@ module.exports = {
         fs: false
       }
     },
+    externals: {
+      jquery: 'jQuery'
+    },
     module: {
       rules: [
         {
