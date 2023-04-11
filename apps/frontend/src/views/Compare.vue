@@ -340,7 +340,6 @@ export default class Compare extends Vue {
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
       nistIdFilter: SearchModule.NISTIdFilter,
-      searchTerm: SearchModule.freeSearch,
       codeSearchTerms: SearchModule.codeSearchTerms,
       omit_overlayed_controls: true
     };

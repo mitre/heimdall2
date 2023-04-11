@@ -365,7 +365,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
       nistIdFilter: SearchModule.NISTIdFilter,
-      searchTerm: SearchModule.freeSearch || '',
       codeSearchTerms: SearchModule.codeSearchTerms,
       treeFilters: this.treeFilters,
       omit_overlayed_controls: true,
@@ -387,7 +386,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       nistIdFilter: SearchModule.NISTIdFilter,
       ids: SearchModule.controlIdSearchTerms,
       fromFile: this.file_filter,
-      searchTerm: SearchModule.freeSearch,
       omit_overlayed_controls: true
     };
   }

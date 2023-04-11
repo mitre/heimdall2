@@ -719,7 +719,6 @@ export function checklistRules(
   rules: readonly ChecklistVuln[],
   filters: Filter
 ): readonly ChecklistVuln[] {
-  
   // If an attribute name changes in the checklist mapping, make sure it is reflected here
   const checklistFilters: Record<string, FilterRecord> = {
     severity: filters.severity,
