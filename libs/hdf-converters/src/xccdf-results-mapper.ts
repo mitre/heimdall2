@@ -1,4 +1,3 @@
-import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -244,16 +243,12 @@ export class XCCDFResultsMapper extends BaseConverter {
               ['TestResult.id'],
               ['TestResult.identity'],
               ['TestResult.organization'],
-              [
-                'TestResult.platform.idref'
-              ],
+              ['TestResult.platform.idref'],
               ['TestResult.profile.idref'],
               ['TestResult.score'],
               ['TestResult.set-value'],
               ['TestResult.target'],
-              [
-                'TestResult.target-address'
-              ],
+              ['TestResult.target-address'],
               ['TestResult.target-facts'],
               ['TestResult.target-id-ref'],
               ['TestResult.test-system'],
@@ -357,9 +352,7 @@ export class XCCDFResultsMapper extends BaseConverter {
             id: {
               path: 'Rule',
               transformer: (input: Record<string, unknown>): string => {
-                const valueIdPaths = [
-                  'check.check-export.value-id'
-                ];
+                const valueIdPaths = ['check.check-export.value-id'];
                 let setValueIdTracker = false;
                 for (const path of valueIdPaths) {
                   const valueId = _.get(input, path);
@@ -446,7 +439,7 @@ export class XCCDFResultsMapper extends BaseConverter {
             'version',
             'model',
             'Group',
-            'TestResult',
+            'TestResult'
           ]);
         }
         auxData = {Benchmark: auxData};

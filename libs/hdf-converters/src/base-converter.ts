@@ -54,7 +54,10 @@ export function parseHtml(input: unknown): string {
   return textData.join('');
 }
 
-export function parseXml(xml: string, additionalOptions?: Record<string, unknown>): Record<string, unknown> {
+export function parseXml(
+  xml: string,
+  additionalOptions?: Record<string, unknown>
+): Record<string, unknown> {
   const options = {
     attributeNamePrefix: '',
     textNodeName: 'text',
