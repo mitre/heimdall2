@@ -80,7 +80,7 @@
     "eslint-plugin-import": "^2.20.1",
     "express-rate-limit": "^6.0.1",
     "express-session": "^1.17.1",
-    "helmet": "^4.1.1",
+    "helmet": "^6.1.4",
     "js-levenshtein": "^1.1.6",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.1",
