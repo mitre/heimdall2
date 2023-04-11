@@ -22,7 +22,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 
 const CCI_NIST_MAPPING = new CciNistMapping();
 
-const RULE_RESULT_PATHS = ['cdf:rule-result', 'rule-result'];
+const RULE_RESULT_PATHS = ['rule-result'];
 
 let idTracker = '';
 let valueIdTracker: string | undefined = undefined;
@@ -69,7 +69,7 @@ function getStatus(
     testResult,
     RULE_RESULT_PATHS,
     ['idref'],
-    ['cdf:result', 'result']
+    ['result']
   ) as string | undefined;
   if (typeof status === 'string' && status === 'pass') {
     return ExecJSON.ControlResultStatus.Passed;
@@ -95,17 +95,7 @@ function getStartTime(testResult: Record<string, unknown>): string {
 function convertEncodedXmlIntoJson(
   encodedXml: string
 ): Record<string, unknown> {
-  const xmlChunks: string[] = [];
-  const htmlParser = new htmlparser.Parser({
-    ontext(text: string) {
-      xmlChunks.push(text);
-    }
-  });
-  htmlParser.write(encodedXml);
-  htmlParser.end();
-  const xmlParsed = xmlChunks.join('');
-
-  return parseXml(xmlParsed);
+  return parseXml(encodedXml);
 }
 
 type ProfileKey = 'id' | 'description' | 'title';
@@ -131,6 +121,7 @@ function extractProfile(
         } else {
           profileInfo[profileKey as ProfileKey] = item;
         }
+        break;
       }
     }
   }
@@ -213,66 +204,61 @@ export class XCCDFResultsMapper extends BaseConverter {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
       target_id: {
-        path: ['cdf:Benchmark.cdf:platform.idref', 'Benchmark.platform.idref']
+        path: 'Benchmark.platform.idref'
       }
     },
     version: HeimdallToolsVersion,
     statistics: {},
     profiles: [
       {
-        name: {path: ['cdf:Benchmark.id', 'Benchmark.id']},
-        version: {path: ['cdf:Benchmark.style', 'Benchmark.style']},
-        title: {path: ['cdf:Benchmark.cdf:title', 'Benchmark.title.text']},
+        name: {path: 'Benchmark.id'},
+        version: {path: 'Benchmark.style'},
+        title: {path: ['Benchmark.title.text', 'Benchmark.title']},
         maintainer: {
-          path: [
-            'cdf:Benchmark.cdf:reference.dc:publisher',
-            'Benchmark.reference.dc:publisher'
-          ]
+          path: 'Benchmark.reference.publisher'
         },
         summary: {
-          path: ['cdf:Benchmark.cdf:description', 'Benchmark.description.text']
+          path: ['Benchmark.description.text', 'Benchmark.description']
         },
         description: {
-          path: ['cdf:Benchmark', 'Benchmark'],
+          path: 'Benchmark',
           transformer: (input: Record<string, unknown>): string => {
             const descriptionPaths = [
-              ['cdf:description', 'description'],
-              ['cdf:front-matter', 'front-matter'],
-              ['cdf:metadata', 'metadata'],
+              ['description.text', 'description'],
+              ['front-matter'],
+              ['metadata'],
               ['model'],
-              ['cdf:plain-text', 'plain-text'],
-              ['cdf:rear-matter', 'rear-matter'],
-              ['cdf:reference', 'reference'],
-              ['cdf:status', 'status'],
-              ['cdf:version', 'version'],
+              ['plain-text'],
+              ['rear-matter'],
+              ['reference'],
+              ['status'],
+              ['version'],
               ['xml:lang'],
               ['xmlns:cdf', 'xmlns'],
               ['xmlns:dc'],
               ['xmlns:dsi'],
               ['xsi:schemaLocation'],
-              ['cdf:TestResult.cdf:benchmark', 'TestResult.benchmark'],
-              ['cdf:TestResult.start-time', 'TestResult.start-time'],
-              ['cdf:TestResult.end-time', 'TestResult.end-time'],
-              ['cdf:TestResult.id', 'TestResult.id'],
-              ['cdf:TestResult.cdf:identity', 'TestResult.identity'],
-              ['cdf:TestResult.cdf:organization'],
+              ['TestResult.benchmark'],
+              ['TestResult.start-time'],
+              ['TestResult.end-time'],
+              ['TestResult.id'],
+              ['TestResult.identity'],
+              ['TestResult.organization'],
               [
-                'cdf:TestResult.cdf:platform.idref',
                 'TestResult.platform.idref'
               ],
-              ['cdf:TestResult.cdf:profile.idref', 'TestResult.profile.idref'], // this property makes me think that TestResult could be an array which will certainly cause this mapper to fail
-              ['cdf:TestResult.cdf:score', 'TestResult.score'],
-              ['cdf:TestResult.cdf:set-value', 'TestResult.set-value'],
-              ['cdf:TestResult.cdf:target', 'TestResult.target'],
+              ['TestResult.profile.idref'],
+              ['TestResult.score'],
+              ['TestResult.set-value'],
+              ['TestResult.target'],
               [
-                'cdf:TestResult.cdf:target-address',
                 'TestResult.target-address'
               ],
-              ['cdf:TestResult.cdf:target-facts', 'TestResult.target-facts'],
-              ['cdf:TestResult.cdf:target-id-ref'],
-              ['cdf:TestResult.test-system', 'TestResult.test-system'],
+              ['TestResult.target-facts'],
+              ['TestResult.target-id-ref'],
+              ['TestResult.test-system'],
               ['TestResult.title'],
-              ['cdf:TestResult.version', 'TestResult.version']
+              ['TestResult.version']
             ];
             const fullDescription: Record<string, unknown> = {};
             for (const paths of descriptionPaths) {
@@ -286,83 +272,77 @@ export class XCCDFResultsMapper extends BaseConverter {
             return JSON.stringify(fullDescription, null, 2);
           }
         },
-        license: {path: ['cdf:Benchmark.cdf:notice.id', 'Benchmark.notice.id']},
+        license: {path: 'Benchmark.notice.id'},
         copyright: {
-          path: [
-            'cdf:Benchmark.cdf:metadata.dc:creator',
-            'Benchmark.metadata.dc:creator.text'
-          ]
+          path: 'Benchmark.metadata.creator'
         },
-        copyright_email: 'disa.stig_spt@mail.mil',
+        copyright_email: 'disa.stig_spt@mail.mil', // this should only be specified if that email address is in Benchmark.description
         supports: [],
         attributes: [],
         groups: [],
         status: 'loaded',
         controls: [
           {
-            path: ['cdf:Benchmark.cdf:Group', 'Benchmark.Group'],
+            path: 'Benchmark.Group',
             key: 'id',
             tags: {
               cci: {
-                path: ['cdf:Rule.cdf:ident', 'Rule.ident'],
+                path: 'Rule.ident',
                 transformer: extractCci
               },
               nist: {
-                path: ['cdf:Rule.cdf:ident', 'Rule.ident'],
+                path: 'Rule.ident',
                 transformer: nistTag
               },
-              severity: {path: ['cdf:Rule.severity', 'Rule.severity']},
+              severity: {path: 'Rule.severity'},
               description: {
-                path: ['cdf:Rule.cdf:description', 'Rule.description.text'],
+                path: ['Rule.description.text', 'Rule.description'],
                 transformer: (description: string) =>
                   JSON.stringify(
                     _.pickBy(convertEncodedXmlIntoJson(description), _.identity)
                   )
               },
               group_id: {path: 'id'},
-              group_title: {path: ['cdf:title', 'title.text']},
+              group_title: {path: ['title.text', 'title']},
               group_description: {
-                path: ['cdf:description', 'description.text'],
+                path: ['description.text', 'description'],
                 transformer: (description: string) =>
                   JSON.stringify(
                     _.pickBy(convertEncodedXmlIntoJson(description), _.identity)
                   )
               },
-              rule_id: {path: ['cdf:Rule.id', 'Rule.id']},
-              check: {path: ['cdf:Rule.cdf:check', 'Rule.check']},
-              fix_id: {path: ['cdf:Rule.cdf:fix.id', 'Rule.fix.id']},
+              rule_id: {path: 'Rule.id'},
+              check: {path: 'Rule.check'},
+              fix_id: {path: 'Rule.fix.id'},
               fixtext_fixref: {
-                path: ['cdf:Rule.cdf:fixtext.fixref', 'Rule.fixtext.fixref']
+                path: 'Rule.fixtext.fixref'
               },
-              ident: {path: ['cdf:Rule.cdf:ident', 'Rule.ident']},
-              reference: {path: ['cdf:Rule.cdf:reference', 'Rule.reference']},
+              ident: {path: 'Rule.ident'},
+              reference: {path: 'Rule.reference'},
               selected: {path: 'Rule.selected'},
-              version: {path: ['cdf:Rule.id', 'Rule.version.text']}, // dunno why the field is called version when it's just an old id
-              weight: {path: ['cdf:Rule.weight', 'Rule.weight']},
+              version: {path: 'Rule.version.text'},
+              weight: {path: 'Rule.weight'},
               profiles: {
-                path: ['$.cdf:Benchmark.cdf:Profile', '$.Benchmark.Profile'],
+                path: '$.Benchmark.Profile',
                 transformer: (
                   profiles: Record<string, unknown>[]
                 ): Record<ProfileKey, unknown>[] => {
-                  const pathsSelect = ['cdf:select', 'select'];
+                  const pathsSelect = ['select'];
                   const paths = {
                     id: ['id'],
-                    description: ['cdf:description', 'description.text'],
-                    title: ['cdf:title', 'title.text']
+                    description: ['description.text', 'description'],
+                    title: ['title.text', 'title']
                   };
                   return getProfiles(profiles, pathsSelect, paths);
                 }
               },
               rule_result: {
-                path: [
-                  '$.cdf:Benchmark.cdf:TestResult',
-                  '$.Benchmark.TestResult'
-                ],
+                path: '$.Benchmark.TestResult',
                 transformer: (testResult: Record<string, unknown>): unknown =>
                   getRuleResultItem(testResult, RULE_RESULT_PATHS)
               },
               value: {
-                path: ['$.cdf:Benchmark.cdf:Value', '$.Benchmark.Value'],
+                path: '$.Benchmark.Value',
                 transformer: (values: Record<string, unknown>[]): unknown => {
                   return _.find(values, (value: Record<string, unknown>) => {
                     const id = _.get(value, 'id');
@@ -373,12 +353,11 @@ export class XCCDFResultsMapper extends BaseConverter {
             },
             refs: [],
             source_location: {},
-            title: {path: ['cdf:Rule.cdf:title', 'Rule.title.text']},
+            title: {path: ['Rule.title.text', 'Rule.title']},
             id: {
-              path: ['cdf:Rule', 'Rule'],
+              path: 'Rule',
               transformer: (input: Record<string, unknown>): string => {
                 const valueIdPaths = [
-                  'cdf:check.cdf:check-export.value-id',
                   'check.check-export.value-id'
                 ];
                 let setValueIdTracker = false;
@@ -402,7 +381,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               }
             },
             desc: {
-              path: ['cdf:Rule.cdf:description', 'Rule.description.text'],
+              path: ['Rule.description.text', 'Rule.description'],
               transformer: (description: string): string => {
                 const descTextJson = convertEncodedXmlIntoJson(description);
                 return _.get(descTextJson, 'VulnDiscussion', '') as string;
@@ -411,24 +390,21 @@ export class XCCDFResultsMapper extends BaseConverter {
             descriptions: [
               {
                 data: {
-                  path: [
-                    'cdf:Rule.cdf:check.cdf:check-content-ref.name',
-                    'Rule.check.check-content-ref.name'
-                  ],
+                  path: 'Rule.check.check-content-ref.name',
                   transformer: parseHtml
                 },
                 label: 'check'
               },
               {
                 data: {
-                  path: ['cdf:Rule.cdf:fixtext.text', 'Rule.fixtext.text'],
+                  path: 'Rule.fixtext.text',
                   transformer: parseHtml
                 },
                 label: 'fix'
               }
             ],
             impact: {
-              path: ['cdf:Rule.severity', 'Rule.severity'],
+              path: 'Rule.severity',
               transformer: impactMapping(IMPACT_MAPPING)
             },
             code: {
@@ -438,18 +414,12 @@ export class XCCDFResultsMapper extends BaseConverter {
             results: [
               {
                 status: {
-                  path: [
-                    '$.cdf:Benchmark.cdf:TestResult',
-                    '$.Benchmark.TestResult'
-                  ],
+                  path: '$.Benchmark.TestResult',
                   transformer: getStatus
                 },
                 code_desc: '',
                 start_time: {
-                  path: [
-                    '$.cdf:Benchmark.cdf:TestResult',
-                    '$.Benchmark.TestResult'
-                  ],
+                  path: '$.Benchmark.TestResult',
                   transformer: getStartTime
                 }
               }
@@ -461,38 +431,25 @@ export class XCCDFResultsMapper extends BaseConverter {
     ],
     passthrough: {
       transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        let auxData = _.has(data, 'Benchmark')
-          ? _.get(data, 'Benchmark')
-          : _.get(data, 'cdf:Benchmark');
-        if (auxData instanceof Object) {
+        let auxData = _.get(data, 'Benchmark') as Record<string, unknown>;
+        if (auxData) {
           auxData = _.omit(auxData, [
             'id',
             'xml:lang',
             'style',
             'title',
-            'cdf:title',
             'description',
-            'cdf:description',
             'notice',
-            'cdf:notice',
             'front-matter',
-            'cdf:front-matter',
             'reference',
-            'cdf:reference',
             'platform',
-            'cdf:platform',
             'version',
-            'cdf:version',
             'model',
             'Group',
-            'cdf:Group',
             'TestResult',
-            'cdf:TestResult'
           ]);
         }
-        auxData = _.has(data, 'Benchmark')
-          ? {Benchmark: auxData}
-          : {'cdf:Benchmark': auxData};
+        auxData = {Benchmark: auxData};
         return {
           auxiliary_data: [
             {
