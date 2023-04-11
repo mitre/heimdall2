@@ -88,8 +88,7 @@ class Search extends VuexModule {
   iaControlsSearchTerms: SearchEntry<iaControlsSearchTerm>[] = [];
   NISTIdFilter: SearchEntry<NistIdFilter>[] = [];
   descriptionSearchTerms: SearchEntry<DescriptionSearchTerm>[] = [];
-  freeSearch = '';
-  searchTerm = '';
+  searchTerm = ''; // Value entered into the top search bar
   statusFilter: SearchEntry<ExtendedControlStatus>[] = [];
   severityFilter: SearchEntry<Severity>[] = [];
   titleSearchTerms: SearchEntry<TitleSearchTerm>[] = [];
@@ -212,7 +211,10 @@ class Search extends VuexModule {
             this.addCciFilter({value: include.value, negated: include.negated});
             break;
           case 'iaControl':
-            this.addIaControlsFilter({value: include.value, negated: include.negated});
+            this.addIaControlsFilter({
+              value: include.value,
+              negated: include.negated
+            });
             break;
           case 'keywords':
             this.addKeywordsFilter({
@@ -713,12 +715,20 @@ class Search extends VuexModule {
 
   /** Adds IA Controls to filter */
   @Action
-  addIaControlsFilter(iaControl: SearchEntry<iaControlsSearchTerm> | SearchEntry<iaControlsSearchTerm>[]) {
+  addIaControlsFilter(
+    iaControl:
+      | SearchEntry<iaControlsSearchTerm>
+      | SearchEntry<iaControlsSearchTerm>[]
+  ) {
     this.context.commit('ADD_IA_CONTROL', iaControl);
   }
 
   @Mutation
-  ADD_IA_CONTROL(iaControl: SearchEntry<iaControlsSearchTerm> | SearchEntry<iaControlsSearchTerm>[]) {
+  ADD_IA_CONTROL(
+    iaControl:
+      | SearchEntry<iaControlsSearchTerm>
+      | SearchEntry<iaControlsSearchTerm>[]
+  ) {
     this.iaControlsSearchTerms = this.iaControlsSearchTerms.concat(iaControl);
   }
 
