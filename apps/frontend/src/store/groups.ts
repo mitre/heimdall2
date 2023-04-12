@@ -89,9 +89,8 @@ export class Groups extends VuexModule implements IGroupState {
 
   @Action
   public async UpdateGroupById(id: string) {
-    axios.get<IGroup>(`/groups/${id}`).then(({data}) => {
-      this.UpdateGroup(data);
-    });
+    const group = (await axios.get<IGroup>(`/groups/${id}`)).data;
+    await this.UpdateGroup(group);
   }
 
   @Action
