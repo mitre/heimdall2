@@ -622,17 +622,18 @@ class Search extends VuexModule {
    @Action
    parseSearch() {
      this.clear();
-     const gatherFreeText = true;
      const freeTextTransformer = (text: string) =>
-       gatherFreeText && {
+       ({
          key: 'keywords',
          value: text
-       };
+       });
      const parsedSearchResult = parse(this.searchTerm, [freeTextTransformer]);
      this.setParsedSearchResult(parsedSearchResult);
      /*
       Standard format for the condition array:
-      Example: [ { keyword: 'status', value: 'Passed', negated: false }, { keyword: 'severity', value: 'low', negated: true } ]
+      Example: [ { keyword: 'status', value: 'Passed', negated: false },
+      { keyword: 'status', value: 'Failed', negated: true }, 
+      { keyword: 'severity', value: 'low', negated: true } ]
     */
    for(const prop of parsedSearchResult.getConditionArray()){
     const include = {
