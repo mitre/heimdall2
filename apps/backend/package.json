@@ -98,7 +98,7 @@
     "passport-openidconnect": "^0.0.2",
     "pg": "^8.2.1",
     "reflect-metadata": "^0.1.13",
-    "rimraf": "^4.0.4",
+    "rimraf": "^5.0.0",
     "rxjs": "^7.2.0",
     "sequelize": "^6.4.0",
     "sequelize-cli": "^6.2.0",
@@ -116,6 +116,6 @@
     "jest": "^27.0.3",
     "mock-fs": "^5.0.0",
     "supertest": "^6.0.0",
-    "ts-jest": "^27.0.2"
+    "ts-jest": "^29.1.0"
   }
 }
