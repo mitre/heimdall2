@@ -21,73 +21,56 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 
 const CCI_NIST_MAPPING = new CciNistMapping();
 
-const RULE_RESULT_PATHS = ['rule-result'];
+function asArray<T>(arg: T | T[]): T[] {
+  if (Array.isArray(arg)) {
+    return arg;
+  } else if (arg === undefined || arg === null) {
+    return [];
+  } else {
+    return [arg];
+  }
+}
 
-let idTracker = '';
-let valueIdTracker: string | undefined = undefined;
-
-function getRuleResultItem(
-  testResult: Record<string, unknown>,
-  pathRuleResultPossibilities: string[],
-  pathIdRefPossibilities: string[] = ['idref'],
-  pathItemPossibilities: string[] | undefined = undefined
-): unknown {
-  for (const pathRuleResult of pathRuleResultPossibilities) {
-    const ruleResult: Record<string, unknown>[] | undefined = _.get(
-      testResult,
-      pathRuleResult
-    ) as Record<string, unknown>[] | undefined;
-    if (ruleResult === undefined) {
-      continue;
-    }
-    const match = ruleResult.find((element: Record<string, unknown>) =>
-      _.some(
-        pathIdRefPossibilities.map(
-          (pathIDRef) => _.get(element, pathIDRef) === idTracker
-        ),
-        Boolean
-      )
-    );
-    if (pathItemPossibilities === undefined) {
-      return match;
-    }
-    for (const pathItem of pathItemPossibilities) {
-      const item = _.get(match, pathItem);
-      if (item !== undefined) {
-        return item;
-      }
-    }
+function getRuleResult(
+  ruleId: string,
+  benchmark: Record<string, unknown>
+): Record<string, unknown> | undefined {
+  const ruleResults = asArray(
+    _.get(benchmark, 'TestResult.rule-result') as
+      | Record<string, unknown>
+      | Record<string, unknown>[]
+  );
+  const matchingRuleResult = ruleResults.find(
+    (element) => _.get(element, 'idref') === ruleId
+  );
+  if (matchingRuleResult) {
+    return matchingRuleResult;
   }
   return undefined;
 }
 
-function getStatus(
-  testResult: Record<string, unknown>
-): ExecJSON.ControlResultStatus {
-  const status = getRuleResultItem(
-    testResult,
-    RULE_RESULT_PATHS,
-    ['idref'],
-    ['result']
-  ) as string | undefined;
-  if (typeof status === 'string' && status === 'pass') {
-    return ExecJSON.ControlResultStatus.Passed;
-  } else {
-    return ExecJSON.ControlResultStatus.Failed;
-  }
-}
-
-function getStartTime(testResult: Record<string, unknown>): string {
-  const time = getRuleResultItem(
-    testResult,
-    RULE_RESULT_PATHS,
-    ['idref'],
-    ['time']
-  ) as string | undefined;
-  if (typeof time === 'string') {
-    return time;
-  } else {
-    return '';
+function getStatus(testResultStatus: string): ExecJSON.ControlResultStatus {
+  switch (testResultStatus) {
+    case 'pass':
+      return ExecJSON.ControlResultStatus.Passed;
+    case 'fail':
+      return ExecJSON.ControlResultStatus.Failed;
+    case 'error':
+      return ExecJSON.ControlResultStatus.Error;
+    case 'unknown':
+      return ExecJSON.ControlResultStatus.Error;
+    case 'notapplicable':
+      return ExecJSON.ControlResultStatus.Skipped;
+    case 'notchecked':
+      return ExecJSON.ControlResultStatus.Skipped;
+    case 'notselected':
+      return ExecJSON.ControlResultStatus.Skipped;
+    case 'informational':
+      return ExecJSON.ControlResultStatus.Skipped;
+    case 'fixed':
+      return ExecJSON.ControlResultStatus.Passed;
+    default:
+      return ExecJSON.ControlResultStatus.Error;
   }
 }
 
@@ -97,65 +80,63 @@ function convertEncodedXmlIntoJson(
   return parseXml(encodedXml);
 }
 
-type ProfileKey = 'id' | 'description' | 'title';
-
-function extractProfile(
-  profile: Record<string, unknown>,
-  pathProfileItemPossibilities: Record<ProfileKey, string[]>
-) {
-  const profileInfo: Record<ProfileKey, unknown> = {
-    id: '',
-    description: '',
-    title: ''
-  };
-  for (const profileKey of Object.keys(pathProfileItemPossibilities)) {
-    for (const pathProfileItem of pathProfileItemPossibilities[
-      profileKey as ProfileKey
-    ]) {
-      const item = _.get(profile, pathProfileItem) as string | undefined;
-      if (item) {
-        if (profileKey === 'description') {
-          profileInfo[profileKey as ProfileKey] =
-            convertEncodedXmlIntoJson(item);
-        } else {
-          profileInfo[profileKey as ProfileKey] = item;
-        }
-        break;
-      }
+function getValues(
+  rule: Record<string, unknown>,
+  group: Record<string, unknown>,
+  benchmark: Record<string, unknown>
+): Record<string, unknown>[] {
+  const checks = asArray(_.get(rule, 'check'));
+  if (!checks) {
+    return [];
+  }
+  const ruleValueIds: string[] = [];
+  for (const check of checks as Record<string, unknown>[]) {
+    const valueId = _.get(check, 'check-export.value-id') as string;
+    if (valueId) {
+      ruleValueIds.push(valueId);
     }
   }
-  return profileInfo;
+  const matchingValues: Record<string, unknown>[] = [];
+  for (const values of [_.get(group, 'Value'), _.get(benchmark, 'Value')]) {
+    if (!values) {
+      continue;
+    }
+    matchingValues.push(
+      ...(asArray(values) as Record<string, unknown>[]).filter((value) =>
+        ruleValueIds.includes(_.get(value, 'id') as string)
+      )
+    );
+  }
+  return matchingValues;
 }
 
 function getProfiles(
-  profiles: Record<string, unknown>[],
-  pathSelectPossibilities: string[],
-  pathProfileItemPossibilities: Record<ProfileKey, string[]>
-): Record<ProfileKey, unknown>[] {
-  const profileInfos = [];
+  ids: string[],
+  benchmark: Record<string, unknown>
+): Record<string, unknown>[] {
+  const matchingProfiles: Record<string, unknown>[] = [];
+  const profiles = asArray(
+    _.get(benchmark, 'Profile') as
+      | Record<string, unknown>
+      | Record<string, unknown>[]
+  );
   for (const profile of profiles) {
-    for (const pathSelect of pathSelectPossibilities) {
-      const select: Record<string, string>[] | undefined = _.get(
-        profile,
-        pathSelect
-      ) as Record<string, string>[] | undefined;
-      if (select === undefined) {
-        continue;
-      }
-      const selected = _.some(
-        select,
-        (element: Record<string, string>) =>
-          idTracker.replace('rule_SV', 'group_V').replace(/r\d+_rule/, '') ===
-            _.get(element, 'idref') && _.get(element, 'selected') === 'true'
-      );
-      if (selected) {
-        profileInfos.push(
-          extractProfile(profile, pathProfileItemPossibilities)
-        );
-      }
+    const selects = asArray(
+      _.get(profile, 'select') as
+        | Record<string, unknown>
+        | Record<string, unknown>[]
+    );
+    if (
+      selects.find(
+        (select) =>
+          ids.includes(_.get(select, 'idref') as string) &&
+          _.get(select, 'selected') === 'true'
+      )
+    ) {
+      matchingProfiles.push(profile);
     }
   }
-  return profileInfos;
+  return matchingProfiles;
 }
 
 interface IIdent {
@@ -164,19 +145,14 @@ interface IIdent {
 }
 
 function extractCci(input: IIdent | IIdent[]): string[] {
-  let inputArray;
-  if (Array.isArray(input)) {
-    inputArray = input;
-  } else {
-    inputArray = [input];
-  }
+  const inputArray = asArray(input);
 
   const CCI_REGEX = /CCI-(\d*)/;
 
   const output: string[] = [];
   inputArray.forEach((element) => {
-    const text = _.get(element, 'text');
-    if (text.match(CCI_REGEX)) {
+    const text = String(_.get(element, 'text'));
+    if (!!text && text.match(CCI_REGEX)) {
       output.push(text);
     }
   });
@@ -190,6 +166,59 @@ function nistTag(input: IIdent | IIdent[]): string[] {
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
     false
   );
+}
+
+/**
+ * Given a group, returns all the rules within it (including rules in groups nested within the group).
+ */
+function getRulesInGroup(
+  allRules: Record<string, unknown>[],
+  benchmark: Record<string, unknown>,
+  group: Record<string, unknown>
+) {
+  const subGroups = asArray(
+    _.get(group, 'Group') as Record<string, unknown> | Record<string, unknown>[]
+  );
+  if (subGroups) {
+    for (const subGroup of subGroups) {
+      getRulesInGroup(allRules, benchmark, subGroup);
+    }
+  }
+  const rules = asArray(
+    _.get(group, 'Rule') as Record<string, unknown> | Record<string, unknown>[]
+  );
+  if (rules) {
+    for (const rule of rules) {
+      allRules.push(
+        _.merge({}, rule, {
+          group: _.omit(group, ['Rule', 'Group']), // save the group as a new "group" property on the rule to allow the mapper to use the group
+          ruleResult: getRuleResult(_.get(rule, 'id') as string, benchmark), // save the ruleResult as a new "ruleResult" property on the rule to allow the mapper to use the ruleResult
+          profiles: getProfiles(
+            [_.get(rule, 'id') as string, _.get(group, 'id') as string],
+            benchmark
+          ), // save the profiles as a new "profiles" property on the rule to allow the mapper to use the profiles
+          values: getValues(rule, group, benchmark) // save the values as a new "values" property on the rule to allow the mapper to use the values
+        })
+      );
+    }
+  }
+}
+
+/**
+ * Given groups or a group, returns all the rules.
+ */
+function getRulesInBenchmark(input: unknown): Record<string, unknown>[] {
+  const benchmark = input as Record<string, unknown>;
+  const groups = asArray(
+    _.get(benchmark, 'Group') as
+      | Record<string, unknown>
+      | Record<string, unknown>[]
+  );
+  const allRules: Record<string, unknown>[] = [];
+  for (const group of groups) {
+    getRulesInGroup(allRules, benchmark, group);
+  }
+  return allRules;
 }
 
 export class XCCDFResultsMapper extends BaseConverter {
@@ -223,7 +252,7 @@ export class XCCDFResultsMapper extends BaseConverter {
           path: 'Benchmark',
           transformer: (input: Record<string, unknown>): string => {
             const descriptionPaths = [
-              ['description.text', 'description'],
+              ['description.text'],
               ['front-matter'],
               ['metadata'],
               ['model'],
@@ -278,142 +307,141 @@ export class XCCDFResultsMapper extends BaseConverter {
         status: 'loaded',
         controls: [
           {
-            path: 'Benchmark.Group',
+            path: 'Benchmark',
+            pathTransform: getRulesInBenchmark,
             key: 'id',
             tags: {
               cci: {
-                path: 'Rule.ident',
+                path: ['ident', 'reference'],
                 transformer: extractCci
               },
               nist: {
-                path: 'Rule.ident',
+                path: ['ident', 'reference'],
                 transformer: nistTag
               },
-              severity: {path: 'Rule.severity'},
+              severity: {path: 'severity'},
               description: {
-                path: ['Rule.description.text', 'Rule.description'],
-                transformer: (description: string) =>
-                  JSON.stringify(
-                    _.pickBy(convertEncodedXmlIntoJson(description), _.identity)
-                  )
-              },
-              group_id: {path: 'id'},
-              group_title: {path: ['title.text', 'title']},
-              group_description: {
                 path: ['description.text', 'description'],
-                transformer: (description: string) =>
-                  JSON.stringify(
-                    _.pickBy(convertEncodedXmlIntoJson(description), _.identity)
-                  )
-              },
-              rule_id: {path: 'Rule.id'},
-              check: {path: 'Rule.check'},
-              fix_id: {path: 'Rule.fix.id'},
-              fixtext_fixref: {
-                path: 'Rule.fixtext.fixref'
-              },
-              ident: {path: 'Rule.ident'},
-              reference: {path: 'Rule.reference'},
-              selected: {path: 'Rule.selected'},
-              version: {path: 'Rule.version.text'},
-              weight: {path: 'Rule.weight'},
-              profiles: {
-                path: '$.Benchmark.Profile',
-                transformer: (
-                  profiles: Record<string, unknown>[]
-                ): Record<ProfileKey, unknown>[] => {
-                  const pathsSelect = ['select'];
-                  const paths = {
-                    id: ['id'],
-                    description: ['description.text', 'description'],
-                    title: ['title.text', 'title']
-                  };
-                  return getProfiles(profiles, pathsSelect, paths);
+                transformer: (description: string): string => {
+                  return _.get(
+                    convertEncodedXmlIntoJson(description),
+                    'VulnDiscussion',
+                    description
+                  ) as string;
                 }
               },
+              group_id: {path: 'group.id'},
+              group_title: {path: ['group.title.text', 'group.title']},
+              group_description: {
+                path: ['group.description.text', 'group.description'],
+                transformer: (description: string): string => {
+                  return _.get(
+                    convertEncodedXmlIntoJson(description),
+                    'GroupDescription',
+                    description
+                  ) as string;
+                }
+              },
+              rule_id: {path: 'id'},
+              check: {path: 'check'},
+              fix_id: {path: 'fix.id'},
+              fixtext_fixref: {
+                path: ['fixtext.fixref.text', 'fixtext.fixref']
+              },
+              ident: {path: 'ident'},
+              reference: {path: 'reference'},
+              selected: {path: 'selected'},
+              version: {path: ['id', 'version']}, // dunno why the field is called version when it's just an old id
+              weight: {path: 'weight'},
+              profiles: [
+                {
+                  path: ['profiles'],
+                  id: {path: ['id']},
+                  description: {
+                    path: ['description.text', 'description'],
+                    transformer: (description: string): string => {
+                      return _.get(
+                        convertEncodedXmlIntoJson(description),
+                        'ProfileDescription',
+                        description
+                      ) as string;
+                    }
+                  },
+                  title: {path: ['title.text', 'title']}
+                }
+              ],
               rule_result: {
-                path: '$.Benchmark.TestResult',
-                transformer: (testResult: Record<string, unknown>): unknown =>
-                  getRuleResultItem(testResult, RULE_RESULT_PATHS)
+                path: ['ruleResult']
               },
               value: {
-                path: '$.Benchmark.Value',
-                transformer: (values: Record<string, unknown>[]): unknown => {
-                  return _.find(values, (value: Record<string, unknown>) => {
-                    const id = _.get(value, 'id');
-                    return id && id === valueIdTracker;
-                  });
-                }
+                path: ['values']
               }
             },
             refs: [],
             source_location: {},
-            title: {path: ['Rule.title.text', 'Rule.title']},
-            id: {
-              path: 'Rule',
-              transformer: (input: Record<string, unknown>): string => {
-                const valueIdPaths = ['check.check-export.value-id'];
-                let setValueIdTracker = false;
-                for (const path of valueIdPaths) {
-                  const valueId = _.get(input, path);
-                  if (valueId !== undefined) {
-                    valueIdTracker = valueId as string; // NOTE: global variable
-                    setValueIdTracker = true;
-                  }
-                }
-                if (!setValueIdTracker) {
-                  valueIdTracker = undefined;
-                }
-                const id = _.get(input, 'id');
-                if (typeof id === 'string') {
-                  idTracker = id; // NOTE: global variable
-                  return id.split('_S')[1].split('r')[0];
-                } else {
-                  return '';
-                }
-              }
-            },
+            title: {path: ['title.text', 'title']},
+            id: {path: ['id']},
             desc: {
-              path: ['Rule.description.text', 'Rule.description'],
+              path: ['description.text', 'description'],
               transformer: (description: string): string => {
-                const descTextJson = convertEncodedXmlIntoJson(description);
-                return _.get(descTextJson, 'VulnDiscussion', '') as string;
+                return _.get(
+                  convertEncodedXmlIntoJson(description),
+                  'ProfileDescription',
+                  description
+                ) as string;
               }
             },
             descriptions: [
               {
                 data: {
-                  path: 'Rule.check.check-content-ref.name',
+                  path: ['check.check-content-ref.name'],
                   transformer: parseHtml
                 },
                 label: 'check'
               },
               {
                 data: {
-                  path: 'Rule.fixtext.text',
+                  path: ['fixtext', 'fix'],
                   transformer: parseHtml
                 },
                 label: 'fix'
               }
             ],
             impact: {
-              path: 'Rule.severity',
+              path: ['severity'],
               transformer: impactMapping(IMPACT_MAPPING)
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
-                JSON.stringify(vulnerability, null, 2)
+                JSON.stringify(
+                  _.omit(vulnerability, [
+                    'group',
+                    'ruleResult',
+                    'profiles',
+                    'values'
+                  ]),
+                  null,
+                  2
+                )
             },
             results: [
               {
                 status: {
-                  path: '$.Benchmark.TestResult',
+                  path: ['ruleResult.result'],
                   transformer: getStatus
                 },
-                code_desc: '',
+                code_desc: {
+                  path: ['description.text', 'description'],
+                  transformer: (description: string): string => {
+                    return _.get(
+                      convertEncodedXmlIntoJson(description),
+                      'VulnDiscussion',
+                      description
+                    ) as string;
+                  }
+                },
                 start_time: {
-                  path: '$.Benchmark.TestResult',
-                  transformer: getStartTime
+                  path: ['ruleResult.time']
                 }
               }
             ]
