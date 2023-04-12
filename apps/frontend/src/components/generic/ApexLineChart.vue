@@ -1,21 +1,17 @@
 <template>
   <div style="color: black">
-    <vue-apex-charts
-      type="line"
-      height="350"
-      :options="chartOptions"
-      :series="series"
-    />
+    <vue-apex-charts type="line" height="350" :options="chartOptions" :series="series" />
   </div>
 </template>
 
 <script lang="ts">
-import {ApexOptions} from 'apexcharts';
+import { ApexOptions } from 'apexcharts';
 import Vue from 'vue';
 import VueApexCharts from 'vue-apexcharts';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {Category} from './ApexPieChart.vue';
+import { Prop } from 'vue-property-decorator';
+import { Category } from './ApexPieChart.vue';
+import { ControlStatus, Severity } from 'inspecjs';
 
 export interface SeriesItem {
   name: string;
@@ -31,12 +27,12 @@ export interface SeriesItem {
   }
 })
 export default class ApexLineChart extends Vue {
-  @Prop({required: true, type: Array}) readonly categories!: Category<string>[];
-  @Prop({required: true, type: Array}) readonly series!: number[];
-  @Prop({type: Number}) readonly upperRange!: number; //upper bound of y axis
-  @Prop({type: Boolean}) readonly sevChart!: boolean; //identifies chart as severity chart
-  @Prop({type: String}) readonly title!: string;
-  @Prop({type: String}) readonly yTitle!: string;
+  @Prop({ required: true, type: Array }) readonly categories!: Category<Severity | ControlStatus>[];
+  @Prop({ required: true, type: Array }) readonly series!: number[];
+  @Prop({ type: Number }) readonly upperRange!: number; //upper bound of y axis
+  @Prop({ type: Boolean }) readonly sevChart!: boolean; //identifies chart as severity chart
+  @Prop({ type: String }) readonly title!: string;
+  @Prop({ type: String }) readonly yTitle!: string;
 
   //gives apex charts the severity colors
   sevColors: string[] = ['#FFEB3B', '#FF9800', '#FF5722', '#F44336'];

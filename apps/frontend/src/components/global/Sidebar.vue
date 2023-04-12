@@ -14,8 +14,8 @@
       </v-container>
     </v-navigation-drawer>
     <v-navigation-drawer v-model="isSideUtilityDrawerShown" :clipped="$vuetify.breakpoint.lgAndUp" app
-      :style="{ 'z-index': 11, 'margin-top': classification ? '5em' : '3em' }" disable-resize-watcher disable-route-watcher
-      fixed temporary width="600px" @input="$emit('input', $event)" @blur="value = false">
+      :style="{ 'z-index': 11, 'margin-top': classification ? '5em' : '3em' }" disable-resize-watcher
+      disable-route-watcher fixed temporary width="600px" @input="$emit('input', $event)" @blur="value = false">
       <div v-if="isSideUtilityDrawerShown">
         <v-expansion-panels v-model="active_path" accordion>
           <DropdownContent header-text="Results" :files="visible_evaluation_files"
@@ -93,10 +93,10 @@
               :items="convertFilterData(currentFilters.conditionArray)" item-key="value" class="elevation-1 mb-3" />
           </v-row>
           <v-row class="mt-2 mx-auto" style="
-                padding-bottom: 5rem;
-                align-items: center;
-                justify-content: center;
-              ">
+                  padding-bottom: 5rem;
+                  align-items: center;
+                  justify-content: center;
+                ">
             <v-btn id="remove-filters-btn" class="mx-2" @click="removeSelectedFilters">
               <span class="d-none d-md-inline pr-2"> Remove Filter(s) </span>
             </v-btn>
@@ -127,6 +127,7 @@ import { Severity } from 'inspecjs';
 
 import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
 import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
+import { SearchFilterSyncModule } from '@/store/search_filter_sync';
 
 @Component({
   components: {
@@ -198,11 +199,11 @@ export default class Sidebar extends mixins(RouteMixin) {
   }
 
   changeSeverityToggle(name: Severity) {
-    FilteredDataModule.changeSeveritySwitch(name);
+    SearchFilterSyncModule.changeSeveritySwitch(name);
   }
 
   changeStatusToggle(name: ExtendedControlStatus) {
-    FilteredDataModule.changeStatusSwitch(name);
+    SearchFilterSyncModule.changeStatusSwitch(name);
   }
 
   // Used for toggling the side nav drawer

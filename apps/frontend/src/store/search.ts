@@ -8,7 +8,8 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import {ExtendedControlStatus, FilteredDataModule} from './data_filters';
+import {ExtendedControlStatus} from './data_filters';
+import {SearchFilterSyncModule} from './search_filter_sync'
 
 // Alias types for all the search capabilities (minus status and severity as they already have a type)
 export type TitleSearchTerm = string;
@@ -58,7 +59,12 @@ export function valueToSeverity(severity: string): Severity {
 class Search extends VuexModule {
   searchTerm = ''; // Value entered into the top search bar
 
-  /** Current value of the parsed query string */
+  /** Current value of the parsed query string 
+   * Standard format for the condition array:
+   * Example: [ { keyword: 'status', value: 'Passed', negated: false },
+   * { keyword: 'status', value: 'Failed', negated: true }, 
+   * { keyword: 'severity', value: 'low', negated: true } ]
+  */
   parsedSearchResult = parse('');
 
   controlIdSearchTerms: SearchEntry<ControlIdSearchTerm>[] = [];
@@ -629,12 +635,6 @@ class Search extends VuexModule {
        });
      const parsedSearchResult = parse(this.searchTerm, [freeTextTransformer]);
      this.setParsedSearchResult(parsedSearchResult);
-     /*
-      Standard format for the condition array:
-      Example: [ { keyword: 'status', value: 'Passed', negated: false },
-      { keyword: 'status', value: 'Failed', negated: true }, 
-      { keyword: 'severity', value: 'low', negated: true } ]
-    */
    for(const prop of parsedSearchResult.getConditionArray()){
     const include = {
       value: prop.value,
@@ -734,8 +734,8 @@ class Search extends VuexModule {
     }
    }
  
-     FilteredDataModule.alterStatusBoolean();
-     FilteredDataModule.alterSeverityBoolean();
+   SearchFilterSyncModule.alterStatusBoolean();
+   SearchFilterSyncModule.alterSeverityBoolean();
    }
 }
 

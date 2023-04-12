@@ -710,7 +710,7 @@ function convertChecklist(text: string): Object {
   return unmarshaller.unmarshalString(text);
 }
 
-function revertChecklist(data: Object): string {
+function revertChecklist(data: Record<string, unknown>): string {
   const context = new Jsonix.Context([mapping]);
 
   const marshaller = context.createMarshaller();
@@ -868,6 +868,6 @@ export class ChecklistConverter {
       }
     );
 
-    return revertChecklist(data.raw);
+    return revertChecklist(data.raw as Record<string, unknown>);
   }
 }
