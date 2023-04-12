@@ -2,6 +2,7 @@ name: Push Heimdall-Lite to NPM and GitHub Packages and Push InspecJs to NPM
 on:
   release:
     types: [published]
+  workflow_dispatch:
 
 jobs:
   build-deploy:
