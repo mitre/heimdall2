@@ -1,5 +1,5 @@
 import Store from '@/store/store';
-import {severities, Severity} from 'inspecjs';
+import {severities, controlStatuses, Severity} from 'inspecjs';
 import {parse} from 'search-string';
 import {
   Action,
@@ -32,30 +32,9 @@ export type SearchEntry<T> = {
 };
 
 /** List of possible status types  */
-export const statusTypes = [
-  'Not Applicable',
-  'From Profile',
-  'Profile Error',
-  'Passed',
-  'Failed',
-  'Not Reviewed',
+export const statusTypes = [...controlStatuses,
   'Waived'
 ];
-
-/**
- * Will lowercase a string or array of strings.
- *
- * @param input - The string or array of strings that need to be lowercased
- */
-export function lowercaseAll(input: string | string[]): string | string[] {
-  if (typeof input === 'string') {
-    return input.toLowerCase();
-  } else {
-    return input.map((string) => {
-      return string.toLowerCase();
-    });
-  }
-}
 
 /**
  * Will take a string and map it to a severity.
@@ -77,6 +56,11 @@ export function valueToSeverity(severity: string): Severity {
   name: 'SearchModule'
 })
 class Search extends VuexModule {
+  searchTerm = ''; // Value entered into the top search bar
+
+  /** Current value of the parsed query string */
+  currentSearchResult = parse('');
+
   controlIdSearchTerms: SearchEntry<ControlIdSearchTerm>[] = [];
   codeSearchTerms: SearchEntry<CodeSearchTerm>[] = [];
   ruleidSearchTerms: SearchEntry<RuleIdSearchTerm>[] = [];
@@ -88,147 +72,10 @@ class Search extends VuexModule {
   iaControlsSearchTerms: SearchEntry<iaControlsSearchTerm>[] = [];
   NISTIdFilter: SearchEntry<NistIdFilter>[] = [];
   descriptionSearchTerms: SearchEntry<DescriptionSearchTerm>[] = [];
-  searchTerm = ''; // Value entered into the top search bar
   statusFilter: SearchEntry<ExtendedControlStatus>[] = [];
   severityFilter: SearchEntry<Severity>[] = [];
   titleSearchTerms: SearchEntry<TitleSearchTerm>[] = [];
   keywordsSearchTerms: SearchEntry<KeywordsSearchTerm>[] = [];
-
-  /** Update the current search */
-  @Action
-  updateSearch(newValue: string) {
-    if (newValue) {
-      this.context.commit('SET_SEARCH', newValue);
-    } else {
-      this.context.commit('SET_SEARCH', '');
-    }
-  }
-
-  /** Current value of the parsed query string */
-  currentSearchResult = parse('');
-
-  /** Parse search bar to add strings to needed filter category */
-  @Mutation
-  setCurrentSearchResult(value: object) {
-    this.currentSearchResult = value;
-  }
-
-  /** Parse search bar to add strings to needed filter category */
-  @Action
-  parseSearch() {
-    this.clear();
-    const gatherFreeText = true;
-    const freeTextTransformer = (text: string) =>
-      gatherFreeText && {
-        key: 'keywords',
-        value: text
-      };
-    const searchResult = parse(this.searchTerm, [freeTextTransformer]);
-    this.setCurrentSearchResult(searchResult);
-    searchResult.conditionArray.forEach(
-      (prop: {keyword: string; value: string; negated: boolean}): void => {
-        const include: {value: string; negated: boolean} = {
-          value: prop.value,
-          negated: prop.negated
-        };
-        if (include.value === '') {
-          return;
-        }
-
-        switch (prop.keyword) {
-          case 'status':
-            this.addStatusFilter({
-              value: include.value as ExtendedControlStatus,
-              negated: include.negated
-            });
-            break;
-          case 'severity':
-            this.addSeverityFilter({
-              value: include.value as Severity,
-              negated: include.negated
-            });
-            break;
-          case 'id':
-            this.addIdFilter({value: include.value, negated: include.negated});
-            break;
-          case 'title':
-            this.addTitleFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-          case 'nist':
-            this.addNISTIdFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-          case 'desc':
-          case 'description':
-            this.addDescriptionFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-          case 'code':
-            this.addCodeFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-          case 'ruleid':
-            this.addRuleidFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-          case 'vulid':
-            this.addVulidFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-          case 'stigid':
-            this.addStigidFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-          case 'class':
-          case 'classification':
-            this.addClassificationFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-          case 'groupname':
-            this.addGroupnameFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-          case 'cci':
-            this.addCciFilter({value: include.value, negated: include.negated});
-            break;
-          case 'iaControl':
-            this.addIaControlsFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-          case 'keywords':
-            this.addKeywordsFilter({
-              value: include.value,
-              negated: include.negated
-            });
-            break;
-        }
-      }
-    );
-
-    FilteredDataModule.alterStatusBoolean();
-    FilteredDataModule.alterSeverityBoolean();
-  }
 
   /** Sets the current search */
   @Mutation
@@ -236,25 +83,14 @@ class Search extends VuexModule {
     this.searchTerm = newSearch;
   }
 
-  /** Clears all current filters */
+  /** Update the current search */
   @Action
-  clear() {
-    this.context.commit('CLEAR_SEVERITY');
-    this.context.commit('CLEAR_STATUS');
-    this.context.commit('CLEAR_ID');
-    this.context.commit('CLEAR_TITLE');
-    this.context.commit('CLEAR_NIST');
-    this.context.commit('CLEAR_DESCRIPTION');
-    this.context.commit('CLEAR_CODE');
-    this.context.commit('CLEAR_RULEID');
-    this.context.commit('CLEAR_VULID');
-    this.context.commit('CLEAR_STIGID');
-    this.context.commit('CLEAR_CLASSIFICATION');
-    this.context.commit('CLEAR_GROUPNAME');
-    this.context.commit('CLEAR_RULEID');
-    this.context.commit('CLEAR_CCI');
-    this.context.commit('CLEAR_IA_CONTROLS');
-    this.context.commit('CLEAR_KEYWORDS');
+  updateSearch(newSearch: string) {
+    if (newSearch) {
+      this.context.commit('SET_SEARCH', newSearch);
+    } else {
+      this.context.commit('SET_SEARCH', '');
+    }
   }
 
   /** Mapper for category input fields to valid filter values*/
@@ -302,7 +138,7 @@ class Search extends VuexModule {
         searchPayload.negated
       );
     }
-    this.context.commit('SET_SEARCH', this.currentSearchResult.toString());
+    this.updateSearch(this.currentSearchResult.toString());
   }
 
   /**
@@ -754,6 +590,152 @@ class Search extends VuexModule {
   CLEAR_KEYWORDS() {
     this.keywordsSearchTerms = [];
   }
+
+  /** Clears all current filters */
+  @Action
+  clear() {
+    this.context.commit('CLEAR_SEVERITY');
+    this.context.commit('CLEAR_STATUS');
+    this.context.commit('CLEAR_ID');
+    this.context.commit('CLEAR_TITLE');
+    this.context.commit('CLEAR_NIST');
+    this.context.commit('CLEAR_DESCRIPTION');
+    this.context.commit('CLEAR_CODE');
+    this.context.commit('CLEAR_RULEID');
+    this.context.commit('CLEAR_VULID');
+    this.context.commit('CLEAR_STIGID');
+    this.context.commit('CLEAR_CLASSIFICATION');
+    this.context.commit('CLEAR_GROUPNAME');
+    this.context.commit('CLEAR_RULEID');
+    this.context.commit('CLEAR_CCI');
+    this.context.commit('CLEAR_IA_CONTROLS');
+    this.context.commit('CLEAR_KEYWORDS');
+  }
+
+   /** Set the parsed search result */
+   @Mutation
+   setParsedSearchResult(parsedSearchResult: Record<string, unknown>) {
+     this.currentSearchResult = parsedSearchResult;
+   }
+ 
+   /** Parse search bar to add strings to needed filter category */
+   @Action
+   parseSearch() {
+     this.clear();
+     const gatherFreeText = true;
+     const freeTextTransformer = (text: string) =>
+       gatherFreeText && {
+         key: 'keywords',
+         value: text
+       };
+     const searchResult = parse(this.searchTerm, [freeTextTransformer]);
+     this.setParsedSearchResult(searchResult);
+     /*
+      Standard format for the condition array:
+      Example: [ { keyword: 'status', value: 'Passed', negated: false }, { keyword: 'severity', value: 'low', negated: true } ]
+    */
+   for(const prop of searchResult.getConditionArray()){
+    const include = {
+      value: prop.value,
+      negated: prop.negated
+    };
+    if (include.value === '') {
+      continue;
+    }
+
+    switch (prop.keyword) {
+      case 'status':
+        this.addStatusFilter({
+          value: include.value as ExtendedControlStatus,
+          negated: include.negated
+        });
+        break;
+      case 'severity':
+        this.addSeverityFilter({
+          value: include.value as Severity,
+          negated: include.negated
+        });
+        break;
+      case 'id':
+        this.addIdFilter({value: include.value, negated: include.negated});
+        break;
+      case 'title':
+        this.addTitleFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+      case 'nist':
+        this.addNISTIdFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+      case 'desc':
+      case 'description':
+        this.addDescriptionFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+      case 'code':
+        this.addCodeFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+      case 'ruleid':
+        this.addRuleidFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+      case 'vulid':
+        this.addVulidFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+      case 'stigid':
+        this.addStigidFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+      case 'class':
+      case 'classification':
+        this.addClassificationFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+      case 'groupname':
+        this.addGroupnameFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+      case 'cci':
+        this.addCciFilter({value: include.value, negated: include.negated});
+        break;
+      case 'iaControl':
+        this.addIaControlsFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+      case 'keywords':
+        this.addKeywordsFilter({
+          value: include.value,
+          negated: include.negated
+        });
+        break;
+    }
+   }
+ 
+     FilteredDataModule.alterStatusBoolean();
+     FilteredDataModule.alterSeverityBoolean();
+   }
 }
 
 export const SearchModule = getModule(Search);

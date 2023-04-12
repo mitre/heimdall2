@@ -23,13 +23,16 @@ import {CanonizationConfig, NistControl, NistRevision} from './nist';
  * 8. from profile -> "From Profile"
  * These cases are in theory comprehensive, but if somehow no apply, it is still Profile Error
  */
-export type ControlStatus =
-  | 'Not Applicable'
-  | 'From Profile'
-  | 'Profile Error'
-  | 'Passed'
-  | 'Failed'
-  | 'Not Reviewed';
+export const controlStatuses = [
+ 'Not Applicable',
+  'From Profile',
+  'Profile Error',
+  'Passed',
+  'Failed',
+  'Not Reviewed',
+] as const;
+export type ControlStatus = (typeof controlStatuses)[number];
+ 
 
 /** The severities a control can have. These map numeric impact values to No/Low/Medium/High/Crtiical impact
  * [0, 0.01) => No impact
