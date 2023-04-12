@@ -113,7 +113,8 @@ function formatCweData(input: Record<string, unknown>): string {
         cwe += categories
           .map((value: string) => {
             if (_.has(cweinfo, `@_.${value}`)) {
-              return `${value}: ${_.get(cweinfo, `@_.${value}`)}\n`;
+              const val = _.get(cweinfo, `@_.${value}`);
+              return `${value}: ${val}\n`;
             } else {
               return '';
             }
@@ -189,7 +190,8 @@ function formatCodeDesc(input: Record<string, unknown>[]): string {
     flawDesc += categories
       .map(([title, name]) => {
         if (_.has(input, `@_.${name}`)) {
-          return `${title}: ${_.get(input, `@_.${name}`)}\n`;
+          const nameVal = _.get(input, `@_.${name}`);
+          return `${title}: ${nameVal}\n`;
         } else {
           return '';
         }
@@ -218,7 +220,8 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
     flawDesc += _.compact(
       categories.map((value: string) => {
         if (_.has(input, `@_.${value}`)) {
-          return `${value}: ${_.get(input, `@_.${value}`)}`;
+          const val = _.get(input, `@_.${value}`);
+          return `${value}: ${val}`;
         } else {
           return '';
         }
