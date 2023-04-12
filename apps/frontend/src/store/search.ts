@@ -59,7 +59,7 @@ class Search extends VuexModule {
   searchTerm = ''; // Value entered into the top search bar
 
   /** Current value of the parsed query string */
-  currentSearchResult = parse('');
+  parsedSearchResult = parse('');
 
   controlIdSearchTerms: SearchEntry<ControlIdSearchTerm>[] = [];
   codeSearchTerms: SearchEntry<CodeSearchTerm>[] = [];
@@ -121,24 +121,24 @@ class Search extends VuexModule {
     value: string;
     negated: boolean;
   }) {
-    if (this.currentSearchResult == undefined) {
+    if (this.parsedSearchResult == undefined) {
       return;
     }
     // If coming from a category filter, else a quick filter
     if (!this.categoryToFilterMapping.get(searchPayload.field)) {
-      this.currentSearchResult.addEntry(
+      this.parsedSearchResult.addEntry(
         searchPayload.field,
         searchPayload.value,
         searchPayload.negated
       );
     } else {
-      this.currentSearchResult.addEntry(
+      this.parsedSearchResult.addEntry(
         this.categoryToFilterMapping.get(searchPayload.field),
         searchPayload.value,
         searchPayload.negated
       );
     }
-    this.updateSearch(this.currentSearchResult.toString());
+    this.updateSearch(this.parsedSearchResult.toString());
   }
 
   /**
@@ -151,11 +151,11 @@ class Search extends VuexModule {
     value: string;
     negated: boolean;
   }) {
-    if (this.currentSearchResult == undefined) {
+    if (this.parsedSearchResult == undefined) {
       return;
     }
 
-    this.currentSearchResult.removeEntry(
+    this.parsedSearchResult.removeEntry(
       searchPayload.field,
       searchPayload.value,
       searchPayload.negated
@@ -164,7 +164,7 @@ class Search extends VuexModule {
     ////// TODO: Remove all occurances of the same filter string //////
     // Regex is used to make sure correct filter is removed
     // const regex = new RegExp(name, 'i');
-    // const temp = SearchModule.currentSearchResult.clone();
+    // const temp = this.parsedSearchResult.clone();
 
     // for (const item of temp.conditionArray) {
     //   if (
@@ -176,7 +176,7 @@ class Search extends VuexModule {
     // }
     // SearchModule.SET_SEARCH(temp.toString());
 
-    this.context.commit('SET_SEARCH', this.currentSearchResult.toString());
+    this.context.commit('SET_SEARCH', this.parsedSearchResult.toString());
   }
 
   // Status filtering
@@ -615,7 +615,7 @@ class Search extends VuexModule {
    /** Set the parsed search result */
    @Mutation
    setParsedSearchResult(parsedSearchResult: Record<string, unknown>) {
-     this.currentSearchResult = parsedSearchResult;
+     this.parsedSearchResult = parsedSearchResult;
    }
  
    /** Parse search bar to add strings to needed filter category */
@@ -628,13 +628,13 @@ class Search extends VuexModule {
          key: 'keywords',
          value: text
        };
-     const searchResult = parse(this.searchTerm, [freeTextTransformer]);
-     this.setParsedSearchResult(searchResult);
+     const parsedSearchResult = parse(this.searchTerm, [freeTextTransformer]);
+     this.setParsedSearchResult(parsedSearchResult);
      /*
       Standard format for the condition array:
       Example: [ { keyword: 'status', value: 'Passed', negated: false }, { keyword: 'severity', value: 'low', negated: true } ]
     */
-   for(const prop of searchResult.getConditionArray()){
+   for(const prop of parsedSearchResult.getConditionArray()){
     const include = {
       value: prop.value,
       negated: prop.negated
