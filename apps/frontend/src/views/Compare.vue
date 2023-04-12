@@ -333,14 +333,14 @@ export default class Compare extends Vue {
 
   get filter(): Filter {
     return {
-      status: SearchModule.statusFilter,
-      severity: SearchModule.severityFilter,
+      status: SearchModule.inFileSearchTerms.statusFilter,
+      severity: SearchModule.inFileSearchTerms.severityFilter,
       fromFile: this.file_filter,
-      ids: SearchModule.controlIdSearchTerms,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      codeSearchTerms: SearchModule.codeSearchTerms,
+      ids: SearchModule.inFileSearchTerms.controlId,
+      titleSearchTerms: SearchModule.inFileSearchTerms.title,
+      descriptionSearchTerms: SearchModule.inFileSearchTerms.description,
+      nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
+      codeSearchTerms: SearchModule.inFileSearchTerms.code,
       omit_overlayed_controls: true
     };
   }
