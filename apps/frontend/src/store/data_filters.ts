@@ -43,7 +43,6 @@ import {
   NistIdFilter,
   RuleIdSearchTerm,
   SearchEntry,
-  SearchModule,
   StigIdSearchTerm,
   TitleSearchTerm,
   VulIdSearchTerm

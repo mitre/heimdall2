@@ -296,7 +296,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   get severityFilter(): SearchEntry<Severity>[] {
-    return SearchModule.severityFilter;
+    return SearchModule.inFileSearchTerms.severityFilter;
   }
 
   set severityFilter(severity: SearchEntry<Severity>[]) {
@@ -304,7 +304,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   get statusFilter(): SearchEntry<ExtendedControlStatus>[] {
-    return SearchModule.statusFilter;
+    return SearchModule.inFileSearchTerms.statusFilter;
   }
 
   set statusFilter(status: SearchEntry<ExtendedControlStatus>[]) {
@@ -358,18 +358,18 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get all_filter(): Filter {
     return {
-      status: SearchModule.statusFilter,
-      severity: SearchModule.severityFilter,
+      status: SearchModule.inFileSearchTerms.statusFilter,
+      severity: SearchModule.inFileSearchTerms.severityFilter,
       fromFile: this.file_filter,
-      ids: SearchModule.controlIdSearchTerms,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      codeSearchTerms: SearchModule.codeSearchTerms,
+      ids: SearchModule.inFileSearchTerms.controlId,
+      titleSearchTerms: SearchModule.inFileSearchTerms.title,
+      descriptionSearchTerms: SearchModule.inFileSearchTerms.description,
+      nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
+      codeSearchTerms: SearchModule.inFileSearchTerms.code,
       treeFilters: this.treeFilters,
       omit_overlayed_controls: true,
       control_id: this.controlSelection || undefined,
-      keywordsSearchTerms: SearchModule.keywordsSearchTerms
+      keywordsSearchTerms: SearchModule.inFileSearchTerms.keywords
     };
   }
 
@@ -378,13 +378,13 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   get treemap_full_filter(): Filter {
     return {
-      status: SearchModule.statusFilter || [],
-      severity: SearchModule.severityFilter,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      codeSearchTerms: SearchModule.codeSearchTerms,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      ids: SearchModule.controlIdSearchTerms,
+      status: SearchModule.inFileSearchTerms.statusFilter || [],
+      severity: SearchModule.inFileSearchTerms.severityFilter,
+      titleSearchTerms: SearchModule.inFileSearchTerms.title,
+      descriptionSearchTerms: SearchModule.inFileSearchTerms.description,
+      codeSearchTerms: SearchModule.inFileSearchTerms.code,
+      nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
+      ids: SearchModule.inFileSearchTerms.controlId,
       fromFile: this.file_filter,
       omit_overlayed_controls: true
     };
@@ -411,10 +411,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      SearchModule.severityFilter.length !== 0 ||
-      SearchModule.statusFilter.length !== 0 ||
-      SearchModule.controlIdSearchTerms.length !== 0 ||
-      SearchModule.codeSearchTerms.length !== 0 ||
+      SearchModule.inFileSearchTerms.severityFilter.length !== 0 ||
+      SearchModule.inFileSearchTerms.statusFilter.length !== 0 ||
+      SearchModule.inFileSearchTerms.controlId.length !== 0 ||
+      SearchModule.inFileSearchTerms.code.length !== 0 ||
       this.searchTerm ||
       this.treeFilters.length
     ) {

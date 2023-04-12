@@ -730,24 +730,24 @@ export default class Checklist extends RouteMixin {
    */
   get all_filter(): Filter {
     return {
-      status: SearchModule.statusFilter,
-      severity: SearchModule.severityFilter,
+      status: SearchModule.inFileSearchTerms.statusFilter,
+      severity: SearchModule.inFileSearchTerms.severityFilter,
       fromFile: this.file_filter,
-      ids: SearchModule.controlIdSearchTerms,
-      ruleidSearchTerms: SearchModule.ruleidSearchTerms,
-      vulidSearchTerms: SearchModule.vulidSearchTerms,
-      stigidSearchTerms: SearchModule.stigidSearchTerms,
-      classificationSearchTerms: SearchModule.classificationSearchTerms,
-      groupNameSearchTerms: SearchModule.groupNameSearchTerms,
-      cciSearchTerms: SearchModule.cciSearchTerms,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      codeSearchTerms: SearchModule.codeSearchTerms,
+      ids: SearchModule.inFileSearchTerms.controlId,
+      ruleidSearchTerms: SearchModule.inFileSearchTerms.ruleid,
+      vulidSearchTerms: SearchModule.inFileSearchTerms.vulid,
+      stigidSearchTerms: SearchModule.inFileSearchTerms.stigid,
+      classificationSearchTerms: SearchModule.inFileSearchTerms.classification,
+      groupNameSearchTerms: SearchModule.inFileSearchTerms.groupName,
+      cciSearchTerms: SearchModule.inFileSearchTerms.cci,
+      titleSearchTerms: SearchModule.inFileSearchTerms.title,
+      descriptionSearchTerms: SearchModule.inFileSearchTerms.description,
+      nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
+      codeSearchTerms: SearchModule.inFileSearchTerms.code,
       omit_overlayed_controls: true,
       control_id: this.controlSelection || undefined,
-      iaControlsSearchTerms: SearchModule.iaControlsSearchTerms,
-      keywordsSearchTerms: SearchModule.keywordsSearchTerms
+      iaControlsSearchTerms: SearchModule.inFileSearchTerms.iaControls,
+      keywordsSearchTerms: SearchModule.inFileSearchTerms.keywords
     };
   }
 
@@ -775,10 +775,10 @@ export default class Checklist extends RouteMixin {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      SearchModule.severityFilter.length !== 0 ||
-      SearchModule.statusFilter.length !== 0 ||
-      SearchModule.controlIdSearchTerms.length !== 0 ||
-      SearchModule.codeSearchTerms.length !== 0 ||
+      SearchModule.inFileSearchTerms.severityFilter.length !== 0 ||
+      SearchModule.inFileSearchTerms.statusFilter.length !== 0 ||
+      SearchModule.inFileSearchTerms.controlId.length !== 0 ||
+      SearchModule.inFileSearchTerms.code.length !== 0 ||
       this.searchTerm
     ) {
       result = true;

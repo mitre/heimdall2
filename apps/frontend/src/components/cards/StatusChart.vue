@@ -83,7 +83,7 @@ export default class StatusChart extends Vue {
 
   onSelect(status: Category<ControlStatus>) {
     if (
-      SearchModule.statusFilter?.find((obj) => {
+      SearchModule.inFileSearchTerms.statusFilter?.find((obj) => {
         return obj.value === status.value.toLowerCase();
       }) !== undefined
     ) {

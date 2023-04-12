@@ -1,5 +1,5 @@
 import Store from '@/store/store';
-import {severities, controlStatuses, Severity} from 'inspecjs';
+import {controlStatuses, severities, Severity} from 'inspecjs';
 import {parse} from 'search-string';
 import {
   Action,
@@ -9,7 +9,7 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import {ExtendedControlStatus} from './data_filters';
-import {SearchFilterSyncModule} from './search_filter_sync'
+import {SearchFilterSyncModule} from './search_filter_sync';
 
 // Alias types for all the search capabilities (minus status and severity as they already have a type)
 export type TitleSearchTerm = string;
@@ -33,9 +33,7 @@ export type SearchEntry<T> = {
 };
 
 /** List of possible status types  */
-export const statusTypes = [...controlStatuses,
-  'Waived'
-];
+export const statusTypes = [...controlStatuses, 'Waived'];
 
 /**
  * Will take a string and map it to a severity.
@@ -59,29 +57,63 @@ export function valueToSeverity(severity: string): Severity {
 class Search extends VuexModule {
   searchTerm = ''; // Value entered into the top search bar
 
-  /** Current value of the parsed query string 
+  /** Current value of the parsed query string
    * Standard format for the condition array:
    * Example: [ { keyword: 'status', value: 'Passed', negated: false },
-   * { keyword: 'status', value: 'Failed', negated: true }, 
+   * { keyword: 'status', value: 'Failed', negated: true },
    * { keyword: 'severity', value: 'low', negated: true } ]
-  */
+   */
   parsedSearchResult = parse('');
 
-  controlIdSearchTerms: SearchEntry<ControlIdSearchTerm>[] = [];
-  codeSearchTerms: SearchEntry<CodeSearchTerm>[] = [];
-  ruleidSearchTerms: SearchEntry<RuleIdSearchTerm>[] = [];
-  vulidSearchTerms: SearchEntry<VulIdSearchTerm>[] = [];
-  stigidSearchTerms: SearchEntry<StigIdSearchTerm>[] = [];
-  classificationSearchTerms: SearchEntry<ClassificationSearchTerm>[] = [];
-  groupNameSearchTerms: SearchEntry<GroupNameSearchTerm>[] = [];
-  cciSearchTerms: SearchEntry<CciSearchTerm>[] = [];
-  iaControlsSearchTerms: SearchEntry<iaControlsSearchTerm>[] = [];
-  NISTIdFilter: SearchEntry<NistIdFilter>[] = [];
-  descriptionSearchTerms: SearchEntry<DescriptionSearchTerm>[] = [];
-  statusFilter: SearchEntry<ExtendedControlStatus>[] = [];
-  severityFilter: SearchEntry<Severity>[] = [];
-  titleSearchTerms: SearchEntry<TitleSearchTerm>[] = [];
-  keywordsSearchTerms: SearchEntry<KeywordsSearchTerm>[] = [];
+  inFileSearchTerms: {
+    controlId: SearchEntry<ControlIdSearchTerm>[];
+    code: SearchEntry<CodeSearchTerm>[];
+    ruleid: SearchEntry<RuleIdSearchTerm>[];
+    vulid: SearchEntry<VulIdSearchTerm>[];
+    stigid: SearchEntry<StigIdSearchTerm>[];
+    classification: SearchEntry<ClassificationSearchTerm>[];
+    groupName: SearchEntry<GroupNameSearchTerm>[];
+    cci: SearchEntry<CciSearchTerm>[];
+    iaControls: SearchEntry<iaControlsSearchTerm>[];
+    NISTIdFilter: SearchEntry<NistIdFilter>[];
+    description: SearchEntry<DescriptionSearchTerm>[];
+    statusFilter: SearchEntry<ExtendedControlStatus>[];
+    severityFilter: SearchEntry<Severity>[];
+    title: SearchEntry<TitleSearchTerm>[];
+    keywords: SearchEntry<KeywordsSearchTerm>[];
+  } = {
+    controlId: [],
+    code: [],
+    ruleid: [],
+    vulid: [],
+    stigid: [],
+    classification: [],
+    groupName: [],
+    cci: [],
+    iaControls: [],
+    NISTIdFilter: [],
+    description: [],
+    statusFilter: [],
+    severityFilter: [],
+    title: [],
+    keywords: []
+  };
+
+  // controlIdSearchTerms: SearchEntry<ControlIdSearchTerm>[] = [];
+  // codeSearchTerms: SearchEntry<CodeSearchTerm>[] = [];
+  // ruleidSearchTerms: SearchEntry<RuleIdSearchTerm>[] = [];
+  // vulidSearchTerms: SearchEntry<VulIdSearchTerm>[] = [];
+  // stigidSearchTerms: SearchEntry<StigIdSearchTerm>[] = [];
+  // classificationSearchTerms: SearchEntry<ClassificationSearchTerm>[] = [];
+  // groupNameSearchTerms: SearchEntry<GroupNameSearchTerm>[] = [];
+  // cciSearchTerms: SearchEntry<CciSearchTerm>[] = [];
+  // iaControlsSearchTerms: SearchEntry<iaControlsSearchTerm>[] = [];
+  // NISTIdFilter: SearchEntry<NistIdFilter>[] = [];
+  // descriptionSearchTerms: SearchEntry<DescriptionSearchTerm>[] = [];
+  // statusFilter: SearchEntry<ExtendedControlStatus>[] = [];
+  // severityFilter: SearchEntry<Severity>[] = [];
+  // titleSearchTerms: SearchEntry<TitleSearchTerm>[] = [];
+  // keywordsSearchTerms: SearchEntry<KeywordsSearchTerm>[] = [];
 
   /** Sets the current search */
   @Mutation
@@ -213,25 +245,27 @@ class Search extends VuexModule {
       | SearchEntry<ExtendedControlStatus>
       | SearchEntry<ExtendedControlStatus>[]
   ) {
-    this.statusFilter = this.statusFilter.concat(status);
+    this.inFileSearchTerms.statusFilter =
+      this.inFileSearchTerms.statusFilter.concat(status);
   }
 
   /** Removes a status filter */
   @Mutation
   REMOVE_STATUS(status: SearchEntry<ExtendedControlStatus>) {
-    this.statusFilter = this.statusFilter.filter(
-      (filter) => filter.value.toLowerCase() !== status.value.toLowerCase()
-    );
+    this.inFileSearchTerms.statusFilter =
+      this.inFileSearchTerms.statusFilter.filter(
+        (filter) => filter.value.toLowerCase() !== status.value.toLowerCase()
+      );
   }
 
   @Mutation
   CLEAR_STATUS() {
-    this.statusFilter = [];
+    this.inFileSearchTerms.statusFilter = [];
   }
 
   @Mutation
   SET_STATUS(status: SearchEntry<ExtendedControlStatus>[]) {
-    this.statusFilter = status;
+    this.inFileSearchTerms.statusFilter = status;
   }
 
   // Severity filtering
@@ -259,26 +293,28 @@ class Search extends VuexModule {
 
   @Mutation
   ADD_SEVERITY(severity: SearchEntry<Severity> | SearchEntry<Severity>[]) {
-    this.severityFilter = this.severityFilter.concat(severity);
+    this.inFileSearchTerms.severityFilter =
+      this.inFileSearchTerms.severityFilter.concat(severity);
   }
 
   @Mutation
   REMOVE_SEVERITY(severity: SearchEntry<Severity>) {
-    this.severityFilter = this.severityFilter.filter(
-      (filter) => filter.value.toLowerCase() !== severity.value.toLowerCase()
-    );
+    this.inFileSearchTerms.severityFilter =
+      this.inFileSearchTerms.severityFilter.filter(
+        (filter) => filter.value.toLowerCase() !== severity.value.toLowerCase()
+      );
   }
 
   /** Sets the severity filter */
   @Mutation
   SET_SEVERITY(severity: SearchEntry<Severity>[]) {
-    this.severityFilter = severity;
+    this.inFileSearchTerms.severityFilter = severity;
   }
 
   /** Clears all severity filters */
   @Mutation
   CLEAR_SEVERITY() {
-    this.severityFilter = [];
+    this.inFileSearchTerms.severityFilter = [];
   }
 
   // Control ID Filtering
@@ -295,19 +331,20 @@ class Search extends VuexModule {
   ADD_ID(
     id: SearchEntry<ControlIdSearchTerm> | SearchEntry<ControlIdSearchTerm>[]
   ) {
-    this.controlIdSearchTerms = this.controlIdSearchTerms.concat(id);
+    this.inFileSearchTerms.controlId =
+      this.inFileSearchTerms.controlId.concat(id);
   }
 
   /** Sets the control IDs filter */
   @Mutation
   SET_ID(ids: SearchEntry<ControlIdSearchTerm>[]) {
-    this.controlIdSearchTerms = ids;
+    this.inFileSearchTerms.controlId = ids;
   }
 
   /** Clears all control ID filters */
   @Mutation
   CLEAR_ID() {
-    this.controlIdSearchTerms = [];
+    this.inFileSearchTerms.controlId = [];
   }
 
   // Title filtering
@@ -324,19 +361,19 @@ class Search extends VuexModule {
   ADD_TITLE(
     title: SearchEntry<TitleSearchTerm> | SearchEntry<TitleSearchTerm>[]
   ) {
-    this.titleSearchTerms = this.titleSearchTerms.concat(title);
+    this.inFileSearchTerms.title = this.inFileSearchTerms.title.concat(title);
   }
 
   /** Sets the title filters */
   @Mutation
   SET_TITLE(titles: SearchEntry<TitleSearchTerm>[]) {
-    this.titleSearchTerms = titles;
+    this.inFileSearchTerms.title = titles;
   }
 
   /** Clears all title filters */
   @Mutation
   CLEAR_TITLE() {
-    this.titleSearchTerms = [];
+    this.inFileSearchTerms.title = [];
   }
 
   // NIST ID Filtering
@@ -351,13 +388,14 @@ class Search extends VuexModule {
 
   @Mutation
   ADD_NIST(NISTId: SearchEntry<NistIdFilter> | SearchEntry<NistIdFilter>[]) {
-    this.NISTIdFilter = this.NISTIdFilter.concat(NISTId);
+    this.inFileSearchTerms.NISTIdFilter =
+      this.inFileSearchTerms.NISTIdFilter.concat(NISTId);
   }
 
   /** Clears all NIST ID filters */
   @Mutation
   CLEAR_NIST() {
-    this.NISTIdFilter = [];
+    this.inFileSearchTerms.NISTIdFilter = [];
   }
 
   // Description Filtering
@@ -379,14 +417,14 @@ class Search extends VuexModule {
       | SearchEntry<DescriptionSearchTerm>
       | SearchEntry<DescriptionSearchTerm>[]
   ) {
-    this.descriptionSearchTerms =
-      this.descriptionSearchTerms.concat(description);
+    this.inFileSearchTerms.description =
+      this.inFileSearchTerms.description.concat(description);
   }
 
   /** Clears all description from the filters */
   @Mutation
   CLEAR_DESCRIPTION() {
-    this.descriptionSearchTerms = [];
+    this.inFileSearchTerms.description = [];
   }
 
   // Code filtering
@@ -401,13 +439,13 @@ class Search extends VuexModule {
 
   @Mutation
   ADD_CODE(code: SearchEntry<CodeSearchTerm> | SearchEntry<CodeSearchTerm>[]) {
-    this.codeSearchTerms = this.codeSearchTerms.concat(code);
+    this.inFileSearchTerms.code = this.inFileSearchTerms.code.concat(code);
   }
 
   /** Clears all code filters */
   @Mutation
   CLEAR_CODE() {
-    this.codeSearchTerms = [];
+    this.inFileSearchTerms.code = [];
   }
 
   // Ruleid filtering
@@ -424,13 +462,14 @@ class Search extends VuexModule {
   ADD_RULEID(
     ruleid: SearchEntry<RuleIdSearchTerm> | SearchEntry<RuleIdSearchTerm>[]
   ) {
-    this.ruleidSearchTerms = this.ruleidSearchTerms.concat(ruleid);
+    this.inFileSearchTerms.ruleid =
+      this.inFileSearchTerms.ruleid.concat(ruleid);
   }
 
   /** Clears all Ruleid filters */
   @Mutation
   CLEAR_RULEID() {
-    this.ruleidSearchTerms = [];
+    this.inFileSearchTerms.ruleid = [];
   }
 
   // Vulid filtering
@@ -447,13 +486,13 @@ class Search extends VuexModule {
   ADD_VULID(
     vulid: SearchEntry<VulIdSearchTerm> | SearchEntry<VulIdSearchTerm>[]
   ) {
-    this.vulidSearchTerms = this.vulidSearchTerms.concat(vulid);
+    this.inFileSearchTerms.vulid = this.inFileSearchTerms.vulid.concat(vulid);
   }
 
   /** Clears all Vulid filters */
   @Mutation
   CLEAR_VULID() {
-    this.vulidSearchTerms = [];
+    this.inFileSearchTerms.vulid = [];
   }
 
   // Stigid filtering
@@ -470,13 +509,14 @@ class Search extends VuexModule {
   ADD_STIGID(
     stigid: SearchEntry<StigIdSearchTerm> | SearchEntry<StigIdSearchTerm>[]
   ) {
-    this.stigidSearchTerms = this.stigidSearchTerms.concat(stigid);
+    this.inFileSearchTerms.stigid =
+      this.inFileSearchTerms.stigid.concat(stigid);
   }
 
   /** Clears all Stigid filters */
   @Mutation
   CLEAR_STIGID() {
-    this.stigidSearchTerms = [];
+    this.inFileSearchTerms.stigid = [];
   }
 
   // Classification filtering
@@ -497,14 +537,14 @@ class Search extends VuexModule {
       | SearchEntry<ClassificationSearchTerm>
       | SearchEntry<ClassificationSearchTerm>[]
   ) {
-    this.classificationSearchTerms =
-      this.classificationSearchTerms.concat(classification);
+    this.inFileSearchTerms.classification =
+      this.inFileSearchTerms.classification.concat(classification);
   }
 
   /** Clears all Classification filters */
   @Mutation
   CLEAR_CLASSIFICATION() {
-    this.classificationSearchTerms = [];
+    this.inFileSearchTerms.classification = [];
   }
 
   // Groupname filtering
@@ -525,13 +565,14 @@ class Search extends VuexModule {
       | SearchEntry<GroupNameSearchTerm>
       | SearchEntry<GroupNameSearchTerm>[]
   ) {
-    this.groupNameSearchTerms = this.groupNameSearchTerms.concat(groupname);
+    this.inFileSearchTerms.groupName =
+      this.inFileSearchTerms.groupName.concat(groupname);
   }
 
   /** Clears all Groupname filters */
   @Mutation
   CLEAR_GROUPNAME() {
-    this.groupNameSearchTerms = [];
+    this.inFileSearchTerms.groupName = [];
   }
 
   // CCI filtering
@@ -544,13 +585,13 @@ class Search extends VuexModule {
 
   @Mutation
   ADD_CCI(cci: SearchEntry<CciSearchTerm> | SearchEntry<CciSearchTerm>[]) {
-    this.cciSearchTerms = this.cciSearchTerms.concat(cci);
+    this.inFileSearchTerms.cci = this.inFileSearchTerms.cci.concat(cci);
   }
 
   /** Clears all CCI filters */
   @Mutation
   CLEAR_CCI() {
-    this.cciSearchTerms = [];
+    this.inFileSearchTerms.cci = [];
   }
 
   // IA Controls filtering
@@ -571,13 +612,14 @@ class Search extends VuexModule {
       | SearchEntry<iaControlsSearchTerm>
       | SearchEntry<iaControlsSearchTerm>[]
   ) {
-    this.iaControlsSearchTerms = this.iaControlsSearchTerms.concat(iaControl);
+    this.inFileSearchTerms.iaControls =
+      this.inFileSearchTerms.iaControls.concat(iaControl);
   }
 
   /** Clears all CCI filters */
   @Mutation
   CLEAR_IA_CONTROLS() {
-    this.iaControlsSearchTerms = [];
+    this.inFileSearchTerms.iaControls = [];
   }
 
   /** Adds Keywords to filter */
@@ -588,13 +630,14 @@ class Search extends VuexModule {
 
   @Mutation
   ADD_KEYWORD(keyword: SearchEntry<KeywordsSearchTerm>) {
-    this.keywordsSearchTerms = this.keywordsSearchTerms.concat(keyword);
+    this.inFileSearchTerms.keywords =
+      this.inFileSearchTerms.keywords.concat(keyword);
   }
 
   /** Clears all keyword filters */
   @Mutation
   CLEAR_KEYWORDS() {
-    this.keywordsSearchTerms = [];
+    this.inFileSearchTerms.keywords = [];
   }
 
   /** Clears all current filters */
@@ -618,125 +661,124 @@ class Search extends VuexModule {
     this.context.commit('CLEAR_KEYWORDS');
   }
 
-   /** Set the parsed search result */
-   @Mutation
-   setParsedSearchResult(parsedSearchResult: Record<string, unknown>) {
-     this.parsedSearchResult = parsedSearchResult;
-   }
- 
-   /** Parse search bar to add strings to needed filter category */
-   @Action
-   parseSearch() {
-     this.clear();
-     const freeTextTransformer = (text: string) =>
-       ({
-         key: 'keywords',
-         value: text
-       });
-     const parsedSearchResult = parse(this.searchTerm, [freeTextTransformer]);
-     this.setParsedSearchResult(parsedSearchResult);
-   for(const prop of parsedSearchResult.getConditionArray()){
-    const include = {
-      value: prop.value,
-      negated: prop.negated
-    };
-    if (include.value === '') {
-      continue;
+  /** Set the parsed search result */
+  @Mutation
+  setParsedSearchResult(parsedSearchResult: Record<string, unknown>) {
+    this.parsedSearchResult = parsedSearchResult;
+  }
+
+  /** Parse search bar to add strings to needed filter category */
+  @Action
+  parseSearch() {
+    this.clear();
+    const freeTextTransformer = (text: string) => ({
+      key: 'keywords',
+      value: text
+    });
+    const parsedSearchResult = parse(this.searchTerm, [freeTextTransformer]);
+    this.setParsedSearchResult(parsedSearchResult);
+    for (const prop of parsedSearchResult.getConditionArray()) {
+      const include = {
+        value: prop.value,
+        negated: prop.negated
+      };
+      if (include.value === '') {
+        continue;
+      }
+
+      switch (prop.keyword) {
+        case 'status':
+          this.addStatusFilter({
+            value: include.value as ExtendedControlStatus,
+            negated: include.negated
+          });
+          break;
+        case 'severity':
+          this.addSeverityFilter({
+            value: include.value as Severity,
+            negated: include.negated
+          });
+          break;
+        case 'id':
+          this.addIdFilter({value: include.value, negated: include.negated});
+          break;
+        case 'title':
+          this.addTitleFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'nist':
+          this.addNISTIdFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'desc':
+        case 'description':
+          this.addDescriptionFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'code':
+          this.addCodeFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'ruleid':
+          this.addRuleidFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'vulid':
+          this.addVulidFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'stigid':
+          this.addStigidFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'class':
+        case 'classification':
+          this.addClassificationFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'groupname':
+          this.addGroupnameFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'cci':
+          this.addCciFilter({value: include.value, negated: include.negated});
+          break;
+        case 'iaControl':
+          this.addIaControlsFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'keywords':
+          this.addKeywordsFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+      }
     }
 
-    switch (prop.keyword) {
-      case 'status':
-        this.addStatusFilter({
-          value: include.value as ExtendedControlStatus,
-          negated: include.negated
-        });
-        break;
-      case 'severity':
-        this.addSeverityFilter({
-          value: include.value as Severity,
-          negated: include.negated
-        });
-        break;
-      case 'id':
-        this.addIdFilter({value: include.value, negated: include.negated});
-        break;
-      case 'title':
-        this.addTitleFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-      case 'nist':
-        this.addNISTIdFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-      case 'desc':
-      case 'description':
-        this.addDescriptionFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-      case 'code':
-        this.addCodeFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-      case 'ruleid':
-        this.addRuleidFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-      case 'vulid':
-        this.addVulidFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-      case 'stigid':
-        this.addStigidFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-      case 'class':
-      case 'classification':
-        this.addClassificationFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-      case 'groupname':
-        this.addGroupnameFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-      case 'cci':
-        this.addCciFilter({value: include.value, negated: include.negated});
-        break;
-      case 'iaControl':
-        this.addIaControlsFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-      case 'keywords':
-        this.addKeywordsFilter({
-          value: include.value,
-          negated: include.negated
-        });
-        break;
-    }
-   }
- 
-   SearchFilterSyncModule.alterStatusBoolean();
-   SearchFilterSyncModule.alterSeverityBoolean();
-   }
+    SearchFilterSyncModule.alterStatusBoolean();
+    SearchFilterSyncModule.alterSeverityBoolean();
+  }
 }
 
 export const SearchModule = getModule(Search);
