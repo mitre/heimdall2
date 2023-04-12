@@ -8,6 +8,7 @@ export {
   hdfWrapControl,
   SegmentStatus,
   severities,
+  controlStatuses,
   Severity
 } from './compat_wrappers';
 // Export Conversion functions
