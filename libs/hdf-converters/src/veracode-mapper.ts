@@ -514,7 +514,6 @@ export class VeracodeMapper extends BaseConverter {
   constructor(xml: string, withRaw = false) {
     // the default textNodeName that we're using ('text') clobbers any attributes that also are named 'text' of which there are many in this format
     // the attribute group names are necessary since there are many times that attributes and inner tags share the same name within a tag (ex. 'vulnerabilities' the attribute is a count whereas as an inner tag it is an array detailing the vulnerabilities) where it seems that the attribute clobbers the inner tag
-    // TODO: turn on htmlentities after everything else is fixed
     const parsedXML = parseXml(xml, {
       attributesGroupName: '@_',
       textNodeName: 'text_'
