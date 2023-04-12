@@ -1,99 +1,43 @@
 <template>
   <div>
-    <ChecklistTargetDataModal
-      :visible="showTargetModal"
-      style="display: none"
-      @close-modal="showTargetModal = false"
-    />
-    <ChecklistTechnologyAreaModal
-      :visible="showTechnologyModal"
-      style="display: none"
-      @close-modal="showTechnologyModal = false"
-    />
+    <ChecklistTargetDataModal :visible="showTargetModal" style="display: none" @close-modal="showTargetModal = false" />
+    <ChecklistTechnologyAreaModal :visible="showTechnologyModal" style="display: none"
+      @close-modal="showTechnologyModal = false" />
 
-    <v-navigation-drawer
-      :clipped="$vuetify.breakpoint.lgAndUp"
-      app
-      :style="{'z-index': 11}"
-      disable-resize-watcher
-      disable-route-watcher
-      fixed
-      permanent
-      width="45px"
-      @input="$emit('input', $event)"
-      @blur="value = false"
-    >
+    <v-navigation-drawer :clipped="$vuetify.breakpoint.lgAndUp" app :style="{ 'z-index': 11 }" disable-resize-watcher
+      disable-route-watcher fixed permanent width="45px" @input="$emit('input', $event)" @blur="value = false">
       <v-container v-if="!isSideUtilityDrawerShown" fill-height fluid>
         <v-row align="center" justify="center">
-          <v-col
-            ><v-icon
-              class="text-center"
-              right
-              @click="isSideUtilityDrawerShown = !isSideUtilityDrawerShown"
-              >mdi-arrow-right</v-icon
-            ></v-col
-          >
+          <v-col><v-icon class="text-center" right
+              @click="isSideUtilityDrawerShown = !isSideUtilityDrawerShown">mdi-arrow-right</v-icon></v-col>
         </v-row>
       </v-container>
     </v-navigation-drawer>
-    <v-navigation-drawer
-      v-model="isSideUtilityDrawerShown"
-      :clipped="$vuetify.breakpoint.lgAndUp"
-      app
-      :style="{'z-index': 11, 'margin-top': classification ? '5em' : '3em'}"
-      disable-resize-watcher
-      disable-route-watcher
-      fixed
-      temporary
-      width="600px"
-      @input="$emit('input', $event)"
-      @blur="value = false"
-    >
+    <v-navigation-drawer v-model="isSideUtilityDrawerShown" :clipped="$vuetify.breakpoint.lgAndUp" app
+      :style="{ 'z-index': 11, 'margin-top': classification ? '5em' : '3em' }" disable-resize-watcher disable-route-watcher
+      fixed temporary width="600px" @input="$emit('input', $event)" @blur="value = false">
       <div v-if="isSideUtilityDrawerShown">
         <v-expansion-panels v-model="active_path" accordion>
-          <DropdownContent
-            header-text="Results"
-            :files="visible_evaluation_files"
-            :all-selected="all_evaluations_selected"
-            :enable-compare-view="true"
-            :compare-view-active="compareViewActive"
-            @toggle-all="toggle_all_evaluations"
-            @toggle-compare-view="compareView"
-            @changed-files="$emit('changed-files')"
-          />
-          <DropdownContent
-            header-text="Profiles"
-            :files="visible_profile_files"
-            :all-selected="all_profiles_selected"
-            @toggle-all="toggle_all_profiles"
-            @changed-files="$emit('changed-files')"
-          />
-          <DropdownContent
-            header-text="Checklists"
-            :files="visible_checklist_files"
-            :all-selected="all_checklists_selected"
-            @toggle-all="toggle_all_checklists"
-            @changed-files="$emit('changed-files')"
-          />
+          <DropdownContent header-text="Results" :files="visible_evaluation_files"
+            :all-selected="all_evaluations_selected" :enable-compare-view="true" :compare-view-active="compareViewActive"
+            @toggle-all="toggle_all_evaluations" @toggle-compare-view="compareView"
+            @changed-files="$emit('changed-files')" />
+          <DropdownContent header-text="Profiles" :files="visible_profile_files" :all-selected="all_profiles_selected"
+            @toggle-all="toggle_all_profiles" @changed-files="$emit('changed-files')" />
+          <DropdownContent header-text="Checklists" :files="visible_checklist_files"
+            :all-selected="all_checklists_selected" @toggle-all="toggle_all_checklists"
+            @changed-files="$emit('changed-files')" />
         </v-expansion-panels>
         <div class="mx-5 mr-10 mb-5">
           <v-divider class="mb-5" />
           <!-- Checklist Data Modals -->
           <v-row v-if="inChecklistView()" class="my-4" style="width: 600px">
-            <v-btn
-              id="target-data-btn"
-              class="mx-2"
-              @click="setShowTargetModal"
-            >
+            <v-btn id="target-data-btn" class="mx-2" @click="setShowTargetModal">
               <span class="d-none d-md-inline pr-2">
                 Add/Update Target Data
               </span>
             </v-btn>
-            <v-btn
-              id="technology-area-btn"
-              class="mx-2"
-              @click="setShowTechnologyModal"
-            >
+            <v-btn id="technology-area-btn" class="mx-2" @click="setShowTechnologyModal">
               <span class="d-none d-md-inline pr-2">
                 Add/Update Technology Area
               </span>
@@ -102,87 +46,40 @@
           <!-- Quick Filters -->
           <h1 class="my-4">Quick Filters:</h1>
           <v-row class="my-4">
-            <v-col
-              v-for="item in controlStatusSwitches"
-              :key="item.name"
-              :cols="3"
-              >{{ item.name }}</v-col
-            >
+            <v-col v-for="item in controlStatusSwitches" :key="item.name" :cols="3">{{ item.name }}</v-col>
           </v-row>
           <v-row class="mt-n10">
-            <v-col
-              v-for="item in controlStatusSwitches"
-              :key="item.name"
-              :cols="3"
-            >
-              <v-switch
-                dense
-                justify="center"
-                inset
-                :color="item.color"
-                hide-details
-                :value="false"
-                :input-value="item.enabled"
-                @change="changeStatusToggle(item.name)"
-              />
+            <v-col v-for="item in controlStatusSwitches" :key="item.name" :cols="3">
+              <v-switch dense justify="center" inset :color="item.color" hide-details :value="false"
+                :input-value="item.enabled" @change="changeStatusToggle(item.name)" />
             </v-col>
           </v-row>
           <v-row>
-            <v-col
-              v-for="item in severitySwitches"
-              :key="item.name"
-              :cols="3"
-              >{{ item.name }}</v-col
-            >
+            <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">{{ item.name }}</v-col>
           </v-row>
           <v-row class="mt-n10">
             <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
-              <v-switch
-                dense
-                justify="center"
-                inset
-                :color="item.color"
-                hide-details
-                :value="false"
-                :input-value="item.enabled"
-                @change="changeSeverityToggle(item.name)"
-              />
+              <v-switch dense justify="center" inset :color="item.color" hide-details :value="false"
+                :input-value="item.enabled" @change="changeSeverityToggle(item.name)" />
             </v-col>
           </v-row>
           <v-divider class="my-5" />
           <!-- Category Filters -->
           <h1 class="mt-5">Category Filters:</h1>
           <v-row class="mt-4">
-            <v-select
-              v-model="currentFreeTextFilterCategory"
-              class="mx-2 select"
-              :items="categories"
-              label="Filter Categories"
-              dark
-            />
-            <v-text-field
-              v-model="currentFreeTextFilterInput"
-              class="mr-2"
-              label="Enter filter keyword"
-              dark
-            />
-            <v-btn
-              id="upload-btn"
-              class="mx-2"
-              @click="
-                addCategoryFilter(
-                  currentFreeTextFilterCategory,
-                  currentFreeTextFilterInput
-                )
-              "
-            >
+            <v-select v-model="currentFreeTextFilterCategory" class="mx-2 select" :items="categories"
+              label="Filter Categories" dark />
+            <v-text-field v-model="currentFreeTextFilterInput" class="mr-2" label="Enter filter keyword" dark />
+            <v-btn id="upload-btn" class="mx-2" @click="
+              addCategoryFilter(
+                currentFreeTextFilterCategory,
+                currentFreeTextFilterInput
+              )
+            ">
               <span class="d-none d-md-inline pr-2"> Add </span>
             </v-btn>
           </v-row>
-          <v-row
-            style="align-items: center; justify-content: center"
-            class="mt-n5"
-          >
+          <v-row style="align-items: center; justify-content: center" class="mt-n5">
             <v-radio-group v-model="selectedRadioButton" row>
               <v-radio label="Inclusive (+) Filter" value="inclusive" />
               <v-radio label="Exclusive (-) Filter" value="exclusive" />
@@ -192,29 +89,15 @@
           <!-- Selected Filters -->
           <h1 class="my-4">Selected Filters:</h1>
           <v-row class="mt-4 mx-auto">
-            <v-data-table
-              v-model="selectedFilters"
-              dense
-              show-select
-              :headers="filterHeaders"
-              :items="convertFilterData(currentFilters.conditionArray)"
-              item-key="value"
-              class="elevation-1 mb-3"
-            />
+            <v-data-table v-model="selectedFilters" dense show-select :headers="filterHeaders"
+              :items="convertFilterData(currentFilters.conditionArray)" item-key="value" class="elevation-1 mb-3" />
           </v-row>
-          <v-row
-            class="mt-2 mx-auto"
-            style="
-              padding-bottom: 5rem;
-              align-items: center;
-              justify-content: center;
-            "
-          >
-            <v-btn
-              id="remove-filters-btn"
-              class="mx-2"
-              @click="removeSelectedFilters"
-            >
+          <v-row class="mt-2 mx-auto" style="
+                padding-bottom: 5rem;
+                align-items: center;
+                justify-content: center;
+              ">
+            <v-btn id="remove-filters-btn" class="mx-2" @click="removeSelectedFilters">
               <span class="d-none d-md-inline pr-2"> Remove Filter(s) </span>
             </v-btn>
             <v-btn id="clear-all-btn" class="mx-2" @click="removeAllFilters">
@@ -229,18 +112,18 @@
 
 <script lang="ts">
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
-import {Trinary} from '@/enums/Trinary';
+import { Trinary } from '@/enums/Trinary';
 import RouteMixin from '@/mixins/RouteMixin';
-import {ExtendedControlStatus, FilteredDataModule} from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {ChecklistFile} from '@mitre/hdf-converters';
-import Component, {mixins} from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-import {ServerModule} from '../../store/server';
+import { ExtendedControlStatus, FilteredDataModule } from '@/store/data_filters';
+import { InspecDataModule } from '@/store/data_store';
+import { EvaluationFile, ProfileFile } from '@/store/report_intake';
+import { ChecklistFile } from '@mitre/hdf-converters';
+import Component, { mixins } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
+import { ServerModule } from '../../store/server';
 
-import {SearchModule} from '@/store/search';
-import {Severity} from 'inspecjs';
+import { SearchModule } from '@/store/search';
+import { Severity } from 'inspecjs';
 
 import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
 import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
@@ -253,7 +136,7 @@ import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnolog
   }
 })
 export default class Sidebar extends mixins(RouteMixin) {
-  @Prop({type: Boolean}) readonly value!: boolean;
+  @Prop({ type: Boolean }) readonly value!: boolean;
 
   addCategoryFilter(field: string, value: string) {
     let negated = false;
@@ -274,7 +157,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   /** Removes selected filters from data table */
   removeSelectedFilters() {
     this.selectedFilters.forEach(
-      (item: {keyword: string; value: string; negated: string}) => {
+      (item: { keyword: string; value: string; negated: string }) => {
         const field = item.keyword;
         const value = item.value;
         let negated = false;
@@ -338,15 +221,15 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   /** Converts the active filters into array that can be ingested by selected filter data table */
   convertFilterData(
-    filters: {keyword: string; value: string; negated: boolean}[]
+    filters: { keyword: string; value: string; negated: boolean }[]
   ) {
-    let temp: {keyword: string; value: string; negated: string}[] = [];
+    let temp: { keyword: string; value: string; negated: string }[] = [];
     filters.forEach(
-      (item: {keyword: string; value: string; negated: boolean}) => {
+      (item: { keyword: string; value: string; negated: boolean }) => {
         if (item.negated) {
-          temp.push({keyword: item.keyword, value: item.value, negated: '-'});
+          temp.push({ keyword: item.keyword, value: item.value, negated: '-' });
         } else {
-          temp.push({keyword: item.keyword, value: item.value, negated: '+'});
+          temp.push({ keyword: item.keyword, value: item.value, negated: '+' });
         }
       }
     );
@@ -381,8 +264,8 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   /** Returns the current parsed search result */
   get currentFilters(): any {
-    console.log('What is this: ', SearchModule.currentSearchResult);
-    return SearchModule.currentSearchResult;
+    console.log('What is this: ', SearchModule.parsedSearchResult);
+    return SearchModule.parsedSearchResult;
   }
 
   /** Headers that are displayed on top of selected filters data table */
@@ -392,8 +275,8 @@ export default class Sidebar extends mixins(RouteMixin) {
       align: 'start',
       value: 'negated'
     },
-    {text: 'Keyword', align: 'start', value: 'value'},
-    {text: 'Filter', align: 'start', value: 'keyword'}
+    { text: 'Keyword', align: 'start', value: 'value' },
+    { text: 'Filter', align: 'start', value: 'keyword' }
   ];
 
   /** Checks to see if you are in checklist view */
