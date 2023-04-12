@@ -43,7 +43,7 @@ type ApexTotalType = {
   }
 })
 export default class ApexPieChart extends Vue {
-  @Prop({ required: true, type: Array }) readonly categories!: Category<string>[];
+  @Prop({ required: true, type: Array }) readonly categories!: Category<Severity | ControlStatus>[];
   @Prop({ required: true, type: Array }) readonly series!: number[];
   @Prop({ required: false, type: String }) readonly centerValue!: string;
 
