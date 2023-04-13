@@ -14,7 +14,7 @@ import {Severity} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {SearchEntry, SearchModule, valueToSeverity} from '../../store/search';
+import {SearchEntry, SearchModule} from '../../store/search';
 
 /**
  * Categories property must be of type Category
@@ -64,18 +64,18 @@ export default class SeverityChart extends Vue {
     if (
       this.value &&
       this.value?.find((obj) => {
-        return obj.value === valueToSeverity(severity.value);
+        return obj.value === severity.value;
       }) !== undefined
     ) {
-      SearchModule.removeSearchFilter({
+      SearchModule.removeSearchFilter<Severity>({
         field: 'severity',
-        value: valueToSeverity(severity.value).toLowerCase(),
+        value: severity.value.toLowerCase() as Severity,
         negated: false // Defaulted as false
       });
     } else {
-      SearchModule.addSearchFilter({
+      SearchModule.addSearchFilter<Severity>({
         field: 'severity',
-        value: valueToSeverity(severity.value).toLowerCase(),
+        value: severity.value.toLowerCase() as Severity,
         negated: false // Defaulted as false
       });
     }

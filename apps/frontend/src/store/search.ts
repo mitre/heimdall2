@@ -1,5 +1,5 @@
 import Store from '@/store/store';
-import {controlStatuses, severities, Severity} from 'inspecjs';
+import {controlStatuses, Severity} from 'inspecjs';
 import {parse} from 'search-string';
 import {
   Action,
@@ -35,19 +35,6 @@ export type SearchEntry<T> = {
 /** List of possible status types  */
 export const statusTypes = [...controlStatuses, 'Waived'];
 
-/**
- * Will take a string and map it to a severity.
- *
- * @param severity - The string to be mapped to a severity
- * @returns The severity string as a Severity
- */
-export function valueToSeverity(severity: string): Severity {
-  if (severities.includes(severity.toLowerCase() as Severity)) {
-    return severity as Severity;
-  } else {
-    return 'none';
-  }
-}
 @Module({
   namespaced: true,
   dynamic: true,
@@ -154,9 +141,9 @@ class Search extends VuexModule {
    *
    */
   @Action
-  addSearchFilter(searchPayload: {
+  addSearchFilter<T>(searchPayload: {
     field: string;
-    value: string;
+    value: T;
     negated: boolean;
   }) {
     if (this.parsedSearchResult == undefined) {
@@ -184,9 +171,9 @@ class Search extends VuexModule {
    * @param searchPayload - An object of field (The field to add to (e.g., status, severity, etc.)), value (The value to add to the field (e.g., "Passed","Failed", etc.)), and previousValues (The values already in the querystring)
    */
   @Action
-  removeSearchFilter(searchPayload: {
+  removeSearchFilter<T>(searchPayload: {
     field: string;
-    value: string;
+    value: T;
     negated: boolean;
   }) {
     if (this.parsedSearchResult == undefined) {
