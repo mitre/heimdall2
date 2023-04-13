@@ -32,6 +32,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {SearchEntry} from './search';
 import {
   CciSearchTerm,
   ClassificationSearchTerm,
@@ -39,15 +40,14 @@ import {
   ControlIdSearchTerm,
   DescriptionSearchTerm,
   GroupNameSearchTerm,
+  IaControlsSearchTerm,
   KeywordsSearchTerm,
   NistIdFilter,
   RuleIdSearchTerm,
   StigIdSearchTerm,
   TitleSearchTerm,
-  VulIdSearchTerm,
-  IaControlsSearchTerm
+  VulIdSearchTerm
 } from './search_filter_sync';
-import { SearchEntry } from './search';
 
 const MAX_CACHE_ENTRIES = 20;
 
