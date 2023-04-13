@@ -4,6 +4,22 @@ import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {ExtendedControlStatus, FilteredDataModule} from './data_filters';
 import {SearchModule} from './search';
 
+
+/* Alias types for all the search capabilities (minus status and severity as they already have a type) */
+export type TitleSearchTerm = string;
+export type DescriptionSearchTerm = string;
+export type ControlIdSearchTerm = string;
+export type CodeSearchTerm = string;
+export type RuleIdSearchTerm = string;
+export type VulIdSearchTerm = string;
+export type StigIdSearchTerm = string;
+export type ClassificationSearchTerm = string;
+export type GroupNameSearchTerm = string;
+export type CciSearchTerm = string;
+export type IaControlsSearchTerm = string;
+export type NistIdFilter = string;
+export type KeywordsSearchTerm = string;
+
 @Module({
   namespaced: true,
   dynamic: true,

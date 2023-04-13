@@ -42,11 +42,12 @@ import {
   KeywordsSearchTerm,
   NistIdFilter,
   RuleIdSearchTerm,
-  SearchEntry,
   StigIdSearchTerm,
   TitleSearchTerm,
-  VulIdSearchTerm
-} from './search';
+  VulIdSearchTerm,
+  IaControlsSearchTerm
+} from './search_filter_sync';
+import { SearchEntry } from './search';
 
 const MAX_CACHE_ENTRIES = 20;
 
@@ -106,7 +107,7 @@ export interface Filter {
   cciSearchTerms?: SearchEntry<CciSearchTerm>[];
 
   /** Checklist CCIs to search for */
-  iaControlsSearchTerms?: SearchEntry<CciSearchTerm>[];
+  iaControlsSearchTerms?: SearchEntry<IaControlsSearchTerm>[];
 
   /** Checklist keywords to search for */
   keywordsSearchTerms?: SearchEntry<KeywordsSearchTerm>[];
