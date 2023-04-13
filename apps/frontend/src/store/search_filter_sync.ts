@@ -4,7 +4,6 @@ import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {ExtendedControlStatus, FilteredDataModule} from './data_filters';
 import {SearchModule} from './search';
 
-
 /* Alias types for all the search capabilities (minus status and severity as they already have a type) */
 export type TitleSearchTerm = string;
 export type DescriptionSearchTerm = string;

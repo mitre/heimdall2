@@ -8,6 +8,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {ExtendedControlStatus} from './data_filters';
 import {
   CciSearchTerm,
   ClassificationSearchTerm,
@@ -15,18 +16,15 @@ import {
   ControlIdSearchTerm,
   DescriptionSearchTerm,
   GroupNameSearchTerm,
+  IaControlsSearchTerm,
   KeywordsSearchTerm,
   NistIdFilter,
   RuleIdSearchTerm,
+  SearchFilterSyncModule,
   StigIdSearchTerm,
   TitleSearchTerm,
-  VulIdSearchTerm,
-  IaControlsSearchTerm
+  VulIdSearchTerm
 } from './search_filter_sync';
-import {ExtendedControlStatus} from './data_filters';
-import {SearchFilterSyncModule} from './search_filter_sync';
-
-
 
 /** Type used to represent a parsed value and negated pair from query string  */
 export type SearchEntry<T> = {
@@ -182,28 +180,23 @@ class Search extends VuexModule {
       return;
     }
 
-    this.parsedSearchResult.removeEntry(
-      searchPayload.field,
-      searchPayload.value,
-      searchPayload.negated
-    );
-
-    ////// TODO: Remove all occurances of the same filter string //////
-    // Regex is used to make sure correct filter is removed
-    // const regex = new RegExp(name, 'i');
-    // const temp = this.parsedSearchResult.clone();
-
-    // for (const item of temp.conditionArray) {
-    //   if (
-    //     item.keyword === 'severity' &&
-    //     regex.exec(item.value) !== null
-    //   ) {
-    //     temp.removeEntry('severity', item.value, false);
-    //   }
-    // }
-    // SearchModule.SET_SEARCH(temp.toString());
-
-    this.context.commit('SET_SEARCH', this.parsedSearchResult.toString());
+    const clonedConditionArray = this.parsedSearchResult
+      .getConditionArray()
+      .slice();
+    for (const searchEntry of clonedConditionArray) {
+      if (
+        searchEntry.keyword === searchPayload.field &&
+        searchEntry.value.toLowerCase() ===
+          (searchPayload.value as string).toLowerCase()
+      ) {
+        this.parsedSearchResult.removeEntry(
+          searchPayload.field,
+          searchEntry.value,
+          searchPayload.negated
+        );
+      }
+    }
+    this.updateSearch(this.parsedSearchResult.toString());
   }
 
   // Status filtering
