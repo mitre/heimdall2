@@ -417,17 +417,78 @@ export default class Sidebar extends mixins(RouteMixin) {
     }
   }
 
+  isFromChecklist() {
+    return this.$router.currentRoute.path.split('/')[1] === 'checklists';
+  }
+
+  isFromResultsOrProfiles() {
+    return (
+      this.$router.currentRoute.path.split('/')[1] === 'results' ||
+      this.$router.currentRoute.path.split('/')[1] === 'profiles'
+    );
+  }
+
+  // TODO: Move this into data_filter.ts or search_filter_sync.ts
+  setChecklistState() {
+    FilteredDataModule.setChecklistFilterState(SearchModule.searchTerm);
+    //   {
+    //   status: SearchModule.inFileSearchTerms.statusFilter,
+    //   severity: SearchModule.inFileSearchTerms.severityFilter,
+    //   fromFile: FilteredDataModule.selectedChecklistIds,
+    //   ruleidSearchTerms: SearchModule.inFileSearchTerms.ruleid,
+    //   vulidSearchTerms: SearchModule.inFileSearchTerms.vulid,
+    //   stigidSearchTerms: SearchModule.inFileSearchTerms.stigid,
+    //   classificationSearchTerms: SearchModule.inFileSearchTerms.classification,
+    //   groupNameSearchTerms: SearchModule.inFileSearchTerms.groupName,
+    //   cciSearchTerms: SearchModule.inFileSearchTerms.cci,
+    //   titleSearchTerms: SearchModule.inFileSearchTerms.title,
+    //   descriptionSearchTerms: SearchModule.inFileSearchTerms.description,
+    //   nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
+    //   codeSearchTerms: SearchModule.inFileSearchTerms.code,
+    //   omit_overlayed_controls: true,
+    //   control_id: undefined,
+    //   iaControlsSearchTerms: SearchModule.inFileSearchTerms.iaControls,
+    //   keywordsSearchTerms: SearchModule.inFileSearchTerms.keywords
+    // }
+  }
+
+  // TODO: Move this into data_filter.ts or search_filter_sync.ts
+  setResultsState() {
+    FilteredDataModule.setResultsFilterState(SearchModule.searchTerm);
+  }
+
   set active_path(id: number) {
     // There are currently 3 available values that the v-modal can have,
     // 0 -> results view
     // 1 -> profile view
     // 2 -> checklists view
     if (id === 0) {
+      if (this.isFromChecklist()) {
+        this.setChecklistState();
+        console.log(
+          'What is the checklist state: ',
+          FilteredDataModule.checklistFilterState
+        );
+        // Remove filters for change
+      }
+      this.removeAllFilters();
       this.navigateWithNoErrors(`/results`);
+      SearchModule.updateSearch(FilteredDataModule.controlsFilterState);
+      // TODO: Grab results state and set the search bar to it
     } else if (id === 1) {
       this.navigateWithNoErrors(`/profiles`);
     } else if (id === 2) {
+      if (this.isFromResultsOrProfiles()) {
+        this.setResultsState();
+        console.log(
+          'What is the controls state: ',
+          FilteredDataModule.controlsFilterState
+        );
+        // Remove filters for change
+      }
+      this.removeAllFilters();
       this.navigateWithNoErrors(`/checklists`);
+      SearchModule.updateSearch(FilteredDataModule.checklistFilterState);
     }
   }
 

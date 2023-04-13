@@ -21,7 +21,7 @@ import {FromHDFToCAATMapper} from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {Filter, FilteredDataModule} from '../../store/data_filters';
+import {GenericFilter, FilteredDataModule} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {EvaluationFile} from '../../store/report_intake';
 
@@ -31,7 +31,7 @@ import {EvaluationFile} from '../../store/report_intake';
   }
 })
 export default class ExportCaat extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
 
   exportCaat() {
     const inputData = this.filter.fromFile.map((fileId: string) => {

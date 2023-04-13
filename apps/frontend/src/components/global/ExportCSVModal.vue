@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {GenericFilter, FilteredDataModule} from '@/store/data_filters';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import {ContextualizedControl, ExecJSON, HDFControlSegment} from 'inspecjs';
 import * as _ from 'lodash';
@@ -105,7 +105,7 @@ type ControlSetRows = ControlSetRow[];
   }
 })
 export default class ExportCSVModal extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
 
   showingModal = false;
   fields = _.clone(fieldNames);

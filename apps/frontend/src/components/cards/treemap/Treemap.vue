@@ -36,8 +36,12 @@
 <script lang="ts">
 import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
 import {ColorHackModule} from '@/store/color_hack';
-import {Filter, FilteredDataModule, TreeMapState} from '@/store/data_filters';
-import {compareArrays} from '@/utilities/helper_util';
+import {
+  GenericFilter,
+  FilteredDataModule,
+  TreeMapState
+} from '@/store/data_filters';
+import {compare_arrays} from '@/utilities/helper_util';
 import {
   build_nist_tree_map,
   is_leaf,
@@ -58,7 +62,7 @@ import {Prop, PropSync, Ref} from 'vue-property-decorator';
 export default class Treemap extends Vue {
   @Ref('treemapContainer') readonly treemapContainer!: Element;
   @Prop({type: Array, required: true}) readonly value!: TreeMapState;
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
   @PropSync('selected_control', {type: String}) syncedSelectedControl!:
     | string
     | null;

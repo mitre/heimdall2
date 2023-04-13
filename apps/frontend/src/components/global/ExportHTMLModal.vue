@@ -53,7 +53,7 @@ import {saveAs} from 'file-saver';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
-import {Filter} from '../../store/data_filters';
+import {GenericFilter, FilteredDataModule} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {SnackbarModule} from '../../store/snackbar';
 import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
@@ -78,7 +78,7 @@ const enum FileExportDescriptions {
   }
 })
 export default class ExportHTMLModal extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
   // If we are exporting a profile we can remove the test/results table
   @Prop({type: String, required: true}) readonly fileType!: string;
 

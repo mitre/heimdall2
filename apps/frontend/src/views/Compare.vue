@@ -211,7 +211,7 @@ import UploadButton from '@/components/generic/UploadButton.vue';
 import Modal from '@/components/global/Modal.vue';
 import SearchHelpModal from '@/components/global/SearchHelpModal.vue';
 import TagRow from '@/components/global/tags/TagRow.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {ControlsFilter, FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {
   EvaluationFile,
@@ -331,7 +331,7 @@ export default class Compare extends Vue {
     });
   }
 
-  get filter(): Filter {
+  get filter(): ControlsFilter {
     return {
       status: SearchModule.inFileSearchTerms.statusFilter,
       severity: SearchModule.inFileSearchTerms.severityFilter,

@@ -220,7 +220,7 @@ import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import {
   ExtendedControlStatus,
-  Filter,
+  ControlsFilter,
   FilteredDataModule,
   TreeMapState
 } from '@/store/data_filters';
@@ -356,7 +356,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The filter for charts. Contains all of our filter stuff
    */
-  get all_filter(): Filter {
+  get all_filter(): ControlsFilter {
     return {
       status: SearchModule.inFileSearchTerms.statusFilter,
       severity: SearchModule.inFileSearchTerms.severityFilter,
@@ -376,7 +376,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * The filter for treemap. Omits its own stuff
    */
-  get treemap_full_filter(): Filter {
+  get treemap_full_filter(): ControlsFilter {
     return {
       status: SearchModule.inFileSearchTerms.statusFilter || [],
       severity: SearchModule.inFileSearchTerms.severityFilter,

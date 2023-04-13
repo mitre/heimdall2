@@ -1,5 +1,5 @@
 import ControlTable from '@/components/cards/controltable/ControlTable.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {ControlsFilter, FilteredDataModule} from '@/store/data_filters';
 import Results from '@/views/Results.vue';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import {ContextualizedControl} from 'inspecjs';
@@ -52,7 +52,7 @@ describe('Datatable', () => {
         $router
       },
       propsData: {
-        filter: (wrapper.vm as Vue & {all_filter: Filter}).all_filter,
+        filter: (wrapper.vm as Vue & {all_filter: ControlsFilter}).all_filter,
         showImpact: true
       }
     });

@@ -61,8 +61,7 @@ export type FilterRecord =
   | undefined;
 
 /** Contains common filters on data from the store. */
-export interface Filter {
-  // General
+export interface GenericFilter {
   /** Which file these objects came from. Undefined => any */
   fromFile: FileID[];
 
@@ -72,9 +71,6 @@ export interface Filter {
 
   /** What severity the controls can have. Undefined => any */
   severity?: SearchEntry<Severity>[];
-
-  /** Control IDs to search for */
-  ids?: SearchEntry<ControlIdSearchTerm>[];
 
   /** Titles to search for */
   titleSearchTerms?: SearchEntry<TitleSearchTerm>[];
@@ -88,6 +84,41 @@ export interface Filter {
   /** CCIs to search for */
   nistIdFilter?: SearchEntry<NistIdFilter>[];
 
+  /** Checklist keywords to search for */
+  keywordsSearchTerms?: SearchEntry<KeywordsSearchTerm>[];
+
+  /** Whether or not to allow/include overlayed controls */
+  omit_overlayed_controls?: boolean;
+
+  /** A specific control id */
+  control_id?: string;
+}
+
+/** Contains common filters for controls. */
+export interface ControlsFilter extends GenericFilter {
+  /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
+  treeFilters?: TreeMapState;
+
+  /** Control IDs to search for */
+  ids?: SearchEntry<ControlIdSearchTerm>[];
+
+  /** A search term string, case insensitive
+   * We look for this in
+   * - control ID
+   * - rule title
+   * - severity
+   * - status
+   * - finding details (from HDF)
+   * - code
+   */
+  searchTerm?: string;
+}
+
+console.log('What is this: ');
+console.log('And what is this: ');
+
+/** Contains common filters for a checklist. */
+export interface ChecklistFilter extends GenericFilter {
   /** Ruleid to search for */
   ruleidSearchTerms?: SearchEntry<RuleIdSearchTerm>[];
 
@@ -108,29 +139,6 @@ export interface Filter {
 
   /** Checklist CCIs to search for */
   iaControlsSearchTerms?: SearchEntry<IaControlsSearchTerm>[];
-
-  /** Checklist keywords to search for */
-  keywordsSearchTerms?: SearchEntry<KeywordsSearchTerm>[];
-
-  /** A search term string, case insensitive
-   * We look for this in
-   * - control ID
-   * - rule title
-   * - severity
-   * - status
-   * - finding details (from HDF)
-   * - code
-   */
-  searchTerm?: string;
-
-  /** Whether or not to allow/include overlayed controls */
-  omit_overlayed_controls?: boolean;
-
-  /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
-  treeFilters?: TreeMapState;
-
-  /** A specific control id */
-  control_id?: string;
 }
 
 export type TreeMapState = string[]; // Representing the current path spec, from root
@@ -186,6 +194,68 @@ export class FilteredData extends VuexModule {
   selectedEvaluationIds: FileID[] = [];
   selectedProfileIds: FileID[] = [];
   selectedChecklistIds: FileID[] = [];
+
+  checklistFilterState: string = '';
+  // ChecklistFilter = {
+  //   fromFile: [],
+  //   status: [],
+  //   severity: [],
+  //   titleSearchTerms: [],
+  //   descriptionSearchTerms: [],
+  //   codeSearchTerms: [],
+  //   nistIdFilter: [],
+  //   keywordsSearchTerms: [],
+  //   omit_overlayed_controls: false,
+  //   control_id: '',
+  //   ruleidSearchTerms: [],
+  //   vulidSearchTerms: [],
+  //   stigidSearchTerms: [],
+  //   classificationSearchTerms: [],
+  //   groupNameSearchTerms: [],
+  //   cciSearchTerms: [],
+  //   iaControlsSearchTerms: []
+  // };
+
+  /** Sets the current checklist state */
+  @Mutation
+  SET_CHECKLIST_FILTER_STATE(checklistState: string) {
+    this.checklistFilterState = checklistState;
+  }
+
+  /** Update the current checklist state */
+  @Action
+  setChecklistFilterState(checklistState: string) {
+    this.context.commit('SET_CHECKLIST_FILTER_STATE', checklistState);
+  }
+
+  controlsFilterState: string = '';
+  //  ControlsFilter = {
+  //   fromFile: [],
+  //   status: [],
+  //   severity: [],
+  //   titleSearchTerms: [],
+  //   descriptionSearchTerms: [],
+  //   codeSearchTerms: [],
+  //   nistIdFilter: [],
+  //   keywordsSearchTerms: [],
+  //   omit_overlayed_controls: false,
+  //   control_id: '',
+  //   treeFilters: [],
+  //   ids: [],
+  //   searchTerm: ''
+  // };
+
+  /** Sets the current results state */
+  @Mutation
+  SET_RESULTS_FILTER_STATE(resultsState: string) {
+    this.controlsFilterState = resultsState;
+  }
+
+  /** Update the current results state */
+  @Action
+  setResultsFilterState(resultsState: string) {
+    this.context.commit('SET_RESULTS_FILTER_STATE', resultsState);
+  }
 
   /** For Checklist Viewer */
   readonly emptyRule: ChecklistVuln = {
@@ -465,12 +535,12 @@ export class FilteredData extends VuexModule {
    * @param filter - Filters to apply
    * @returns Controls from all profiles from the specified file id
    */
-  get controls(): (filter: Filter) => readonly ContextualizedControl[] {
+  get controls(): (filter: ControlsFilter) => readonly ContextualizedControl[] {
     /** Cache by filter */
     const localCache: LRUCache<string, readonly ContextualizedControl[]> =
       new LRUCache({max: MAX_CACHE_ENTRIES});
 
-    return (filter: Filter) => {
+    return (filter: ControlsFilter) => {
       // Generate a hash for cache purposes.
       // If the "searchTerm" string is not null, we don't cache - no need to pollute
       const id: string = filterCacheKey(filter);
@@ -621,7 +691,7 @@ export const FilteredDataModule = getModule(FilteredData);
  */
 export function checklistRules(
   rules: readonly ChecklistVuln[],
-  filters: Filter
+  filters: ChecklistFilter
 ): readonly ChecklistVuln[] {
   // If an attribute name changes in the checklist mapping, make sure it is reflected here
   const checklistFilters: Record<string, FilterRecord> = {
@@ -653,8 +723,8 @@ export function checklistRules(
  * @returns Converted newFilter to a JSON string.
  *
  */
-export function filterCacheKey(f: Filter) {
-  const newFilter: Filter = {
+export function filterCacheKey(f: ControlsFilter) {
+  const newFilter: ControlsFilter = {
     searchTerm: f.searchTerm?.trim() || '',
     omit_overlayed_controls: f.omit_overlayed_controls || false,
     ...f

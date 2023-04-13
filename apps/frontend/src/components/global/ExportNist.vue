@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {GenericFilter, FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {FileID} from '@/store/report_intake';
 import {s2ab} from '@/utilities/export_util';
@@ -41,7 +41,7 @@ export interface Sheet {
   }
 })
 export default class ExportNIST extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
 
   /** Formats a tag into a well-structured nist string */
   format_tag(control: NistControl): string | null {
@@ -75,7 +75,7 @@ export default class ExportNIST extends Vue {
 
     // Get our data
     const baseFilter = this.filter;
-    const modifiedFilter: Filter = {...baseFilter, fromFile: id};
+    const modifiedFilter: GenericFilter = {...baseFilter, fromFile: id};
     const controls = FilteredDataModule.controls(modifiedFilter);
 
     // Initialize our data structures
