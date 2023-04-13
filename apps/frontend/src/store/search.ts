@@ -8,23 +8,25 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {
+  CciSearchTerm,
+  ClassificationSearchTerm,
+  CodeSearchTerm,
+  ControlIdSearchTerm,
+  DescriptionSearchTerm,
+  GroupNameSearchTerm,
+  KeywordsSearchTerm,
+  NistIdFilter,
+  RuleIdSearchTerm,
+  StigIdSearchTerm,
+  TitleSearchTerm,
+  VulIdSearchTerm,
+  IaControlsSearchTerm
+} from './search_filter_sync';
 import {ExtendedControlStatus} from './data_filters';
 import {SearchFilterSyncModule} from './search_filter_sync';
 
-// Alias types for all the search capabilities (minus status and severity as they already have a type)
-export type TitleSearchTerm = string;
-export type DescriptionSearchTerm = string;
-export type ControlIdSearchTerm = string;
-export type CodeSearchTerm = string;
-export type RuleIdSearchTerm = string;
-export type VulIdSearchTerm = string;
-export type StigIdSearchTerm = string;
-export type ClassificationSearchTerm = string;
-export type GroupNameSearchTerm = string;
-export type CciSearchTerm = string;
-export type iaControlsSearchTerm = string;
-export type NistIdFilter = string;
-export type KeywordsSearchTerm = string;
+
 
 /** Type used to represent a parsed value and negated pair from query string  */
 export type SearchEntry<T> = {
@@ -61,7 +63,7 @@ class Search extends VuexModule {
     classification: SearchEntry<ClassificationSearchTerm>[];
     groupName: SearchEntry<GroupNameSearchTerm>[];
     cci: SearchEntry<CciSearchTerm>[];
-    iaControls: SearchEntry<iaControlsSearchTerm>[];
+    iaControls: SearchEntry<IaControlsSearchTerm>[];
     NISTIdFilter: SearchEntry<NistIdFilter>[];
     description: SearchEntry<DescriptionSearchTerm>[];
     statusFilter: SearchEntry<ExtendedControlStatus>[];
@@ -94,7 +96,7 @@ class Search extends VuexModule {
   // classificationSearchTerms: SearchEntry<ClassificationSearchTerm>[] = [];
   // groupNameSearchTerms: SearchEntry<GroupNameSearchTerm>[] = [];
   // cciSearchTerms: SearchEntry<CciSearchTerm>[] = [];
-  // iaControlsSearchTerms: SearchEntry<iaControlsSearchTerm>[] = [];
+  // iaControlsSearchTerms: SearchEntry<IaControlsSearchTerm>[] = [];
   // NISTIdFilter: SearchEntry<NistIdFilter>[] = [];
   // descriptionSearchTerms: SearchEntry<DescriptionSearchTerm>[] = [];
   // statusFilter: SearchEntry<ExtendedControlStatus>[] = [];
@@ -587,8 +589,8 @@ class Search extends VuexModule {
   @Action
   addIaControlsFilter(
     iaControl:
-      | SearchEntry<iaControlsSearchTerm>
-      | SearchEntry<iaControlsSearchTerm>[]
+      | SearchEntry<IaControlsSearchTerm>
+      | SearchEntry<IaControlsSearchTerm>[]
   ) {
     this.context.commit('ADD_IA_CONTROL', iaControl);
   }
@@ -596,8 +598,8 @@ class Search extends VuexModule {
   @Mutation
   ADD_IA_CONTROL(
     iaControl:
-      | SearchEntry<iaControlsSearchTerm>
-      | SearchEntry<iaControlsSearchTerm>[]
+      | SearchEntry<IaControlsSearchTerm>
+      | SearchEntry<IaControlsSearchTerm>[]
   ) {
     this.inFileSearchTerms.iaControls =
       this.inFileSearchTerms.iaControls.concat(iaControl);
