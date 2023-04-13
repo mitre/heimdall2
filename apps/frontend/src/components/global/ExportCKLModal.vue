@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {GenericFilter, FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
@@ -137,7 +137,7 @@ type FileData = {
   }
 })
 export default class ExportCKLModal extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
 
   showingModal = false;
   outputData: OutputData = {

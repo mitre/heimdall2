@@ -342,7 +342,11 @@ import Base from './Base.vue';
 import Component from 'vue-class-component';
 import RouteMixin from '@/mixins/RouteMixin';
 import {SearchModule} from '@/store/search';
-import {Filter, FilteredDataModule, checklistRules} from '@/store/data_filters';
+import {
+  ChecklistFilter,
+  FilteredDataModule,
+  checklistRules
+} from '@/store/data_filters';
 import {
   FileID,
   SourcedContextualizedEvaluation,
@@ -649,12 +653,11 @@ export default class Checklist extends RouteMixin {
   /**
    * The filter for charts. Contains all of our filter stuff
    */
-  get all_filter(): Filter {
+  get all_filter(): ChecklistFilter {
     return {
       status: SearchModule.inFileSearchTerms.statusFilter,
       severity: SearchModule.inFileSearchTerms.severityFilter,
       fromFile: this.file_filter,
-      ids: SearchModule.inFileSearchTerms.controlId,
       ruleidSearchTerms: SearchModule.inFileSearchTerms.ruleid,
       vulidSearchTerms: SearchModule.inFileSearchTerms.vulid,
       stigidSearchTerms: SearchModule.inFileSearchTerms.stigid,
@@ -708,7 +711,7 @@ export default class Checklist extends RouteMixin {
     }
 
     // Logic to check: are any files actually visible?
-    if (FilteredDataModule.controls(this.all_filter).length === 0) {
+    if (this.rules.length === 0) {
       this.filterSnackbar = true;
     } else {
       this.filterSnackbar = false;

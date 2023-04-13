@@ -54,7 +54,7 @@ import Mustache from 'mustache';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
-import {Filter, FilteredDataModule} from '../../store/data_filters';
+import {GenericFilter, FilteredDataModule} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {SnackbarModule} from '../../store/snackbar';
@@ -114,7 +114,7 @@ interface OutputData {
   }
 })
 export default class ExportHTMLModal extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
   // If we are exporting a profile we can remove the test/results table
   @Prop({type: String, required: true}) readonly fileType!: string;
 

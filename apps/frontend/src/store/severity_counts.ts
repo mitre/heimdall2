@@ -3,10 +3,10 @@
  */
 
 import {
-  Filter,
   filterCacheKey,
   FilteredData,
-  FilteredDataModule
+  FilteredDataModule,
+  GenericFilter
 } from '@/store/data_filters';
 import Store from '@/store/store';
 import {Severity} from 'inspecjs';
@@ -17,9 +17,12 @@ import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 type SeverityHash = {[key in Severity]: number};
 
 // Helper function for counting a status in a list of controls
-function count_severities(data: FilteredData, filter: Filter): SeverityHash {
+function count_severities(
+  data: FilteredData,
+  filter: GenericFilter
+): SeverityHash {
   // Remove the status filter from the control filter
-  const newFilter: Filter = {
+  const newFilter: GenericFilter = {
     status: [],
     ...filter
   };
@@ -52,11 +55,11 @@ function count_severities(data: FilteredData, filter: Filter): SeverityHash {
 })
 export class SeverityCount extends VuexModule {
   /** Generates a hash mapping each status -> a count of its members */
-  get hash(): (filter: Filter) => SeverityHash {
+  get hash(): (filter: GenericFilter) => SeverityHash {
     // Establish our cache and dependency
     const cache: LRUCache<string, SeverityHash> = new LRUCache({max: 30});
 
-    return (filter: Filter) => {
+    return (filter: GenericFilter) => {
       const id = filterCacheKey(filter);
       const cached = cache.get(id);
       // If cache hits, just return
@@ -71,23 +74,23 @@ export class SeverityCount extends VuexModule {
     };
   }
 
-  get none(): (filter: Filter) => number {
+  get none(): (filter: GenericFilter) => number {
     return (filter) => this.hash(filter)['none'];
   }
 
-  get low(): (filter: Filter) => number {
+  get low(): (filter: GenericFilter) => number {
     return (filter) => this.hash(filter)['low'];
   }
 
-  get medium(): (filter: Filter) => number {
+  get medium(): (filter: GenericFilter) => number {
     return (filter) => this.hash(filter)['medium'];
   }
 
-  get high(): (filter: Filter) => number {
+  get high(): (filter: GenericFilter) => number {
     return (filter) => this.hash(filter)['high'];
   }
 
-  get critical(): (filter: Filter) => number {
+  get critical(): (filter: GenericFilter) => number {
     return (filter) => this.hash(filter)['critical'];
   }
 }

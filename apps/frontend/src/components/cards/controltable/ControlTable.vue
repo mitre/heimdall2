@@ -149,7 +149,7 @@ import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails
 import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {ControlsFilter, FilteredDataModule} from '@/store/data_filters';
 import {HeightsModule} from '@/store/heights';
 import {getControlRunTime} from '@/utilities/delta_util';
 import {control_unique_key} from '@/utilities/format_util';
@@ -183,7 +183,7 @@ interface ListElt {
 })
 export default class ControlTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
   @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
 
   // Whether to allow multiple expansions
