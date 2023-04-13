@@ -402,9 +402,6 @@ export default class Checklist extends RouteMixin {
 
   //** Variable for selected tab */
   tab = null;
-  webOrDatabase = false; // Needs to be replaced for selected checklist
-
-  showSearchHelp = true;
 
   selectedHeaders: {text: string; value: string; width?: string}[] = [
     {text: 'Status', value: 'status', width: '100px'},
@@ -423,9 +420,6 @@ export default class Checklist extends RouteMixin {
     {text: 'Group Name', value: 'groupTitle', width: '150px'},
     {text: 'CCIs', value: 'cciRef', width: '120px'}
   ];
-
-  currentFreeTextFilterCategory = '';
-  currentFreeTextFilterInput = '';
 
   /** Kept so we can filter by these values even though they are hidden */
   hiddenRows = [
@@ -451,33 +445,6 @@ export default class Checklist extends RouteMixin {
     {value: 'targetKey', align: ' d-none'},
     {value: 'stigUuid', align: ' d-none'},
     {value: 'legacyId', align: ' d-none'}
-  ];
-
-  stigListHeaders = [
-    {text: 'Selected', value: 'show', width: '100px'},
-    {text: 'Name', value: 'name'},
-    {text: 'Version', value: 'version', width: '100px'},
-    {text: 'Release', value: 'release', width: '100px'}
-  ];
-
-  techAreaLabels: string[] = [
-    'Application Review',
-    'Boundary Security',
-    'CDS Admin Review',
-    'CDS Technical Review',
-    'Database Review',
-    'Domain Name System (DNS)',
-    'Exchange Server',
-    'Host Based System Security (HBSS)',
-    'Internal Network',
-    'Mobility',
-    'Releasable Networks (REL)',
-    'Traditional Security',
-    'UNIX OS',
-    'VVOIP Review',
-    'Web Review',
-    'Windows OS',
-    'Other Review'
   ];
 
   statusItems = [
@@ -601,40 +568,6 @@ export default class Checklist extends RouteMixin {
     return FilteredDataModule.emptyRule;
   }
 
-  get selectedChecklistAsset() {
-    const selectedChecklist = this.getChecklist(this.file_filter);
-    if (selectedChecklist) {
-      return selectedChecklist.asset;
-    } else {
-      return FilteredDataModule.emptyAsset;
-    }
-  }
-
-  get selectedChecklistStigs(): {
-    show: boolean;
-    name: string;
-    version: string;
-    release: string;
-  }[] {
-    const selectedChecklist = this.getChecklist(this.file_filter);
-    const stigInfo: {
-      show: boolean;
-      name: string;
-      version: string;
-      release: string;
-    }[] = [];
-    selectedChecklist?.stigs.forEach((stig) => {
-      stigInfo.push({
-        show: true,
-        name: stig.header.title,
-        version: stig.header.version,
-        release: stig.header.releaseinfo?.split(' ')[1] || ''
-      });
-    });
-    this.stigInfo = stigInfo;
-    return stigInfo;
-  }
-
   /**
    * The current search terms, as modeled by the search bar
    */
@@ -711,18 +644,6 @@ export default class Checklist extends RouteMixin {
       ),
       ...this.hiddenRows
     ];
-  }
-
-  /**
-   * Returns true if we're showing a checklist
-   */
-  get is_checklist_view(): boolean {
-    return this.current_route === 'checklist';
-  }
-
-  // Returns true if no files are uploaded
-  get no_files(): boolean {
-    return FilteredDataModule.selectedChecklistIds.length === 0;
   }
 
   /**
