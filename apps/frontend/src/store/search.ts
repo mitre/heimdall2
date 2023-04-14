@@ -141,9 +141,9 @@ class Search extends VuexModule {
    *
    */
   @Action
-  addSearchFilter<T>(searchPayload: {
+  addSearchFilter(searchPayload: {
     field: string;
-    value: T;
+    value: string;
     negated: boolean;
   }) {
     if (this.parsedSearchResult == undefined) {
@@ -171,9 +171,9 @@ class Search extends VuexModule {
    * @param searchPayload - An object of field (The field to add to (e.g., status, severity, etc.)), value (The value to add to the field (e.g., "Passed","Failed", etc.)), and previousValues (The values already in the querystring)
    */
   @Action
-  removeSearchFilter<T>(searchPayload: {
+  removeSearchFilter(searchPayload: {
     field: string;
-    value: T;
+    value: string;
     negated: boolean;
   }) {
     if (this.parsedSearchResult == undefined) {
@@ -187,7 +187,7 @@ class Search extends VuexModule {
       if (
         searchEntry.keyword === searchPayload.field &&
         searchEntry.value.toLowerCase() ===
-          (searchPayload.value as string).toLowerCase()
+          searchPayload.value.toLowerCase()
       ) {
         this.parsedSearchResult.removeEntry(
           searchPayload.field,
