@@ -186,8 +186,7 @@ class Search extends VuexModule {
     for (const searchEntry of clonedConditionArray) {
       if (
         searchEntry.keyword === searchPayload.field &&
-        searchEntry.value.toLowerCase() ===
-          searchPayload.value.toLowerCase()
+        searchEntry.value.toLowerCase() === searchPayload.value.toLowerCase()
       ) {
         this.parsedSearchResult.removeEntry(
           searchPayload.field,

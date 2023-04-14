@@ -386,7 +386,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
       ids: SearchModule.inFileSearchTerms.controlId,
       fromFile: this.file_filter,
-      omit_overlayed_controls: true
+      omit_overlayed_controls: true,
+      keywordsSearchTerms: SearchModule.inFileSearchTerms.keywords
     };
   }
 
