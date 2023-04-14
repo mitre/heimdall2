@@ -583,7 +583,8 @@ export class FilteredData extends VuexModule {
         'root.hdf.status': _.filter(
           filter.status,
           (status) => status.value !== 'Waived'
-        )
+        ),
+        keywords: filter.keywordsSearchTerms
       };
 
       controls = filterControlsBy(controls, controlFilters);
@@ -830,7 +831,6 @@ export function filterControlsBy(
     firstPass,
     activeFilters.keywords
   );
-
   return final;
 }
 

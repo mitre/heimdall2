@@ -3,6 +3,7 @@
  */
 
 import {
+  ControlsFilter,
   filterCacheKey,
   FilteredData,
   FilteredDataModule,
@@ -110,7 +111,10 @@ export class StatusCount extends VuexModule {
     };
   }
 
-  get countOf(): (filter: GenericFilter, category: keyof StatusHash) => number {
+  get countOf(): (
+    filter: ControlsFilter,
+    category: keyof StatusHash
+  ) => number {
     return (filter, category) => this.hash(filter)[category];
   }
 }
