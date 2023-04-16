@@ -228,6 +228,7 @@ export class FilteredData extends VuexModule {
     this.context.commit('SET_CHECKLIST_FILTER_STATE', checklistState);
   }
 
+  // TODO: Change this naming to "resultsFilterState" or change the next two functions to be worded around controls
   controlsFilterState: string = '';
   //  ControlsFilter = {
   //   fromFile: [],
