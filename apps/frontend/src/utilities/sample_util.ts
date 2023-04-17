@@ -16,8 +16,6 @@ const threeOverlayProfilePath = '/static/samples/example-3-layer-overlay.json';
 const ubuntu1604BaselineResultsPath =
   '/static/samples/ubuntu-16.04-baseline-results.json';
 const acmeOverlayPath = '/static/samples/wrapper-acme-run.json';
-const checklistExamplePath =
-  '/static/samples/Red_Hat_7_STIG_Baseline_Checklist.ckl';
 
 import axios from 'axios';
 
@@ -101,10 +99,5 @@ export const samples: Sample[] = [
     filename: 'Acme Overlay Example',
     data: () => fetch(acmeOverlayPath),
     path: acmeOverlayPath
-  },
-  {
-    filename: 'Demo Checklist (Red Hat 7 STIG Baseline)',
-    data: () => fetch(checklistExamplePath),
-    path: checklistExamplePath
   }
 ];
