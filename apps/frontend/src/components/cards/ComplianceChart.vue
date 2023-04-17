@@ -1,24 +1,18 @@
 <template>
   <div slot="no-body">
-    <vue-apex-charts
-      id="chart"
-      type="radialBar"
-      width="350"
-      :options="chartOptions"
-      :series="series"
-    />
+    <vue-apex-charts id="chart" type="radialBar" width="350" :options="chartOptions" :series="series" />
   </div>
 </template>
 
 <script lang="ts">
-import {ColorHackModule} from '@/store/color_hack';
-import {GenericFilter} from '@/store/data_filters';
-import {calculateCompliance} from '@/store/status_counts';
-import {ApexOptions} from 'apexcharts';
+import { ColorHackModule } from '@/store/color_hack';
+import { ControlsFilter } from '@/store/data_filters';
+import { calculateCompliance } from '@/store/status_counts';
+import { ApexOptions } from 'apexcharts';
 import Vue from 'vue';
 import VueApexCharts from 'vue-apexcharts';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import { Prop } from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -26,7 +20,7 @@ import {Prop} from 'vue-property-decorator';
   }
 })
 export default class ComplianceChart extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
+  @Prop({ type: Object, required: true }) readonly filter!: ControlsFilter;
 
   get chartOptions(): ApexOptions {
     // Produce our options
@@ -53,7 +47,7 @@ export default class ComplianceChart extends Vue {
       fill: {
         type: 'solid',
         colors: [
-          function (data: {value: number}) {
+          function (data: { value: number }) {
             if (data.value < 60) {
               return ColorHackModule.lookupColor('complianceLow');
             } else if (data.value >= 60 && data.value < 90) {
