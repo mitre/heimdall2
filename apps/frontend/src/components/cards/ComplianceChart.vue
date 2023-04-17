@@ -12,9 +12,8 @@
 
 <script lang="ts">
 import {ColorHackModule} from '@/store/color_hack';
-import {GenericFilter} from '@/store/data_filters';
+import {ControlsFilter} from '@/store/data_filters';
 import {calculateCompliance} from '@/store/status_counts';
-import {formatCompliance} from '@mitre/hdf-converters';
 import {ApexOptions} from 'apexcharts';
 import Vue from 'vue';
 import VueApexCharts from 'vue-apexcharts';
@@ -27,7 +26,7 @@ import {Prop} from 'vue-property-decorator';
   }
 })
 export default class ComplianceChart extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
 
   get chartOptions(): ApexOptions {
     // Produce our options

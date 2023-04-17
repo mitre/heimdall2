@@ -84,7 +84,7 @@
 </template>
 
 <script lang="ts">
-import {ExtendedControlStatus, GenericFilter} from '@/store/data_filters';
+import {ExtendedControlStatus, ControlsFilter} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -100,11 +100,11 @@ interface CardProps {
 
 @Component
 export default class StatusCardRow extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
   @Prop({type: Array, required: false})
-  readonly currentStatusFilter!: GenericFilter;
+  readonly currentStatusFilter!: ControlsFilter;
 
-  get overlayRemovedFilter(): GenericFilter {
+  get overlayRemovedFilter(): ControlsFilter {
     return {
       fromFile: this.filter.fromFile,
       omit_overlayed_controls: this.filter.omit_overlayed_controls

@@ -14,18 +14,10 @@
     <v-row>
       <v-col v-resize="on_resize" :cols="12">
         <svg id="chartBody" :width="width" :height="height">
-          <g
-            style="shape-rendering: crispEdges"
-            preserveAspectRatio="xMidYMid meet"
-          >
+          <g style="shape-rendering: crispEdges" preserveAspectRatio="xMidYMid meet">
             <!-- The body -->
-            <Cell
-              :selected_control_id="selected_control"
-              :node="selected_node"
-              :scales="scales"
-              :depth="0"
-              @select-node="select_node"
-            />
+            <Cell :selected_control_id="selected_control" :node="selected_node" :scales="scales" :depth="0"
+              @select-node="select_node" />
           </g>
         </svg>
       </v-col>
@@ -34,24 +26,24 @@
 </template>
 
 <script lang="ts">
-import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
-import {ColorHackModule} from '@/store/color_hack';
+import Cell, { XYScale } from '@/components/cards/treemap/Cell.vue';
+import { ColorHackModule } from '@/store/color_hack';
 import {
-  GenericFilter,
+  ControlsFilter,
   FilteredDataModule,
   TreeMapState
 } from '@/store/data_filters';
-import {compare_arrays} from '@/utilities/helper_util';
+import { compare_arrays } from '@/utilities/helper_util';
 import {
   build_nist_tree_map,
   is_leaf,
   is_parent,
   TreemapNode
 } from '@/utilities/treemap_util';
-import {HierarchyRectangularNode, scaleLinear, treemap} from 'd3';
+import { HierarchyRectangularNode, scaleLinear, treemap } from 'd3';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, PropSync, Ref} from 'vue-property-decorator';
+import { Prop, PropSync, Ref } from 'vue-property-decorator';
 
 // Respects a v-model of type TreeMapState
 @Component({
@@ -61,9 +53,9 @@ import {Prop, PropSync, Ref} from 'vue-property-decorator';
 })
 export default class Treemap extends Vue {
   @Ref('treemapContainer') readonly treemapContainer!: Element;
-  @Prop({type: Array, required: true}) readonly value!: TreeMapState;
-  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
-  @PropSync('selected_control', {type: String}) syncedSelectedControl!:
+  @Prop({ type: Array, required: true }) readonly value!: TreeMapState;
+  @Prop({ type: Object, required: true }) readonly filter!: ControlsFilter;
+  @PropSync('selected_control', { type: String }) syncedSelectedControl!:
     | string
     | null;
 

@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
-import {ExtendedControlStatus, GenericFilter} from '@/store/data_filters';
+import {ExtendedControlStatus, ControlsFilter} from '@/store/data_filters';
 import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
 import {ControlStatus} from 'inspecjs';
 import Vue from 'vue';
@@ -32,7 +32,12 @@ export default class StatusChart extends Vue {
     | ExtendedControlStatus[]
     | null;
 
-  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
+  @Prop({type: Object, required: true}) readonly filter!:
+    | {
+        fromFile: string;
+        omit_overlayed_controls: boolean;
+      }
+    | ControlsFilter;
   @Prop({type: Boolean, default: false}) showCompliance!: boolean;
 
   categories: Category<ControlStatus>[] = [
