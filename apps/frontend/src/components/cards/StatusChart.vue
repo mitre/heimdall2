@@ -38,6 +38,7 @@ export default class StatusChart extends Vue {
         omit_overlayed_controls: boolean;
       }
     | ControlsFilter;
+
   @Prop({type: Boolean, default: false}) showCompliance!: boolean;
 
   categories: Category<ControlStatus>[] = [

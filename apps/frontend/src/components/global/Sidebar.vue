@@ -294,7 +294,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   removeAllFilters() {
     SearchModule.clear();
     this.selectedFilters = [];
-    SearchModule.SET_SEARCH('');
+    SearchModule.updateSearch('');
   }
 
   get controlStatusSwitches(): {
