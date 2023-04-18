@@ -1,16 +1,21 @@
 <template>
-  <ApexPieChart :categories="categories" :series="series" :center-value="centerValue" @category-selected="onSelect" />
+  <ApexPieChart
+    :categories="categories"
+    :series="series"
+    :center-value="centerValue"
+    @category-selected="onSelect"
+  />
 </template>
 
 <script lang="ts">
-import ApexPieChart, { Category } from '@/components/generic/ApexPieChart.vue';
-import { ExtendedControlStatus, ControlsFilter } from '@/store/data_filters';
-import { calculateCompliance, StatusCountModule } from '@/store/status_counts';
-import { ControlStatus } from 'inspecjs';
+import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
+import {ExtendedControlStatus, ControlsFilter} from '@/store/data_filters';
+import {calculateCompliance, StatusCountModule} from '@/store/status_counts';
+import {ControlStatus} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
-import { SearchModule } from '../../store/search';
+import {Prop} from 'vue-property-decorator';
+import {SearchModule} from '../../store/search';
 
 /**
  * Categories property must be of type Category
@@ -22,15 +27,18 @@ import { SearchModule } from '../../store/search';
   }
 })
 export default class StatusChart extends Vue {
-  @Prop({ type: Array, default: null }) readonly value!:
+  @Prop({type: Array, default: null}) readonly value!:
     | ExtendedControlStatus[]
     | null;
 
-  @Prop({ type: Object, required: true }) readonly filter!: {
-    fromFile: string,
-    omit_overlayed_controls: boolean
-  } | ControlsFilter;
-  @Prop({ type: Boolean, default: false }) showCompliance!: boolean;
+  @Prop({type: Object, required: true}) readonly filter!:
+    | {
+        fromFile: string;
+        omit_overlayed_controls: boolean;
+      }
+    | ControlsFilter;
+
+  @Prop({type: Boolean, default: false}) showCompliance!: boolean;
 
   categories: Category<ControlStatus>[] = [
     {

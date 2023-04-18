@@ -1,16 +1,20 @@
 <template>
-  <ApexPieChart :categories="categories" :series="series" @category-selected="onSelect" />
+  <ApexPieChart
+    :categories="categories"
+    :series="series"
+    @category-selected="onSelect"
+  />
 </template>
 
 <script lang="ts">
-import ApexPieChart, { Category } from '@/components/generic/ApexPieChart.vue';
-import { ControlsFilter } from '@/store/data_filters';
-import { SeverityCountModule } from '@/store/severity_counts';
-import { Severity } from 'inspecjs';
+import ApexPieChart, {Category} from '@/components/generic/ApexPieChart.vue';
+import {ControlsFilter} from '@/store/data_filters';
+import {SeverityCountModule} from '@/store/severity_counts';
+import {Severity} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import { Prop } from 'vue-property-decorator';
-import { SearchEntry, SearchModule } from '../../store/search';
+import {Prop} from 'vue-property-decorator';
+import {SearchEntry, SearchModule} from '../../store/search';
 
 /**
  * Categories property must be of type Category
@@ -22,11 +26,11 @@ import { SearchEntry, SearchModule } from '../../store/search';
   }
 })
 export default class SeverityChart extends Vue {
-  @Prop({ type: Array }) readonly value!: SearchEntry<Severity>[];
-  @Prop({ type: Object, required: true }) readonly filter!: ControlsFilter;
+  @Prop({type: Array}) readonly value!: SearchEntry<Severity>[];
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
 
   categories: Category<Severity>[] = [
-    { label: 'Low', value: 'low', color: 'severityLow' },
+    {label: 'Low', value: 'low', color: 'severityLow'},
     {
       label: 'Medium',
       value: 'medium',

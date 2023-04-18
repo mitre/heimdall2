@@ -16,21 +16,21 @@ export default class RouteMixin extends Vue {
         // Save checklist filter state and clear filters before navigation
         FilteredDataModule.setChecklistFilterState(SearchModule.searchTerm);
         SearchModule.clear();
-        SearchModule.SET_SEARCH('');
+        SearchModule.updateSearch('');
         break;
       }
       case 'results': {
         /// Save results filter state and clear filters before navigation
         FilteredDataModule.setResultsFilterState(SearchModule.searchTerm);
         SearchModule.clear();
-        SearchModule.SET_SEARCH('');
+        SearchModule.updateSearch('');
         break;
       }
       case 'profiles': {
         /// Currently will still just save the results filter state and clear filters before navigation
         FilteredDataModule.setResultsFilterState(SearchModule.searchTerm);
         SearchModule.clear();
-        SearchModule.SET_SEARCH('');
+        SearchModule.updateSearch('');
         break;
       }
     }
