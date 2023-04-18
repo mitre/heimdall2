@@ -86,22 +86,6 @@ class Search extends VuexModule {
     keywords: []
   };
 
-  // controlIdSearchTerms: SearchEntry<ControlIdSearchTerm>[] = [];
-  // codeSearchTerms: SearchEntry<CodeSearchTerm>[] = [];
-  // ruleidSearchTerms: SearchEntry<RuleIdSearchTerm>[] = [];
-  // vulidSearchTerms: SearchEntry<VulIdSearchTerm>[] = [];
-  // stigidSearchTerms: SearchEntry<StigIdSearchTerm>[] = [];
-  // classificationSearchTerms: SearchEntry<ClassificationSearchTerm>[] = [];
-  // groupNameSearchTerms: SearchEntry<GroupNameSearchTerm>[] = [];
-  // cciSearchTerms: SearchEntry<CciSearchTerm>[] = [];
-  // iaControlsSearchTerms: SearchEntry<IaControlsSearchTerm>[] = [];
-  // NISTIdFilter: SearchEntry<NistIdFilter>[] = [];
-  // descriptionSearchTerms: SearchEntry<DescriptionSearchTerm>[] = [];
-  // statusFilter: SearchEntry<ExtendedControlStatus>[] = [];
-  // severityFilter: SearchEntry<Severity>[] = [];
-  // titleSearchTerms: SearchEntry<TitleSearchTerm>[] = [];
-  // keywordsSearchTerms: SearchEntry<KeywordsSearchTerm>[] = [];
-
   /** Sets the current search */
   @Mutation
   SET_SEARCH(newSearch: string) {
