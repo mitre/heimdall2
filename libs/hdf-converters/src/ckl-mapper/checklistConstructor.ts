@@ -45,7 +45,7 @@ export type ChecklistVuln = Omit<
 > & {
   status: 'Passed' | 'Failed' | 'Not Applicable' | 'Not Reviewed';
   vulnNum: string;
-  severity: string;
+  severity: 'low' | 'medium' | 'high';
   groupTitle: string;
   ruleId: string;
   ruleVersion: string;
@@ -172,7 +172,10 @@ export function createChecklistObject(raw: ChecklistJSONIX): ChecklistObject {
         severityoverride: _.get(vuln, 'severityoverride'),
         severityjustification: _.get(vuln, 'severityjustification'),
         vulnNum: getAttributeData(stigdata, 'Vuln_Num'),
-        severity: getAttributeData(stigdata, 'Severity'),
+        severity: getAttributeData(
+          stigdata,
+          'Severity'
+        ) as unknown as ChecklistVuln['severity'],
         groupTitle: getAttributeData(stigdata, 'Group_Title'),
         ruleId: getAttributeData(stigdata, 'Rule_ID'),
         ruleVersion: getAttributeData(stigdata, 'Rule_Ver'),

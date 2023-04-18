@@ -61,7 +61,7 @@ function transformImpact(vuln: ChecklistVuln): number {
   // check if severity does not exists within ImpactMapping throw new Error
   //throw new Error("Mapping does not exist");
   return ImpactMapping[
-    severity.toString().toLowerCase() as keyof typeof ImpactMapping
+    severity.toLowerCase() as keyof typeof ImpactMapping
   ];
 }
 
