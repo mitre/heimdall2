@@ -326,15 +326,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     );
   }
 
-  get profiles(): SourcedContextualizedProfile[] {
-    return Array.from(FilteredDataModule.profiles(this.file_filter));
-  }
-
-  get activeFiles(): (
-    | SourcedContextualizedEvaluation
-    | SourcedContextualizedProfile
-  )[] {
-    return this.is_result_view ? this.evaluationFiles : this.profiles;
+  get activeFiles(): SourcedContextualizedEvaluation[] {
+    return this.evaluationFiles;
   }
 
   getFile(fileID: FileID) {
@@ -513,6 +506,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 .glow {
   box-shadow: 0px 0px 8px 6px #5a5;
 }
+
 .bottom-right {
   position: absolute;
   bottom: 0;
