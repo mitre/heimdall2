@@ -1,5 +1,4 @@
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
-const path = require('path');
 
 module.exports = {
   lintOnSave: 'warning',
@@ -20,32 +19,16 @@ module.exports = {
         fs: false
       }
     },
-    externals: {
-      jquery: 'jQuery'
-    },
     module: {
       rules: [
-        {
-          test: /\.(t|j)sx?$/,
-          enforce: 'post',
-          use: [{loader: path.resolve('./stripStrictLoader.js')}]
-        },
         {
           test: /\.m?js$/,
           exclude: /(node_modules|bower_components)/,
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['@babel/preset-env', {modules: 'commonjs'}],
-              plugins: [
-                [
-                  '@babel/plugin-transform-modules-commonjs',
-                  {
-                    loose: true,
-                    strictMode: false
-                  }
-                ]
-              ]
+              presets: ['@babel/preset-env'],
+              plugins: ['transform-remove-strict-mode']
             }
           }
         }
