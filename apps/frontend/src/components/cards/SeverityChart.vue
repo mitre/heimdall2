@@ -69,13 +69,13 @@ export default class SeverityChart extends Vue {
     ) {
       SearchModule.removeSearchFilter({
         field: 'severity',
-        value: severity.value.toLowerCase() as Severity,
+        value: severity.value,
         negated: false // Defaulted as false
       });
     } else {
       SearchModule.addSearchFilter({
         field: 'severity',
-        value: severity.value.toLowerCase() as Severity,
+        value: severity.value,
         negated: false // Defaulted as false
       });
     }

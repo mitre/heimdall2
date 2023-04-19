@@ -20,15 +20,15 @@ export default class RouteMixin extends Vue {
         break;
       }
       case 'results': {
-        /// Save results filter state and clear filters before navigation
+        // Save results filter state and clear filters before navigation
         FilteredDataModule.setResultsFilterState(SearchModule.searchTerm);
         SearchModule.clear();
         SearchModule.updateSearch('');
         break;
       }
       case 'profiles': {
-        /// Currently will still just save the results filter state and clear filters before navigation
-        FilteredDataModule.setResultsFilterState(SearchModule.searchTerm);
+        // Save profiles filter state and clear filters before navigation
+        FilteredDataModule.setProfilesFilterState(SearchModule.searchTerm);
         SearchModule.clear();
         SearchModule.updateSearch('');
         break;
@@ -46,11 +46,11 @@ export default class RouteMixin extends Vue {
         break;
       }
       case '/results': {
-        SearchModule.updateSearch(FilteredDataModule.controlsFilterState);
+        SearchModule.updateSearch(FilteredDataModule.resultsFilterState);
         break;
       }
       case '/profiles': {
-        SearchModule.updateSearch(FilteredDataModule.controlsFilterState);
+        SearchModule.updateSearch(FilteredDataModule.profilesFilterState);
         break;
       }
     }

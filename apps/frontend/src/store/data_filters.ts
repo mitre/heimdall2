@@ -55,13 +55,15 @@ export declare type ExtendedControlStatus = ControlStatus | 'Waived';
 
 export type GenericSearchEntryValue = string | ExtendedControlStatus | Severity;
 
+export type SearchBarEntry = string;
+
 export type FilterRecord =
   | boolean
   | SearchEntry<GenericSearchEntryValue>[]
   | undefined;
 
-/** Contains common filters on data from the store. */
-export interface GenericFilter {
+/** Contains common filters for controls. */
+export interface ControlsFilter {
   /** Which file these objects came from. Undefined => any */
   fromFile: FileID[];
 
@@ -92,10 +94,9 @@ export interface GenericFilter {
 
   /** A specific control id */
   control_id?: string;
-}
 
-/** Contains common filters for controls. */
-export interface ControlsFilter extends GenericFilter {
+  // End of "generic" filters
+
   /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
   treeFilters?: TreeMapState;
 
@@ -114,11 +115,41 @@ export interface ControlsFilter extends GenericFilter {
   searchTerm?: string;
 }
 
-console.log('What is this: ');
-console.log('And what is this: ');
-
 /** Contains common filters for a checklist. */
-export interface ChecklistFilter extends GenericFilter {
+export interface ChecklistFilter {
+  /** Which file these objects came from. Undefined => any */
+  fromFile: FileID[];
+
+  // Control specific
+  /** What status the controls can have. Undefined => any */
+  status?: SearchEntry<ExtendedControlStatus>[];
+
+  /** What severity the controls can have. Undefined => any */
+  severity?: SearchEntry<Severity>[];
+
+  /** Titles to search for */
+  titleSearchTerms?: SearchEntry<TitleSearchTerm>[];
+
+  /** Descriptions to search for */
+  descriptionSearchTerms?: SearchEntry<DescriptionSearchTerm>[];
+
+  /** Code to search for */
+  codeSearchTerms?: SearchEntry<CodeSearchTerm>[];
+
+  /** CCIs to search for */
+  nistIdFilter?: SearchEntry<NistIdFilter>[];
+
+  /** Checklist keywords to search for */
+  keywordsSearchTerms?: SearchEntry<KeywordsSearchTerm>[];
+
+  /** Whether or not to allow/include overlayed controls */
+  omit_overlayed_controls?: boolean;
+
+  /** A specific control id */
+  control_id?: string;
+
+  // End of "generic" filters
+
   /** Ruleid to search for */
   ruleidSearchTerms?: SearchEntry<RuleIdSearchTerm>[];
 
@@ -195,26 +226,8 @@ export class FilteredData extends VuexModule {
   selectedProfileIds: FileID[] = [];
   selectedChecklistIds: FileID[] = [];
 
-  checklistFilterState: string = '';
-  // ChecklistFilter = {
-  //   fromFile: [],
-  //   status: [],
-  //   severity: [],
-  //   titleSearchTerms: [],
-  //   descriptionSearchTerms: [],
-  //   codeSearchTerms: [],
-  //   nistIdFilter: [],
-  //   keywordsSearchTerms: [],
-  //   omit_overlayed_controls: false,
-  //   control_id: '',
-  //   ruleidSearchTerms: [],
-  //   vulidSearchTerms: [],
-  //   stigidSearchTerms: [],
-  //   classificationSearchTerms: [],
-  //   groupNameSearchTerms: [],
-  //   cciSearchTerms: [],
-  //   iaControlsSearchTerms: []
-  // };
+  /** Filter state for the checklist view */
+  checklistFilterState: SearchBarEntry = '';
 
   /** Sets the current checklist state */
   @Mutation
@@ -228,34 +241,34 @@ export class FilteredData extends VuexModule {
     this.context.commit('SET_CHECKLIST_FILTER_STATE', checklistState);
   }
 
-  // TODO: Change this naming to "resultsFilterState" or change the next two functions to be worded around controls
-  controlsFilterState: string = '';
-  //  ControlsFilter = {
-  //   fromFile: [],
-  //   status: [],
-  //   severity: [],
-  //   titleSearchTerms: [],
-  //   descriptionSearchTerms: [],
-  //   codeSearchTerms: [],
-  //   nistIdFilter: [],
-  //   keywordsSearchTerms: [],
-  //   omit_overlayed_controls: false,
-  //   control_id: '',
-  //   treeFilters: [],
-  //   ids: [],
-  //   searchTerm: ''
-  // };
+  /** Filter state for the results view */
+  resultsFilterState: SearchBarEntry = '';
 
   /** Sets the current results state */
   @Mutation
   SET_RESULTS_FILTER_STATE(resultsState: string) {
-    this.controlsFilterState = resultsState;
+    this.resultsFilterState = resultsState;
   }
 
   /** Update the current results state */
   @Action
   setResultsFilterState(resultsState: string) {
     this.context.commit('SET_RESULTS_FILTER_STATE', resultsState);
+  }
+
+  /** Filter state for the profiles view */
+  profilesFilterState: SearchBarEntry = '';
+
+  /** Sets the current results state */
+  @Mutation
+  SET_PROFILES_FILTER_STATE(profilesState: string) {
+    this.profilesFilterState = profilesState;
+  }
+
+  /** Update the current results state */
+  @Action
+  setProfilesFilterState(profilesState: string) {
+    this.context.commit('SET_PROFILES_FILTER_STATE', profilesState);
   }
 
   /** For Checklist Viewer */
