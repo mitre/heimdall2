@@ -1,3 +1,27 @@
+v2.6.44
+
+- BUG Fix for Heimdall CKL Export @Hookwitz (#4212)
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1359.0 to 2.1360.0 @dependabot (#4362)
+- Bump @types/sinon from 10.0.13 to 10.0.14 @dependabot (#4359)
+- Bump @aws-sdk/client-config-service from 3.312.0 to 3.315.0 @dependabot (#4363)
+- Bump diff2html from 3.4.34 to 3.4.35 @dependabot (#4356)
+- Bump @typescript-eslint/parser from 5.58.0 to 5.59.0 @dependabot (#4361)
+- Bump apexcharts from 3.38.0 to 3.39.0 @dependabot (#4364)
+- Bump @typescript-eslint/eslint-plugin from 5.58.0 to 5.59.0 @dependabot (#4358)
+- Bump typedoc from 0.24.1 to 0.24.4 @dependabot (#4360)
+- Bump @types/lodash from 4.14.192 to 4.14.194 @dependabot (#4351)
+- Bump aws-sdk from 2.1358.0 to 2.1359.0 @dependabot (#4354)
+- Bump apexcharts from 3.37.3 to 3.38.0 @dependabot (#4355)
+- Bump aws-sdk from 2.1357.0 to 2.1358.0 @dependabot (#4350)
+- Bump core-js from 3.30.0 to 3.30.1 @dependabot (#4349)
+- Bump @types/validator from 13.7.14 to 13.7.15 @dependabot (#4347)
+- Bump vuetify from 2.6.14 to 2.6.15 @dependabot (#4343)
+- Bump aws-sdk from 2.1356.0 to 2.1357.0 @dependabot (#4345)
+- Bump @aws-sdk/client-config-service from 3.310.0 to 3.312.0 @dependabot (#4344)
+
 v2.6.43
 
 ## Dependency Updates
