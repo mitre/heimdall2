@@ -1,5 +1,6 @@
 import Store from '@/store/store';
 import {controlStatuses, Severity} from 'inspecjs';
+import _ from 'lodash';
 import {parse} from 'search-string';
 import {
   Action,
@@ -155,9 +156,9 @@ class Search extends VuexModule {
    * @param searchPayload - An object of field (The field to add to (e.g., status, severity, etc.)), value (The value to add to the field (e.g., "Passed","Failed", etc.)), and previousValues (The values already in the querystring)
    */
   @Action
-  removeSearchFilter(searchPayload: {
+  removeSearchFilter<T>(searchPayload: {
     field: string;
-    value: string;
+    value: T;
     negated: boolean;
   }) {
     if (this.parsedSearchResult == undefined) {
@@ -168,9 +169,12 @@ class Search extends VuexModule {
       .getConditionArray()
       .slice();
     for (const searchEntry of clonedConditionArray) {
+      const payloadValue = _.isString(searchPayload.value)
+        ? searchPayload.value.toLowerCase()
+        : searchPayload.value;
       if (
         searchEntry.keyword === searchPayload.field &&
-        searchEntry.value.toLowerCase() === searchPayload.value.toLowerCase()
+        searchEntry.value.toLowerCase() === payloadValue
       ) {
         this.parsedSearchResult.removeEntry(
           searchPayload.field,
