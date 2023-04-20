@@ -23,7 +23,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import XLSX from 'xlsx';
-import {GenericFilter, FilteredDataModule} from '../../store/data_filters';
+import {ControlsFilter, FilteredDataModule} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 
 type CAATRow = {
@@ -36,7 +36,7 @@ type CAATRow = {
   }
 })
 export default class ExportCaat extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
 
   MAX_CELL_SIZE = 32000;
 

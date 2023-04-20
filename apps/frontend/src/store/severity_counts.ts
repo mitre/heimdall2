@@ -3,10 +3,11 @@
  */
 
 import {
+  ChecklistFilter,
+  ControlsFilter,
   filterCacheKey,
   FilteredData,
-  FilteredDataModule,
-  GenericFilter
+  FilteredDataModule
 } from '@/store/data_filters';
 import Store from '@/store/store';
 import {Severity} from 'inspecjs';
@@ -19,10 +20,10 @@ type SeverityHash = {[key in Severity]: number};
 // Helper function for counting a status in a list of controls
 function count_severities(
   data: FilteredData,
-  filter: GenericFilter
+  filter: ControlsFilter | ChecklistFilter
 ): SeverityHash {
   // Remove the status filter from the control filter
-  const newFilter: GenericFilter = {
+  const newFilter: ControlsFilter | ChecklistFilter = {
     status: [],
     ...filter
   };
@@ -55,11 +56,11 @@ function count_severities(
 })
 export class SeverityCount extends VuexModule {
   /** Generates a hash mapping each status -> a count of its members */
-  get hash(): (filter: GenericFilter) => SeverityHash {
+  get hash(): (filter: ControlsFilter | ChecklistFilter) => SeverityHash {
     // Establish our cache and dependency
     const cache: LRUCache<string, SeverityHash> = new LRUCache({max: 30});
 
-    return (filter: GenericFilter) => {
+    return (filter: ControlsFilter | ChecklistFilter) => {
       const id = filterCacheKey(filter);
       const cached = cache.get(id);
       // If cache hits, just return
@@ -74,23 +75,23 @@ export class SeverityCount extends VuexModule {
     };
   }
 
-  get none(): (filter: GenericFilter) => number {
+  get none(): (filter: ControlsFilter | ChecklistFilter) => number {
     return (filter) => this.hash(filter)['none'];
   }
 
-  get low(): (filter: GenericFilter) => number {
+  get low(): (filter: ControlsFilter | ChecklistFilter) => number {
     return (filter) => this.hash(filter)['low'];
   }
 
-  get medium(): (filter: GenericFilter) => number {
+  get medium(): (filter: ControlsFilter | ChecklistFilter) => number {
     return (filter) => this.hash(filter)['medium'];
   }
 
-  get high(): (filter: GenericFilter) => number {
+  get high(): (filter: ControlsFilter | ChecklistFilter) => number {
     return (filter) => this.hash(filter)['high'];
   }
 
-  get critical(): (filter: GenericFilter) => number {
+  get critical(): (filter: ControlsFilter | ChecklistFilter) => number {
     return (filter) => this.hash(filter)['critical'];
   }
 }

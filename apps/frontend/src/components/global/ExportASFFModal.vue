@@ -75,7 +75,7 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {GenericFilter, FilteredDataModule} from '@/store/data_filters';
+import {ControlsFilter, FilteredDataModule} from '@/store/data_filters';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import {FromHdfToAsffMapper} from '@mitre/hdf-converters';
 import Vue from 'vue';
@@ -89,7 +89,7 @@ import {FileData} from './ExportJson.vue';
   }
 })
 export default class ExportASFFModal extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
 
   files: File[] = [];
   showingModal = false;
