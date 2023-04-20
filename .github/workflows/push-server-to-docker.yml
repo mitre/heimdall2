@@ -18,6 +18,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Checkout the Heimdall Repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v3
@@ -29,15 +31,7 @@ jobs:
       - name: Get release tags
         shell: bash
         id: get-release-version
-        run: |
-          if [[ "${github_ref}" =~ "refs/tags/v" ]]; then
-            echo "RELEASE_VERSION=${github_ref##refs/tags/v}" >> $GITHUB_ENV
-          else
-            echo "GITHUB_REF: ($github_ref) does not match pattern (refs/tags/v)"
-            exit 1;
-          fi
-        env:
-          github_ref: ${{ github.ref }}
+        run: echo "tag=$(git describe --abbrev=0 --tags | sed 's/v//')" >> $GITHUB_ENV
       - name: Get Docker SHA
         shell: bash
         id: get-docker-sha
