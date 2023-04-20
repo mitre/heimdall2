@@ -1,10 +1,8 @@
 <template>
   <Modal :visible="visible" @close-modal="$emit('close-modal')">
     <v-card>
-      <h2 style="text-align: center; padding-top: 25px">
-        Add/Update Technology Area
-      </h2>
-      <div style="margin: 30px">
+      <h2 class="modal-title">Add/Update Technology Area</h2>
+      <div class="input-section">
         <v-select
           v-model="selectedChecklistAsset.techarea"
           dense
@@ -13,6 +11,9 @@
           justify="center"
           label="Select a Technology Area (optional)"
         />
+        <v-btn @click="clearSelection()">
+          <span class="d-none d-md-inline pr-2"> Clear Selection </span>
+        </v-btn>
       </div>
       <v-divider />
       <v-card-actions>
@@ -64,6 +65,10 @@ export default class ChecklistTechnologyAreaModal extends Vue {
     }
   }
 
+  clearSelection() {
+    this.selectedChecklistAsset.techarea = '';
+  }
+
   techAreaLabels: string[] = [
     'Application Review',
     'Boundary Security',
@@ -85,3 +90,14 @@ export default class ChecklistTechnologyAreaModal extends Vue {
   ];
 }
 </script>
+
+<style scoped>
+.modal-title {
+  text-align: center;
+  padding-top: 25px;
+}
+
+.input-section {
+  margin: 30px;
+}
+</style>
