@@ -3,6 +3,7 @@ name: Push Heimdall Server to Docker Hub on every merge to master and tag as lat
 on:
   push:
     branches: [ master ]
+  workflow_dispatch: # to be removed
 
 jobs:
   docker:
@@ -25,3 +26,31 @@ jobs:
           push: true
           platforms: "linux/amd64"
           tags: mitre/heimdall2:latest
+      - name: Get release tags
+        shell: bash
+        id: get-release-version
+        run: |
+          if [[ "${github_ref}" =~ "refs/tags/v" ]]; then
+            echo "RELEASE_VERSION=${github_ref##refs/tags/v}" >> $GITHUB_ENV
+          else
+            echo "GITHUB_REF: ($github_ref) does not match pattern (refs/tags/v)"
+            exit 1;
+          fi
+        env:
+          github_ref: ${{ github.ref }}
+      - name: Get Docker SHA
+        shell: bash
+        id: get-docker-sha
+        run: echo "DOCKER_SHA=$(docker manifest inspect --verbose docker.io/mitre/heimdall2:${{ env.RELEASE_VERSION }} | jq '.Descriptor.digest')" >> $GITHUB_ENV
+      - name: Sophos Factory pipeline
+        uses: sophos/factory-run-pipeline@master
+        with:
+          project_id: 601c48ad71a5df94e698a9ad
+          job_id: 644185303992f67e1d9412f2
+          api_token: ${{ secrets.SOPHOS_FACTORY_TOKEN }}
+          variables: |
+            {
+              "gitlabHost": "repo1.dso.mil",
+              "heimdallVersion": "${{ env.RELEASE_VERSION }}",
+              "heimdallDockerURL": "docker://docker.io/mitre/heimdall2@${{ env.DOCKER_SHA }}"
+            }
