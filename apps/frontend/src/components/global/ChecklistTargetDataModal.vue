@@ -1,10 +1,8 @@
 <template>
   <Modal :visible="visible" @close-modal="$emit('close-modal')">
     <v-card>
-      <h2 style="text-align: center; padding-top: 25px">
-        Add/Update Target Data
-      </h2>
-      <div style="margin: 30px">
+      <h2 class="modal-title">Add/Update Target Data</h2>
+      <div class="input-section">
         <v-select
           v-model="selectedChecklistAsset.assettype"
           outlined
@@ -15,26 +13,31 @@
           v-model="selectedChecklistAsset.marking"
           dense
           label="Marking"
+          placeholder="Examples: UNCLASSIFIED, FOUO, CUI"
         />
         <v-text-field
           v-model="selectedChecklistAsset.hostname"
           dense
           label="Host Name"
+          placeholder="localhost"
         />
         <v-text-field
           v-model="selectedChecklistAsset.hostip"
           dense
           label="IP Address"
+          placeholder="XXX.XXX.XXX.XXX"
         />
         <v-text-field
           v-model="selectedChecklistAsset.hostmac"
           dense
           label="MAC Address"
+          placeholder="XX:XX:XX:XX:XX:XX"
         />
         <v-text-field
           v-model="selectedChecklistAsset.hostfqdn"
           dense
           label="Fully Qualified Domain Name"
+          placeholder="https://www.exampledomain.com"
         />
         <v-text-field
           v-model="selectedChecklistAsset.targetcomment"
@@ -49,21 +52,30 @@
           <v-radio label="Member Server" value="Member Server" />
           <v-radio label="Domain Controller" value="Domain Controller" />
         </v-radio-group>
-        <v-checkbox
-          v-model="selectedChecklistAsset.webordatabase"
-          label="Website or Database STIG"
-          hide-details
-        />
-        <v-text-field
-          v-if="selectedChecklistAsset.webordatabase"
-          v-model="selectedChecklistAsset.webdbsite"
-          label="Site"
-        />
-        <v-text-field
-          v-if="selectedChecklistAsset.webordatabase"
-          v-model="selectedChecklistAsset.webdbinstance"
-          label="Instance"
-        />
+        <div class="d-flex flex-wrap">
+          <v-checkbox
+            v-model="selectedChecklistAsset.webordatabase"
+            class="mr-5"
+            label="Website or Database STIG"
+            hide-details
+            @change="clearTextInputs()"
+          />
+          <div class="flexed-inputs">
+            <v-text-field
+              v-model="selectedChecklistAsset.webdbsite"
+              class="shrink input-width"
+              label="Site"
+              :disabled="!selectedChecklistAsset.webordatabase"
+            />
+
+            <v-text-field
+              v-model="selectedChecklistAsset.webdbinstance"
+              class="shrink input-width"
+              label="Instance"
+              :disabled="!selectedChecklistAsset.webordatabase"
+            />
+          </div>
+        </div>
       </div>
       <v-divider />
       <v-card-actions>
@@ -106,6 +118,11 @@ export default class ChecklistTargetDataModal extends Vue {
     );
   }
 
+  clearTextInputs() {
+    this.selectedChecklistAsset.webdbsite = '';
+    this.selectedChecklistAsset.webdbinstance = '';
+  }
+
   get selectedChecklistAsset() {
     const selectedChecklist = this.getChecklist(this.file_filter);
     if (selectedChecklist) {
@@ -116,3 +133,25 @@ export default class ChecklistTargetDataModal extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.modal-title {
+  text-align: center;
+  padding-top: 25px;
+}
+
+.flexed-inputs {
+  display: flex;
+  justify-content: space-between;
+  width: 75%;
+  flex-wrap: wrap;
+}
+
+.input-section {
+  margin: 30px;
+}
+
+.input-width {
+  width: 400px;
+}
+</style>
