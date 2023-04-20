@@ -45,7 +45,7 @@ export type ChecklistVuln = Omit<
 > & {
   status: 'Passed' | 'Failed' | 'Not Applicable' | 'Not Reviewed';
   vulnNum: string;
-  severity: 'low' | 'medium' | 'high';
+  severity: string;
   groupTitle: string;
   ruleId: string;
   ruleVersion: string;
