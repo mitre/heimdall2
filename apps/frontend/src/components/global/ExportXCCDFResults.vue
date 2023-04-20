@@ -15,7 +15,7 @@
 
 <script lang="ts">
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {GenericFilter, FilteredDataModule} from '@/store/data_filters';
+import {ControlsFilter, FilteredDataModule} from '@/store/data_filters';
 import {FromHDFToXCCDFMapper} from '@mitre/hdf-converters';
 import axios from 'axios';
 import Vue from 'vue';
@@ -32,7 +32,7 @@ export type FileData = {
   }
 })
 export default class ExportXCCDF extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: GenericFilter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
   @Prop({type: Boolean, required: true}) readonly isResultView!: boolean;
   //exports .zip of XCCDFs if multiple are selected, if one is selected it will export that single file
   exportXCCDF() {
