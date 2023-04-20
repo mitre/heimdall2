@@ -32,12 +32,7 @@ export default class StatusChart extends Vue {
     | ExtendedControlStatus[]
     | null;
 
-  @Prop({type: Object, required: true}) readonly filter!:
-    | {
-        fromFile: string;
-        omit_overlayed_controls: boolean;
-      }
-    | ControlsFilter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
 
   @Prop({type: Boolean, default: false}) showCompliance!: boolean;
 
