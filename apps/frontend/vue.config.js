@@ -28,7 +28,15 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               presets: ['env'],
-              plugins: ['transform-remove-strict-mode']
+              plugins: [
+                'transform-remove-strict-mode',
+                [
+                  require('@babel/plugin-transform-modules-commonjs'),
+                  {
+                    strictMode: false
+                  }
+                ]
+              ]
             }
           }
         }
