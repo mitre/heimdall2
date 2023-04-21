@@ -2,7 +2,8 @@
   <ApexPieChart
     :categories="categories"
     :series="series"
-    @category-selected="onSelect"
+    @slice-selected="onSliceSelect"
+    @legend-selected="onLegendSelect"
   />
 </template>
 
@@ -59,7 +60,23 @@ export default class SeverityChart extends Vue {
     ];
   }
 
-  onSelect(severity: Category<Severity>) {
+  onSliceSelect(severity: Category<Severity>) {
+    for (const filter of SearchModule.inFileSearchTerms.severityFilter) {
+      SearchModule.removeSearchFilter({
+        field: 'severity',
+        value: filter.value,
+        negated: false // Defaulted as false
+      });
+    }
+    // Apply selected status
+    SearchModule.addSearchFilter({
+      field: 'severity',
+      value: severity.value.toLowerCase(),
+      negated: false // Defaulted as false
+    });
+  }
+
+  onLegendSelect(severity: Category<Severity>) {
     // In the case that the values are the same, we want to instead emit null
     if (
       this.value &&
