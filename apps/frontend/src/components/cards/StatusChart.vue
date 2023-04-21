@@ -83,23 +83,44 @@ export default class StatusChart extends Vue {
   }
 
   onSelect(status: Category<ControlStatus>) {
-    if (
-      SearchModule.inFileSearchTerms.statusFilter?.find((obj) => {
-        return obj.value === status.value.toLowerCase();
-      }) !== undefined
-    ) {
+    console.log('I have been selected: ', status);
+    // Should clear status become an action instead of just a mutation???
+    // Clear status filter
+    console.log(
+      'What is this collection: ',
+      SearchModule.inFileSearchTerms.statusFilter
+    );
+    for (const filter of SearchModule.inFileSearchTerms.statusFilter) {
+      console.log('I am a filter: ', filter);
       SearchModule.removeSearchFilter({
         field: 'status',
-        value: status.value.toLowerCase(),
-        negated: false // Defaulted as false
-      });
-    } else {
-      SearchModule.addSearchFilter({
-        field: 'status',
-        value: status.value.toLowerCase(),
+        value: filter.value,
         negated: false // Defaulted as false
       });
     }
+    // Apply selected status
+    SearchModule.addSearchFilter({
+      field: 'status',
+      value: status.value.toLowerCase(),
+      negated: false // Defaulted as false
+    });
+    // if (
+    //   SearchModule.inFileSearchTerms.statusFilter?.find((obj) => {
+    //     return obj.value === status.value.toLowerCase();
+    //   }) !== undefined
+    // ) {
+    //   SearchModule.removeSearchFilter({
+    //     field: 'status',
+    //     value: status.value.toLowerCase(),
+    //     negated: false // Defaulted as false
+    //   });
+    // } else {
+    //   SearchModule.addSearchFilter({
+    //     field: 'status',
+    //     value: status.value.toLowerCase(),
+    //     negated: false // Defaulted as false
+    //   });
+    // }
   }
 }
 </script>
