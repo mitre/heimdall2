@@ -1,6 +1,6 @@
-import {SequelizeOptions} from 'sequelize-typescript';
+import { SequelizeOptions } from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
-import {StartupSettingsDto} from './dto/startup-settings.dto';
+import { StartupSettingsDto } from './dto/startup-settings.dto';
 
 export class ConfigService {
   private readonly appConfig: AppConfig;
@@ -46,6 +46,7 @@ export class ConfigService {
 
   frontendStartupSettings(): StartupSettingsDto {
     return new StartupSettingsDto({
+      apiKeysEnabled: this.get('API_KEY_SECRET') ? true : false,
       banner: this.get('WARNING_BANNER') || '',
       classificationBannerColor:
         this.get('CLASSIFICATION_BANNER_COLOR') || 'red',
