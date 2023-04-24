@@ -180,9 +180,8 @@
             id="toggleAPIKeys"
             class="ml-2"
             @click="toggleShowAPIKeys"
-            >{{ showAPIKeys ? 'Hide
-                      API Keys' : 'Show API Keys' }}</v-btn
-          >
+            >{{ showAPIKeys ? 'Hide API Keys' : 'Show API Keys' }}
+          </v-btn>
           <div v-show="changePassword">
             <v-text-field
               id="new_password_field"
