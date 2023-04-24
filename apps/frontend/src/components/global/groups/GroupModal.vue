@@ -55,7 +55,7 @@
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <GroupAPIKeysModal v-if="!create" :group="group">
+        <GroupAPIKeysModal v-if="!create && apiKeysEnabled" :group="group">
           <template #clickable="{on, attrs}">
             <v-btn
               data-cy="groupAPIKeys"
@@ -93,6 +93,7 @@ import ActionDialog from '@/components/generic/ActionDialog.vue';
 import GroupAPIKeysModal from '@/components/global/groups/GroupAPIKeysModal.vue';
 import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
+import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {
   IAddUserToGroup,
@@ -151,6 +152,10 @@ export default class GroupModal extends Vue {
     } else {
       return 'Update Group';
     }
+  }
+
+  get apiKeysEnabled(): boolean {
+    return ServerModule.apiKeysEnabled;
   }
 
   // Upon user role update, the child component will emit whether the current state is acceptable
