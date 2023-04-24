@@ -384,7 +384,6 @@ export default class UserModal extends Vue {
         .catch((error) => {
           if (error.response) {
             SnackbarModule.failure('Unable to get API Keys');
-            return;
           }
         });
       this.apiKeyTableLoading = false;
