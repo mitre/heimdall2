@@ -144,18 +144,16 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     if (numChecklists > numProfiles && numChecklists > numEvaluations) {
       if (this.currentRoute !== 'checklists')
         this.navigateWithNoErrors(`/checklists`);
-    } else {
-      if (numEvaluations >= numProfiles) {
-        // Only navigate the user to the results page if they are not
-        // already on the compare page.
-        if (this.currentRoute === 'compare') {
-          this.navigateWithNoErrors(`/compare/${loadedDatabaseIds}`);
-        } else {
-          this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
-        }
+    } else if (numEvaluations >= numProfiles) {
+      // Only navigate the user to the results page if they are not
+      // already on the compare page.
+      if (this.currentRoute === 'compare') {
+        this.navigateWithNoErrors(`/compare/${loadedDatabaseIds}`);
       } else {
-        this.navigateWithNoErrors(`/profiles/${loadedDatabaseIds}`);
+        this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
       }
+    } else {
+      this.navigateWithNoErrors(`/profiles/${loadedDatabaseIds}`);
     }
   }
 }
