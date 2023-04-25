@@ -12,7 +12,6 @@ export default class RouteMixin extends Vue {
 
   navigateWithNoErrors(route: string): void {
     // Saves filter state of current route before navigation
-    console.log('I am saving: ', this.currentRoute);
     switch (this.currentRoute) {
       case 'checklists': {
         // Save checklist filter state and clear filters before navigation
@@ -42,7 +41,6 @@ export default class RouteMixin extends Vue {
     });
     // Set the current view
     AppInfoModule.SET_CURRENT_VIEW(route.split('/')[1]);
-    console.log('I am setting to: ', route.split('/')[1]);
     // Sets the filter state to the page navigated to
     switch (route.split('/')[1]) {
       case 'checklists': {
