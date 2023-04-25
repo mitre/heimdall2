@@ -1,3 +1,21 @@
+v2.6.45
+
+- Added variable in store/config to track if api keys are enabled @Rlin232 (#4383)
+- Allow owners to change users group role @samuelsunvold (#1494)
+
+## Dependency Updates
+
+- Bump eslint from 8.38.0 to 8.39.0 @dependabot (#4380)
+- Bump aws-sdk from 2.1362.0 to 2.1363.0 @dependabot (#4379)
+- Bump @types/node from 18.15.12 to 18.15.13 @dependabot (#4376)
+- Bump aws-sdk from 2.1361.0 to 2.1362.0 @dependabot (#4375)
+- Bump sinon from 15.0.3 to 15.0.4 @dependabot (#4374)
+- Bump aws-sdk from 2.1360.0 to 2.1361.0 @dependabot (#4369)
+- Bump @types/node from 18.15.11 to 18.15.12 @dependabot (#4371)
+- Bump axios from 1.3.5 to 1.3.6 @dependabot (#4370)
+- Bump fast-xml-parser from 4.2.0 to 4.2.2 @dependabot (#4365)
+- Bump @aws-sdk/client-config-service from 3.315.0 to 3.316.0 @dependabot (#4368)
+
 v2.6.44
 
 - BUG Fix for Heimdall CKL Export @Hookwitz (#4212)
