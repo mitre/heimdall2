@@ -434,7 +434,7 @@ export class InspecIntake extends VuexModule {
     });
 
     InspecDataModule.addChecklist({uniqueId: fileID, ...newChecklist});
-    FilteredDataModule.toggle_checklist(fileID);
+    FilteredDataModule.select_exclusive_checklist(fileID);
 
     return fileID;
   }

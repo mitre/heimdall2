@@ -443,7 +443,7 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
-  public toggle_checklist(fileID: FileID): void {
+  public select_exclusive_checklist(fileID: FileID): void {
     if (this.selectedChecklistIds.includes(fileID)) {
       this.CLEAR_CHECKLIST(fileID);
       this.SELECT_RULE(this.emptyRule);
