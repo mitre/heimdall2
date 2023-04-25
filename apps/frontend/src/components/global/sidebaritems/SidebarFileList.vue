@@ -5,7 +5,15 @@
     @click.stop="select_file_exclusive"
   >
     <v-list-item-action @click.stop="select_file">
-      <v-checkbox :input-value="selected" color="blue" />
+      <v-checkbox
+        v-if="currentView !== 'checklists'"
+        :input-value="selected"
+        color="blue"
+      />
+
+      <v-radio-group v-else :value="selected ? 0 : -1">
+        <v-radio :value="0" color="blue" />
+      </v-radio-group>
     </v-list-item-action>
 
     <v-list-item-avatar>
@@ -44,6 +52,7 @@ import _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import {ChecklistFile} from '@mitre/hdf-converters';
 import {Prop} from 'vue-property-decorator';
+import {AppInfoModule} from '@/store/app_info';
 
 @Component
 export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
@@ -74,7 +83,12 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  //checks if file is selected
+  /** Current application view */
+  get currentView() {
+    return AppInfoModule.currentView;
+  }
+
+  /** Checks if file is selected */
   get selected(): boolean {
     return FilteredDataModule.selected_file_ids.includes(this.file.uniqueId);
   }
@@ -85,7 +99,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     // Remove any database files that may have been in the URL
     // by calling the router and causing it to write the appropriate
     // route to the URL bar
-    this.navigateWithNoErrors(`/${this.current_route}`);
+    this.navigateWithNoErrors(`/${this.currentRoute}`);
   }
 
   //saves file to database
@@ -144,9 +158,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
         file.database_id = parseInt(response.data.id);
         EvaluationModule.loadEvaluation(response.data.id);
         const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
-        this.navigateWithNoErrors(
-          `/${this.current_route}/${loadedDatabaseIds}`
-        );
+        this.navigateWithNoErrors(`/${this.currentRoute}/${loadedDatabaseIds}`);
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);

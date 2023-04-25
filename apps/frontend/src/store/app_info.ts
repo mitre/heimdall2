@@ -131,6 +131,13 @@ export class AppInfo extends VuexModule implements IAppInfoState {
   get issues(): string {
     return process.env.ISSUES;
   }
+
+  currentView = 'results';
+
+  @Mutation
+  SET_CURRENT_VIEW(value: string) {
+    this.currentView = value;
+  }
 }
 
 export const AppInfoModule = getModule(AppInfo);
