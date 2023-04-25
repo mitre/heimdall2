@@ -1,6 +1,6 @@
 {
-  "name": "@mitre/heimdall-lite", 
-  "version": "2.6.44",
+  "name": "@mitre/heimdall-lite",
+  "version": "2.6.45",
   "description": "Heimdall-Lite 2.0 is a JavaScript based security results viewer and review tool supporting multiple security results formats, such as: InSpec, SonarQube, OWASP-Zap and Fortify which you can load locally, from S3 and other data sources.",
   "repository": {
     "type": "git",
@@ -28,7 +28,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@heimdall/interfaces": "^2.6.38",
+    "@heimdall/interfaces": "^2.6.45",
     "@mdi/font": "^7.0.96",
     "@mdi/js": "^7.0.96",
     "@mitre/splunk-sdk-no-env": "^1.10.0",
