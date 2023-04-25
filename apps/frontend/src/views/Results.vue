@@ -345,7 +345,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * Returns true if we're showing results
    */
   get is_result_view(): boolean {
-    return this.current_route === 'results';
+    return this.currentRoute === 'results';
   }
 
   // Returns true if no files are uploaded

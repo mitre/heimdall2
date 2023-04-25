@@ -142,13 +142,13 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     ).length;
     const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
     if (numChecklists > numProfiles && numChecklists > numEvaluations) {
-      if (this.current_route !== 'checklists')
+      if (this.currentRoute !== 'checklists')
         this.navigateWithNoErrors(`/checklists`);
     } else {
       if (numEvaluations >= numProfiles) {
         // Only navigate the user to the results page if they are not
         // already on the compare page.
-        if (this.current_route === 'compare') {
+        if (this.currentRoute === 'compare') {
           this.navigateWithNoErrors(`/compare/${loadedDatabaseIds}`);
         } else {
           this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
