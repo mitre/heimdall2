@@ -11,6 +11,7 @@
         color="blue"
       />
 
+      <!-- Due to how Vuetify handles radio buttons a value of 0 will select the radio button and -1 will deselect it-->
       <v-radio-group v-else :value="selected ? 0 : -1">
         <v-radio :value="0" color="blue" />
       </v-radio-group>
@@ -69,7 +70,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.toggle_profile(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('asset')) {
-      FilteredDataModule.toggle_checklist(this.file.uniqueId);
+      FilteredDataModule.select_exclusive_checklist(this.file.uniqueId);
     }
   }
 
@@ -79,7 +80,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.select_exclusive_profile(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('stigs')) {
-      FilteredDataModule.toggle_checklist(this.file.uniqueId);
+      FilteredDataModule.select_exclusive_checklist(this.file.uniqueId);
     }
   }
 
