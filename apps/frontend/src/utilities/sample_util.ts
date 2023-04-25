@@ -19,16 +19,18 @@ const acmeOverlayPath = '/static/samples/wrapper-acme-run.json';
 const cleanRhel8ChecklistPath = '/static/samples/clean_rhel_8_checklist.ckl';
 const rhel8ChecklistPath = '/static/samples/rhel_8_checklist.ckl';
 const threeStigChecklistPath = '/static/samples/three_stig_checklist.ckl';
+const ubuntuProfile = '/static/samples/ubunutu_profile.json';
+const veracodeExecJson = '/static/samples/veracode.xml';
 
 import axios from 'axios';
 
 export interface Sample {
   filename: string;
-  data: Function;
   path: string;
+  fingerprint: string;
 }
 
-function fetch(sample: Sample) {
+export function fetchSample(sample: Sample): Promise<File> {
   return axios
     .get(sample.path, {responseType: 'blob'})
     .then(({data}) => new File([data], sample.filename));
@@ -37,121 +39,97 @@ function fetch(sample: Sample) {
 export const samples: Sample[] = [
   {
     filename: 'Sonarqube Java Heimdall_tools Sample',
-    data: function () {
-      return fetch(this);
-    },
-    path: sonarqubeJavaSamplePath
+    path: sonarqubeJavaSamplePath,
+    fingerprint: "HDF"
   },
   {
     filename: 'OWASP ZAP Webgoat Heimdall_tools Sample',
-    data: function () {
-      return fetch(this);
-    },
-    path: owaspZapWebgoatPath
+    path: owaspZapWebgoatPath,
+    fingerprint: "HDF"
   },
   {
     filename: 'OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample',
-    data: function () {
-      return fetch(this);
-    },
-    path: owaspZapZeroPath
+    path: owaspZapZeroPath,
+    fingerprint: "HDF"
   },
   {
     filename: 'Fortify Heimdall_tools Sample',
-    data: function () {
-      return fetch(this);
-    },
-    path: fortifyHToolsConvWebgoatPath
+    path: fortifyHToolsConvWebgoatPath,
+    fingerprint: "HDF"
   },
   {
     filename: 'AWS S3 Permissions Check',
-    data: function () {
-      return fetch(this);
-    },
-    path: awsS3BaselinePath
+    path: awsS3BaselinePath,
+    fingerprint: "HDF"
   },
   {
     filename: 'AWS CIS Foundations Baseline',
-    data: function () {
-      return fetch(this);
-    },
-    path: cisAwsFoundationsBaselinePath
+    path: cisAwsFoundationsBaselinePath,
+    fingerprint: "HDF"
   },
   {
     filename: 'NGINX Clean Sample',
-    data: function () {
-      return fetch(this);
-    },
-    path: goodNginxResultsPath
+    path: goodNginxResultsPath,
+    fingerprint: "HDF"
   },
   {
     filename: 'NGINX With Failing Tests',
-    data: function () {
-      return fetch(this);
-    },
-    path: badNginxPath
+    path: badNginxPath,
+    fingerprint: "HDF"
   },
   {
     filename: 'Red Hat CVE Vulnerability Scan',
-    data: function () {
-      return fetch(this);
-    },
-    path: rhelCveVulnerabilityScanBaselineWithFailuresPath
+    path: rhelCveVulnerabilityScanBaselineWithFailuresPath,
+    fingerprint: "HDF"
   },
   {
     filename: 'Red Hat 7 STIG Baseline',
-    data: function () {
-      return fetch(this);
-    },
-    path: rhel7ResultsPath
+    path: rhel7ResultsPath,
+    fingerprint: "HDF"
   },
   {
     filename: 'Ubuntu STIG Baseline',
-    data: function () {
-      return fetch(this);
-    },
-    path: ubuntu1604BaselineResultsPath
+    path: ubuntu1604BaselineResultsPath,
+    fingerprint: "HDF"
   },
   {
     filename: 'Red Hat With Failing Tests',
-    data: function () {
-      return fetch(this);
-    },
-    path: redhatBadPath
+    path: redhatBadPath,
+    fingerprint: "HDF"
   },
   {
     filename: 'Three Layer RHEL7 Overlay Example',
-    data: function () {
-      return fetch(this);
-    },
-    path: threeOverlayProfilePath
+    path: threeOverlayProfilePath,
+    fingerprint: "HDF"
   },
   {
     filename: 'Acme Overlay Example',
-    data: function () {
-      return fetch(this);
-    },
-    path: acmeOverlayPath
+    path: acmeOverlayPath,
+    fingerprint: "HDF"
   },
   {
     filename: 'Clean RHEL 8 Checklist',
-    data: function () {
-      return fetch(this);
-    },
-    path: cleanRhel8ChecklistPath
+    path: cleanRhel8ChecklistPath,
+    fingerprint: "Checklist"
   },
   {
     filename: 'RHEL 8 Checklist',
-    data: function () {
-      return fetch(this);
-    },
-    path: rhel8ChecklistPath
+    path: rhel8ChecklistPath,
+    fingerprint: "Checklist"
   },
   {
     filename: 'Three Stig Checklist',
-    data: function () {
-      return fetch(this);
-    },
-    path: threeStigChecklistPath
+    path: threeStigChecklistPath,
+    fingerprint: "Checklist"
+  },
+  {
+    filename: 'Ubunutu Profile',
+    path: ubuntuProfile,
+    fingerprint: "Profile"
+  },
+  {
+    filename: 'Veracode Exec JSON',
+    path: veracodeExecJson,
+    fingerprint: "VeraCode"
   }
 ];

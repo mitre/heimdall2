@@ -132,7 +132,7 @@ export default class LoadFileList extends Vue {
   deleteTagDialog = false;
   search = '';
 
-  load_results(evaluations: IEvaluation[]) {
+  load_results(evaluations: IEvaluation[] | Sample[]) {
     this.selectedFiles = [];
     this.$emit('load-results', evaluations);
   }

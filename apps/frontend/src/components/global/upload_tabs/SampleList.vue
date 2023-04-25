@@ -22,7 +22,7 @@
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import {FileID, InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {Sample, samples} from '@/utilities/sample_util';
+import {Sample, samples, fetchSample} from '@/utilities/sample_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
@@ -39,20 +39,25 @@ export default class SampleList extends Vue {
       align: 'start',
       sortable: true,
       value: 'filename'
+    },
+    {
+      text: 'Type',
+      value: 'fingerprint',
+      sortable: true
     }
   ];
 
   loading = false;
 
-  load_samples(sampleArray: Sample[]) {
+  load_samples(samples: Sample[]) {
     this.loading = true;
     Promise.all(
-      sampleArray.map((arrayItem) => {
-        return arrayItem.data().then((data: File) => {
+      samples.map<Promise<FileID>>((sample: Sample) => {
+        return fetchSample(sample).then((data: File): Promise<FileID> => {
           return InspecIntakeModule.loadFile({
             file: data,
-            filename: arrayItem.filename
-          });
+            filename: sample.filename
+          }) as Promise<FileID>;
         });
       })
     )
