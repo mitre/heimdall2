@@ -50,6 +50,7 @@
             v-model="groupInfo.users"
             :editable="true"
             @on-update-group-user-role="updateSaveState"
+            @delete-user-confirm="updateSaveState"
           />
         </v-form>
       </v-card-text>
@@ -72,7 +73,7 @@
           data-cy="closeAndDiscardChanges"
           color="primary"
           text
-          @click="dialog = false"
+          @click="cancel"
           >Cancel</v-btn
         >
         <v-btn
@@ -167,6 +168,11 @@ export default class GroupModal extends Vue {
     }
   }
 
+  async cancel(): Promise<void> {
+    this.dialog = false;
+    location.reload();
+  }
+
   async save(): Promise<void> {
     const groupInfo: ICreateGroup = {
       ...this.groupInfo
@@ -176,8 +182,8 @@ export default class GroupModal extends Vue {
       ? this.createGroup(groupInfo)
       : this.updateExistingGroup(groupInfo));
     const group = response.data;
-    await this.syncUsersWithGroup(group);
     await GroupsModule.UpdateGroupById(group.id);
+    await this.syncUsersWithGroup(group);
     // This clears when creating a new Group.
     // Calling clear on edit makes it impossible to edit the same group twice.
     if (this.create) {

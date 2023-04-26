@@ -168,7 +168,12 @@ export default class Users extends Vue {
     this.editedUserID = '0';
   }
 
-  deleteUserConfirm(): void {
+  @Emit()
+  deleteUserConfirm(): boolean {
+    let saveable = true;
+    if (this.numberOfOwners() <= 1) {
+      saveable = false;
+    }
     if (this.editedUserID !== '0') {
       this.currentUsers.splice(
         this.currentUsers.indexOf(this.getEditedUser()),
@@ -176,6 +181,7 @@ export default class Users extends Vue {
       );
     }
     this.closeActionDialog();
+    return saveable;
   }
 
   getEditedUser(): ISlimUser {
