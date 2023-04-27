@@ -49,23 +49,25 @@ export default class SampleList extends Vue {
 
   loading = false;
 
-  load_samples(samples: Sample[]) {
+  load_samples(selectedSamples: Sample[]) {
+    const promises: Promise<FileID | FileID[]>[] = []
     this.loading = true;
-    Promise.all(
-      samples.map<Promise<FileID>>((sample: Sample) => {
-        return fetchSample(sample).then((data: File): Promise<FileID> => {
-          return InspecIntakeModule.loadFile({
-            file: data,
-            filename: sample.filename
-          }) as Promise<FileID>;
+    for (const sample of selectedSamples) {
+      const requestFile = fetchSample(sample).then((data: File) => {
+        return InspecIntakeModule.loadFile({
+          file: data,
+          filename: sample.filename
         });
       })
-    )
-      .then((fileIds: FileID[]) => {
-        this.$emit('got-files', fileIds);
+      promises.push(requestFile);
+    }
+
+    Promise.all(promises)
+      .then((fileIds: (FileID | FileID[])[]) => {
+        this.$emit('got-files', fileIds.flat(2));
       })
-      .catch((err) => {
-        SnackbarModule.failure(String(err));
+      .catch((error) => {
+        SnackbarModule.failure(String(error));
       })
       .finally(() => {
         this.loading = false;
