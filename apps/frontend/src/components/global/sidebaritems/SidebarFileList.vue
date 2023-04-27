@@ -70,6 +70,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.toggle_profile(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('asset')) {
+      // Currently checklist can only be exclusively selected so there is no need for a toggle function
       FilteredDataModule.select_exclusive_checklist(this.file.uniqueId);
     }
   }
@@ -112,7 +113,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  //determines if the use can save the file
+  //determines if the user can save the file
   get disable_saving() {
     return typeof this.file?.database_id !== 'undefined' || this.saving;
   }
