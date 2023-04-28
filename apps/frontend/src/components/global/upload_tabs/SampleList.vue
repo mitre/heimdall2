@@ -50,7 +50,7 @@ export default class SampleList extends Vue {
   loading = false;
 
   load_samples(selectedSamples: Sample[]) {
-    const promises: Promise<FileID | FileID[]>[] = []
+    const promises: Promise<FileID | FileID[]>[] = [];
     this.loading = true;
     for (const sample of selectedSamples) {
       const requestFile = fetchSample(sample).then((data: File) => {
@@ -58,7 +58,7 @@ export default class SampleList extends Vue {
           file: data,
           filename: sample.filename
         });
-      })
+      });
       promises.push(requestFile);
     }
 

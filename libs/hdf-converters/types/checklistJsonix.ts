@@ -66,10 +66,10 @@ export type ChecklistJsonixIstig = {
 
 export type ChecklistJsonixStigInfo = {
   TYPE_NAME: string;
-  sidata: ChecklistJsonixSidata[];
+  sidata: ChecklistJsonixSiData[];
 };
 
-export type ChecklistJsonixSidata = {
+export type ChecklistJsonixSiData = {
   TYPE_NAME: string;
   sidata?: string;
   sidname:

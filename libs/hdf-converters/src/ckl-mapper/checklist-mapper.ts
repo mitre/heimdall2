@@ -6,17 +6,24 @@ import {
   BaseConverter,
   generateHash,
   ILookupPath,
-  MappedTransform,
-  parseXmlToJsonix
+  MappedTransform
 } from '../base-converter';
 import {CciNistMapping} from '../mappings/CciNistMapping';
 import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
 import {
+  ChecklistJsonixConverter,
   ChecklistObject,
-  ChecklistVuln,
-  createChecklistObject
-} from './checklistConstructor';
+  ChecklistVuln
+} from './checklist-jsonix-converter';
 import * as checklistMapping from './jsonixMapping';
+
+enum ImpactMapping {
+  high = 0.7,
+  medium = 0.5,
+  low = 0.3
+}
+
+const CCI_NIST_MAPPING = new CciNistMapping();
 
 /**
  * Tranformer function that splits a string and return array
@@ -26,8 +33,6 @@ import * as checklistMapping from './jsonixMapping';
 function cciRef(input: string): string[] {
   return input.split('; ');
 }
-
-const CCI_NIST_MAPPING = new CciNistMapping();
 
 /**
  * Transformer function that splits string and maps resulting array
@@ -43,28 +48,6 @@ function nistTag(input: string): string[] {
   );
 }
 
-enum ImpactMapping {
-  high = 0.7,
-  medium = 0.5,
-  low = 0.3
-}
-
-/**
- * Transformer function that checks if the status is 'Not Applicable' returning a 0.
- * Otherwise, maps severity to ImpactMapping
- * @param vuln - checklist vulnerability object
- * @returns impact - number 0.3, 0.5, or 0.7
- */
-function transformImpact(vuln: ChecklistVuln): number {
-  if (vuln.status === 'Not Applicable') return 0.0;
-  const severity = findSeverity(vuln);
-  // check if severity does not exists within ImpactMapping throw new Error
-  //throw new Error("Mapping does not exist");
-  return ImpactMapping[
-    severity.toLowerCase() as keyof typeof ImpactMapping
-  ];
-}
-
 /**
  * Inner function to check is there was a severify override which would alter
  * the impact of the vulnerability
@@ -76,6 +59,24 @@ function findSeverity(vuln: ChecklistVuln): string {
     return vuln.severityoverride;
   }
   return vuln.severity;
+}
+
+/**
+ * Transformer function that checks if the status is 'Not Applicable' returning a 0.
+ * Otherwise, maps severity to ImpactMapping
+ * @param vuln - checklist vulnerability object
+ * @returns impact - number 0.3, 0.5, or 0.7
+ */
+function transformImpact(vuln: ChecklistVuln): number {
+  if (vuln.status === 'Not Applicable') return 0.0;
+  const severity = findSeverity(vuln);
+  const impact =
+    ImpactMapping[severity.toLowerCase() as keyof typeof ImpactMapping];
+  if (!impact)
+    throw new Error(
+      `Severity "${severity}" does not match low, medium, or high, please check severity for ${vuln.vulnNum}`
+    );
+  return impact;
 }
 
 /**
@@ -162,7 +163,7 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
  *  split returns multiple hdf object based on number of iSTIG objects in checklist
  *  wrapper returns a single hdf object with an additional profile created using file name as profile name and adds parent_profile key to each mapped profile
  */
-export class ChecklistResults {
+export class ChecklistResults extends ChecklistJsonixConverter {
   checklistXml: string;
   raw: ChecklistJSONIX;
   checklistObject: ChecklistObject;
@@ -173,12 +174,13 @@ export class ChecklistResults {
    * @param checklistXml - string of xml data
    */
   constructor(checklistXml: string) {
+    super();
     this.checklistXml = checklistXml;
-    this.raw = parseXmlToJsonix(
+    this.raw = super.toJsonix(
       this.checklistXml,
       checklistMapping.jsonixMapping
-    ) as ChecklistJSONIX;
-    this.checklistObject = createChecklistObject(this.raw);
+    );
+    this.checklistObject = super.toIntermediateObject(this.raw);
   }
 
   toHdf(): ExecJSON.Execution {
@@ -208,6 +210,7 @@ export class ChecklistResults {
       }
       parent_profile.sha256 = generateHash(JSON.stringify(parent_profile));
       original.profiles.push(parent_profile);
+      console.log('Bottom of HDF Converter');
       return original;
     }
   }

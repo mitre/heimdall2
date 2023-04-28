@@ -1,4 +1,3 @@
-import {Jsonix} from '@mitre/jsonix';
 import {createHash} from 'crypto';
 import parser from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
@@ -62,16 +61,6 @@ export function parseXml(xml: string): Record<string, unknown> {
     ignoreAttributes: false
   };
   return parser.parse(xml, options);
-}
-
-export function parseXmlToJsonix(
-  xml: string,
-  mapping: object
-): Record<string, unknown> {
-  const context = new Jsonix.Context([mapping]);
-  const unmarshaller = context.createUnmarshaller();
-  const jsonix_unmarshalled = unmarshaller.unmarshalString(xml);
-  return jsonix_unmarshalled;
 }
 
 export function parseCsv(csv: string): unknown[] {
