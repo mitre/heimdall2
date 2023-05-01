@@ -41,7 +41,7 @@ export default class SampleList extends Vue {
       value: 'filename'
     },
     {
-      text: 'Type',
+      text: 'Filetype',
       value: 'fingerprint',
       sortable: true
     }
