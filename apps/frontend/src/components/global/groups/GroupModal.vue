@@ -225,12 +225,6 @@ export default class GroupModal extends Vue {
       };
       return axios.post(`/groups/${group.id}/user`, addUserDto);
     });
-    const removedUserPromises = toRemove.map((user) => {
-      const removeUserDto: IRemoveUserFromGroup = {
-        userId: user.id
-      };
-      return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
-    });
     const updatedUserPromises = toUpdate.map((user) => {
       const updateGroupUserRole: IUpdateGroupUser = {
         userId: user.id,
@@ -241,11 +235,17 @@ export default class GroupModal extends Vue {
         updateGroupUserRole
       );
     });
-    return Promise.all([
-      ...addedUserPromises,
-      ...removedUserPromises,
-      ...updatedUserPromises
-    ]);
+    const removedUserPromises = toRemove.map((user) => {
+      const removeUserDto: IRemoveUserFromGroup = {
+        userId: user.id
+      };
+      return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
+    });
+    return Promise.all([...addedUserPromises, ...updatedUserPromises]).then(
+      () => {
+        removedUserPromises;
+      }
+    );
   }
 }
 </script>

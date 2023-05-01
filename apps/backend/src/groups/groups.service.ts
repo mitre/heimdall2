@@ -58,6 +58,7 @@ export class GroupsService {
     const groupUser = await GroupUser.findOne({
       where: {groupId: group.id, userId: updateGroupUser.userId}
     });
+    // If there are no more owners please set admin to owner
     return groupUser?.update({role: updateGroupUser.groupRole});
   }
 
@@ -66,6 +67,7 @@ export class GroupsService {
       (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
     );
     if (owners.length < 2 && owners.some((owner) => owner.id === user.id)) {
+      // By default set to admin
       throw new ForbiddenException(
         'Cannot remove only group owner, please promote another user to owner first'
       );
