@@ -1,15 +1,17 @@
 <template>
   <span>
-    <div
-      class="d-flex flex-row-reverse"
-      style="cursor: pointer"
-    >
-      <v-btn icon @click="updateSearch" v-b-tooltip.hover title="Request content from the server">
+    <div class="d-flex flex-row-reverse" style="cursor: pointer">
+      <v-btn
+        v-b-tooltip.hover
+        title="Request content from the server"
+        icon
+        @click="updateSearch"
+      >
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
-      <div @click="logout" v-b-tooltip.hover title="Return to login page">
+      <div v-b-tooltip.hover title="Return to login page" @click="logout">
         <span class="pt-2 pr-4">Sign Out</span>
-        <v-icon color="red" class="pr-2" >mdi-logout</v-icon>         
+        <v-icon color="red" class="pr-2">mdi-logout</v-icon>
       </div>
     </div>
 
@@ -24,9 +26,6 @@
         :show-sort-icons="true"
         show-select
       >
-        <!-- <template #[`item.actions`]="{item}">
-          <v-icon @click="load_event(item)"> mdi-plus-circle </v-icon>
-        </template> -->
         <template #no-data>
           No data. Try relaxing the search conditions, or expanding the date
           range.
@@ -41,29 +40,22 @@
 </template>
 
 <script lang="ts">
-import {InspecIntakeModule} from '@/store/report_intake';
+import {InspecIntakeModule, FileLoadOptions} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {FileMetaData, SplunkConfig} from '@mitre/hdf-converters';
-//import {SplunkReport} from '@mitre/hdf-converters/src/converters-from-hdf/splunk/splunk-report-types';
-import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
+import {FileMetaData} from '@mitre/hdf-converters';
 import {AuthInfo, ScanResults, TenableUtil} from '@/utilities/tenable_util';
-import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, Watch} from 'vue-property-decorator';
+import {Prop} from 'vue-property-decorator';
+import {InspecDataModule} from '@/store/data_store';
 
 @Component({})
 export default class FileList extends Vue {
   @Prop({type: Object, required: true}) readonly tenableConfig!: AuthInfo;
 
-  splunkConverter?: SplunkMapper;
-
   executions: Omit<FileMetaData, 'profile_sha256'>[] = [];
   selectedExecutions: Omit<FileMetaData, 'profile_sha256'>[] = [];
 
-  //search = '';
-  //awaitingSearch = false;
-  //initalSearchDone = false;
   loading = false;
 
   /** Table info */
@@ -80,13 +72,14 @@ export default class FileList extends Vue {
       align: 'start'
     },
     {
-      text: 'Description',
-      value: 'description'
+      text: 'Scanned IPs',
+      value: 'scannedIPs',
+      align: 'center'
     },
     {
-      text: 'Scanned IPs',
-      value: 'scannedIPs'
-    },    
+      text: 'Total Checks',
+      value: 'totalChecks'
+    },
     {
       text: 'Start Time',
       value: 'startTime'
@@ -98,38 +91,23 @@ export default class FileList extends Vue {
     {
       text: 'Scan Status',
       value: 'status'
-    },        
+    }
   ];
-
-  // @Watch('search')
-  // async onUpdateSearch() {
-  //   console.log('async onUpdateSearch()')
-  //   // On first load we update the search field which triggers this function, instead of waiting this time we can just search right away
-  //   if (!this.initalSearchDone) {
-  //     this.initalSearchDone = true;
-  //     this.updateSearch();
-  //   } else if (!this.awaitingSearch) {
-  //     setTimeout(() => {
-  //       this.updateSearch();
-  //       this.awaitingSearch = false;
-  //     }, 1000); // Wait for user input for 1 second before executing our query
-  //     this.awaitingSearch = true;
-  //   }
-  // }
 
   async updateSearch() {
     this.loading = true;
-    // this.splunkConverter = new SplunkMapper(this.splunkConfig, true);
-    // const results = await this.splunkConverter.queryData(this.search);
     const results = await new TenableUtil(this.tenableConfig).getScans();
     this.executions = [];
     results.forEach((result: ScanResults) => {
+      result.totalChecks = this.formatNumberOfScans(result.totalChecks);
       result.startTime = this.epochToDate(result.startTime);
       result.finishTime = this.epochToDate(result.finishTime);
       this.executions.push(result);
     });
     this.loading = false;
-    SnackbarModule.notify('Successfully queried Tenable.sc for available scan results');
+    SnackbarModule.notify(
+      'Successfully queried Tenable.sc for available scan results'
+    );
   }
 
   async mounted() {
@@ -138,34 +116,57 @@ export default class FileList extends Vue {
 
   async loadResults() {
     this.loading = true;
-    console.log("this.selectedExecutions: ", typeof this.selectedExecutions)
-    console.log("this.selectedExecutions.map: ", this.selectedExecutions[0])
+
     const files = this.selectedExecutions.map(
-      //
       async (execution: Partial<ScanResults>) => {
-        console.log("processing file: ", execution.id)
         if (execution.id) {
-          const results = await new TenableUtil(this.tenableConfig).getVulnerabilities(execution.id);
+          if (execution.status === 'Running') {
+            SnackbarModule.failure(
+              `Scan ${execution.id} hasn't finished, wait until completed before loading for viewing.`
+            );
+          } else {
+            const resultData = await new TenableUtil(
+              this.tenableConfig
+            ).getVulnerabilities(execution.id);
+            if (resultData) {
+              // Check is this scan is already loaded
+              let isLoaded = false;
+              const loadedFiles = InspecDataModule.allEvaluationFiles;
+
+              // We need to check if loaded zip file contained multiple scans, where they are
+              // loaded as [scanId]-[ReportHost] (i.e. 9214-mitre-saf-rhel8-mitre.org)
+              // if they are, just use the scanId for the Map key. If the scan contains a single
+              // scan it is loaded as [scanId].nessus (i.e. 9213.nessus)
+              const loadedMap = new Map(
+                loadedFiles.map((obj) => [
+                  obj.filename.indexOf('-') != -1
+                    ? obj.filename.substring(0, obj.filename.indexOf('-'))
+                    : obj.filename.substring(0, obj.filename.indexOf('.')),
+                  obj.uniqueId
+                ])
+              );
+
+              isLoaded = loadedMap.has(execution.id);
+              if (!isLoaded) {
+                try {
+                  const textFile: FileLoadOptions = {
+                    filename: execution.id + '.nessus',
+                    data: resultData
+                  };
+                  // .loadFile evaluates to data if file is not provided
+                  return await InspecIntakeModule.loadFile(textFile);
+                } catch (err) {
+                  SnackbarModule.failure(String(err));
+                }
+              }
+            } else {
+              SnackbarModule.failure(
+                'Attempted to load an undefined execution'
+              );
+              throw new Error('Attempted to load an undefined execution');
+            }
+          }
         }
-        
-        // const hdf = await this.splunkConverter
-        //   ?.toHdf(execution.guid || '')
-        //   .catch((error) => {
-        //     SnackbarModule.failure(error);
-        //     this.loading = false;
-        //     throw error;
-        //   });
-        // if (hdf) {
-        //   return InspecIntakeModule.loadText({
-        //     text: JSON.stringify(hdf),
-        //     filename: _.get(hdf, 'meta.filename') as unknown as string
-        //   }).catch((err) => {
-        //     SnackbarModule.failure(String(err));
-        //   });
-        // } else {
-        //   SnackbarModule.failure('Attempted to load an undefined execution');
-        //   throw new Error('Attempted to load an undefined execution');
-        // }
       }
     );
     await Promise.all(files);
@@ -174,10 +175,18 @@ export default class FileList extends Vue {
   }
 
   epochToDate(date: string): string {
-    console.log('date is', date)
-    return (Number(date) !== -1)
-      ? new Date(Number(date) * 1000).toLocaleString('en-US', {timeZone: 'UTC', hour12:false})
+    return Number(date) !== -1
+      ? new Date(Number(date) * 1000).toLocaleString('en-US', {
+          timeZone: 'UTC',
+          hour12: false
+        })
       : '';
+  }
+
+  formatNumberOfScans(value: string | undefined): string {
+    return Number(value) !== -1
+      ? Number(value).toLocaleString('en-US').toString()
+      : '-';
   }
 
   logout() {

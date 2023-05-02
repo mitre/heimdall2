@@ -25,6 +25,7 @@
     "@aws-sdk/client-config-service": "^3.23.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
+    "adm-zip": "^0.5.10",
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^8.0.0",
     "eslint-plugin-prettier": "^4.0.0",

@@ -10,7 +10,8 @@
         {{ warning_banner }}
       </v-banner>
       <v-tabs
-        :vertical="$vuetify.breakpoint.mdAndUp"
+        vertical
+        class="left-justify-tabs"
         :value="activeTab"
         color="primary-visible"
         show-arrows
@@ -30,7 +31,9 @@
 
         <v-tab id="select-tab-splunk" href="#uploadtab-splunk">Splunk</v-tab>
 
-        <v-tab id="select-tab-tenable" href="#uploadtab-tenable">Tenable</v-tab>
+        <v-tab id="select-tab-tenable" href="#uploadtab-tenable">
+          Tenable.SC
+        </v-tab>
 
         <v-spacer />
         <v-divider />
@@ -59,7 +62,7 @@
 
         <v-tab-item value="uploadtab-tenable">
           <TenableReader @got-files="got_files" />
-        </v-tab-item>        
+        </v-tab-item>
       </v-tabs>
       <HelpFooter />
     </div>
@@ -154,5 +157,10 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
 <style lang="scss" scoped>
 .theme--dark.v-tabs {
   background: var(--v-secondary-lighten1);
+}
+
+// Workaround to left justify the tabs title
+div.left-justify-tabs [role='tab'] {
+  justify-content: flex-start;
 }
 </style>

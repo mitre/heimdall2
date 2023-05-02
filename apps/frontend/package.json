@@ -117,6 +117,7 @@
     "yazl": "^2.5.1"
   },
   "devDependencies": {
+    "@types/adm-zip": "^0.5.0",
     "@types/chai": "^4.2.5",
     "@types/chai-as-promised": "^7.1.2",
     "@types/jest": "^27.0.0",

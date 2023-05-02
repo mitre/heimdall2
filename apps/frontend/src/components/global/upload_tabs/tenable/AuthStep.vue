@@ -3,16 +3,14 @@
     <v-form>
       <v-text-field
         v-model="accesskey"
-        label="Access Key"
+        label="Access Token (Key)"
         for="accesskey_field"
-        type="password"
-        lazy-validation="lazy"
         :rules="[reqRule]"
         data-cy="tenableaccesskey"
       />
       <v-text-field
         v-model="secretkey"
-        label="Secret Key"
+        label="Secret Token (Key)"
         for="secretkey_field"
         type="password"
         lazy-validation="lazy"
@@ -27,7 +25,7 @@
         :rules="[reqRule]"
         hint="https://yourtenabledomain.com:443"
         data-cy="tenablehostname"
-      />   
+      />
     </v-form>
     <v-row class="mx-1">
       <v-btn
@@ -57,7 +55,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 
 // Our saved fields
-const localAccesskey =  new LocalStorageVal<string>('tenable_accesskey');
+const localAccesskey = new LocalStorageVal<string>('tenable_accesskey');
 const localSecretkey = new LocalStorageVal<string>('tenable_secretkey');
 const localHostname = new LocalStorageVal<string>('tenable_hostname');
 
@@ -79,14 +77,15 @@ export default class AuthStep extends Vue {
     if (!/^https?:\/\//.test(this.hostname)) {
       this.hostname = `https://${this.hostname}`;
     }
-    
+
     const config: AuthInfo = {
       accesskey: this.accesskey,
       secretkey: this.secretkey,
       host_url: this.hostname
-    }
+    };
 
-    await new TenableUtil(config).loginToTenable()
+    await new TenableUtil(config)
+      .loginToTenable()
       .then(() => {
         localAccesskey.set(this.accesskey);
         localSecretkey.set(this.secretkey);
@@ -103,11 +102,10 @@ export default class AuthStep extends Vue {
   }
 
   /** Init our fields */
-  // set default back to ''
   mounted() {
-    this.accesskey = localAccesskey.get_default('0fa926a493ec4e1c8a4ffc2e1bb9d7fb');
-    this.secretkey = localSecretkey.get_default('c78972f44aef48b1992a2a8ad6cfb6a5');
-    this.hostname = localHostname.get_default('https://vcapsecb1.mitre.org:443');
+    this.accesskey = localAccesskey.get_default('');
+    this.secretkey = localSecretkey.get_default('');
+    this.hostname = localHostname.get_default('');
   }
 }
 </script>

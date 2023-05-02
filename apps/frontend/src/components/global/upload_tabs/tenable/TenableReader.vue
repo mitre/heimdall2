@@ -1,7 +1,9 @@
 <template>
   <v-stepper v-model="step">
     <v-stepper-header class="elevation-0">
-      <v-stepper-step id="step-1" step="1"> Tenable Authorization </v-stepper-step>
+      <v-stepper-step id="step-1" step="1">
+        Tenable Authorization
+      </v-stepper-step>
       <v-divider />
       <v-stepper-step id="step-2" step="2">
         Search Scan Results
@@ -17,7 +19,7 @@
       </v-stepper-content>
       <v-stepper-content step="2">
         <FileList
-        v-if="tenableConfig"
+          v-if="tenableConfig"
           :tenable-config="tenableConfig"
           @signOut="onSignOut"
           @got-files="got_files"
@@ -32,8 +34,8 @@
       <div class="text-center">
         <p>
           <span v-if="errorCount > 0">
-            It seems you may be having trouble connecting to Tenable.sc. Are you
-            sure that you have configured it properly, access and secrete key, URL?
+            It seems you may be having trouble connecting to Tenable.sc. Ensure
+            the following are properly configured: access and secrete key, URL?
           </span>
           <br />
           <span>
@@ -51,10 +53,12 @@
           </v-btn>
           <br />
           <span>
-            API key authorization requires Tenable.sc 5.13.x or later. Unique set of API
-            keys can be generated for each user account. These keys allow your application
-            to authenticate to the Tenable.sc API without a user authentication token.
-          </span>          
+            API key authorization requires Tenable.sc 5.13.x or later.
+            <br />
+            Unique set of API keys can be generated for each user account.
+            <br />
+            The API authorization keys serve as a user authentication token.
+          </span>
         </p>
         <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
       </div>
@@ -91,7 +95,7 @@ export default class TenableReader extends Vue {
 
   onSignOut() {
     this.step = 1;
-    this.tenableConfig = null
+    this.tenableConfig = null;
   }
 }
 </script>
