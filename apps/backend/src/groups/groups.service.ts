@@ -8,8 +8,10 @@ import {Op} from 'sequelize';
 import {FindOptions} from 'sequelize/types';
 import winston from 'winston';
 import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
 import {User} from '../users/user.model';
 import {CreateGroupDto} from './dto/create-group.dto';
+import {UpdateGroupUserRoleDto} from './dto/update-group-user.dto';
 import {Group} from './group.model';
 @Injectable()
 export class GroupsService {
@@ -76,6 +78,16 @@ export class GroupsService {
     await group.$add('user', user, {
       through: {role: role, createdAt: new Date(), updatedAt: new Date()}
     });
+  }
+
+  async updateGroupUserRole(
+    group: Group,
+    updateGroupUser: UpdateGroupUserRoleDto
+  ): Promise<GroupUser | undefined> {
+    const groupUser = await GroupUser.findOne({
+      where: {groupId: group.id, userId: updateGroupUser.userId}
+    });
+    return groupUser?.update({role: updateGroupUser.groupRole});
   }
 
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {

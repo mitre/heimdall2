@@ -176,12 +176,12 @@
             >Change Password</v-btn
           >
           <v-btn
-            v-if="!apiKeysDisabled"
+            v-if="apiKeysEnabled"
             id="toggleAPIKeys"
             class="ml-2"
             @click="toggleShowAPIKeys"
-            >{{ showAPIKeys ? 'Hide API Keys' : 'Show API Keys' }}</v-btn
-          >
+            >{{ showAPIKeys ? 'Hide API Keys' : 'Show API Keys' }}
+          </v-btn>
           <div v-show="changePassword">
             <v-text-field
               id="new_password_field"
@@ -305,7 +305,10 @@ export default class UserModal extends Vue {
   ];
 
   apiKeys: IApiKey[] = [];
-  apiKeysDisabled = false;
+  get apiKeysEnabled(): boolean {
+    return ServerModule.apiKeysEnabled;
+  }
+
   apiKeyTableLoading = false;
   activeAPIKey: IApiKey | null = null;
   inputPasswordDialog = false;
@@ -370,22 +373,21 @@ export default class UserModal extends Vue {
   }
 
   getAPIKeys() {
-    this.apiKeyTableLoading = true;
-    axios
-      .create()
-      .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}})
-      .then(({data}) => {
-        this.apiKeys = data;
-      })
-      .catch((error) => {
-        if (error.response) {
-          if (error.response.status === 403) {
-            this.apiKeysDisabled = true;
-            return;
+    if (this.apiKeysEnabled) {
+      this.apiKeyTableLoading = true;
+      axios
+        .create()
+        .get<IApiKey[]>(`/apikeys`, {params: {userId: this.user.id}})
+        .then(({data}) => {
+          this.apiKeys = data;
+        })
+        .catch((error) => {
+          if (error.response) {
+            SnackbarModule.failure('Unable to get API Keys');
           }
-        }
-      });
-    this.apiKeyTableLoading = false;
+        });
+      this.apiKeyTableLoading = false;
+    }
   }
 
   addAPIKey() {

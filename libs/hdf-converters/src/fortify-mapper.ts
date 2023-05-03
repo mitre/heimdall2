@@ -160,7 +160,7 @@ export class FortifyMapper extends BaseConverter {
             },
             refs: [],
             source_location: {},
-            title: {path: 'Abstract', transformer: parseHtml},
+            title: {path: 'Abstract', transformer: parseHtml}, // there are embedded nodes that do not show up properly
             id: {path: 'classID'},
             desc: {path: 'Explanation', transformer: parseHtml},
             impact: {path: '$.FVDL.Vulnerabilities.Vulnerability'},
@@ -211,7 +211,11 @@ export class FortifyMapper extends BaseConverter {
     }
   };
   constructor(fvdl: string, withRaw = false) {
-    super(parseXml(fvdl));
+    super(
+      parseXml(fvdl, {
+        stopNodes: ['FVDL.Description.Abstract', 'FVDL.Description.Explanation']
+      })
+    );
     this.startTime = `${_.get(this.data, 'FVDL.CreatedTS.date')} ${_.get(
       this.data,
       'FVDL.CreatedTS.time'

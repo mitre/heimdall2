@@ -6,8 +6,11 @@
       <slot name="clickable" :on="on" />
     </template>
     <v-card>
-      <v-card-title class="headline grey" primary-title>
+      <v-card-title v-if="!serverMode" class="headline grey" primary-title>
         About Heimdall Lite
+      </v-card-title>
+      <v-card-title v-else class="headline grey" primary-title>
+        About Heimdall
       </v-card-title>
 
       <v-card-text>
@@ -52,12 +55,12 @@
 </template>
 
 <script lang="ts">
+import ServerMixin from '@/mixins/ServerMixin';
 import {AppInfoModule} from '@/store/app_info';
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 
 @Component
-export default class AboutModal extends Vue {
+export default class AboutModal extends mixins(ServerMixin) {
   dialog = false;
 
   get version(): string {
