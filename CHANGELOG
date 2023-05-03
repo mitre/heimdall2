@@ -1,3 +1,28 @@
+v2.6.46
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1369.0 to 2.1370.0 @dependabot (#4426)
+- Bump highlight.js from 11.7.0 to 11.8.0 @dependabot (#4424)
+- Bump @typescript-eslint/eslint-plugin from 5.59.1 to 5.59.2 @dependabot (#4425)
+- Bump @types/node from 18.16.2 to 18.16.3 @dependabot (#4420)
+- Bump aws-sdk from 2.1367.0 to 2.1369.0 @dependabot (#4421)
+- Bump apexcharts from 3.39.0 to 3.40.0 @dependabot (#4418)
+- Bump @casl/ability from 6.4.0 to 6.5.0 @dependabot (#4416)
+- Bump @typescript-eslint/parser from 5.59.1 to 5.59.2 @dependabot (#4419)
+- Bump date-fns from 2.29.3 to 2.30.0 @dependabot (#4422)
+- Bump eslint-plugin-cypress from 2.13.2 to 2.13.3 @dependabot (#4414)
+- Bump @types/chai from 4.3.4 to 4.3.5 @dependabot (#4417)
+- Bump axios from 1.3.6 to 1.4.0 @dependabot (#4411)
+- Bump @aws-sdk/client-config-service from 3.319.0 to 3.321.1 @dependabot (#4409)
+- Bump @types/node from 18.16.1 to 18.16.2 @dependabot (#4412)
+- Bump aws-sdk from 2.1366.0 to 2.1367.0 @dependabot (#4413)
+- Bump rxjs from 7.8.0 to 7.8.1 @dependabot (#4406)
+- Bump aws-sdk from 2.1365.0 to 2.1366.0 @dependabot (#4404)
+- Bump @types/node from 18.16.0 to 18.16.1 @dependabot (#4400)
+- Bump @vue/eslint-config-typescript from 11.0.2 to 11.0.3 @dependabot (#4402)
+- Bump aws-sdk from 2.1364.0 to 2.1365.0 @dependabot (#4401)
+
 v2.6.45
 
 - Added variable in store/config to track if api keys are enabled @Rlin232 (#4383)
