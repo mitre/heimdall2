@@ -12,7 +12,7 @@
         sort-by="filename"
         :sort-desc="false"
         :loading="loading"
-        @load-results="load_samples($event)"
+        @load-selected="load_samples($event)"
       />
     </v-container>
   </v-card>

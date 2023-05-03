@@ -165,22 +165,21 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
  */
 export class ChecklistResults extends ChecklistJsonixConverter {
   checklistXml: string;
-  raw: ChecklistJSONIX;
+  jsonixData: ChecklistJSONIX;
   checklistObject: ChecklistObject;
 
   /**
-   * Creates instance of ChecklistResult object because baseConverter does not return ExecJSON.Execution[] type.
-   * Constructor takes an addtional (optional) param object supplementalInfo
+   * Creates instance of ChecklistResult object because ChecklistMapper uses the intermediate ChecklistObject to create HDF mapping
    * @param checklistXml - string of xml data
    */
   constructor(checklistXml: string) {
     super();
     this.checklistXml = checklistXml;
-    this.raw = super.toJsonix(
+    this.jsonixData = super.toJsonix(
       this.checklistXml,
       checklistMapping.jsonixMapping
     );
-    this.checklistObject = super.toIntermediateObject(this.raw);
+    this.checklistObject = super.toIntermediateObject(this.jsonixData);
   }
 
   toHdf(): ExecJSON.Execution {
@@ -210,7 +209,6 @@ export class ChecklistResults extends ChecklistJsonixConverter {
       }
       parent_profile.sha256 = generateHash(JSON.stringify(parent_profile));
       original.profiles.push(parent_profile);
-      console.log('Bottom of HDF Converter');
       return original;
     }
   }
@@ -261,19 +259,21 @@ export class ChecklistMapper extends BaseConverter {
                 transformer: nistTag
               },
               weight: {path: 'weight'},
+              // following transform takes the available attributes found in a checklist vuln and if available will add to the tags.
+              // first element is the label name as it will appear in UI while the second is the ChecklistObject keyname
               transformer: (input: ChecklistVuln): Record<string, unknown> => {
                 const tags = [
-                  ['ia_controls', 'iaControls'],
-                  ['legacy_id', 'legacyId'],
-                  ['false_positives', 'falsePositives'],
-                  ['false_negatives', 'falseNegatives'],
-                  ['mitigations', 'mitigations'],
-                  ['mitigation_controls', 'mitigationControl'],
-                  ['potential_impact', 'potentialImpact'],
-                  ['responsibility', 'responsibility'],
-                  ['stig_ref', 'stigRef'],
-                  ['security_override_guidance', 'securityOverrideGuidance'],
-                  ['severity_justification', 'severityJustification']
+                  ['IA Controls', 'iaControls'],
+                  ['Legacy ID', 'legacyId'],
+                  ['False Positives', 'falsePositives'],
+                  ['False Negatives', 'falseNegatives'],
+                  ['Mitigations', 'mitigations'],
+                  ['Mitigation Controls', 'mitigationControl'],
+                  ['Potential Impact', 'potentialImpact'],
+                  ['Responsibility', 'responsibility'],
+                  ['STIGRef', 'stigRef'],
+                  ['Security Override Guidance', 'securityOverrideGuidance'],
+                  ['Severity Justification', 'severityJustification']
                 ];
                 const fullTags: Record<string, unknown> = {};
                 for (const [key, path] of tags) {

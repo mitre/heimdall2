@@ -14,6 +14,7 @@
             <li>InSpec/Heimdall Data Format</li>
             <li>AWS Security Finding Format (ASFF)</li>
             <li>Burp Suite</li>
+            <li>Checklist</li>
             <li>DBProtect</li>
             <li>Fortify</li>
             <li>Golang Security Checker (GoSec)</li>
