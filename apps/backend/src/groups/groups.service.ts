@@ -1,8 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException
-} from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {Op} from 'sequelize';
 import {Evaluation} from '../evaluations/evaluation.model';
@@ -58,7 +54,26 @@ export class GroupsService {
     const groupUser = await GroupUser.findOne({
       where: {groupId: group.id, userId: updateGroupUser.userId}
     });
-    // If there are no more owners please set admin to owner
+    // If there are no more owners, set an admin to owner
+    const owners = (await group.$get('users')).filter(
+      (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
+    );
+    if (
+      owners.length < 2 &&
+      owners.some((owner) => owner.id === updateGroupUser.userId)
+    ) {
+      const admins = (await group.$get('users')).filter((userOnGroup) => {
+        userOnGroup.role === 'admin';
+      });
+      if (admins.length >= 1) {
+        admins[0].GroupUser.update({role: 'owner'});
+      } else {
+        const admin = await User.findOne({where: {role: 'admin'}});
+        if (admin) {
+          this.addUserToGroup(group, admin, 'owner');
+        }
+      }
+    }
     return groupUser?.update({role: updateGroupUser.groupRole});
   }
 
@@ -67,10 +82,18 @@ export class GroupsService {
       (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
     );
     if (owners.length < 2 && owners.some((owner) => owner.id === user.id)) {
-      // By default set to admin
-      throw new ForbiddenException(
-        'Cannot remove only group owner, please promote another user to owner first'
-      );
+      // If there are no more owners, set an admin to owner
+      const admins = (await group.$get('users')).filter((userOnGroup) => {
+        userOnGroup.role === 'admin';
+      });
+      if (admins.length >= 1) {
+        admins[0].GroupUser.update({role: 'owner'});
+      } else {
+        const admin = await User.findOne({where: {role: 'admin'}});
+        if (admin) {
+          this.addUserToGroup(group, admin, 'owner');
+        }
+      }
     }
     return group.$remove('user', user);
   }

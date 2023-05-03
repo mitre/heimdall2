@@ -1,24 +1,50 @@
 <template>
   <div>
-    <RegistrationModal :admin-register-mode="true" :visible="createUserDialog" @close-modal="createUserDialog = false"
-      @update-user-table="getUsers" />
+    <RegistrationModal
+      :admin-register-mode="true"
+      :visible="createUserDialog"
+      @close-modal="createUserDialog = false"
+      @update-user-table="getUsers"
+    />
     <v-card>
       <v-card-title>
         <v-row>
           <v-col sm="6" md="10">
-            <v-text-field v-model="search" append-icon="mdi-magnify" label="Search" single-line hide-details />
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            />
           </v-col>
           <v-col sm="6" md="2" class="text-center mt-3">
-            <v-btn color="primary" max-width="100%" @click="createUserDialog = true">
+            <v-btn
+              color="primary"
+              max-width="100%"
+              @click="createUserDialog = true"
+            >
               Add New User
             </v-btn>
           </v-col>
         </v-row>
       </v-card-title>
-      <v-data-table :headers="headers" :items="users" class="elevation-1" :loading="loading" :search="search">
-        <template #[`item.actions`]="{ item }">
-          <UserModal id="adminUserEditModal" :user="item" :admin="true" @update-user="updateUser">
-            <template #clickable="{ on }"><v-icon small title="Edit" class="mr-2" v-on="on">
+      <v-data-table
+        :headers="headers"
+        :items="users"
+        class="elevation-1"
+        :loading="loading"
+        :search="search"
+      >
+        <template #[`item.actions`]="{item}">
+          <UserModal
+            id="adminUserEditModal"
+            :user="item"
+            :admin="true"
+            @update-user="updateUser"
+          >
+            <template #clickable="{on}"
+              ><v-icon small title="Edit" class="mr-2" v-on="on">
                 mdi-pencil
               </v-icon>
             </template>
@@ -31,9 +57,13 @@
           <v-btn color="primary" @click="initialize"> Reset </v-btn>
         </template>
       </v-data-table>
-      <ActionDialog v-model="dialogDelete" type="user"
-        message="Any ownerless groups left by this user will be transfered to an admin." @cancel="closeActionDialog"
-        @confirm="deleteUserConfirm" />
+      <ActionDialog
+        v-model="dialogDelete"
+        type="user"
+        message="Any ownerless groups left by this user will be transfered to an admin."
+        @cancel="closeActionDialog"
+        @confirm="deleteUserConfirm"
+      />
     </v-card>
   </div>
 </template>
@@ -43,8 +73,8 @@ import ActionDialog from '@/components/generic/ActionDialog.vue';
 import RegistrationModal from '@/components/global/RegistrationModal.vue';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import UserModal from '@/components/global/UserModal.vue';
-import { SnackbarModule } from '@/store/snackbar';
-import { IUser } from '@heimdall/interfaces';
+import {SnackbarModule} from '@/store/snackbar';
+import {IUser} from '@heimdall/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -71,11 +101,11 @@ export default class UserManagement extends Vue {
       sortable: true,
       value: 'email'
     },
-    { text: 'First Name', value: 'firstName', sortable: true },
-    { text: 'Last Name', value: 'lastName', sortable: true },
-    { text: 'Role', value: 'role', sortable: true },
-    { text: 'Last Login', value: 'lastLogin', sortable: true },
-    { text: 'Actions', value: 'actions', sortable: false }
+    {text: 'First Name', value: 'firstName', sortable: true},
+    {text: 'Last Name', value: 'lastName', sortable: true},
+    {text: 'Role', value: 'role', sortable: true},
+    {text: 'Last Login', value: 'lastLogin', sortable: true},
+    {text: 'Actions', value: 'actions', sortable: false}
   ];
 
   mounted() {
@@ -88,7 +118,7 @@ export default class UserManagement extends Vue {
   }
 
   deleteUserConfirm(): void {
-    // Something needs to go here to handle orphaned groups
+    // TODO Something needs to go here to handle orphaned groups
     if (this.editedUser) {
       axios
         .delete<IUser>(`/users/${this.editedUser.id}`)
