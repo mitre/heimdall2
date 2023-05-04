@@ -29,7 +29,7 @@
     </Topbar>
 
     <!-- Sidebar to navigate between different views -->
-    <Sidebar v-model="drawer" @changed-files="$emit('changed-files')" />
+    <Sidebar @changed-files="$emit('changed-files')" />
 
     <!-- The actual content. Slotted by our "descendants" -->
     <v-main>
