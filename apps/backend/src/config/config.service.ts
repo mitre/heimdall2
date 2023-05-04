@@ -46,6 +46,7 @@ export class ConfigService {
 
   frontendStartupSettings(): StartupSettingsDto {
     return new StartupSettingsDto({
+      apiKeysEnabled: this.get('API_KEY_SECRET') ? true : false,
       banner: this.get('WARNING_BANNER') || '',
       classificationBannerColor:
         this.get('CLASSIFICATION_BANNER_COLOR') || 'red',

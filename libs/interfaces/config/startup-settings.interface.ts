@@ -1,4 +1,5 @@
 export interface IStartupSettings {
+  readonly apiKeysEnabled: boolean;
   readonly banner: string;
   readonly classificationBannerColor: string;
   readonly classificationBannerText: string;

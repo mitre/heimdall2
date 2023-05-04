@@ -9,6 +9,9 @@
       <v-card-title class="headline grey" primary-title>
         About Heimdall {{ serverMode }}
       </v-card-title>
+      <v-card-title v-else class="headline grey" primary-title>
+        About Heimdall
+      </v-card-title>
 
       <v-card-text>
         <p>
@@ -52,13 +55,14 @@
 </template>
 
 <script lang="ts">
+import ServerMixin from '@/mixins/ServerMixin';
 import {AppInfoModule} from '@/store/app_info';
 import {ServerModule} from '@/store/server';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
 @Component
-export default class AboutModal extends Vue {
+export default class AboutModal extends mixins(ServerMixin) {
   dialog = false;
 
   get serverMode(): string {
