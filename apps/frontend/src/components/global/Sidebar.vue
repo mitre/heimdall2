@@ -2,54 +2,45 @@
   <div>
     <ChecklistTargetDataModal
       :visible="showTargetModal"
-      style="display: none"
       @close-modal="showTargetModal = false"
     />
     <ChecklistTechnologyAreaModal
       :visible="showTechnologyModal"
-      style="display: none"
       @close-modal="showTechnologyModal = false"
     />
 
+    <!-- Due to how the vuetify components work, one drawer is permanent to always be appended to the side and the other will be the temporary that can be pulled out -->
     <v-navigation-drawer
       :clipped="$vuetify.breakpoint.lgAndUp"
       app
       :style="{'z-index': 11}"
-      disable-resize-watcher
-      disable-route-watcher
-      fixed
       permanent
       width="45px"
       @input="$emit('input', $event)"
-      @blur="value = false"
     >
-      <v-container v-if="!isSideUtilityDrawerShown" fill-height fluid>
+      <v-container
+        v-if="!isUtilityDrawerShown"
+        fill-height
+        fluid
+        @click="isUtilityDrawerShown = !isUtilityDrawerShown"
+      >
         <v-row align="center" justify="center">
-          <v-col
-            ><v-icon
-              class="text-center"
-              right
-              @click="isSideUtilityDrawerShown = !isSideUtilityDrawerShown"
-              >mdi-arrow-right</v-icon
-            ></v-col
-          >
+          <v-col>
+            <v-icon>mdi-arrow-right</v-icon>
+          </v-col>
         </v-row>
       </v-container>
     </v-navigation-drawer>
     <v-navigation-drawer
-      v-model="isSideUtilityDrawerShown"
+      v-model="isUtilityDrawerShown"
       :clipped="$vuetify.breakpoint.lgAndUp"
       app
       :style="{'z-index': 11, 'margin-top': classification ? '5em' : '3em'}"
-      disable-resize-watcher
-      disable-route-watcher
-      fixed
       temporary
       width="600px"
       @input="$emit('input', $event)"
-      @blur="value = false"
     >
-      <div v-if="isSideUtilityDrawerShown">
+      <div v-if="isUtilityDrawerShown">
         <v-expansion-panels v-model="active_path" accordion>
           <DropdownContent
             header-text="Results"
@@ -71,15 +62,12 @@
           <DropdownContent
             header-text="Checklists"
             :files="visible_checklist_files"
-            :all-selected="all_checklists_selected"
-            @toggle-all="toggle_all_checklists"
             @changed-files="$emit('changed-files')"
           />
         </v-expansion-panels>
         <div class="mx-5 mr-10 mb-5">
-          <v-divider class="mb-5" />
           <!-- Checklist Data Modals -->
-          <v-row v-if="inChecklistView()" class="my-4" style="width: 600px">
+          <v-row v-if="inChecklistView" class="my-4">
             <v-btn
               id="target-data-btn"
               class="mx-2"
@@ -106,8 +94,9 @@
               v-for="item in controlStatusSwitches"
               :key="item.name"
               :cols="3"
-              >{{ item.name }}</v-col
             >
+              {{ item.name }}
+            </v-col>
           </v-row>
           <v-row class="mt-n10">
             <v-col
@@ -117,33 +106,24 @@
             >
               <v-switch
                 dense
-                justify="center"
                 inset
                 :color="item.color"
-                hide-details
-                :value="false"
                 :input-value="item.enabled"
                 @change="changeStatusToggle(item.name)"
               />
             </v-col>
           </v-row>
           <v-row>
-            <v-col
-              v-for="item in severitySwitches"
-              :key="item.name"
-              :cols="3"
-              >{{ item.name }}</v-col
-            >
+            <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
+              {{ item.name }}
+            </v-col>
           </v-row>
           <v-row class="mt-n10">
             <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
               <v-switch
                 dense
-                justify="center"
                 inset
                 :color="item.color"
-                hide-details
-                :value="false"
                 :input-value="item.enabled"
                 @change="changeSeverityToggle(item.name)"
               />
@@ -158,16 +138,13 @@
               class="mx-2 select"
               :items="categories"
               label="Filter Categories"
-              dark
             />
             <v-text-field
               v-model="currentFreeTextFilterInput"
               class="mr-2"
               label="Enter filter keyword"
-              dark
             />
             <v-btn
-              id="upload-btn"
               class="mx-2"
               @click="
                 addCategoryFilter(
@@ -176,7 +153,7 @@
                 )
               "
             >
-              <span class="d-none d-md-inline pr-2"> Add </span>
+              <span class="d-none d-md-inline">Add</span>
             </v-btn>
           </v-row>
           <v-row
@@ -205,6 +182,7 @@
           <v-row
             class="mt-2 mx-auto"
             style="
+              padding-top: 0.75rem;
               padding-bottom: 5rem;
               align-items: center;
               justify-content: center;
@@ -215,10 +193,10 @@
               class="mx-2"
               @click="removeSelectedFilters"
             >
-              <span class="d-none d-md-inline pr-2"> Remove Filter(s) </span>
+              <span class="d-none d-md-inline"> Remove Filter(s) </span>
             </v-btn>
             <v-btn id="clear-all-btn" class="mx-2" @click="removeAllFilters">
-              <span class="d-none d-md-inline pr-2"> Remove All Filters </span>
+              <span class="d-none d-md-inline"> Remove All Filters </span>
             </v-btn>
           </v-row>
         </div>
@@ -236,16 +214,15 @@ import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {ChecklistFile} from '@mitre/hdf-converters';
 import Component, {mixins} from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '../../store/server';
-
 import {SearchModule} from '@/store/search';
 import {Severity} from 'inspecjs';
-
 import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
 import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
 import {SearchFilterSyncModule} from '@/store/search_filter_sync';
 import {AppInfoModule} from '@/store/app_info';
+
+type FilterType = 'inclusive' | 'exclusive';
 
 @Component({
   components: {
@@ -255,8 +232,6 @@ import {AppInfoModule} from '@/store/app_info';
   }
 })
 export default class Sidebar extends mixins(RouteMixin) {
-  @Prop({type: Boolean}) readonly value!: boolean;
-
   addCategoryFilter(field: string, value: string) {
     let negated = false;
     if (this.selectedRadioButton === 'exclusive') {
@@ -270,7 +245,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   }
 
   /** Whether category filter is inclusive or exclusive (default: inclusive)*/
-  selectedRadioButton = 'inclusive';
+  selectedRadioButton: FilterType = 'inclusive';
 
   selectedFilters = [];
   /** Removes selected filters from data table */
@@ -296,6 +271,23 @@ export default class Sidebar extends mixins(RouteMixin) {
     SearchModule.clear();
     this.selectedFilters = [];
     SearchModule.updateSearch('');
+  }
+
+  /** Converts the active filters into array that can be ingested by selected filter data table */
+  convertFilterData(
+    filters: {keyword: string; value: string; negated: boolean}[]
+  ) {
+    let temp: {keyword: string; value: string; negated: string}[] = [];
+    filters.forEach(
+      (item: {keyword: string; value: string; negated: boolean}) => {
+        if (item.negated) {
+          temp.push({keyword: item.keyword, value: item.value, negated: '-'});
+        } else {
+          temp.push({keyword: item.keyword, value: item.value, negated: '+'});
+        }
+      }
+    );
+    return temp;
   }
 
   get controlStatusSwitches(): {
@@ -325,34 +317,15 @@ export default class Sidebar extends mixins(RouteMixin) {
   }
 
   // Used for toggling the side nav drawer
-  isSideUtilityDrawerShown = false;
+  isUtilityDrawerShown = false;
   setUtilityDrawerBoolean() {
-    this.isSideUtilityDrawerShown = !this.isSideUtilityDrawerShown;
+    this.isUtilityDrawerShown = !this.isUtilityDrawerShown;
   }
-
-  shortIdEnabled = false;
 
   // Used for toggling the target data modal
   showTargetModal = false;
   setShowTargetModal() {
     this.showTargetModal = !this.showTargetModal;
-  }
-
-  /** Converts the active filters into array that can be ingested by selected filter data table */
-  convertFilterData(
-    filters: {keyword: string; value: string; negated: boolean}[]
-  ) {
-    let temp: {keyword: string; value: string; negated: string}[] = [];
-    filters.forEach(
-      (item: {keyword: string; value: string; negated: boolean}) => {
-        if (item.negated) {
-          temp.push({keyword: item.keyword, value: item.value, negated: '-'});
-        } else {
-          temp.push({keyword: item.keyword, value: item.value, negated: '+'});
-        }
-      }
-    );
-    return temp;
   }
 
   // Used for toggling the technology area modal
@@ -365,7 +338,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   currentFreeTextFilterCategory = '';
 
   /** Free text filter category list for dropdown */
-  categories = [
+  readonly categories = [
     'Keywords',
     'ID',
     'Vul ID',
@@ -382,7 +355,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   ];
 
   /** Returns the current parsed search result */
-  get currentFilters(): any {
+  get currentFilters() {
     return SearchModule.parsedSearchResult;
   }
 
@@ -398,7 +371,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   ];
 
   /** Checks to see if you are in checklist view */
-  inChecklistView(): boolean {
+  get inChecklistView(): boolean {
     return AppInfoModule.currentView === 'checklists';
   }
 
@@ -458,10 +431,6 @@ export default class Sidebar extends mixins(RouteMixin) {
     return FilteredDataModule.all_profiles_selected;
   }
 
-  get all_checklists_selected(): Trinary {
-    return Trinary.Mixed;
-  }
-
   get checklist_selected(): Trinary {
     return FilteredDataModule.checklist_selected;
   }
@@ -482,10 +451,6 @@ export default class Sidebar extends mixins(RouteMixin) {
   // toggle the "select all" for evaluations
   toggle_all_evaluations(): void {
     FilteredDataModule.toggle_all_evaluations();
-  }
-
-  toggle_all_checklists(): void {
-    // Meaningless function
   }
 
   // toggle between the comparison view and the results view
