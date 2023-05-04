@@ -1,21 +1,64 @@
 <template>
   <span>
     <div class="d-flex flex-row-reverse" style="cursor: pointer">
-      <v-btn
-        v-b-tooltip.hover
-        title="Request content from the server"
-        icon
-        @click="updateSearch"
-      >
-        <v-icon>mdi-refresh</v-icon>
+      <v-btn icon @click="updateSearch">
+        <v-icon
+          b-tooltip.hover
+          title="Request content from the server"
+          color="blue"
+          >mdi-refresh</v-icon
+        >
       </v-btn>
-      <div v-b-tooltip.hover title="Return to login page" @click="logout">
-        <span class="pt-2 pr-4">Sign Out</span>
-        <v-icon color="red" class="pr-2">mdi-logout</v-icon>
+
+      <div b-tooltip.hover title="Return to login page" @click="logout">
+        <span class="pt-4 pr-4">Sign Out</span>
+        <v-icon color="red" class="pr-2 pt-2">mdi-logout</v-icon>
       </div>
     </div>
 
-    <div class="d-flex flex-column">
+    <h3>Scans Options</h3>
+    <v-container class="bg-surface-variant">
+      <v-row no-gutters>
+        <v-col cols="12" sm="8">
+          <v-sheet>
+            <v-radio-group v-model="scanDays" row inline>
+              <v-radio
+                label="Today's"
+                :value="1"
+                tooltip.hover
+                title="Show today's scans"
+                @click="updateSearch"
+              />
+              <v-radio
+                label="30 Days"
+                :value="30"
+                tooltip.hover
+                title="Show 30 days cumulative scans"
+                @click="updateSearch"
+              />
+              <v-radio
+                label="60 Days"
+                :value="60"
+                tooltip.hover
+                title="Show 60 days cumulative scans"
+                @click="updateSearch"
+              />
+              <v-radio
+                label="90 Days"
+                :value="90"
+                tooltip.hover
+                title="Show 90 days cumulative scans"
+                @click="updateSearch"
+              />
+            </v-radio-group>
+          </v-sheet>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-spacer />
+
+    <div class="d-flex flex-column justify-content-between">
       <v-data-table
         v-model="selectedExecutions"
         :headers="headers"
@@ -27,8 +70,7 @@
         show-select
       >
         <template #no-data>
-          No data. Try relaxing the search conditions, or expanding the date
-          range.
+          No data. Try relaxing the scan search conditions.
         </template>
       </v-data-table>
       <v-btn block class="card-outter" @click="loadResults">
@@ -58,13 +100,15 @@ export default class FileList extends Vue {
 
   loading = false;
 
+  scanDays = 1;
+
   /** Table info */
   headers = [
     {
       text: 'Scan ID',
       value: 'id',
       filterable: true,
-      align: 'center'
+      align: 'start'
     },
     {
       text: 'Name',
@@ -72,9 +116,13 @@ export default class FileList extends Vue {
       align: 'start'
     },
     {
-      text: 'Scanned IPs',
-      value: 'scannedIPs',
-      align: 'center'
+      text: 'Details',
+      value: 'details',
+      align: 'start'
+    },
+    {
+      text: 'IPs',
+      value: 'scannedIPs'
     },
     {
       text: 'Total Checks',
@@ -96,7 +144,24 @@ export default class FileList extends Vue {
 
   async updateSearch() {
     this.loading = true;
-    const results = await new TenableUtil(this.tenableConfig).getScans();
+
+    const dateNow = new Date(new Date().toISOString());
+
+    const endTime = Number(
+      dateNow.setDate(dateNow.getDate()).toString().substring(0, 10)
+    );
+
+    const startTime = Number(
+      dateNow
+        .setDate(dateNow.getDate() - this.scanDays)
+        .toString()
+        .substring(0, 10)
+    );
+
+    const results = await new TenableUtil(this.tenableConfig).getScans(
+      startTime,
+      endTime
+    );
     this.executions = [];
     results.forEach((result: ScanResults) => {
       result.totalChecks = this.formatNumberOfScans(result.totalChecks);
@@ -181,6 +246,10 @@ export default class FileList extends Vue {
           hour12: false
         })
       : '';
+  }
+
+  dateToEpoch(date: Date): number {
+    return Date.parse(date.toDateString());
   }
 
   formatNumberOfScans(value: string | undefined): string {

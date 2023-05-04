@@ -1,6 +1,5 @@
 import Zip from 'adm-zip';
 import axios, {AxiosInstance} from 'axios';
-import https from 'https';
 import {createWinstonLogger} from '../../../../libs/hdf-converters/src/utils/global';
 
 /** represents the information of the current used */
@@ -15,6 +14,7 @@ export type ScanResults = {
   id: string;
   name: string;
   description?: string;
+  details?: string;
   scannedIPs: string;
   totalChecks?: string;
   startTime: string;
@@ -37,10 +37,7 @@ export class TenableUtil {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'x-apikey': `accesskey=${hostConfig.accesskey}; secretkey=${hostConfig.secretkey}`
-      },
-      httpsAgent: new https.Agent({
-        rejectUnauthorized: false
-      })
+      }
     });
     logger.info(`Initializing Tenable Client`);
   }
@@ -78,7 +75,9 @@ export class TenableUtil {
                 reject(error.response.data.error_msg);
               }
             } catch (e) {
-              reject(`Network connection error ${error}`);
+              reject(
+                `Possible network connection blocked by CORS policy. Received error: ${error}`
+              );
             }
           });
       } catch (e) {
@@ -92,7 +91,7 @@ export class TenableUtil {
    * Returned values are based on the fields requested:
    *   name,description,scannedIPs,startTime,finishTime,status
    */
-  async getScans(): Promise<[]> {
+  async getScans(startTime: number, endTime: number): Promise<[]> {
     logger.info(`Getting scans from Tenable Client`);
     return new Promise((resolve, reject) => {
       setTimeout(
@@ -108,7 +107,7 @@ export class TenableUtil {
       try {
         this.axios_instance({
           method: 'get',
-          url: '/rest/scanResult?fields=name,description,scannedIPs,totalChecks,startTime,finishTime,status'
+          url: `/rest/scanResult?fields=name,description,details,scannedIPs,totalChecks,startTime,finishTime,status&startTime=${startTime}&endTime=${endTime}`
         })
           .then((response) => {
             resolve(response.data.response.usable);

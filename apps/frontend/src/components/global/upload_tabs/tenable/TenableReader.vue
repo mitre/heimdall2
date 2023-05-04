@@ -35,6 +35,7 @@
         <p>
           <span v-if="errorCount > 0">
             It seems you may be having trouble connecting to Tenable.sc. Ensure
+            <br />
             the following are properly configured: access and secrete key, URL?
           </span>
           <br />
@@ -43,7 +44,7 @@
           </span>
           <v-btn
             target="_blank"
-            href="https://github.com/mitre/saf/wiki/Tenable-Capabilities"
+            href="https://github.com/mitre/heimdall2#tenable.sc"
             text
             color="info"
             px-0

@@ -27,7 +27,7 @@
             <li>Static Analysis Results Interchange Format (SARIF)</li>
             <li>Scoutsuite</li>
             <li>Snyk</li>
-            <li>Tenable Export (nessus)</li>
+            <li>Tenable (Nessus)</li>
             <li>Twistlock</li>
             <li>Veracode</li>
             <li>

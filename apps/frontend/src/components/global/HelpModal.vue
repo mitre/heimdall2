@@ -8,7 +8,7 @@
 
     <v-card>
       <v-card-title class="headline grey" primary-title
-        >How to use Heimdall Lite {{ version }}</v-card-title
+        >How to use Heimdall {{ serverMode }} {{ version }}</v-card-title
       >
 
       <v-card-text>
@@ -70,12 +70,17 @@
 
 <script lang="ts">
 import {AppInfoModule} from '@/store/app_info';
+import {ServerModule} from '@/store/server';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
 @Component
 export default class HelpModal extends Vue {
   dialog = false;
+  get serverMode(): string {
+    return ServerModule.serverMode ? 'Server' : 'Lite';
+  }
+
   get version(): string {
     return AppInfoModule.version;
   }

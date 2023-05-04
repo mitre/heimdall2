@@ -7,7 +7,7 @@
     </template>
     <v-card>
       <v-card-title class="headline grey" primary-title>
-        About Heimdall Lite
+        About Heimdall {{ serverMode }}
       </v-card-title>
 
       <v-card-text>
@@ -53,12 +53,17 @@
 
 <script lang="ts">
 import {AppInfoModule} from '@/store/app_info';
+import {ServerModule} from '@/store/server';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
 @Component
 export default class AboutModal extends Vue {
   dialog = false;
+
+  get serverMode(): string {
+    return ServerModule.serverMode ? 'Server' : 'Lite';
+  }
 
   get version(): string {
     return AppInfoModule.version;

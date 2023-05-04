@@ -2127,7 +2127,7 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@heimdall/cypress-tests@file:d:\\2-sourcecode\\heimdall\\tenable\\heimdall2\\test":
+"@heimdall/cypress-tests@file:D:\\2-SourceCode\\Heimdall\\tenable\\heimdall2\\test":
   version "2.6.42"
   resolved "file:test"
   dependencies:
@@ -2136,7 +2136,7 @@
     json-server "^0.17.0"
     oauth2-mock-server "^5.0.0"
 
-"@heimdall/interfaces@^2.6.38", "@heimdall/interfaces@file:d:\\2-sourcecode\\heimdall\\tenable\\heimdall2\\libs\\interfaces":
+"@heimdall/interfaces@^2.6.38", "@heimdall/interfaces@file:D:\\2-SourceCode\\Heimdall\\tenable\\heimdall2\\libs\\interfaces":
   version "2.6.38"
   resolved "file:libs/interfaces"
 
@@ -2144,7 +2144,7 @@
   version "2.6.19"
   resolved "file:libs/password-complexity"
 
-"@heimdall/password-complexity@file:d:\\2-sourcecode\\heimdall\\tenable\\heimdall2\\libs\\password-complexity":
+"@heimdall/password-complexity@file:D:\\2-SourceCode\\Heimdall\\tenable\\heimdall2\\libs\\password-complexity":
   version "2.6.19"
   resolved "file:libs/password-complexity"
 
@@ -3187,7 +3187,7 @@
   resolved "https://registry.npmjs.org/@mdi/js/-/js-7.2.96.tgz"
   integrity sha512-paR9M9ZT7rKbh2boksNUynuSZMHhqRYnEZOm/KrZTjQ4/FzyhjLHuvw/8XYzP+E7fS4+/Ms/82EN1pl/OFsiIA==
 
-"@mitre/hdf-converters@file:d:\\2-sourcecode\\heimdall\\tenable\\heimdall2\\libs\\hdf-converters":
+"@mitre/hdf-converters@file:D:\\2-SourceCode\\Heimdall\\tenable\\heimdall2\\libs\\hdf-converters":
   version "2.6.42"
   resolved "file:libs/hdf-converters"
   dependencies:
@@ -3217,7 +3217,7 @@
     xml2js "^0.5.0"
     yaml "^2.1.1"
 
-"@mitre/heimdall-lite@file:d:\\2-sourcecode\\heimdall\\tenable\\heimdall2\\apps\\frontend":
+"@mitre/heimdall-lite@file:D:\\2-SourceCode\\Heimdall\\tenable\\heimdall2\\apps\\frontend":
   version "2.6.42"
   resolved "file:apps/frontend"
   dependencies:
@@ -3252,6 +3252,7 @@
     "@vue/cli-service" "^4.5.16"
     "@vue/eslint-config-prettier" "^7.0.0"
     "@vue/eslint-config-typescript" "^11.0.2"
+    adm-zip "^0.5.10"
     apexcharts "^3.10.1"
     aws-sdk "^2.573.0"
     axios "^1.3.5"
@@ -12346,7 +12347,7 @@ he@^1.1.0, he@1.2.x:
   resolved "https://registry.npmjs.org/he/-/he-1.2.0.tgz"
   integrity sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==
 
-"heimdall-server@file:d:\\2-sourcecode\\heimdall\\tenable\\heimdall2\\apps\\backend":
+"heimdall-server@file:D:\\2-SourceCode\\Heimdall\\tenable\\heimdall2\\apps\\backend":
   version "2.6.39"
   resolved "file:apps/backend"
   dependencies:
@@ -13018,7 +13019,7 @@ inquirer@8.2.0:
     strip-ansi "^6.0.0"
     through "^2.3.6"
 
-inspecjs@^2.6.42, "inspecjs@file:d:\\2-sourcecode\\heimdall\\tenable\\heimdall2\\libs\\inspecjs":
+inspecjs@^2.6.42, "inspecjs@file:D:\\2-SourceCode\\Heimdall\\tenable\\heimdall2\\libs\\inspecjs":
   version "2.6.42"
   resolved "file:libs/inspecjs"
 

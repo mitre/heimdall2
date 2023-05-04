@@ -40,8 +40,7 @@ async function bootstrap() {
         'connect-src': [
           "'self'",
           'https://api.github.com',
-          'https://sts.amazonaws.com',
-          'https://vcapsecb1.mitre.org'
+          'https://sts.amazonaws.com'
         ]
       }
     })

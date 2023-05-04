@@ -31,6 +31,7 @@ This repository contains the source code for Heimdall's [Backend](https://github
       - [Running via Cloud.gov](#running-via-cloudgov)
   - [External Data Sources](#external-data-sources)
     - [AWS S3](#aws-s3)
+    - [Tenable.SC](#tenablesc)
   - [API Usage](#api-usage)
   - [For Developers](#for-developers)
     - [How to Install](#how-to-install)
@@ -45,9 +46,6 @@ This repository contains the source code for Heimdall's [Backend](https://github
   - [Contributing, Issues and Support](#contributing-issues-and-support)
     - [Contributing](#contributing)
     - [Issues and Support](#issues-and-support)
-    - [NOTICE](#notice)
-    - [NOTICE](#notice-1)
-    - [NOTICE](#notice-2)
 
 ## Demos
 
@@ -247,7 +245,7 @@ Heimdall currently supports AWS S3 for loading external HDF data.
 
 ### AWS S3
 
-In order to allow Heimdall to Connect to your AWS S3 bucket, you need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficent, however you need to change the allowed origin to where you are deploying Heimdall.
+In order to allow Heimdall to connect to an AWS S3 bucket, we need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficient, however we need to change the allowed origin `AllowedOrigins` to the domain where Heimdall is deployed.
 
 ```json
 [
@@ -267,6 +265,12 @@ In order to allow Heimdall to Connect to your AWS S3 bucket, you need to [add a 
     }
 ]
 ```
+
+### Tenable.SC
+
+In order to allow Heimdall to Connect to a Tenable.SC instance, the hosting services should be configured with an allowlist including the calling domain (where Heimdall resides) is a trusted domain to perform CORS requests.
+For information on how to enable [open access across domain boundaries](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) references the [CORS Enabled W3C](https://www.w3.org/wiki/CORS_Enabled)
+
 
 ## API Usage
 
