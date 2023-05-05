@@ -1,6 +1,7 @@
 import {IEvaluation} from '@heimdall/interfaces';
 import {EvaluationTagDto} from '../../evaluation-tags/dto/evaluation-tag.dto';
 import {GroupDto} from '../../groups/dto/group.dto';
+import {Group} from '../../groups/group.model';
 import {Evaluation} from '../evaluation.model';
 
 export class EvaluationDto implements IEvaluation {
@@ -38,7 +39,9 @@ export class EvaluationDto implements IEvaluation {
     if (evaluation.groups === null || evaluation.groups === undefined) {
       this.groups = [];
     } else {
-      this.groups = evaluation.groups.map((tag) => new GroupDto(tag));
+      this.groups = evaluation.groups.map(
+        (group) => new GroupDto(group as Group)
+      );
     }
     this.userId = evaluation.userId;
     this.groupId = evaluation.groupId;
