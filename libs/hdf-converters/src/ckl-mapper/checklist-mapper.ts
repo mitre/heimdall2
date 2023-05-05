@@ -337,7 +337,7 @@ export class ChecklistMapper extends BaseConverter {
               stigs: data.stigs
             }
           },
-          ...(this.withRaw && {raw: data.raw})
+          ...(this.withRaw && {raw: data.jsonixData})
         };
       }
     }

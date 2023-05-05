@@ -30,7 +30,7 @@
           mobile-breakpoint="0"
         >
           <template #[`item.filename`]="{item}">
-            <span class="cursor-pointer" @click="load_results([item])">{{
+            <span class="cursor-pointer" @click="emit_selected([item])">{{
               item.filename
             }}</span>
           </template>
