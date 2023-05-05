@@ -75,7 +75,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 })
 export default class DropdownContent extends Vue {
   @Prop({type: String, required: true}) readonly headerText!: string;
-  @Prop({type: String, required: true}) readonly allSelected!: Trinary;
+  @Prop({type: String, required: false}) readonly allSelected!: Trinary;
   @Prop({type: Array, required: true}) readonly files!:
     | EvaluationFile[]
     | ProfileFile[];
