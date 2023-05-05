@@ -7,10 +7,7 @@
     </template>
     <v-card>
       <v-card-title class="headline grey" primary-title>
-        About Heimdall {{ serverMode }}
-      </v-card-title>
-      <v-card-title v-else class="headline grey" primary-title>
-        About Heimdall
+        About Heimdall {{ instanceMode }}
       </v-card-title>
 
       <v-card-text>
@@ -57,16 +54,15 @@
 <script lang="ts">
 import ServerMixin from '@/mixins/ServerMixin';
 import {AppInfoModule} from '@/store/app_info';
-import {ServerModule} from '@/store/server';
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 
 @Component
 export default class AboutModal extends mixins(ServerMixin) {
   dialog = false;
 
-  get serverMode(): string {
-    return ServerModule.serverMode ? 'Server' : 'Lite';
+  // serverMode is define in ServerMixin
+  get instanceMode(): string {
+    return this.serverMode ? 'Server' : 'Lite';
   }
 
   get version(): string {

@@ -33,7 +33,7 @@
     >
       <div class="text-center">
         <p>
-          <span v-if="errorCount > 0">
+          <span v-if="errorCount > 0" style="color: red; font-weight: bold">
             It seems you may be having trouble connecting to Tenable.sc. Ensure
             <br />
             the following are properly configured: access and secrete key, URL?

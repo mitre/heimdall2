@@ -31,7 +31,7 @@
     >
       <div class="text-center">
         <p>
-          <span v-if="errorCount > 0">
+          <span v-if="errorCount > 0" style="color: red; font-weight: bold">
             It seems you may be having trouble connecting to Splunk. Are you
             sure that you have configured it properly?
           </span>

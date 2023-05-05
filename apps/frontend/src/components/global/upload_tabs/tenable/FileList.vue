@@ -17,6 +17,7 @@
     </div>
 
     <h3>Scans Options</h3>
+
     <v-container class="bg-surface-variant">
       <v-row no-gutters>
         <v-col cols="12" sm="8">
@@ -24,7 +25,7 @@
             <v-radio-group v-model="scanDays" row inline>
               <v-radio
                 label="Today's"
-                :value="1"
+                :value="0"
                 tooltip.hover
                 title="Show today's scans"
                 @click="updateSearch"
@@ -100,7 +101,7 @@ export default class FileList extends Vue {
 
   loading = false;
 
-  scanDays = 1;
+  scanDays = 0;
 
   /** Table info */
   headers = [
@@ -145,12 +146,14 @@ export default class FileList extends Vue {
   async updateSearch() {
     this.loading = true;
 
-    const dateNow = new Date(new Date().toISOString());
+    // Get todays date
+    const dateNow = new Date();
 
-    const endTime = Number(
-      dateNow.setDate(dateNow.getDate()).toString().substring(0, 10)
-    );
+    // Convert date to epoch number value
+    const endTime = Number(dateNow.getTime().toString().substring(0, 10));
 
+    // Set the start time to midnight (start of the day), converting to epoch
+    dateNow.setHours(0, 0, 0, 0);
     const startTime = Number(
       dateNow
         .setDate(dateNow.getDate() - this.scanDays)
