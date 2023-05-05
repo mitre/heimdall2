@@ -271,7 +271,10 @@ In order to allow Heimdall to connect to an AWS S3 bucket, we need to [add a Cro
 In order to allow Heimdall to Connect to a Tenable.SC instance, the hosting services should be configured with an allowlist including the calling domain (where Heimdall resides) is a trusted domain to perform CORS requests.
 For information on how to enable [open access across domain boundaries](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) references the [CORS Enabled W3C](https://www.w3.org/wiki/CORS_Enabled)
 
-To temporary disable CORS checks in Google Chrome (in Windows), create a short cut, in the "Type the location of the item:" text box enter the following command:
+To temporarily disable CORS use a browser [extension](https://www.bannerbear.com/blog/what-is-a-cors-error-and-how-to-fix-it-3-ways/#solution-3-bypass-the-error-using-a-browser-extension) like CORS Unlock
+
+In a Windows platform using Google Chrome CORS can be temporarily disabled by starting the browser with web security disabled:
+  - Create a short cut, in the "Type the location of the item:" text box enter the following command:
 ```
   "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --user-data-dir="C:/ChromeDev" --disable-web-security --disable-features=IsolateOrigins,site-per-process 
 ```

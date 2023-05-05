@@ -178,10 +178,6 @@ export default class FileList extends Vue {
     );
   }
 
-  async mounted() {
-    this.updateSearch();
-  }
-
   async loadResults() {
     this.loading = true;
 
@@ -242,6 +238,10 @@ export default class FileList extends Vue {
     this.$emit('got-files', files);
   }
 
+  mounted() {
+    this.updateSearch();
+  }
+
   epochToDate(date: string): string {
     return Number(date) !== -1
       ? new Date(Number(date) * 1000).toLocaleString('en-US', {
@@ -249,10 +249,6 @@ export default class FileList extends Vue {
           hour12: false
         })
       : '';
-  }
-
-  dateToEpoch(date: Date): number {
-    return Date.parse(date.toDateString());
   }
 
   formatNumberOfScans(value: string | undefined): string {

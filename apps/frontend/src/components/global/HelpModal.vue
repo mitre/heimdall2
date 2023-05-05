@@ -74,7 +74,7 @@ import ServerMixin from '@/mixins/ServerMixin';
 import Component, {mixins} from 'vue-class-component';
 
 @Component
-export default class AboutModal extends mixins(ServerMixin) {
+export default class HelpModal extends mixins(ServerMixin) {
   dialog = false;
 
   // serverMode is define in ServerMixin
