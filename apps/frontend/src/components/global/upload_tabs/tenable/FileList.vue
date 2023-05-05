@@ -70,9 +70,7 @@
         :show-sort-icons="true"
         show-select
       >
-        <template #no-data>
-          No data. Try relaxing the scan search conditions.
-        </template>
+        <template #no-data> No data. Try relaxing the scan options. </template>
       </v-data-table>
       <v-btn block class="card-outter" @click="loadResults">
         Load Selected
@@ -238,8 +236,8 @@ export default class FileList extends Vue {
     this.$emit('got-files', files);
   }
 
-  mounted() {
-    this.updateSearch();
+  async mounted() {
+    await this.updateSearch();
   }
 
   epochToDate(date: string): string {
