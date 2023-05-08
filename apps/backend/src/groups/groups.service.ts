@@ -1,5 +1,10 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
+import AppConfig from 'config/app_config';
 import {Op} from 'sequelize';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
@@ -54,48 +59,53 @@ export class GroupsService {
     const groupUser = await GroupUser.findOne({
       where: {groupId: group.id, userId: updateGroupUser.userId}
     });
-    // If there are no more owners, set an admin to owner
-    const owners = (await group.$get('users')).filter(
-      (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
-    );
-    if (
-      owners.length < 2 &&
-      owners.some((owner) => owner.id === updateGroupUser.userId)
-    ) {
-      const admins = (await group.$get('users')).filter((userOnGroup) => {
-        userOnGroup.role === 'admin';
-      });
-      if (admins.length >= 1) {
-        admins[0].GroupUser.update({role: 'owner'});
-      } else {
-        const admin = await User.findOne({where: {role: 'admin'}});
-        if (admin) {
-          this.addUserToGroup(group, admin, 'owner');
-        }
-      }
+    if (groupUser) {
+      await this.setDefaultToOwner(group, groupUser.userId);
     }
     return groupUser?.update({role: updateGroupUser.groupRole});
   }
 
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {
+    await this.setDefaultToOwner(group, user.id);
+    return group.$remove('user', user);
+  }
+
+  async setDefaultToOwner(group: Group, id: string) {
     const owners = (await group.$get('users')).filter(
       (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
     );
-    if (owners.length < 2 && owners.some((owner) => owner.id === user.id)) {
-      // If there are no more owners, set an admin to owner
-      const admins = (await group.$get('users')).filter((userOnGroup) => {
-        userOnGroup.role === 'admin';
+    // If there are no more owners, set an admin to owner
+    if (owners.length < 2 && owners.some((owner) => owner.id === id)) {
+      const appConfig = new AppConfig();
+      const defaultAdmin = await User.findOne({
+        where: {role: 'admin', email: appConfig.getDefaultAdmin()}
       });
-      if (admins.length >= 1) {
-        admins[0].GroupUser.update({role: 'owner'});
+      if (defaultAdmin) {
+        // If default admin is found, either promote it or add it to the group as an owner
+        const adminInGroup = (await group.$get('users')).find(
+          (userOnGroup) => (userOnGroup.id = defaultAdmin.id)
+        );
+        adminInGroup
+          ? adminInGroup.update({role: 'owner'})
+          : await this.addUserToGroup(group, defaultAdmin, 'owner');
       } else {
-        const admin = await User.findOne({where: {role: 'admin'}});
+        // If default admin is not found, use the admin with the lowest ID
+        const admin = await User.findOne({
+          where: {role: 'admin'},
+          order: [['id', 'ASC']]
+        });
         if (admin) {
-          this.addUserToGroup(group, admin, 'owner');
+          const adminInGroup = (await group.$get('users')).find(
+            (userOnGroup) => (userOnGroup.id = admin.id)
+          );
+          adminInGroup
+            ? adminInGroup.update({role: 'owner'})
+            : await this.addUserToGroup(group, admin, 'owner');
+        } else {
+          throw new ForbiddenException('No admin to be promoted');
         }
       }
     }
-    return group.$remove('user', user);
   }
 
   async addEvaluationToGroup(

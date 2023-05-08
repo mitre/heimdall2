@@ -1,9 +1,9 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
-import {Dialect} from 'sequelize/types';
+import { Dialect } from 'sequelize/types';
 
 export default class AppConfig {
-  private envConfig: {[key: string]: string | undefined};
+  private envConfig: { [key: string]: string | undefined };
 
   constructor() {
     console.log('Attempting to read configuration file `.env`!');
@@ -106,6 +106,12 @@ export default class AppConfig {
       key: sslKey,
       cert: sslCert,
       ca: sslCA
+    }
+  }
+
+  getDefaultAdmin() {
+    return {
+      username: this.get('ADMIN_EMAIL') || 'admin@heimdall.local'
     }
   }
 
