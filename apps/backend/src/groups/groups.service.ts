@@ -4,8 +4,8 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import AppConfig from 'config/app_config';
 import {Op} from 'sequelize';
+import AppConfig from '../../config/app_config';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {User} from '../users/user.model';
