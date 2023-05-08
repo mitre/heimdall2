@@ -171,14 +171,15 @@ export default class Users extends Vue {
   @Emit()
   deleteUserConfirm(): boolean {
     let saveable = true;
-    if (this.numberOfOwners() <= 1) {
+    const userToDelete = this.currentUsers.indexOf(this.getEditedUser());
+    if (
+      this.currentUsers[userToDelete].groupRole === 'owner' &&
+      this.numberOfOwners() <= 1
+    ) {
       saveable = false;
     }
     if (this.editedUserID !== '0') {
-      this.currentUsers.splice(
-        this.currentUsers.indexOf(this.getEditedUser()),
-        1
-      );
+      this.currentUsers.splice(userToDelete, 1);
     }
     this.closeActionDialog();
     return saveable;
