@@ -86,7 +86,7 @@ export class GroupsService {
           (userOnGroup) => (userOnGroup.id = defaultAdmin.id)
         );
         adminInGroup
-          ? adminInGroup.update({role: 'owner'})
+          ? await adminInGroup.update({role: 'owner'})
           : await this.addUserToGroup(group, defaultAdmin, 'owner');
       } else {
         // If default admin is not found, use the admin with the lowest ID
@@ -99,7 +99,7 @@ export class GroupsService {
             (userOnGroup) => (userOnGroup.id = admin.id)
           );
           adminInGroup
-            ? adminInGroup.update({role: 'owner'})
+            ? await adminInGroup.update({role: 'owner'})
             : await this.addUserToGroup(group, admin, 'owner');
         } else {
           throw new ForbiddenException('No admin to be promoted');
