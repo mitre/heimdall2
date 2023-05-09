@@ -36,7 +36,8 @@
           <span v-if="errorCount > 0" style="color: red; font-weight: bold">
             It seems you may be having trouble connecting to Tenable.sc. Ensure
             <br />
-            that the access key, secret key, and host url are properly configured.
+            that the access key, secret key, and host url are properly
+            configured.
           </span>
           <br />
           <span>
