@@ -36,7 +36,7 @@
           <span v-if="errorCount > 0" style="color: red; font-weight: bold">
             It seems you may be having trouble connecting to Tenable.sc. Ensure
             <br />
-            the following are properly configured: access and secrete key, URL?
+            that the access key, secret key, and host url are properly configured.
           </span>
           <br />
           <span>
@@ -56,7 +56,7 @@
           <span>
             API key authorization requires Tenable.sc 5.13.x or later.
             <br />
-            Unique set of API keys can be generated for each user account.
+            A unique set of API keys can be generated for each user account.
             <br />
             The API authorization keys serve as a user authentication token.
           </span>
