@@ -40,13 +40,7 @@ function getRuleResult(
       | Record<string, unknown>
       | Record<string, unknown>[]
   );
-  const matchingRuleResult = ruleResults.find(
-    (element) => _.get(element, 'idref') === ruleId
-  );
-  if (matchingRuleResult) {
-    return matchingRuleResult;
-  }
-  return undefined;
+  return ruleResults.find((element) => _.get(element, 'idref') === ruleId);
 }
 
 function getStatus(testResultStatus: string): ExecJSON.ControlResultStatus {
@@ -72,12 +66,6 @@ function getStatus(testResultStatus: string): ExecJSON.ControlResultStatus {
     default:
       return ExecJSON.ControlResultStatus.Error;
   }
-}
-
-function convertEncodedXmlIntoJson(
-  encodedXml: string
-): Record<string, unknown> {
-  return parseXml(encodedXml);
 }
 
 function getValues(
@@ -150,12 +138,12 @@ function extractCci(input: IIdent | IIdent[]): string[] {
   const CCI_REGEX = /CCI-(\d*)/;
 
   const output: string[] = [];
-  inputArray.forEach((element) => {
+  for (const element of inputArray) {
     const text = String(_.get(element, 'text'));
     if (!!text && text.match(CCI_REGEX)) {
       output.push(text);
     }
-  });
+  }
   return output;
 }
 
@@ -322,25 +310,23 @@ export class XCCDFResultsMapper extends BaseConverter {
               severity: {path: 'severity'},
               description: {
                 path: ['description.text', 'description'],
-                transformer: (description: string): string => {
-                  return _.get(
-                    convertEncodedXmlIntoJson(description),
+                transformer: (description: string): string =>
+                  _.get(
+                    parseXml(description),
                     'VulnDiscussion',
                     description
-                  ) as string;
-                }
+                  ) as string
               },
               group_id: {path: 'group.id'},
               group_title: {path: ['group.title.text', 'group.title']},
               group_description: {
                 path: ['group.description.text', 'group.description'],
-                transformer: (description: string): string => {
-                  return _.get(
-                    convertEncodedXmlIntoJson(description),
+                transformer: (description: string): string =>
+                  _.get(
+                    parseXml(description),
                     'GroupDescription',
                     description
-                  ) as string;
-                }
+                  ) as string
               },
               rule_id: {path: 'id'},
               check: {path: 'check'},
@@ -359,13 +345,12 @@ export class XCCDFResultsMapper extends BaseConverter {
                   id: {path: ['id']},
                   description: {
                     path: ['description.text', 'description'],
-                    transformer: (description: string): string => {
-                      return _.get(
-                        convertEncodedXmlIntoJson(description),
+                    transformer: (description: string): string =>
+                      _.get(
+                        parseXml(description),
                         'ProfileDescription',
                         description
-                      ) as string;
-                    }
+                      ) as string
                   },
                   title: {path: ['title.text', 'title']}
                 }
@@ -383,13 +368,12 @@ export class XCCDFResultsMapper extends BaseConverter {
             id: {path: ['id']},
             desc: {
               path: ['description.text', 'description'],
-              transformer: (description: string): string => {
-                return _.get(
-                  convertEncodedXmlIntoJson(description),
+              transformer: (description: string): string =>
+                _.get(
+                  parseXml(description),
                   'ProfileDescription',
                   description
-                ) as string;
-              }
+                ) as string
             },
             descriptions: [
               {
@@ -432,13 +416,12 @@ export class XCCDFResultsMapper extends BaseConverter {
                 },
                 code_desc: {
                   path: ['description.text', 'description'],
-                  transformer: (description: string): string => {
-                    return _.get(
-                      convertEncodedXmlIntoJson(description),
+                  transformer: (description: string): string =>
+                    _.get(
+                      parseXml(description),
                       'VulnDiscussion',
                       description
-                    ) as string;
-                  }
+                    ) as string
                 },
                 start_time: {
                   path: ['ruleResult.time']
