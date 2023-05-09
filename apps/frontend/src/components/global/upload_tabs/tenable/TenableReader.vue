@@ -44,7 +44,7 @@
           </span>
           <v-btn
             target="_blank"
-            href="https://github.com/mitre/heimdall2#tenable.sc"
+            href="https://github.com/mitre/heimdall2#tenablesc"
             text
             color="info"
             px-0
