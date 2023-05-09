@@ -392,8 +392,21 @@ export class XCCDFResultsMapper extends BaseConverter {
               }
             ],
             impact: {
-              path: ['severity'],
-              transformer: impactMapping(IMPACT_MAPPING)
+              transformer: (vulnerability: Record<string, unknown>): number => {
+                const ruleResult = _.get(vulnerability, 'ruleResult') as Record<
+                  string,
+                  unknown
+                >;
+                if (ruleResult) {
+                  const result = _.get(ruleResult, 'result') as string;
+                  if (result == 'notapplicable' || result == 'informational') {
+                    return 0;
+                  }
+                }
+                return impactMapping(IMPACT_MAPPING)(
+                  _.get(vulnerability, 'severity')
+                );
+              }
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
