@@ -59,6 +59,8 @@ export default class SeverityChart extends Vue {
   }
 
   onSliceSelect(severity: Category<Severity>) {
+    const singleSelected =
+      SearchModule.inFileSearchTerms.severityFilter.length === 1;
     for (const filter of SearchModule.inFileSearchTerms.severityFilter) {
       SearchModule.removeSearchFilter({
         field: 'severity',
@@ -66,12 +68,14 @@ export default class SeverityChart extends Vue {
         negated: false // Defaulted as false
       });
     }
-    // Apply selected status
-    SearchModule.addSearchFilter({
-      field: 'severity',
-      value: severity.value.toLowerCase(),
-      negated: false // Defaulted as false
-    });
+    if (!singleSelected) {
+      // Apply selected status
+      SearchModule.addSearchFilter({
+        field: 'severity',
+        value: severity.value.toLowerCase(),
+        negated: false // Defaulted as false
+      });
+    }
   }
 
   onLegendSelect(severity: Category<Severity>) {
