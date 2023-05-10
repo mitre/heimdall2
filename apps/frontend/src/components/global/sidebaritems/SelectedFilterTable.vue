@@ -9,7 +9,7 @@
         :headers="filterHeaders"
         :items="convertFilterData(currentFilters.conditionArray)"
         item-key="value"
-        class="elevation-1 mb-3"
+        class="elevation-1 mb-3 testing"
       />
     </v-row>
     <v-row
@@ -81,19 +81,17 @@ export default class SelectedFilterTable extends Vue {
   ) {
     let temp: {keyword: string; value: string; negated: string}[] = [];
     for (const filterEntry of filters) {
-      if (filterEntry.negated) {
-        temp.push({
-          keyword: filterEntry.keyword,
-          value: filterEntry.value,
-          negated: '-'
-        });
-      } else {
-        temp.push({
-          keyword: filterEntry.keyword,
-          value: filterEntry.value,
-          negated: '+'
-        });
-      }
+      filterEntry.negated
+        ? temp.push({
+            keyword: filterEntry.keyword,
+            value: filterEntry.value,
+            negated: '-'
+          })
+        : temp.push({
+            keyword: filterEntry.keyword,
+            value: filterEntry.value,
+            negated: '+'
+          });
     }
     return temp;
   }
@@ -105,3 +103,13 @@ export default class SelectedFilterTable extends Vue {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.v-data-table::v-deep th {
+  font-size: 1rem !important;
+}
+
+.v-data-table::v-deep td {
+  font-size: 1rem !important;
+}
+</style>

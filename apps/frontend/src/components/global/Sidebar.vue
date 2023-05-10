@@ -1,12 +1,30 @@
 <template>
   <div>
-    <ChecklistTargetDataModal :visible="showTargetModal" @close-modal="showTargetModal = false" />
-    <ChecklistTechnologyAreaModal :visible="showTechnologyModal" @close-modal="showTechnologyModal = false" />
+    <ChecklistTargetDataModal
+      :visible="showTargetModal"
+      @close-modal="showTargetModal = false"
+    />
+    <ChecklistTechnologyAreaModal
+      :visible="showTechnologyModal"
+      @close-modal="showTechnologyModal = false"
+    />
 
     <!-- Due to how the vuetify components work, one drawer is permanent to always be appended to the side and the other will be the temporary that can be pulled out -->
-    <v-navigation-drawer :clipped="$vuetify.breakpoint.lgAndUp" app :style="{ 'z-index': 11 }" permanent width="45px"
-      @input="$emit('input', $event)">
-      <v-container v-if="!isUtilityDrawerShown" fill-height fluid @click="isUtilityDrawerShown = !isUtilityDrawerShown">
+    <v-navigation-drawer
+      :clipped="$vuetify.breakpoint.lgAndUp"
+      app
+      :style="{'z-index': 11}"
+      permanent
+      width="45px"
+      @input="$emit('input', $event)"
+    >
+      <v-container
+        v-if="!isUtilityDrawerShown"
+        fill-height
+        fluid
+        class="clickable"
+        @click="isUtilityDrawerShown = !isUtilityDrawerShown"
+      >
         <v-row align="center" justify="center">
           <v-col>
             <v-icon>mdi-arrow-right</v-icon>
@@ -14,29 +32,57 @@
         </v-row>
       </v-container>
     </v-navigation-drawer>
-    <v-navigation-drawer v-model="isUtilityDrawerShown" :clipped="$vuetify.breakpoint.lgAndUp" app
-      :style="{ 'z-index': 11, 'margin-top': classification ? '5em' : '3em' }" temporary width="600px"
-      @input="$emit('input', $event)">
+    <v-navigation-drawer
+      v-model="isUtilityDrawerShown"
+      :clipped="$vuetify.breakpoint.lgAndUp"
+      app
+      :style="{'z-index': 11, 'margin-top': classification ? '5em' : '3em'}"
+      temporary
+      width="600px"
+      @input="$emit('input', $event)"
+    >
       <div v-if="isUtilityDrawerShown">
         <v-expansion-panels v-model="active_path" accordion>
-          <DropdownContent header-text="Results" :files="visible_evaluation_files"
-            :all-selected="all_evaluations_selected" :enable-compare-view="true" :compare-view-active="compareViewActive"
-            @toggle-all="toggle_all_evaluations" @toggle-compare-view="compareView"
-            @changed-files="$emit('changed-files')" />
-          <DropdownContent header-text="Profiles" :files="visible_profile_files" :all-selected="all_profiles_selected"
-            @toggle-all="toggle_all_profiles" @changed-files="$emit('changed-files')" />
-          <DropdownContent header-text="Checklists" :files="visible_checklist_files"
-            @changed-files="$emit('changed-files')" />
+          <DropdownContent
+            header-text="Results"
+            :files="visible_evaluation_files"
+            :all-selected="all_evaluations_selected"
+            :enable-compare-view="true"
+            :compare-view-active="compareViewActive"
+            @toggle-all="toggle_all_evaluations"
+            @toggle-compare-view="compareView"
+            @changed-files="$emit('changed-files')"
+          />
+          <DropdownContent
+            header-text="Profiles"
+            :files="visible_profile_files"
+            :all-selected="all_profiles_selected"
+            @toggle-all="toggle_all_profiles"
+            @changed-files="$emit('changed-files')"
+          />
+          <DropdownContent
+            header-text="Checklists"
+            :files="visible_checklist_files"
+            @changed-files="$emit('changed-files')"
+          />
         </v-expansion-panels>
         <div class="mx-5 mr-10 mb-5">
           <!-- Checklist Data Modals -->
           <v-row v-if="inChecklistView" class="my-4" justify="center">
-            <v-btn id="target-data-btn" class="mx-2" @click="setShowTargetModal">
+            <v-btn
+              id="target-data-btn"
+              class="mx-2"
+              @click="setShowTargetModal"
+            >
               <span class="d-none d-md-inline pr-2">
                 Add/Update Target Data
               </span>
             </v-btn>
-            <v-btn id="technology-area-btn" class="mx-2" @click="setShowTechnologyModal">
+            <v-btn
+              id="technology-area-btn"
+              class="mx-2"
+              @click="setShowTechnologyModal"
+            >
               <span class="d-none d-md-inline pr-2">
                 Add/Update Technology Area
               </span>
@@ -56,17 +102,17 @@
 
 <script lang="ts">
 import DropdownContent from '@/components/global/sidebaritems/DropdownContent.vue';
-import { Trinary } from '@/enums/Trinary';
+import {Trinary} from '@/enums/Trinary';
 import RouteMixin from '@/mixins/RouteMixin';
-import { FilteredDataModule } from '@/store/data_filters';
-import { InspecDataModule } from '@/store/data_store';
-import { EvaluationFile, ProfileFile } from '@/store/report_intake';
-import { ChecklistFile } from '@mitre/hdf-converters';
-import Component, { mixins } from 'vue-class-component';
-import { ServerModule } from '../../store/server';
+import {FilteredDataModule} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {ChecklistFile} from '@mitre/hdf-converters';
+import Component, {mixins} from 'vue-class-component';
+import {ServerModule} from '../../store/server';
 import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
 import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
-import { AppInfoModule } from '@/store/app_info';
+import {AppInfoModule} from '@/store/app_info';
 import QuickFilters from './sidebaritems/QuickFilters.vue';
 import CategoryFilters from './sidebaritems/CategoryFilters.vue';
 import SelectedFilterTable from './sidebaritems/SelectedFilterTable.vue';
@@ -208,5 +254,9 @@ nav.v-navigation-drawer {
   width: 70px;
   max-height: 60px;
   font-size: 15px;
+}
+
+.clickable {
+  cursor: pointer;
 }
 </style>
