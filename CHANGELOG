@@ -1,3 +1,31 @@
+v2.6.47
+
+- Tenable Frontend @georgedias (#4410)
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1374.0 to 2.1375.0 @dependabot (#4457)
+- Bump @types/validator from 13.7.16 to 13.7.17 @dependabot (#4458)
+- Bump @types/node from 20.1.0 to 20.1.1 @dependabot (#4449)
+- Bump @aws-sdk/client-config-service from 3.328.0 to 3.329.0 @dependabot (#4445)
+- Bump @typescript-eslint/eslint-plugin from 5.59.2 to 5.59.5 @dependabot (#4455)
+- Bump @types/validator from 13.7.15 to 13.7.16 @dependabot (#4453)
+- Bump core-js from 3.30.1 to 3.30.2 @dependabot (#4450)
+- Bump typedoc from 0.24.6 to 0.24.7 @dependabot (#4451)
+- Bump @types/vuelidate from 0.7.17 to 0.7.18 @dependabot (#4446)
+- Bump aws-sdk from 2.1373.0 to 2.1374.0 @dependabot (#4452)
+- Bump @typescript-eslint/parser from 5.59.2 to 5.59.5 @dependabot (#4447)
+- Bump eslint from 8.39.0 to 8.40.0 @dependabot (#4439)
+- Bump @aws-sdk/client-config-service from 3.327.0 to 3.328.0 @dependabot (#4441)
+- Bump aws-sdk from 2.1372.0 to 2.1373.0 @dependabot (#4442)
+- Bump @types/node from 18.16.3 to 20.1.0 @dependabot (#4440)
+- Bump @aws-sdk/client-config-service from 3.326.0 to 3.327.0 @dependabot (#4438)
+- Bump aws-sdk from 2.1370.0 to 2.1372.0 @dependabot (#4435)
+- Bump @aws-sdk/client-config-service from 3.321.1 to 3.326.0 @dependabot (#4432)
+- Bump @typescript-eslint/eslint-plugin from 5.59.1 to 5.59.2 @dependabot (#4437)
+- Bump @types/vuelidate from 0.7.16 to 0.7.17 @dependabot (#4428)
+- Bump @nestjs/cli from 8.2.8 to 9.4.2 @dependabot (#4394)
+
 v2.6.46
 
 ## Dependency Updates
