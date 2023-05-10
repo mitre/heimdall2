@@ -114,11 +114,11 @@ export default class ApexPieChart extends Vue {
                 'slice-selected',
                 this.categories[config.dataPointIndex]
               );
-            }
-          },
-          legendClick: (chartContext, seriesIndex, config) => {
-            if (seriesIndex) {
-              this.$emit('legend-selected', this.categories[seriesIndex]);
+            } else {
+              this.$emit(
+                'legend-selected',
+                this.categories[config.dataPointIndex]
+              );
             }
           },
           dataPointMouseEnter: (_event) => {

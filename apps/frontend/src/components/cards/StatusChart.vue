@@ -84,6 +84,8 @@ export default class StatusChart extends Vue {
   }
 
   onSliceSelect(status: Category<ControlStatus>) {
+    const singleSelected =
+      SearchModule.inFileSearchTerms.statusFilter.length === 1;
     for (const filter of SearchModule.inFileSearchTerms.statusFilter) {
       SearchModule.removeSearchFilter({
         field: 'status',
@@ -91,12 +93,14 @@ export default class StatusChart extends Vue {
         negated: false // Defaulted as false
       });
     }
-    // Apply selected status
-    SearchModule.addSearchFilter({
-      field: 'status',
-      value: status.value.toLowerCase(),
-      negated: false // Defaulted as false
-    });
+    if (!singleSelected) {
+      // Apply selected status
+      SearchModule.addSearchFilter({
+        field: 'status',
+        value: status.value.toLowerCase(),
+        negated: false // Defaulted as false
+      });
+    }
   }
 
   onLegendSelect(status: Category<ControlStatus>) {
