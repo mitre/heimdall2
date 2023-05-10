@@ -148,15 +148,12 @@ export default class FileList extends Vue {
     const dateNow = new Date();
 
     // Convert date to epoch number value
-    const endTime = Number(dateNow.getTime().toString().substring(0, 10));
+    const endTime = Math.trunc(dateNow.getTime() / 1000);
 
     // Set the start time to midnight (start of the day), converting to epoch
     dateNow.setHours(0, 0, 0, 0);
-    const startTime = Number(
-      dateNow
-        .setDate(dateNow.getDate() - this.scanDays)
-        .toString()
-        .substring(0, 10)
+    const startTime = Math.trunc(
+      dateNow.setDate(dateNow.getDate() - this.scanDays) / 1000
     );
 
     const results = await new TenableUtil(this.tenableConfig).getScans(
@@ -242,10 +239,7 @@ export default class FileList extends Vue {
 
   epochToDate(date: string): string {
     return Number(date) !== -1
-      ? new Date(Number(date) * 1000).toLocaleString('en-US', {
-          timeZone: 'UTC',
-          hour12: false
-        })
+      ? new Date(Number(date) * 1000).toLocaleString()
       : '';
   }
 
