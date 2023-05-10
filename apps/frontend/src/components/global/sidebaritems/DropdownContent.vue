@@ -64,7 +64,7 @@
 <script lang="ts">
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
 import {Trinary} from '@/enums/Trinary';
-import {AppInfoModule} from '@/store/app_info';
+import {AppInfoModule, views} from '@/store/app_info';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
@@ -100,7 +100,7 @@ export default class DropdownContent extends Vue {
   }
 
   inChecklistView(): boolean {
-    return AppInfoModule.currentView === 'checklists';
+    return AppInfoModule.currentView === views.Checklist;
   }
 }
 </script>

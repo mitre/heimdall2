@@ -116,6 +116,7 @@ import {AppInfoModule} from '@/store/app_info';
 import QuickFilters from './sidebaritems/QuickFilters.vue';
 import CategoryFilters from './sidebaritems/CategoryFilters.vue';
 import SelectedFilterTable from './sidebaritems/SelectedFilterTable.vue';
+import {views} from '@/store/app_info';
 
 @Component({
   components: {
@@ -148,18 +149,18 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   /** Checks to see if you are in checklist view */
   get inChecklistView(): boolean {
-    return AppInfoModule.currentView === 'checklists';
+    return AppInfoModule.currentView === views.Checklist;
   }
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
-    if (this.currentRoute === 'checklists') {
+    if (this.currentRoute === views.Checklist) {
       return 2;
-    } else if (this.currentRoute === 'profiles') {
+    } else if (this.currentRoute === views.Profile) {
       return 1;
     } else if (
-      this.currentRoute === 'results' ||
-      this.currentRoute === 'compare'
+      this.currentRoute === views.Result ||
+      this.currentRoute === views.Compare
     ) {
       return 0;
     } else {
@@ -212,7 +213,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   }
 
   get compareViewActive(): boolean {
-    return this.currentRoute === 'compare';
+    return this.currentRoute === views.Compare;
   }
 
   get classification(): string {
@@ -231,10 +232,10 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   // toggle between the comparison view and the results view
   compareView(): void {
-    if (this.currentRoute === 'results') {
+    if (this.currentRoute === views.Result) {
       this.navigateWithNoErrors('/compare');
     }
-    if (this.currentRoute === 'compare') {
+    if (this.currentRoute === views.Compare) {
       this.navigateWithNoErrors('/results');
     }
   }

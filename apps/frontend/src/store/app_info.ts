@@ -26,6 +26,13 @@ export interface IAppInfoState {
   updateNotification: boolean;
 }
 
+export enum views {
+  Checklist = 'checklists',
+  Result = 'results',
+  Profile = 'profiles',
+  Compare = 'compare'
+}
+
 @Module({
   namespaced: true,
   dynamic: true,
@@ -132,10 +139,10 @@ export class AppInfo extends VuexModule implements IAppInfoState {
     return process.env.ISSUES;
   }
 
-  currentView = 'results';
+  currentView = views.Result;
 
   @Mutation
-  SET_CURRENT_VIEW(value: string) {
+  SET_CURRENT_VIEW(value: views) {
     this.currentView = value;
   }
 }

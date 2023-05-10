@@ -1,4 +1,4 @@
-import {AppInfoModule} from '@/store/app_info';
+import {AppInfoModule, views} from '@/store/app_info';
 import {FilteredDataModule} from '@/store/data_filters';
 import {SearchModule} from '@/store/search';
 import {Component, Vue} from 'vue-property-decorator';
@@ -13,21 +13,21 @@ export default class RouteMixin extends Vue {
   navigateWithNoErrors(route: string): void {
     // Saves filter state of current route before navigation
     switch (this.currentRoute) {
-      case 'checklists': {
+      case views.Checklist: {
         // Save checklist filter state and clear filters before navigation
         FilteredDataModule.setChecklistFilterState(SearchModule.searchTerm);
         SearchModule.clear();
         SearchModule.updateSearch('');
         break;
       }
-      case 'results': {
+      case views.Result: {
         // Save results filter state and clear filters before navigation
         FilteredDataModule.setResultsFilterState(SearchModule.searchTerm);
         SearchModule.clear();
         SearchModule.updateSearch('');
         break;
       }
-      case 'profiles': {
+      case views.Profile: {
         // Save profiles filter state and clear filters before navigation
         FilteredDataModule.setProfilesFilterState(SearchModule.searchTerm);
         SearchModule.clear();
@@ -40,18 +40,18 @@ export default class RouteMixin extends Vue {
       // Ignore errors caused by navigation
     });
     // Set the current view
-    AppInfoModule.SET_CURRENT_VIEW(route.split('/')[1]);
+    AppInfoModule.SET_CURRENT_VIEW(route.split('/')[1] as views);
     // Sets the filter state to the page navigated to
     switch (route.split('/')[1]) {
-      case 'checklists': {
+      case views.Checklist: {
         SearchModule.updateSearch(FilteredDataModule.checklistFilterState);
         break;
       }
-      case 'results': {
+      case views.Result: {
         SearchModule.updateSearch(FilteredDataModule.resultsFilterState);
         break;
       }
-      case 'profiles': {
+      case views.Profile: {
         SearchModule.updateSearch(FilteredDataModule.profilesFilterState);
         break;
       }

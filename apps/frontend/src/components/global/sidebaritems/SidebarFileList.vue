@@ -6,7 +6,7 @@
   >
     <v-list-item-action @click.stop="select_file">
       <v-checkbox
-        v-if="currentView !== 'checklists'"
+        v-if="!inChecklistView"
         :input-value="selected"
         color="blue"
       />
@@ -53,7 +53,7 @@ import _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import {ChecklistFile} from '@mitre/hdf-converters';
 import {Prop} from 'vue-property-decorator';
-import {AppInfoModule} from '@/store/app_info';
+import {AppInfoModule, views} from '@/store/app_info';
 
 @Component
 export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
@@ -88,6 +88,10 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   /** Current application view */
   get currentView() {
     return AppInfoModule.currentView;
+  }
+
+  get inChecklistView() {
+    return this.currentView === views.Checklist;
   }
 
   /** Checks if file is selected */
