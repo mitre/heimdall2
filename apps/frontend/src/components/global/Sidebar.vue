@@ -234,8 +234,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   compareView(): void {
     if (this.currentRoute === views.Result) {
       this.navigateWithNoErrors('/compare');
-    }
-    if (this.currentRoute === views.Compare) {
+    } else if (this.currentRoute === views.Compare) {
       this.navigateWithNoErrors('/results');
     }
   }
