@@ -4,7 +4,7 @@
       id="upload-btn"
       :disabled="showModal"
       class="mx-2"
-      @click="show_modal"
+      @click="openModal"
     >
       <span class="d-none d-md-inline pr-2"> Load </span>
       <v-icon> mdi-cloud-upload </v-icon>
@@ -12,8 +12,8 @@
     <!-- File select modal -->
     <UploadNexus
       :visible="showModal"
-      @close-modal="close_modal"
-      @got-files="close_modal"
+      @close-modal="closeModal"
+      @got-files="closeModal"
     />
   </div>
 </template>
@@ -33,11 +33,11 @@ export default class UploadButton extends Vue {
   /**
    * Invoked when file(s) are loaded.
    */
-  close_modal() {
+   closeModal() {
     this.showModal = false;
   }
 
-  show_modal() {
+  openModal() {
     this.showModal = true;
   }
 }
