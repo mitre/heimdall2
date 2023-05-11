@@ -33,7 +33,7 @@ export default class UploadButton extends Vue {
   /**
    * Invoked when file(s) are loaded.
    */
-   closeModal() {
+  closeModal() {
     this.showModal = false;
   }
 
