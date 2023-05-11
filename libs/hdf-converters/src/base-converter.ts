@@ -295,9 +295,7 @@ export class BaseConverter {
             : element;
         });
         let output: Array<T> = [];
-        v.forEach((element) => {
-          output.push(this.evaluate(file, element) as T);
-        });
+        output.push(this.evaluate(file, lookupPath) as T);
         if (arrayTransformer !== undefined) {
           if (Array.isArray(arrayTransformer)) {
             output = arrayTransformer[0].apply(arrayTransformer[1], [
