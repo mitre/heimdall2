@@ -337,7 +337,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               ident: {path: 'ident'},
               reference: {path: 'reference'},
               selected: {path: 'selected'},
-              version: {path: ['id', 'version']}, // dunno why the field is called version when it's just an old id
+              version: {path: ['id', 'version.text']}, // dunno why the field is called version when it's just an old id
               weight: {path: 'weight'},
               profiles: [
                 {
