@@ -4,6 +4,7 @@
     <v-row class="mt-4 mx-auto">
       <v-data-table
         v-model="selectedFilters"
+        mobile-breakpoint="0"
         dense
         show-select
         :headers="filterHeaders"
