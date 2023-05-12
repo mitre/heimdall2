@@ -1,12 +1,12 @@
 <template>
   <Base
     :show-search="true"
-    :title="curr_title"
+    :title="currentTitle"
     @changed-files="evalInfo = null"
   >
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
-      <v-btn :disabled="!can_clear" @click="clear">
+      <v-btn :disabled="!canClear" @click="clear">
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
@@ -24,10 +24,10 @@
               <v-tooltip top>
                 <template #activator="{on}">
                   <IconLinkItem
-                    key="export_ckl"
+                    key="exportCkl"
                     text="Export as CKL"
                     icon="mdi-check-all"
-                    @click="export_ckl()"
+                    @click="exportCkl()"
                     v-on="on"
                   />
                 </template>
@@ -54,10 +54,10 @@
                   "
                 >
                   <div>
-                    <strong
-                      >Rules ({{ numItems }} shown,
-                      {{ loadedRules.length - numItems }} hidden)</strong
-                    >
+                    <strong>
+                      Rules ({{ numItems }} shown,
+                      {{ loadedRules.length - numItems }} hidden)
+                    </strong>
                   </div>
                   <div style="width: fit-content">
                     <v-switch
@@ -92,16 +92,17 @@
                       <span
                         v-if="index === 4"
                         class="grey--text caption mt-0 pt-0"
-                        >(+{{ selectedHeaders.length - 4 }} others)</span
                       >
+                        (+{{ selectedHeaders.length - 4 }} others)
+                      </span>
                     </div>
                     <div v-else>
                       <v-chip v-if="index < 3" small>
                         <span>{{ item.text }}</span>
                       </v-chip>
-                      <span v-if="index === 3" class="grey--text caption ml-2"
-                        >(+{{ selectedHeaders.length - 3 }} others)</span
-                      >
+                      <span v-if="index === 3" class="grey--text caption ml-2">
+                        (+{{ selectedHeaders.length - 3 }} others)
+                      </span>
                     </div>
                   </template>
                 </v-select>
@@ -152,20 +153,20 @@
                 <v-row dense class="mt-n2 mt-xl-3">
                   <v-col :cols="4">
                     <div>
-                      <span class="text-overline white--text">Vul ID: </span
-                      >{{ selectedRule.vulnNum }}
+                      <span class="text-overline white--text">Vul ID: </span>
+                      {{ selectedRule.vulnNum }}
                     </div>
                   </v-col>
                   <v-col :cols="4">
                     <div>
-                      <span class="text-overline white--text">Rule ID: </span
-                      >{{ shortRuleId(selectedRule.ruleId) }}
+                      <span class="text-overline white--text">Rule ID: </span>
+                      {{ shortRuleId(selectedRule.ruleId) }}
                     </div>
                   </v-col>
                   <v-col :cols="4">
                     <div>
-                      <span class="text-overline white--text">STIG ID: </span
-                      >{{ shortStigId(selectedRule.ruleVersion) }}
+                      <span class="text-overline white--text">STIG ID: </span>
+                      {{ shortStigId(selectedRule.ruleVersion) }}
                     </div>
                   </v-col>
                 </v-row>
@@ -178,9 +179,10 @@
                   </v-col>
                   <v-col :cols="4">
                     <div>
-                      <span class="text-overline white--text"
-                        >Classification: </span
-                      >{{ selectedRule.class }}
+                      <span class="text-overline white--text">
+                        Classification:
+                      </span>
+                      {{ selectedRule.class }}
                     </div>
                   </v-col>
                   <v-col :cols="4">
@@ -212,9 +214,9 @@
                   </div>
                   {{ selectedRule.fixText }}<br /><br />
                 </v-card-text>
-                <v-card-subtitle class="text-center text-subtitle-2"
-                  >References</v-card-subtitle
-                >
+                <v-card-subtitle class="text-center text-subtitle-2">
+                  References
+                </v-card-subtitle>
                 <v-divider />
                 <v-card-text>
                   <div
@@ -301,10 +303,10 @@
                 v-if="selectedRule.severityJustification === ''"
                 class="justify-center mt-1"
               >
-                <strong
-                  >Please input a valid severity override justification.
-                  (Required)</strong
-                >
+                <strong>
+                  Please input a valid severity override justification.
+                  (Required)
+                </strong>
               </v-card-subtitle>
               <v-card-subtitle v-else class="justify-center mt-1">
                 <strong>Press "OK" to save.</strong>
@@ -370,6 +372,7 @@ import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
 import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
+import {AppInfoModule} from '@/store/app_info';
 
 @Component({
   components: {
@@ -472,12 +475,12 @@ export default class Checklist extends RouteMixin {
     return _.truncate(value, {omission: omission, length: length});
   }
 
-  export_ckl() {
+  exportCkl() {
     type FileData = {
       filename: string;
       data: string;
     };
-    const checklist = this.getChecklist(this.file_filter);
+    const checklist = this.getChecklist(this.fileFilter);
     if (checklist) {
       const checklistString = ChecklistConverter.toChecklist(checklist);
       const file: FileData[] = [
@@ -583,7 +586,7 @@ export default class Checklist extends RouteMixin {
    * The currently selected file, if one exists.
    * Controlled by router.
    */
-  get file_filter(): FileID[] {
+  get fileFilter(): FileID[] {
     return FilteredDataModule.selectedChecklistIds;
   }
 
@@ -649,11 +652,11 @@ export default class Checklist extends RouteMixin {
   /**
    * The filter for charts. Contains all of our filter stuff
    */
-  get all_filter(): ChecklistFilter {
+  get allFilter(): ChecklistFilter {
     return {
       status: SearchModule.inFileSearchTerms.statusFilter,
       severity: SearchModule.inFileSearchTerms.severityFilter,
-      fromFile: this.file_filter,
+      fromFile: this.fileFilter,
       ruleidSearchTerms: SearchModule.inFileSearchTerms.ruleid,
       vulidSearchTerms: SearchModule.inFileSearchTerms.vulid,
       stigidSearchTerms: SearchModule.inFileSearchTerms.stigid,
@@ -691,7 +694,7 @@ export default class Checklist extends RouteMixin {
    * Returns true if we can currently clear.
    * Essentially, just controls whether the button is available
    */
-  get can_clear(): boolean {
+  get canClear(): boolean {
     // Return if any params not null/empty
     let result: boolean;
     if (
@@ -720,34 +723,31 @@ export default class Checklist extends RouteMixin {
   loadedRules: ChecklistVuln[] = [];
   get rules() {
     const rulesList: ChecklistVuln[] = [];
-    this.getChecklist(this.file_filter)
+    this.getChecklist(this.fileFilter)
       ?.stigs.map((stig) => stig.vulns)
       .forEach((rulesItems) => {
         rulesList.push(...rulesItems);
       });
 
     this.loadedRules = rulesList;
-    return checklistRules(rulesList, this.all_filter);
+    return checklistRules(rulesList, this.allFilter);
   }
 
   /**
    * The title to override with
    */
-  get curr_title(): string {
-    let returnText = `${_.capitalize(this.current_route_name)} View`;
-    if (this.file_filter.length === 1) {
-      const file = this.getChecklist(this.file_filter);
+  get currentTitle(): string {
+    if (this.fileFilter.length !== 0) {
+      const file = this.getChecklist(this.fileFilter);
       if (file) {
-        returnText += ` (${file.filename} selected)`;
+        return `Checklist View (${file.filename} selected)`;
       }
-    } else {
-      returnText += ` (${this.file_filter.length} ${this.current_route_name} selected)`;
-    }
-    return returnText;
+    } 
+      return `Checklist View (0 Checklists selected)`;
   }
 
-  get current_route_name(): string {
-    return this.$router.currentRoute.path.replace(/[^a-z]/gi, '');
+  get currentView(): string {
+    return AppInfoModule.currentView;
   }
 }
 </script>
