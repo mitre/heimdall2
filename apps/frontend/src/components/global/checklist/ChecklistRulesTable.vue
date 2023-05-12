@@ -16,13 +16,14 @@
         </div>
         <div style="width: fit-content">
           <v-switch
-            v-model="shortIdEnabled"
+            input-value="true"
             style="margin-top: 0; padding-top: 0"
             dense
             inset
             label="Short ID"
             color="teal"
             hide-details
+            @change="$emit('toggle-short-id')"
           />
         </div>
       </div>
