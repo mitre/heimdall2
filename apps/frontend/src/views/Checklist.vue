@@ -108,6 +108,7 @@
                 </v-select>
               </v-card-title>
               <v-card-text>
+                <!-- The mobile-breakpoint attribute fixes issues with the mobile resizing of a v-data-table-->
                 <v-data-table
                   :single-select="true"
                   disable-pagination
@@ -742,8 +743,8 @@ export default class Checklist extends RouteMixin {
       if (file) {
         return `Checklist View (${file.filename} selected)`;
       }
-    } 
-      return `Checklist View (0 Checklists selected)`;
+    }
+    return `Checklist View (0 Checklists selected)`;
   }
 
   get currentView(): string {
