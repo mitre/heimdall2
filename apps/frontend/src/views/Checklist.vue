@@ -43,103 +43,12 @@
         <v-row>
           <v-col md="4" :cols="12" class="pr-0 pl-1">
             <!-- Data Table -->
-            <v-card height="94vh" overflow-auto>
-              <v-card-title class="pt-2">
-                <div
-                  style="
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    width: 100%;
-                  "
-                >
-                  <div>
-                    <strong>
-                      Rules ({{ numItems }} shown,
-                      {{ loadedRules.length - numItems }} hidden)
-                    </strong>
-                  </div>
-                  <div style="width: fit-content">
-                    <v-switch
-                      v-model="shortIdEnabled"
-                      style="margin-top: 0; padding-top: 0"
-                      dense
-                      inset
-                      label="Short ID"
-                      color="teal"
-                      hide-details
-                    />
-                  </div>
-                </div>
-                <v-spacer class="mt-0 pt-0" />
-                <v-select
-                  v-model="selectedHeaders"
-                  :items="headersList"
-                  label="Select Columns"
-                  class="mt-4 pt-0"
-                  dark
-                  item-color="white"
-                  multiple
-                  outlined
-                  return-object
-                  height="8.5vh"
-                >
-                  <template #selection="{item, index}">
-                    <div v-if="$vuetify.breakpoint.lgAndUp">
-                      <v-chip v-if="index < 4" small>
-                        <span>{{ item.text }}</span>
-                      </v-chip>
-                      <span
-                        v-if="index === 4"
-                        class="grey--text caption mt-0 pt-0"
-                      >
-                        (+{{ selectedHeaders.length - 4 }} others)
-                      </span>
-                    </div>
-                    <div v-else>
-                      <v-chip v-if="index < 3" small>
-                        <span>{{ item.text }}</span>
-                      </v-chip>
-                      <span v-if="index === 3" class="grey--text caption ml-2">
-                        (+{{ selectedHeaders.length - 3 }} others)
-                      </span>
-                    </div>
-                  </template>
-                </v-select>
-              </v-card-title>
-              <v-card-text>
-                <!-- The mobile-breakpoint attribute fixes issues with the mobile resizing of a v-data-table-->
-                <v-data-table
-                  :single-select="true"
-                  disable-pagination
-                  dense
-                  mobile-breakpoint="0"
-                  :items="rules"
-                  :item-class="checkSelected"
-                  :headers="headers"
-                  hide-default-footer
-                  class="overflow-auto"
-                  height="68vh"
-                  @current-items="getFiltered"
-                  @click:row="showRule"
-                >
-                  <template #[`item.status`]="{item}">
-                    <v-chip :color="statusColor(item.status)" small
-                      ><strong>{{ shortStatus(item.status) }}</strong>
-                    </v-chip>
-                  </template>
-                  <template #[`item.ruleVersion`]="{item}">
-                    {{ truncate(shortStigId(item.ruleVersion), 20) }}
-                  </template>
-                  <template #[`item.ruleId`]="{item}">
-                    {{ truncate(shortRuleId(item.ruleId), 20) }}
-                  </template>
-                  <template #[`item.cciRef`]="{item}">
-                    {{ truncate(shortRuleId(item.cciRef), 15) }}
-                  </template>
-                </v-data-table>
-              </v-card-text>
-            </v-card>
+            <ChecklistRulesTable
+              :all-filter="allFilter"
+              :file-filter="fileFilter"
+              :short-id-enabled="shortIdEnabled"
+              :rules="rules"
+            />
           </v-col>
           <!-- Rule Data -->
           <v-col md="8" :cols="12">
@@ -356,41 +265,21 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import UploadButton from '@/components/generic/UploadButton.vue';
-import ExportASFFModal from '@/components/global/ExportASFFModal.vue';
-import ExportCaat from '@/components/global/ExportCaat.vue';
-import ExportCKLModal from '@/components/global/ExportCKLModal.vue';
-import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
-import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
-import ExportJson from '@/components/global/ExportJson.vue';
-import ExportNist from '@/components/global/ExportNist.vue';
-import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
-import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import {ChecklistConverter, ChecklistVuln} from '@mitre/hdf-converters';
 import {InspecDataModule} from '@/store/data_store';
 import _ from 'lodash';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
-import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
 import {AppInfoModule} from '@/store/app_info';
+import ChecklistRulesTable from '@/components/global/checklist/ChecklistRulesTable.vue';
 
 @Component({
   components: {
     Base,
-    ExportASFFModal,
-    ExportCaat,
-    ExportCSVModal,
-    ExportNist,
-    ExportJson,
-    ExportXCCDFResults,
-    ExportCKLModal,
-    ExportHTMLModal,
-    ExportSplunkModal,
     UploadButton,
     IconLinkItem,
-    ChecklistTargetDataModal,
-    ChecklistTechnologyAreaModal
+    ChecklistRulesTable
   }
 })
 export default class Checklist extends RouteMixin {
@@ -407,50 +296,6 @@ export default class Checklist extends RouteMixin {
   //** Variable for selected tab */
   tab = null;
 
-  selectedHeaders: {text: string; value: string; width?: string}[] = [
-    {text: 'Status', value: 'status', width: '100px'},
-    {text: 'STIG ID', value: 'ruleVersion', width: '170px'},
-    {text: 'Rule ID', value: 'ruleId', width: '170px'},
-    {text: 'Vul ID', value: 'vulnNum', width: '100px'},
-    {text: 'Group Name', value: 'groupTitle', width: '150px'},
-    {text: 'CCIs', value: 'cciRef', width: '120px'}
-  ];
-
-  headersList = [
-    {text: 'Status', value: 'status', width: '100px'},
-    {text: 'STIG ID', value: 'ruleVersion', width: '170px'},
-    {text: 'Rule ID', value: 'ruleId', width: '170px'},
-    {text: 'Vul ID', value: 'vulnNum', width: '100px'},
-    {text: 'Group Name', value: 'groupTitle', width: '150px'},
-    {text: 'CCIs', value: 'cciRef', width: '120px'}
-  ];
-
-  /** Kept so we can filter by these values even though they are hidden */
-  hiddenRows = [
-    {value: 'severity', align: ' d-none'},
-    {value: 'ruleTitle', align: ' d-none'},
-    {value: 'vulnDiscuss', align: ' d-none'},
-    {value: 'iaControls', align: ' d-none'},
-    {value: 'checkContent', align: ' d-none'},
-    {value: 'fixText', align: ' d-none'},
-    {value: 'falsePositives', align: ' d-none'},
-    {value: 'falseNegatives', align: ' d-none'},
-    {value: 'documentable', align: ' d-none'},
-    {value: 'mitigations', align: ' d-none'},
-    {value: 'potentialImpact', align: ' d-none'},
-    {value: 'thirdPartyTools', align: ' d-none'},
-    {value: 'mitigationControl', align: ' d-none'},
-    {value: 'responsibility', align: ' d-none'},
-    {value: 'securityOverrideGuidance', align: ' d-none'},
-    {value: 'checkContentRef', align: ' d-none'},
-    {value: 'weight', align: ' d-none'},
-    {value: 'class', align: ' d-none'},
-    {value: 'stigRef', align: ' d-none'},
-    {value: 'targetKey', align: ' d-none'},
-    {value: 'stigUuid', align: ' d-none'},
-    {value: 'legacyId', align: ' d-none'}
-  ];
-
   statusItems = [
     {name: 'Passed', value: 'Passed'},
     {name: 'Failed', value: 'Failed'},
@@ -465,16 +310,10 @@ export default class Checklist extends RouteMixin {
     {name: '(Default)', value: ''}
   ];
 
-  stigInfo: {show: boolean; name: string}[] = [];
-
   evalInfo:
     | SourcedContextualizedEvaluation
     | SourcedContextualizedProfile
     | null = null;
-
-  truncate(value: string, length: number, omission = '...') {
-    return _.truncate(value, {omission: omission, length: length});
-  }
 
   exportCkl() {
     type FileData = {
@@ -507,22 +346,6 @@ export default class Checklist extends RouteMixin {
     }
   }
 
-  shortStatus(status: string) {
-    if (this.shortIdEnabled) {
-      switch (status) {
-        case 'Not Reviewed':
-          return 'NR';
-        case 'Failed':
-          return 'F';
-        case 'Passed':
-          return 'P';
-        case 'Not Applicable':
-          return 'NA';
-      }
-    }
-    return status;
-  }
-
   shortRuleId(ruleId: string) {
     if (this.shortIdEnabled) return ruleId.split('r')[0] || ruleId;
     else return ruleId;
@@ -541,23 +364,6 @@ export default class Checklist extends RouteMixin {
     return CCI_DESCRIPTIONS[cci].def;
   }
 
-  numStatus(status: string): string {
-    return this.tableItems
-      .filter((item) => item.status === status)
-      .length.toString();
-  }
-
-  numSeverity(severity: string): string {
-    return this.tableItems
-      .filter((item) => item.severity === severity.toLowerCase())
-      .length.toString();
-  }
-
-  checkSelected(rule: ChecklistVuln) {
-    if (rule.ruleId === FilteredDataModule.selectedRule.ruleId)
-      return 'selectedRow';
-  }
-
   get selectedRule() {
     let stillExists = false;
     // Checks to see if the selected rule still exists after filtering
@@ -569,7 +375,7 @@ export default class Checklist extends RouteMixin {
     if (stillExists) {
       return FilteredDataModule.selectedRule;
     }
-    return FilteredDataModule.emptyRule;
+    return this.rules[0] ?? FilteredDataModule.emptyRule;
   }
 
   /**
@@ -595,13 +401,6 @@ export default class Checklist extends RouteMixin {
     return InspecDataModule.allChecklistFiles.find(
       (f) => f.uniqueId === fileID[0]
     );
-  }
-
-  tableItems: ChecklistVuln[] = [];
-  numItems = 0;
-  getFiltered(rules: ChecklistVuln[]) {
-    this.tableItems = rules;
-    this.numItems = this.tableItems.length;
   }
 
   checkPossibleOverrides(severity: string) {
@@ -636,18 +435,6 @@ export default class Checklist extends RouteMixin {
     this.sheet = false;
     this.selectedRule.severityOverride = '';
     this.selectedRule.severityJustification = '';
-  }
-
-  get headers() {
-    const selectedHeadersList = this.selectedHeaders.map(
-      (header) => header.text
-    );
-    return [
-      ...this.headersList.filter((header) =>
-        selectedHeadersList.includes(header.text)
-      ),
-      ...this.hiddenRows
-    ];
   }
 
   /**
@@ -687,10 +474,6 @@ export default class Checklist extends RouteMixin {
     }
   }
 
-  showRule(rule: ChecklistVuln) {
-    FilteredDataModule.selectRule(rule);
-  }
-
   /**
    * Returns true if we can currently clear.
    * Essentially, just controls whether the button is available
@@ -721,7 +504,6 @@ export default class Checklist extends RouteMixin {
     return result;
   }
 
-  loadedRules: ChecklistVuln[] = [];
   get rules() {
     const rulesList: ChecklistVuln[] = [];
     this.getChecklist(this.fileFilter)
@@ -730,7 +512,6 @@ export default class Checklist extends RouteMixin {
         rulesList.push(...rulesItems);
       });
 
-    this.loadedRules = rulesList;
     return checklistRules(rulesList, this.allFilter);
   }
 
@@ -766,23 +547,6 @@ tbody tr:nth-of-type(odd) {
   background-color: #3e3e3e;
 }
 
-/*
-(bw)
-Color of selected text and checkboxes will not be overridden with
-
-.v-list .v-list-item--active {
-  color: #ffffff;
-}
-
-because
-
-.v-application .primary--text {
-  color: var(--v-primary-base) !important;
-  caret-color: var(--v-primary-base) !important;
-}
-
-troubleshooting
-*/
 .v-list .v-list-item:nth-of-type(odd) {
   background-color: rgba(0, 0, 0, 0.1);
 }
