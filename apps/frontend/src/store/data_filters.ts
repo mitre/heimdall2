@@ -449,6 +449,10 @@ export class FilteredData extends VuexModule {
       this.SELECT_RULE(this.emptyRule);
     } else {
       this.SELECT_CHECKLIST(fileID);
+      this.selectRule(
+        InspecDataModule.allChecklistFiles.find((f) => f.uniqueId === fileID)
+          ?.stigs[0].vulns[0] ?? this.emptyRule
+      );
     }
   }
 
