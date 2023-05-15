@@ -62,7 +62,8 @@ export default class CategoryFilters extends Vue {
     'Classification',
     'IA Control',
     'Group Name',
-    'CCIs'
+    'CCIs',
+    'File Name'
   ];
 
   addCategoryFilter(field: string, value: string) {

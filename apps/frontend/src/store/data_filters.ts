@@ -95,6 +95,9 @@ export interface ControlsFilter {
   /** A specific control id */
   control_id?: string;
 
+  /** Filenames to search for  */
+  filenameSearchTerms?: SearchEntry<KeywordsSearchTerm>[];
+
   // End of "generic" filters
 
   /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
@@ -602,6 +605,8 @@ export class FilteredData extends VuexModule {
           filter.status,
           (status) => status.value !== 'Waived'
         ),
+        'root.sourcedFrom.sourcedFrom.from_file.filename':
+          filter.filenameSearchTerms,
         keywords: filter.keywordsSearchTerms
       };
 
