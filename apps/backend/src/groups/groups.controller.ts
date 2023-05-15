@@ -141,6 +141,7 @@ export class GroupsController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findById(
     @Request() request: {user: User},
