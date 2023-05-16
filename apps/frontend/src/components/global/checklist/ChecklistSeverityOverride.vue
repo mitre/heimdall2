@@ -36,7 +36,6 @@
 </template>
 
 <script lang="ts">
-import _ from 'lodash';
 import {ChecklistVuln} from '@mitre/hdf-converters';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
