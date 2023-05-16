@@ -50,7 +50,6 @@
 
 <script lang="ts">
 import {ChecklistVuln} from '@mitre/hdf-converters';
-import _ from 'lodash';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
 @Component
