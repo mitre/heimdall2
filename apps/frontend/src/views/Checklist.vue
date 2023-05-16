@@ -11,32 +11,20 @@
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
       <UploadButton />
-      <div class="text-center">
-        <v-menu>
-          <template #activator="{on, attrs}">
-            <v-btn v-bind="attrs" class="mr-2" v-on="on">
-              <span class="d-none d-md-inline mr-2"> Export </span>
-              <v-icon> mdi-file-export </v-icon>
-            </v-btn>
-          </template>
-          <v-list class="py-0">
-            <v-list-item class="px-0">
-              <v-tooltip top>
-                <template #activator="{on}">
-                  <IconLinkItem
-                    key="exportCkl"
-                    text="Export as CKL"
-                    icon="mdi-check-all"
-                    @click="exportCkl()"
-                    v-on="on"
-                  />
-                </template>
-                <span>JSON Download</span>
-              </v-tooltip>
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
+      <ExportButton>
+        <v-list-item class="px-0">
+          <v-tooltip top>
+            <template #activator="{on}">
+              <IconLinkItem
+                key="exportCkl"
+                text="Export as CKL"
+                icon="mdi-check-all"
+                v-on="on"
+              />
+            </template>
+          </v-tooltip>
+        </v-list-item>
+      </ExportButton>
     </template>
     <template #main-content>
       <v-container fluid grid-list-md pt-0 mt-4 mx-1>
@@ -111,6 +99,7 @@ import ChecklistRuleInfoHeader from '@/components/global/checklist/ChecklistRule
 import ChecklistRuleInfoBody from '@/components/global/checklist/ChecklistRuleInfoBody.vue';
 import ChecklistRuleEdit from '@/components/global/checklist/ChecklistRuleEdit.vue';
 import ChecklistSeverityOverride from '@/components/global/checklist/ChecklistSeverityOverride.vue';
+import ExportButton from '@/components/generic/ExportButton.vue';
 
 @Component({
   components: {
@@ -121,7 +110,8 @@ import ChecklistSeverityOverride from '@/components/global/checklist/ChecklistSe
     ChecklistRuleInfoHeader,
     ChecklistRuleInfoBody,
     ChecklistRuleEdit,
-    ChecklistSeverityOverride
+    ChecklistSeverityOverride,
+    ExportButton
   }
 })
 export default class Checklist extends RouteMixin {
