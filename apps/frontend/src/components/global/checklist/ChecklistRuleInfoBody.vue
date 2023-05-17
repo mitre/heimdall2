@@ -1,5 +1,5 @@
 <template>
-  <v-card height="37vh" class="overflow-auto mt-3 pt-2">
+  <v-card class="overflow-auto mt-3 pt-2" width="100%">
     <div v-if="selectedRule.ruleId !== ''">
       <v-card-text>
         <div>

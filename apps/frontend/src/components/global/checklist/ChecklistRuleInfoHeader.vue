@@ -1,5 +1,5 @@
 <template>
-  <v-card height="13vh" class="overflow-y-auto">
+  <v-card width="100%" class="overflow-y-auto">
     <v-card-text class="text-center">
       <h3 class="d-inline-block text-truncate mx-2" style="max-width: 100%">
         {{ selectedRule.stigRef }}

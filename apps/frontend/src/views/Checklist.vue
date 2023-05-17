@@ -12,7 +12,7 @@
       </v-btn>
       <UploadButton />
       <ExportButton>
-        <v-list-item class="px-0">
+        <v-list-item>
           <v-tooltip top>
             <template #activator="{on}">
               <IconLinkItem
@@ -29,7 +29,7 @@
     <template #main-content>
       <v-container fluid grid-list-md pt-0 mt-4 mx-1>
         <v-row>
-          <v-col md="4" :cols="12" class="pr-0 pl-1">
+          <v-col cols="12" md="6">
             <!-- Data Table -->
             <ChecklistRulesTable
               :all-filter="allFilter"
@@ -40,20 +40,26 @@
             />
           </v-col>
           <!-- Rule Data -->
-          <v-col md="8" :cols="12">
+          <v-col cols="12" md="6">
             <!-- Rule Header Info -->
-            <ChecklistRuleInfoHeader
-              :selected-rule="selectedRule"
-              :short-id-enabled="shortIdEnabled"
-            />
+            <v-row dense style="height: 15%">
+              <ChecklistRuleInfoHeader
+                :selected-rule="selectedRule"
+                :short-id-enabled="shortIdEnabled"
+              />
+            </v-row>
             <!-- Rule Body Info -->
-            <ChecklistRuleInfoBody :selected-rule="selectedRule" />
+            <v-row dense style="height: 50%">
+              <ChecklistRuleInfoBody :selected-rule="selectedRule" />
+            </v-row>
             <!-- Rule Info Edit -->
-            <ChecklistRuleEdit
-              :selected-rule="selectedRule"
-              :sheet="sheet"
-              @enable-sheet="sheet = true"
-            />
+            <v-row dense style="height: 35%">
+              <ChecklistRuleEdit
+                :selected-rule="selectedRule"
+                :sheet="sheet"
+                @enable-sheet="sheet = true"
+              />
+            </v-row>
           </v-col>
         </v-row>
         <div class="text-center">

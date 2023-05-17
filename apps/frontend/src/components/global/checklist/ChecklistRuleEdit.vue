@@ -1,7 +1,7 @@
 <template>
-  <v-card class="mt-3 pt-4" height="42vh">
+  <v-card width="100%" class="mt-3 pt-4">
     <v-card-text>
-      <v-row>
+      <v-row dense>
         <v-col>
           <v-select
             v-model="selectedRule.status"
@@ -10,7 +10,6 @@
             :items="statusItems"
             item-text="name"
             item-value="value"
-            :item-color="statusColor(selectedRule.status)"
           />
         </v-col>
         <v-col>
@@ -25,7 +24,7 @@
           />
         </v-col>
       </v-row>
-      <v-row class="mt-n8">
+      <v-row dense>
         <v-col>
           <strong>Finding Details: </strong><br />
           <v-textarea
@@ -33,12 +32,11 @@
             solo
             outlined
             dense
-            no-resize
-            height="12vh"
+            auto-grow
           />
         </v-col>
       </v-row>
-      <v-row class="mt-n10">
+      <v-row dense>
         <v-col>
           <strong>Comments: </strong>
           <v-textarea
@@ -46,8 +44,7 @@
             solo
             outlined
             dense
-            no-resize
-            height="8vh"
+            auto-grow
           />
         </v-col>
       </v-row>
@@ -77,19 +74,6 @@ export default class ChecklistRuleInfoBody extends Vue {
     {name: 'Low', value: 'low'},
     {name: '(Default)', value: ''}
   ];
-
-  statusColor(status: string | undefined) {
-    switch (status) {
-      case 'Passed':
-        return 'statusPassed';
-      case 'Not Applicable':
-        return 'statusNotApplicable';
-      case 'Failed':
-        return 'statusFailed';
-      default: // Not_Reviewed
-        return 'statusNotReviewed';
-    }
-  }
 
   checkPossibleOverrides(severity: string) {
     return this.severityOverrideItems.filter((item) => item.value !== severity);
