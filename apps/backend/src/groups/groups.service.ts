@@ -77,33 +77,27 @@ export class GroupsService {
     // If there are no more owners, set an admin to owner
     if (owners.length < 2 && owners.some((owner) => owner.id === id)) {
       const appConfig = new AppConfig();
-      const defaultAdmin = await User.findOne({
-        where: {role: 'admin', email: appConfig.getDefaultAdmin()}
-      });
-      if (defaultAdmin) {
-        // If default admin is found, either promote it or add it to the group as an owner
+      // If default admin is not found, use admin with lowest ID
+      const admin =
+        (await User.findOne({
+          where: {role: 'admin', email: appConfig.getDefaultAdmin()}
+        })) ||
+        (await User.findOne({
+          where: {role: 'admin'},
+          order: [['id', 'ASC']]
+        }));
+      if (admin !== null) {
+        // If admin is in the group, promote it. If not, add as owner
+        const adminId = admin.id;
         const adminInGroup = (await group.$get('users')).find(
-          (userOnGroup) => (userOnGroup.id = defaultAdmin.id)
+          (userOnGroup) => userOnGroup.id === adminId
         );
         adminInGroup
           ? await adminInGroup.update({role: 'owner'})
-          : await this.addUserToGroup(group, defaultAdmin, 'owner');
+          : await this.addUserToGroup(group, admin, 'owner');
       } else {
-        // If default admin is not found, use the admin with the lowest ID
-        const admin = await User.findOne({
-          where: {role: 'admin'},
-          order: [['id', 'ASC']]
-        });
-        if (admin) {
-          const adminInGroup = (await group.$get('users')).find(
-            (userOnGroup) => (userOnGroup.id = admin.id)
-          );
-          adminInGroup
-            ? await adminInGroup.update({role: 'owner'})
-            : await this.addUserToGroup(group, admin, 'owner');
-        } else {
-          throw new ForbiddenException('No admin to be promoted');
-        }
+        // No admin found in system
+        throw new ForbiddenException('No admin to be promoted');
       }
     }
   }
