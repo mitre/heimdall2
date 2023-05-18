@@ -1,6 +1,7 @@
 <template>
   <v-card width="100%" class="mt-3 pt-4">
     <v-card-text>
+      <h1>Current Justification {{ selectedRule.severityOverride }}</h1>
       <v-row dense>
         <v-col>
           <v-select
@@ -54,6 +55,7 @@
 
 <script lang="ts">
 import {ChecklistVuln} from '@mitre/hdf-converters';
+import _ from 'lodash';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
 @Component
@@ -71,16 +73,25 @@ export default class ChecklistRuleInfoBody extends Vue {
   severityOverrideItems = [
     {name: 'High', value: 'high'},
     {name: 'Medium', value: 'medium'},
-    {name: 'Low', value: 'low'},
-    {name: '(Default)', value: ''}
+    {name: 'Low', value: 'low'}
   ];
 
   checkPossibleOverrides(severity: string) {
-    return this.severityOverrideItems.filter((item) => item.value !== severity);
+    const newArr = this.severityOverrideItems.filter(
+      (item) => item.value !== severity
+    );
+    // Check if it is an empty rule
+    if (this.selectedRule.severity !== '') {
+      newArr.push({
+        name: `${_.capitalize(this.selectedRule.severity)} (Default)`,
+        value: this.selectedRule.severity
+      });
+    }
+    return newArr;
   }
 
   promptSeverityJustification() {
-    if (this.selectedRule.severityOverride === '') {
+    if (this.selectedRule.severityOverride === this.selectedRule.severity) {
       this.selectedRule.severityJustification =
         'Returning to default severity.';
     } else {
