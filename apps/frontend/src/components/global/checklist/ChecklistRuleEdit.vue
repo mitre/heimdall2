@@ -1,7 +1,6 @@
 <template>
   <v-card width="100%" class="mt-3 pt-4">
     <v-card-text>
-      <h1>Current Justification {{ selectedRule.severityOverride }}</h1>
       <v-row dense>
         <v-col>
           <v-select
