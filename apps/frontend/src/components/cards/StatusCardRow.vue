@@ -93,6 +93,13 @@ import {Prop} from 'vue-property-decorator';
 interface CardProps {
   icon: string;
   title: ExtendedControlStatus;
+  value:
+    | 'passed'
+    | 'failed'
+    | 'not reviewed'
+    | 'not applicable'
+    | 'profile error'
+    | 'waived';
   number: number;
   subtitle: string;
   color: string;
@@ -117,6 +124,7 @@ export default class StatusCardRow extends Vue {
       {
         icon: 'check-circle',
         title: 'Passed',
+        value: 'passed',
         subtitle: `${StatusCountModule.countOf(
           this.overlayRemovedFilter,
           'PassedTests'
@@ -127,6 +135,7 @@ export default class StatusCardRow extends Vue {
       {
         icon: 'close-circle',
         title: 'Failed',
+        value: 'failed',
         subtitle: `${StatusCountModule.countOf(
           this.overlayRemovedFilter,
           'PassingTestsFailedControl'
@@ -146,6 +155,7 @@ export default class StatusCardRow extends Vue {
       {
         icon: 'minus-circle',
         title: 'Not Applicable',
+        value: 'not applicable',
         subtitle: `System exception or absent component`,
         color: 'statusNotApplicable',
         number: StatusCountModule.countOf(
@@ -156,6 +166,7 @@ export default class StatusCardRow extends Vue {
       {
         icon: 'alert-circle',
         title: 'Not Reviewed',
+        value: 'not reviewed',
         subtitle: `Can only be tested manually at this time`,
         color: 'statusNotReviewed',
         number: StatusCountModule.countOf(
@@ -175,6 +186,7 @@ export default class StatusCardRow extends Vue {
     return {
       icon: 'alert',
       title: 'Profile Error',
+      value: 'profile error',
       subtitle: `Errors running test - check profile run privileges or check with the author of profile.`,
       color: 'statusProfileError',
       number: StatusCountModule.countOf(filter, 'Profile Error')
@@ -185,6 +197,7 @@ export default class StatusCardRow extends Vue {
     return {
       icon: 'alert-circle',
       title: 'Waived',
+      value: 'waived',
       subtitle: `Consider using an overlay or manual attestation to properly address this control.`,
       color: 'statusNotApplicable',
       number: StatusCountModule.countOf(
@@ -198,8 +211,7 @@ export default class StatusCardRow extends Vue {
     if (
       this.filter.status?.length === 0 ||
       this.filter.status?.some(
-        (statusFilter) =>
-          statusFilter.value.toLowerCase() === card.title.toLowerCase()
+        (statusFilter) => statusFilter.value.toLowerCase() === card.value
       )
     ) {
       return card.color;
