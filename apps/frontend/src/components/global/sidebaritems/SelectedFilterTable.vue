@@ -22,16 +22,20 @@
         justify-content: center;
       "
     >
-      <v-btn
-        id="remove-filters-btn"
-        class="mx-2"
-        @click="removeSelectedFilters"
-      >
-        <span class="d-none d-md-inline"> Remove Filter(s) </span>
-      </v-btn>
-      <v-btn id="clear-all-btn" class="mx-2" @click="removeAllFilters">
-        <span class="d-none d-md-inline"> Remove All Filters </span>
-      </v-btn>
+      <v-col>
+        <v-btn
+          id="remove-filters-btn"
+          class="mx-2"
+          @click="removeSelectedFilters"
+        >
+          <span> Remove Filter(s) </span>
+        </v-btn>
+      </v-col>
+      <v-col>
+        <v-btn id="clear-all-btn" class="mx-2" @click="removeAllFilters">
+          <span> Remove All Filters </span>
+        </v-btn>
+      </v-col>
     </v-row>
   </div>
 </template>

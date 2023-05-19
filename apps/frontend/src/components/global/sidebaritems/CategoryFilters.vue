@@ -22,7 +22,7 @@
           )
         "
       >
-        <span class="d-none d-md-inline">Add</span>
+        <span>Add</span>
       </v-btn>
     </v-row>
     <v-row style="align-items: center; justify-content: center" class="mt-n5">

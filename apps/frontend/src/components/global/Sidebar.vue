@@ -69,24 +69,24 @@
         <div class="mx-5 mr-10 mb-5">
           <!-- Checklist Data Modals -->
           <v-row v-if="inChecklistView" class="my-4" justify="center">
-            <v-btn
-              id="target-data-btn"
-              class="mx-2"
-              @click="setShowTargetModal"
-            >
-              <span class="d-none d-md-inline pr-2">
-                Add/Update Target Data
-              </span>
-            </v-btn>
-            <v-btn
-              id="technology-area-btn"
-              class="mx-2"
-              @click="setShowTechnologyModal"
-            >
-              <span class="d-none d-md-inline pr-2">
-                Add/Update Technology Area
-              </span>
-            </v-btn>
+            <v-col>
+              <v-btn
+                id="target-data-btn"
+                class="mx-2"
+                @click="setShowTargetModal"
+              >
+                <span> Add/Update Target Data </span>
+              </v-btn>
+            </v-col>
+            <v-col>
+              <v-btn
+                id="technology-area-btn"
+                class="mx-2"
+                @click="setShowTechnologyModal"
+              >
+                <span> Add/Update Technology Area </span>
+              </v-btn>
+            </v-col>
           </v-row>
           <!-- Filtering Capabilities Section -->
           <QuickFilters />
