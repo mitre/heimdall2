@@ -39,6 +39,7 @@ import {
   CodeSearchTerm,
   ControlIdSearchTerm,
   DescriptionSearchTerm,
+  FilenameSearchTerm,
   GroupNameSearchTerm,
   IaControlsSearchTerm,
   KeywordsSearchTerm,
@@ -96,7 +97,7 @@ export interface ControlsFilter {
   control_id?: string;
 
   /** Filenames to search for  */
-  filenameSearchTerms?: SearchEntry<KeywordsSearchTerm>[];
+  filenameSearchTerms?: SearchEntry<FilenameSearchTerm>[];
 
   // End of "generic" filters
 

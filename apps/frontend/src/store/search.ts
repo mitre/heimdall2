@@ -90,6 +90,12 @@ class Search extends VuexModule {
     keywords: []
   };
 
+  fileMetadataSearchTerms: {
+    filename: SearchEntry<FilenameSearchTerm>[];
+  } = {
+    filename: []
+  };
+
   /** Sets the current search */
   @Mutation
   SET_SEARCH(newSearch: string) {
@@ -621,14 +627,14 @@ class Search extends VuexModule {
 
   @Mutation
   ADD_FILENAME(filename: SearchEntry<FilenameSearchTerm>) {
-    this.inFileSearchTerms.filename =
-      this.inFileSearchTerms.filename.concat(filename);
+    this.fileMetadataSearchTerms.filename =
+      this.fileMetadataSearchTerms.filename.concat(filename);
   }
 
   /** Clears all filename filters */
   @Mutation
   CLEAR_FILENAME() {
-    this.inFileSearchTerms.filename = [];
+    this.fileMetadataSearchTerms.filename = [];
   }
 
   /** Clears all current filters */
