@@ -93,6 +93,8 @@
           <v-divider class="my-5" />
           <CategoryFilters />
           <v-divider class="my-5" />
+          <FileFilters />
+          <v-divider class="my-5" />
           <SelectedFilterTable />
         </div>
       </div>
@@ -116,6 +118,7 @@ import {AppInfoModule} from '@/store/app_info';
 import QuickFilters from './sidebaritems/QuickFilters.vue';
 import CategoryFilters from './sidebaritems/CategoryFilters.vue';
 import SelectedFilterTable from './sidebaritems/SelectedFilterTable.vue';
+import FileFilters from './sidebaritems/FileFilters.vue';
 import {views} from '@/store/app_info';
 
 @Component({
@@ -125,7 +128,8 @@ import {views} from '@/store/app_info';
     ChecklistTechnologyAreaModal,
     QuickFilters,
     CategoryFilters,
-    SelectedFilterTable
+    SelectedFilterTable,
+    FileFilters
   }
 })
 export default class Sidebar extends mixins(RouteMixin) {
