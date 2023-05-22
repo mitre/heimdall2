@@ -95,9 +95,9 @@ export class ConveyorMapper extends BaseConverter {
       statistics: {},
       profiles: [
         {
-          name: {path: 'api_response.params.description'},
+          name: 'Conveyor',
           version: 'tbd',
-          title: 'tbd',
+          title: {path: 'api_response.params.description'},
           supports: [],
           attributes: [],
           groups: [],
