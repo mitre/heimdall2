@@ -139,7 +139,7 @@ function extractCci(input: IIdent | IIdent[]): string[] {
 
   const output: string[] = [];
   for (const element of inputArray) {
-    const text = String(_.get(element, 'text'));
+    const text = _.get(element, 'text');
     if (!!text && CCI_REGEX.exec(text)) {
       output.push(text);
     }
