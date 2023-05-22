@@ -1,0 +1,982 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.32"
+  },
+  "version": "2.6.32",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Stigma",
+      "version": "tbd",
+      "title": "Inspection of file: submissions/services.tar.zip",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "0274188fb7e9a3502aada623301a6ab3d3b2d24fb8fc245a156d32c0ccf2b543",
+          "title": "Popper_JS.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Popper JS\nVersion: 1.14.7\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:38.371186Z",
+              "run_time": "2023-01-19T16:02:40.812836Z"
+            }
+          ]
+        },
+        {
+          "id": "033ecf8f77772375c638c1874f881a2aa300aae7073c23280554edf007174602",
+          "title": "Capa.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Capa\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:32.768422Z",
+              "run_time": "2023-01-19T16:03:34.590537Z"
+            }
+          ]
+        },
+        {
+          "id": "0d97ed0db5e80234523a7379cc31189e8e10c65ffb34da0d9ba6577c11be6373",
+          "title": "SweetAlert_js.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: SweetAlert js\nVersion: 2.1.2\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:51.062400Z",
+              "run_time": "2023-01-19T16:02:52.975366Z"
+            }
+          ]
+        },
+        {
+          "id": "0f542396de549b5318077fe0fc1052846ccb02bf7194a15259ad53d87711e167",
+          "title": "dep2.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: dep2\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:47.047252Z",
+              "run_time": "2023-01-19T16:03:48.759285Z"
+            }
+          ]
+        },
+        {
+          "id": "11dfc1725b3ff88a071587b78a0385e362906e0552f52d377e010dffdec45d99",
+          "title": "eslint.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: eslint\nVersion: 7.19.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:18.774194Z",
+              "run_time": "2023-01-19T16:03:20.659944Z"
+            }
+          ]
+        },
+        {
+          "id": "12650b0627f69886b1904a5346e9a87f11d8e52cd12d0a5436d5763f39848bab",
+          "title": "TypeScript.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: TypeScript\nVersion: 4.1.5\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:11.605636Z",
+              "run_time": "2023-01-19T16:03:13.413900Z"
+            }
+          ]
+        },
+        {
+          "id": "12bd8594aa8150a9f0fee188ddda5500e3d4b3298d4656d7c529b72b5afd3bbf",
+          "title": "JSZip.stigma",
+          "desc": "",
+          "impact": 1,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: JSZip\nVersion: 3.5.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2021-23413: This affects the package jszip before 3.7.0. Crafting a new zip file with filenames set to Object prototype values (e.g __proto__, toString, etc) results in a returned object with a modified prototype instance.\n\ntitle_text1:Minor Vulnerability\n",
+              "start_time": "2023-01-19T16:02:42.693258Z",
+              "run_time": "2023-01-19T16:02:44.777815Z"
+            }
+          ]
+        },
+        {
+          "id": "13c74a36948baeec0823ab045febb6f6c3a326e5fb5fb68ce7b4e5bf9e7ea4a9",
+          "title": "D3.js.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: D3.js\nVersion: 3.5.17\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:57.363556Z",
+              "run_time": "2023-01-19T16:02:59.193822Z"
+            }
+          ]
+        },
+        {
+          "id": "1445e7f7f1f71413a97c585990697bd42ae369cb6bebf737435c3873c1ed4ecb",
+          "title": "Prime_Data_Center_Network_Manager.stigma",
+          "desc": "",
+          "impact": 5,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Prime Data Center Network Manager\nVersion: 10.2\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2018-0464: A vulnerability in Cisco Data Center Network Manager software could allow an authenticated, remote attacker to conduct directory traversal attacks and gain access to sensitive files on the targeted system. The vulnerability is due to improper validation of user requests within the management interface. An attacker could exploit this vulnerability by sending malicious requests containing directory traversal character sequences within the management interface. An exploit could allow the attacker to view or create arbitrary files on the targeted system.\n\ntitle_text1:Significant Vulnerability\n",
+              "start_time": "2023-01-19T16:03:34.704321Z",
+              "run_time": "2023-01-19T16:03:36.787069Z"
+            }
+          ]
+        },
+        {
+          "id": "16b81be1a3f47cf82edff2cc12e516b57f820678d9135be91cc4ada05e836d7a",
+          "title": "Energizer.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Energizer\nVersion: 1.7.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:46.805734Z",
+              "run_time": "2023-01-19T16:02:48.872028Z"
+            }
+          ]
+        },
+        {
+          "id": "1e932683e969ad480aa4d4f35bc604fc580d5ee4608b90c5026b585881ac7765",
+          "title": "<dependency_name>.stigma",
+          "desc": "",
+          "impact": 99,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: \nVersion: dependency\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-47935: A vulnerability has been identified in JT Open (All versions < V11.1.1.0), JT Utilities (All versions < V13.1.1.0), Solid Edge (All versions < V2023). The Jt1001.dll contains a memory corruption vulnerability while parsing specially crafted JT files. An attacker could leverage this vulnerability to execute code in the context of the current process. (ZDI-CAN-19078)\n\ntitle_text1:Significant Vulnerability\n",
+              "start_time": "2023-01-19T16:03:41.262817Z",
+              "run_time": "2023-01-19T16:03:44.970939Z"
+            }
+          ]
+        },
+        {
+          "id": "3ef8d99df20b8d7ba0ce10ac0fa63662c3a0cae18f214cbab830bba31fde7793",
+          "title": "prettier.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: prettier\nVersion: 2.2.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:23.899769Z",
+              "run_time": "2023-01-19T16:03:25.720799Z"
+            }
+          ]
+        },
+        {
+          "id": "4291664b016fe1f0d1899582bc5ca2c55aab90bce889e2eaf35b69a3ed7e8711",
+          "title": "css.css.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: css.css\nVersion: 2.6\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:35.334318Z",
+              "run_time": "2023-01-19T16:02:37.768770Z"
+            }
+          ]
+        },
+        {
+          "id": "4347e17d70975fd07609c481d128a2cd917f801e3c950413258cf5eb34af4522",
+          "title": "pako.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: pako\nVersion: 2.0.3\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:26.014037Z",
+              "run_time": "2023-01-19T16:03:28.848796Z"
+            }
+          ]
+        },
+        {
+          "id": "463bbdabe4fda8961eb0500c5b2dd2b3ef1a447619911445bcc431df85e7e27f",
+          "title": "dep3.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: dep3\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:48.878301Z",
+              "run_time": "2023-01-19T16:03:50.948148Z"
+            }
+          ]
+        },
+        {
+          "id": "4e7e3c2f97c1d6daac63fde55c90c855605526177fe4569ab47976b298a54b2c",
+          "title": "node_jose.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: node jose\nVersion: 2.0.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:13.681866Z",
+              "run_time": "2023-01-19T16:03:15.436519Z"
+            }
+          ]
+        },
+        {
+          "id": "5188e307a0ddef50c36d722660e5524683c4b3447c1dd62d31278eabd77b44ed",
+          "title": "node_qrcode.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: node qrcode\nVersion: 1.4.4\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:30.812541Z",
+              "run_time": "2023-01-19T16:03:32.643362Z"
+            }
+          ]
+        },
+        {
+          "id": "5643cecb7711e9811ee48bb81c2adbda6e0161960bc0be733bb0fa3b4d64b254",
+          "title": "got.stigma",
+          "desc": "",
+          "impact": 1,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: got\nVersion: 11.8.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2022-33987: The got package before 12.1.0 (also fixed in 11.8.5) for Node.js allows a redirect to a UNIX socket.\n\ntitle_text1:Minor Vulnerability\n",
+              "start_time": "2023-01-19T16:03:20.785842Z",
+              "run_time": "2023-01-19T16:03:23.749591Z"
+            }
+          ]
+        },
+        {
+          "id": "5686e54de8451537143f44b266c6648626e2a1c4d9def8d31670e47e32961ba6",
+          "title": "Ansible.stigma",
+          "desc": "",
+          "impact": 66,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Ansible\nVersion: 2.9.3\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2020-10684: A flaw was found in Ansible Engine, all versions 2.7.x, 2.8.x and 2.9.x prior to 2.7.17, 2.8.9 and 2.9.6 respectively, when using ansible_facts as a subkey of itself and promoting it to a variable when inject is enabled, overwriting the ansible_facts after the clean. An attacker could take advantage of this by altering the ansible_facts, such as ansible_hosts, users and any other key data which would lead into privilege escalation or code injection.\n\ntitle_text1:Significant Vulnerability\n",
+              "start_time": "2023-01-19T16:02:14.382000Z",
+              "run_time": "2023-01-19T16:02:17.526179Z"
+            }
+          ]
+        },
+        {
+          "id": "621722717a09b81c94a08cc34ba011c6452c04a3f18c7c87a086189881eab839",
+          "title": "Vault.stigma",
+          "desc": "",
+          "impact": 71,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Vault\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 1.4 was found in the NIST Vulnerability Database\nCVE-2022-41316: HashiCorp Vault and Vault Enterprise’s TLS certificate auth method did not initially load the optionally configured CRL issued by the role's CA into memory on startup, resulting in the revocation list not being checked if the CRL has not yet been retrieved. Fixed in 1.12.0, 1.11.4, 1.10.7, and 1.9.10.\n\ntitle_text1:Minor Vulnerability\n",
+              "start_time": "2023-01-19T16:02:17.936349Z",
+              "run_time": "2023-01-19T16:02:20.513559Z"
+            }
+          ]
+        },
+        {
+          "id": "64a43312b3c8ba85bc8ef45f6e239689be03d1019afc36b8837db15c122e2170",
+          "title": "SwiftBom-v1.7.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: SwiftBom-v1.7\nVersion: 1.7\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:40.890908Z",
+              "run_time": "2023-01-19T16:02:42.571847Z"
+            }
+          ]
+        },
+        {
+          "id": "6521a8b1069c2591867d7614cebdc8e43368ae32344468d86960e549f2f3b50f",
+          "title": "ts_node.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: ts node\nVersion: 9.1.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:28.972201Z",
+              "run_time": "2023-01-19T16:03:30.686465Z"
+            }
+          ]
+        },
+        {
+          "id": "66ec927a268a6d689390a9821d5be318e0dfd6fc3d2f36be8331557a7f22fef2",
+          "title": "eslint_config_prettier.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: eslint config prettier\nVersion: 7.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:09.632778Z",
+              "run_time": "2023-01-19T16:03:11.440225Z"
+            }
+          ]
+        },
+        {
+          "id": "6c3f3c86f2c9fae2bdf1a4f89ee2b43c5ab0178e52d90783a42da86c6e483481",
+          "title": "Nexus_Repository_OSS.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Nexus Repository OSS\nVersion: 3.19.1-01\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:49.130473Z",
+              "run_time": "2023-01-19T16:02:50.829138Z"
+            }
+          ]
+        },
+        {
+          "id": "7eaffea2117c34e70b1e0db32406f29a289ab94715b9121246ef5b2a2fe85f5e",
+          "title": "eslint_plugin_prettier.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: eslint plugin prettier\nVersion: 3.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:15.640049Z",
+              "run_time": "2023-01-19T16:03:17.682236Z"
+            }
+          ]
+        },
+        {
+          "id": "8ec063137f4d9c31910781a3d284fc0ce74b0594d1c9c605b309fb456df07613",
+          "title": "asn1crypto.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: asn1crypto\nVersion: 1.3.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:55.456333Z",
+              "run_time": "2023-01-19T16:02:57.250772Z"
+            }
+          ]
+        },
+        {
+          "id": "92082079c529738ae7856ed59906ed80572ed0100312b33b01e11cfefa8b069a",
+          "title": "Enterprise_Linux.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Enterprise Linux\nVersion: 7.8\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:44.922469Z",
+              "run_time": "2023-01-19T16:02:46.649410Z"
+            }
+          ]
+        },
+        {
+          "id": "945efa5d8390dd2df73b327ce276b46a4f4e6f94907b18f994a65aea4a56ea9f",
+          "title": "Bootstrap_CSS.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Bootstrap CSS\nVersion: 4.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:59.325142Z",
+              "run_time": "2023-01-19T16:03:04.257681Z"
+            }
+          ]
+        },
+        {
+          "id": "97dca9b54680dfa35f95571672ca5b770f3be76bd49c2f6837c625e0cb06365b",
+          "title": "xlsx.js.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: xlsx.js\nVersion: 0.8.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:20.646329Z",
+              "run_time": "2023-01-19T16:02:24.127675Z"
+            }
+          ]
+        },
+        {
+          "id": "97f1ff66b4dad43fadc312c8fa934ccc614f6772b8f403e0b3ba7c7d69818de9",
+          "title": "libICE.stigma",
+          "desc": "",
+          "impact": 5,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: libICE\nVersion: 1.0.9\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2017-2626: It was discovered that libICE before 1.0.9-8 used a weak entropy to generate keys. A local attacker could potentially use this flaw for session hijacking using the information available from the process list.\n\ntitle_text1:Significant Vulnerability\n",
+              "start_time": "2023-01-19T16:02:30.154115Z",
+              "run_time": "2023-01-19T16:02:32.413821Z"
+            }
+          ]
+        },
+        {
+          "id": "a19dd34ccbabda52322356849f3340d8bf625d8bb4dbf0a591e173279d6fde8c",
+          "title": "Terraform.stigma",
+          "desc": "",
+          "impact": 15,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Terraform\nVersion: 0.12.26\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2021-36230: HashiCorp Terraform Enterprise releases up to v202106-1 did not properly perform authorization checks on a subset of API requests executed using the run token, allowing privilege escalation to organization owner. Fixed in v202107-1.\n\ntitle_text1:Major Vulnerability\n",
+              "start_time": "2023-01-19T16:02:53.109506Z",
+              "run_time": "2023-01-19T16:02:55.300383Z"
+            }
+          ]
+        },
+        {
+          "id": "ad6e9de0b6e2956b20c8e5a96812e6d76fdbe218148d417c2e8903ebdf9b6cc2",
+          "title": "Commander.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Commander\nVersion: 7.0.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:06.589660Z",
+              "run_time": "2023-01-19T16:03:08.986197Z"
+            }
+          ]
+        },
+        {
+          "id": "ad8ac9f22b72ca716948328160bf9a6b6231d2804c2eaed73855222d9c68f2a0",
+          "title": "jQuery.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: jQuery\nVersion: 3.5.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:32.998455Z",
+              "run_time": "2023-01-19T16:02:35.215604Z"
+            }
+          ]
+        },
+        {
+          "id": "b401494606642a0a316acbc4a7cdf8b92431113ec70fad730237f6570a28a4fb",
+          "title": "OKD.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: OKD\nVersion: 3.11\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:26.274221Z",
+              "run_time": "2023-01-19T16:02:28.238521Z"
+            }
+          ]
+        },
+        {
+          "id": "b75691a0d96778e72f572a073cc8e292c939b8901f523f083f9dd8786238725e",
+          "title": "package_name.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: package name\nVersion: package\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:36.912284Z",
+              "run_time": "2023-01-19T16:03:38.623221Z"
+            }
+          ]
+        },
+        {
+          "id": "ceba93bf54bf5dd30cb834d103f2de990bb341c8c362e961a0496c2d1c71226e",
+          "title": "script.js.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: script.js\nVersion: 4.9\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:28.347947Z",
+              "run_time": "2023-01-19T16:02:30.028486Z"
+            }
+          ]
+        },
+        {
+          "id": "d88cfb652f7785e1bf097c0240ad71858934e6199fba55e99411777b0030e53e",
+          "title": "dep1.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: dep1\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:45.176145Z",
+              "run_time": "2023-01-19T16:03:46.831020Z"
+            }
+          ]
+        },
+        {
+          "id": "dde5e80baeb1d5d6007868c39fdfcbdfac88603bdd0d71c114b752d719e87c24",
+          "title": "Bootstrap_JS.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: Bootstrap JS\nVersion: 4.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:04.406622Z",
+              "run_time": "2023-01-19T16:03:06.403494Z"
+            }
+          ]
+        },
+        {
+          "id": "ea145613693e95c24cddfdc651db436f71ccf830849179e08ad30bd79bdd6034",
+          "title": "dependency_name.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: dependency name\nVersion: dependency\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:03:38.768721Z",
+              "run_time": "2023-01-19T16:03:41.132525Z"
+            }
+          ]
+        },
+        {
+          "id": "f403d4001924f6879e1c1e882fb801ca482e151a595c7704a00620204e876660",
+          "title": "sha256.js.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ]
+          },
+          "source_location": {
+            "ref": ""
+          },
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body0:Package Name: sha256.js\nVersion: 1.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+              "start_time": "2023-01-19T16:02:24.355126Z",
+              "run_time": "2023-01-19T16:02:26.120667Z"
+            }
+          ]
+        }
+      ],
+      "sha256": "14484843a5b1170d3b708b1d93ec89a907057f536f48aaa5ed3e33f855d9dade"
+    }
+  ]
+}
