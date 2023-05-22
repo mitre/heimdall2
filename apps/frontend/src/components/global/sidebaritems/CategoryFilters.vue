@@ -59,10 +59,20 @@ const defaultCategories = [
 
 @Component({})
 export default class CategoryFilters extends Vue {
-  @Prop({required: false, default: defaultCategories})
+  @Prop({
+    required: false,
+    default() {
+      return defaultCategories;
+    }
+  })
   readonly categories!: string[];
 
-  @Prop({required: false, default: 'Category Filters'})
+  @Prop({
+    required: false,
+    default() {
+      return 'Category Filters';
+    }
+  })
   readonly header!: string;
 
   currentFreeTextFilterInput = '';
