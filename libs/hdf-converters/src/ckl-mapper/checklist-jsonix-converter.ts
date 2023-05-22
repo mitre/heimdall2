@@ -7,7 +7,7 @@ import {
   ChecklistJsonixStigData,
   ChecklistJsonixVuln
 } from '../../types/checklistJsonix';
-import {JsonixConverter} from '../jsonix-converter';
+import { JsonixIntermediateConverter } from '../jsonix-intermediate-converter';
 
 export type ChecklistObject = {
   asset: ChecklistAsset;
@@ -82,10 +82,8 @@ enum StatusMapping {
   Not_Reviewed = 'Not Reviewed'
 }
 
-export class ChecklistJsonixConverter extends JsonixConverter<
-  ChecklistJSONIX,
-  ChecklistObject
-> {
+export class ChecklistJsonixConverter extends JsonixIntermediateConverter<ChecklistJSONIX, ChecklistObject> {
+
   getValueFromAttributeName<
     T extends ChecklistJsonixStigData | ChecklistJsonixSiData
   >(data: T[], tag: string): string {
@@ -180,7 +178,7 @@ export class ChecklistJsonixConverter extends JsonixConverter<
         const stigdata: ChecklistJsonixStigData[] = _.get(vuln, 'stigdata');
         const checklistVuln: ChecklistVuln = {
           status:
-            StatusMapping[_.get(vuln, 'status') as keyof typeof StatusMapping],
+            StatusMapping[_.get(vuln, 'status')],
           findingdetails: _.get(vuln, 'findingdetails'),
           comments: _.get(vuln, 'comments'),
           severityoverride: _.get(vuln, 'severityoverride'),
@@ -319,5 +317,5 @@ export class ChecklistJsonixConverter extends JsonixConverter<
       jsonixData: jsonixData
     };
     return checklistObject;
-  }
+  };
 }

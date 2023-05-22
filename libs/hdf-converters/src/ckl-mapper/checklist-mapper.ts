@@ -173,10 +173,9 @@ export class ChecklistResults extends ChecklistJsonixConverter {
    * @param checklistXml - string of xml data
    */
   constructor(checklistXml: string) {
-    super();
+    super(checklistXml);
     this.checklistXml = checklistXml;
     this.jsonixData = super.toJsonix(
-      this.checklistXml,
       checklistMapping.jsonixMapping
     );
     this.checklistObject = super.toIntermediateObject(this.jsonixData);

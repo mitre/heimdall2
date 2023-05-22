@@ -1,5 +1,6 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
+import * as checklistMapping from '../../../src/ckl-mapper/jsonixMapping';
 import {omitVersions} from '../../utils';
 
 describe('checklist_mapper_single_stig', () => {
@@ -52,6 +53,62 @@ describe('checklist_mapper_multi_stig_wrapper', () => {
             'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
             {encoding: 'utf-8'}
           )
+        )
+      )
+    );
+  });
+});
+
+describe('checklist_jsonix', () => {
+  it('Successfully creates jsonix object', () => {
+    const mapper = new ChecklistResults(
+      fs.readFileSync(
+        'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    const results = mapper.toJsonix(checklistMapping.jsonixMapping);
+
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/checklist_jsonix_data.json',
+    //   JSON.stringify(mapper.toJsonix(checklistMapping.jsonixMapping), null, 2)
+    // );
+
+    expect(results).toEqual(
+      JSON.parse(
+        fs.readFileSync(
+          'sample_jsons/checklist_mapper/checklist_jsonix_data.json',
+          {encoding: 'utf-8'}
+        )
+      )
+    );
+  });
+});
+
+describe('checklist_intermediate_object', () => {
+  it('Successfully creates intermediate checklist object', () => {
+    const mapper = new ChecklistResults(
+      fs.readFileSync(
+        'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    const jsonixData = mapper.toJsonix(checklistMapping.jsonixMapping);
+
+    const results = mapper.toIntermediateObject(jsonixData);
+
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/checklist_intermediate_object.json',
+    //   JSON.stringify(mapper.toIntermediateObject(jsonixData), null, 2)
+    // );
+
+    expect(results).toEqual(
+      JSON.parse(
+        fs.readFileSync(
+          'sample_jsons/checklist_mapper/checklist_intermediate_object.json',
+          {encoding: 'utf-8'}
         )
       )
     );
