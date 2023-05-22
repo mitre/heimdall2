@@ -8,7 +8,7 @@
           @keyup.enter="load"
         />
         <v-btn
-          title="Load"
+          title="Query the S3 bucket"
           :disabled="formBucketName.length < 1"
           class="fill-height pa-0"
           @click="load"
@@ -32,7 +32,7 @@
           </v-list-item-content>
           <!-- Action: Click to add -->
           <v-list-item-action>
-            <v-btn icon @click="load_file(index)">
+            <v-btn title="Load into Heimdall" icon @click="load_file(index)">
               <v-icon>mdi-plus-circle</v-icon>
             </v-btn>
           </v-list-item-action>
@@ -53,6 +53,7 @@ import S3 from 'aws-sdk/clients/s3';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {SnackbarModule} from '../../../../store/snackbar';
 
 // Caches the bucket name
 const localBucketName = new LocalStorageVal<string>('aws_bucket_name');
@@ -78,6 +79,14 @@ export default class FileList extends Vue {
     // Fetch it from s3, and promise to submit it to be loaded afterwards
     await fetch_s3_file(this.auth.creds, file.Key!, this.formBucketName).then(
       (content) => {
+        try {
+          JSON.parse(content);
+        } catch (parseError) {
+          SnackbarModule.failure(
+            `Selected file: ${file.Key} is not a valid formatted json file.`
+          );
+          return;
+        }
         InspecIntakeModule.loadText({
           text: content,
           filename: file.Key!

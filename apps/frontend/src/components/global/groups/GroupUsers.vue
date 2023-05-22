@@ -1,5 +1,9 @@
 <template>
-  <v-dialog v-model="dialogDisplayUsers" max-width="700px">
+  <v-dialog
+    v-model="dialogDisplayUsers"
+    max-width="700px"
+    @click:outside="$emit('close-group-users-dialog')"
+  >
     <v-card class="rounded-t-0">
       <v-card-title
         data-cy="groupModalTitle"
@@ -29,7 +33,6 @@ import Component from 'vue-class-component';
 import {Prop, VModel} from 'vue-property-decorator';
 
 @Component({
-  validations: {},
   components: {
     Users
   }

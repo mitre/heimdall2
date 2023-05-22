@@ -4,6 +4,7 @@ export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
   FORTIFY = 'fortify',
+  GOSEC = 'gosec',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
   NIKTO = 'nikto',
@@ -60,7 +61,8 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.NETSPARKER]: [],
   [INPUT_TYPES.SCOUTSUITE]: [],
   [INPUT_TYPES.NOT_FOUND]: [],
-  [INPUT_TYPES.VERACODE]: []
+  [INPUT_TYPES.VERACODE]: [],
+  [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues']
 };
 
 export function fingerprint(guessOptions: {
@@ -96,7 +98,10 @@ export function fingerprint(guessOptions: {
       guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1
     ) {
       return INPUT_TYPES.XCCDF;
-    } else if (guessOptions.data.match(/<netsparker-.*generated.*>/)) {
+    } else if (
+      guessOptions.data.match(/<netsparker-.*generated.*>/) ||
+      guessOptions.data.match(/<invicti-.*generated.*>/)
+    ) {
       return INPUT_TYPES.NETSPARKER;
     } else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {
       return INPUT_TYPES.FORTIFY;

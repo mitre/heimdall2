@@ -31,7 +31,7 @@
     >
       <div class="text-center">
         <p>
-          <span v-if="errorCount > 0">
+          <span v-if="errorCount > 0" style="color: red; font-weight: bold">
             It seems you may be having trouble connecting to Splunk. Are you
             sure that you have configured it properly?
           </span>
@@ -49,6 +49,31 @@
             <v-icon pr-2>mdi-github-circle</v-icon>
             Splunk Configuration
           </v-btn>
+          <br />
+          <span>
+            The Splunk platform accepts any type of data. In particular, it
+            works with all IT streaming
+            <br />
+            and historical data. The source of the data can be event logs, web
+            logs, live application logs,
+            <br />
+            network feeds, system metrics, change monitoring, message queues,
+            archive files, and so on.
+          </span>
+          <br />
+          <span>
+            <br />
+            "A Splunk index is a repository for Splunk data."
+            <br />
+            Data that has not been previously added to Splunk is referred to as
+            raw data.
+            <br />
+            When the data is added to Splunk, it indexes the data (uses the data
+            to update its indexes),
+            <br />
+            creating event data. Individual units of this data are called
+            events.
+          </span>
         </p>
         <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
       </div>
