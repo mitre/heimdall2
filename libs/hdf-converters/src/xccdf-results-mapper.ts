@@ -158,6 +158,10 @@ function nistTag(input: IIdent | IIdent[]): string[] {
 
 /**
  * Given a group, returns all the rules within it (including rules in groups nested within the group).
+ *
+ * @param allRules a mutable list that will be populated with the rules.
+ * @param benchmark The benchmark being operated upon.
+ * @param group The group for which rules are to be retrieved.
  */
 function getRulesInGroup(
   allRules: Record<string, unknown>[],
