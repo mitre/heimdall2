@@ -412,7 +412,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 >;
                 if (ruleResult) {
                   const result = _.get(ruleResult, 'result') as string;
-                  if (result == 'notapplicable' || result == 'informational') {
+                  if (result === 'notapplicable' || result === 'informational') {
                     return 0;
                   }
                 }
