@@ -1,6 +1,7 @@
 import {IStartupSettings} from '@heimdall/interfaces';
 
 export class StartupSettingsDto implements IStartupSettings {
+  readonly apiKeysEnabled: boolean;
   readonly banner: string;
   readonly classificationBannerColor: string;
   readonly classificationBannerText: string;
@@ -12,6 +13,7 @@ export class StartupSettingsDto implements IStartupSettings {
   readonly localLoginEnabled: boolean;
 
   constructor(settings: IStartupSettings) {
+    this.apiKeysEnabled = settings.apiKeysEnabled;
     this.banner = settings.banner;
     this.classificationBannerColor = settings.classificationBannerColor;
     this.classificationBannerText = settings.classificationBannerText;

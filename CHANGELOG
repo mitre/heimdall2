@@ -1,3 +1,114 @@
+v2.6.48
+
+## Dependency Updates
+
+- Bump @types/sinon from 10.0.14 to 10.0.15 @dependabot (#4477)
+- Bump @types/node from 20.1.4 to 20.1.5 @dependabot (#4479)
+- Bump pg from 8.10.0 to 8.11.0 @dependabot (#4476)
+- Bump @typescript-eslint/eslint-plugin from 5.59.5 to 5.59.6 @dependabot (#4474)
+- Bump @typescript-eslint/parser from 5.59.5 to 5.59.6 @dependabot (#4473)
+- Bump aws-sdk from 2.1377.0 to 2.1378.0 @dependabot (#4478)
+- Bump @types/node from 20.1.3 to 20.1.4 @dependabot (#4472)
+- Bump jquery from 3.6.4 to 3.7.0 @dependabot (#4468)
+- Bump aws-sdk from 2.1376.0 to 2.1377.0 @dependabot (#4469)
+- Bump @aws-sdk/client-config-service from 3.329.0 to 3.332.0 @dependabot (#4470)
+- Bump @types/node from 20.1.1 to 20.1.3 @dependabot (#4467)
+
+v2.6.47
+
+- Tenable Frontend @georgedias (#4410)
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1374.0 to 2.1375.0 @dependabot (#4457)
+- Bump @types/validator from 13.7.16 to 13.7.17 @dependabot (#4458)
+- Bump @types/node from 20.1.0 to 20.1.1 @dependabot (#4449)
+- Bump @aws-sdk/client-config-service from 3.328.0 to 3.329.0 @dependabot (#4445)
+- Bump @typescript-eslint/eslint-plugin from 5.59.2 to 5.59.5 @dependabot (#4455)
+- Bump @types/validator from 13.7.15 to 13.7.16 @dependabot (#4453)
+- Bump core-js from 3.30.1 to 3.30.2 @dependabot (#4450)
+- Bump typedoc from 0.24.6 to 0.24.7 @dependabot (#4451)
+- Bump @types/vuelidate from 0.7.17 to 0.7.18 @dependabot (#4446)
+- Bump aws-sdk from 2.1373.0 to 2.1374.0 @dependabot (#4452)
+- Bump @typescript-eslint/parser from 5.59.2 to 5.59.5 @dependabot (#4447)
+- Bump eslint from 8.39.0 to 8.40.0 @dependabot (#4439)
+- Bump @aws-sdk/client-config-service from 3.327.0 to 3.328.0 @dependabot (#4441)
+- Bump aws-sdk from 2.1372.0 to 2.1373.0 @dependabot (#4442)
+- Bump @types/node from 18.16.3 to 20.1.0 @dependabot (#4440)
+- Bump @aws-sdk/client-config-service from 3.326.0 to 3.327.0 @dependabot (#4438)
+- Bump aws-sdk from 2.1370.0 to 2.1372.0 @dependabot (#4435)
+- Bump @aws-sdk/client-config-service from 3.321.1 to 3.326.0 @dependabot (#4432)
+- Bump @typescript-eslint/eslint-plugin from 5.59.1 to 5.59.2 @dependabot (#4437)
+- Bump @types/vuelidate from 0.7.16 to 0.7.17 @dependabot (#4428)
+- Bump @nestjs/cli from 8.2.8 to 9.4.2 @dependabot (#4394)
+
+v2.6.46
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1369.0 to 2.1370.0 @dependabot (#4426)
+- Bump highlight.js from 11.7.0 to 11.8.0 @dependabot (#4424)
+- Bump @typescript-eslint/eslint-plugin from 5.59.1 to 5.59.2 @dependabot (#4425)
+- Bump @types/node from 18.16.2 to 18.16.3 @dependabot (#4420)
+- Bump aws-sdk from 2.1367.0 to 2.1369.0 @dependabot (#4421)
+- Bump apexcharts from 3.39.0 to 3.40.0 @dependabot (#4418)
+- Bump @casl/ability from 6.4.0 to 6.5.0 @dependabot (#4416)
+- Bump @typescript-eslint/parser from 5.59.1 to 5.59.2 @dependabot (#4419)
+- Bump date-fns from 2.29.3 to 2.30.0 @dependabot (#4422)
+- Bump eslint-plugin-cypress from 2.13.2 to 2.13.3 @dependabot (#4414)
+- Bump @types/chai from 4.3.4 to 4.3.5 @dependabot (#4417)
+- Bump axios from 1.3.6 to 1.4.0 @dependabot (#4411)
+- Bump @aws-sdk/client-config-service from 3.319.0 to 3.321.1 @dependabot (#4409)
+- Bump @types/node from 18.16.1 to 18.16.2 @dependabot (#4412)
+- Bump aws-sdk from 2.1366.0 to 2.1367.0 @dependabot (#4413)
+- Bump rxjs from 7.8.0 to 7.8.1 @dependabot (#4406)
+- Bump aws-sdk from 2.1365.0 to 2.1366.0 @dependabot (#4404)
+- Bump @types/node from 18.16.0 to 18.16.1 @dependabot (#4400)
+- Bump @vue/eslint-config-typescript from 11.0.2 to 11.0.3 @dependabot (#4402)
+- Bump aws-sdk from 2.1364.0 to 2.1365.0 @dependabot (#4401)
+
+v2.6.45
+
+- Added variable in store/config to track if api keys are enabled @Rlin232 (#4383)
+- Allow owners to change users group role @samuelsunvold (#1494)
+
+## Dependency Updates
+
+- Bump eslint from 8.38.0 to 8.39.0 @dependabot (#4380)
+- Bump aws-sdk from 2.1362.0 to 2.1363.0 @dependabot (#4379)
+- Bump @types/node from 18.15.12 to 18.15.13 @dependabot (#4376)
+- Bump aws-sdk from 2.1361.0 to 2.1362.0 @dependabot (#4375)
+- Bump sinon from 15.0.3 to 15.0.4 @dependabot (#4374)
+- Bump aws-sdk from 2.1360.0 to 2.1361.0 @dependabot (#4369)
+- Bump @types/node from 18.15.11 to 18.15.12 @dependabot (#4371)
+- Bump axios from 1.3.5 to 1.3.6 @dependabot (#4370)
+- Bump fast-xml-parser from 4.2.0 to 4.2.2 @dependabot (#4365)
+- Bump @aws-sdk/client-config-service from 3.315.0 to 3.316.0 @dependabot (#4368)
+
+v2.6.44
+
+- BUG Fix for Heimdall CKL Export @Hookwitz (#4212)
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1359.0 to 2.1360.0 @dependabot (#4362)
+- Bump @types/sinon from 10.0.13 to 10.0.14 @dependabot (#4359)
+- Bump @aws-sdk/client-config-service from 3.312.0 to 3.315.0 @dependabot (#4363)
+- Bump diff2html from 3.4.34 to 3.4.35 @dependabot (#4356)
+- Bump @typescript-eslint/parser from 5.58.0 to 5.59.0 @dependabot (#4361)
+- Bump apexcharts from 3.38.0 to 3.39.0 @dependabot (#4364)
+- Bump @typescript-eslint/eslint-plugin from 5.58.0 to 5.59.0 @dependabot (#4358)
+- Bump typedoc from 0.24.1 to 0.24.4 @dependabot (#4360)
+- Bump @types/lodash from 4.14.192 to 4.14.194 @dependabot (#4351)
+- Bump aws-sdk from 2.1358.0 to 2.1359.0 @dependabot (#4354)
+- Bump apexcharts from 3.37.3 to 3.38.0 @dependabot (#4355)
+- Bump aws-sdk from 2.1357.0 to 2.1358.0 @dependabot (#4350)
+- Bump core-js from 3.30.0 to 3.30.1 @dependabot (#4349)
+- Bump @types/validator from 13.7.14 to 13.7.15 @dependabot (#4347)
+- Bump vuetify from 2.6.14 to 2.6.15 @dependabot (#4343)
+- Bump aws-sdk from 2.1356.0 to 2.1357.0 @dependabot (#4345)
+- Bump @aws-sdk/client-config-service from 3.310.0 to 3.312.0 @dependabot (#4344)
+
 v2.6.43
 
 ## Dependency Updates

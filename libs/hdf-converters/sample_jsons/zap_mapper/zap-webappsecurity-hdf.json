@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.29"
+    "release": "2.6.47"
   },
-  "version": "2.6.29",
+  "version": "2.6.47",
   "statistics": {},
   "profiles": [
     {
@@ -611,6 +611,11 @@
             {
               "status": "failed",
               "code_desc": "Uri: http://zero.webappsecurity.com/bank/money-map-get-spendings-by-type.html?_dc=1544043856896\nMethod: GET\nAttack: TRACE, OPTIONS methods with 'Max-Forwards' header. TRACK method.\n",
+              "start_time": "Wed, 5 Dec 2018 19:00:19"
+            },
+            {
+              "status": "failed",
+              "code_desc": "Uri: http://zero.webappsecurity.com/bank/pay-bills-get-payee-details.html\nMethod: GET\nAttack: TRACE, OPTIONS methods with 'Max-Forwards' header. TRACK method.\n",
               "start_time": "Wed, 5 Dec 2018 19:00:19"
             },
             {
@@ -1247,7 +1252,7 @@
           ]
         }
       ],
-      "sha256": "14963a7949541e18fab2c27097afd2374e37b35e54c71fd71a82e74a583bc4ab"
+      "sha256": "dc87fef5b7ce93b02f962f859309f21d08b33c3754667fac7c1214f52bb70f07"
     }
   ],
   "passthrough": {
