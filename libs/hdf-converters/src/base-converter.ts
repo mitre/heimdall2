@@ -352,15 +352,7 @@ export class BaseConverter {
       }
     }
 
-    const uniqueResults: T[] = [];
-    resultingData.forEach((result) => {
-      if (
-        !uniqueResults.some((uniqueResult) => _.isEqual(result, uniqueResult))
-      ) {
-        uniqueResults.push(result);
-      }
-    });
-    return uniqueResults;
+    return resultingData;
   }
 
   handlePath(file: Record<string, unknown>, path: string | string[]): unknown {
