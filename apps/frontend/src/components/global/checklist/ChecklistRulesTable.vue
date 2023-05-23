@@ -27,7 +27,6 @@
           />
         </div>
       </div>
-      <v-spacer class="mt-0 pt-0" />
       <v-select
         v-model="selectedHeaders"
         :items="headersList"
@@ -41,22 +40,12 @@
         height="8.5vh"
       >
         <template #selection="{item, index}">
-          <div v-if="$vuetify.breakpoint.lgAndUp">
-            <v-chip v-if="index < 4" small>
-              <span>{{ item.text }}</span>
-            </v-chip>
-            <span v-if="index === 4" class="grey--text caption mt-0 pt-0">
-              (+{{ selectedHeaders.length - 4 }} others)
-            </span>
-          </div>
-          <div v-else>
-            <v-chip v-if="index < 3" small>
-              <span>{{ item.text }}</span>
-            </v-chip>
-            <span v-if="index === 3" class="grey--text caption ml-2">
-              (+{{ selectedHeaders.length - 3 }} others)
-            </span>
-          </div>
+          <v-chip v-if="index < 3" small>
+            <span>{{ item.text }}</span>
+          </v-chip>
+          <span v-if="index === 3" class="grey--text caption ml-2">
+            (+{{ selectedHeaders.length - 3 }} others)
+          </span>
         </template>
       </v-select>
     </v-card-title>
@@ -77,18 +66,18 @@
         @click:row="showRule"
       >
         <template #[`item.status`]="{item}">
-          <v-chip :color="statusColor(item.status)" small
-            ><strong>{{ shortStatus(item.status) }}</strong>
+          <v-chip :color="statusColor(item.status)" small>
+            <strong>{{ shortStatus(item.status) }}</strong>
           </v-chip>
         </template>
         <template #[`item.ruleVersion`]="{item}">
-          {{ truncate(shortStigId(item.ruleVersion), 20) }}
+          {{ shortStigId(item.ruleVersion) }}
         </template>
         <template #[`item.ruleId`]="{item}">
-          {{ truncate(shortRuleId(item.ruleId), 20) }}
+          {{ shortRuleId(item.ruleId) }}
         </template>
         <template #[`item.cciRef`]="{item}">
-          {{ truncate(shortRuleId(item.cciRef), 15) }}
+          {{ shortRuleId(item.cciRef) }}
         </template>
       </v-data-table>
     </v-card-text>
@@ -118,10 +107,6 @@ export default class ChecklistRulesTable extends Vue {
   shortStigId(stigId: string) {
     if (this.shortIdEnabled) return stigId.split('-').slice(0, 2).join('-');
     else return stigId;
-  }
-
-  truncate(value: string, length: number, omission = '...') {
-    return _.truncate(value, {omission: omission, length: length});
   }
 
   statusColor(status: string | undefined) {
