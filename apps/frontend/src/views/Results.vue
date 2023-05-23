@@ -189,8 +189,8 @@
       </span>
       <span v-else class="subtitle-2">
         No files are currently enabled for viewing. Open the
-        <v-icon class="mx-1">mdi-menu</v-icon> sidebar menu, and ensure that the
-        file(s) you wish to view are
+        <v-icon class="mx-1">mdi-arrow-right</v-icon> sidebar menu, and ensure
+        that the file(s) you wish to view are
         <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
       </span>
     </v-snackbar>
