@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.43",
+    "release": "2.6.47",
     "target_id": "cpe:/o:redhat:enterprise_linux:7"
   },
-  "version": "2.6.43",
+  "version": "2.6.47",
   "statistics": {},
   "profiles": [
     {
@@ -69,7 +69,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204393r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -154,7 +153,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010030"
           },
           "refs": [],
           "source_location": {},
@@ -228,7 +228,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204396r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -313,7 +312,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010060"
           },
           "refs": [],
           "source_location": {},
@@ -395,7 +395,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204397r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -484,7 +483,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010061"
           },
           "refs": [],
           "source_location": {},
@@ -562,7 +562,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204398r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -674,7 +673,8 @@
                 "Id": "xccdf_mil.disa.stig_value_inactivity_timeout_value",
                 "id": "xccdf_mil.disa.stig_value_inactivity_timeout_value"
               }
-            ]
+            ],
+            "version": "RHEL-07-010070"
           },
           "refs": [],
           "source_location": {},
@@ -748,7 +748,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204399r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -833,7 +832,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010081"
           },
           "refs": [],
           "source_location": {},
@@ -907,7 +907,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204402r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -992,7 +991,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010100"
           },
           "refs": [],
           "source_location": {},
@@ -1062,7 +1062,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204403r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -1143,7 +1142,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010101"
           },
           "refs": [],
           "source_location": {},
@@ -1217,7 +1217,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204404r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -1302,7 +1301,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010110"
           },
           "refs": [],
           "source_location": {},
@@ -1372,7 +1372,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204405r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -1453,7 +1452,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010118"
           },
           "refs": [],
           "source_location": {},
@@ -1527,7 +1527,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204406r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -1612,7 +1611,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010119"
           },
           "refs": [],
           "source_location": {},
@@ -1690,7 +1690,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204407r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -1802,7 +1801,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_password_pam_ucredit",
                 "id": "xccdf_mil.disa.stig_value_var_password_pam_ucredit"
               }
-            ]
+            ],
+            "version": "RHEL-07-010120"
           },
           "refs": [],
           "source_location": {},
@@ -1880,7 +1880,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204408r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -1992,7 +1991,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_password_pam_lcredit",
                 "id": "xccdf_mil.disa.stig_value_var_password_pam_lcredit"
               }
-            ]
+            ],
+            "version": "RHEL-07-010130"
           },
           "refs": [],
           "source_location": {},
@@ -2070,7 +2070,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204409r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -2182,7 +2181,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_password_pam_dcredit",
                 "id": "xccdf_mil.disa.stig_value_var_password_pam_dcredit"
               }
-            ]
+            ],
+            "version": "RHEL-07-010140"
           },
           "refs": [],
           "source_location": {},
@@ -2260,7 +2260,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204410r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -2372,7 +2371,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_password_pam_ocredit",
                 "id": "xccdf_mil.disa.stig_value_var_password_pam_ocredit"
               }
-            ]
+            ],
+            "version": "RHEL-07-010150"
           },
           "refs": [],
           "source_location": {},
@@ -2450,7 +2450,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204411r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -2583,7 +2582,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_password_pam_difok",
                 "id": "xccdf_mil.disa.stig_value_var_password_pam_difok"
               }
-            ]
+            ],
+            "version": "RHEL-07-010160"
           },
           "refs": [],
           "source_location": {},
@@ -2661,7 +2661,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204412r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -2777,7 +2776,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_password_pam_minclass",
                 "id": "xccdf_mil.disa.stig_value_var_password_pam_minclass"
               }
-            ]
+            ],
+            "version": "RHEL-07-010170"
           },
           "refs": [],
           "source_location": {},
@@ -2855,7 +2855,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204413r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -2967,7 +2966,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_password_pam_maxrepeat",
                 "id": "xccdf_mil.disa.stig_value_var_password_pam_maxrepeat"
               }
-            ]
+            ],
+            "version": "RHEL-07-010180"
           },
           "refs": [],
           "source_location": {},
@@ -3045,7 +3045,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204414r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -3161,7 +3160,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_password_pam_maxclassrepeat",
                 "id": "xccdf_mil.disa.stig_value_var_password_pam_maxclassrepeat"
               }
-            ]
+            ],
+            "version": "RHEL-07-010190"
           },
           "refs": [],
           "source_location": {},
@@ -3235,7 +3235,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204415r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -3320,7 +3319,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010200"
           },
           "refs": [],
           "source_location": {},
@@ -3394,7 +3394,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204416r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -3479,7 +3478,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010210"
           },
           "refs": [],
           "source_location": {},
@@ -3553,7 +3553,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204417r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -3638,7 +3637,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010220"
           },
           "refs": [],
           "source_location": {},
@@ -3716,7 +3716,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204418r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -3837,7 +3836,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_accounts_minimum_age_login_defs",
                 "id": "xccdf_mil.disa.stig_value_var_accounts_minimum_age_login_defs"
               }
-            ]
+            ],
+            "version": "RHEL-07-010230"
           },
           "refs": [],
           "source_location": {},
@@ -3907,7 +3907,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204419r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -3988,7 +3987,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010240"
           },
           "refs": [],
           "source_location": {},
@@ -4066,7 +4066,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204420r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -4183,7 +4182,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_accounts_maximum_age_login_defs",
                 "id": "xccdf_mil.disa.stig_value_var_accounts_maximum_age_login_defs"
               }
-            ]
+            ],
+            "version": "RHEL-07-010250"
           },
           "refs": [],
           "source_location": {},
@@ -4253,7 +4253,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204421r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -4334,7 +4333,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010260"
           },
           "refs": [],
           "source_location": {},
@@ -4412,7 +4412,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204422r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -4532,7 +4531,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_password_pam_unix_remember",
                 "id": "xccdf_mil.disa.stig_value_var_password_pam_unix_remember"
               }
-            ]
+            ],
+            "version": "RHEL-07-010270"
           },
           "refs": [],
           "source_location": {},
@@ -4610,7 +4610,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204423r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -4738,7 +4737,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_password_pam_minlen",
                 "id": "xccdf_mil.disa.stig_value_var_password_pam_minlen"
               }
-            ]
+            ],
+            "version": "RHEL-07-010280"
           },
           "refs": [],
           "source_location": {},
@@ -4812,7 +4812,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204424r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -4897,7 +4896,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010290"
           },
           "refs": [],
           "source_location": {},
@@ -4971,7 +4971,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204425r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -5056,7 +5055,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010300"
           },
           "refs": [],
           "source_location": {},
@@ -5134,7 +5134,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204426r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -5263,7 +5262,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_account_disable_post_pw_expiration",
                 "id": "xccdf_mil.disa.stig_value_var_account_disable_post_pw_expiration"
               }
-            ]
+            ],
+            "version": "RHEL-07-010310"
           },
           "refs": [],
           "source_location": {},
@@ -5337,7 +5337,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204429r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -5422,7 +5421,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010340"
           },
           "refs": [],
           "source_location": {},
@@ -5496,7 +5496,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204430r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -5581,7 +5580,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010350"
           },
           "refs": [],
           "source_location": {},
@@ -5659,7 +5659,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204431r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -5779,7 +5778,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_accounts_fail_delay",
                 "id": "xccdf_mil.disa.stig_value_var_accounts_fail_delay"
               }
-            ]
+            ],
+            "version": "RHEL-07-010430"
           },
           "refs": [],
           "source_location": {},
@@ -5853,7 +5853,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204432r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -5938,7 +5937,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010440"
           },
           "refs": [],
           "source_location": {},
@@ -6012,7 +6012,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204433r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -6097,7 +6096,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010450"
           },
           "refs": [],
           "source_location": {},
@@ -6171,7 +6171,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204434r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -6256,7 +6255,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010460"
           },
           "refs": [],
           "source_location": {},
@@ -6330,7 +6330,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204435r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -6415,7 +6414,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010470"
           },
           "refs": [],
           "source_location": {},
@@ -6489,7 +6489,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204436r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -6574,7 +6573,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010480"
           },
           "refs": [],
           "source_location": {},
@@ -6644,7 +6644,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204437r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -6725,7 +6724,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010481"
           },
           "refs": [],
           "source_location": {},
@@ -6799,7 +6799,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204438r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -6884,7 +6883,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010482"
           },
           "refs": [],
           "source_location": {},
@@ -6958,7 +6958,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204439r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -7043,7 +7042,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010490"
           },
           "refs": [],
           "source_location": {},
@@ -7117,7 +7117,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204440r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -7202,7 +7201,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010491"
           },
           "refs": [],
           "source_location": {},
@@ -7276,7 +7276,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204442r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -7361,7 +7360,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020000"
           },
           "refs": [],
           "source_location": {},
@@ -7435,7 +7435,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204443r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -7520,7 +7519,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020010"
           },
           "refs": [],
           "source_location": {},
@@ -7594,7 +7594,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204445r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -7679,7 +7678,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020030"
           },
           "refs": [],
           "source_location": {},
@@ -7753,7 +7753,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204447r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -7838,7 +7837,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020050"
           },
           "refs": [],
           "source_location": {},
@@ -7912,7 +7912,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204448r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -7997,7 +7996,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020060"
           },
           "refs": [],
           "source_location": {},
@@ -8079,7 +8079,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204449r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -8168,7 +8167,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020100"
           },
           "refs": [],
           "source_location": {},
@@ -8238,7 +8238,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204450r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -8319,7 +8318,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020101"
           },
           "refs": [],
           "source_location": {},
@@ -8405,7 +8405,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204451r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -8498,7 +8497,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020110"
           },
           "refs": [],
           "source_location": {},
@@ -8572,7 +8572,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204452r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -8657,7 +8656,8 @@
               "severity": "low",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020200"
           },
           "refs": [],
           "source_location": {},
@@ -8735,7 +8735,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204457r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -8850,7 +8849,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_accounts_user_umask",
                 "id": "xccdf_mil.disa.stig_value_var_accounts_user_umask"
               }
-            ]
+            ],
+            "version": "RHEL-07-020240"
           },
           "refs": [],
           "source_location": {},
@@ -8924,7 +8924,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204458r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -9009,7 +9008,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020250"
           },
           "refs": [],
           "source_location": {},
@@ -9083,7 +9083,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204461r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -9168,7 +9167,8 @@
               "severity": "low",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020300"
           },
           "refs": [],
           "source_location": {},
@@ -9242,7 +9242,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204462r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -9327,7 +9326,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020310"
           },
           "refs": [],
           "source_location": {},
@@ -9401,7 +9401,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204466r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -9486,7 +9485,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020610"
           },
           "refs": [],
           "source_location": {},
@@ -9556,7 +9556,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204467r603826_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -9637,7 +9636,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-020620"
           },
           "refs": [],
           "source_location": {},
@@ -9711,7 +9711,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204482r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -9796,7 +9795,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021020"
           },
           "refs": [],
           "source_location": {},
@@ -9870,7 +9870,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204483r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -9955,7 +9954,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021021"
           },
           "refs": [],
           "source_location": {},
@@ -10029,7 +10029,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204487r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -10114,7 +10113,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021030"
           },
           "refs": [],
           "source_location": {},
@@ -10188,7 +10188,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204490r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -10273,7 +10272,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021110"
           },
           "refs": [],
           "source_location": {},
@@ -10347,7 +10347,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204491r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -10432,7 +10431,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021120"
           },
           "refs": [],
           "source_location": {},
@@ -10506,7 +10506,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204493r603840_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -10591,7 +10590,8 @@
               "severity": "low",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021310"
           },
           "refs": [],
           "source_location": {},
@@ -10665,7 +10665,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204494r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -10750,7 +10749,8 @@
               "severity": "low",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021320"
           },
           "refs": [],
           "source_location": {},
@@ -10820,7 +10820,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204495r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -10901,7 +10900,8 @@
               "severity": "low",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021330"
           },
           "refs": [],
           "source_location": {},
@@ -10975,7 +10975,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204496r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -11060,7 +11059,8 @@
               "severity": "low",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021340"
           },
           "refs": [],
           "source_location": {},
@@ -11152,7 +11152,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204497r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -11249,7 +11248,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021350"
           },
           "refs": [],
           "source_location": {},
@@ -11323,7 +11323,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204502r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -11408,7 +11407,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-021710"
           },
           "refs": [],
           "source_location": {},
@@ -11488,7 +11488,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204503r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -11577,7 +11576,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030000"
           },
           "refs": [],
           "source_location": {},
@@ -11651,7 +11651,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204504r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -11736,7 +11735,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030010"
           },
           "refs": [],
           "source_location": {},
@@ -11806,7 +11806,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204506r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -11887,7 +11886,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030201"
           },
           "refs": [],
           "source_location": {},
@@ -11957,7 +11957,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204507r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -12038,7 +12037,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030210"
           },
           "refs": [],
           "source_location": {},
@@ -12108,7 +12108,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204508r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -12189,7 +12188,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030211"
           },
           "refs": [],
           "source_location": {},
@@ -12259,7 +12259,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204509r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -12340,7 +12339,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030300"
           },
           "refs": [],
           "source_location": {},
@@ -12410,7 +12410,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204510r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -12491,7 +12490,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030310"
           },
           "refs": [],
           "source_location": {},
@@ -12561,7 +12561,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204511r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -12642,7 +12641,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030320"
           },
           "refs": [],
           "source_location": {},
@@ -12712,7 +12712,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204512r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -12793,7 +12792,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030321"
           },
           "refs": [],
           "source_location": {},
@@ -12863,7 +12863,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204514r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -12944,7 +12943,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030340"
           },
           "refs": [],
           "source_location": {},
@@ -13022,7 +13022,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204515r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -13129,7 +13128,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_auditd_action_mail_acct",
                 "id": "xccdf_mil.disa.stig_value_var_auditd_action_mail_acct"
               }
-            ]
+            ],
+            "version": "RHEL-07-030350"
           },
           "refs": [],
           "source_location": {},
@@ -13199,7 +13199,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204516r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -13280,7 +13279,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030360"
           },
           "refs": [],
           "source_location": {},
@@ -13360,7 +13360,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204517r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -13449,7 +13448,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030370"
           },
           "refs": [],
           "source_location": {},
@@ -13529,7 +13529,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204518r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -13618,7 +13617,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030380"
           },
           "refs": [],
           "source_location": {},
@@ -13698,7 +13698,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204519r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -13787,7 +13786,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030390"
           },
           "refs": [],
           "source_location": {},
@@ -13867,7 +13867,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204520r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -13956,7 +13955,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030400"
           },
           "refs": [],
           "source_location": {},
@@ -14030,7 +14030,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204521r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -14115,7 +14114,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030410"
           },
           "refs": [],
           "source_location": {},
@@ -14189,7 +14189,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204522r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -14274,7 +14273,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030420"
           },
           "refs": [],
           "source_location": {},
@@ -14348,7 +14348,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204523r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -14433,7 +14432,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030430"
           },
           "refs": [],
           "source_location": {},
@@ -14507,7 +14507,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204524r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -14592,7 +14591,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030440"
           },
           "refs": [],
           "source_location": {},
@@ -14666,7 +14666,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204525r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -14751,7 +14750,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030450"
           },
           "refs": [],
           "source_location": {},
@@ -14825,7 +14825,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204526r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -14910,7 +14909,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030460"
           },
           "refs": [],
           "source_location": {},
@@ -14984,7 +14984,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204527r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -15069,7 +15068,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030470"
           },
           "refs": [],
           "source_location": {},
@@ -15143,7 +15143,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204528r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -15228,7 +15227,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030480"
           },
           "refs": [],
           "source_location": {},
@@ -15302,7 +15302,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204529r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -15387,7 +15386,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030490"
           },
           "refs": [],
           "source_location": {},
@@ -15467,7 +15467,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204530r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -15556,7 +15555,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030500"
           },
           "refs": [],
           "source_location": {},
@@ -15636,7 +15636,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204531r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -15725,7 +15724,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030510"
           },
           "refs": [],
           "source_location": {},
@@ -15805,7 +15805,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204532r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -15894,7 +15893,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030520"
           },
           "refs": [],
           "source_location": {},
@@ -15974,7 +15974,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204533r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -16063,7 +16062,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030530"
           },
           "refs": [],
           "source_location": {},
@@ -16143,7 +16143,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204534r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -16232,7 +16231,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030540"
           },
           "refs": [],
           "source_location": {},
@@ -16312,7 +16312,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204535r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -16401,7 +16400,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030550"
           },
           "refs": [],
           "source_location": {},
@@ -16481,7 +16481,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204536r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -16570,7 +16569,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030560"
           },
           "refs": [],
           "source_location": {},
@@ -16650,7 +16650,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204537r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -16739,7 +16738,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030570"
           },
           "refs": [],
           "source_location": {},
@@ -16819,7 +16819,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204538r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -16908,7 +16907,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030580"
           },
           "refs": [],
           "source_location": {},
@@ -16984,7 +16984,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204539r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -17069,7 +17068,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030590"
           },
           "refs": [],
           "source_location": {},
@@ -17155,7 +17155,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204540r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -17248,7 +17247,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030610"
           },
           "refs": [],
           "source_location": {},
@@ -17334,7 +17334,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204541r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -17427,7 +17426,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030620"
           },
           "refs": [],
           "source_location": {},
@@ -17513,7 +17513,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204542r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -17606,7 +17605,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030630"
           },
           "refs": [],
           "source_location": {},
@@ -17692,7 +17692,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204543r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -17785,7 +17784,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030640"
           },
           "refs": [],
           "source_location": {},
@@ -17871,7 +17871,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204544r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -17964,7 +17963,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030650"
           },
           "refs": [],
           "source_location": {},
@@ -18050,7 +18050,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204545r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -18143,7 +18142,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030660"
           },
           "refs": [],
           "source_location": {},
@@ -18229,7 +18229,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204546r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -18322,7 +18321,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030670"
           },
           "refs": [],
           "source_location": {},
@@ -18414,7 +18414,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204547r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -18511,7 +18510,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030680"
           },
           "refs": [],
           "source_location": {},
@@ -18603,7 +18603,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204548r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -18700,7 +18699,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030690"
           },
           "refs": [],
           "source_location": {},
@@ -18792,7 +18792,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204549r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -18889,7 +18888,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030700"
           },
           "refs": [],
           "source_location": {},
@@ -18981,7 +18981,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204550r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -19078,7 +19077,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030710"
           },
           "refs": [],
           "source_location": {},
@@ -19170,7 +19170,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204551r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -19267,7 +19266,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030720"
           },
           "refs": [],
           "source_location": {},
@@ -19347,7 +19347,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204552r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -19436,7 +19435,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030740"
           },
           "refs": [],
           "source_location": {},
@@ -19516,7 +19516,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204553r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -19605,7 +19604,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030750"
           },
           "refs": [],
           "source_location": {},
@@ -19685,7 +19685,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204554r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -19774,7 +19773,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030760"
           },
           "refs": [],
           "source_location": {},
@@ -19854,7 +19854,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204555r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -19943,7 +19942,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030770"
           },
           "refs": [],
           "source_location": {},
@@ -20029,7 +20029,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204556r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -20122,7 +20121,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030780"
           },
           "refs": [],
           "source_location": {},
@@ -20208,7 +20208,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204557r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -20301,7 +20300,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030800"
           },
           "refs": [],
           "source_location": {},
@@ -20375,7 +20375,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204558r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -20460,7 +20459,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030810"
           },
           "refs": [],
           "source_location": {},
@@ -20530,7 +20530,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204559r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -20611,7 +20610,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030819"
           },
           "refs": [],
           "source_location": {},
@@ -20685,7 +20685,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204560r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -20770,7 +20769,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030820"
           },
           "refs": [],
           "source_location": {},
@@ -20844,7 +20844,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204561r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -20929,7 +20928,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030821"
           },
           "refs": [],
           "source_location": {},
@@ -21003,7 +21003,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204562r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -21088,7 +21087,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030830"
           },
           "refs": [],
           "source_location": {},
@@ -21158,7 +21158,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204563r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -21239,7 +21238,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030840"
           },
           "refs": [],
           "source_location": {},
@@ -21331,7 +21331,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204564r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -21428,7 +21427,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030870"
           },
           "refs": [],
           "source_location": {},
@@ -21520,7 +21520,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204565r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -21617,7 +21616,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030871"
           },
           "refs": [],
           "source_location": {},
@@ -21709,7 +21709,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204566r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -21806,7 +21805,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030872"
           },
           "refs": [],
           "source_location": {},
@@ -21898,7 +21898,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204567r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -21995,7 +21994,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030873"
           },
           "refs": [],
           "source_location": {},
@@ -22087,7 +22087,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204568r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -22184,7 +22183,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030874"
           },
           "refs": [],
           "source_location": {},
@@ -22264,7 +22264,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204569r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -22353,7 +22352,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030880"
           },
           "refs": [],
           "source_location": {},
@@ -22433,7 +22433,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204570r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -22522,7 +22521,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030890"
           },
           "refs": [],
           "source_location": {},
@@ -22602,7 +22602,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204571r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -22691,7 +22690,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030900"
           },
           "refs": [],
           "source_location": {},
@@ -22771,7 +22771,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204572r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -22860,7 +22859,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030910"
           },
           "refs": [],
           "source_location": {},
@@ -22940,7 +22940,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204573r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -23029,7 +23028,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-030920"
           },
           "refs": [],
           "source_location": {},
@@ -23107,7 +23107,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204576r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -23231,7 +23230,8 @@
                 "Id": "xccdf_mil.disa.stig_value_var_accounts_max_concurrent_login_sessions",
                 "id": "xccdf_mil.disa.stig_value_var_accounts_max_concurrent_login_sessions"
               }
-            ]
+            ],
+            "version": "RHEL-07-040000"
           },
           "refs": [],
           "source_location": {},
@@ -23317,7 +23317,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204578r603843_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -23410,7 +23409,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040110"
           },
           "refs": [],
           "source_location": {},
@@ -23480,7 +23480,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204584r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -23561,7 +23560,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040201"
           },
           "refs": [],
           "source_location": {},
@@ -23653,7 +23653,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204585r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -23750,7 +23749,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040300"
           },
           "refs": [],
           "source_location": {},
@@ -23834,7 +23834,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204587r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -23958,7 +23957,8 @@
                 "Id": "xccdf_mil.disa.stig_value_sshd_idle_timeout_value",
                 "id": "xccdf_mil.disa.stig_value_sshd_idle_timeout_value"
               }
-            ]
+            ],
+            "version": "RHEL-07-040320"
           },
           "refs": [],
           "source_location": {},
@@ -24032,7 +24032,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204588r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -24117,7 +24116,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040330"
           },
           "refs": [],
           "source_location": {},
@@ -24197,7 +24197,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204589r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -24286,7 +24285,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040340"
           },
           "refs": [],
           "source_location": {},
@@ -24360,7 +24360,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204590r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -24445,7 +24444,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040350"
           },
           "refs": [],
           "source_location": {},
@@ -24519,7 +24519,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204591r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -24604,7 +24603,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040360"
           },
           "refs": [],
           "source_location": {},
@@ -24678,7 +24678,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204592r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -24763,7 +24762,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040370"
           },
           "refs": [],
           "source_location": {},
@@ -24837,7 +24837,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204593r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -24922,7 +24921,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040380"
           },
           "refs": [],
           "source_location": {},
@@ -25002,7 +25002,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204594r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -25091,7 +25090,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040390"
           },
           "refs": [],
           "source_location": {},
@@ -25165,7 +25165,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204595r603846_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -25250,7 +25249,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040400"
           },
           "refs": [],
           "source_location": {},
@@ -25324,7 +25324,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204596r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -25409,7 +25408,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040410"
           },
           "refs": [],
           "source_location": {},
@@ -25483,7 +25483,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204597r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -25568,7 +25567,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040420"
           },
           "refs": [],
           "source_location": {},
@@ -25662,7 +25662,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204598r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -25759,7 +25758,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040430"
           },
           "refs": [],
           "source_location": {},
@@ -25857,7 +25857,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204599r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -25958,7 +25957,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040440"
           },
           "refs": [],
           "source_location": {},
@@ -26032,7 +26032,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204600r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -26117,7 +26116,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040450"
           },
           "refs": [],
           "source_location": {},
@@ -26191,7 +26191,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204601r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -26276,7 +26275,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040460"
           },
           "refs": [],
           "source_location": {},
@@ -26346,7 +26346,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204602r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -26427,7 +26426,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040470"
           },
           "refs": [],
           "source_location": {},
@@ -26497,7 +26497,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204605r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -26578,7 +26577,8 @@
               "severity": "low",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040530"
           },
           "refs": [],
           "source_location": {},
@@ -26648,7 +26648,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204606r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -26729,7 +26728,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040540"
           },
           "refs": [],
           "source_location": {},
@@ -26799,7 +26799,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204607r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -26880,7 +26879,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040550"
           },
           "refs": [],
           "source_location": {},
@@ -26958,7 +26958,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204609r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -27066,7 +27065,8 @@
                 "Id": "xccdf_mil.disa.stig_value_sysctl_net_ipv4_conf_all_accept_source_route_value",
                 "id": "xccdf_mil.disa.stig_value_sysctl_net_ipv4_conf_all_accept_source_route_value"
               }
-            ]
+            ],
+            "version": "RHEL-07-040610"
           },
           "refs": [],
           "source_location": {},
@@ -27144,7 +27144,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204612r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -27252,7 +27251,8 @@
                 "Id": "xccdf_mil.disa.stig_value_sysctl_net_ipv4_conf_default_accept_source_route_value",
                 "id": "xccdf_mil.disa.stig_value_sysctl_net_ipv4_conf_default_accept_source_route_value"
               }
-            ]
+            ],
+            "version": "RHEL-07-040620"
           },
           "refs": [],
           "source_location": {},
@@ -27330,7 +27330,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204613r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -27438,7 +27437,8 @@
                 "Id": "xccdf_mil.disa.stig_value_sysctl_net_ipv4_icmp_echo_ignore_broadcasts_value",
                 "id": "xccdf_mil.disa.stig_value_sysctl_net_ipv4_icmp_echo_ignore_broadcasts_value"
               }
-            ]
+            ],
+            "version": "RHEL-07-040630"
           },
           "refs": [],
           "source_location": {},
@@ -27516,7 +27516,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204614r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -27624,7 +27623,8 @@
                 "Id": "xccdf_mil.disa.stig_value_sysctl_net_ipv4_conf_default_accept_redirects_value",
                 "id": "xccdf_mil.disa.stig_value_sysctl_net_ipv4_conf_default_accept_redirects_value"
               }
-            ]
+            ],
+            "version": "RHEL-07-040640"
           },
           "refs": [],
           "source_location": {},
@@ -27702,7 +27702,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204615r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -27810,7 +27809,8 @@
                 "Id": "xccdf_mil.disa.stig_value_sysctl_net_ipv4_conf_all_accept_redirects_value",
                 "id": "xccdf_mil.disa.stig_value_sysctl_net_ipv4_conf_all_accept_redirects_value"
               }
-            ]
+            ],
+            "version": "RHEL-07-040641"
           },
           "refs": [],
           "source_location": {},
@@ -27884,7 +27884,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204616r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -27969,7 +27968,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040650"
           },
           "refs": [],
           "source_location": {},
@@ -28043,7 +28043,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204617r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -28128,7 +28127,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040660"
           },
           "refs": [],
           "source_location": {},
@@ -28198,7 +28198,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204620r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -28279,7 +28278,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040690"
           },
           "refs": [],
           "source_location": {},
@@ -28377,7 +28377,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204621r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -28478,7 +28477,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040700"
           },
           "refs": [],
           "source_location": {},
@@ -28552,7 +28552,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204622r603849_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -28637,7 +28636,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040710"
           },
           "refs": [],
           "source_location": {},
@@ -28711,7 +28711,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204624r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -28796,7 +28795,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040730"
           },
           "refs": [],
           "source_location": {},
@@ -28870,7 +28870,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204625r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -28955,7 +28954,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040740"
           },
           "refs": [],
           "source_location": {},
@@ -29029,7 +29029,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204627r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -29114,7 +29113,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-040800"
           },
           "refs": [],
           "source_location": {},
@@ -29192,7 +29192,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204630r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -29300,7 +29299,8 @@
                 "Id": "xccdf_mil.disa.stig_value_sysctl_net_ipv6_conf_all_accept_source_route_value",
                 "id": "xccdf_mil.disa.stig_value_sysctl_net_ipv6_conf_all_accept_source_route_value"
               }
-            ]
+            ],
+            "version": "RHEL-07-040830"
           },
           "refs": [],
           "source_location": {},
@@ -29382,7 +29382,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204631r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -29471,7 +29470,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-041001"
           },
           "refs": [],
           "source_location": {},
@@ -29557,7 +29557,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204632r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -29650,7 +29649,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-041002"
           },
           "refs": [],
           "source_location": {},
@@ -29732,7 +29732,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-204633r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -29821,7 +29820,8 @@
               "severity": "medium",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-041003"
           },
           "refs": [],
           "source_location": {},
@@ -29895,7 +29895,6 @@
               "type": "DPMS Target"
             },
             "selected": "",
-            "version": "xccdf_mil.disa.stig_rule_SV-214799r603261_rule",
             "weight": "10.0",
             "profiles": [
               {
@@ -29980,7 +29979,8 @@
               "severity": "high",
               "weight": "10.0"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-07-010020"
           },
           "refs": [],
           "source_location": {},
@@ -30008,7 +30008,7 @@
           ]
         }
       ],
-      "sha256": "9fa7e3e09bcaf0e237dc19f9b351cb8fc8fa37b44c7fb81dd77217dc2db5085c"
+      "sha256": "809b446adf157dca16a37c771da38e6c36eb49dbc747f01f47007af41d549293"
     }
   ],
   "passthrough": {

@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.43",
+    "release": "2.6.47",
     "target_id": "cpe:/o:redhat:enterprise_linux:8"
   },
-  "version": "2.6.43",
+  "version": "2.6.47",
   "statistics": {},
   "profiles": [
     {
@@ -57,7 +57,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230221r743913_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -126,7 +125,8 @@
               "version": "RHEL-08-010000",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010000"
           },
           "refs": [],
           "source_location": {},
@@ -188,7 +188,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230223r792855_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -257,7 +256,8 @@
               "version": "RHEL-08-010020",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010020"
           },
           "refs": [],
           "source_location": {},
@@ -319,7 +319,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230231r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -388,7 +387,8 @@
               "version": "RHEL-08-010110",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010110"
           },
           "refs": [],
           "source_location": {},
@@ -450,7 +450,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230232r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -519,7 +518,8 @@
               "version": "RHEL-08-010120",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010120"
           },
           "refs": [],
           "source_location": {},
@@ -581,7 +581,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230233r743919_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -650,7 +649,8 @@
               "version": "RHEL-08-010130",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010130"
           },
           "refs": [],
           "source_location": {},
@@ -712,7 +712,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230234r743922_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -781,7 +780,8 @@
               "version": "RHEL-08-010140",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010140"
           },
           "refs": [],
           "source_location": {},
@@ -843,7 +843,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230235r743925_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -912,7 +911,8 @@
               "version": "RHEL-08-010150",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010150"
           },
           "refs": [],
           "source_location": {},
@@ -974,7 +974,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230236r743928_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -1043,7 +1042,8 @@
               "version": "RHEL-08-010151",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010151"
           },
           "refs": [],
           "source_location": {},
@@ -1105,7 +1105,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230237r743931_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -1174,7 +1173,8 @@
               "version": "RHEL-08-010160",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010160"
           },
           "refs": [],
           "source_location": {},
@@ -1236,7 +1236,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230238r646862_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -1305,7 +1304,8 @@
               "version": "RHEL-08-010161",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010161"
           },
           "refs": [],
           "source_location": {},
@@ -1367,7 +1367,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230239r646864_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -1436,7 +1435,8 @@
               "version": "RHEL-08-010162",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010162"
           },
           "refs": [],
           "source_location": {},
@@ -1498,7 +1498,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230241r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -1567,7 +1566,8 @@
               "version": "RHEL-08-010171",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010171"
           },
           "refs": [],
           "source_location": {},
@@ -1629,7 +1629,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230244r743934_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -1698,7 +1697,8 @@
               "version": "RHEL-08-010200",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010200"
           },
           "refs": [],
           "source_location": {},
@@ -1760,7 +1760,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230245r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -1829,7 +1828,8 @@
               "version": "RHEL-08-010210",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010210"
           },
           "refs": [],
           "source_location": {},
@@ -1891,7 +1891,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230246r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -1960,7 +1959,8 @@
               "version": "RHEL-08-010220",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010220"
           },
           "refs": [],
           "source_location": {},
@@ -2022,7 +2022,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230247r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -2091,7 +2090,8 @@
               "version": "RHEL-08-010230",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010230"
           },
           "refs": [],
           "source_location": {},
@@ -2153,7 +2153,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230248r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -2222,7 +2221,8 @@
               "version": "RHEL-08-010240",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010240"
           },
           "refs": [],
           "source_location": {},
@@ -2284,7 +2284,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230249r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -2353,7 +2352,8 @@
               "version": "RHEL-08-010250",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010250"
           },
           "refs": [],
           "source_location": {},
@@ -2415,7 +2415,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230250r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -2484,7 +2483,8 @@
               "version": "RHEL-08-010260",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010260"
           },
           "refs": [],
           "source_location": {},
@@ -2546,7 +2546,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230253r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -2615,7 +2614,8 @@
               "version": "RHEL-08-010292",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010292"
           },
           "refs": [],
           "source_location": {},
@@ -2677,7 +2677,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230255r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -2746,7 +2745,8 @@
               "version": "RHEL-08-010294",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010294"
           },
           "refs": [],
           "source_location": {},
@@ -2808,7 +2808,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230257r792862_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -2877,7 +2876,8 @@
               "version": "RHEL-08-010300",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010300"
           },
           "refs": [],
           "source_location": {},
@@ -2939,7 +2939,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230258r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -3008,7 +3007,8 @@
               "version": "RHEL-08-010310",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010310"
           },
           "refs": [],
           "source_location": {},
@@ -3070,7 +3070,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230259r792864_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -3139,7 +3138,8 @@
               "version": "RHEL-08-010320",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010320"
           },
           "refs": [],
           "source_location": {},
@@ -3201,7 +3201,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230264r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -3270,7 +3269,8 @@
               "version": "RHEL-08-010370",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010370"
           },
           "refs": [],
           "source_location": {},
@@ -3332,7 +3332,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230265r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -3401,7 +3400,8 @@
               "version": "RHEL-08-010371",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010371"
           },
           "refs": [],
           "source_location": {},
@@ -3463,7 +3463,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230266r792870_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -3532,7 +3531,8 @@
               "version": "RHEL-08-010372",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010372"
           },
           "refs": [],
           "source_location": {},
@@ -3594,7 +3594,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230267r792873_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -3663,7 +3662,8 @@
               "version": "RHEL-08-010373",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010373"
           },
           "refs": [],
           "source_location": {},
@@ -3725,7 +3725,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230268r792876_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -3794,7 +3793,8 @@
               "version": "RHEL-08-010374",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010374"
           },
           "refs": [],
           "source_location": {},
@@ -3856,7 +3856,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230269r792879_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -3925,7 +3924,8 @@
               "version": "RHEL-08-010375",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010375"
           },
           "refs": [],
           "source_location": {},
@@ -3987,7 +3987,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230270r792882_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -4056,7 +4055,8 @@
               "version": "RHEL-08-010376",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010376"
           },
           "refs": [],
           "source_location": {},
@@ -4118,7 +4118,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230271r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -4187,7 +4186,8 @@
               "version": "RHEL-08-010380",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010380"
           },
           "refs": [],
           "source_location": {},
@@ -4249,7 +4249,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230272r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -4318,7 +4317,8 @@
               "version": "RHEL-08-010381",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010381"
           },
           "refs": [],
           "source_location": {},
@@ -4380,7 +4380,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230273r743943_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -4449,7 +4448,8 @@
               "version": "RHEL-08-010390",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010390"
           },
           "refs": [],
           "source_location": {},
@@ -4511,7 +4511,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230281r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -4580,7 +4579,8 @@
               "version": "RHEL-08-010440",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010440"
           },
           "refs": [],
           "source_location": {},
@@ -4642,7 +4642,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230282r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -4711,7 +4710,8 @@
               "version": "RHEL-08-010450",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010450"
           },
           "refs": [],
           "source_location": {},
@@ -4773,7 +4773,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230283r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -4842,7 +4841,8 @@
               "version": "RHEL-08-010460",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010460"
           },
           "refs": [],
           "source_location": {},
@@ -4904,7 +4904,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230284r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -4973,7 +4972,8 @@
               "version": "RHEL-08-010470",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010470"
           },
           "refs": [],
           "source_location": {},
@@ -5035,7 +5035,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230286r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -5104,7 +5103,8 @@
               "version": "RHEL-08-010480",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010480"
           },
           "refs": [],
           "source_location": {},
@@ -5166,7 +5166,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230287r743951_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -5235,7 +5234,8 @@
               "version": "RHEL-08-010490",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010490"
           },
           "refs": [],
           "source_location": {},
@@ -5297,7 +5297,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230288r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -5366,7 +5365,8 @@
               "version": "RHEL-08-010500",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010500"
           },
           "refs": [],
           "source_location": {},
@@ -5428,7 +5428,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230289r743954_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -5497,7 +5496,8 @@
               "version": "RHEL-08-010510",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010510"
           },
           "refs": [],
           "source_location": {},
@@ -5559,7 +5559,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230290r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -5628,7 +5627,8 @@
               "version": "RHEL-08-010520",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010520"
           },
           "refs": [],
           "source_location": {},
@@ -5690,7 +5690,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230291r743957_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -5759,7 +5758,8 @@
               "version": "RHEL-08-010521",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010521"
           },
           "refs": [],
           "source_location": {},
@@ -5821,7 +5821,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230292r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -5890,7 +5889,8 @@
               "version": "RHEL-08-010540",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010540"
           },
           "refs": [],
           "source_location": {},
@@ -5952,7 +5952,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230293r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -6021,7 +6020,8 @@
               "version": "RHEL-08-010541",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010541"
           },
           "refs": [],
           "source_location": {},
@@ -6083,7 +6083,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230294r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -6152,7 +6151,8 @@
               "version": "RHEL-08-010542",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010542"
           },
           "refs": [],
           "source_location": {},
@@ -6214,7 +6214,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230295r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -6283,7 +6282,8 @@
               "version": "RHEL-08-010543",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010543"
           },
           "refs": [],
           "source_location": {},
@@ -6345,7 +6345,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230296r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -6414,7 +6413,8 @@
               "version": "RHEL-08-010550",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010550"
           },
           "refs": [],
           "source_location": {},
@@ -6476,7 +6476,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230297r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -6545,7 +6544,8 @@
               "version": "RHEL-08-010560",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010560"
           },
           "refs": [],
           "source_location": {},
@@ -6607,7 +6607,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230298r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -6676,7 +6675,8 @@
               "version": "RHEL-08-010561",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010561"
           },
           "refs": [],
           "source_location": {},
@@ -6738,7 +6738,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230300r743959_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -6807,7 +6806,8 @@
               "version": "RHEL-08-010571",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010571"
           },
           "refs": [],
           "source_location": {},
@@ -6869,7 +6869,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230301r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -6938,7 +6937,8 @@
               "version": "RHEL-08-010580",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010580"
           },
           "refs": [],
           "source_location": {},
@@ -7000,7 +7000,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230306r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -7069,7 +7068,8 @@
               "version": "RHEL-08-010630",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010630"
           },
           "refs": [],
           "source_location": {},
@@ -7131,7 +7131,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230307r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -7200,7 +7199,8 @@
               "version": "RHEL-08-010640",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010640"
           },
           "refs": [],
           "source_location": {},
@@ -7262,7 +7262,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230308r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -7331,7 +7330,8 @@
               "version": "RHEL-08-010650",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010650"
           },
           "refs": [],
           "source_location": {},
@@ -7393,7 +7393,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230311r792894_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -7462,7 +7461,8 @@
               "version": "RHEL-08-010671",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010671"
           },
           "refs": [],
           "source_location": {},
@@ -7524,7 +7524,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230313r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -7593,7 +7592,8 @@
               "version": "RHEL-08-010673",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010673"
           },
           "refs": [],
           "source_location": {},
@@ -7655,7 +7655,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230314r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -7724,7 +7723,8 @@
               "version": "RHEL-08-010674",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010674"
           },
           "refs": [],
           "source_location": {},
@@ -7786,7 +7786,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230315r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -7855,7 +7854,8 @@
               "version": "RHEL-08-010675",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010675"
           },
           "refs": [],
           "source_location": {},
@@ -7917,7 +7917,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230324r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -7986,7 +7985,8 @@
               "version": "RHEL-08-010760",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010760"
           },
           "refs": [],
           "source_location": {},
@@ -8048,7 +8048,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230330r646870_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -8117,7 +8116,8 @@
               "version": "RHEL-08-010830",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010830"
           },
           "refs": [],
           "source_location": {},
@@ -8179,7 +8179,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230332r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -8248,7 +8247,8 @@
               "version": "RHEL-08-020010",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020010"
           },
           "refs": [],
           "source_location": {},
@@ -8310,7 +8310,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230333r743966_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -8379,7 +8378,8 @@
               "version": "RHEL-08-020011",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020011"
           },
           "refs": [],
           "source_location": {},
@@ -8441,7 +8441,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230334r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -8510,7 +8509,8 @@
               "version": "RHEL-08-020012",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020012"
           },
           "refs": [],
           "source_location": {},
@@ -8572,7 +8572,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230335r743969_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -8641,7 +8640,8 @@
               "version": "RHEL-08-020013",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020013"
           },
           "refs": [],
           "source_location": {},
@@ -8703,7 +8703,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230336r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -8772,7 +8771,8 @@
               "version": "RHEL-08-020014",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020014"
           },
           "refs": [],
           "source_location": {},
@@ -8834,7 +8834,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230337r743972_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -8903,7 +8902,8 @@
               "version": "RHEL-08-020015",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020015"
           },
           "refs": [],
           "source_location": {},
@@ -8965,7 +8965,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230340r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -9034,7 +9033,8 @@
               "version": "RHEL-08-020018",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020018"
           },
           "refs": [],
           "source_location": {},
@@ -9096,7 +9096,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230341r743978_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -9165,7 +9164,8 @@
               "version": "RHEL-08-020019",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020019"
           },
           "refs": [],
           "source_location": {},
@@ -9227,7 +9227,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230342r646872_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -9296,7 +9295,8 @@
               "version": "RHEL-08-020020",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020020"
           },
           "refs": [],
           "source_location": {},
@@ -9358,7 +9358,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230343r743981_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -9427,7 +9426,8 @@
               "version": "RHEL-08-020021",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020021"
           },
           "refs": [],
           "source_location": {},
@@ -9489,7 +9489,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230344r646874_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -9558,7 +9557,8 @@
               "version": "RHEL-08-020022",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020022"
           },
           "refs": [],
           "source_location": {},
@@ -9620,7 +9620,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230345r743984_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -9689,7 +9688,8 @@
               "version": "RHEL-08-020023",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020023"
           },
           "refs": [],
           "source_location": {},
@@ -9751,7 +9751,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230346r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -9820,7 +9819,8 @@
               "version": "RHEL-08-020024",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020024"
           },
           "refs": [],
           "source_location": {},
@@ -9882,7 +9882,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230348r743987_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -9951,7 +9950,8 @@
               "version": "RHEL-08-020040",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020040"
           },
           "refs": [],
           "source_location": {},
@@ -10013,7 +10013,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230349r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -10082,7 +10081,8 @@
               "version": "RHEL-08-020041",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020041"
           },
           "refs": [],
           "source_location": {},
@@ -10144,7 +10144,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230350r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -10213,7 +10212,8 @@
               "version": "RHEL-08-020042",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020042"
           },
           "refs": [],
           "source_location": {},
@@ -10275,7 +10275,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230356r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -10344,7 +10343,8 @@
               "version": "RHEL-08-020100",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020100"
           },
           "refs": [],
           "source_location": {},
@@ -10406,7 +10406,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230357r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -10475,7 +10474,8 @@
               "version": "RHEL-08-020110",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020110"
           },
           "refs": [],
           "source_location": {},
@@ -10537,7 +10537,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230358r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -10606,7 +10605,8 @@
               "version": "RHEL-08-020120",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020120"
           },
           "refs": [],
           "source_location": {},
@@ -10668,7 +10668,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230359r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -10737,7 +10736,8 @@
               "version": "RHEL-08-020130",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020130"
           },
           "refs": [],
           "source_location": {},
@@ -10799,7 +10799,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230360r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -10868,7 +10867,8 @@
               "version": "RHEL-08-020140",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020140"
           },
           "refs": [],
           "source_location": {},
@@ -10930,7 +10930,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230361r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -10999,7 +10998,8 @@
               "version": "RHEL-08-020150",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020150"
           },
           "refs": [],
           "source_location": {},
@@ -11061,7 +11061,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230362r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -11130,7 +11129,8 @@
               "version": "RHEL-08-020160",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020160"
           },
           "refs": [],
           "source_location": {},
@@ -11192,7 +11192,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230363r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -11261,7 +11260,8 @@
               "version": "RHEL-08-020170",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020170"
           },
           "refs": [],
           "source_location": {},
@@ -11323,7 +11323,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230364r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -11392,7 +11391,8 @@
               "version": "RHEL-08-020180",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020180"
           },
           "refs": [],
           "source_location": {},
@@ -11454,7 +11454,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230365r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -11523,7 +11522,8 @@
               "version": "RHEL-08-020190",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020190"
           },
           "refs": [],
           "source_location": {},
@@ -11585,7 +11585,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230366r646878_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -11654,7 +11653,8 @@
               "version": "RHEL-08-020200",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020200"
           },
           "refs": [],
           "source_location": {},
@@ -11716,7 +11716,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230367r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -11785,7 +11784,8 @@
               "version": "RHEL-08-020210",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020210"
           },
           "refs": [],
           "source_location": {},
@@ -11847,7 +11847,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230368r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -11916,7 +11915,8 @@
               "version": "RHEL-08-020220",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020220"
           },
           "refs": [],
           "source_location": {},
@@ -11978,7 +11978,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230369r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -12047,7 +12046,8 @@
               "version": "RHEL-08-020230",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020230"
           },
           "refs": [],
           "source_location": {},
@@ -12109,7 +12109,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230370r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -12178,7 +12177,8 @@
               "version": "RHEL-08-020231",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020231"
           },
           "refs": [],
           "source_location": {},
@@ -12240,7 +12240,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230373r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -12309,7 +12308,8 @@
               "version": "RHEL-08-020260",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020260"
           },
           "refs": [],
           "source_location": {},
@@ -12371,7 +12371,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230375r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -12440,7 +12439,8 @@
               "version": "RHEL-08-020280",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020280"
           },
           "refs": [],
           "source_location": {},
@@ -12502,7 +12502,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230377r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -12571,7 +12570,8 @@
               "version": "RHEL-08-020300",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020300"
           },
           "refs": [],
           "source_location": {},
@@ -12633,7 +12633,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230378r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -12702,7 +12701,8 @@
               "version": "RHEL-08-020310",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020310"
           },
           "refs": [],
           "source_location": {},
@@ -12764,7 +12764,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230380r743993_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -12833,7 +12832,8 @@
               "version": "RHEL-08-020330",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020330"
           },
           "refs": [],
           "source_location": {},
@@ -12895,7 +12895,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230382r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -12964,7 +12963,8 @@
               "version": "RHEL-08-020350",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020350"
           },
           "refs": [],
           "source_location": {},
@@ -13026,7 +13026,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230383r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -13095,7 +13094,8 @@
               "version": "RHEL-08-020351",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-020351"
           },
           "refs": [],
           "source_location": {},
@@ -13157,7 +13157,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230386r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -13226,7 +13225,8 @@
               "version": "RHEL-08-030000",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030000"
           },
           "refs": [],
           "source_location": {},
@@ -13288,7 +13288,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230388r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -13357,7 +13356,8 @@
               "version": "RHEL-08-030020",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030020"
           },
           "refs": [],
           "source_location": {},
@@ -13419,7 +13419,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230390r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -13488,7 +13487,8 @@
               "version": "RHEL-08-030040",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030040"
           },
           "refs": [],
           "source_location": {},
@@ -13550,7 +13550,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230391r743998_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -13619,7 +13618,8 @@
               "version": "RHEL-08-030050",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030050"
           },
           "refs": [],
           "source_location": {},
@@ -13681,7 +13681,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230392r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -13750,7 +13749,8 @@
               "version": "RHEL-08-030060",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030060"
           },
           "refs": [],
           "source_location": {},
@@ -13812,7 +13812,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230393r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -13881,7 +13880,8 @@
               "version": "RHEL-08-030061",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030061"
           },
           "refs": [],
           "source_location": {},
@@ -13943,7 +13943,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230394r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -14012,7 +14011,8 @@
               "version": "RHEL-08-030062",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030062"
           },
           "refs": [],
           "source_location": {},
@@ -14074,7 +14074,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230395r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -14143,7 +14142,8 @@
               "version": "RHEL-08-030063",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030063"
           },
           "refs": [],
           "source_location": {},
@@ -14205,7 +14205,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230396r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -14274,7 +14273,8 @@
               "version": "RHEL-08-030070",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030070"
           },
           "refs": [],
           "source_location": {},
@@ -14336,7 +14336,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230397r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -14405,7 +14404,8 @@
               "version": "RHEL-08-030080",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030080"
           },
           "refs": [],
           "source_location": {},
@@ -14467,7 +14467,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230398r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -14536,7 +14535,8 @@
               "version": "RHEL-08-030090",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030090"
           },
           "refs": [],
           "source_location": {},
@@ -14598,7 +14598,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230399r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -14667,7 +14666,8 @@
               "version": "RHEL-08-030100",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030100"
           },
           "refs": [],
           "source_location": {},
@@ -14729,7 +14729,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230400r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -14798,7 +14797,8 @@
               "version": "RHEL-08-030110",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030110"
           },
           "refs": [],
           "source_location": {},
@@ -14860,7 +14860,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230401r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -14929,7 +14928,8 @@
               "version": "RHEL-08-030120",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030120"
           },
           "refs": [],
           "source_location": {},
@@ -14991,7 +14991,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230402r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -15060,7 +15059,8 @@
               "version": "RHEL-08-030121",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030121"
           },
           "refs": [],
           "source_location": {},
@@ -15122,7 +15122,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230403r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -15191,7 +15190,8 @@
               "version": "RHEL-08-030122",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030122"
           },
           "refs": [],
           "source_location": {},
@@ -15253,7 +15253,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230404r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -15322,7 +15321,8 @@
               "version": "RHEL-08-030130",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030130"
           },
           "refs": [],
           "source_location": {},
@@ -15384,7 +15384,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230405r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -15453,7 +15452,8 @@
               "version": "RHEL-08-030140",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030140"
           },
           "refs": [],
           "source_location": {},
@@ -15515,7 +15515,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230406r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -15584,7 +15583,8 @@
               "version": "RHEL-08-030150",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030150"
           },
           "refs": [],
           "source_location": {},
@@ -15646,7 +15646,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230407r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -15715,7 +15714,8 @@
               "version": "RHEL-08-030160",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030160"
           },
           "refs": [],
           "source_location": {},
@@ -15777,7 +15777,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230408r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -15846,7 +15845,8 @@
               "version": "RHEL-08-030170",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030170"
           },
           "refs": [],
           "source_location": {},
@@ -15908,7 +15908,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230409r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -15977,7 +15976,8 @@
               "version": "RHEL-08-030171",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030171"
           },
           "refs": [],
           "source_location": {},
@@ -16039,7 +16039,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230410r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -16108,7 +16107,8 @@
               "version": "RHEL-08-030172",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030172"
           },
           "refs": [],
           "source_location": {},
@@ -16170,7 +16170,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230411r744000_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -16239,7 +16238,8 @@
               "version": "RHEL-08-030180",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030180"
           },
           "refs": [],
           "source_location": {},
@@ -16301,7 +16301,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230412r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -16370,7 +16369,8 @@
               "version": "RHEL-08-030190",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030190"
           },
           "refs": [],
           "source_location": {},
@@ -16432,7 +16432,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230413r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -16501,7 +16500,8 @@
               "version": "RHEL-08-030200",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030200"
           },
           "refs": [],
           "source_location": {},
@@ -16563,7 +16563,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230414r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -16632,7 +16631,8 @@
               "version": "RHEL-08-030210",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030210"
           },
           "refs": [],
           "source_location": {},
@@ -16694,7 +16694,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230415r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -16763,7 +16762,8 @@
               "version": "RHEL-08-030220",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030220"
           },
           "refs": [],
           "source_location": {},
@@ -16825,7 +16825,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230416r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -16894,7 +16893,8 @@
               "version": "RHEL-08-030230",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030230"
           },
           "refs": [],
           "source_location": {},
@@ -16956,7 +16956,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230417r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -17025,7 +17024,8 @@
               "version": "RHEL-08-030240",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030240"
           },
           "refs": [],
           "source_location": {},
@@ -17087,7 +17087,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230418r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -17156,7 +17155,8 @@
               "version": "RHEL-08-030250",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030250"
           },
           "refs": [],
           "source_location": {},
@@ -17218,7 +17218,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230419r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -17287,7 +17286,8 @@
               "version": "RHEL-08-030260",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030260"
           },
           "refs": [],
           "source_location": {},
@@ -17349,7 +17349,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230420r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -17418,7 +17417,8 @@
               "version": "RHEL-08-030270",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030270"
           },
           "refs": [],
           "source_location": {},
@@ -17480,7 +17480,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230421r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -17549,7 +17548,8 @@
               "version": "RHEL-08-030280",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030280"
           },
           "refs": [],
           "source_location": {},
@@ -17611,7 +17611,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230422r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -17680,7 +17679,8 @@
               "version": "RHEL-08-030290",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030290"
           },
           "refs": [],
           "source_location": {},
@@ -17742,7 +17742,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230423r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -17811,7 +17810,8 @@
               "version": "RHEL-08-030300",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030300"
           },
           "refs": [],
           "source_location": {},
@@ -17873,7 +17873,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230424r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -17942,7 +17941,8 @@
               "version": "RHEL-08-030301",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030301"
           },
           "refs": [],
           "source_location": {},
@@ -18004,7 +18004,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230425r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -18073,7 +18072,8 @@
               "version": "RHEL-08-030302",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030302"
           },
           "refs": [],
           "source_location": {},
@@ -18135,7 +18135,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230426r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -18204,7 +18203,8 @@
               "version": "RHEL-08-030310",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030310"
           },
           "refs": [],
           "source_location": {},
@@ -18266,7 +18266,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230427r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -18335,7 +18334,8 @@
               "version": "RHEL-08-030311",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030311"
           },
           "refs": [],
           "source_location": {},
@@ -18397,7 +18397,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230428r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -18466,7 +18465,8 @@
               "version": "RHEL-08-030312",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030312"
           },
           "refs": [],
           "source_location": {},
@@ -18528,7 +18528,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230429r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -18597,7 +18596,8 @@
               "version": "RHEL-08-030313",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030313"
           },
           "refs": [],
           "source_location": {},
@@ -18659,7 +18659,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230430r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -18728,7 +18727,8 @@
               "version": "RHEL-08-030314",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030314"
           },
           "refs": [],
           "source_location": {},
@@ -18790,7 +18790,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230431r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -18859,7 +18858,8 @@
               "version": "RHEL-08-030315",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030315"
           },
           "refs": [],
           "source_location": {},
@@ -18921,7 +18921,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230432r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -18990,7 +18989,8 @@
               "version": "RHEL-08-030316",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030316"
           },
           "refs": [],
           "source_location": {},
@@ -19052,7 +19052,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230433r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -19121,7 +19120,8 @@
               "version": "RHEL-08-030317",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030317"
           },
           "refs": [],
           "source_location": {},
@@ -19183,7 +19183,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230434r744002_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -19252,7 +19251,8 @@
               "version": "RHEL-08-030320",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030320"
           },
           "refs": [],
           "source_location": {},
@@ -19314,7 +19314,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230435r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -19383,7 +19382,8 @@
               "version": "RHEL-08-030330",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030330"
           },
           "refs": [],
           "source_location": {},
@@ -19445,7 +19445,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230436r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -19514,7 +19513,8 @@
               "version": "RHEL-08-030340",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030340"
           },
           "refs": [],
           "source_location": {},
@@ -19576,7 +19576,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230437r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -19645,7 +19644,8 @@
               "version": "RHEL-08-030350",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030350"
           },
           "refs": [],
           "source_location": {},
@@ -19707,7 +19707,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230438r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -19776,7 +19775,8 @@
               "version": "RHEL-08-030360",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030360"
           },
           "refs": [],
           "source_location": {},
@@ -19838,7 +19838,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230439r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -19907,7 +19906,8 @@
               "version": "RHEL-08-030361",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030361"
           },
           "refs": [],
           "source_location": {},
@@ -19969,7 +19969,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230440r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -20038,7 +20037,8 @@
               "version": "RHEL-08-030362",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030362"
           },
           "refs": [],
           "source_location": {},
@@ -20100,7 +20100,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230441r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -20169,7 +20168,8 @@
               "version": "RHEL-08-030363",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030363"
           },
           "refs": [],
           "source_location": {},
@@ -20231,7 +20231,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230442r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -20300,7 +20299,8 @@
               "version": "RHEL-08-030364",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030364"
           },
           "refs": [],
           "source_location": {},
@@ -20362,7 +20362,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230443r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -20431,7 +20430,8 @@
               "version": "RHEL-08-030365",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030365"
           },
           "refs": [],
           "source_location": {},
@@ -20493,7 +20493,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230444r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -20562,7 +20561,8 @@
               "version": "RHEL-08-030370",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030370"
           },
           "refs": [],
           "source_location": {},
@@ -20624,7 +20624,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230445r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -20693,7 +20692,8 @@
               "version": "RHEL-08-030380",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030380"
           },
           "refs": [],
           "source_location": {},
@@ -20755,7 +20755,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230446r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -20824,7 +20823,8 @@
               "version": "RHEL-08-030390",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030390"
           },
           "refs": [],
           "source_location": {},
@@ -20886,7 +20886,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230447r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -20955,7 +20954,8 @@
               "version": "RHEL-08-030400",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030400"
           },
           "refs": [],
           "source_location": {},
@@ -21017,7 +21017,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230448r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -21086,7 +21085,8 @@
               "version": "RHEL-08-030410",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030410"
           },
           "refs": [],
           "source_location": {},
@@ -21148,7 +21148,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230449r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -21217,7 +21216,8 @@
               "version": "RHEL-08-030420",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030420"
           },
           "refs": [],
           "source_location": {},
@@ -21279,7 +21279,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230450r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -21348,7 +21347,8 @@
               "version": "RHEL-08-030430",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030430"
           },
           "refs": [],
           "source_location": {},
@@ -21410,7 +21410,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230451r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -21479,7 +21478,8 @@
               "version": "RHEL-08-030440",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030440"
           },
           "refs": [],
           "source_location": {},
@@ -21541,7 +21541,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230452r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -21610,7 +21609,8 @@
               "version": "RHEL-08-030450",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030450"
           },
           "refs": [],
           "source_location": {},
@@ -21672,7 +21672,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230453r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -21741,7 +21740,8 @@
               "version": "RHEL-08-030460",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030460"
           },
           "refs": [],
           "source_location": {},
@@ -21803,7 +21803,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230454r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -21872,7 +21871,8 @@
               "version": "RHEL-08-030470",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030470"
           },
           "refs": [],
           "source_location": {},
@@ -21934,7 +21934,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230455r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -22003,7 +22002,8 @@
               "version": "RHEL-08-030480",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030480"
           },
           "refs": [],
           "source_location": {},
@@ -22065,7 +22065,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230456r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -22134,7 +22133,8 @@
               "version": "RHEL-08-030490",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030490"
           },
           "refs": [],
           "source_location": {},
@@ -22196,7 +22196,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230457r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -22265,7 +22264,8 @@
               "version": "RHEL-08-030500",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030500"
           },
           "refs": [],
           "source_location": {},
@@ -22327,7 +22327,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230458r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -22396,7 +22395,8 @@
               "version": "RHEL-08-030510",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030510"
           },
           "refs": [],
           "source_location": {},
@@ -22458,7 +22458,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230459r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -22527,7 +22526,8 @@
               "version": "RHEL-08-030520",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030520"
           },
           "refs": [],
           "source_location": {},
@@ -22589,7 +22589,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230460r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -22658,7 +22657,8 @@
               "version": "RHEL-08-030530",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030530"
           },
           "refs": [],
           "source_location": {},
@@ -22720,7 +22720,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230461r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -22789,7 +22788,8 @@
               "version": "RHEL-08-030540",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030540"
           },
           "refs": [],
           "source_location": {},
@@ -22851,7 +22851,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230462r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -22920,7 +22919,8 @@
               "version": "RHEL-08-030550",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030550"
           },
           "refs": [],
           "source_location": {},
@@ -22982,7 +22982,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230463r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -23051,7 +23050,8 @@
               "version": "RHEL-08-030560",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030560"
           },
           "refs": [],
           "source_location": {},
@@ -23113,7 +23113,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230464r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -23182,7 +23181,8 @@
               "version": "RHEL-08-030570",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030570"
           },
           "refs": [],
           "source_location": {},
@@ -23244,7 +23244,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230465r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -23313,7 +23312,8 @@
               "version": "RHEL-08-030580",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030580"
           },
           "refs": [],
           "source_location": {},
@@ -23375,7 +23375,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230467r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -23444,7 +23443,8 @@
               "version": "RHEL-08-030600",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030600"
           },
           "refs": [],
           "source_location": {},
@@ -23506,7 +23506,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230471r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -23575,7 +23574,8 @@
               "version": "RHEL-08-030610",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030610"
           },
           "refs": [],
           "source_location": {},
@@ -23637,7 +23637,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230472r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -23706,7 +23705,8 @@
               "version": "RHEL-08-030620",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030620"
           },
           "refs": [],
           "source_location": {},
@@ -23768,7 +23768,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230473r744008_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -23837,7 +23836,8 @@
               "version": "RHEL-08-030630",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030630"
           },
           "refs": [],
           "source_location": {},
@@ -23899,7 +23899,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230474r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -23968,7 +23967,8 @@
               "version": "RHEL-08-030640",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030640"
           },
           "refs": [],
           "source_location": {},
@@ -24030,7 +24030,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230477r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -24099,7 +24098,8 @@
               "version": "RHEL-08-030670",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030670"
           },
           "refs": [],
           "source_location": {},
@@ -24161,7 +24161,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230478r744011_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -24230,7 +24229,8 @@
               "version": "RHEL-08-030680",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030680"
           },
           "refs": [],
           "source_location": {},
@@ -24292,7 +24292,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230480r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -24361,7 +24360,8 @@
               "version": "RHEL-08-030700",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030700"
           },
           "refs": [],
           "source_location": {},
@@ -24423,7 +24423,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230483r744014_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -24492,7 +24491,8 @@
               "version": "RHEL-08-030730",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030730"
           },
           "refs": [],
           "source_location": {},
@@ -24554,7 +24554,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230485r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -24623,7 +24622,8 @@
               "version": "RHEL-08-030741",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030741"
           },
           "refs": [],
           "source_location": {},
@@ -24685,7 +24685,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230486r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -24754,7 +24753,8 @@
               "version": "RHEL-08-030742",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-030742"
           },
           "refs": [],
           "source_location": {},
@@ -24816,7 +24816,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230487r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -24885,7 +24884,8 @@
               "version": "RHEL-08-040000",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040000"
           },
           "refs": [],
           "source_location": {},
@@ -24947,7 +24947,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230488r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -25016,7 +25015,8 @@
               "version": "RHEL-08-040001",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040001"
           },
           "refs": [],
           "source_location": {},
@@ -25078,7 +25078,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230489r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -25147,7 +25146,8 @@
               "version": "RHEL-08-040002",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040002"
           },
           "refs": [],
           "source_location": {},
@@ -25209,7 +25209,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230492r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -25278,7 +25277,8 @@
               "version": "RHEL-08-040010",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040010"
           },
           "refs": [],
           "source_location": {},
@@ -25340,7 +25340,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230494r792911_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -25409,7 +25408,8 @@
               "version": "RHEL-08-040021",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040021"
           },
           "refs": [],
           "source_location": {},
@@ -25471,7 +25471,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230495r792914_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -25540,7 +25539,8 @@
               "version": "RHEL-08-040022",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040022"
           },
           "refs": [],
           "source_location": {},
@@ -25602,7 +25602,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230496r792917_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -25671,7 +25670,8 @@
               "version": "RHEL-08-040023",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040023"
           },
           "refs": [],
           "source_location": {},
@@ -25733,7 +25733,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230497r792920_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -25802,7 +25801,8 @@
               "version": "RHEL-08-040024",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040024"
           },
           "refs": [],
           "source_location": {},
@@ -25864,7 +25864,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230498r792922_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -25933,7 +25932,8 @@
               "version": "RHEL-08-040025",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040025"
           },
           "refs": [],
           "source_location": {},
@@ -25995,7 +25995,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230499r792924_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -26064,7 +26063,8 @@
               "version": "RHEL-08-040026",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040026"
           },
           "refs": [],
           "source_location": {},
@@ -26126,7 +26126,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230503r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -26195,7 +26194,8 @@
               "version": "RHEL-08-040080",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040080"
           },
           "refs": [],
           "source_location": {},
@@ -26257,7 +26257,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230507r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -26326,7 +26325,8 @@
               "version": "RHEL-08-040111",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040111"
           },
           "refs": [],
           "source_location": {},
@@ -26388,7 +26388,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230508r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -26457,7 +26456,8 @@
               "version": "RHEL-08-040120",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040120"
           },
           "refs": [],
           "source_location": {},
@@ -26519,7 +26519,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230509r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -26588,7 +26587,8 @@
               "version": "RHEL-08-040121",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040121"
           },
           "refs": [],
           "source_location": {},
@@ -26650,7 +26650,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230510r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -26719,7 +26718,8 @@
               "version": "RHEL-08-040122",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040122"
           },
           "refs": [],
           "source_location": {},
@@ -26781,7 +26781,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230511r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -26850,7 +26849,8 @@
               "version": "RHEL-08-040123",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040123"
           },
           "refs": [],
           "source_location": {},
@@ -26912,7 +26912,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230512r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -26981,7 +26980,8 @@
               "version": "RHEL-08-040124",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040124"
           },
           "refs": [],
           "source_location": {},
@@ -27043,7 +27043,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230513r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -27112,7 +27111,8 @@
               "version": "RHEL-08-040125",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040125"
           },
           "refs": [],
           "source_location": {},
@@ -27174,7 +27174,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230514r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -27243,7 +27242,8 @@
               "version": "RHEL-08-040126",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040126"
           },
           "refs": [],
           "source_location": {},
@@ -27305,7 +27305,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230515r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -27374,7 +27373,8 @@
               "version": "RHEL-08-040127",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040127"
           },
           "refs": [],
           "source_location": {},
@@ -27436,7 +27436,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230516r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -27505,7 +27504,8 @@
               "version": "RHEL-08-040128",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040128"
           },
           "refs": [],
           "source_location": {},
@@ -27567,7 +27567,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230517r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -27636,7 +27635,8 @@
               "version": "RHEL-08-040129",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040129"
           },
           "refs": [],
           "source_location": {},
@@ -27698,7 +27698,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230518r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -27767,7 +27766,8 @@
               "version": "RHEL-08-040130",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040130"
           },
           "refs": [],
           "source_location": {},
@@ -27829,7 +27829,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230519r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -27898,7 +27897,8 @@
               "version": "RHEL-08-040131",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040131"
           },
           "refs": [],
           "source_location": {},
@@ -27960,7 +27960,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230520r792927_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -28029,7 +28028,8 @@
               "version": "RHEL-08-040132",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040132"
           },
           "refs": [],
           "source_location": {},
@@ -28091,7 +28091,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230521r792930_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -28160,7 +28159,8 @@
               "version": "RHEL-08-040133",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040133"
           },
           "refs": [],
           "source_location": {},
@@ -28222,7 +28222,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230522r792933_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -28291,7 +28290,8 @@
               "version": "RHEL-08-040134",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040134"
           },
           "refs": [],
           "source_location": {},
@@ -28353,7 +28353,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230526r744032_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -28422,7 +28421,8 @@
               "version": "RHEL-08-040160",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040160"
           },
           "refs": [],
           "source_location": {},
@@ -28484,7 +28484,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230527r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -28553,7 +28552,8 @@
               "version": "RHEL-08-040161",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040161"
           },
           "refs": [],
           "source_location": {},
@@ -28615,7 +28615,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230531r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -28684,7 +28683,8 @@
               "version": "RHEL-08-040172",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040172"
           },
           "refs": [],
           "source_location": {},
@@ -28746,7 +28746,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230533r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -28815,7 +28814,8 @@
               "version": "RHEL-08-040190",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040190"
           },
           "refs": [],
           "source_location": {},
@@ -28877,7 +28877,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230534r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -28946,7 +28945,8 @@
               "version": "RHEL-08-040200",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040200"
           },
           "refs": [],
           "source_location": {},
@@ -29008,7 +29008,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230535r792936_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -29077,7 +29076,8 @@
               "version": "RHEL-08-040210",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040210"
           },
           "refs": [],
           "source_location": {},
@@ -29139,7 +29139,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230536r792939_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -29208,7 +29207,8 @@
               "version": "RHEL-08-040220",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040220"
           },
           "refs": [],
           "source_location": {},
@@ -29270,7 +29270,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230537r792942_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -29339,7 +29338,8 @@
               "version": "RHEL-08-040230",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040230"
           },
           "refs": [],
           "source_location": {},
@@ -29401,7 +29401,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230538r792945_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -29470,7 +29469,8 @@
               "version": "RHEL-08-040240",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040240"
           },
           "refs": [],
           "source_location": {},
@@ -29532,7 +29532,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230539r792948_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -29601,7 +29600,8 @@
               "version": "RHEL-08-040250",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040250"
           },
           "refs": [],
           "source_location": {},
@@ -29663,7 +29663,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230540r792951_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -29732,7 +29731,8 @@
               "version": "RHEL-08-040260",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040260"
           },
           "refs": [],
           "source_location": {},
@@ -29794,7 +29794,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230541r792954_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -29863,7 +29862,8 @@
               "version": "RHEL-08-040261",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040261"
           },
           "refs": [],
           "source_location": {},
@@ -29925,7 +29925,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230542r792957_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -29994,7 +29993,8 @@
               "version": "RHEL-08-040262",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040262"
           },
           "refs": [],
           "source_location": {},
@@ -30056,7 +30056,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230543r792960_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -30125,7 +30124,8 @@
               "version": "RHEL-08-040270",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040270"
           },
           "refs": [],
           "source_location": {},
@@ -30187,7 +30187,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230544r792963_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -30256,7 +30255,8 @@
               "version": "RHEL-08-040280",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040280"
           },
           "refs": [],
           "source_location": {},
@@ -30318,7 +30318,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230545r792966_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -30387,7 +30386,8 @@
               "version": "RHEL-08-040281",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040281"
           },
           "refs": [],
           "source_location": {},
@@ -30449,7 +30449,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230546r792969_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -30518,7 +30517,8 @@
               "version": "RHEL-08-040282",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040282"
           },
           "refs": [],
           "source_location": {},
@@ -30580,7 +30580,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230547r792972_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -30649,7 +30648,8 @@
               "version": "RHEL-08-040283",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040283"
           },
           "refs": [],
           "source_location": {},
@@ -30711,7 +30711,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230548r792975_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -30780,7 +30779,8 @@
               "version": "RHEL-08-040284",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040284"
           },
           "refs": [],
           "source_location": {},
@@ -30842,7 +30842,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230549r792978_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -30911,7 +30910,8 @@
               "version": "RHEL-08-040285",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040285"
           },
           "refs": [],
           "source_location": {},
@@ -30973,7 +30973,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230550r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -31042,7 +31041,8 @@
               "version": "RHEL-08-040290",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040290"
           },
           "refs": [],
           "source_location": {},
@@ -31104,7 +31104,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230555r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -31173,7 +31172,8 @@
               "version": "RHEL-08-040340",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040340"
           },
           "refs": [],
           "source_location": {},
@@ -31235,7 +31235,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230556r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -31304,7 +31303,8 @@
               "version": "RHEL-08-040341",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040341"
           },
           "refs": [],
           "source_location": {},
@@ -31366,7 +31366,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230557r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -31435,7 +31434,8 @@
               "version": "RHEL-08-040350",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040350"
           },
           "refs": [],
           "source_location": {},
@@ -31497,7 +31497,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230558r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -31566,7 +31565,8 @@
               "version": "RHEL-08-040360",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040360"
           },
           "refs": [],
           "source_location": {},
@@ -31628,7 +31628,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230559r646887_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -31697,7 +31696,8 @@
               "version": "RHEL-08-040370",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040370"
           },
           "refs": [],
           "source_location": {},
@@ -31759,7 +31759,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230560r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -31828,7 +31827,8 @@
               "version": "RHEL-08-040380",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040380"
           },
           "refs": [],
           "source_location": {},
@@ -31890,7 +31890,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-230561r627750_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -31959,7 +31958,8 @@
               "version": "RHEL-08-040390",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-040390"
           },
           "refs": [],
           "source_location": {},
@@ -32021,7 +32021,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-237640r646890_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -32090,7 +32089,8 @@
               "version": "RHEL-08-010163",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010163"
           },
           "refs": [],
           "source_location": {},
@@ -32152,7 +32152,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-237641r646893_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -32221,7 +32220,8 @@
               "version": "RHEL-08-010382",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010382"
           },
           "refs": [],
           "source_location": {},
@@ -32283,7 +32283,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-237642r646896_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -32352,7 +32351,8 @@
               "version": "RHEL-08-010383",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010383"
           },
           "refs": [],
           "source_location": {},
@@ -32414,7 +32414,6 @@
               "identifier": "2921"
             },
             "selected": "true",
-            "version": "xccdf_mil.disa.stig_rule_SV-237643r792980_rule",
             "weight": "10.000000",
             "profiles": [
               {
@@ -32483,7 +32482,8 @@
               "version": "RHEL-08-010384",
               "weight": "10.000000"
             },
-            "value": []
+            "value": [],
+            "version": "RHEL-08-010384"
           },
           "refs": [],
           "source_location": {},
@@ -32511,7 +32511,7 @@
           ]
         }
       ],
-      "sha256": "b91d700765b75a0ff1d944c253bd3d15a88bc455fa6ff7b4114614ca16767bb8"
+      "sha256": "3dab7e4e96005ba824bb5dbe328d94b0a61fdf441315af1a1b33238eb62c46bd"
     }
   ],
   "passthrough": {

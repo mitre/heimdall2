@@ -10,7 +10,7 @@ import {
   parseXml
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {conditionallyProvideAttribute, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -341,7 +341,6 @@ export class XCCDFResultsMapper extends BaseConverter {
               ident: {path: 'ident'},
               reference: {path: 'reference'},
               selected: {path: 'selected'},
-              version: {path: ['version.text', 'id']},
               weight: {path: 'weight'},
               profiles: [
                 {
@@ -364,7 +363,14 @@ export class XCCDFResultsMapper extends BaseConverter {
               },
               value: {
                 path: ['values']
-              }
+              },
+              transformer: (data: Record<string, unknown>) => ({
+                ...conditionallyProvideAttribute(
+                  'version',
+                  _.get(data, 'version.text'),
+                  _.has(data, 'version.text')
+                )
+              })
             },
             refs: [],
             source_location: {},
