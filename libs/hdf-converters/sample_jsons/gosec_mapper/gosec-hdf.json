@@ -1,0 +1,145 @@
+{
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "Gosec",
+        "data": {
+          "Golang errors": {}
+        }
+      }
+    ]
+  },
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.6.32"
+  },
+  "version": "2.6.32",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Gosec scanner",
+      "title": "gosec",
+      "version": "dev",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "nist": [
+              "SI-10"
+            ],
+            "cwe": {
+              "id": "22",
+              "url": "https://cwe.mitre.org/data/definitions/22.html"
+            },
+            "nosec": "",
+            "suppressions": "",
+            "severity": "MEDIUM",
+            "confidence": "HIGH"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Potential file inclusion via variable",
+          "id": "G304",
+          "desc": "",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "82: \t\tcase tar.TypeReg:\n83: \t\t\tf, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, os.FileMode(header.Mode))\n84: \t\t\tif err != nil {\n",
+              "message": "C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\internal\\file\\tar.go, line:83, column:14",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "51: \n52: \ttemplateContents, err := os.ReadFile(expandedPathToTemplateFile)\n53: \tif err != nil {\n",
+              "message": "C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\grype\\presenter\\template\\presenter.go, line:52, column:27",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "95: func isPossibleSBOM(userInput string) bool {\n96: \tf, err := os.Open(userInput)\n97: \tif err != nil {\n",
+              "message": "C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\grype\\pkg\\syft_sbom_provider.go, line:96, column:12",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "86: \n87: \tsbom, err := os.Open(expandedPath)\n88: \tif err != nil {\n",
+              "message": "C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\grype\\pkg\\syft_sbom_provider.go, line:87, column:15",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "18: \tdefault:\n19: \t\treportFile, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)\n20: \n",
+              "message": "C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\cmd\\report_writer.go, line:19, column:22",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cwe": {
+              "id": "276",
+              "url": "https://cwe.mitre.org/data/definitions/276.html"
+            },
+            "nosec": "",
+            "suppressions": "",
+            "severity": "MEDIUM",
+            "confidence": "HIGH"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Expect file permissions to be 0600 or less",
+          "id": "G302",
+          "desc": "",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "18: \tdefault:\n19: \t\treportFile, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)\n20: \n",
+              "message": "C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\cmd\\report_writer.go, line:19, column:22",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": [
+              "SI-2",
+              "RA-5"
+            ],
+            "cwe": {
+              "id": "276",
+              "url": "https://cwe.mitre.org/data/definitions/276.html"
+            },
+            "nosec": "",
+            "suppressions": "",
+            "severity": "MEDIUM",
+            "confidence": "HIGH"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Expect directory permissions to be 0750 or less",
+          "id": "G301",
+          "desc": "",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "76: \t\t\tif _, err := os.Stat(target); err != nil {\n77: \t\t\t\tif err := os.MkdirAll(target, 0755); err != nil {\n78: \t\t\t\t\treturn fmt.Errorf(\"failed to mkdir (%s): %w\", target, err)\n",
+              "message": "C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\internal\\file\\tar.go, line:77, column:15",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "b849a262dbb19f2c8f950a75c551aa50b97c76967cd092d6ac5585cabe3fbbc4"
+    }
+  ]
+}

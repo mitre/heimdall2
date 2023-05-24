@@ -11,7 +11,7 @@ import {CweNistMapping} from './mappings/CweNistMapping';
 import {getCCIsForNISTTags} from './utils/global';
 const STATIC_FLAWS = 'staticflaws.flaw';
 const SEVERITY = 'detailedreport.severity';
-const FILE_PATH_VALUE = 'file_paths.file_path.value';
+const FILE_PATH_VALUE = 'file_paths.file_path.@_.value';
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -23,7 +23,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['0', 0.0]
 ]);
 
-function impactMapping(severity: number): number {
+function impactMapping(severity: number | string): number {
   return IMPACT_MAPPING.get(severity.toString()) || 0.1;
 }
 
@@ -35,7 +35,7 @@ function nistTag(input: Record<string, unknown>): string[] {
   }
   cwes.push(
     ...(cwe as Record<string, unknown>[]).map(
-      (value: Record<string, unknown>) => _.get(value, 'cweid')
+      (value: Record<string, unknown>) => _.get(value, '@_.cweid')
     )
   );
   return CWE_NIST_MAPPING.nistFilter(cwes as string[], DEFAULT_NIST_TAG);
@@ -44,14 +44,14 @@ function nistTag(input: Record<string, unknown>): string[] {
 function formatRecommendations(input: Record<string, unknown>): string {
   const text: string[] = [];
   if (_.has(input, 'recommendations.para')) {
-    if (_.has(input, 'recommendations.para.text')) {
-      text.push(`${_.get(input, 'recommendations.para.text')}`);
+    if (_.has(input, 'recommendations.para.@_.text')) {
+      text.push(`${_.get(input, 'recommendations.para.@_.text')}`);
     } else {
       text.push(
         ...(
           _.get(input, `recommendations.para`) as Record<string, unknown>[]
         ).map(
-          (value: Record<string, unknown>) => _.get(value, 'text') as string
+          (value: Record<string, unknown>) => _.get(value, '@_.text') as string
         )
       );
     }
@@ -65,7 +65,7 @@ function formatRecommendations(input: Record<string, unknown>): string {
             unknown
           >[]
         ).map(
-          (value: Record<string, unknown>) => _.get(value, 'text') as string
+          (value: Record<string, unknown>) => _.get(value, '@_.text') as string
         )
       );
     }
@@ -76,12 +76,12 @@ function formatRecommendations(input: Record<string, unknown>): string {
 function formatDesc(input: Record<string, unknown>): string {
   const text = [];
   if (_.has(input, 'desc.para')) {
-    if (_.has(input, 'desc.para.text')) {
-      text.push(`${_.get(input, 'desc.para.text')}`);
+    if (_.has(input, 'desc.para.@_.text')) {
+      text.push(`${_.get(input, 'desc.para.@_.text')}`);
     } else {
       text.push(
         ...(_.get(input, `desc.para`) as Record<string, unknown>[]).map(
-          (value) => _.get(value, 'text')
+          (value) => _.get(value, '@_.text')
         )
       );
     }
@@ -108,12 +108,13 @@ function formatCweData(input: Record<string, unknown>): string {
     }
     text.push(
       ...(cweInput as Record<string, unknown>[]).map((cweinfo) => {
-        let cwe = `CWE-${_.get(cweinfo, 'cweid')}: `;
-        cwe += `${_.get(cweinfo, 'cwename')}`;
+        let cwe = `CWE-${_.get(cweinfo, '@_.cweid')}: `;
+        cwe += `${_.get(cweinfo, '@_.cwename')}`;
         cwe += categories
           .map((value: string) => {
-            if (_.has(cweinfo, value)) {
-              return `${value}: ${_.get(cweinfo, value)}\n`;
+            if (_.has(cweinfo, `@_.${value}`)) {
+              const val = _.get(cweinfo, `@_.${value}`);
+              return `${value}: ${val}\n`;
             } else {
               return '';
             }
@@ -136,10 +137,10 @@ function formatCweDesc(input: Record<string, unknown>): string {
     text.push(
       ...(cwe as Record<string, unknown>[]).map(
         (value: Record<string, unknown>) =>
-          `CWE-${_.get(value, 'cweid')}: ${_.get(
+          `CWE-${_.get(value, '@_.cweid')}: ${_.get(
             value,
-            'cwename'
-          )} Description: ${_.get(value, 'description.text.text')}; `
+            '@_.cwename'
+          )} Description: ${_.get(value, 'description.text.@_.text')}; `
       )
     );
   }
@@ -184,12 +185,13 @@ function formatCodeDesc(input: Record<string, unknown>[]): string {
     ['Function Prototype', 'functionprototype'],
     ['Function Relative Location', 'functionrelativelocation']
   ];
-  if (_.has(input, 'sourcefilepath')) {
-    flawDesc = `Sourcefile Path: ${_.get(input, 'sourcefilepath')}\n`;
+  if (_.has(input, '@_.sourcefilepath')) {
+    flawDesc = `Sourcefile Path: ${_.get(input, '@_.sourcefilepath')}\n`;
     flawDesc += categories
       .map(([title, name]) => {
-        if (_.has(input, name)) {
-          return `${title}: ${_.get(input, name)}\n`;
+        if (_.has(input, `@_.${name}`)) {
+          const nameVal = _.get(input, `@_.${name}`);
+          return `${title}: ${nameVal}\n`;
         } else {
           return '';
         }
@@ -213,12 +215,13 @@ function formatSCACodeDesc(input: Record<string, unknown>): string {
     'added_date',
     'component_affects_policy_compliance'
   ];
-  if (_.has(input, 'component_id')) {
-    flawDesc = `component_id: ${_.get(input, 'component_id')}\n`;
+  if (_.has(input, '@_.component_id')) {
+    flawDesc = `component_id: ${_.get(input, '@_.component_id')}\n`;
     flawDesc += _.compact(
       categories.map((value: string) => {
-        if (_.has(input, value)) {
-          return `${value}: ${_.get(input, value)}`;
+        if (_.has(input, `@_.${value}`)) {
+          const val = _.get(input, `@_.${value}`);
+          return `${value}: ${val}`;
         } else {
           return '';
         }
@@ -243,17 +246,19 @@ function formatSourceLocation(input: Record<string, unknown>[]): string {
       flawArr.push(...(_.get(value, STATIC_FLAWS) as string[]));
     }
   }
-  return flawArr.map((value) => _.get(value, 'sourcefile')).join('\n');
+  return flawArr.map((value) => _.get(value, '@_.sourcefile')).join('\n');
 }
 
 function componentListCreate(input: unknown): Record<string, unknown>[] {
   const componentList: Record<string, unknown>[] = [];
-  let component = _.get(input, 'component');
+  let component = _.get(input, 'component') as unknown as
+    | Record<string, unknown>
+    | Record<string, unknown>[];
   if (!Array.isArray(component)) {
     component = [component];
   }
   for (const value of component as Record<string, unknown>[]) {
-    if (_.get(value, `vulnerabilities`) !== '') {
+    if (_.get(value, '@_.vulnerabilities') !== '0') {
       componentList.push(value);
     }
   }
@@ -279,8 +284,8 @@ function componentTransform(input: unknown): Record<string, unknown>[] {
     })
     .flat()
     .reduce((acc: Record<string, unknown>[], cur: Record<string, unknown>) => {
-      const cveId = _.get(cur, 'cve_id');
-      const index = acc.findIndex(({cve_id}) => cveId === cve_id);
+      const cveId = _.get(cur, '@_.cve_id');
+      const index = acc.findIndex((vuln) => cveId === _.get(vuln, '@_.cve_id'));
       if (index === -1) {
         return [...acc, cur];
       } else {
@@ -298,15 +303,15 @@ function controlMappingCve(): MappedTransform<
   ILookupPath
 > {
   return {
-    id: {path: 'cve_id'},
-    title: {path: 'cve_id'},
-    desc: {path: 'cve_summary'},
-    impact: {path: 'severity', transformer: impactMapping},
+    id: {path: '@_.cve_id'},
+    title: {path: '@_.cve_id'},
+    desc: {path: '@_.cve_summary'},
+    impact: {path: '@_.severity', transformer: impactMapping},
     refs: [],
     tags: {
-      cwe: {path: 'cwe_id'},
+      cwe: {path: '@_.cwe_id'},
       nist: {
-        path: 'cwe_id',
+        path: '@_.cwe_id',
         transformer: (value: string | string[]) => {
           if (!Array.isArray(value)) {
             value = [value];
@@ -334,7 +339,7 @@ function controlMappingCve(): MappedTransform<
         path: 'components',
         status: ExecJSON.ControlResultStatus.Failed,
         code_desc: {transformer: formatSCACodeDesc},
-        start_time: {path: '$.detailedreport.first_build_submitted_date'}
+        start_time: {path: '$.detailedreport.@_.first_build_submitted_date'}
       }
     ]
   };
@@ -344,8 +349,8 @@ function controlMappingCwe(
   severity: number
 ): MappedTransform<ExecJSON.Control & ILookupPath, ILookupPath> {
   return {
-    id: {path: 'categoryid'},
-    title: {path: 'categoryname'},
+    id: {path: '@_.categoryid'},
+    title: {path: '@_.categoryname'},
     desc: {transformer: formatDesc},
     descriptions: [
       {
@@ -376,7 +381,7 @@ function controlMappingCwe(
         pathTransform: getFlaws,
         status: ExecJSON.ControlResultStatus.Failed,
         code_desc: {transformer: formatCodeDesc},
-        start_time: {path: '$.detailedreport.first_build_submitted_date'},
+        start_time: {path: '$.detailedreport.@_.first_build_submitted_date'},
         message: {
           path: 'exploitability_adjustments.exploitability_adjustment.note'
         }
@@ -388,10 +393,10 @@ function controlMappingCwe(
 function componentPass(component: Record<string, unknown>) {
   const vulnList: string[] = [];
   _.set(component, 'control_ids', vulnList);
-  if (_.get(component, 'vulnerabilities.vulnerability')) {
+  if (_.get(component, 'vulnerabilities') !== '') {
     if (!Array.isArray(_.get(component, 'vulnerabilities.vulnerability'))) {
       vulnList.push(
-        _.get(component, 'vulnerabilities.vulnerability.cve_id') as string
+        _.get(component, 'vulnerabilities.vulnerability.@_.cve_id') as string
       );
       _.set(component, 'control_ids', vulnList);
     } else {
@@ -402,7 +407,7 @@ function componentPass(component: Record<string, unknown>) {
             unknown
           >[]
         ).map(
-          (vuln: Record<string, unknown>) => _.get(vuln, 'cve_id') as string
+          (vuln: Record<string, unknown>) => _.get(vuln, '@_.cve_id') as string
         )
       );
       _.set(component, 'control_ids', vulnList);
@@ -424,10 +429,17 @@ export class VeracodeMapper extends BaseConverter {
       passthrough: {
         components: {
           path: 'detailedreport.software_composition_analysis.vulnerable_components',
-          transformer: (value: Record<string, unknown>) =>
-            (_.get(value, 'component') as Record<string, unknown>[]).map(
-              (component: Record<string, unknown>) => componentPass(component)
-            )
+          transformer: (value: Record<string, unknown>) => {
+            if (_.get(value, 'component') as Record<string, unknown>[]) {
+              return (
+                _.get(value, 'component') as Record<string, unknown>[]
+              ).map((component: Record<string, unknown>) =>
+                componentPass(component)
+              );
+            } else {
+              return '';
+            }
+          }
         },
         auxiliary_data: [
           {
@@ -448,9 +460,11 @@ export class VeracodeMapper extends BaseConverter {
       statistics: {},
       profiles: [
         {
-          name: {path: 'detailedreport.policy_name'},
-          version: {path: 'detailedreport.policy_version'},
-          title: {path: 'detailedreport.static-analysis.modules.module.name'},
+          name: {path: 'detailedreport.@_.policy_name'},
+          version: {path: 'detailedreport.@_.policy_version'},
+          title: {
+            path: 'detailedreport.static-analysis.modules.module.@_.name'
+          },
           supports: [],
           attributes: [],
           groups: [],
@@ -501,7 +515,12 @@ export class VeracodeMapper extends BaseConverter {
     };
   }
   constructor(xml: string, withRaw = false) {
-    const parsedXML = parseXml(xml);
+    // the default textNodeName that we're using ('text') clobbers any attributes that also are named 'text' of which there are many in this format
+    // the attribute group names are necessary since there are many times that attributes and inner tags share the same name within a tag (ex. 'vulnerabilities' the attribute is a count whereas as an inner tag it is an array detailing the vulnerabilities) where it seems that the attribute clobbers the inner tag
+    const parsedXML = parseXml(xml, {
+      attributesGroupName: '@_',
+      textNodeName: 'text_'
+    });
     if (_.has(parsedXML, 'summaryreport')) {
       throw new Error('Current mapper does not accept summary reports');
     }

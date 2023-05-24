@@ -1,9 +1,10 @@
 <template>
   <div>
-    <div v-if="editable">
+    <div>
       <v-row class="mt-0">
         <v-col>
           <v-autocomplete
+            v-if="editable"
             v-model="usersToAdd"
             :items="availableUsers"
             chips
@@ -13,14 +14,8 @@
             deletable-chips
             multiple
             single-line
-          >
-            <template slot="append-outer">
-              <v-btn @click="addUsers">
-                <v-icon left>mdi-plus</v-icon>
-                Add
-              </v-btn>
-            </template>
-          </v-autocomplete>
+            @blur="addUsers"
+          />
         </v-col>
       </v-row>
     </div>
@@ -34,7 +29,17 @@
           <template #[`item.full-name`]="{item}"
             >{{ item.firstName }} {{ item.lastName }}</template
           >
-          <template v-if="editable" #[`item.actions`]="{item}">
+          <template #[`item.groupRole`]="{item}">
+            <v-select
+              v-if="editable"
+              :value="item.groupRole"
+              :items="['owner', 'member']"
+              @click="editedUserID = item.id"
+              @change="onUpdateGroupUserRole"
+            />
+            <span v-else> {{ item.groupRole }} </span>
+          </template>
+          <template #[`item.actions`]="{item}">
             <v-icon small title="Delete" @click="deleteUserDialog(item)">
               mdi-delete
             </v-icon>
@@ -56,12 +61,13 @@
 
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
-import {ServerModule} from '@/store/server';
-import {IVuetifyItems} from '@/utilities/helper_util';
 import {ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, VModel} from 'vue-property-decorator';
+import {Emit, Prop, VModel} from 'vue-property-decorator';
+import {ServerModule} from '@/store/server';
+import {IVuetifyItems} from '@/utilities/helper_util';
+import {DataTableHeader} from 'vuetify';
 
 @Component({
   components: {
@@ -72,7 +78,7 @@ export default class Users extends Vue {
   @VModel({
     type: Array,
     required: false,
-    default() {
+    default(): ISlimUser[] {
       return [];
     }
   })
@@ -81,12 +87,11 @@ export default class Users extends Vue {
   @Prop({type: Boolean, required: false, default: true})
   readonly editable!: boolean;
 
+  editedUserID: string = '0';
   usersToAdd: string[] = [];
 
-  editedUser: ISlimUser | null = null;
   dialogDelete = false;
-
-  headers: Object[] = [
+  headers: DataTableHeader[] = [
     {
       text: 'Name',
       value: 'full-name'
@@ -120,35 +125,73 @@ export default class Users extends Vue {
   addUsers() {
     ServerModule.allUsers.forEach((user) => {
       if (this.usersToAdd.includes(user.id)) {
-        this.currentUsers.push(user);
+        this.currentUsers.push({
+          ...user,
+          groupRole: 'member'
+        });
       }
     });
     this.usersToAdd = [];
   }
 
+  @Emit()
+  onUpdateGroupUserRole(newRole: string) {
+    let saveable = true;
+    // If a role is being changed to member, check that there is at least 1 owner.
+    if (newRole === 'member') {
+      if (this.numberOfOwners() <= 1) {
+        saveable = false;
+      }
+    }
+    const editedUser = this.getEditedUser();
+    const userToUpdate = this.currentUsers.indexOf(editedUser);
+    const updatedGroupUser: ISlimUser = {
+      ...editedUser,
+      groupRole: newRole
+    };
+    this.currentUsers[userToUpdate] = updatedGroupUser;
+    return saveable;
+  }
+
+  numberOfOwners(): number {
+    return this.currentUsers.filter((user) => user.groupRole === 'owner')
+      .length;
+  }
+
   deleteUserDialog(user: ISlimUser): void {
-    this.editedUser = user;
+    this.editedUserID = user.id;
     this.dialogDelete = true;
   }
 
   closeActionDialog() {
     this.dialogDelete = false;
-    this.editedUser = null;
+    this.editedUserID = '0';
   }
 
   deleteUserConfirm(): void {
-    if (this.editedUser) {
-      this.currentUsers.splice(this.currentUsers.indexOf(this.editedUser), 1);
+    if (this.editedUserID !== '0') {
+      this.currentUsers.splice(
+        this.currentUsers.indexOf(this.getEditedUser()),
+        1
+      );
     }
     this.closeActionDialog();
+  }
+
+  getEditedUser(): ISlimUser {
+    return (
+      this.currentUsers.find((user) => user.id === this.editedUserID) || {
+        id: '0',
+        email: ''
+      }
+    );
   }
 
   // Filter out users that are already in the group from the user search
   get availableUsers(): IVuetifyItems[] {
     const currentUserIds: string[] = this.currentUsers.map((user) => user.id);
     const users: IVuetifyItems[] = [];
-
-    ServerModule.allUsers.forEach(async (user) => {
+    for (const user of ServerModule.allUsers) {
       if (
         !currentUserIds.includes(user.id) &&
         user.id !== ServerModule.userInfo.id
@@ -160,7 +203,7 @@ export default class Users extends Vue {
           value: user.id
         });
       }
-    });
+    }
     return users;
   }
 }

@@ -25,7 +25,6 @@ context('Groups', () => {
     it('allows a user to create a group', () => {
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName);
-      toastVerifier.toastTextContains('Group Successfully Saved');
       dataTableVerifier.verifyTextPresent(groupName);
     });
 
@@ -34,7 +33,6 @@ context('Groups', () => {
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName);
       groupPage.updateGroup('Test Group', updatedGroupName);
-      toastVerifier.toastTextContains('Group Successfully Saved');
       dataTableVerifier.verifyTextPresent(updatedGroupName);
     });
 

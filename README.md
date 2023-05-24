@@ -6,37 +6,46 @@ This repository contains the source code for Heimdall's [Backend](https://github
 
 ## Contents
 
-* [Demos](#demos)
-    * [Video](#video)
-    * [Hosted](#hosted)
-* [Heimdall (Lite) vs Heimdall with Backend (Server)](#heimdall-lite-vs-heimdall-with-backend-server)
-    * [Features](#features)
-    * [Use Cases](#use-cases)
-* [Getting Started / Installation](#getting-started--installation)
-    * [Heimdall Lite](#heimdall-lite)
-        * [Running via npm](#running-via-npm)
-        * [Running via Docker](#running-via-docker)
-    * [Heimdall Server - Docker](#heimdall-server---docker)
-        * [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
-        * [Running Docker Container](#running-docker-container)
-        * [Updating Docker Container](#updating-docker-container)
-        * [Stopping the Container](#stopping-the-container)
-        * [Helm Chart](#helm-chart)
-        * [Running via Cloud.gov](#running-via-cloudgov)
-* [External Data Sources](#external-data-sources)
-    * [AWS S3](#aws-s3)
-* [API Usage](#api-usage)
-* [For Developers](#for-developers)
-    * [How to Install](#how-to-install)
-    * [Debugging Heimdall Server](#debugging-heimdall-server)
-    * [Developing Heimdall Lite Standalone](#developing-heimdall-lite-standalone)
-    * [Lint and fix files](#lint-and-fix-files)
-    * [Compile and minify the frontend and backend for production](#compile-and-minify-the-frontend-and-backend-for-production)
-    * [Run tests](#run-tests)
-        * [Run Cypress End to End Tests](#run-cypress-end-to-end-tests)
-    * [Creating a Release](#creating-a-release)
-* [Versioning and State of Development](#versioning-and-state-of-development)
-* [Contributing, Issues and Support](#contributing-issues-and-support)
+- [Heimdall](#heimdall)
+  - [Contents](#contents)
+  - [Demos](#demos)
+    - [Video](#video)
+    - [Hosted](#hosted)
+      - [*These demos are only intended to show the functionality of Heimdall, please do not upload any sensitive data to them.*](#these-demos-are-only-intended-to-show-the-functionality-of-heimdall-please-do-not-upload-any-sensitive-data-to-them)
+      - [Released Previews](#released-previews)
+      - [Current *Development Master Branch* Preview](#current-development-master-branch-preview)
+  - [Heimdall (Lite) vs Heimdall with Backend (Server)](#heimdall-lite-vs-heimdall-with-backend-server)
+    - [Heimdall-Lite](#heimdall-lite)
+    - [Heimdall with Backend (Server)](#heimdall-with-backend-server)
+    - [Features](#features)
+    - [Use Cases](#use-cases)
+  - [Getting Started / Installation](#getting-started--installation)
+    - [Heimdall Lite](#heimdall-lite-1)
+      - [Running via npm](#running-via-npm)
+      - [Running via Docker](#running-via-docker)
+    - [Heimdall Server - Docker](#heimdall-server---docker)
+      - [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
+      - [Updating Docker Container](#updating-docker-container)
+      - [Stopping the Container](#stopping-the-container)
+      - [Helm Chart](#helm-chart)
+      - [Running via Cloud.gov](#running-via-cloudgov)
+  - [External Data Sources](#external-data-sources)
+    - [AWS S3](#aws-s3)
+    - [Tenable.SC](#tenablesc)
+  - [API Usage](#api-usage)
+  - [For Developers](#for-developers)
+    - [How to Install](#how-to-install)
+    - [Debugging Heimdall Server](#debugging-heimdall-server)
+    - [Developing Heimdall Lite Standalone](#developing-heimdall-lite-standalone)
+    - [Lint and fix files](#lint-and-fix-files)
+    - [Compile and minify the frontend and backend for production](#compile-and-minify-the-frontend-and-backend-for-production)
+    - [Run tests](#run-tests)
+      - [Run Cypress End to End Tests](#run-cypress-end-to-end-tests)
+    - [Creating a Release](#creating-a-release)
+  - [Versioning and State of Development](#versioning-and-state-of-development)
+  - [Contributing, Issues and Support](#contributing-issues-and-support)
+    - [Contributing](#contributing)
+    - [Issues and Support](#issues-and-support)
 
 ## Demos
 
@@ -96,6 +105,7 @@ Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Li
 | View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF) | :white_check_mark: | :white_check_mark: |
 | Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | :white_check_mark: | :white_check_mark: |
 | Authenticated REST API       |   | :white_check_mark: |
+| CRUD Capabilities            |   | :white_check_mark: |
 | Users & Roles & multi-team support    |   | :white_check_mark: |
 | Authentication & Authorization        | Hosting Webserver | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
 
@@ -105,7 +115,7 @@ Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Li
 | :------------------------------------------------------: | :------------------------------------------------------: |
 | Just-in-Time Use | Multiple Teams |
 | Minimal Footprint & Deployment Time  | Timeline and Report History |
-| Local or disconnected Use | Centralized Deployment Model |
+| Local or Disconnected Use | Centralized Deployment Model |
 | Minimal Authorization & Approval Time |  |
 
 ## Getting Started / Installation
@@ -235,7 +245,7 @@ Heimdall currently supports AWS S3 for loading external HDF data.
 
 ### AWS S3
 
-In order to allow Heimdall to Connect to your AWS S3 bucket, you need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficent, however you need to change the allowed origin to where you are deploying Heimdall.
+In order to allow Heimdall to connect to an AWS S3 bucket, we need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficient, however we need to change the allowed origin `AllowedOrigins` to the domain where Heimdall is deployed.
 
 ```json
 [
@@ -256,11 +266,25 @@ In order to allow Heimdall to Connect to your AWS S3 bucket, you need to [add a 
 ]
 ```
 
+### Tenable.SC
+
+In order to allow Heimdall to connect to a Tenable.SC instance, the hosting services should be configured with an allowlist that includes the calling domain where Heimdall resides as a trusted domain to perform CORS requests.
+For information on how to enable [open access across domain boundaries](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing), please reference the [CORS Enabled W3C wiki](https://www.w3.org/wiki/CORS_Enabled).
+
+To temporarily disable CORS for local development, you can use a browser [extension](https://www.bannerbear.com/blog/what-is-a-cors-error-and-how-to-fix-it-3-ways/#solution-3-bypass-the-error-using-a-browser-extension) like CORS Unlock.
+
+It is also possible to start Google Chrome on Windows with CORS temporarily disabled by starting the browser with web security disabled.
+  - Create a short cut, in the "Type the location of the item:" text box enter the following command:
+```
+  "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --user-data-dir="C:/ChromeDev" --disable-web-security --disable-features=IsolateOrigins,site-per-process 
+```
+
+
 ## API Usage
 
 API usage only works when using Heimdall Enterprise Server (AKA "Server Mode").
 
-Proper API documentation does not exist yet. In the meantime here are quick instructions for uploading evaluations to Heimdall Server.
+Heimdall API documentation is being compiled and it is located in this  [wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-API-Documentation) page. In the meantime here are quick instructions for uploading evaluations to Heimdall Server.
 
 ```sh
 # To use API Keys, ensure you have set the API_KEY_SECRET environment variable. To create a secret run: openssl rand -hex 33
@@ -276,24 +300,26 @@ curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evalua
 
 If you would like to change Heimdall to your needs, you can use Heimdall's 'Development Mode' to ease the development process. The benefit to using this mode is that it will automatically rebuild itself and use those changes as soon as you make them. Please note that you should not run development mode when deploying Heimdall for general usage.
 
-1. Install system dependencies with your system's package manager.
+1. Install system dependencies with your system's package manager. NodeJS is required and can be installed via your system's package manager, or an alternative method if desired. Documented below is the installation via your system's package manager.
 
    Ubuntu:
 
    - ```bash
      # grab nodesource for recent version of nodejs
      sudo curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh
-     sudo /tmp/nodesource_setup.sh
+     sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
-     sudo apt install postgresql nodejs nano git
+     sudo apt install postgresql nodejs git
+     sudo apt install nano                        # recommended installation
      sudo npm install -g yarn
      ```
      
    OSX:
    
    - ```bash
-     brew install postgresql node@16 nano git
+     brew install postgresql node@16 git      
+     brew install nano                        # recommended installation
      sudo npm install -g yarn
      ```
 
@@ -325,8 +351,12 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    OSX:
 
     - ```sql
-      # Start the server
+      # Start the postgres server corresponding to your installation method
       pg_ctl -D /opt/homebrew/var/postgres start
+      # Alternatively, you may find postgres in another location like the following:
+      pg_ctl -D /usr/local/var/postgres start
+      # Brew method
+      brew services start postgresql@13
 
       # Start the Postgres terminal
       psql postgres
@@ -431,21 +461,3 @@ Please feel free to look through our issues, make a fork and submit _PRs_ and im
 ### Issues and Support
 
 Please feel free to contact us by **opening an issue** on the issue board, or, at [inspec@mitre.org](mailto:inspec@mitre.org) should you have any suggestions, questions or issues. If you have more general questions about the use of our software or other concerns, please contact us at [opensource@mitre.org](mailto:opensource@mitre.org).
-
-### NOTICE
-
-© 2019-2021 The MITRE Corporation.
-
-Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
-
-### NOTICE
-
-MITRE hereby grants express written permission to use, reproduce, distribute, modify, and otherwise leverage this software to the extent permitted by the licensed terms provided in the LICENSE.md file included with this project.
-
-### NOTICE
-
-This software was produced for the U. S. Government under Contract Number HHSM-500-2012-00008I, and is subject to Federal Acquisition Regulation Clause 52.227-14, Rights in Data-General.
-
-No other use other than that granted to the U. S. Government, or to those acting on behalf of the U. S. Government under that Clause is authorized without the express written permission of The MITRE Corporation.
-
-For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA 22102-7539, (703) 983-6000.
