@@ -22,5 +22,17 @@ describe('conveyor_mapper', () => {
         )
       )
     );
+    expect(omitVersions(mapper.toHdf()['Stigma'])).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/conveyor_mapper/conveyor-stigma-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
   });
 });
