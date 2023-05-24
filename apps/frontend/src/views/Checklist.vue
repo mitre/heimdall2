@@ -42,18 +42,18 @@
           <!-- Rule Data -->
           <v-col cols="12" md="6">
             <!-- Rule Header Info -->
-            <v-row dense style="height: 15%">
+            <v-row dense>
               <ChecklistRuleInfoHeader
                 :selected-rule="selectedRule"
                 :short-id-enabled="shortIdEnabled"
               />
             </v-row>
             <!-- Rule Body Info -->
-            <v-row dense style="height: 50%">
+            <v-row dense>
               <ChecklistRuleInfoBody :selected-rule="selectedRule" />
             </v-row>
             <!-- Rule Info Edit -->
-            <v-row dense style="height: 35%">
+            <v-row dense>
               <ChecklistRuleEdit
                 :selected-rule="selectedRule"
                 :sheet="sheet"
