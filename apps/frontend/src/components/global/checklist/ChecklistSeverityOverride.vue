@@ -1,5 +1,5 @@
 <template>
-  <v-card class="text-center px-8 pt-2" height="300px">
+  <v-card class="text-center px-8 pt-2">
     <v-card-title class="justify-center"
       >Severity Override Justification</v-card-title
     >
