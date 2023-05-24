@@ -2,14 +2,14 @@
   "Characterize": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "Characterize",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -4457,21 +4457,21 @@
             ]
           }
         ],
-        "sha256": "17c016b4c50106cb07722c5a27031689050065b1f6498a3d793c81f526d9f5d0"
+        "sha256": "89645d3202ccbfbe7d030c142b92278fadbb60f370316aa1c3af162fa0876381"
       }
     ]
   },
   "CodeQuality": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "CodeQuality",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -8919,21 +8919,21 @@
             ]
           }
         ],
-        "sha256": "d1c6540d0a0a2faf46727066b9736298558fb04ea3923fbe445ea687bf30030d"
+        "sha256": "362282552f34c07f6f03874a4adba10ddd7bdecc75b1e5e2322cd771186520e4"
       }
     ]
   },
   "FrankenStrings": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "FrankenStrings",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -13381,21 +13381,21 @@
             ]
           }
         ],
-        "sha256": "337884738c4d4b5035afc89a921c329e18801fbffe24574518477f7007e45985"
+        "sha256": "f0aadbe7853d5efffcb0c1a7ff1c5d02ed019a0ecac2d6bd3f9468743036af6c"
       }
     ]
   },
   "MetaDefender": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "MetaDefender",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -17843,21 +17843,21 @@
             ]
           }
         ],
-        "sha256": "42b73a66887f1d72946b39b4cb0ed9fdb874bbe99ee4fcc90c47de2e246ca6f1"
+        "sha256": "f3e59965dd88971eb900a4275d799db65fb515848f74d4a6708050f1f6f62b6b"
       }
     ]
   },
   "MetaPeek": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "MetaPeek",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -22305,21 +22305,21 @@
             ]
           }
         ],
-        "sha256": "ac9bd30532c75fef4282cbb561975f4ac9103548b5c748be880c54de2ed6ed66"
+        "sha256": "9fbf9eb19d9058cbd84e27bffb0482cf5ae5c858f0d83ab404019ff70b884a0a"
       }
     ]
   },
   "Moldy": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "Moldy",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -22344,7 +22344,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tThe package hashicorp vault, version 1.2.0 is 10 Minor versions behind the latest version v1.12.2 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:32.095596Z\n",
+                "code_desc": "body:\tThe package hashicorp vault, version 1.2.0 is 10 Minor versions behind the latest version v1.12.2 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:32.095596Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:31.952278Z"
               }
@@ -22368,7 +22368,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tThe package nodeca pako, version 2.0.3 is 1 Minor versions behind the latest version 2.1.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:39.139295Z\n",
+                "code_desc": "body:\tThe package nodeca pako, version 2.0.3 is 1 Minor versions behind the latest version 2.1.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:39.139295Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:38.234158Z"
               }
@@ -22392,7 +22392,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tGitHub Repository: https://github.com/sindresorhus/got.git, version: 11.8.1\nThe package sindresorhus got, version 11.8.1 is 1 Major versions behind the latest version v12.5.3 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:36.258923Z\n",
+                "code_desc": "body:\tGitHub Repository: https://github.com/sindresorhus/got.git, version: 11.8.1\nThe package sindresorhus got, version 11.8.1 is 1 Major versions behind the latest version v12.5.3 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:36.258923Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:36.084149Z"
               }
@@ -22416,7 +22416,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\n2023-01-19T16:52:06.301273Z\n",
+                "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\nFinished_at2023-01-19T16:52:06.301273Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:52:06.301210Z"
               }
@@ -22440,7 +22440,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tThe package microsoft TypeScript, version 4.1.5 is 8 Minor versions behind the latest version v4.9.4 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:34.698690Z\n",
+                "code_desc": "body:\tThe package microsoft TypeScript, version 4.1.5 is 8 Minor versions behind the latest version v4.9.4 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:34.698690Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:34.555160Z"
               }
@@ -22464,7 +22464,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\n2023-01-19T16:52:06.287534Z\n",
+                "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\nFinished_at2023-01-19T16:52:06.287534Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:52:06.287424Z"
               }
@@ -22488,7 +22488,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tThe package cisco node-jose, version 2.0.0 is 1 Minor versions behind the latest version v2.1.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:37.625187Z\n",
+                "code_desc": "body:\tThe package cisco node-jose, version 2.0.0 is 1 Minor versions behind the latest version v2.1.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:37.625187Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:36.692474Z"
               }
@@ -22512,7 +22512,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tThe package soldair node-qrcode, version 1.4.4 is 1 Minor versions behind the latest version v1.5.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:35.968114Z\n",
+                "code_desc": "body:\tThe package soldair node-qrcode, version 1.4.4 is 1 Minor versions behind the latest version v1.5.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:35.968114Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:34.817411Z"
               }
@@ -22536,7 +22536,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tThe package ansible ansible, version 2.9.3 is 5 Minor versions behind the latest version v2.14.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:31.095538Z\n",
+                "code_desc": "body:\tThe package ansible ansible, version 2.9.3 is 5 Minor versions behind the latest version v2.14.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:31.095538Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:30.235759Z"
               }
@@ -22560,7 +22560,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tGitHub Repository: https://github.com/fireeye/capa.git, version: 1.2.0\nThe package fireeye capa, version 1.2.0 is 3 Major versions behind the latest version v4.0.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:42.070402Z\n",
+                "code_desc": "body:\tGitHub Repository: https://github.com/fireeye/capa.git, version: 1.2.0\nThe package fireeye capa, version 1.2.0 is 3 Major versions behind the latest version v4.0.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:42.070402Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:41.811407Z"
               }
@@ -22584,7 +22584,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tGitHub Repository: https://github.com/eslint/eslint.git, version: 7.19.0\nThe package eslint eslint, version 7.19.0 is 1 Major versions behind the latest version v8.32.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:38.121459Z\n",
+                "code_desc": "body:\tGitHub Repository: https://github.com/eslint/eslint.git, version: 7.19.0\nThe package eslint eslint, version 7.19.0 is 1 Major versions behind the latest version v8.32.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:38.121459Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:37.985910Z"
               }
@@ -22608,7 +22608,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tGitHub Repository: https://github.com/prettier/eslint-plugin-prettier.git, version: 3.3.1\nThe package prettier eslint-plugin-prettier, version 3.3.1 is 1 Major versions behind the latest version v4.2.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:41.531293Z\n",
+                "code_desc": "body:\tGitHub Repository: https://github.com/prettier/eslint-plugin-prettier.git, version: 3.3.1\nThe package prettier eslint-plugin-prettier, version 3.3.1 is 1 Major versions behind the latest version v4.2.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:41.531293Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:41.347783Z"
               }
@@ -22632,7 +22632,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tGitHub Repository: https://github.com/tj/commander.js.git, version: 7.0.0\nThe package tj commander.js, version 7.0.0 is 3 Major versions behind the latest version v10.0.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:39.388805Z\n",
+                "code_desc": "body:\tGitHub Repository: https://github.com/tj/commander.js.git, version: 7.0.0\nThe package tj commander.js, version 7.0.0 is 3 Major versions behind the latest version v10.0.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:39.388805Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:39.262084Z"
               }
@@ -22656,7 +22656,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tThe package wbond asn1crypto, version 1.3.0 is 2 Minor versions behind the latest version 1.5.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:33.191296Z\n",
+                "code_desc": "body:\tThe package wbond asn1crypto, version 1.3.0 is 2 Minor versions behind the latest version 1.5.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:33.191296Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:32.320640Z"
               }
@@ -22680,7 +22680,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\n2023-01-19T16:52:06.329485Z\n",
+                "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\nFinished_at2023-01-19T16:52:06.329485Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:52:06.329443Z"
               }
@@ -22704,7 +22704,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\n2023-01-19T16:52:06.326907Z\n",
+                "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\nFinished_at2023-01-19T16:52:06.326907Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:52:06.326866Z"
               }
@@ -22728,7 +22728,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tGitHub Repository: https://github.com/prettier/eslint-config-prettier.git, version: 7.2.0\nThe package prettier eslint-config-prettier, version 7.2.0 is 1 Major versions behind the latest version v8.6.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:41.221259Z\n",
+                "code_desc": "body:\tGitHub Repository: https://github.com/prettier/eslint-config-prettier.git, version: 7.2.0\nThe package prettier eslint-config-prettier, version 7.2.0 is 1 Major versions behind the latest version v8.6.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:41.221259Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:39.528109Z"
               }
@@ -22752,7 +22752,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tGitHub Repository: https://github.com/hashicorp/terraform.git, version: 0.12.26\nThe package hashicorp terraform, version 0.12.26 is 1 Major versions behind the latest version v1.3.7 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:31.620873Z\n",
+                "code_desc": "body:\tGitHub Repository: https://github.com/hashicorp/terraform.git, version: 0.12.26\nThe package hashicorp terraform, version 0.12.26 is 1 Major versions behind the latest version v1.3.7 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:31.620873Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:31.474340Z"
               }
@@ -22776,7 +22776,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tGitHub Repository: https://github.com/TypeStrong/ts-node.git, version: 9.1.1\nThe package TypeStrong ts-node, version 9.1.1 is 1 Major versions behind the latest version v10.9.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:36.575704Z\n",
+                "code_desc": "body:\tGitHub Repository: https://github.com/TypeStrong/ts-node.git, version: 9.1.1\nThe package TypeStrong ts-node, version 9.1.1 is 1 Major versions behind the latest version v10.9.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:36.575704Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:36.390372Z"
               }
@@ -22800,7 +22800,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:\tThe package prettier prettier, version 2.2.1 is 6 Minor versions behind the latest version 2.8.3 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\n2023-01-19T16:02:37.867003Z\n",
+                "code_desc": "body:\tThe package prettier prettier, version 2.2.1 is 6 Minor versions behind the latest version 2.8.3 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:37.867003Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:37.739202Z"
               }
@@ -22824,28 +22824,28 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\n2023-01-19T16:52:06.285156Z\n",
+                "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\nFinished_at2023-01-19T16:52:06.285156Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:52:06.284618Z"
               }
             ]
           }
         ],
-        "sha256": "c254efdab138304f03e4f9d8460e81f2c6ab7b16ff40c6d6250e7d1710bf280f"
+        "sha256": "26357a104d98e169d2b754a07f93655accc1fd865f93f40274a67b0d2f4f520f"
       }
     ]
   },
   "SBOM": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "SBOM",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -27293,21 +27293,21 @@
             ]
           }
         ],
-        "sha256": "84f4bcfe69dabfd2d6b708a4239a57a2f835d75b80052042666a349d0e4542a2"
+        "sha256": "7a357bd27d0727c20e8c4a9cf0cdc6aa4fcb10ee3a619c0411dd100da32eea72"
       }
     ]
   },
   "TagCheck": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "TagCheck",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -31755,21 +31755,21 @@
             ]
           }
         ],
-        "sha256": "b888404e58edd6dcc58ac7eb0ae7d655a20487cad7769d5a98a092b299ef2095"
+        "sha256": "2e4fbd42c90f016e94427ca4dc0affbcfde8618eeb17f9602820a52f24c3ae50"
       }
     ]
   },
   "YARA": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "YARA",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -36217,21 +36217,21 @@
             ]
           }
         ],
-        "sha256": "ea13b9f9cfe1bc6ad95ed778ff2cc8e5d07dca70f76a231cc3f7afebd46ba64b"
+        "sha256": "af185c92b61832def5d90dd3636e4285041c1af6e0bb5c15eaddad70ce143374"
       }
     ]
   },
   "Stigma": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "Stigma",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -36256,7 +36256,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Popper JS\nVersion: 1.14.7\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: Popper JS\nVersion: 1.14.7\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:40.812836Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:38.371186Z"
               }
@@ -36280,7 +36280,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Capa\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: Capa\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:34.590537Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:32.768422Z"
               }
@@ -36304,7 +36304,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: SweetAlert js\nVersion: 2.1.2\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: SweetAlert js\nVersion: 2.1.2\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:52.975366Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:51.062400Z"
               }
@@ -36328,7 +36328,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: dep2\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: dep2\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:48.759285Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:47.047252Z"
               }
@@ -36352,7 +36352,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: eslint\nVersion: 7.19.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: eslint\nVersion: 7.19.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:20.659944Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:18.774194Z"
               }
@@ -36376,7 +36376,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: TypeScript\nVersion: 4.1.5\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: TypeScript\nVersion: 4.1.5\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:13.413900Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:11.605636Z"
               }
@@ -36400,7 +36400,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: JSZip\nVersion: 3.5.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2021-23413: This affects the package jszip before 3.7.0. Crafting a new zip file with filenames set to Object prototype values (e.g __proto__, toString, etc) results in a returned object with a modified prototype instance.\n\ntitle_text1:Minor Vulnerability\n",
+                "code_desc": "body0:Package Name: JSZip\nVersion: 3.5.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2021-23413: This affects the package jszip before 3.7.0. Crafting a new zip file with filenames set to Object prototype values (e.g __proto__, toString, etc) results in a returned object with a modified prototype instance.\n\ntitle_text1:Minor Vulnerability\nFinished_at2023-01-19T16:02:44.777815Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:42.693258Z"
               }
@@ -36424,7 +36424,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: D3.js\nVersion: 3.5.17\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: D3.js\nVersion: 3.5.17\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:59.193822Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:57.363556Z"
               }
@@ -36448,7 +36448,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Prime Data Center Network Manager\nVersion: 10.2\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2018-0464: A vulnerability in Cisco Data Center Network Manager software could allow an authenticated, remote attacker to conduct directory traversal attacks and gain access to sensitive files on the targeted system. The vulnerability is due to improper validation of user requests within the management interface. An attacker could exploit this vulnerability by sending malicious requests containing directory traversal character sequences within the management interface. An exploit could allow the attacker to view or create arbitrary files on the targeted system.\n\ntitle_text1:Significant Vulnerability\n",
+                "code_desc": "body0:Package Name: Prime Data Center Network Manager\nVersion: 10.2\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2018-0464: A vulnerability in Cisco Data Center Network Manager software could allow an authenticated, remote attacker to conduct directory traversal attacks and gain access to sensitive files on the targeted system. The vulnerability is due to improper validation of user requests within the management interface. An attacker could exploit this vulnerability by sending malicious requests containing directory traversal character sequences within the management interface. An exploit could allow the attacker to view or create arbitrary files on the targeted system.\n\ntitle_text1:Significant Vulnerability\nFinished_at2023-01-19T16:03:36.787069Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:34.704321Z"
               }
@@ -36472,7 +36472,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Energizer\nVersion: 1.7.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: Energizer\nVersion: 1.7.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:48.872028Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:46.805734Z"
               }
@@ -36496,7 +36496,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: \nVersion: dependency\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-47935: A vulnerability has been identified in JT Open (All versions < V11.1.1.0), JT Utilities (All versions < V13.1.1.0), Solid Edge (All versions < V2023). The Jt1001.dll contains a memory corruption vulnerability while parsing specially crafted JT files. An attacker could leverage this vulnerability to execute code in the context of the current process. (ZDI-CAN-19078)\n\ntitle_text1:Significant Vulnerability\n",
+                "code_desc": "body0:Package Name: \nVersion: dependency\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-47935: A vulnerability has been identified in JT Open (All versions < V11.1.1.0), JT Utilities (All versions < V13.1.1.0), Solid Edge (All versions < V2023). The Jt1001.dll contains a memory corruption vulnerability while parsing specially crafted JT files. An attacker could leverage this vulnerability to execute code in the context of the current process. (ZDI-CAN-19078)\n\ntitle_text1:Significant Vulnerability\nFinished_at2023-01-19T16:03:44.970939Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:41.262817Z"
               }
@@ -36520,7 +36520,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: prettier\nVersion: 2.2.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: prettier\nVersion: 2.2.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:25.720799Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:23.899769Z"
               }
@@ -36544,7 +36544,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: css.css\nVersion: 2.6\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: css.css\nVersion: 2.6\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:37.768770Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:35.334318Z"
               }
@@ -36568,7 +36568,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: pako\nVersion: 2.0.3\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: pako\nVersion: 2.0.3\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:28.848796Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:26.014037Z"
               }
@@ -36592,7 +36592,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: dep3\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: dep3\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:50.948148Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:48.878301Z"
               }
@@ -36616,7 +36616,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: node jose\nVersion: 2.0.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: node jose\nVersion: 2.0.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:15.436519Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:13.681866Z"
               }
@@ -36640,7 +36640,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: node qrcode\nVersion: 1.4.4\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: node qrcode\nVersion: 1.4.4\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:32.643362Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:30.812541Z"
               }
@@ -36664,7 +36664,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: got\nVersion: 11.8.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2022-33987: The got package before 12.1.0 (also fixed in 11.8.5) for Node.js allows a redirect to a UNIX socket.\n\ntitle_text1:Minor Vulnerability\n",
+                "code_desc": "body0:Package Name: got\nVersion: 11.8.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2022-33987: The got package before 12.1.0 (also fixed in 11.8.5) for Node.js allows a redirect to a UNIX socket.\n\ntitle_text1:Minor Vulnerability\nFinished_at2023-01-19T16:03:23.749591Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:20.785842Z"
               }
@@ -36688,7 +36688,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Ansible\nVersion: 2.9.3\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2020-10684: A flaw was found in Ansible Engine, all versions 2.7.x, 2.8.x and 2.9.x prior to 2.7.17, 2.8.9 and 2.9.6 respectively, when using ansible_facts as a subkey of itself and promoting it to a variable when inject is enabled, overwriting the ansible_facts after the clean. An attacker could take advantage of this by altering the ansible_facts, such as ansible_hosts, users and any other key data which would lead into privilege escalation or code injection.\n\ntitle_text1:Significant Vulnerability\n",
+                "code_desc": "body0:Package Name: Ansible\nVersion: 2.9.3\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2020-10684: A flaw was found in Ansible Engine, all versions 2.7.x, 2.8.x and 2.9.x prior to 2.7.17, 2.8.9 and 2.9.6 respectively, when using ansible_facts as a subkey of itself and promoting it to a variable when inject is enabled, overwriting the ansible_facts after the clean. An attacker could take advantage of this by altering the ansible_facts, such as ansible_hosts, users and any other key data which would lead into privilege escalation or code injection.\n\ntitle_text1:Significant Vulnerability\nFinished_at2023-01-19T16:02:17.526179Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:14.382000Z"
               }
@@ -36712,7 +36712,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Vault\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 1.4 was found in the NIST Vulnerability Database\nCVE-2022-41316: HashiCorp Vault and Vault Enterprise’s TLS certificate auth method did not initially load the optionally configured CRL issued by the role's CA into memory on startup, resulting in the revocation list not being checked if the CRL has not yet been retrieved. Fixed in 1.12.0, 1.11.4, 1.10.7, and 1.9.10.\n\ntitle_text1:Minor Vulnerability\n",
+                "code_desc": "body0:Package Name: Vault\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 1.4 was found in the NIST Vulnerability Database\nCVE-2022-41316: HashiCorp Vault and Vault Enterprise’s TLS certificate auth method did not initially load the optionally configured CRL issued by the role's CA into memory on startup, resulting in the revocation list not being checked if the CRL has not yet been retrieved. Fixed in 1.12.0, 1.11.4, 1.10.7, and 1.9.10.\n\ntitle_text1:Minor Vulnerability\nFinished_at2023-01-19T16:02:20.513559Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:17.936349Z"
               }
@@ -36736,7 +36736,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: SwiftBom-v1.7\nVersion: 1.7\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: SwiftBom-v1.7\nVersion: 1.7\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:42.571847Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:40.890908Z"
               }
@@ -36760,7 +36760,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: ts node\nVersion: 9.1.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: ts node\nVersion: 9.1.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:30.686465Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:28.972201Z"
               }
@@ -36784,7 +36784,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: eslint config prettier\nVersion: 7.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: eslint config prettier\nVersion: 7.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:11.440225Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:09.632778Z"
               }
@@ -36808,7 +36808,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Nexus Repository OSS\nVersion: 3.19.1-01\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: Nexus Repository OSS\nVersion: 3.19.1-01\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:50.829138Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:49.130473Z"
               }
@@ -36832,7 +36832,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: eslint plugin prettier\nVersion: 3.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: eslint plugin prettier\nVersion: 3.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:17.682236Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:15.640049Z"
               }
@@ -36856,7 +36856,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: asn1crypto\nVersion: 1.3.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: asn1crypto\nVersion: 1.3.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:57.250772Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:55.456333Z"
               }
@@ -36880,7 +36880,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Enterprise Linux\nVersion: 7.8\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: Enterprise Linux\nVersion: 7.8\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:46.649410Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:44.922469Z"
               }
@@ -36904,7 +36904,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Bootstrap CSS\nVersion: 4.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: Bootstrap CSS\nVersion: 4.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:04.257681Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:59.325142Z"
               }
@@ -36928,7 +36928,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: xlsx.js\nVersion: 0.8.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: xlsx.js\nVersion: 0.8.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:24.127675Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:20.646329Z"
               }
@@ -36952,7 +36952,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: libICE\nVersion: 1.0.9\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2017-2626: It was discovered that libICE before 1.0.9-8 used a weak entropy to generate keys. A local attacker could potentially use this flaw for session hijacking using the information available from the process list.\n\ntitle_text1:Significant Vulnerability\n",
+                "code_desc": "body0:Package Name: libICE\nVersion: 1.0.9\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2017-2626: It was discovered that libICE before 1.0.9-8 used a weak entropy to generate keys. A local attacker could potentially use this flaw for session hijacking using the information available from the process list.\n\ntitle_text1:Significant Vulnerability\nFinished_at2023-01-19T16:02:32.413821Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:30.154115Z"
               }
@@ -36976,7 +36976,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Terraform\nVersion: 0.12.26\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2021-36230: HashiCorp Terraform Enterprise releases up to v202106-1 did not properly perform authorization checks on a subset of API requests executed using the run token, allowing privilege escalation to organization owner. Fixed in v202107-1.\n\ntitle_text1:Major Vulnerability\n",
+                "code_desc": "body0:Package Name: Terraform\nVersion: 0.12.26\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2021-36230: HashiCorp Terraform Enterprise releases up to v202106-1 did not properly perform authorization checks on a subset of API requests executed using the run token, allowing privilege escalation to organization owner. Fixed in v202107-1.\n\ntitle_text1:Major Vulnerability\nFinished_at2023-01-19T16:02:55.300383Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:53.109506Z"
               }
@@ -37000,7 +37000,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Commander\nVersion: 7.0.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: Commander\nVersion: 7.0.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:08.986197Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:06.589660Z"
               }
@@ -37024,7 +37024,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: jQuery\nVersion: 3.5.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: jQuery\nVersion: 3.5.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:35.215604Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:32.998455Z"
               }
@@ -37048,7 +37048,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: OKD\nVersion: 3.11\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: OKD\nVersion: 3.11\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:28.238521Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:26.274221Z"
               }
@@ -37072,7 +37072,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: package name\nVersion: package\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: package name\nVersion: package\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:38.623221Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:36.912284Z"
               }
@@ -37096,7 +37096,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: script.js\nVersion: 4.9\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: script.js\nVersion: 4.9\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:30.028486Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:28.347947Z"
               }
@@ -37120,7 +37120,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: dep1\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: dep1\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:46.831020Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:45.176145Z"
               }
@@ -37144,7 +37144,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: Bootstrap JS\nVersion: 4.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: Bootstrap JS\nVersion: 4.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:06.403494Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:04.406622Z"
               }
@@ -37168,7 +37168,7 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: dependency name\nVersion: dependency\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: dependency name\nVersion: dependency\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:41.132525Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:03:38.768721Z"
               }
@@ -37192,28 +37192,28 @@
             "results": [
               {
                 "status": "failed",
-                "code_desc": "body0:Package Name: sha256.js\nVersion: 1.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
+                "code_desc": "body0:Package Name: sha256.js\nVersion: 1.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:26.120667Z\n",
                 "message": "",
                 "start_time": "2023-01-19T16:02:24.355126Z"
               }
             ]
           }
         ],
-        "sha256": "d1f8bfd843a0f79ec5c2ebcad7ecc16e999ef30d78b56b9f6ac4a8ab36efb766"
+        "sha256": "91ec2eea07d9a6398f3b05973b9f3ae1e71b538e2772d7f60a30a7fbb14ea0c5"
       }
     ]
   },
   "Hipcheck": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "Hipcheck",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -37629,21 +37629,21 @@
             ]
           }
         ],
-        "sha256": "8471aae99c2abb1fc5a7d12e165626bc8190f067366017a8560acf06a112f3cd"
+        "sha256": "bca90d1f248e4445fc21c2550e76c8fc3716157ecc95767961c2db57f08c54c1"
       }
     ]
   },
   "DeobfuScripter": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "DeobfuScripter",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -38467,21 +38467,21 @@
             ]
           }
         ],
-        "sha256": "fa33c6ab53176e41e780d2a7e4ec3532e147d35462f48c86442ba91cee9974ac"
+        "sha256": "8a9ae7d2a2432a01c2d179c4a88518a54d7c70eb7024882a4746e0d9fc526b5b"
       }
     ]
   },
   "PeePDF": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "PeePDF",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -38633,21 +38633,21 @@
             ]
           }
         ],
-        "sha256": "046acc1b5cb3925eb204c0f8e71150b4caad29d35d2f9afcd1fb633cef6ac9b9"
+        "sha256": "e3612759ff278f3136f2af2b717daedf25c5d7b21c4a78bbafff0bd5d1239b0e"
       }
     ]
   },
   "Extract": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "Extract",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -38871,21 +38871,21 @@
             ]
           }
         ],
-        "sha256": "aeba33f5f9d74d4a0b1b8c19d4b8b232000c378761fbd6ae23037a392d44e0ae"
+        "sha256": "eeba3e3624c9cc3a2e8688458b12bc3eb1784d4f91f9437d42bfe91e195457fc"
       }
     ]
   },
   "Pixaxe": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "Pixaxe",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -38917,21 +38917,21 @@
             ]
           }
         ],
-        "sha256": "56113eafba35576ffe71659dfe8c861008634be73c0daa293eab55b600b7d0bf"
+        "sha256": "6db34b4661a3ffeb1c139c89d6af679497221de2c417071937e116f2c79c022e"
       }
     ]
   },
   "Safelist": {
     "platform": {
       "name": "Heimdall Tools",
-      "release": "2.6.32"
+      "release": "2.6.47"
     },
-    "version": "2.6.32",
+    "version": "2.6.47",
     "statistics": {},
     "profiles": [
       {
         "name": "Safelist",
-        "version": "tbd",
+        "version": "na",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -38963,7 +38963,7 @@
             ]
           }
         ],
-        "sha256": "d9c79cc3e93659952e460027078aa885692fb2f637c618a5bb9f9453db437078"
+        "sha256": "3c9d5b4c66f50d65827f0df5f36390d7f8e4efed524ce777d0dda89e6ab12df9"
       }
     ]
   }
