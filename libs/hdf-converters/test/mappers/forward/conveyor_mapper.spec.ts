@@ -10,19 +10,6 @@ describe('conveyor_mapper', () => {
       )
     );
 
-    /*fs.writeFileSync(
-      'sample_jsons/conveyor_mapper/conveyor-moldy-hdf.json',
-      JSON.stringify(mapper.toHdf()['Moldy'], null, 2)
-    );
-    fs.writeFileSync(
-      'sample_jsons/conveyor_mapper/conveyor-stigma-hdf.json',
-      JSON.stringify(mapper.toHdf()['Stigma'], null, 2)
-    );
-    fs.writeFileSync(
-      'sample_jsons/conveyor_mapper/conveyor-hdf.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );*/
-
     expect(omitVersions(mapper.toHdf()['Moldy'])).toEqual(
       omitVersions(
         JSON.parse(
