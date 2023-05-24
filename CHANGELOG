@@ -1,4 +1,29 @@
-v2.6.48
+v2.6.49
+
+- fix wordwrap for api key modal @Amndeep7 (#4515)
+- Don't handle every array item within each array item @candrews (#4480)
+
+## Dependency Updates
+
+- Bump ts-loader from 9.4.2 to 9.4.3 @dependabot (#4514)
+- Bump @aws-sdk/client-config-service from 3.337.0 to 3.338.0 @dependabot (#4510)
+- Bump @nestjs/platform-express from 9.4.1 to 9.4.2 @dependabot (#4511)
+- Bump yaml from 2.2.2 to 2.3.0 @dependabot (#4512)
+- Bump aws-sdk from 2.1381.0 to 2.1382.0 @dependabot (#4503)
+- Bump @typescript-eslint/parser from 5.59.6 to 5.59.7 @dependabot (#4507)
+- Bump @types/node from 20.2.1 to 20.2.3 @dependabot (#4505)
+- Bump @typescript-eslint/eslint-plugin from 5.59.6 to 5.59.7 @dependabot (#4504)
+- Bump @aws-sdk/client-config-service from 3.335.0 to 3.337.0 @dependabot (#4502)
+- Bump @aws-sdk/client-config-service from 3.332.0 to 3.335.0 @dependabot (#4497)
+- Bump eslint from 8.40.0 to 8.41.0 @dependabot (#4499)
+- Bump aws-sdk from 2.1380.0 to 2.1381.0 @dependabot (#4500)
+- Bump aws-sdk from 2.1378.0 to 2.1380.0 @dependabot (#4496)
+- Bump @types/node from 20.2.0 to 20.2.1 @dependabot (#4498)
+- Bump sinon from 15.0.4 to 15.1.0 @dependabot (#4495)
+- Bump @nestjs/cli from 9.4.2 to 9.5.0 @dependabot (#4488)
+- Bump @nestjs/schematics from 9.1.0 to 9.2.0 @dependabot (#4489)
+- Bump @types/node from 20.1.7 to 20.2.0 @dependabot (#4491)
+- Bump rimraf from 5.0.0 to 5.0.1 @dependabot (#4490)
 
 ## Dependency Updates
 
