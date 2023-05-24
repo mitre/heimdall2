@@ -34,8 +34,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Popper JS\nVersion: 1.14.7\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:38.371186Z",
-              "run_time": "2023-01-19T16:02:40.812836Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:38.371186Z"
             }
           ]
         },
@@ -58,8 +58,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Capa\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:32.768422Z",
-              "run_time": "2023-01-19T16:03:34.590537Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:32.768422Z"
             }
           ]
         },
@@ -82,8 +82,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: SweetAlert js\nVersion: 2.1.2\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:51.062400Z",
-              "run_time": "2023-01-19T16:02:52.975366Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:51.062400Z"
             }
           ]
         },
@@ -106,8 +106,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: dep2\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:47.047252Z",
-              "run_time": "2023-01-19T16:03:48.759285Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:47.047252Z"
             }
           ]
         },
@@ -130,8 +130,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: eslint\nVersion: 7.19.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:18.774194Z",
-              "run_time": "2023-01-19T16:03:20.659944Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:18.774194Z"
             }
           ]
         },
@@ -154,8 +154,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: TypeScript\nVersion: 4.1.5\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:11.605636Z",
-              "run_time": "2023-01-19T16:03:13.413900Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:11.605636Z"
             }
           ]
         },
@@ -178,8 +178,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: JSZip\nVersion: 3.5.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2021-23413: This affects the package jszip before 3.7.0. Crafting a new zip file with filenames set to Object prototype values (e.g __proto__, toString, etc) results in a returned object with a modified prototype instance.\n\ntitle_text1:Minor Vulnerability\n",
-              "start_time": "2023-01-19T16:02:42.693258Z",
-              "run_time": "2023-01-19T16:02:44.777815Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:42.693258Z"
             }
           ]
         },
@@ -202,8 +202,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: D3.js\nVersion: 3.5.17\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:57.363556Z",
-              "run_time": "2023-01-19T16:02:59.193822Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:57.363556Z"
             }
           ]
         },
@@ -226,8 +226,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Prime Data Center Network Manager\nVersion: 10.2\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2018-0464: A vulnerability in Cisco Data Center Network Manager software could allow an authenticated, remote attacker to conduct directory traversal attacks and gain access to sensitive files on the targeted system. The vulnerability is due to improper validation of user requests within the management interface. An attacker could exploit this vulnerability by sending malicious requests containing directory traversal character sequences within the management interface. An exploit could allow the attacker to view or create arbitrary files on the targeted system.\n\ntitle_text1:Significant Vulnerability\n",
-              "start_time": "2023-01-19T16:03:34.704321Z",
-              "run_time": "2023-01-19T16:03:36.787069Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:34.704321Z"
             }
           ]
         },
@@ -250,8 +250,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Energizer\nVersion: 1.7.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:46.805734Z",
-              "run_time": "2023-01-19T16:02:48.872028Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:46.805734Z"
             }
           ]
         },
@@ -274,8 +274,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: \nVersion: dependency\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-47935: A vulnerability has been identified in JT Open (All versions < V11.1.1.0), JT Utilities (All versions < V13.1.1.0), Solid Edge (All versions < V2023). The Jt1001.dll contains a memory corruption vulnerability while parsing specially crafted JT files. An attacker could leverage this vulnerability to execute code in the context of the current process. (ZDI-CAN-19078)\n\ntitle_text1:Significant Vulnerability\n",
-              "start_time": "2023-01-19T16:03:41.262817Z",
-              "run_time": "2023-01-19T16:03:44.970939Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:41.262817Z"
             }
           ]
         },
@@ -298,8 +298,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: prettier\nVersion: 2.2.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:23.899769Z",
-              "run_time": "2023-01-19T16:03:25.720799Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:23.899769Z"
             }
           ]
         },
@@ -322,8 +322,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: css.css\nVersion: 2.6\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:35.334318Z",
-              "run_time": "2023-01-19T16:02:37.768770Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:35.334318Z"
             }
           ]
         },
@@ -346,8 +346,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: pako\nVersion: 2.0.3\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:26.014037Z",
-              "run_time": "2023-01-19T16:03:28.848796Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:26.014037Z"
             }
           ]
         },
@@ -370,8 +370,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: dep3\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:48.878301Z",
-              "run_time": "2023-01-19T16:03:50.948148Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:48.878301Z"
             }
           ]
         },
@@ -394,8 +394,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: node jose\nVersion: 2.0.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:13.681866Z",
-              "run_time": "2023-01-19T16:03:15.436519Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:13.681866Z"
             }
           ]
         },
@@ -418,8 +418,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: node qrcode\nVersion: 1.4.4\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:30.812541Z",
-              "run_time": "2023-01-19T16:03:32.643362Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:30.812541Z"
             }
           ]
         },
@@ -442,8 +442,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: got\nVersion: 11.8.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2022-33987: The got package before 12.1.0 (also fixed in 11.8.5) for Node.js allows a redirect to a UNIX socket.\n\ntitle_text1:Minor Vulnerability\n",
-              "start_time": "2023-01-19T16:03:20.785842Z",
-              "run_time": "2023-01-19T16:03:23.749591Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:20.785842Z"
             }
           ]
         },
@@ -466,8 +466,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Ansible\nVersion: 2.9.3\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2020-10684: A flaw was found in Ansible Engine, all versions 2.7.x, 2.8.x and 2.9.x prior to 2.7.17, 2.8.9 and 2.9.6 respectively, when using ansible_facts as a subkey of itself and promoting it to a variable when inject is enabled, overwriting the ansible_facts after the clean. An attacker could take advantage of this by altering the ansible_facts, such as ansible_hosts, users and any other key data which would lead into privilege escalation or code injection.\n\ntitle_text1:Significant Vulnerability\n",
-              "start_time": "2023-01-19T16:02:14.382000Z",
-              "run_time": "2023-01-19T16:02:17.526179Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:14.382000Z"
             }
           ]
         },
@@ -490,8 +490,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Vault\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 1.4 was found in the NIST Vulnerability Database\nCVE-2022-41316: HashiCorp Vault and Vault Enterprise’s TLS certificate auth method did not initially load the optionally configured CRL issued by the role's CA into memory on startup, resulting in the revocation list not being checked if the CRL has not yet been retrieved. Fixed in 1.12.0, 1.11.4, 1.10.7, and 1.9.10.\n\ntitle_text1:Minor Vulnerability\n",
-              "start_time": "2023-01-19T16:02:17.936349Z",
-              "run_time": "2023-01-19T16:02:20.513559Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:17.936349Z"
             }
           ]
         },
@@ -514,8 +514,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: SwiftBom-v1.7\nVersion: 1.7\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:40.890908Z",
-              "run_time": "2023-01-19T16:02:42.571847Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:40.890908Z"
             }
           ]
         },
@@ -538,8 +538,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: ts node\nVersion: 9.1.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:28.972201Z",
-              "run_time": "2023-01-19T16:03:30.686465Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:28.972201Z"
             }
           ]
         },
@@ -562,8 +562,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: eslint config prettier\nVersion: 7.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:09.632778Z",
-              "run_time": "2023-01-19T16:03:11.440225Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:09.632778Z"
             }
           ]
         },
@@ -586,8 +586,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Nexus Repository OSS\nVersion: 3.19.1-01\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:49.130473Z",
-              "run_time": "2023-01-19T16:02:50.829138Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:49.130473Z"
             }
           ]
         },
@@ -610,8 +610,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: eslint plugin prettier\nVersion: 3.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:15.640049Z",
-              "run_time": "2023-01-19T16:03:17.682236Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:15.640049Z"
             }
           ]
         },
@@ -634,8 +634,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: asn1crypto\nVersion: 1.3.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:55.456333Z",
-              "run_time": "2023-01-19T16:02:57.250772Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:55.456333Z"
             }
           ]
         },
@@ -658,8 +658,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Enterprise Linux\nVersion: 7.8\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:44.922469Z",
-              "run_time": "2023-01-19T16:02:46.649410Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:44.922469Z"
             }
           ]
         },
@@ -682,8 +682,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Bootstrap CSS\nVersion: 4.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:59.325142Z",
-              "run_time": "2023-01-19T16:03:04.257681Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:59.325142Z"
             }
           ]
         },
@@ -706,8 +706,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: xlsx.js\nVersion: 0.8.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:20.646329Z",
-              "run_time": "2023-01-19T16:02:24.127675Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:20.646329Z"
             }
           ]
         },
@@ -730,8 +730,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: libICE\nVersion: 1.0.9\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2017-2626: It was discovered that libICE before 1.0.9-8 used a weak entropy to generate keys. A local attacker could potentially use this flaw for session hijacking using the information available from the process list.\n\ntitle_text1:Significant Vulnerability\n",
-              "start_time": "2023-01-19T16:02:30.154115Z",
-              "run_time": "2023-01-19T16:02:32.413821Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:30.154115Z"
             }
           ]
         },
@@ -754,8 +754,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Terraform\nVersion: 0.12.26\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2021-36230: HashiCorp Terraform Enterprise releases up to v202106-1 did not properly perform authorization checks on a subset of API requests executed using the run token, allowing privilege escalation to organization owner. Fixed in v202107-1.\n\ntitle_text1:Major Vulnerability\n",
-              "start_time": "2023-01-19T16:02:53.109506Z",
-              "run_time": "2023-01-19T16:02:55.300383Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:53.109506Z"
             }
           ]
         },
@@ -778,8 +778,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Commander\nVersion: 7.0.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:06.589660Z",
-              "run_time": "2023-01-19T16:03:08.986197Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:06.589660Z"
             }
           ]
         },
@@ -802,8 +802,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: jQuery\nVersion: 3.5.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:32.998455Z",
-              "run_time": "2023-01-19T16:02:35.215604Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:32.998455Z"
             }
           ]
         },
@@ -826,8 +826,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: OKD\nVersion: 3.11\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:26.274221Z",
-              "run_time": "2023-01-19T16:02:28.238521Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:26.274221Z"
             }
           ]
         },
@@ -850,8 +850,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: package name\nVersion: package\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:36.912284Z",
-              "run_time": "2023-01-19T16:03:38.623221Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:36.912284Z"
             }
           ]
         },
@@ -874,8 +874,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: script.js\nVersion: 4.9\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:28.347947Z",
-              "run_time": "2023-01-19T16:02:30.028486Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:28.347947Z"
             }
           ]
         },
@@ -898,8 +898,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: dep1\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:45.176145Z",
-              "run_time": "2023-01-19T16:03:46.831020Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:45.176145Z"
             }
           ]
         },
@@ -922,8 +922,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: Bootstrap JS\nVersion: 4.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:04.406622Z",
-              "run_time": "2023-01-19T16:03:06.403494Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:04.406622Z"
             }
           ]
         },
@@ -946,8 +946,8 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: dependency name\nVersion: dependency\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:03:38.768721Z",
-              "run_time": "2023-01-19T16:03:41.132525Z"
+              "message": "",
+              "start_time": "2023-01-19T16:03:38.768721Z"
             }
           ]
         },
@@ -970,13 +970,13 @@
             {
               "status": "failed",
               "code_desc": "body0:Package Name: sha256.js\nVersion: 1.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\n",
-              "start_time": "2023-01-19T16:02:24.355126Z",
-              "run_time": "2023-01-19T16:02:26.120667Z"
+              "message": "",
+              "start_time": "2023-01-19T16:02:24.355126Z"
             }
           ]
         }
       ],
-      "sha256": "14484843a5b1170d3b708b1d93ec89a907057f536f48aaa5ed3e33f855d9dade"
+      "sha256": "d1f8bfd843a0f79ec5c2ebcad7ecc16e999ef30d78b56b9f6ac4a8ab36efb766"
     }
   ]
 }
