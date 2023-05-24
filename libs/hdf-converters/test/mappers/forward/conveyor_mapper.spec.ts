@@ -26,9 +26,12 @@ describe('conveyor_mapper', () => {
     expect(omitVersions(mapper.toHdf()['Moldy'])).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/conveyor_mapper/conveyor-moldy-hdf.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/conveyor_mapper/conveyor-moldy-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );

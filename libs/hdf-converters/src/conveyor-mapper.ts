@@ -2,38 +2,41 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
-import {CweNistMapping} from './mappings/CweNistMapping';
-const FILE_PATH_VALUE = 'file_paths.file_path.value';
-const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
-const IMPACT_MAPPING: Map<string, number> = new Map([
-  ['5', 0.9],
-  ['4', 0.7],
-  ['3', 0.5],
-  ['2', 0.3],
-  ['1', 0.1],
-  ['0', 0.0]
-]);
-
 
 function createDescription(
   data: Record<string, unknown>,
   type: string
 ): string {
   if (type == 'Moldy') {
-    return ('body:' + _.get(data, 'result.sections[0].body') as string) +
-        '\nbody_format:' + (_.get(data, 'result.sections[0].body_format') as string) +
-        '\nclassificaton:' + (_.get(data, 'result.sections[0].body_classification') as string) +
-        '\nFinished_at'+ (_.get(data, 'response.milestones.service_completed') as string) + '\n'
+    return (
+      (('body:' + _.get(data, 'result.sections[0].body')) as string) +
+      '\nbody_format:' +
+      (_.get(data, 'result.sections[0].body_format') as string) +
+      '\nclassificaton:' +
+      (_.get(data, 'result.sections[0].body_classification') as string) +
+      '\nFinished_at' +
+      (_.get(data, 'response.milestones.service_completed') as string) +
+      '\n'
+    );
   }
   if (type == 'Stigma') {
-    return ('body0:' + _.get(data, 'result.sections[0].body') as string) +
-        '\nbody_format0:' + (_.get(data, 'result.sections[0].body_format') as string) +
-        '\ntitle_text0:' + (_.get(data, 'result.sections[0].title_text') as string) +
-        '\nclassificaton0:' + (_.get(data, 'result.sections[0].body_classification') as string) +
-        '\nbody1:' + (_.get(data, 'result.sections[1].body') as string) +
-        '\ntitle_text1:' + (_.get(data, 'result.sections[1].title_text') as string) +
-        '\nFinished_at' + (_.get(data, 'response.milestones.service_completed') as string) + '\n'
+    return (
+      (('body0:' + _.get(data, 'result.sections[0].body')) as string) +
+      '\nbody_format0:' +
+      (_.get(data, 'result.sections[0].body_format') as string) +
+      '\ntitle_text0:' +
+      (_.get(data, 'result.sections[0].title_text') as string) +
+      '\nclassificaton0:' +
+      (_.get(data, 'result.sections[0].body_classification') as string) +
+      '\nbody1:' +
+      (_.get(data, 'result.sections[1].body') as string) +
+      '\ntitle_text1:' +
+      (_.get(data, 'result.sections[1].title_text') as string) +
+      '\nFinished_at' +
+      (_.get(data, 'response.milestones.service_completed') as string) +
+      '\n'
+    );
   }
   return JSON.stringify(_.get(data, 'result.sections[0]') as string);
 }
@@ -60,7 +63,7 @@ function shafileMapper(
     unknown
   >;
   const shamappings = {};
-  _.forEach(toplevel, (value, key) => {
+  _.forEach(toplevel, (value) => {
     if (_.has(value, 'name')) {
       _.set(shamappings, _.get(value, 'name[0]'), _.get(value, 'sha256'));
     }
