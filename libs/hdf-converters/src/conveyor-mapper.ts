@@ -143,7 +143,6 @@ export class ConveyorMapper extends BaseConverter {
   data: Record<string, unknown>;
   type: string;
   defaultMapping(
-    withRaw = false
   ): MappedTransform<ExecJSON.Execution, ILookupPath> {
     return {
       platform: {
@@ -175,15 +174,14 @@ export class ConveyorMapper extends BaseConverter {
   constructor(
     conveyor: Record<string, unknown>,
     meta: Record<string, unknown>,
-    type: string,
-    withRaw = false
+    type: string
   ) {
     const data = meta;
     _.set(data, 'api_response.results', conveyor);
     super(data);
     this.type = type;
     this.data = data;
-    this.setMappings(this.defaultMapping(withRaw));
+    this.setMappings(this.defaultMapping());
   }
 }
 
