@@ -45,10 +45,12 @@ function childrenfinder(output: Record<string, unknown>): string[][] {
   const arr: string[][] = [];
   _.forEach(output, (value, key) => {
     if (_.has(value, 'name')) {
-      arr.push([key, _.get(value, 'name[0]')]);
+      let temp:string = _.get(value, 'name[0]')||''
+      arr.push([key, temp]);
     }
     if (_.has(value, 'children')) {
-      _.forEach(childrenfinder(_.get(value, 'children')), function (value) {
+      let temp:Record<string, unknown> = _.get(value, 'children') || {}
+      _.forEach(childrenfinder(temp), function (value) {
         arr.push(value);
       });
     }
@@ -65,12 +67,16 @@ function shafileMapper(
   const shamappings = {};
   _.forEach(toplevel, (value) => {
     if (_.has(value, 'name')) {
-      _.set(shamappings, _.get(value, 'name[0]'), _.get(value, 'sha256'));
+      let temp:string = _.get(value, 'name[0]') || ''
+      _.set(shamappings, temp, _.get(value, 'sha256'));
     }
     if (_.has(value, 'children')) {
-      const arr = childrenfinder(_.get(value, 'children'));
+      let temp:Record<string, unknown> = _.get(value, 'children') || {}
+      const arr = childrenfinder(temp);
       _.forEach(arr, (value) => {
-        _.set(shamappings, value[0], value[1]);
+        let temp1:string = value[0] || ''
+        let temp2:string = value[1] || ''
+        _.set(shamappings, temp1, temp2);
       });
     }
   });
@@ -84,7 +90,8 @@ function arrayifyObject(
   const newout: Record<string, unknown>[] = [];
   _.forEach(res, (value) => {
     const temp = value as Record<string, unknown>;
-    _.set(temp, 'filename', _.get(mapped, _.get(value, 'sha256')));
+    let temp1:string = _.get(value, 'sha256') || ''
+    _.set(temp, 'filename', temp1);
     const description = createDescription(
       temp as Record<string, unknown>,
       _.get(temp, 'response.service_name') as string
