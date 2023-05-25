@@ -9,7 +9,7 @@
     "profiles": [
       {
         "name": "Characterize",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -4457,7 +4457,7 @@
             ]
           }
         ],
-        "sha256": "89645d3202ccbfbe7d030c142b92278fadbb60f370316aa1c3af162fa0876381"
+        "sha256": "a61987f58619999247c5c21bc0932d094b5a7cce2923041ff1d92a7da3d6970e"
       }
     ]
   },
@@ -4471,7 +4471,7 @@
     "profiles": [
       {
         "name": "CodeQuality",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -8919,7 +8919,7 @@
             ]
           }
         ],
-        "sha256": "362282552f34c07f6f03874a4adba10ddd7bdecc75b1e5e2322cd771186520e4"
+        "sha256": "19a858ae02927d498b180f21ae42b5eb4f49403d97ee3cbcc37fc6c90e5e5cdb"
       }
     ]
   },
@@ -8933,7 +8933,7 @@
     "profiles": [
       {
         "name": "FrankenStrings",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -13381,7 +13381,7 @@
             ]
           }
         ],
-        "sha256": "f0aadbe7853d5efffcb0c1a7ff1c5d02ed019a0ecac2d6bd3f9468743036af6c"
+        "sha256": "76c4c3cd7e35fa9970ece207b29069a3782bd7e03c7b52a5a4cec5e8ae55af6f"
       }
     ]
   },
@@ -13395,7 +13395,7 @@
     "profiles": [
       {
         "name": "MetaDefender",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -17843,7 +17843,7 @@
             ]
           }
         ],
-        "sha256": "f3e59965dd88971eb900a4275d799db65fb515848f74d4a6708050f1f6f62b6b"
+        "sha256": "a88d779e151eca4f556b3115d05e84925c704c0247e1400b856262492b222bf6"
       }
     ]
   },
@@ -17857,7 +17857,7 @@
     "profiles": [
       {
         "name": "MetaPeek",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -22305,7 +22305,7 @@
             ]
           }
         ],
-        "sha256": "9fbf9eb19d9058cbd84e27bffb0482cf5ae5c858f0d83ab404019ff70b884a0a"
+        "sha256": "b0749024c3818b7a06ce142cb4b794438e2fd3a678723b01319f8466b3b6d6f7"
       }
     ]
   },
@@ -22319,7 +22319,7 @@
     "profiles": [
       {
         "name": "Moldy",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -22831,7 +22831,7 @@
             ]
           }
         ],
-        "sha256": "26357a104d98e169d2b754a07f93655accc1fd865f93f40274a67b0d2f4f520f"
+        "sha256": "c736ba90abbcfe7a64a5bff4c6a575c36feddc95231aee947ca6032484dfd804"
       }
     ]
   },
@@ -22845,7 +22845,7 @@
     "profiles": [
       {
         "name": "SBOM",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -27293,7 +27293,7 @@
             ]
           }
         ],
-        "sha256": "7a357bd27d0727c20e8c4a9cf0cdc6aa4fcb10ee3a619c0411dd100da32eea72"
+        "sha256": "302ed1bf43bf3b8ae8ab4aefdabc70072f45afd8225261c85e6efbd5ac791637"
       }
     ]
   },
@@ -27307,7 +27307,7 @@
     "profiles": [
       {
         "name": "TagCheck",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -31755,7 +31755,7 @@
             ]
           }
         ],
-        "sha256": "2e4fbd42c90f016e94427ca4dc0affbcfde8618eeb17f9602820a52f24c3ae50"
+        "sha256": "1cb2415a1398794974a51b2328504e5e739c4586cf74b1bc3c846cc675de3140"
       }
     ]
   },
@@ -31769,7 +31769,7 @@
     "profiles": [
       {
         "name": "YARA",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -36217,7 +36217,7 @@
             ]
           }
         ],
-        "sha256": "af185c92b61832def5d90dd3636e4285041c1af6e0bb5c15eaddad70ce143374"
+        "sha256": "27e494f826f5a2519d2e0c5308aca85c22511759e6d322b78938046fa8c010e9"
       }
     ]
   },
@@ -36231,7 +36231,7 @@
     "profiles": [
       {
         "name": "Stigma",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -37199,7 +37199,7 @@
             ]
           }
         ],
-        "sha256": "91ec2eea07d9a6398f3b05973b9f3ae1e71b538e2772d7f60a30a7fbb14ea0c5"
+        "sha256": "3b130dc38ee213a836e34d0f8548df41b5aa1eeb03e23bf5fecfd6f414b646d8"
       }
     ]
   },
@@ -37213,7 +37213,7 @@
     "profiles": [
       {
         "name": "Hipcheck",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -37629,7 +37629,7 @@
             ]
           }
         ],
-        "sha256": "bca90d1f248e4445fc21c2550e76c8fc3716157ecc95767961c2db57f08c54c1"
+        "sha256": "d9685be9cb8954a318c2b78f50c6f15be2763f8da3ef037d624b2a3469abbe71"
       }
     ]
   },
@@ -37643,7 +37643,7 @@
     "profiles": [
       {
         "name": "DeobfuScripter",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -38467,7 +38467,7 @@
             ]
           }
         ],
-        "sha256": "8a9ae7d2a2432a01c2d179c4a88518a54d7c70eb7024882a4746e0d9fc526b5b"
+        "sha256": "7566439a21102d98ab21724e70c1f30325daa8c7e9ad0dff3b5904e52db54529"
       }
     ]
   },
@@ -38481,7 +38481,7 @@
     "profiles": [
       {
         "name": "PeePDF",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -38633,7 +38633,7 @@
             ]
           }
         ],
-        "sha256": "e3612759ff278f3136f2af2b717daedf25c5d7b21c4a78bbafff0bd5d1239b0e"
+        "sha256": "a35bcc9ae9ff16f004745e1d82ae38a83a278ebacf838d4a106337d1b3cb2c32"
       }
     ]
   },
@@ -38647,7 +38647,7 @@
     "profiles": [
       {
         "name": "Extract",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -38871,7 +38871,7 @@
             ]
           }
         ],
-        "sha256": "eeba3e3624c9cc3a2e8688458b12bc3eb1784d4f91f9437d42bfe91e195457fc"
+        "sha256": "5c69920f2500300bbc4bbd36d21b3c6107555a04e46e4d962e91ed0630d6c2e5"
       }
     ]
   },
@@ -38885,7 +38885,7 @@
     "profiles": [
       {
         "name": "Pixaxe",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -38917,7 +38917,7 @@
             ]
           }
         ],
-        "sha256": "6db34b4661a3ffeb1c139c89d6af679497221de2c417071937e116f2c79c022e"
+        "sha256": "1f86bdde2f564fcea8424c5072eb2a1371b2d20cf48185026c3e246641bb64a3"
       }
     ]
   },
@@ -38931,7 +38931,7 @@
     "profiles": [
       {
         "name": "Safelist",
-        "version": "na",
+        "version": "api_response.api_server_version",
         "title": "Inspection of file: submissions/services.tar.zip",
         "supports": [],
         "attributes": [],
@@ -38963,7 +38963,7 @@
             ]
           }
         ],
-        "sha256": "3c9d5b4c66f50d65827f0df5f36390d7f8e4efed524ce777d0dda89e6ab12df9"
+        "sha256": "06461a6c36cfa17c7664882b816abc23bedb2a749a3fabdb4206863fd2d2f2ee"
       }
     ]
   }
