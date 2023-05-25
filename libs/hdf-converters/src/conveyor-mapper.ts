@@ -10,7 +10,7 @@ function createDescription(
 ): string {
   if (type == 'Moldy') {
     return (
-      (('body:' + _.get(data, 'result.sections[0].body')) as string) +
+      (('body:' + _.get(data, 'result.sections[0].body'))) +
       '\nbody_format:' +
       (_.get(data, 'result.sections[0].body_format') as string) +
       '\nclassificaton:' +
@@ -22,7 +22,7 @@ function createDescription(
   }
   if (type == 'Stigma') {
     return (
-      (('body0:' + _.get(data, 'result.sections[0].body')) as string) +
+      (('body0:' + _.get(data, 'result.sections[0].body'))) +
       '\nbody_format0:' +
       (_.get(data, 'result.sections[0].body_format') as string) +
       '\ntitle_text0:' +
@@ -93,7 +93,7 @@ function arrayifyObject(
     const temp2:string = _.get(value, 'sha256') || ''
     _.set(temp, 'filename', _.get(mapped, temp2));
     const description = createDescription(
-      temp as Record<string, unknown>,
+      temp,
       _.get(temp, 'response.service_name') as string
     );
     _.set(temp, 'result.sections[0].body', description);
