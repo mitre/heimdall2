@@ -232,7 +232,11 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   // I didn't make this one static because, frankly, it was annoying and unnecessary
   // Just do it last
   private compute_status(): ControlStatus {
-    if (this.attested && this.attestationStatus && !['failed', 'passed'].includes(this.attestationStatus)) {
+    if (
+      this.attested &&
+      this.attestationStatus &&
+      !['failed', 'passed'].includes(this.attestationStatus)
+    ) {
       throw new Error(
         `Attestation for control ${this.wraps.id} exists with invalid status: ${this.attestationStatus}`
       );
