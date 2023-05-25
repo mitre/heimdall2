@@ -142,8 +142,7 @@ function controlMappingConveyor(): MappedTransform<
 export class ConveyorMapper extends BaseConverter {
   data: Record<string, unknown>;
   type: string;
-  defaultMapping(
-  ): MappedTransform<ExecJSON.Execution, ILookupPath> {
+  defaultMapping(): MappedTransform<ExecJSON.Execution, ILookupPath> {
     return {
       platform: {
         name: 'Heimdall Tools',
