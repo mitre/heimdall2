@@ -8,7 +8,7 @@
   "profiles": [
     {
       "name": "Stigma",
-      "version": "api_response.api_server_version",
+      "version": "",
       "title": "Inspection of file: submissions/services.tar.zip",
       "supports": [],
       "attributes": [],
@@ -976,7 +976,7 @@
           ]
         }
       ],
-      "sha256": "3b130dc38ee213a836e34d0f8548df41b5aa1eeb03e23bf5fecfd6f414b646d8"
+      "sha256": "c484f43d7de4380b47734c0aa9af9b057cf2f2d543baf67c7b0a8c68c7431769"
     }
   ]
 }
