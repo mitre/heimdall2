@@ -10,7 +10,8 @@ function createDescription(
 ): string {
   if (type == 'Moldy') {
     return (
-      (('body:' + _.get(data, 'result.sections[0].body'))) +
+      'body:' +
+      _.get(data, 'result.sections[0].body') +
       '\nbody_format:' +
       (_.get(data, 'result.sections[0].body_format') as string) +
       '\nclassificaton:' +
@@ -22,7 +23,8 @@ function createDescription(
   }
   if (type == 'Stigma') {
     return (
-      (('body0:' + _.get(data, 'result.sections[0].body'))) +
+      'body0:' +
+      _.get(data, 'result.sections[0].body') +
       '\nbody_format0:' +
       (_.get(data, 'result.sections[0].body_format') as string) +
       '\ntitle_text0:' +
@@ -45,11 +47,11 @@ function childrenfinder(output: Record<string, unknown>): string[][] {
   const arr: string[][] = [];
   _.forEach(output, (value, key) => {
     if (_.has(value, 'name')) {
-      let temp:string =_.get(value, 'name[0]') || ''
+      const temp: string = _.get(value, 'name[0]') || '';
       arr.push([key, temp]);
     }
     if (_.has(value, 'children')) {
-      let temp:Record<string, unknown> = _.get(value, 'children') || {}
+      const temp: Record<string, unknown> = _.get(value, 'children') || {};
       _.forEach(childrenfinder(temp), function (value) {
         arr.push(value);
       });
@@ -67,15 +69,15 @@ function shafileMapper(
   const shamappings = {};
   _.forEach(toplevel, (value) => {
     if (_.has(value, 'name')) {
-      let temp:string = _.get(value, 'name[0]') || ''
+      const temp: string = _.get(value, 'name[0]') || '';
       _.set(shamappings, temp, _.get(value, 'sha256'));
     }
     if (_.has(value, 'children')) {
-      let temp:Record<string,unknown> = _.get(value, 'children')|| {}
+      const temp: Record<string, unknown> = _.get(value, 'children') || {};
       const arr = childrenfinder(temp);
       _.forEach(arr, (value) => {
-        let temp1:string = value[0] || ''
-        let temp2: string = value[1] || ''
+        const temp1: string = value[0] || '';
+        const temp2: string = value[1] || '';
         _.set(shamappings, temp1, temp2);
       });
     }
@@ -90,7 +92,7 @@ function arrayifyObject(
   const newout: Record<string, unknown>[] = [];
   _.forEach(res, (value) => {
     const temp = value as Record<string, unknown>;
-    const temp2:string = _.get(value, 'sha256') || ''
+    const temp2: string = _.get(value, 'sha256') || '';
     _.set(temp, 'filename', _.get(mapped, temp2));
     const description = createDescription(
       temp,
