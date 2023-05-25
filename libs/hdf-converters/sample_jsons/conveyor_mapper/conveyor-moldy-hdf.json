@@ -8,7 +8,7 @@
   "profiles": [
     {
       "name": "Moldy",
-      "version": "",
+      "version": "4.3.0.41",
       "title": "Inspection of file: submissions/services.tar.zip",
       "supports": [],
       "attributes": [],
@@ -520,7 +520,7 @@
           ]
         }
       ],
-      "sha256": "dfd7b42ba5cfdfd8764268d9378c8cc103960262ba8855b71e2d7c6e44fc1c02"
+      "sha256": "b12a4456d3c7396dd727ab544f45ed255959dc8ec69bcc9965fbf99eba854f5b"
     }
   ]
 }
