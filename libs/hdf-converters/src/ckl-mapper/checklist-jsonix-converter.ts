@@ -1,21 +1,21 @@
 import _ from 'lodash';
-import {
-  ChecklistJSONIX,
-  ChecklistJsonixAsset,
-  ChecklistJsonixIstig,
-  ChecklistJsonixSiData,
-  ChecklistJsonixStigData,
-  ChecklistJsonixVuln
+import { 
+  Checklist,
+  Asset,
+  Istig,
+  Sidata,
+  Stigdata,
+  Vuln
 } from '../../types/checklistJsonix';
 import { JsonixIntermediateConverter } from '../jsonix-intermediate-converter';
 
 export type ChecklistObject = {
   asset: ChecklistAsset;
   stigs: ChecklistStig[];
-  jsonixData: ChecklistJSONIX;
+  jsonixData: Checklist;
 };
 
-type ChecklistAsset = Omit<ChecklistJsonixAsset, 'TYPE_NAME'>;
+type ChecklistAsset = Asset;
 
 type ChecklistStig = {
   header: StigHeader;
@@ -41,10 +41,10 @@ type StigHeader = {
 
 // omit status to overwrite possible HDF status values
 export type ChecklistVuln = Omit<
-  ChecklistJsonixVuln,
-  'TYPE_NAME' | 'stigdata' | 'status'
+  Vuln,
+  'stigdata' | 'status'
 > & {
-  status: 'Passed' | 'Failed' | 'Not Applicable' | 'Not Reviewed';
+  status: StatusMapping;
   vulnNum: string;
   severity: string;
   groupTitle: string;
@@ -82,10 +82,10 @@ enum StatusMapping {
   Not_Reviewed = 'Not Reviewed'
 }
 
-export class ChecklistJsonixConverter extends JsonixIntermediateConverter<ChecklistJSONIX, ChecklistObject> {
+export class ChecklistJsonixConverter extends JsonixIntermediateConverter<Checklist, ChecklistObject> {
 
   getValueFromAttributeName<
-    T extends ChecklistJsonixStigData | ChecklistJsonixSiData
+    T extends Stigdata | Sidata
   >(data: T[], tag: string): string {
     let keyName = 'vulnattribute';
     let dataName = 'attributedata';
@@ -104,7 +104,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<Checkl
    * @param jsonixData - ChecklistJSONIX object
    * @returns - newChecklistObject
    */
-  toIntermediateObject(jsonixData: ChecklistJSONIX): ChecklistObject {
+  toIntermediateObject(jsonixData: Checklist): ChecklistObject {
     const asset: ChecklistAsset = {
       role: _.get(jsonixData, 'value.asset.role'),
       assettype: _.get(jsonixData, 'value.asset.assettype'),
@@ -121,61 +121,61 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<Checkl
       webdbinstance: _.get(jsonixData, 'value.asset.webdbinstance')
     };
 
-    const rawStigs: ChecklistJsonixIstig[] = _.get(jsonixData, 'value.stigs.istig');
+    const rawStigs: Istig[] = _.get(jsonixData, 'value.stigs.istig') as unknown as Istig[];
     const stigs: ChecklistStig[] = [];
     for (const stig of rawStigs) {
-      const stigInfo: ChecklistJsonixSiData[] = _.get(stig, 'stiginfo.sidata');
+      const stigInfo: Sidata[] = _.get(stig, 'stiginfo.sidata') as unknown as Sidata[];
       const header: StigHeader = {
-        version: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        version: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'version'
         ),
-        classification: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        classification: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'classification'
         ) as unknown as StigHeader['classification'],
-        customname: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        customname: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'customname'
         ),
-        stigid: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        stigid: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'stigid'
         ),
-        description: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        description: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'description'
         ),
-        filename: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        filename: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'filename'
         ),
-        releaseinfo: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        releaseinfo: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'releaseinfo'
         ),
-        title: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        title: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'title'
         ),
-        uuid: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        uuid: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'uuid'
         ),
-        notice: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        notice: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'notice'
         ),
-        source: this.getValueFromAttributeName<ChecklistJsonixSiData>(
+        source: this.getValueFromAttributeName<Sidata>(
           stigInfo,
           'source'
         )
       };
 
       const checklistVulns: ChecklistVuln[] = [];
-      const vulns: ChecklistJsonixVuln[] = _.get(stig, 'vuln');
+      const vulns: Vuln[] = _.get(stig, 'vuln');
       for (const vuln of vulns) {
-        const stigdata: ChecklistJsonixStigData[] = _.get(vuln, 'stigdata');
+        const stigdata: Stigdata[] = _.get(vuln, 'stigdata');
         const checklistVuln: ChecklistVuln = {
           status:
             StatusMapping[_.get(vuln, 'status')],
@@ -183,121 +183,121 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<Checkl
           comments: _.get(vuln, 'comments'),
           severityoverride: _.get(vuln, 'severityoverride'),
           severityjustification: _.get(vuln, 'severityjustification'),
-          vulnNum: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          vulnNum: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Vuln_Num'
           ),
-          severity: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          severity: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Severity'
           ) as unknown as ChecklistVuln['severity'],
-          groupTitle: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          groupTitle: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Group_Title'
           ),
-          ruleId: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          ruleId: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Rule_ID'
           ),
-          ruleVersion: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          ruleVersion: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Rule_Ver'
           ),
-          ruleTitle: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          ruleTitle: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Rule_Title'
           ),
-          vulnDiscuss: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          vulnDiscuss: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Vuln_Discuss'
           ),
-          iaControls: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          iaControls: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'IA_Controls'
           ),
           checkContent:
-            this.getValueFromAttributeName<ChecklistJsonixStigData>(
+            this.getValueFromAttributeName<Stigdata>(
               stigdata,
               'Check_Content'
             ),
-          fixText: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          fixText: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Fix_Text'
           ),
           falsePositives:
-            this.getValueFromAttributeName<ChecklistJsonixStigData>(
+            this.getValueFromAttributeName<Stigdata>(
               stigdata,
               'False_Positives'
             ),
           falseNegatives:
-            this.getValueFromAttributeName<ChecklistJsonixStigData>(
+            this.getValueFromAttributeName<Stigdata>(
               stigdata,
               'False_Negatives'
             ),
           documentable:
-            this.getValueFromAttributeName<ChecklistJsonixStigData>(
+            this.getValueFromAttributeName<Stigdata>(
               stigdata,
               'Documentable'
             ) as unknown as boolean,
-          mitigations: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          mitigations: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Mitigations'
           ),
           potentialImpact:
-            this.getValueFromAttributeName<ChecklistJsonixStigData>(
+            this.getValueFromAttributeName<Stigdata>(
               stigdata,
               'Potential_Impact'
             ),
           thirdPartyTools:
-            this.getValueFromAttributeName<ChecklistJsonixStigData>(
+            this.getValueFromAttributeName<Stigdata>(
               stigdata,
               'Third_Party_Tools'
             ),
           mitigationControl:
-            this.getValueFromAttributeName<ChecklistJsonixStigData>(
+            this.getValueFromAttributeName<Stigdata>(
               stigdata,
               'Mitigation_Control'
             ),
           responsibility:
-            this.getValueFromAttributeName<ChecklistJsonixStigData>(
+            this.getValueFromAttributeName<Stigdata>(
               stigdata,
               'Responsibility'
             ),
           securityOverrideGuidance:
-            this.getValueFromAttributeName<ChecklistJsonixStigData>(
+            this.getValueFromAttributeName<Stigdata>(
               stigdata,
               'Security_Override_Guidance'
             ),
           checkContentRef:
-            this.getValueFromAttributeName<ChecklistJsonixStigData>(
+            this.getValueFromAttributeName<Stigdata>(
               stigdata,
               'Check_Content_Ref'
             ),
-          weight: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          weight: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Weight'
           ),
-          class: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          class: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Class'
           ) as unknown as ChecklistVuln['class'],
-          stigRef: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          stigRef: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'STIGRef'
           ),
-          targetKey: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          targetKey: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'TargetKey'
           ),
-          stigUuid: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          stigUuid: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'STIG_UUID'
           ),
-          legacyId: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          legacyId: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'LEGACY_ID'
           ),
-          cciRef: this.getValueFromAttributeName<ChecklistJsonixStigData>(
+          cciRef: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'CCI_REF'
           )

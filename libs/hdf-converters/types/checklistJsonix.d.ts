@@ -1,129 +1,231 @@
-export type ChecklistJSONIX = {
-  name: ChecklistJsonixName;
-  value: ChecklistJsonixValue;
-};
+export interface Checklist {
+    name?:  Name;
+    value?: boolean | null | Stigdata | string;
+    [property: string]: unknown;
+}
 
-export type ChecklistJsonixName = {
-  key: string;
-  localPart: string;
-  namespaceURI: string;
-  prefix: string;
-  string: string;
-};
+export interface Name {
+    localPart:     LocalPartEnum;
+    namespaceURI?: string;
+    prefix?:       null | string;
+    [property: string]: unknown;
+}
 
-export type ChecklistJsonixValue = {
-  TYPE_NAME: string;
-  asset: ChecklistJsonixAsset;
-  stigs: ChecklistJsonixStigs;
-};
+export enum LocalPartEnum {
+    Asset = "ASSET",
+    AssetType = "ASSET_TYPE",
+    AttributeData = "ATTRIBUTE_DATA",
+    Checklist = "CHECKLIST",
+    Comments = "COMMENTS",
+    FindingDetails = "FINDING_DETAILS",
+    HostFQDN = "HOST_FQDN",
+    HostGUID = "HOST_GUID",
+    HostIP = "HOST_IP",
+    HostMAC = "HOST_MAC",
+    HostName = "HOST_NAME",
+    ISTIG = "iSTIG",
+    Marking = "MARKING",
+    Role = "ROLE",
+    SeverityJustification = "SEVERITY_JUSTIFICATION",
+    SeverityOverride = "SEVERITY_OVERRIDE",
+    SiData = "SI_DATA",
+    SidData = "SID_DATA",
+    SidName = "SID_NAME",
+    Status = "STATUS",
+    StigData = "STIG_DATA",
+    StigGUID = "STIG_GUID",
+    StigInfo = "STIG_INFO",
+    Stigs = "STIGS",
+    TargetComment = "TARGET_COMMENT",
+    TargetKey = "TARGET_KEY",
+    TechArea = "TECH_AREA",
+    Vuln = "VULN",
+    VulnAttribute = "VULN_ATTRIBUTE",
+    WebDBInstance = "WEB_DB_INSTANCE",
+    WebDBSite = "WEB_DB_SITE",
+    WebOrDatabase = "WEB_OR_DATABASE",
+}
 
-export type ChecklistJsonixAsset = {
-  TYPE_NAME: string;
-  assettype: 'Computing' | 'Non-Computing';
-  hostfqdn: string;
-  hostip: string;
-  hostmac: string;
-  hostname: string;
-  marking: string;
-  role: 'None' | 'Workstation' | 'Member Server' | 'Domain Controller';
-  targetcomment: string;
-  targetkey: string;
-  techarea:
-    | ''
-    | 'Application Review'
-    | 'Boundary Security'
-    | 'CDS Admin Review'
-    | 'CDS Technical Review'
-    | 'Database Review'
-    | 'Domain Name System (DNS)'
-    | 'Exchange Server'
-    | 'Host Based System Security (HBSS)'
-    | 'Internal Network'
-    | 'Mobility'
-    | 'Releasable Networks (REL)'
-    | 'Releaseable Networks (REL)'
-    | 'Traditional Security'
-    | 'UNIX OS'
-    | 'VVOIP Review'
-    | 'Web Review'
-    | 'Windows OS'
-    | 'Other Review';
-  webdbinstance: string;
-  webdbsite: string;
-  webordatabase: boolean;
-};
+export interface Stigdata {
+    attributedata?:         null | string;
+    vulnattribute?:         Vulnattribute;
+    comments?:              null | string;
+    findingdetails?:        null | string;
+    severityjustification?: null | string;
+    severityoverride?:      Severityoverride;
+    status?:                Status;
+    stigdata?:              StigdatumElement[];
+    sidata?:                Sidata[];
+    assettype?:             Assettype;
+    hostfqdn?:              null | string;
+    hostguid?:              null | string;
+    hostip?:                null | string;
+    hostmac?:               null | string;
+    hostname?:              null | string;
+    marking?:               null | string;
+    role?:                  Role;
+    stigguid?:              null | string;
+    targetcomment?:         null | string;
+    targetkey?:             null | string;
+    techarea?:              Techarea;
+    webdbinstance?:         null | string;
+    webdbsite?:             null | string;
+    webordatabase?:         boolean | null;
+    asset?:                 Asset;
+    stigs?:                 Stigs;
+    stiginfo?:              Stiginfo;
+    vuln?:                  Vuln[];
+    siddata?:               null | string;
+    sidname?:               Sidname;
+    istig?:                 Istig[];
+    [property: string]: unknown;
+}
 
-export type ChecklistJsonixStigs = {
-  TYPE_NAME: string;
-  istig: ChecklistJsonixIstig[];
-};
+export interface Asset {
+    assettype:      Assettype | unknown;
+    hostfqdn:       null | string | unknown;
+    hostguid?:      null | string | unknown;
+    hostip:         null | string | unknown;
+    hostmac:        null | string | unknown;
+    hostname:       null | string | unknown;
+    marking?:       null | string | unknown;
+    role:           Role | unknown;
+    stigguid?:      null | string | unknown;
+    targetcomment?: null | string | unknown;
+    targetkey:      null | string | unknown;
+    techarea:       Techarea | unknown;
+    webdbinstance:  null | string | unknown;
+    webdbsite:      null | string | unknown;
+    webordatabase:  boolean | null | unknown;
+    [property: string]: unknown;
+}
 
-export type ChecklistJsonixIstig = {
-  TYPE_NAME: string;
-  stiginfo: ChecklistJsonixStigInfo;
-  vuln: ChecklistJsonixVuln[];
-};
+export enum Assettype {
+    Computing = "Computing",
+    NonComputing = "Non-Computing",
+}
 
-export type ChecklistJsonixStigInfo = {
-  TYPE_NAME: string;
-  sidata: ChecklistJsonixSiData[];
-};
+export enum Role {
+    DomainController = "Domain Controller",
+    MemberServer = "Member Server",
+    None = "None",
+    Workstation = "Workstation",
+}
 
-export type ChecklistJsonixSiData = {
-  TYPE_NAME: string;
-  sidata?: string;
-  sidname:
-    | 'classification'
-    | 'customname'
-    | 'description'
-    | 'filename'
-    | 'notice'
-    | 'releaseinfo'
-    | 'source'
-    | 'stigid'
-    | 'title'
-    | 'uuid'
-    | 'version';
-};
+export enum Techarea {
+    ApplicationReview = "Application Review",
+    BoundarySecurity = "Boundary Security",
+    CDSAdminReview = "CDS Admin Review",
+    CDSTechnicalReview = "CDS Technical Review",
+    DatabaseReview = "Database Review",
+    DomainNameSystemDNS = "Domain Name System (DNS)",
+    Empty = "",
+    ExchangeServer = "Exchange Server",
+    HostBasedSystemSecurityHBSS = "Host Based System Security (HBSS)",
+    InternalNetwork = "Internal Network",
+    Mobility = "Mobility",
+    OtherReview = "Other Review",
+    ReleasableNetworksREL = "Releasable Networks (REL)",
+    ReleaseableNetworksREL = "Releaseable Networks (REL)",
+    TraditionalSecurity = "Traditional Security",
+    UnixOS = "UNIX OS",
+    VVOIPReview = "VVOIP Review",
+    WebReview = "Web Review",
+    WindowsOS = "Windows OS",
+}
 
-export type ChecklistJsonixVuln = {
-  TYPE_NAME: string;
-  comments: string;
-  findingdetails: string;
-  severityjustification: string;
-  severityoverride: '' | 'low' | 'medium' | 'high';
-  status: 'NotAFinding' | 'Open' | 'Not_Applicable' | 'Not_Reviewed';
-  stigdata: ChecklistJsonixStigData[];
-};
+export interface Istig {
+    stiginfo: Stiginfo;
+    vuln:     Vuln[];
+    [property: string]: unknown;
+}
 
-export type ChecklistJsonixStigData = {
-  TYPE_NAME: string;
-  attributedata?: string;
-  vulnattribute:
-    | 'CCI_REF'
-    | 'Check_Content_Ref'
-    | 'Class'
-    | 'Documentable'
-    | 'False_Negatives'
-    | 'False_Positives'
-    | 'Fix_Text'
-    | 'Group_Title'
-    | 'IA_Controls'
-    | 'Mitigation_Control'
-    | 'Mitigations'
-    | 'Potential_Impact'
-    | 'Responsibility'
-    | 'Rule_ID'
-    | 'Rule_Title'
-    | 'Rule_Ver'
-    | 'STIGRef'
-    | 'Security_Override_Guidance'
-    | 'Severity'
-    | 'Third_Party_Tools'
-    | 'Vuln_Discuss'
-    | 'Vuln_Num'
-    | 'Weight'
-    | 'TargetKey'
-    | 'STIG_UUID'
-    | 'LEGACY_ID';
-};
+export interface Stiginfo {
+    sidata: Sidata[];
+    [property: string]: unknown;
+}
+
+export interface Sidata {
+    siddata?: null | string;
+    sidname:  Sidname;
+    [property: string]: unknown;
+}
+
+export enum Sidname {
+    Classification = "classification",
+    Customname = "customname",
+    Description = "description",
+    Filename = "filename",
+    Notice = "notice",
+    Releaseinfo = "releaseinfo",
+    Source = "source",
+    Stigid = "stigid",
+    Title = "title",
+    UUID = "uuid",
+    Version = "version",
+}
+
+export interface Vuln {
+    comments:              null | string;
+    findingdetails:        null | string;
+    severityjustification: null | string;
+    severityoverride:      Severityoverride;
+    status:                Status;
+    stigdata:              StigdatumElement[];
+    [property: string]: unknown;
+}
+
+export enum Severityoverride {
+    Empty = "",
+    High = "high",
+    Low = "low",
+    Medium = "medium",
+}
+
+export enum Status {
+    NotAFinding = "NotAFinding",
+    NotApplicable = "Not_Applicable",
+    NotReviewed = "Not_Reviewed",
+    Open = "Open",
+}
+
+export interface StigdatumElement {
+    attributedata: null | string;
+    vulnattribute: Vulnattribute;
+    [property: string]: unknown;
+}
+
+export enum Vulnattribute {
+    CciRef = "CCI_REF",
+    CheckContent = "Check_Content",
+    CheckContentRef = "Check_Content_Ref",
+    Class = "Class",
+    Documentable = "Documentable",
+    FalseNegatives = "False_Negatives",
+    FalsePositives = "False_Positives",
+    FixText = "Fix_Text",
+    GroupTitle = "Group_Title",
+    IAControls = "IA_Controls",
+    LegacyID = "LEGACY_ID",
+    MitigationControl = "Mitigation_Control",
+    Mitigations = "Mitigations",
+    PotentialImpact = "Potential_Impact",
+    Responsibility = "Responsibility",
+    RuleID = "Rule_ID",
+    RuleTitle = "Rule_Title",
+    RuleVer = "Rule_Ver",
+    STIGRef = "STIGRef",
+    SecurityOverrideGuidance = "Security_Override_Guidance",
+    Severity = "Severity",
+    StigUUID = "STIG_UUID",
+    TargetKey = "TargetKey",
+    ThirdPartyTools = "Third_Party_Tools",
+    VulnDiscuss = "Vuln_Discuss",
+    VulnNum = "Vuln_Num",
+    Weight = "Weight",
+}
+
+export interface Stigs {
+    istig: Istig[];
+    [property: string]: unknown;
+}

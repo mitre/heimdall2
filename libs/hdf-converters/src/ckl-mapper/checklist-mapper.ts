@@ -1,7 +1,7 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
-import {ChecklistJSONIX} from '../../types/checklistJsonix';
+import { Checklist } from '../../types/checklistJsonix';
 import {
   BaseConverter,
   generateHash,
@@ -165,7 +165,7 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
  */
 export class ChecklistResults extends ChecklistJsonixConverter {
   checklistXml: string;
-  jsonixData: ChecklistJSONIX;
+  jsonixData: Checklist;
   checklistObject: ChecklistObject;
 
   /**
