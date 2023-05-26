@@ -19,6 +19,7 @@
                 key="exportCkl"
                 text="Export as CKL"
                 icon="mdi-check-all"
+                @click="exportCkl()"
                 v-on="on"
               />
             </template>
