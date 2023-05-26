@@ -6,7 +6,7 @@
   >
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
-      <v-btn :disabled="!can_clear" @click="clear">
+      <v-btn :disabled="!canClear" @click="clear">
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
@@ -354,7 +354,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   /**
-   * The filter for charts. Contains all of our filter stuff
+   * Subset of all filter terms specific for Results
    */
   get all_filter(): ControlsFilter {
     return {
@@ -408,7 +408,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * Returns true if we can currently clear.
    * Essentially, just controls whether the button is available
    */
-  get can_clear(): boolean {
+  get canClear(): boolean {
     // Return if any params not null/empty
     let result: boolean;
     if (
