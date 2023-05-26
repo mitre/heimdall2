@@ -91,6 +91,7 @@ import {ChecklistVuln} from '@mitre/hdf-converters';
 import {InspecDataModule} from '@/store/data_store';
 import _ from 'lodash';
 import {Component, Prop, Vue} from 'vue-property-decorator';
+import {ControlStatus} from 'inspecjs';
 
 @Component
 export default class ChecklistRulesTable extends Vue {
@@ -109,7 +110,23 @@ export default class ChecklistRulesTable extends Vue {
     else return stigId;
   }
 
-  statusColor(status: string | undefined) {
+  shortStatus(status: string) {
+    if (this.shortIdEnabled) {
+      switch (status) {
+        case 'Not Reviewed':
+          return 'NR';
+        case 'Failed':
+          return 'F';
+        case 'Passed':
+          return 'P';
+        case 'Not Applicable':
+          return 'NA';
+      }
+    }
+    return status;
+  }
+
+  statusColor(status: ControlStatus) {
     switch (status) {
       case 'Passed':
         return 'statusPassed';
@@ -127,40 +144,6 @@ export default class ChecklistRulesTable extends Vue {
   getFiltered(rules: ChecklistVuln[]) {
     this.tableItems = rules;
     this.numItems = this.tableItems.length;
-  }
-
-  numStatus(status: string): string {
-    return this.tableItems
-      .filter((item) => item.status === status)
-      .length.toString();
-  }
-
-  shortStatus(status: string) {
-    if (this.shortIdEnabled) {
-      switch (status) {
-        case 'Not Reviewed':
-          return 'NR';
-        case 'Failed':
-          return 'F';
-        case 'Passed':
-          return 'P';
-        case 'Not Applicable':
-          return 'NA';
-      }
-    }
-    return status;
-  }
-
-  numSeverity(severity: string): string {
-    return this.tableItems
-      .filter((item) => item.severity === severity.toLowerCase())
-      .length.toString();
-  }
-
-  getChecklist(fileID: FileID[]) {
-    return InspecDataModule.allChecklistFiles.find(
-      (f) => f.uniqueId === fileID[0]
-    );
   }
 
   showRule(rule: ChecklistVuln) {
