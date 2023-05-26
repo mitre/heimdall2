@@ -46,7 +46,7 @@ export type ChecklistVuln = Omit<
 > & {
   status: StatusMapping;
   vulnNum: string;
-  severity: string;
+  severity: Severity;
   groupTitle: string;
   ruleId: string;
   ruleVersion: string;
@@ -80,6 +80,13 @@ enum StatusMapping {
   Open = 'Failed',
   Not_Applicable = 'Not Applicable',
   Not_Reviewed = 'Not Reviewed'
+}
+
+export enum Severity {
+  Empty = "",
+  High = "high",
+  Low = "low",
+  Medium = "medium",
 }
 
 export class ChecklistJsonixConverter extends JsonixIntermediateConverter<Checklist, ChecklistObject> {

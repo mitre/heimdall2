@@ -7,7 +7,7 @@ export abstract class JsonixConverter<T> {
     this.xmlString = xmlString;
   }
 
-  toJsonix(mapping: object): T {
+  toJsonix(mapping: Record<string, unknown>): T {
     const context = new Jsonix.Context([mapping]);
     const unmarshaller = context.createUnmarshaller();
     return unmarshaller.unmarshalString(this.xmlString) as T;

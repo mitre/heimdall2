@@ -1,14 +1,12 @@
 export interface Checklist {
     name?:  Name;
     value?: boolean | null | Stigdata | string;
-    [property: string]: unknown;
 }
 
 export interface Name {
     localPart:     LocalPartEnum;
     namespaceURI?: string;
     prefix?:       null | string;
-    [property: string]: unknown;
 }
 
 export enum LocalPartEnum {
@@ -78,7 +76,6 @@ export interface Stigdata {
     siddata?:               null | string;
     sidname?:               Sidname;
     istig?:                 Istig[];
-    [property: string]: unknown;
 }
 
 export interface Asset {
@@ -97,7 +94,6 @@ export interface Asset {
     webdbinstance:  null | string | unknown;
     webdbsite:      null | string | unknown;
     webordatabase:  boolean | null | unknown;
-    [property: string]: unknown;
 }
 
 export enum Assettype {
@@ -137,18 +133,15 @@ export enum Techarea {
 export interface Istig {
     stiginfo: Stiginfo;
     vuln:     Vuln[];
-    [property: string]: unknown;
 }
 
 export interface Stiginfo {
     sidata: Sidata[];
-    [property: string]: unknown;
 }
 
 export interface Sidata {
     siddata?: null | string;
     sidname:  Sidname;
-    [property: string]: unknown;
 }
 
 export enum Sidname {
@@ -172,7 +165,6 @@ export interface Vuln {
     severityoverride:      Severityoverride;
     status:                Status;
     stigdata:              StigdatumElement[];
-    [property: string]: unknown;
 }
 
 export enum Severityoverride {
@@ -192,7 +184,6 @@ export enum Status {
 export interface StigdatumElement {
     attributedata: null | string;
     vulnattribute: Vulnattribute;
-    [property: string]: unknown;
 }
 
 export enum Vulnattribute {
@@ -227,5 +218,4 @@ export enum Vulnattribute {
 
 export interface Stigs {
     istig: Istig[];
-    [property: string]: unknown;
 }
