@@ -1,3 +1,19 @@
+v2.6.50
+
+## Dependency Updates
+
+- Bump xml2js from 0.5.0 to 0.6.0 @dependabot (#4530)
+- Bump aws-sdk from 2.1385.0 to 2.1386.0 @dependabot (#4536)
+- Bump @typescript-eslint/parser from 5.59.7 to 5.59.8 @dependabot (#4538)
+- Bump @typescript-eslint/eslint-plugin from 5.59.7 to 5.59.8 @dependabot (#4540)
+- Bump @types/node from 20.2.3 to 20.2.5 @dependabot (#4533)
+- Bump @aws-sdk/client-config-service from 3.338.0 to 3.341.0 @dependabot (#4532)
+- Bump yaml from 2.3.0 to 2.3.1 @dependabot (#4535)
+- Bump winston from 3.8.2 to 3.9.0 @dependabot (#4537)
+- Bump @types/lodash from 4.14.194 to 4.14.195 @dependabot (#4531)
+- Bump aws-sdk from 2.1384.0 to 2.1385.0 @dependabot (#4528)
+- Bump aws-sdk from 2.1382.0 to 2.1384.0 @dependabot (#4522)
+
 v2.6.49
 
 - fix wordwrap for api key modal @Amndeep7 (#4515)
