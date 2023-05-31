@@ -64,3 +64,11 @@ export function omitHDFTimes(
     })
   };
 }
+
+export function omitParentProfileVersion(
+  input: Partial<ExecJSON.Execution> & {profiles: ExecJSON.Profile[]}
+) {
+  return _.omit(input, [
+    'profiles[0].version'
+  ]) as unknown as Partial<ExecJSON.Execution> & {profiles: ExecJSON.Profile};
+}

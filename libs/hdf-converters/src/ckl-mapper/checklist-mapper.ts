@@ -1,7 +1,7 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
-import { Checklist } from '../../types/checklistJsonix';
+import {Checklist} from '../../types/checklistJsonix';
 import {
   BaseConverter,
   generateHash,
@@ -116,7 +116,11 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
 
   for (const finding of findings) {
     if (!finding.code_desc) {
-      results.push(finding);
+      results.push({
+        status: finding.status,
+        code_desc: finding.code_desc,
+        start_time: finding.start_time
+      });
     } else {
       // split into multiple findings details using heimdall2 CKLExport functionality
       for (const details of finding.code_desc.split(
@@ -175,9 +179,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   constructor(checklistXml: string) {
     super(checklistXml);
     this.checklistXml = checklistXml;
-    this.jsonixData = super.toJsonix(
-      checklistMapping.jsonixMapping
-    );
+    this.jsonixData = super.toJsonix(checklistMapping.jsonixMapping);
     this.checklistObject = super.toIntermediateObject(this.jsonixData);
   }
 
@@ -207,7 +209,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
         profile.sha256 = generateHash(JSON.stringify(profile));
       }
       parent_profile.sha256 = generateHash(JSON.stringify(parent_profile));
-      original.profiles.push(parent_profile);
+      original.profiles.unshift(parent_profile);
       return original;
     }
   }

@@ -1,7 +1,7 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import * as checklistMapping from '../../../src/ckl-mapper/jsonixMapping';
-import {omitVersions} from '../../utils';
+import {omitParentProfileVersion, omitVersions} from '../../utils';
 
 describe('checklist_mapper_single_stig', () => {
   it('Successfully converts Checklists', () => {
@@ -46,12 +46,14 @@ describe('checklist_mapper_multi_stig_wrapper', () => {
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
-    expect(omitVersions(results)).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
-            {encoding: 'utf-8'}
+    expect(omitParentProfileVersion(omitVersions(results))).toEqual(
+      omitParentProfileVersion(
+        omitVersions(
+          JSON.parse(
+            fs.readFileSync(
+              'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
+              {encoding: 'utf-8'}
+            )
           )
         )
       )
