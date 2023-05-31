@@ -115,7 +115,9 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   const statusSet = ['passed', 'failed', 'skipped', 'error'];
 
   for (const finding of findings) {
-    if (finding.code_desc) {
+    if (!finding.code_desc) {
+      results.push(finding);
+    } else {
       // split into multiple findings details using heimdall2 CKLExport functionality
       for (const details of finding.code_desc.split(
         '--------------------------------\n'
@@ -150,8 +152,6 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
           start_time: ''
         });
       }
-    } else {
-      results.push(finding);
     }
   }
   return results;
