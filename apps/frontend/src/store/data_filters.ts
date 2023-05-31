@@ -606,8 +606,7 @@ export class FilteredData extends VuexModule {
           filter.status,
           (status) => status.value !== 'Waived'
         ),
-        'root.sourcedFrom.sourcedFrom.from_file.filename':
-          filter.filenameSearchTerms,
+        'root.sourcedFrom.from_file.filename': filter.filenameSearchTerms,
         keywords: filter.keywordsSearchTerms
       };
 
