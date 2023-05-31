@@ -91,9 +91,15 @@
           <!-- Filtering Capabilities Section -->
           <QuickFilters />
           <v-divider class="my-5" />
-          <CategoryFilters />
+          <DropdownFilters
+            header="Category Filters"
+            :properties="inFileFilterProps"
+          />
           <v-divider class="my-5" />
-          <FileFilters />
+          <DropdownFilters
+            header="File Filters"
+            :properties="fileMetadataFilterProps"
+          />
           <v-divider class="my-5" />
           <SelectedFilterTable />
         </div>
@@ -116,9 +122,8 @@ import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataMod
 import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
 import {AppInfoModule} from '@/store/app_info';
 import QuickFilters from './sidebaritems/QuickFilters.vue';
-import CategoryFilters from './sidebaritems/CategoryFilters.vue';
+import DropdownFilters from './sidebaritems/DropdownFilters.vue';
 import SelectedFilterTable from './sidebaritems/SelectedFilterTable.vue';
-import FileFilters from './sidebaritems/FileFilters.vue';
 import {views} from '@/store/app_info';
 
 @Component({
@@ -127,12 +132,31 @@ import {views} from '@/store/app_info';
     ChecklistTargetDataModal,
     ChecklistTechnologyAreaModal,
     QuickFilters,
-    CategoryFilters,
-    SelectedFilterTable,
-    FileFilters
+    DropdownFilters,
+    SelectedFilterTable
   }
 })
 export default class Sidebar extends mixins(RouteMixin) {
+  /** Category list for in-file filtering dropdown */
+  readonly inFileFilterProps = [
+    'Keywords',
+    'ID',
+    'Vul ID',
+    'Rule ID',
+    'Title',
+    'Nist',
+    'Description',
+    'Code',
+    'Stig ID',
+    'Classification',
+    'IA Control',
+    'Group Name',
+    'CCIs'
+  ];
+
+  /** Category list for file metadata filtering dropdown */
+  readonly fileMetadataFilterProps = ['File Name'];
+
   // Used for toggling the side nav drawer
   isUtilityDrawerShown = false;
   setUtilityDrawerBoolean() {

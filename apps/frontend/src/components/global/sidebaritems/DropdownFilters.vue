@@ -5,8 +5,8 @@
       <v-select
         v-model="currentFreeTextFilterCategory"
         class="mx-2 select"
-        :items="categories"
-        label="Filter Categories"
+        :items="properties"
+        label="Filter Properties"
       />
       <v-text-field
         v-model="currentFreeTextFilterInput"
@@ -40,40 +40,10 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 
 type FilterType = 'inclusive' | 'exclusive';
 
-/** Free text filter category list for dropdown */
-const defaultCategories = [
-  'Keywords',
-  'ID',
-  'Vul ID',
-  'Rule ID',
-  'Title',
-  'Nist',
-  'Description',
-  'Code',
-  'Stig ID',
-  'Classification',
-  'IA Control',
-  'Group Name',
-  'CCIs'
-];
-
 @Component({})
-export default class CategoryFilters extends Vue {
-  @Prop({
-    required: false,
-    default() {
-      return defaultCategories;
-    }
-  })
-  readonly categories!: string[];
-
-  @Prop({
-    required: false,
-    default() {
-      return 'Category Filters';
-    }
-  })
-  readonly header!: string;
+export default class DropdownFilters extends Vue {
+  @Prop({required: true}) readonly properties!: string[];
+  @Prop({required: true}) readonly header!: string;
 
   currentFreeTextFilterInput = '';
   currentFreeTextFilterCategory = '';
