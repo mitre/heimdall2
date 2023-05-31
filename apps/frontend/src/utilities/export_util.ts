@@ -1,6 +1,5 @@
-import concat from 'concat-stream';
+import ZipFile from 'adm-zip';
 import {saveAs} from 'file-saver';
-import {ZipFile} from 'yazl';
 
 type File = {
   filename: string;
@@ -17,14 +16,10 @@ export async function saveSingleOrMultipleFiles(
     const zipfile = new ZipFile();
     files.forEach((file) => {
       const buffer = Buffer.from(file.data);
-      zipfile.addBuffer(buffer, file.filename);
+      zipfile.addFile(file.filename, buffer);
     });
-    zipfile.outputStream.pipe(
-      concat({encoding: 'uint8array'}, (b: Uint8Array) => {
-        saveAs(new Blob([b]), `exported_${filetype}s.zip`);
-      })
-    );
-    zipfile.end();
+    const blob = new Blob([zipfile.toBuffer()]);
+    saveAs(blob, `exported_${filetype}s.zip`);
   }
 }
 

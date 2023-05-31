@@ -28,6 +28,7 @@
             <li>Static Analysis Results Interchange Format (SARIF)</li>
             <li>Scoutsuite</li>
             <li>Snyk</li>
+            <li>Tenable (API)</li>
             <li>Twistlock</li>
             <li>Veracode</li>
             <li>
@@ -50,7 +51,8 @@
           <v-col cols="12" align="center">
             <div class="d-flex flex-column justify-center">
               <span :class="title_class">Heimdall</span>
-              <span v-if="!serverMode" :class="title_class">Lite</span>
+              <span v-if="serverMode" :class="title_class">Server</span>
+              <span v-else :class="title_class">Lite</span>
             </div>
           </v-col>
         </v-row>
@@ -117,10 +119,12 @@ export default class FileReader extends mixins(ServerMixin) {
   /** Callback for our file reader */
   commit_files(files: File[]) {
     Promise.all(
-      files.map((file) => {
-        return InspecIntakeModule.loadFile({file}).catch((err) => {
+      files.map(async (file) => {
+        try {
+          return await InspecIntakeModule.loadFile({file});
+        } catch (err) {
           SnackbarModule.failure(String(err));
-        });
+        }
       })
     )
       // Since some HDF converters can return multiple results sets, we can sometimes have multiple file IDs returned

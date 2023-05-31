@@ -100,7 +100,10 @@ export function fingerprint(guessOptions: {
       guessOptions.filename.toLowerCase().indexOf('xccdf') !== -1
     ) {
       return INPUT_TYPES.XCCDF;
-    } else if (guessOptions.data.match(/<netsparker-.*generated.*>/)) {
+    } else if (
+      guessOptions.data.match(/<netsparker-.*generated.*>/) ||
+      guessOptions.data.match(/<invicti-.*generated.*>/)
+    ) {
       return INPUT_TYPES.NETSPARKER;
     } else if (guessOptions.filename.toLowerCase().endsWith('.fvdl')) {
       return INPUT_TYPES.FORTIFY;
