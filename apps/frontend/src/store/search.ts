@@ -69,7 +69,6 @@ class Search extends VuexModule {
     statusFilter: SearchEntry<ExtendedControlStatus>[];
     severityFilter: SearchEntry<Severity>[];
     title: SearchEntry<TitleSearchTerm>[];
-    filename: SearchEntry<FilenameSearchTerm>[];
     keywords: SearchEntry<KeywordsSearchTerm>[];
   } = {
     controlId: [],
@@ -86,7 +85,6 @@ class Search extends VuexModule {
     statusFilter: [],
     severityFilter: [],
     title: [],
-    filename: [],
     keywords: []
   };
 
