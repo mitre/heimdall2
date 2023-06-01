@@ -447,7 +447,6 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   async toSplunk(
     config: SplunkConfig,
     filename: string,
-    webCompatibility = false
   ): Promise<string> {
     const parser = new XMLParser();
 

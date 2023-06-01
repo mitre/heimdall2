@@ -140,7 +140,7 @@ export default class ExportSplunkModal extends Vue {
       this.statusLog += `Starting Upload of File: ${evaluation.from_file.filename}\n`;
       if (this.splunkConfig) {
         new FromHDFToSplunkMapper(evaluation, this.logger as Logger)
-          .toSplunk(this.splunkConfig, evaluation.from_file.filename, true)
+          .toSplunk(this.splunkConfig, evaluation.from_file.filename)
           .then(() => {
             this.statusLog += `Sucessfully uploaded file ${evaluation.from_file.filename}\n`;
           })
