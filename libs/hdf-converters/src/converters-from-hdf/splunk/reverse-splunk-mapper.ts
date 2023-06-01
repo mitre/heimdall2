@@ -1,3 +1,5 @@
+import axios from 'axios';
+import {XMLParser} from 'fast-xml-parser';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -14,8 +16,6 @@ import {ILookupPathFH} from '../reverse-base-converter';
 import {SplunkControl} from './splunk-control-types';
 import {SplunkProfile} from './splunk-profile-types';
 import {SplunkReport} from './splunk-report-types';
-import axios from 'axios';
-import { XMLParser } from 'fast-xml-parser';
 
 const HDF_SPLUNK_SCHEMA = '1.1';
 const MAPPER_NAME = 'HDF2Splunk';
@@ -349,46 +349,71 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     splunkData: SplunkData
   ): Promise<void> {
     return new Promise((resolve, reject) => {
-      const hostname = config.port ? `${config.scheme}://${config.host}:${config.port}` : `${config.scheme}://${config.host}`;
+      const hostname = config.port
+        ? `${config.scheme}://${config.host}:${config.port}`
+        : `${config.scheme}://${config.host}:8089`;
 
       // Upload execution event
       splunkData.reports.forEach((report) => {
-        axios.post(
-          `${hostname}/services/receivers/simple`,
-          JSON.stringify(report),
-          {headers: {Authorization: 'Bearer ' + authToken}, params: {sourcetype: MAPPER_NAME, index: targetIndex.title}}
-        ).then(
-          () => logger.verbose(`Successfully uploaded execution for ${report.meta.filename}`),
-          (error) => reject(error)
-        );
+        axios
+          .post(
+            `${hostname}/services/receivers/simple`,
+            JSON.stringify(report),
+            {
+              headers: {Authorization: 'Bearer ' + authToken},
+              params: {sourcetype: MAPPER_NAME, index: targetIndex.title}
+            }
+          )
+          .then(
+            () =>
+              logger.verbose(
+                `Successfully uploaded execution for ${report.meta.filename}`
+              ),
+            (error) => reject(error)
+          );
       });
       // Upload profile event(s)
       // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
       // See https://docs.splunk.com/Documentation/StreamProcessor/standard/FunctionReference/LineBreak
-      axios.post(
-        `${hostname}/services/receivers/simple`,
-        splunkData.profiles
-          .map((profile) => JSON.stringify(profile))
-          .join('\n'),
-        {headers: {Authorization: 'Bearer ' + authToken}, params: {sourcetype: MAPPER_NAME, index: targetIndex.title}}
-      ).then(
-        () => logger.verbose(`Successfully uploaded ${splunkData.profiles.length} profile layer(s)`),
-        (error) => reject(error)
-      );
+      axios
+        .post(
+          `${hostname}/services/receivers/simple`,
+          splunkData.profiles
+            .map((profile) => JSON.stringify(profile))
+            .join('\n'),
+          {
+            headers: {Authorization: 'Bearer ' + authToken},
+            params: {sourcetype: MAPPER_NAME, index: targetIndex.title}
+          }
+        )
+        .then(
+          () =>
+            logger.verbose(
+              `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
+            ),
+          (error) => reject(error)
+        );
 
       // Upload control event(s)
       _.chunk(splunkData.controls, UPLOAD_CHUNK_SIZE).forEach((chunk) => {
-        axios.post(
-          `${hostname}/services/receivers/simple`,
-          chunk.map((control) => JSON.stringify(control)).join('\n'),
-          {headers: {Authorization: 'Bearer ' + authToken}, params: {sourcetype: MAPPER_NAME, index: targetIndex.title}}
-        ).then(
-          () => {
-            logger.verbose(`Successfully uploaded ${chunk.length} control(s)`);
-            resolve();
-          },
-          (error) => reject(error)
-        );
+        axios
+          .post(
+            `${hostname}/services/receivers/simple`,
+            chunk.map((control) => JSON.stringify(control)).join('\n'),
+            {
+              headers: {Authorization: 'Bearer ' + authToken},
+              params: {sourcetype: MAPPER_NAME, index: targetIndex.title}
+            }
+          )
+          .then(
+            () => {
+              logger.verbose(
+                `Successfully uploaded ${chunk.length} control(s)`
+              );
+              resolve();
+            },
+            (error) => reject(error)
+          );
       });
     });
   }
@@ -426,9 +451,11 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   ): Promise<string> {
     const parser = new XMLParser();
 
-    const hostname = config.port ? `${config.scheme}://${config.host}:${config.port}` : `${config.scheme}://${config.host}`;
+    const hostname = config.port
+      ? `${config.scheme}://${config.host}:${config.port}`
+      : `${config.scheme}://${config.host}:8089`;
     const usernameStr = config.username ? config.username : '';
-    const passwordStr = config.password ? config.password: '';
+    const passwordStr = config.password ? config.password : '';
     logger.info(
       `Logging into Splunk Service: ${config.host} with user ${config.username}`
     );
@@ -437,57 +464,74 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     logger.verbose('Using GUID: ' + guid);
 
     return new Promise((resolve) => {
-      axios.post(
-        `${hostname}/services/auth/login`,
-        new URLSearchParams({
-          'username': usernameStr,
-          'password': passwordStr
-        }),
-        {
-          auth: {
+      axios
+        .post(
+          `${hostname}/services/auth/login`,
+          new URLSearchParams({
             username: usernameStr,
             password: passwordStr
+          }),
+          {
+            auth: {
+              username: usernameStr,
+              password: passwordStr
+            }
           }
-        }
-      ).then(
-        (response) => {
-          const authToken = parser.parse(response.data).response.sessionKey;
-          axios.get(
-            `${hostname}/services/data/indexes`,
-            {headers: {Authorization: 'Bearer ' + authToken}, params: {count: 0}}
-          ).then(
-            (response) => {
-              const indexes = parser.parse(response.data).feed.entry;
-              if (indexes.length <= 0) {
-                throw new Error(
-                  'Unable to get available indexes, double-check your scheme configuration and try again'
-                );
-              } else {
-                const indexTitles: string[] = indexes.map((index: {title: string}) => index.title);
-                logger.verbose(`Available Indexes: ${indexTitles.join(', ')}`);
-                if (indexTitles.includes(config.index)) {
-                  const targetIndex = indexes.filter((index: {title: string}) => index.title == config.index)[0];
-                  logger?.verbose(`Have index ${targetIndex.title}`);
-                  const splunkData = this.createSplunkData(guid, filename);
-                  this.uploadSplunkData(config, targetIndex, authToken, splunkData)
-                  .then(() => {
-                    logger.info(`Successfully uploaded to ${config.index}`);
-                    resolve(guid);
-                  })
-                  .catch((resolvedError) => {
-                    throw new Error(resolvedError);
-                  });
-                } else {
-                  logger.error(`Invalid Index: ${config.index}`);
-                  throw new Error(`Invalid Index: ${config.index}`);
-                }
-              }
-            },
-            (error) => this.handleSplunkError(error)
-          );
-        },
-        (error) => this.handleSplunkError(error)
-      );
+        )
+        .then(
+          (response) => {
+            const authToken = parser.parse(response.data).response.sessionKey;
+            axios
+              .get(`${hostname}/services/data/indexes`, {
+                headers: {Authorization: 'Bearer ' + authToken},
+                params: {count: 0}
+              })
+              .then(
+                (response) => {
+                  const indexes = parser.parse(response.data).feed.entry;
+                  if (indexes.length <= 0) {
+                    throw new Error(
+                      'Unable to get available indexes, double-check your scheme configuration and try again'
+                    );
+                  } else {
+                    const indexTitles: string[] = indexes.map(
+                      (index: {title: string}) => index.title
+                    );
+                    logger.verbose(
+                      `Available Indexes: ${indexTitles.join(', ')}`
+                    );
+                    if (indexTitles.includes(config.index)) {
+                      const targetIndex = indexes.filter(
+                        (index: {title: string}) => index.title == config.index
+                      )[0];
+                      logger?.verbose(`Have index ${targetIndex.title}`);
+                      const splunkData = this.createSplunkData(guid, filename);
+                      this.uploadSplunkData(
+                        config,
+                        targetIndex,
+                        authToken,
+                        splunkData
+                      )
+                        .then(() => {
+                          logger.info(
+                            `Successfully uploaded to ${config.index}`
+                          );
+                          resolve(guid);
+                        })
+                        .catch((resolvedError) => {
+                          throw new Error(resolvedError);
+                        });
+                    } else {
+                      logger.error(`Invalid Index: ${config.index}`);
+                      throw new Error(`Invalid Index: ${config.index}`);
+                    }
+                  }
+                },
+                (error) => this.handleSplunkError(error)
+              );
+          },
+          (error) => this.handleSplunkError(error)
+        );
       return guid;
     });
   }
