@@ -8,7 +8,8 @@ export function omitVersions(
   return _.omit(input, [
     'version',
     'platform.release',
-    'profiles[0].sha256'
+    'profiles[0].sha256',
+    'profiles[0].version'
   ]) as unknown as Partial<ExecJSON.Execution> & {profiles: ExecJSON.Profile};
 }
 
@@ -63,12 +64,4 @@ export function omitHDFTimes(
       };
     })
   };
-}
-
-export function omitParentProfileVersion(
-  input: Partial<ExecJSON.Execution> & {profiles: ExecJSON.Profile[]}
-) {
-  return _.omit(input, [
-    'profiles[0].version'
-  ]) as unknown as Partial<ExecJSON.Execution> & {profiles: ExecJSON.Profile};
 }
