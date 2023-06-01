@@ -1,5 +1,3 @@
-import splunkjs from '@mitre/splunk-sdk-no-env';
-import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -16,6 +14,8 @@ import {ILookupPathFH} from '../reverse-base-converter';
 import {SplunkControl} from './splunk-control-types';
 import {SplunkProfile} from './splunk-profile-types';
 import {SplunkReport} from './splunk-report-types';
+import axios from 'axios';
+import { XMLParser } from 'fast-xml-parser';
 
 const HDF_SPLUNK_SCHEMA = '1.1';
 const MAPPER_NAME = 'HDF2Splunk';
@@ -343,64 +343,51 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   }
 
   async uploadSplunkData(
-    targetIndex: splunkjs.Index,
+    config: SplunkConfig,
+    targetIndex: any,
+    authToken: string,
     splunkData: SplunkData
   ): Promise<void> {
     return new Promise((resolve, reject) => {
+      const hostname = config.port ? `${config.scheme}://${config.host}:${config.port}` : `${config.scheme}://${config.host}`;
+
       // Upload execution event
       splunkData.reports.forEach((report) => {
-        targetIndex.submitEvent(
+        axios.post(
+          `${hostname}/services/receivers/simple`,
           JSON.stringify(report),
-          {
-            sourcetype: MAPPER_NAME,
-            index: targetIndex.name
-          },
-          (err: any) => {
-            if (err) {
-              reject(err);
-            }
-            logger.verbose(
-              `Successfully uploaded execution for ${report.meta.filename}`
-            );
-          }
+          {headers: {Authorization: 'Bearer ' + authToken}, params: {sourcetype: MAPPER_NAME, index: targetIndex.title}}
+        ).then(
+          () => logger.verbose(`Successfully uploaded execution for ${report.meta.filename}`),
+          (error) => reject(error)
         );
       });
       // Upload profile event(s)
       // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
       // See https://docs.splunk.com/Documentation/StreamProcessor/standard/FunctionReference/LineBreak
-      targetIndex.submitEvent(
+      axios.post(
+        `${hostname}/services/receivers/simple`,
         splunkData.profiles
           .map((profile) => JSON.stringify(profile))
           .join('\n'),
-        {
-          sourcetype: MAPPER_NAME,
-          index: targetIndex.name
-        },
-        (err: any) => {
-          if (err) {
-            reject(err);
-          }
-          logger.verbose(
-            `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
-          );
-        }
+        {headers: {Authorization: 'Bearer ' + authToken}, params: {sourcetype: MAPPER_NAME, index: targetIndex.title}}
+      ).then(
+        () => logger.verbose(`Successfully uploaded ${splunkData.profiles.length} profile layer(s)`),
+        (error) => reject(error)
       );
 
       // Upload control event(s)
       _.chunk(splunkData.controls, UPLOAD_CHUNK_SIZE).forEach((chunk) => {
-        targetIndex.submitEvent(
+        axios.post(
+          `${hostname}/services/receivers/simple`,
           chunk.map((control) => JSON.stringify(control)).join('\n'),
-          {
-            sourcetype: MAPPER_NAME,
-            index: targetIndex.name
-          },
-          (err: any) => {
-            if (err) {
-              reject(err);
-            }
+          {headers: {Authorization: 'Bearer ' + authToken}, params: {sourcetype: MAPPER_NAME, index: targetIndex.title}}
+        ).then(
+          () => {
             logger.verbose(`Successfully uploaded ${chunk.length} control(s)`);
             resolve();
-          }
+          },
+          (error) => reject(error)
         );
       });
     });
@@ -437,57 +424,70 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     filename: string,
     webCompatibility = false
   ): Promise<string> {
-    let service: splunkjs.Service;
-    if (webCompatibility) {
-      service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
-    } else {
-      service = new splunkjs.Service(config);
-    }
+    const parser = new XMLParser();
+
+    const hostname = config.port ? `${config.scheme}://${config.host}:${config.port}` : `${config.scheme}://${config.host}`;
+    const usernameStr = config.username ? config.username : '';
+    const passwordStr = config.password ? config.password: '';
     logger.info(
       `Logging into Splunk Service: ${config.host} with user ${config.username}`
     );
     logger.verbose('Got Execution: ' + filename);
     const guid = createGUID(30);
     logger.verbose('Using GUID: ' + guid);
+
     return new Promise((resolve) => {
-      if (config.username && config.password) {
-        service.login((error: any) => {
-          this.handleSplunkError(error);
-        });
-      }
-      service.indexes().fetch(async (error: any, indexes: any) => {
-        if (error) {
-          this.handleSplunkError(error);
-        } else if (!indexes) {
-          throw new Error(
-            'Unable to get available indexes, double-check your scheme configuration and try again'
-          );
-        } else {
-          const availableIndexes: string[] = indexes
-            .list()
-            .map((index: {name: string}) => index.name);
-          logger.verbose(
-            `Available Indexes:  + ${availableIndexes.join(', ')}`
-          );
-          if (availableIndexes.includes(config.index)) {
-            const targetIndex = indexes.item(config.index);
-            logger?.verbose(`Have index ${targetIndex.name}`);
-            const splunkData = this.createSplunkData(guid, filename);
-            this.uploadSplunkData(targetIndex, splunkData)
-              .then(() => {
-                logger.info(`Successfully uploaded to ${config.index}`);
-                resolve(guid);
-              })
-              .catch((resolvedError) => {
-                throw new Error(resolvedError);
-              });
-          } else {
-            logger.error(`Invalid Index: ${config.index}`);
-            throw new Error(`Invalid Index: ${config.index}`);
+      axios.post(
+        `${hostname}/services/auth/login`,
+        new URLSearchParams({
+          'username': usernameStr,
+          'password': passwordStr
+        }),
+        {
+          auth: {
+            username: usernameStr,
+            password: passwordStr
           }
         }
-      });
-
+      ).then(
+        (response) => {
+          const authToken = parser.parse(response.data).response.sessionKey;
+          axios.get(
+            `${hostname}/services/data/indexes`,
+            {headers: {Authorization: 'Bearer ' + authToken}, params: {count: 0}}
+          ).then(
+            (response) => {
+              const indexes = parser.parse(response.data).feed.entry;
+              if (indexes.length <= 0) {
+                throw new Error(
+                  'Unable to get available indexes, double-check your scheme configuration and try again'
+                );
+              } else {
+                const indexTitles: string[] = indexes.map((index: {title: string}) => index.title);
+                logger.verbose(`Available Indexes: ${indexTitles.join(', ')}`);
+                if (indexTitles.includes(config.index)) {
+                  const targetIndex = indexes.filter((index: {title: string}) => index.title == config.index)[0];
+                  logger?.verbose(`Have index ${targetIndex.title}`);
+                  const splunkData = this.createSplunkData(guid, filename);
+                  this.uploadSplunkData(config, targetIndex, authToken, splunkData)
+                  .then(() => {
+                    logger.info(`Successfully uploaded to ${config.index}`);
+                    resolve(guid);
+                  })
+                  .catch((resolvedError) => {
+                    throw new Error(resolvedError);
+                  });
+                } else {
+                  logger.error(`Invalid Index: ${config.index}`);
+                  throw new Error(`Invalid Index: ${config.index}`);
+                }
+              }
+            },
+            (error) => this.handleSplunkError(error)
+          );
+        },
+        (error) => this.handleSplunkError(error)
+      );
       return guid;
     });
   }
