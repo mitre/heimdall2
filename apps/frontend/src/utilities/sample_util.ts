@@ -40,92 +40,92 @@ export const samples: Sample[] = [
   {
     filename: 'Sonarqube Java Heimdall_tools Sample',
     path: sonarqubeJavaSamplePath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'OWASP ZAP Webgoat Heimdall_tools Sample',
     path: owaspZapWebgoatPath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample',
     path: owaspZapZeroPath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'Fortify Heimdall_tools Sample',
     path: fortifyHToolsConvWebgoatPath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'AWS S3 Permissions Check',
     path: awsS3BaselinePath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'AWS CIS Foundations Baseline',
     path: cisAwsFoundationsBaselinePath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'NGINX Clean Sample',
     path: goodNginxResultsPath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'NGINX With Failing Tests',
     path: badNginxPath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'Red Hat CVE Vulnerability Scan',
     path: rhelCveVulnerabilityScanBaselineWithFailuresPath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'Red Hat 7 STIG Baseline',
     path: rhel7ResultsPath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'Ubuntu STIG Baseline',
     path: ubuntu1604BaselineResultsPath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'Red Hat With Failing Tests',
     path: redhatBadPath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'Three Layer RHEL7 Overlay Example',
     path: threeOverlayProfilePath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'Acme Overlay Example',
     path: acmeOverlayPath,
-    fingerprint: 'HDF'
+    fingerprint: 'HDF Results'
   },
   {
     filename: 'Clean RHEL 8 Checklist',
     path: cleanRhel8ChecklistPath,
-    fingerprint: 'Checklist'
+    fingerprint: 'DISA Checklist'
   },
   {
     filename: 'RHEL 8 Checklist',
     path: rhel8ChecklistPath,
-    fingerprint: 'Checklist'
+    fingerprint: 'DISA Checklist'
   },
   {
     filename: 'Three Stig Checklist',
     path: threeStigChecklistPath,
-    fingerprint: 'Checklist'
+    fingerprint: 'DISA Checklist'
   },
   {
     filename: 'Ubuntu Profile',
     path: ubuntuProfile,
-    fingerprint: 'Profile'
+    fingerprint: 'HDF Profile'
   },
   {
     filename: 'Veracode Exec JSON',
