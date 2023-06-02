@@ -1,5 +1,4 @@
 import axios from 'axios';
-import {XMLParser} from 'fast-xml-parser';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -361,7 +360,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             JSON.stringify(report),
             {
               headers: {Authorization: 'Bearer ' + authToken},
-              params: {sourcetype: MAPPER_NAME, index: targetIndex.title}
+              params: {sourcetype: MAPPER_NAME, index: targetIndex.name}
             }
           )
           .then(
@@ -383,7 +382,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             .join('\n'),
           {
             headers: {Authorization: 'Bearer ' + authToken},
-            params: {sourcetype: MAPPER_NAME, index: targetIndex.title}
+            params: {sourcetype: MAPPER_NAME, index: targetIndex.name}
           }
         )
         .then(
@@ -402,7 +401,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             chunk.map((control) => JSON.stringify(control)).join('\n'),
             {
               headers: {Authorization: 'Bearer ' + authToken},
-              params: {sourcetype: MAPPER_NAME, index: targetIndex.title}
+              params: {sourcetype: MAPPER_NAME, index: targetIndex.name}
             }
           )
           .then(
@@ -444,12 +443,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     }
   }
 
-  async toSplunk(
-    config: SplunkConfig,
-    filename: string,
-  ): Promise<string> {
-    const parser = new XMLParser();
-
+  async toSplunk(config: SplunkConfig, filename: string): Promise<string> {
     const hostname = config.port
       ? `${config.scheme}://${config.host}:${config.port}`
       : `${config.scheme}://${config.host}:8089`;
@@ -474,36 +468,37 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             auth: {
               username: usernameStr,
               password: passwordStr
-            }
+            },
+            params: {output_mode: 'json'}
           }
         )
         .then(
           (response) => {
-            const authToken = parser.parse(response.data).response.sessionKey;
+            const authToken = response.data.sessionKey;
             axios
               .get(`${hostname}/services/data/indexes`, {
                 headers: {Authorization: 'Bearer ' + authToken},
-                params: {count: 0}
+                params: {count: 0, output_mode: 'json'}
               })
               .then(
                 (response) => {
-                  const indexes = parser.parse(response.data).feed.entry;
+                  const indexes = response.data.entry;
                   if (indexes.length <= 0) {
                     throw new Error(
                       'Unable to get available indexes, double-check your scheme configuration and try again'
                     );
                   } else {
-                    const indexTitles: string[] = indexes.map(
-                      (index: {title: string}) => index.title
+                    const indexNames: string[] = indexes.map(
+                      (index: {name: string}) => index.name
                     );
                     logger.verbose(
-                      `Available Indexes: ${indexTitles.join(', ')}`
+                      `Available Indexes: ${indexNames.join(', ')}`
                     );
-                    if (indexTitles.includes(config.index)) {
+                    if (indexNames.includes(config.index)) {
                       const targetIndex = indexes.filter(
-                        (index: {title: string}) => index.title == config.index
+                        (index: {name: string}) => index.name == config.index
                       )[0];
-                      logger?.verbose(`Have index ${targetIndex.title}`);
+                      logger?.verbose(`Have index ${targetIndex.name}`);
                       const splunkData = this.createSplunkData(guid, filename);
                       this.uploadSplunkData(
                         config,
