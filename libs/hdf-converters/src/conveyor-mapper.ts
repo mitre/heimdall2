@@ -6,41 +6,54 @@ const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
 
 function createDescription(
   data: Record<string, unknown>,
+  score: number,
+  date: string,
   type: string
-): string {
+): Record<string, unknown> {
+  let desc = '';
   if (type == 'Moldy') {
-    return (
+    desc =
       'body:' +
-      _.get(data, 'result.sections[0].body') +
+      _.get(data, 'body') +
       '\nbody_format:' +
-      (_.get(data, 'result.sections[0].body_format') as string) +
+      (_.get(data, 'body_format') as string) +
       '\nclassificaton:' +
-      (_.get(data, 'result.sections[0].body_classification') as string) +
-      '\nFinished_at' +
-      (_.get(data, 'response.milestones.service_completed') as string) +
-      '\n'
-    );
+      (_.get(data, 'classification') as string) +
+      '\n';
+  } else if (type == 'Stigma') {
+    desc =
+      'body:' +
+      _.get(data, 'body') +
+      '\nbody_format:' +
+      (_.get(data, 'body_format') as string) +
+      '\ntitle_text:' +
+      (_.get(data, 'title_text') as string) +
+      '\nclassificaton:' +
+      (_.get(data, 'classification') as string) +
+      '\n';
+  } else if (type == 'CodeQuality') {
+    desc =
+      'body:' +
+      _.get(data, 'body') +
+      '\nbody_format:' +
+      (_.get(data, 'body_format') as string) +
+      '\nclassificaton:' +
+      (_.get(data, 'classification') as string) +
+      '\ndepth:' +
+      (_.get(data, 'depth') as string) +
+      '\nheuristic:' +
+      (_.get(data, 'heuristic') as string) +
+      '\ntitle_text:' +
+      (_.get(data, 'title_text') as string) +
+      '\n';
+  } else {
+    desc = JSON.stringify(data);
   }
-  if (type == 'Stigma') {
-    return (
-      'body0:' +
-      _.get(data, 'result.sections[0].body') +
-      '\nbody_format0:' +
-      (_.get(data, 'result.sections[0].body_format') as string) +
-      '\ntitle_text0:' +
-      (_.get(data, 'result.sections[0].title_text') as string) +
-      '\nclassificaton0:' +
-      (_.get(data, 'result.sections[0].body_classification') as string) +
-      '\nbody1:' +
-      (_.get(data, 'result.sections[1].body') as string) +
-      '\ntitle_text1:' +
-      (_.get(data, 'result.sections[1].title_text') as string) +
-      '\nFinished_at' +
-      (_.get(data, 'response.milestones.service_completed') as string) +
-      '\n'
-    );
-  }
-  return JSON.stringify(_.get(data, 'result.sections[0]') as string);
+  return {
+    status: determineStatus(score),
+    code_desc: desc,
+    start_time: date
+  };
 }
 
 function childrenfinder(output: Record<string, unknown>): string[][] {
@@ -84,6 +97,13 @@ function shafileMapper(
   });
   return shamappings;
 }
+function determineStatus(score: number): ExecJSON.ControlResultStatus {
+  if (score == 0) {
+    return ExecJSON.ControlResultStatus.Passed;
+  }
+  return ExecJSON.ControlResultStatus.Failed;
+}
+
 function arrayifyObject(
   output: Record<string, unknown>,
   mapped: Record<string, unknown>
@@ -94,11 +114,24 @@ function arrayifyObject(
     const temp = value as Record<string, unknown>;
     const temp2: string = _.get(value, 'sha256') || '';
     _.set(temp, 'filename', _.get(mapped, temp2));
-    const description = createDescription(
-      temp,
-      _.get(temp, 'response.service_name') as string
+    const descriptions = _.map(
+      _.get(temp, 'result.sections') as Record<string, unknown>[],
+      (val) =>
+        createDescription(
+          val as Record<string, unknown>,
+          _.get(temp, 'result.score') as number,
+          _.get(temp, 'response.milestones.service_started') as string,
+          _.get(temp, 'response.service_name') as string
+        )
     );
-    _.set(temp, 'result.sections[0].body', description);
+    if (descriptions.length == 0) {
+      descriptions.push({
+        status: ExecJSON.ControlResultStatus.Passed,
+        code_desc: 'NA',
+        start_time: _.get(temp, 'response.milestones.service_started') as string
+      });
+    }
+    _.set(temp, 'result.sections', descriptions);
     newout.push(temp);
   });
   const groups = _.groupBy(newout, (value) => {
@@ -118,7 +151,7 @@ function controlMappingConveyor(): MappedTransform<
     impact: {
       path: 'result.score',
       transformer: (value) => {
-        return value / 100;
+        return value / 1000;
       }
     },
     refs: [],
@@ -130,10 +163,10 @@ function controlMappingConveyor(): MappedTransform<
     },
     results: [
       {
-        status: ExecJSON.ControlResultStatus.Failed,
-        code_desc: {path: 'result.sections[0].body'},
-        message: '',
-        start_time: {path: 'response.milestones.service_started'}
+        path: 'result.sections',
+        status: {path: 'status'},
+        code_desc: {path: 'code_desc'},
+        start_time: {path: 'start_time'}
       }
     ]
   };
