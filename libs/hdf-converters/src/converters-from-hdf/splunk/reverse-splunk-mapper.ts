@@ -445,27 +445,29 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     const guid = createGUID(30);
     logger.verbose('Using GUID: ' + guid);
 
-    return new Promise(async (resolve) => {
+    // Attempt to authenticate using given credentials
+    const username = (config.username ??= '');
+    const password = (config.password ??= '');
+    const authResponse = await axiosInstance.post(
+      `${hostname}/services/auth/login`,
+      new URLSearchParams({
+        username: username,
+        password: password
+      })
+    );
+
+    // Request all available indexes
+    const authToken = authResponse.data.sessionKey;
+    const indexResponse = await axiosInstance.get(
+      `${hostname}/services/data/indexes`,
+      {
+        headers: {Authorization: 'Bearer ' + authToken},
+        params: {count: 0}
+      }
+    );
+
+    return new Promise((resolve) => {
       try {
-        // Attempt to authenticate using given credentials
-        const authResponse = await axiosInstance.post(
-          `${hostname}/services/auth/login`,
-          new URLSearchParams({
-            username: (config.username ??= ''),
-            password: (config.password ??= '')
-          })
-        );
-
-        // Request all available indexes
-        const authToken = authResponse.data.sessionKey;
-        const indexResponse = await axiosInstance.get(
-          `${hostname}/services/data/indexes`,
-          {
-            headers: {Authorization: 'Bearer ' + authToken},
-            params: {count: 0}
-          }
-        );
-
         // Report provided indexes
         const indexes = indexResponse.data.entry;
         if (indexes.length <= 0) {
