@@ -1,6 +1,10 @@
 <template>
   <v-card width="100%" class="mt-3 pt-4">
     <v-card-text>
+      <span
+        >{{ selectedRule.severityOverride }} :
+        {{ selectedRule.severityJustification }}</span
+      >
       <v-row dense>
         <v-col>
           <v-select
@@ -54,6 +58,7 @@
 
 <script lang="ts">
 import {ChecklistVuln} from '@mitre/hdf-converters';
+import {ControlStatus, Severity, TitleCasedSeverity} from 'inspecjs';
 import _ from 'lodash';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
@@ -62,14 +67,14 @@ export default class ChecklistRuleInfoBody extends Vue {
   @Prop({type: Object, required: true}) selectedRule!: ChecklistVuln;
   @Prop({type: Boolean, required: true}) sheet!: Boolean;
 
-  statusItems = [
+  statusItems: {name: ControlStatus; value: ControlStatus}[] = [
     {name: 'Passed', value: 'Passed'},
     {name: 'Failed', value: 'Failed'},
     {name: 'Not Applicable', value: 'Not Applicable'},
     {name: 'Not Reviewed', value: 'Not Reviewed'}
   ];
 
-  severityOverrideItems = [
+  severityOverrideItems: {name: TitleCasedSeverity; value: Severity}[] = [
     {name: 'High', value: 'high'},
     {name: 'Medium', value: 'medium'},
     {name: 'Low', value: 'low'}
@@ -79,11 +84,14 @@ export default class ChecklistRuleInfoBody extends Vue {
     const newArr = this.severityOverrideItems.filter(
       (item) => item.value !== severity
     );
-    // Check if it is an empty rule
-    if (this.selectedRule.severity !== '') {
+    // Check if it is not an empty rule
+    if (
+      this.selectedRule.severity !== '' &&
+      this.selectedRule.severityOverride != ''
+    ) {
       newArr.push({
         name: `${_.capitalize(this.selectedRule.severity)} (Default)`,
-        value: this.selectedRule.severity
+        value: this.selectedRule.severity as Severity
       });
     }
     return newArr;
