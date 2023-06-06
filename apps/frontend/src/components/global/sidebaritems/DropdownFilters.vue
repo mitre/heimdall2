@@ -1,12 +1,12 @@
 <template>
   <div>
-    <h1 class="mt-5">Category Filters:</h1>
+    <h1 class="mt-5">{{ header }}:</h1>
     <v-row class="mt-4">
       <v-select
         v-model="currentFreeTextFilterCategory"
         class="mx-2 select"
-        :items="categories"
-        label="Filter Categories"
+        :items="properties"
+        label="Filter Properties"
       />
       <v-text-field
         v-model="currentFreeTextFilterInput"
@@ -36,34 +36,20 @@
 
 <script lang="ts">
 import {SearchModule} from '@/store/search';
-import {Component, Vue} from 'vue-property-decorator';
+import {Component, Prop, Vue} from 'vue-property-decorator';
 
 type FilterType = 'inclusive' | 'exclusive';
 
 @Component({})
-export default class CategoryFilters extends Vue {
+export default class DropdownFilters extends Vue {
+  @Prop({required: true}) readonly properties!: string[];
+  @Prop({required: true}) readonly header!: string;
+
   currentFreeTextFilterInput = '';
   currentFreeTextFilterCategory = '';
 
   /** Whether category filter is inclusive or exclusive (default: inclusive)*/
   selectedRadioButton: FilterType = 'inclusive';
-
-  /** Free text filter category list for dropdown */
-  readonly categories = [
-    'Keywords',
-    'ID',
-    'Vul ID',
-    'Rule ID',
-    'Title',
-    'Nist',
-    'Description',
-    'Code',
-    'Stig ID',
-    'Classification',
-    'IA Control',
-    'Group Name',
-    'CCIs'
-  ];
 
   addCategoryFilter(field: string, value: string) {
     let negated = false;
