@@ -1,3 +1,24 @@
+v2.6.51
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1390.0 to 2.1391.0 @dependabot (#4564)
+- Bump sequelize-cli from 6.6.0 to 6.6.1 @dependabot (#4566)
+- Bump dotenv from 16.1.3 to 16.1.4 @dependabot (#4568)
+- Bump typedoc from 0.24.7 to 0.24.8 @dependabot (#4563)
+- Bump @typescript-eslint/parser from 5.59.8 to 5.59.9 @dependabot (#4569)
+- Bump html-entities from 2.3.3 to 2.3.4 @dependabot (#4567)
+- Bump fast-xml-parser from 4.2.2 to 4.2.4 @dependabot (#4562)
+- Bump eslint from 8.41.0 to 8.42.0 @dependabot (#4556)
+- Bump aws-sdk from 2.1388.0 to 2.1390.0 @dependabot (#4557)
+- Bump @aws-sdk/client-config-service from 3.343.0 to 3.345.0 @dependabot (#4554)
+- Bump d3 from 7.8.4 to 7.8.5 @dependabot (#4555)
+- Bump aws-sdk from 2.1387.0 to 2.1388.0 @dependabot (#4546)
+- Bump dotenv from 16.1.0 to 16.1.3 @dependabot (#4547)
+- Bump @aws-sdk/client-config-service from 3.342.0 to 3.343.0 @dependabot (#4545)
+- Bump @aws-sdk/client-config-service from 3.341.0 to 3.342.0 @dependabot (#4544)
+- Bump dotenv from 16.0.3 to 16.1.0 @dependabot (#4543)
+
 v2.6.50
 
 ## Dependency Updates
