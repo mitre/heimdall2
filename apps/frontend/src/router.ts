@@ -88,7 +88,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, _, next) => {
-  AppInfoModule.SET_CURRENT_VIEW(to.path.split('/')[1] as views)
+  AppInfoModule.SET_CURRENT_VIEW(to.path.split('/')[1] as views);
   ServerModule.CheckForServer().then(() => {
     AppInfoModule.CheckForUpdates();
     if (to.matched.some((record) => record.meta.requiresAuth)) {
