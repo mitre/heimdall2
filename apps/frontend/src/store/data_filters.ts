@@ -39,6 +39,7 @@ import {
   CodeSearchTerm,
   ControlIdSearchTerm,
   DescriptionSearchTerm,
+  FilenameSearchTerm,
   GroupNameSearchTerm,
   IaControlsSearchTerm,
   KeywordsSearchTerm,
@@ -94,6 +95,9 @@ export interface ControlsFilter {
 
   /** A specific control id */
   control_id?: string;
+
+  /** Filenames to search for  */
+  filenameSearchTerms?: SearchEntry<FilenameSearchTerm>[];
 
   // End of "generic" filters
 
@@ -601,6 +605,7 @@ export class FilteredData extends VuexModule {
           filter.status,
           (status) => status.value !== 'Waived'
         ),
+        'root.sourcedFrom.from_file.filename': filter.filenameSearchTerms,
         keywords: filter.keywordsSearchTerms
       };
 

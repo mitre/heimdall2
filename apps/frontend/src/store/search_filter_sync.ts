@@ -18,6 +18,7 @@ export type CciSearchTerm = string;
 export type IaControlsSearchTerm = string;
 export type NistIdFilter = string;
 export type KeywordsSearchTerm = string;
+export type FilenameSearchTerm = string;
 
 @Module({
   namespaced: true,

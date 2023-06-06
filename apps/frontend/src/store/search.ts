@@ -16,6 +16,7 @@ import {
   CodeSearchTerm,
   ControlIdSearchTerm,
   DescriptionSearchTerm,
+  FilenameSearchTerm,
   GroupNameSearchTerm,
   IaControlsSearchTerm,
   KeywordsSearchTerm,
@@ -87,6 +88,12 @@ class Search extends VuexModule {
     keywords: []
   };
 
+  fileMetadataSearchTerms: {
+    filename: SearchEntry<FilenameSearchTerm>[];
+  } = {
+    filename: []
+  };
+
   /** Sets the current search */
   @Mutation
   SET_SEARCH(newSearch: string) {
@@ -117,7 +124,8 @@ class Search extends VuexModule {
     ['Classification', 'classification'],
     ['IA Control', 'iaControl'],
     ['Group Name', 'groupname'],
-    ['CCIs', 'cci']
+    ['CCIs', 'cci'],
+    ['File Name', 'filename']
   ]);
 
   /**
@@ -609,6 +617,24 @@ class Search extends VuexModule {
     this.inFileSearchTerms.keywords = [];
   }
 
+  /** Adds filename to filter */
+  @Action
+  addFilenameFilter(filename: SearchEntry<FilenameSearchTerm>) {
+    this.context.commit('ADD_FILENAME', filename);
+  }
+
+  @Mutation
+  ADD_FILENAME(filename: SearchEntry<FilenameSearchTerm>) {
+    this.fileMetadataSearchTerms.filename =
+      this.fileMetadataSearchTerms.filename.concat(filename);
+  }
+
+  /** Clears all filename filters */
+  @Mutation
+  CLEAR_FILENAME() {
+    this.fileMetadataSearchTerms.filename = [];
+  }
+
   /** Clears all current filters */
   @Action
   clear() {
@@ -627,6 +653,7 @@ class Search extends VuexModule {
     this.context.commit('CLEAR_RULEID');
     this.context.commit('CLEAR_CCI');
     this.context.commit('CLEAR_IA_CONTROLS');
+    this.context.commit('CLEAR_FILENAME');
     this.context.commit('CLEAR_KEYWORDS');
   }
 
@@ -732,6 +759,12 @@ class Search extends VuexModule {
           break;
         case 'iaControl':
           this.addIaControlsFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'filename':
+          this.addFilenameFilter({
             value: include.value,
             negated: include.negated
           });
