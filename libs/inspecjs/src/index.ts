@@ -7,9 +7,13 @@ export {
   HDFControl,
   HDFControlSegment,
   hdfWrapControl,
+  LowercasedControlStatus,
+  lowercasedControlStatuses,
   SegmentStatus,
   severities,
-  Severity
+  Severity,
+  titleCasedSeverities,
+  TitleCasedSeverity
 } from './compat_wrappers';
 // Export Conversion functions
 export * from './context';
