@@ -3,35 +3,24 @@
     <v-card-title class="justify-center"
       >Severity Override Justification</v-card-title
     >
-    <v-card-subtitle
-      v-if="selectedRule.severityJustification === ''"
-      class="justify-center mt-1"
-    >
-      <strong>
-        Please input a valid severity override justification. (Required)
-      </strong>
-    </v-card-subtitle>
-    <v-card-subtitle v-else class="justify-center mt-1">
-      <strong>Press "OK" to save.</strong>
+    <v-card-subtitle class="justify-center mt-1">
+      Please input a valid severity override justification. (Required)
     </v-card-subtitle>
     <v-textarea
-      v-model="selectedRule.severityJustification"
+      v-model="newJustification"
       class="mt-2"
       solo
       outlined
       dense
-      no-resize
-      height="130px"
+      auto-grow
+      rows="3"
     />
-    <v-btn color="#616161" dark @click="cancelSeverityOverride"> Cancel </v-btn>
-    <v-btn
-      class="ml-4"
-      color="#616161"
-      dark
-      @click="validateSecurityJustification"
-    >
-      Ok
-    </v-btn>
+    <v-row justify>
+      <v-btn color="#616161" dark @click="cancelSeverityOverride">Cancel</v-btn>
+      <v-btn color="#616161" dark @click="validateSecurityJustification">
+        Override
+      </v-btn>
+    </v-row>
   </v-card>
 </template>
 
@@ -42,12 +31,19 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 @Component
 export default class ChecklistSeverityOverride extends Vue {
   @Prop({type: Object, required: true}) readonly selectedRule!: ChecklistVuln;
-  @Prop({type: Boolean, required: true}) sheet!: Boolean;
+  @Prop({type: Boolean, required: true}) sheet!: boolean;
+  @Prop({type: String, required: true}) severityOverrideSelection!: string;
+
+  newJustification = this.selectedRule.severityJustification
+    ? this.selectedRule.severityJustification
+    : '';
 
   validJustification = true;
   validateSecurityJustification() {
-    if (this.selectedRule.severityJustification !== '') {
+    if (this.newJustification !== '') {
       this.validJustification = true;
+      this.selectedRule.severityOverride = this.severityOverrideSelection;
+      this.selectedRule.severityJustification = this.newJustification;
       this.$emit('disable-sheet');
       return true;
     } else {
@@ -60,8 +56,6 @@ export default class ChecklistSeverityOverride extends Vue {
   cancelSeverityOverride() {
     this.validJustification = true;
     this.$emit('disable-sheet');
-    // TODO: Currently this is a v-model so if canceled it will clear previous input
-    this.selectedRule.severityOverride = '';
     this.selectedRule.severityJustification = '';
   }
 }

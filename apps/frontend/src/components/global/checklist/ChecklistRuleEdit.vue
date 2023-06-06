@@ -14,7 +14,7 @@
         </v-col>
         <v-col>
           <v-select
-            v-model="selectedRule.severityOverride"
+            v-model="newOverride"
             dense
             label="Severity Override"
             item-text="name"
@@ -63,6 +63,10 @@ export default class ChecklistRuleInfoBody extends Vue {
   @Prop({type: Object, required: true}) selectedRule!: ChecklistVuln;
   @Prop({type: Boolean, required: true}) sheet!: Boolean;
 
+  newOverride = this.selectedRule.severityOverride
+    ? this.selectedRule.severityOverride
+    : '';
+
   statusItems: {name: ControlStatus; value: ControlStatus}[] = [
     {name: 'Passed', value: 'Passed'},
     {name: 'Failed', value: 'Failed'},
@@ -97,9 +101,8 @@ export default class ChecklistRuleInfoBody extends Vue {
     if (this.selectedRule.severityOverride === this.selectedRule.severity) {
       this.selectedRule.severityJustification =
         'Returning to default severity.';
-    } else {
-      this.selectedRule.severityJustification = '';
     }
+    this.$emit('update-override', this.newOverride);
     this.$emit('enable-sheet');
   }
 }

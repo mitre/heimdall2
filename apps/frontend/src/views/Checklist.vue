@@ -51,7 +51,10 @@
             </v-row>
             <!-- Rule Body Info -->
             <v-row dense>
-              <ChecklistRuleInfoBody :selected-rule="selectedRule" />
+              <ChecklistRuleInfoBody
+                :selected-rule="selectedRule"
+                @enable-sheet="sheet = true"
+              />
             </v-row>
             <!-- Rule Info Edit -->
             <v-row dense>
@@ -59,6 +62,7 @@
                 :selected-rule="selectedRule"
                 :sheet="sheet"
                 @enable-sheet="sheet = true"
+                @update-override="setSeverityOverrideSelection"
               />
             </v-row>
           </v-col>
@@ -69,6 +73,7 @@
             <ChecklistSeverityOverride
               :selected-rule="selectedRule"
               :sheet="sheet"
+              :severity-override-selection="severityOverrideSelection"
               @disable-sheet="sheet = false"
               @enable-sheet="sheet = true"
             />
@@ -76,6 +81,32 @@
         </div>
       </v-container>
     </template>
+    <!-- Everything-is-filtered snackbar -->
+    <v-snackbar
+      v-model="filterSnackbar"
+      class="mt-11"
+      style="z-index: 2"
+      :timeout="-1"
+      color="warning"
+      top
+    >
+      <span v-if="fileFilter.length" class="subtitle-2">
+        All results are filtered out. Use the
+        <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
+        filters and show all.
+      </span>
+      <!-- <span v-else-if="no_files" class="subtitle-2">
+        No files are currently loaded. Press the <strong>LOAD</strong>
+        <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
+        some.
+      </span> -->
+      <span v-else class="subtitle-2">
+        No files are currently enabled for viewing. Open the
+        <v-icon class="mx-1">mdi-arrow-right</v-icon> sidebar menu, and ensure
+        that the file(s) you wish to view are
+        <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
+      </span>
+    </v-snackbar>
   </Base>
 </template>
 
@@ -107,6 +138,7 @@ import ChecklistRuleInfoBody from '@/components/global/checklist/ChecklistRuleIn
 import ChecklistRuleEdit from '@/components/global/checklist/ChecklistRuleEdit.vue';
 import ChecklistSeverityOverride from '@/components/global/checklist/ChecklistSeverityOverride.vue';
 import ExportButton from '@/components/generic/ExportButton.vue';
+import {Severity} from 'inspecjs';
 
 @Component({
   components: {
@@ -124,16 +156,23 @@ import ExportButton from '@/components/generic/ExportButton.vue';
 export default class Checklist extends RouteMixin {
   /** Model for if all-filtered snackbar should be showing */
   filterSnackbar = false;
-  controlSelection: string | null = null;
 
   /** State variable to track status of bottom-sheet */
   sheet = false;
 
+  /** State variable to track severity justification */
+  newJustification = this.selectedRule.severityJustification;
+
+  /** State variable to track severity override */
+  severityOverrideSelection = this.selectedRule.severityOverride;
+
+  setSeverityOverrideSelection(value: Severity) {
+    this.severityOverrideSelection = value;
+    console.log('These two: ', this.severityOverrideSelection, value);
+  }
+
   /** State variable to track "Short ID" switch */
   shortIdEnabled = true;
-
-  //** Variable for selected tab */
-  tab = null;
 
   evalInfo:
     | SourcedContextualizedEvaluation
@@ -159,14 +198,11 @@ export default class Checklist extends RouteMixin {
   }
 
   get selectedRule() {
-    let stillExists = false;
-    // Checks to see if the selected rule still exists after filtering
-    this.rules.forEach((item) => {
-      if (_.isEqual(FilteredDataModule.selectedRule, item)) {
-        stillExists = true;
-      }
-    });
-    if (stillExists) {
+    if (
+      this.rules.some((rule) =>
+        _.isEqual(FilteredDataModule.selectedRule, rule)
+      )
+    ) {
       return FilteredDataModule.selectedRule;
     }
     return this.rules[0] ?? FilteredDataModule.emptyRule;
@@ -198,7 +234,7 @@ export default class Checklist extends RouteMixin {
   }
 
   /**
-   * The filter for charts. Contains all of our filter stuff
+   * Subset of all filter terms specific for Results
    */
   get allFilter(): ChecklistFilter {
     return {
@@ -216,7 +252,6 @@ export default class Checklist extends RouteMixin {
       nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
       codeSearchTerms: SearchModule.inFileSearchTerms.code,
       omit_overlayed_controls: true,
-      control_id: this.controlSelection || undefined,
       iaControlsSearchTerms: SearchModule.inFileSearchTerms.iaControls,
       keywordsSearchTerms: SearchModule.inFileSearchTerms.keywords
     };
@@ -228,7 +263,6 @@ export default class Checklist extends RouteMixin {
   clear(clearSearchBar = false) {
     SearchModule.clear();
     this.filterSnackbar = false;
-    this.controlSelection = null;
     if (clearSearchBar) {
       this.searchTerm = '';
     }
@@ -244,7 +278,6 @@ export default class Checklist extends RouteMixin {
     if (
       SearchModule.inFileSearchTerms.severityFilter.length !== 0 ||
       SearchModule.inFileSearchTerms.statusFilter.length !== 0 ||
-      SearchModule.inFileSearchTerms.controlId.length !== 0 ||
       SearchModule.inFileSearchTerms.code.length !== 0 ||
       this.searchTerm
     ) {
