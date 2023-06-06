@@ -15,8 +15,10 @@
       auto-grow
       rows="3"
     />
-    <v-row justify>
-      <v-btn color="#616161" dark @click="cancelSeverityOverride">Cancel</v-btn>
+    <v-row justify="center" class="mx-auto pb-5">
+      <v-btn class="mr-5" color="#616161" dark @click="cancelSeverityOverride"
+        >Cancel</v-btn
+      >
       <v-btn color="#616161" dark @click="validateSecurityJustification">
         Override
       </v-btn>

@@ -88,10 +88,10 @@
 import {ChecklistFilter, FilteredDataModule} from '@/store/data_filters';
 import {FileID} from '@/store/report_intake';
 import {ChecklistVuln} from '@mitre/hdf-converters';
-import {InspecDataModule} from '@/store/data_store';
-import _ from 'lodash';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import {ControlStatus} from 'inspecjs';
+import {shortRuleId, shortStigId} from '@/utilities/checklist_util';
+import _ from 'lodash';
 
 @Component
 export default class ChecklistRulesTable extends Vue {
@@ -101,13 +101,13 @@ export default class ChecklistRulesTable extends Vue {
   @Prop({type: Array, required: true}) readonly rules!: ChecklistVuln[];
 
   shortRuleId(ruleId: string) {
-    if (this.shortIdEnabled) return ruleId.split('r')[0] || ruleId;
-    else return ruleId;
+    return this.shortIdEnabled ? ruleId.split('r')[0] || ruleId : ruleId;
   }
 
   shortStigId(stigId: string) {
-    if (this.shortIdEnabled) return stigId.split('-').slice(0, 2).join('-');
-    else return stigId;
+    return this.shortIdEnabled
+      ? stigId.split('-').slice(0, 2).join('-')
+      : stigId;
   }
 
   shortStatus(status: string) {
@@ -151,20 +151,15 @@ export default class ChecklistRulesTable extends Vue {
   }
 
   checkSelected(rule: ChecklistVuln) {
-    if (rule.ruleId === FilteredDataModule.selectedRule.ruleId)
+    if (rule.ruleId === FilteredDataModule.selectedRule.ruleId) {
       return 'selectedRow';
+    }
   }
 
   get headers() {
-    const selectedHeadersList = this.selectedHeaders.map(
-      (header) => header.text
-    );
-    return [
-      ...this.headersList.filter((header) =>
-        selectedHeadersList.includes(header.text)
-      ),
-      ...this.hiddenRows
-    ];
+    return this.headersList.filter((header) => {
+      return _.find(this.selectedHeaders, {text: header.text});
+    });
   }
 
   selectedHeaders: {text: string; value: string; width?: string}[] = [
@@ -183,32 +178,6 @@ export default class ChecklistRulesTable extends Vue {
     {text: 'Vul ID', value: 'vulnNum', width: '100px'},
     {text: 'Group Name', value: 'groupTitle', width: '150px'},
     {text: 'CCIs', value: 'cciRef', width: '120px'}
-  ];
-
-  /** Kept so we can filter by these values even though they are hidden */
-  hiddenRows = [
-    {value: 'severity', align: ' d-none'},
-    {value: 'ruleTitle', align: ' d-none'},
-    {value: 'vulnDiscuss', align: ' d-none'},
-    {value: 'iaControls', align: ' d-none'},
-    {value: 'checkContent', align: ' d-none'},
-    {value: 'fixText', align: ' d-none'},
-    {value: 'falsePositives', align: ' d-none'},
-    {value: 'falseNegatives', align: ' d-none'},
-    {value: 'documentable', align: ' d-none'},
-    {value: 'mitigations', align: ' d-none'},
-    {value: 'potentialImpact', align: ' d-none'},
-    {value: 'thirdPartyTools', align: ' d-none'},
-    {value: 'mitigationControl', align: ' d-none'},
-    {value: 'responsibility', align: ' d-none'},
-    {value: 'securityOverrideGuidance', align: ' d-none'},
-    {value: 'checkContentRef', align: ' d-none'},
-    {value: 'weight', align: ' d-none'},
-    {value: 'class', align: ' d-none'},
-    {value: 'stigRef', align: ' d-none'},
-    {value: 'targetKey', align: ' d-none'},
-    {value: 'stigUuid', align: ' d-none'},
-    {value: 'legacyId', align: ' d-none'}
   ];
 }
 </script>
