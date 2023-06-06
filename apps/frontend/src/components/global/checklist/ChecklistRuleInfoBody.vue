@@ -37,7 +37,9 @@
       </div>
       <!-- Rule MISC Data -->
       <div class="my-3 d-flex flex-column">
-        <span class="text-overline white--text">MISC Data: </span>
+        <span v-if="miscDataPresent()" class="text-overline white--text"
+          >MISC Data:
+        </span>
         <!-- Rule IA Controls -->
         <div v-if="selectedRule.iaControls" class="my-3 d-flex flex-column">
           <span>IA Controls:</span>
@@ -77,6 +79,27 @@
           <span>Mitigation Control:</span>
           <span>{{ selectedRule.mitigationControl }}</span>
         </div>
+        <!-- Severity Override -->
+        <div
+          v-if="selectedRule.severityOverride"
+          class="my-3 d-flex flex-column"
+        >
+          <span>Severity Override:</span>
+          <span>{{ selectedRule.severityOverride }}</span>
+        </div>
+        <!-- Severity Override Justification -->
+        <div
+          v-if="selectedRule.severityJustification"
+          class="my-3 d-flex flex-column"
+        >
+          <span>Severity Override Justification:</span>
+          <span>{{ selectedRule.severityJustification }}</span>
+          <v-btn class="mt-2" dark @click="$emit('enable-sheet')"
+            >Edit Justification<v-icon data-cy="edit" title="Edit" class="ml-3">
+              mdi-pencil
+            </v-icon></v-btn
+          >
+        </div>
       </div>
     </v-card-text>
     <v-card-text v-else class="text-center">
@@ -100,6 +123,19 @@ export default class ChecklistRuleInfoBody extends Vue {
 
   cciDescription(cci: string): string {
     return CCI_DESCRIPTIONS[cci].def;
+  }
+
+  miscDataPresent() {
+    return (
+      this.selectedRule.iaControls ||
+      this.selectedRule.falsePositives ||
+      this.selectedRule.mitigations ||
+      this.selectedRule.potentialImpact ||
+      this.selectedRule.thirdPartyTools ||
+      this.selectedRule.mitigationControl ||
+      this.selectedRule.severityOverride ||
+      this.selectedRule.severityJustification
+    );
   }
 }
 </script>
