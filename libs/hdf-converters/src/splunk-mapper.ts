@@ -1,6 +1,4 @@
-import splunkjs, {Job} from '@mitre/splunk-sdk-no-env';
-import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
-import axios, { AxiosInstance } from 'axios';
+import axios, {AxiosInstance} from 'axios';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {Logger} from 'winston';
@@ -154,7 +152,7 @@ function consolidateFilePayloads(
 
 export async function checkSplunkCredentials(
   config: SplunkConfig
-): Promise<boolean> {
+): Promise<string> {
   const hostname = config.port
     ? `${config.scheme}://${config.host}:${config.port}`
     : `${config.scheme}://${config.host}:8089`;
@@ -166,7 +164,7 @@ export async function checkSplunkCredentials(
       () =>
         reject(
           new Error(
-            'Login timed out. Please check your CORS configuration or validate you have inputted the correct domain'
+            'Login timed out. Please check your CORS configuration or validate that you have inputted the correct domain'
           )
         ),
       5000
@@ -184,7 +182,7 @@ export async function checkSplunkCredentials(
         (response) => resolve(response.data.sessionKey),
         (error) => {
           if (error.status === 401) {
-            reject('Incorrect Username or Password');
+            reject('Incorrect username or password');
           } else {
             reject(JSON.stringify(error.data));
           }
@@ -200,48 +198,40 @@ function unixTimeToDate(unixTime: string): Date {
 
 export class SplunkMapper {
   config: SplunkConfig;
-  service: splunkjs.Service;
-  webCompatibility: boolean;
   axiosInstance: AxiosInstance;
+  hostname: string;
 
   constructor(
     config: SplunkConfig,
-    webCompatibility = false,
     logService?: Logger,
     loggingLevel?: string
   ) {
     this.config = config;
-    this.webCompatibility = webCompatibility;
+    this.axiosInstance = axios.create({params: {output_mode: 'json'}});
+    this.hostname = config.port
+      ? `${config.scheme}://${config.host}:${config.port}`
+      : `${config.scheme}://${config.host}:8089`;
     if (logService) {
       logger = logService;
     } else {
       logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     }
-    this.axiosInstance = axios.create();
-    logger.debug(`Initializing Splunk Client`);
-    if (this.webCompatibility) {
-      this.service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
-    } else {
-      this.service = new splunkjs.Service(config);
-    }
     logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
-  async createJob(query: string): Promise<Job> {
+  async createJob(query: string): Promise<string> {
     logger.debug(`Creating job for query: ${query}`);
-    return new Promise((resolve, reject) => {
-      this.service
-        .jobs()
-        .create(
-          query,
-          {exec_mode: 'blocking'},
-          (error: any, createdJob: any) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(createdJob);
-            }
-          }
+    return new Promise(async (resolve, reject) => {
+      // Post to {host}/services/search/jobs endpoint to queue search job for given query
+      // Will return unique search ID (SID) assigned to that search job for future reference
+      this.axiosInstance
+        .post(
+          `${this.hostname}/services/search/jobs`,
+          `exec_mode=blocking&search=${query}`
+        )
+        .then(
+          (response) => resolve(response.data.sid),
+          (error) => reject(error.data)
         );
     });
   }
@@ -307,32 +297,67 @@ export class SplunkMapper {
   }
 
   async queryData(query: string): Promise<any[]> {
+    // Request session key for Axios instance
+    const authToken = await checkSplunkCredentials(this.config);
+    this.axiosInstance.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${authToken}`;
+
     const job = await this.createJob(query);
-    return new Promise((resolve, reject) => {
-      job.track(
-        {},
-        {
-          done: () => {
-            logger.debug(`Getting results for query: ${query}`);
-            job.results({count: 100000}, (err, results) => {
-              if (err) {
-                reject(err);
-              } else {
-                try {
-                  resolve(this.parseSplunkResponse(query, results));
-                } catch (e) {
-                  reject(e);
-                }
+
+    return new Promise(async (resolve, reject) => {
+      // Ping Splunk instance every 500 ms on status of search job
+      const awaitJob = await setInterval(() => {
+        this.axiosInstance
+          .get(`${this.hostname}/services/search/jobs/${job}`)
+          .then(
+            async (response) => {
+              // If search job is complete, kill interval loop and ping Splunk for search job results
+              if (
+                response.data.entry[0].content.dispatchState == 'DONE' &&
+                response.data.entry[0].content.isDone
+              ) {
+                clearInterval(awaitJob);
+
+                const queryJob = await this.axiosInstance.get(
+                  `${this.hostname}/services/search/jobs/${job}/results`,
+                  {
+                    params: {count: 100000, output_mode: 'json_rows'}
+                  }
+                );
+                resolve(this.parseSplunkResponse(query, queryJob.data));
+                // If search job returns a bad state result, kill interval loop and fail the query
+              } else if (
+                response.data.entry[0].content.dispatchState == 'PAUSE' ||
+                'INTERNAL_CANCEL' ||
+                'USER_CANCEL' ||
+                'BAD_INPUT_CANCEL' ||
+                'QUIT' ||
+                'FAILED'
+              ) {
+                clearInterval(awaitJob);
+                reject(
+                  new Error(
+                    `Detected dispatch state ${response.data.entry[0].content.dispatchState} on search job; canceling query`
+                  )
+                );
               }
-            });
-          }
-        }
-      );
+            },
+            (error) => reject(error.data)
+          );
+      }, 500);
+
+      // Kill query after 2 minute of waiting
+      // Arbitrary time used, change as needed
+      setTimeout(() => {
+        clearInterval(awaitJob);
+        reject(new Error('Search job timed out; unable to retrieve query'));
+      }, 120000);
     });
   }
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
-    logger.info(`Starting conversion of guid ${guid}`);
+    logger.info(`Starting conversion of GUID ${guid}`);
     return checkSplunkCredentials(this.config)
       .then(async () => {
         logger.info(`Credentials valid, querying data for ${guid}`);

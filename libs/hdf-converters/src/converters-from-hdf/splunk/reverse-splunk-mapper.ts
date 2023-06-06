@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, {AxiosInstance} from 'axios';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -290,6 +290,7 @@ export class FromHDFControlToSplunkControlMapper extends FromAnyBaseConverter {
 export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   mappings?: MappedTransform<SplunkData, ILookupPathFH>;
   contextualizedEvaluation?: ContextualizedEvaluation;
+  axiosInstance: AxiosInstance;
 
   constructor(
     data: ExecJSON.Execution | ContextualizedEvaluation,
@@ -302,6 +303,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     }
     super(contextualizeIfNeeded(data));
+    this.axiosInstance = axios.create({params: {output_mode: 'json'}});
     logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
@@ -344,34 +346,31 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   async uploadSplunkData(
     config: SplunkConfig,
     targetIndex: any,
-    authToken: string,
     splunkData: SplunkData
   ): Promise<void> {
     return new Promise((resolve, reject) => {
       const hostname = config.port
         ? `${config.scheme}://${config.host}:${config.port}`
         : `${config.scheme}://${config.host}:8089`;
-      const axiosInstance = axios.create({
-        headers: {Authorization: 'Bearer ' + authToken},
-        params: {sourcetype: MAPPER_NAME, index: targetIndex.name}
-      });
+      this.axiosInstance.defaults.params['sourcetype'] = MAPPER_NAME;
+      this.axiosInstance.defaults.params['index'] = targetIndex.name;
 
       // Upload execution event
       for (const report of splunkData.reports) {
-        axiosInstance
+        this.axiosInstance
           .post(`${hostname}/services/receivers/simple`, JSON.stringify(report))
           .then(
             () =>
               logger.verbose(
                 `Successfully uploaded execution for ${report.meta.filename}`
               ),
-            (error) => reject(error)
+            (error) => reject(error.data)
           );
       }
       // Upload profile event(s)
       // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
       // See https://docs.splunk.com/Documentation/StreamProcessor/standard/FunctionReference/LineBreak
-      axiosInstance
+      this.axiosInstance
         .post(
           `${hostname}/services/receivers/simple`,
           splunkData.profiles
@@ -383,12 +382,12 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             logger.verbose(
               `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
             ),
-          (error) => reject(error)
+          (error) => reject(error.data)
         );
 
       // Upload control event(s)
       for (const chunk of _.chunk(splunkData.controls, UPLOAD_CHUNK_SIZE)) {
-        axiosInstance
+        this.axiosInstance
           .post(
             `${hostname}/services/receivers/simple`,
             chunk.map((control) => JSON.stringify(control)).join('\n')
@@ -400,7 +399,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
               );
               resolve();
             },
-            (error) => reject(error)
+            (error) => reject(error.data)
           );
       }
     });
@@ -436,32 +435,32 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     const hostname = config.port
       ? `${config.scheme}://${config.host}:${config.port}`
       : `${config.scheme}://${config.host}:8089`;
-    const axiosInstance = axios.create({params: {output_mode: 'json'}});
     logger.info(
-      `Logging into Splunk Service: ${config.host} with user ${config.username}`
+      `Logging into Splunk instance at ${hostname} with user ${config.username}`
     );
 
-    logger.verbose('Got Execution: ' + filename);
+    logger.verbose(`Got execution: ${filename}`);
     const guid = createGUID(30);
-    logger.verbose('Using GUID: ' + guid);
+    logger.verbose(`Using GUID: ${guid}`);
 
     // Attempt to authenticate using given credentials
     const username = (config.username ??= '');
     const password = (config.password ??= '');
-    const authResponse = await axiosInstance.post(
+    const authResponse = await this.axiosInstance.post(
       `${hostname}/services/auth/login`,
       new URLSearchParams({
         username: username,
         password: password
       })
     );
+    this.axiosInstance.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${authResponse.data.sessionKey}`;
 
     // Request all available indexes
-    const authToken = authResponse.data.sessionKey;
-    const indexResponse = await axiosInstance.get(
+    const indexResponse = await this.axiosInstance.get(
       `${hostname}/services/data/indexes`,
       {
-        headers: {Authorization: 'Bearer ' + authToken},
         params: {count: 0}
       }
     );
@@ -472,24 +471,24 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
         const indexes = indexResponse.data.entry;
         if (indexes.length <= 0) {
           throw new Error(
-            'Unable to get available indexes, double-check your scheme configuration and try again'
+            'Unable to retrieve available indexes, double-check your scheme configuration and try again'
           );
         } else {
           const indexNames: string[] = indexes.map(
             (index: {name: string}) => index.name
           );
-          logger.verbose(`Available Indexes: ${indexNames.join(', ')}`);
+          logger.verbose(`Available indexes: ${indexNames.join(', ')}`);
 
           // Parse available indexes for user desired index
           if (indexNames.includes(config.index)) {
             const targetIndex = indexes.filter(
               (index: {name: string}) => index.name == config.index
             )[0];
-            logger?.verbose(`Have index ${targetIndex.name}`);
+            logger.verbose(`Found index: ${targetIndex.name}`);
 
             // Post given file(s) to identified index
             const splunkData = this.createSplunkData(guid, filename);
-            this.uploadSplunkData(config, targetIndex, authToken, splunkData)
+            this.uploadSplunkData(config, targetIndex, splunkData)
               .then(() => {
                 logger.info(`Successfully uploaded to ${config.index}`);
                 resolve(guid);
@@ -498,7 +497,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
                 throw new Error(resolvedError);
               });
           } else {
-            throw new Error(`Invalid Index: ${config.index}`);
+            throw new Error(`Invalid index: ${config.index}`);
           }
         }
       } catch (error) {
