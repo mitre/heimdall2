@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import {
   ExecControl as HDFExecControl_1_0,
   ProfileControl as HDFProfileControl_1_0
@@ -32,6 +33,11 @@ export const controlStatuses = [
   'Not Reviewed'
 ] as const;
 export type ControlStatus = (typeof controlStatuses)[number];
+export const lowercasedControlStatuses = controlStatuses.map((status) =>
+  status.toLowerCase()
+);
+export type LowercasedControlStatus =
+  (typeof lowercasedControlStatuses)[number];
 
 /** The severities a control can have. These map numeric impact values to No/Low/Medium/High/Crtiical impact
  * [0, 0.01) => No impact
@@ -48,6 +54,10 @@ export const severities = [
   'critical'
 ] as const;
 export type Severity = (typeof severities)[number];
+export const titleCasedSeverities = severities.map((severity) =>
+  _.capitalize(severity)
+);
+export type TitleCasedSeverity = (typeof titleCasedSeverities)[number];
 
 /** The statuses that a segment of a control (IE a describe block) might have. */
 export type SegmentStatus =
