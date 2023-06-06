@@ -1,5 +1,6 @@
 import splunkjs, {Job} from '@mitre/splunk-sdk-no-env';
 import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
+import axios, { AxiosInstance } from 'axios';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {Logger} from 'winston';
@@ -152,15 +153,14 @@ function consolidateFilePayloads(
 }
 
 export async function checkSplunkCredentials(
-  config: SplunkConfig,
-  webCompatibility: boolean
+  config: SplunkConfig
 ): Promise<boolean> {
-  let service: splunkjs.Service;
-  if (webCompatibility) {
-    service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
-  } else {
-    service = new splunkjs.Service(config);
-  }
+  const hostname = config.port
+    ? `${config.scheme}://${config.host}:${config.port}`
+    : `${config.scheme}://${config.host}:8089`;
+  const username = (config.username ??= '');
+  const password = (config.password ??= '');
+
   return new Promise((resolve, reject) => {
     setTimeout(
       () =>
@@ -171,23 +171,25 @@ export async function checkSplunkCredentials(
         ),
       5000
     );
-    service.login((error, result) => {
-      try {
-        if (error && error.status === 401) {
+    axios
+      .post(
+        `${hostname}/services/auth/login`,
+        new URLSearchParams({
+          username: username,
+          password: password
+        }),
+        {params: {output_mode: 'json'}}
+      )
+      .then(
+        (response) => resolve(response.data.sessionKey),
+        (error) => {
           if (error.status === 401) {
             reject('Incorrect Username or Password');
-          } else if ('data' in error) {
-            reject(_.get(error, 'data.messages[0].text'));
+          } else {
+            reject(JSON.stringify(error.data));
           }
-          reject(error);
-        } else if (result) {
-          resolve(result);
         }
-        reject(new Error('Failed to Login'));
-      } catch (e) {
-        reject(e);
-      }
-    });
+      );
   });
 }
 
@@ -200,6 +202,7 @@ export class SplunkMapper {
   config: SplunkConfig;
   service: splunkjs.Service;
   webCompatibility: boolean;
+  axiosInstance: AxiosInstance;
 
   constructor(
     config: SplunkConfig,
@@ -214,6 +217,7 @@ export class SplunkMapper {
     } else {
       logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     }
+    this.axiosInstance = axios.create();
     logger.debug(`Initializing Splunk Client`);
     if (this.webCompatibility) {
       this.service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
@@ -329,7 +333,7 @@ export class SplunkMapper {
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
     logger.info(`Starting conversion of guid ${guid}`);
-    return checkSplunkCredentials(this.config, this.webCompatibility)
+    return checkSplunkCredentials(this.config)
       .then(async () => {
         logger.info(`Credentials valid, querying data for ${guid}`);
         const executionData = await this.queryData(
