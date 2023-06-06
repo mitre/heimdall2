@@ -1,4 +1,4 @@
-import {AppInfoModule} from '@/store/app_info';
+import {AppInfoModule, views} from '@/store/app_info';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationModule} from '@/store/evaluations';
 import {ServerModule} from '@/store/server';
@@ -88,6 +88,7 @@ const router = new Router({
 });
 
 router.beforeEach((to, _, next) => {
+  AppInfoModule.SET_CURRENT_VIEW(to.path.split('/')[1] as views)
   ServerModule.CheckForServer().then(() => {
     AppInfoModule.CheckForUpdates();
     if (to.matched.some((record) => record.meta.requiresAuth)) {
