@@ -380,4 +380,4 @@ export class SplunkMapper {
         throw error;
       });
   }
-} //test
+}
