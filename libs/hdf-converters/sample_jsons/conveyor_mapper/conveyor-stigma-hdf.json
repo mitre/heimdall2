@@ -32,9 +32,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: Popper JS\nVersion: 1.14.7\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:40.812836Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: Popper JS\nVersion: 1.14.7\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:38.371186Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:38.371186Z"
             }
           ]
@@ -56,9 +60,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: Capa\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:34.590537Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: Capa\nVersion: 1.2.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:32.768422Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:32.768422Z"
             }
           ]
@@ -80,9 +88,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: SweetAlert js\nVersion: 2.1.2\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:52.975366Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: SweetAlert js\nVersion: 2.1.2\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:51.062400Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:51.062400Z"
             }
           ]
@@ -104,9 +116,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: dep2\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:48.759285Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: dep2\nVersion: 1.2.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:47.047252Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:47.047252Z"
             }
           ]
@@ -128,9 +144,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: eslint\nVersion: 7.19.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:20.659944Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: eslint\nVersion: 7.19.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:18.774194Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:18.774194Z"
             }
           ]
@@ -152,9 +172,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: TypeScript\nVersion: 4.1.5\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:13.413900Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: TypeScript\nVersion: 4.1.5\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:11.605636Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:11.605636Z"
             }
           ]
@@ -163,7 +187,7 @@
           "id": "12bd8594aa8150a9f0fee188ddda5500e3d4b3298d4656d7c529b72b5afd3bbf",
           "title": "JSZip.stigma",
           "desc": "",
-          "impact": 1,
+          "impact": 0.1,
           "refs": [],
           "tags": {
             "nist": [
@@ -177,8 +201,17 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body0:Package Name: JSZip\nVersion: 3.5.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2021-23413: This affects the package jszip before 3.7.0. Crafting a new zip file with filenames set to Object prototype values (e.g __proto__, toString, etc) results in a returned object with a modified prototype instance.\n\ntitle_text1:Minor Vulnerability\nFinished_at2023-01-19T16:02:44.777815Z\n",
-              "message": "",
+              "code_desc": "body:Package Name: JSZip\nVersion: 3.5.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:42.693258Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2021-23413: This affects the package jszip before 3.7.0. Crafting a new zip file with filenames set to Object prototype values (e.g __proto__, toString, etc) results in a returned object with a modified prototype instance.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:42.693258Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:NVD API: https://services.nvd.nist.gov/rest/json/cves/1.0?cpeMatchString=cpe:2.3:a:*:jszip:3.5.0\nbody_format:TEXT\ntitle_text:NIST NVD\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:42.693258Z"
             }
           ]
@@ -200,9 +233,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: D3.js\nVersion: 3.5.17\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:59.193822Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: D3.js\nVersion: 3.5.17\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:57.363556Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:57.363556Z"
             }
           ]
@@ -211,7 +248,7 @@
           "id": "1445e7f7f1f71413a97c585990697bd42ae369cb6bebf737435c3873c1ed4ecb",
           "title": "Prime_Data_Center_Network_Manager.stigma",
           "desc": "",
-          "impact": 5,
+          "impact": 0.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -225,8 +262,17 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body0:Package Name: Prime Data Center Network Manager\nVersion: 10.2\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2018-0464: A vulnerability in Cisco Data Center Network Manager software could allow an authenticated, remote attacker to conduct directory traversal attacks and gain access to sensitive files on the targeted system. The vulnerability is due to improper validation of user requests within the management interface. An attacker could exploit this vulnerability by sending malicious requests containing directory traversal character sequences within the management interface. An exploit could allow the attacker to view or create arbitrary files on the targeted system.\n\ntitle_text1:Significant Vulnerability\nFinished_at2023-01-19T16:03:36.787069Z\n",
-              "message": "",
+              "code_desc": "body:Package Name: Prime Data Center Network Manager\nVersion: 10.2\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:34.704321Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2018-0464: A vulnerability in Cisco Data Center Network Manager software could allow an authenticated, remote attacker to conduct directory traversal attacks and gain access to sensitive files on the targeted system. The vulnerability is due to improper validation of user requests within the management interface. An attacker could exploit this vulnerability by sending malicious requests containing directory traversal character sequences within the management interface. An exploit could allow the attacker to view or create arbitrary files on the targeted system.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:34.704321Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:NVD API: https://services.nvd.nist.gov/rest/json/cves/1.0?cpeMatchString=cpe:2.3:a:*:prime_data_center_network_manager:10.2\nbody_format:TEXT\ntitle_text:NIST NVD\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:34.704321Z"
             }
           ]
@@ -248,9 +294,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: Energizer\nVersion: 1.7.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:48.872028Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: Energizer\nVersion: 1.7.1\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:46.805734Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:46.805734Z"
             }
           ]
@@ -259,7 +309,7 @@
           "id": "1e932683e969ad480aa4d4f35bc604fc580d5ee4608b90c5026b585881ac7765",
           "title": "<dependency_name>.stigma",
           "desc": "",
-          "impact": 99,
+          "impact": 9.9,
           "refs": [],
           "tags": {
             "nist": [
@@ -273,8 +323,112 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body0:Package Name: \nVersion: dependency\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-47935: A vulnerability has been identified in JT Open (All versions < V11.1.1.0), JT Utilities (All versions < V13.1.1.0), Solid Edge (All versions < V2023). The Jt1001.dll contains a memory corruption vulnerability while parsing specially crafted JT files. An attacker could leverage this vulnerability to execute code in the context of the current process. (ZDI-CAN-19078)\n\ntitle_text1:Significant Vulnerability\nFinished_at2023-01-19T16:03:44.970939Z\n",
-              "message": "",
+              "code_desc": "body:Package Name: \nVersion: dependency\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-47935: A vulnerability has been identified in JT Open (All versions < V11.1.1.0), JT Utilities (All versions < V13.1.1.0), Solid Edge (All versions < V2023). The Jt1001.dll contains a memory corruption vulnerability while parsing specially crafted JT files. An attacker could leverage this vulnerability to execute code in the context of the current process. (ZDI-CAN-19078)\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:NVD API: https://services.nvd.nist.gov/rest/json/cves/1.0?cpeMatchString=cpe:2.3:a:*::dependency\nbody_format:TEXT\ntitle_text:NIST NVD\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-47967: A vulnerability has been identified in Solid Edge (All versions < V2023 MP1). The DOCMGMT.DLL contains a memory corruption vulnerability that could be triggered while parsing files in different file formats such as PAR, ASM, DFT. This could allow an attacker to execute code in the context of the current process.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2022-22809: A CWE-306: Missing Authentication for Critical Function vulnerability exists that could allow modifications of the touch configurations in an unauthorized manner when an attacker attempts to modify the touch configurations. Affected Product: spaceLYnk (V2.6.2 and prior), Wiser for KNX (formerly homeLYnk) (V2.6.2 and prior), fellerLYnk (V2.6.2 and prior)\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 4.0 was found in the NIST Vulnerability Database\nCVE-2022-22807: A CWE-1021 Improper Restriction of Rendered UI Layers or Frames vulnerability exists that could cause unintended modifications of the product settings or user accounts when deceiving the user to use the web interface rendered within iframes. Affected Product: EcoStruxure EV Charging Expert (formerly known as EVlink Load Management System): (HMIBSCEA53D1EDB, HMIBSCEA53D1EDS, HMIBSCEA53D1EDM, HMIBSCEA53D1EDL, HMIBSCEA53D1ESS, HMIBSCEA53D1ESM, HMIBSCEA53D1EML) (All Versions prior to SP8 (Version 01) V4.0.0.13)\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-3927: The affected products store both public and private key that are used to sign and protect Custom Parameter Set (CPS) file from modification. An attacker that manages to exploit this vulnerability will be able to change the CPS file, sign it so that it is trusted as the legitimate CPS file. This issue affects * FOXMAN-UN product: FOXMAN-UN R15B, FOXMAN-UN R15A, FOXMAN-UN R14B, FOXMAN-UN R14A, FOXMAN-UN R11B, FOXMAN-UN R11A, FOXMAN-UN R10C, FOXMAN-UN R9C; * UNEM product: UNEM R15B, UNEM R15A, UNEM R14B, UNEM R14A, UNEM R11B, UNEM R11A, UNEM R10C, UNEM R9C. List of CPEs: * cpe:2.3:a:hitachienergy:foxman-un:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R9C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R9C:*:*:*:*:*:*:*\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2022-3928: Hardcoded credential is found in affected products' message queue. An attacker that manages to exploit this vulnerability will be able to access data to the internal message queue. This issue affects * FOXMAN-UN product: FOXMAN-UN R15B, FOXMAN-UN R15A, FOXMAN-UN R14B, FOXMAN-UN R14A, FOXMAN-UN R11B, FOXMAN-UN R11A, FOXMAN-UN R10C, FOXMAN-UN R9C; * UNEM product: UNEM R15B, UNEM R15A, UNEM R14B, UNEM R14A, UNEM R11B, UNEM R11A, UNEM R10C, UNEM R9C. List of CPEs: * cpe:2.3:a:hitachienergy:foxman-un:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R9C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R9C:*:*:*:*:*:*:*\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-3929: Communication between the client and the server application of the affected products is partially done using CORBA (Common Object Request Broker Architecture) over TCP/IP. This protocol is not encrypted and allows tracing of internal messages. This issue affects * FOXMAN-UN product: FOXMAN-UN R15B, FOXMAN-UN R15A, FOXMAN-UN R14B, FOXMAN-UN R14A, FOXMAN-UN R11B, FOXMAN-UN R11A, FOXMAN-UN R10C, FOXMAN-UN R9C; * UNEM product: UNEM R15B, UNEM R15A, UNEM R14B, UNEM R14A, UNEM R11B, UNEM R11A, UNEM R10C, UNEM R9C. List of CPEs: * cpe:2.3:a:hitachienergy:foxman-un:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:foxman-un:R9C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R15A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R14A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11B:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R11A:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R10C:*:*:*:*:*:*:* * cpe:2.3:a:hitachienergy:unem:R9C:*:*:*:*:*:*:*\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.5 was found in the NIST Vulnerability Database\nCVE-2014-125048: A vulnerability, which was classified as critical, has been found in kassi xingwall. This issue affects some unknown processing of the file app/controllers/oauth.js. The manipulation leads to session fixiation. The name of the patch is e9f0d509e1408743048e29d9c099d36e0e1f6ae7. It is recommended to apply a patch to fix this issue. The associated identifier of this vulnerability is VDB-217559.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-32665: In Boa, there is a possible command injection due to improper input validation. This could lead to remote escalation of privilege with no additional execution privileges needed. User interaction is not needed for exploitation. Patch ID: A20220026; Issue ID: OSBNB00144124.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 4.9 was found in the NIST Vulnerability Database\nCVE-2020-36516: An issue was discovered in the Linux kernel through 5.16.11. The mixed IPID assignment method with the hash-based IPID assignment policy allows an off-path attacker to inject data into a victim's TCP session or terminate that session.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-45942: A Remote Code Execution (RCE) vulnerability was found in includes/baijiacms/common.inc.php in baijiacms v4.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2020-15778: ** DISPUTED ** scp in OpenSSH through 8.3p1 allows command injection in the scp.c toremote function, as demonstrated by backtick characters in the destination argument. NOTE: the vendor reportedly has stated that they intentionally omit validation of \"anomalous argument transfers\" because that could \"stand a great chance of breaking existing workflows.\"\n\nbody_format:TEXT\ntitle_text:Major Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Major Vulnerability with an impact score of 10.0 was found in the NIST Vulnerability Database\nCVE-2013-5830: Unspecified vulnerability in Oracle Java SE 7u40 and earlier, Java SE 6u60 and earlier, Java SE 5.0u51 and earlier, JRockit R28.2.8 and earlier, JRockit R27.7.6 and earlier, and Java SE Embedded 7u40 and earlier allows remote attackers to affect confidentiality, integrity, and availability via unknown vectors related to Libraries.\n\nbody_format:TEXT\ntitle_text:Major Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2022-31697: The vCenter Server contains an information disclosure vulnerability due to the logging of credentials in plaintext. A malicious actor with access to a workstation that invoked a vCenter Server Appliance ISO operation (Install/Upgrade/Migrate/Restore) can access plaintext passwords used during that operation.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2018-15473: OpenSSH through 7.7 is prone to a user enumeration vulnerability due to not delaying bailout for an invalid authenticating user until after the packet containing the request has been fully parsed, related to auth2-gss.c, auth2-hostbased.c, and auth2-pubkey.c.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2017-15906: The process_open function in sftp-server.c in OpenSSH before 7.6 does not properly prevent write operations in readonly mode, which allows attackers to create zero-length files.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2022-37454: The Keccak XKCP SHA-3 reference implementation before fdc6fef has an integer overflow and resultant buffer overflow that allows attackers to execute arbitrary code or eliminate expected cryptographic properties. This occurs in the sponge function interface.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 4.0 was found in the NIST Vulnerability Database\nCVE-2018-3174: Vulnerability in the MySQL Server component of Oracle MySQL (subcomponent: Client programs). Supported versions that are affected are 5.5.61 and prior, 5.6.41 and prior, 5.7.23 and prior and 8.0.12 and prior. Difficult to exploit vulnerability allows high privileged attacker with logon to the infrastructure where MySQL Server executes to compromise MySQL Server. While the vulnerability is in MySQL Server, attacks may significantly impact additional products. Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (complete DOS) of MySQL Server. CVSS 3.0 Base Score 5.3 (Availability impacts). CVSS Vector: (CVSS:3.0/AV:L/AC:H/PR:H/UI:N/S:C/C:N/I:N/A:H).\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2018-3284: Vulnerability in the MySQL Server component of Oracle MySQL (subcomponent: InnoDB). Supported versions that are affected are 5.7.23 and prior and 8.0.12 and prior. Difficult to exploit vulnerability allows high privileged attacker with network access via multiple protocols to compromise MySQL Server. Successful attacks of this vulnerability can result in unauthorized ability to cause a hang or frequently repeatable crash (complete DOS) of MySQL Server. CVSS 3.0 Base Score 4.4 (Availability impacts). CVSS Vector: (CVSS:3.0/AV:N/AC:H/PR:H/UI:N/S:U/C:N/I:N/A:H).\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:41.262817Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2020-14043: ** PRODUCT NOT SUPPORTED WHEN ASSIGNED ** A Cross Side Request Forgery (CSRF) vulnerability was found in Codiad v1.7.8 and later. The request to download a plugin from the marketplace is only available to admin users and it isn't CSRF protected in components/market/controller.php. This might cause admins to make a vulnerable request without them knowing and result in remote code execution. NOTE: the vendor states \"Codiad is no longer under active maintenance by core contributors.\"\n\nbody_format:TEXT\ntitle_text:Major Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:41.262817Z"
             }
           ]
@@ -296,9 +450,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: prettier\nVersion: 2.2.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:25.720799Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: prettier\nVersion: 2.2.1\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:23.899769Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:23.899769Z"
             }
           ]
@@ -320,9 +478,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: css.css\nVersion: 2.6\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:37.768770Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: css.css\nVersion: 2.6\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:35.334318Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:35.334318Z"
             }
           ]
@@ -344,9 +506,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: pako\nVersion: 2.0.3\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:28.848796Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: pako\nVersion: 2.0.3\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:26.014037Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:26.014037Z"
             }
           ]
@@ -368,9 +534,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: dep3\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:50.948148Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: dep3\nVersion: 1.2.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:48.878301Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:48.878301Z"
             }
           ]
@@ -392,9 +562,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: node jose\nVersion: 2.0.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:15.436519Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: node jose\nVersion: 2.0.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:13.681866Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:13.681866Z"
             }
           ]
@@ -416,9 +590,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: node qrcode\nVersion: 1.4.4\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:32.643362Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: node qrcode\nVersion: 1.4.4\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:30.812541Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:30.812541Z"
             }
           ]
@@ -427,7 +605,7 @@
           "id": "5643cecb7711e9811ee48bb81c2adbda6e0161960bc0be733bb0fa3b4d64b254",
           "title": "got.stigma",
           "desc": "",
-          "impact": 1,
+          "impact": 0.1,
           "refs": [],
           "tags": {
             "nist": [
@@ -441,8 +619,17 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body0:Package Name: got\nVersion: 11.8.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2022-33987: The got package before 12.1.0 (also fixed in 11.8.5) for Node.js allows a redirect to a UNIX socket.\n\ntitle_text1:Minor Vulnerability\nFinished_at2023-01-19T16:03:23.749591Z\n",
-              "message": "",
+              "code_desc": "body:Package Name: got\nVersion: 11.8.1\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:20.785842Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2022-33987: The got package before 12.1.0 (also fixed in 11.8.5) for Node.js allows a redirect to a UNIX socket.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:20.785842Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:NVD API: https://services.nvd.nist.gov/rest/json/cves/1.0?cpeMatchString=cpe:2.3:a:*:got:11.8.1\nbody_format:TEXT\ntitle_text:NIST NVD\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:20.785842Z"
             }
           ]
@@ -451,7 +638,7 @@
           "id": "5686e54de8451537143f44b266c6648626e2a1c4d9def8d31670e47e32961ba6",
           "title": "Ansible.stigma",
           "desc": "",
-          "impact": 66,
+          "impact": 6.6,
           "refs": [],
           "tags": {
             "nist": [
@@ -465,8 +652,72 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body0:Package Name: Ansible\nVersion: 2.9.3\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2020-10684: A flaw was found in Ansible Engine, all versions 2.7.x, 2.8.x and 2.9.x prior to 2.7.17, 2.8.9 and 2.9.6 respectively, when using ansible_facts as a subkey of itself and promoting it to a variable when inject is enabled, overwriting the ansible_facts after the clean. An attacker could take advantage of this by altering the ansible_facts, such as ansible_hosts, users and any other key data which would lead into privilege escalation or code injection.\n\ntitle_text1:Significant Vulnerability\nFinished_at2023-01-19T16:02:17.526179Z\n",
-              "message": "",
+              "code_desc": "body:Package Name: Ansible\nVersion: 2.9.3\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2020-10684: A flaw was found in Ansible Engine, all versions 2.7.x, 2.8.x and 2.9.x prior to 2.7.17, 2.8.9 and 2.9.6 respectively, when using ansible_facts as a subkey of itself and promoting it to a variable when inject is enabled, overwriting the ansible_facts after the clean. An attacker could take advantage of this by altering the ansible_facts, such as ansible_hosts, users and any other key data which would lead into privilege escalation or code injection.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:NVD API: https://services.nvd.nist.gov/rest/json/cves/1.0?cpeMatchString=cpe:2.3:a:*:ansible:2.9.3\nbody_format:TEXT\ntitle_text:NIST NVD\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2022-3697: A flaw was found in Ansible in the amazon.aws collection when using the tower_callback parameter from the amazon.aws.ec2_instance module. This flaw allows an attacker to take advantage of this issue as the module is handling the parameter insecurely, leading to the password leaking in the logs.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2020-10744: An incomplete fix was found for the fix of the flaw CVE-2020-1733 ansible: insecure temporary directory when running become_user from become directive. The provided fix is insufficient to prevent the race condition on systems using ACLs and FUSE filesystems. Ansible Engine 2.7.18, 2.8.12, and 2.9.9 as well as previous versions are affected and Ansible Tower 3.4.5, 3.5.6 and 3.6.4 as well as previous versions are affected.\n\nbody_format:TEXT\ntitle_text:Major Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2020-1733: A race condition flaw was found in Ansible Engine 2.7.17 and prior, 2.8.9 and prior, 2.9.6 and prior when running a playbook with an unprivileged become user. When Ansible needs to run a module with become user, the temporary directory is created in /var/tmp. This directory is created with \"umask 77 && mkdir -p <dir>\"; this operation does not fail if the directory already exists and is owned by another user. An attacker could take advantage to gain control of the become user as the target directory can be retrieved by iterating '/proc/<pid>/cmdline'.\n\nbody_format:TEXT\ntitle_text:Major Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2020-1740: A flaw was found in Ansible Engine when using Ansible Vault for editing encrypted files. When a user executes \"ansible-vault edit\", another user on the same computer can read the old and new secret, as it is created in a temporary file with mkstemp and the returned file descriptor is closed and the method write_data is called to write the existing secret in the file. This method will delete the file before recreating it insecurely. All versions in 2.7.x, 2.8.x and 2.9.x branches are believed to be vulnerable.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2020-1736: A flaw was found in Ansible Engine when a file is moved using atomic_move primitive as the file mode cannot be specified. This sets the destination files world-readable if the destination file does not exist and if the file exists, the file could be changed to have less restrictive permissions before the move. This could lead to the disclosure of sensitive data. All versions in 2.7.x, 2.8.x and 2.9.x branches are believed to be vulnerable.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 4.9 was found in the NIST Vulnerability Database\nCVE-2020-1735: A flaw was found in the Ansible Engine when the fetch module is used. An attacker could intercept the module, inject a new path, and then choose a new destination path on the controller node. All versions in 2.7.x, 2.8.x and 2.9.x branches are believed to be vulnerable.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 4.9 was found in the NIST Vulnerability Database\nCVE-2020-1739: A flaw was found in Ansible 2.7.16 and prior, 2.8.8 and prior, and 2.9.5 and prior when a password is set with the argument \"password\" of svn module, it is used on svn command line, disclosing to other users within the same node. An attacker could take advantage by reading the cmdline file from that particular PID on the procfs.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2021-20180: A flaw was found in ansible module where credentials are disclosed in the console log by default and not protected by the security feature when using the bitbucket_pipeline_variable module. This flaw allows an attacker to steal bitbucket_pipeline credentials. The highest threat from this vulnerability is to confidentiality.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 4.9 was found in the NIST Vulnerability Database\nCVE-2020-1738: A flaw was found in Ansible Engine when the module package or service is used and the parameter 'use' is not specified. If a previous task is executed with a malicious user, the module sent can be selected by the attacker using the ansible facts file. All versions in 2.7.x, 2.8.x and 2.9.x branches are believed to be vulnerable.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2021-20178: A flaw was found in ansible module where credentials are disclosed in the console log by default and not protected by the security feature when using the bitbucket_pipeline_variable module. This flaw allows an attacker to steal bitbucket_pipeline credentials. The highest threat from this vulnerability is to confidentiality.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:14.382000Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2021-20191: A flaw was found in ansible. Credentials, such as secrets, are being disclosed in console log by default and not protected by no_log feature when using those modules. An attacker can take advantage of this information to steal those credentials. The highest threat from this vulnerability is to data confidentiality. Versions before ansible 2.9.18 are affected.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:14.382000Z"
             }
           ]
@@ -475,7 +726,7 @@
           "id": "621722717a09b81c94a08cc34ba011c6452c04a3f18c7c87a086189881eab839",
           "title": "Vault.stigma",
           "desc": "",
-          "impact": 71,
+          "impact": 7.1,
           "refs": [],
           "tags": {
             "nist": [
@@ -489,8 +740,97 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body0:Package Name: Vault\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Minor Vulnerability with an impact score of 1.4 was found in the NIST Vulnerability Database\nCVE-2022-41316: HashiCorp Vault and Vault Enterprise’s TLS certificate auth method did not initially load the optionally configured CRL issued by the role's CA into memory on startup, resulting in the revocation list not being checked if the CRL has not yet been retrieved. Fixed in 1.12.0, 1.11.4, 1.10.7, and 1.9.10.\n\ntitle_text1:Minor Vulnerability\nFinished_at2023-01-19T16:02:20.513559Z\n",
-              "message": "",
+              "code_desc": "body:Package Name: Vault\nVersion: 1.2.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 1.4 was found in the NIST Vulnerability Database\nCVE-2022-41316: HashiCorp Vault and Vault Enterprise’s TLS certificate auth method did not initially load the optionally configured CRL issued by the role's CA into memory on startup, resulting in the revocation list not being checked if the CRL has not yet been retrieved. Fixed in 1.12.0, 1.11.4, 1.10.7, and 1.9.10.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:NVD API: https://services.nvd.nist.gov/rest/json/cves/1.0?cpeMatchString=cpe:2.3:a:*:vault:1.2.0\nbody_format:TEXT\ntitle_text:NIST NVD\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2021-32923: HashiCorp Vault and Vault Enterprise allowed the renewal of nearly-expired token leases and dynamic secret leases (specifically, those within 1 second of their maximum TTL), which caused them to be incorrectly treated as non-expiring during subsequent use. Fixed in 1.5.9, 1.6.5, and 1.7.2.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2020-25594: HashiCorp Vault and Vault Enterprise allowed for enumeration of Secrets Engine mount paths via unauthenticated HTTP requests. Fixed in 1.6.2 & 1.5.7.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2021-3024: HashiCorp Vault and Vault Enterprise disclosed the internal IP address of the Vault node when responding to some invalid, unauthenticated HTTP requests. Fixed in 1.6.2 & 1.5.7.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2021-27668: HashiCorp Vault Enterprise 0.9.2 through 1.6.2 allowed the read of license metadata from DR secondaries without authentication. Fixed in 1.6.3.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 4.9 was found in the NIST Vulnerability Database\nCVE-2021-41802: HashiCorp Vault and Vault Enterprise through 1.7.4 and 1.8.3 allowed a user with write permission to an entity alias ID sharing a mount accessor with another user to acquire this other user’s policies by merging their identities. Fixed in Vault and Vault Enterprise 1.7.5 and 1.8.4.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2021-43998: HashiCorp Vault and Vault Enterprise 0.11.0 up to 1.7.5 and 1.8.4 templated ACL policies would always match the first-created entity alias if multiple entity aliases exist for a specified entity and mount combination, potentially resulting in incorrect policy enforcement. Fixed in Vault and Vault Enterprise 1.7.6, 1.8.5, and 1.9.0.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2021-38554: HashiCorp Vault and Vault Enterprise’s UI erroneously cached and exposed user-viewed secrets between sessions in a single shared browser. Fixed in 1.8.0 and pending 1.7.4 / 1.6.6 releases.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2020-16250: HashiCorp Vault and Vault Enterprise versions 0.7.1 and newer, when configured with the AWS IAM auth method, may be vulnerable to authentication bypass. Fixed in 1.2.5, 1.3.8, 1.4.4, and 1.5.1..\n\nbody_format:TEXT\ntitle_text:Major Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2020-13223: HashiCorp Vault and Vault Enterprise logged proxy environment variables that potentially included sensitive credentials. Fixed in 1.3.6 and 1.4.2.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2020-25816: HashiCorp Vault and Vault Enterprise versions 1.0 and newer allowed leases created with a batch token to outlive their TTL because expiration time was not scheduled correctly. Fixed in 1.4.7 and 1.5.4.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2020-7220: HashiCorp Vault Enterprise 0.11.0 through 1.3.1 fails, in certain circumstances, to revoke dynamic secrets for a mount in a deleted namespace. Fixed in 1.3.2.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2021-27400: HashiCorp Vault and Vault Enterprise Cassandra integrations (storage backend and database secrets engine plugin) did not validate TLS certificates when connecting to Cassandra clusters. Fixed in 1.6.4 and 1.7.1\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2020-16251: HashiCorp Vault and Vault Enterprise versions 0.8.3 and newer, when configured with the GCP GCE auth method, may be vulnerable to authentication bypass. Fixed in 1.2.5, 1.3.8, 1.4.4, and 1.5.1.\n\nbody_format:TEXT\ntitle_text:Major Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2020-10660: HashiCorp Vault and Vault Enterprise versions 0.9.0 through 1.3.3 may, under certain circumstances, have an Entity's Group membership inadvertently include Groups the Entity no longer has permissions to. Fixed in 1.3.4.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.2 was found in the NIST Vulnerability Database\nCVE-2020-10661: HashiCorp Vault and Vault Enterprise versions 0.11.0 through 1.3.3 may, under certain circumstances, have existing nested-path policies grant access to Namespaces created after-the-fact. Fixed in 1.3.4.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:17.936349Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Minor Vulnerability with an impact score of 2.9 was found in the NIST Vulnerability Database\nCVE-2015-5711: TIBCO Managed File Transfer Internet Server before 7.2.5, Managed File Transfer Command Center before 7.2.5, Slingshot before 1.9.4, and Vault before 2.0.1 allow remote authenticated users to obtain sensitive information via a crafted HTTP request.\n\nbody_format:TEXT\ntitle_text:Minor Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:17.936349Z"
             }
           ]
@@ -512,9 +852,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: SwiftBom-v1.7\nVersion: 1.7\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:42.571847Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: SwiftBom-v1.7\nVersion: 1.7\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:40.890908Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:40.890908Z"
             }
           ]
@@ -536,9 +880,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: ts node\nVersion: 9.1.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:30.686465Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: ts node\nVersion: 9.1.1\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:28.972201Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:28.972201Z"
             }
           ]
@@ -560,9 +908,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: eslint config prettier\nVersion: 7.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:11.440225Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: eslint config prettier\nVersion: 7.2.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:09.632778Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:09.632778Z"
             }
           ]
@@ -584,9 +936,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: Nexus Repository OSS\nVersion: 3.19.1-01\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:50.829138Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: Nexus Repository OSS\nVersion: 3.19.1-01\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:49.130473Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:49.130473Z"
             }
           ]
@@ -608,9 +964,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: eslint plugin prettier\nVersion: 3.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:17.682236Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: eslint plugin prettier\nVersion: 3.3.1\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:15.640049Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:15.640049Z"
             }
           ]
@@ -632,9 +992,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: asn1crypto\nVersion: 1.3.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:57.250772Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: asn1crypto\nVersion: 1.3.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:55.456333Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:55.456333Z"
             }
           ]
@@ -656,9 +1020,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: Enterprise Linux\nVersion: 7.8\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:46.649410Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: Enterprise Linux\nVersion: 7.8\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:44.922469Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:44.922469Z"
             }
           ]
@@ -680,9 +1048,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: Bootstrap CSS\nVersion: 4.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:04.257681Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: Bootstrap CSS\nVersion: 4.3.1\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:59.325142Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:59.325142Z"
             }
           ]
@@ -704,9 +1076,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: xlsx.js\nVersion: 0.8.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:24.127675Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: xlsx.js\nVersion: 0.8.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:20.646329Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:20.646329Z"
             }
           ]
@@ -715,7 +1091,7 @@
           "id": "97f1ff66b4dad43fadc312c8fa934ccc614f6772b8f403e0b3ba7c7d69818de9",
           "title": "libICE.stigma",
           "desc": "",
-          "impact": 5,
+          "impact": 0.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -729,8 +1105,17 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body0:Package Name: libICE\nVersion: 1.0.9\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2017-2626: It was discovered that libICE before 1.0.9-8 used a weak entropy to generate keys. A local attacker could potentially use this flaw for session hijacking using the information available from the process list.\n\ntitle_text1:Significant Vulnerability\nFinished_at2023-01-19T16:02:32.413821Z\n",
-              "message": "",
+              "code_desc": "body:Package Name: libICE\nVersion: 1.0.9\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:30.154115Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 3.6 was found in the NIST Vulnerability Database\nCVE-2017-2626: It was discovered that libICE before 1.0.9-8 used a weak entropy to generate keys. A local attacker could potentially use this flaw for session hijacking using the information available from the process list.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:30.154115Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:NVD API: https://services.nvd.nist.gov/rest/json/cves/1.0?cpeMatchString=cpe:2.3:a:*:libice:1.0.9\nbody_format:TEXT\ntitle_text:NIST NVD\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:30.154115Z"
             }
           ]
@@ -739,7 +1124,7 @@
           "id": "a19dd34ccbabda52322356849f3340d8bf625d8bb4dbf0a591e173279d6fde8c",
           "title": "Terraform.stigma",
           "desc": "",
-          "impact": 15,
+          "impact": 1.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -753,8 +1138,22 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body0:Package Name: Terraform\nVersion: 0.12.26\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2021-36230: HashiCorp Terraform Enterprise releases up to v202106-1 did not properly perform authorization checks on a subset of API requests executed using the run token, allowing privilege escalation to organization owner. Fixed in v202107-1.\n\ntitle_text1:Major Vulnerability\nFinished_at2023-01-19T16:02:55.300383Z\n",
-              "message": "",
+              "code_desc": "body:Package Name: Terraform\nVersion: 0.12.26\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:53.109506Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Major Vulnerability with an impact score of 6.4 was found in the NIST Vulnerability Database\nCVE-2021-36230: HashiCorp Terraform Enterprise releases up to v202106-1 did not properly perform authorization checks on a subset of API requests executed using the run token, allowing privilege escalation to organization owner. Fixed in v202107-1.\n\nbody_format:TEXT\ntitle_text:Major Vulnerability\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:53.109506Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:NVD API: https://services.nvd.nist.gov/rest/json/cves/1.0?cpeMatchString=cpe:2.3:a:*:terraform:0.12.26\nbody_format:TEXT\ntitle_text:NIST NVD\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:53.109506Z"
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:A Significant Vulnerability with an impact score of 5.9 was found in the NIST Vulnerability Database\nCVE-2018-9057: aws/resource_aws_iam_user_login_profile.go in the HashiCorp Terraform Amazon Web Services (AWS) provider through v1.12.0 has an inappropriate PRNG algorithm and seeding, which makes it easier for remote attackers to obtain access by leveraging an IAM account that was provisioned with a weak password.\n\nbody_format:TEXT\ntitle_text:Significant Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:53.109506Z"
             }
           ]
@@ -776,9 +1175,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: Commander\nVersion: 7.0.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:08.986197Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: Commander\nVersion: 7.0.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:06.589660Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:06.589660Z"
             }
           ]
@@ -800,9 +1203,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: jQuery\nVersion: 3.5.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:35.215604Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: jQuery\nVersion: 3.5.1\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:32.998455Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:32.998455Z"
             }
           ]
@@ -824,9 +1231,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: OKD\nVersion: 3.11\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:28.238521Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: OKD\nVersion: 3.11\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:26.274221Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:26.274221Z"
             }
           ]
@@ -848,9 +1259,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: package name\nVersion: package\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:38.623221Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: package name\nVersion: package\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:36.912284Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:36.912284Z"
             }
           ]
@@ -872,9 +1287,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: script.js\nVersion: 4.9\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:30.028486Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: script.js\nVersion: 4.9\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:28.347947Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:28.347947Z"
             }
           ]
@@ -896,9 +1315,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: dep1\nVersion: 1.2.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:46.831020Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: dep1\nVersion: 1.2.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:45.176145Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:45.176145Z"
             }
           ]
@@ -920,9 +1343,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: Bootstrap JS\nVersion: 4.3.1\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:06.403494Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: Bootstrap JS\nVersion: 4.3.1\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:04.406622Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:04.406622Z"
             }
           ]
@@ -944,9 +1371,13 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: dependency name\nVersion: dependency\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:03:41.132525Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: dependency name\nVersion: dependency\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:03:38.768721Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:03:38.768721Z"
             }
           ]
@@ -968,15 +1399,19 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body0:Package Name: sha256.js\nVersion: 1.0\nbody_format0:TEXT\ntitle_text0:Package Info\nclassificaton0:undefined\nbody1:No vulnerabilities were found\ntitle_text1:No Vulnerability\nFinished_at2023-01-19T16:02:26.120667Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "body:Package Name: sha256.js\nVersion: 1.0\nbody_format:TEXT\ntitle_text:Package Info\nclassificaton:TLP:W\n",
+              "start_time": "2023-01-19T16:02:24.355126Z"
+            },
+            {
+              "status": "passed",
+              "code_desc": "body:No vulnerabilities were found\nbody_format:TEXT\ntitle_text:No Vulnerability\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:24.355126Z"
             }
           ]
         }
       ],
-      "sha256": "b9f57a7a1eb8f9e907ecdec2e392604cc98c68ae1204394ea1a778fa60d93a8b"
+      "sha256": "37c28d99eaca5a8df7e00e60b4eb2ed24802088ef270f4e4193884afe470154f"
     }
   ]
 }

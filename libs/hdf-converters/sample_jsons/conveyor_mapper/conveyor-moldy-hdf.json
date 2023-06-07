@@ -19,7 +19,7 @@
           "id": "000ea57dab5e1eca936eef3ef0640c6a64548e7da97e7e98d28c095aa754ae79",
           "title": "Vault.moldy",
           "desc": "",
-          "impact": 5,
+          "impact": 0.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -33,8 +33,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tThe package hashicorp vault, version 1.2.0 is 10 Minor versions behind the latest version v1.12.2 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:32.095596Z\n",
-              "message": "",
+              "code_desc": "body:\tThe package hashicorp vault, version 1.2.0 is 10 Minor versions behind the latest version v1.12.2 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:31.952278Z"
             }
           ]
@@ -43,7 +42,7 @@
           "id": "089007194abe28262d21180c9ca35626c374aa01eea090dc1ab9853921b54d2b",
           "title": "pako.moldy",
           "desc": "",
-          "impact": 5,
+          "impact": 0.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -57,8 +56,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tThe package nodeca pako, version 2.0.3 is 1 Minor versions behind the latest version 2.1.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:39.139295Z\n",
-              "message": "",
+              "code_desc": "body:\tThe package nodeca pako, version 2.0.3 is 1 Minor versions behind the latest version 2.1.0 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:38.234158Z"
             }
           ]
@@ -67,7 +65,7 @@
           "id": "111356f55de1bcf0980f3c4aa37f75ff81bb84b31c9ca90e1ace3ca2e5e90131",
           "title": "got.moldy",
           "desc": "",
-          "impact": 10,
+          "impact": 1,
           "refs": [],
           "tags": {
             "nist": [
@@ -81,8 +79,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tGitHub Repository: https://github.com/sindresorhus/got.git, version: 11.8.1\nThe package sindresorhus got, version 11.8.1 is 1 Major versions behind the latest version v12.5.3 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:36.258923Z\n",
-              "message": "",
+              "code_desc": "body:\tGitHub Repository: https://github.com/sindresorhus/got.git, version: 11.8.1\nThe package sindresorhus got, version 11.8.1 is 1 Major versions behind the latest version v12.5.3 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:36.084149Z"
             }
           ]
@@ -104,9 +101,8 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\nFinished_at2023-01-19T16:52:06.301273Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "NA",
               "start_time": "2023-01-19T16:52:06.301210Z"
             }
           ]
@@ -115,7 +111,7 @@
           "id": "286ef1b5dcf9247d7809387b4c1e0c21ee5e7cc4531361ebb42c987e5ad3841b",
           "title": "TypeScript.moldy",
           "desc": "",
-          "impact": 5,
+          "impact": 0.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -129,8 +125,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tThe package microsoft TypeScript, version 4.1.5 is 8 Minor versions behind the latest version v4.9.4 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:34.698690Z\n",
-              "message": "",
+              "code_desc": "body:\tThe package microsoft TypeScript, version 4.1.5 is 8 Minor versions behind the latest version v4.9.4 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:34.555160Z"
             }
           ]
@@ -152,9 +147,8 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\nFinished_at2023-01-19T16:52:06.287534Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "NA",
               "start_time": "2023-01-19T16:52:06.287424Z"
             }
           ]
@@ -163,7 +157,7 @@
           "id": "383770a23f0261442e1af05f8f96ad744e72c7a5014946c7ebca8097e9bd3076",
           "title": "node_jose.moldy",
           "desc": "",
-          "impact": 5,
+          "impact": 0.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -177,8 +171,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tThe package cisco node-jose, version 2.0.0 is 1 Minor versions behind the latest version v2.1.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:37.625187Z\n",
-              "message": "",
+              "code_desc": "body:\tThe package cisco node-jose, version 2.0.0 is 1 Minor versions behind the latest version v2.1.1 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:36.692474Z"
             }
           ]
@@ -187,7 +180,7 @@
           "id": "5232b323291f07d02fdb15f0e35c937dee88db1974f3558f95d1d7e0f275c237",
           "title": "node_qrcode.moldy",
           "desc": "",
-          "impact": 5,
+          "impact": 0.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -201,8 +194,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tThe package soldair node-qrcode, version 1.4.4 is 1 Minor versions behind the latest version v1.5.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:35.968114Z\n",
-              "message": "",
+              "code_desc": "body:\tThe package soldair node-qrcode, version 1.4.4 is 1 Minor versions behind the latest version v1.5.1 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:34.817411Z"
             }
           ]
@@ -211,7 +203,7 @@
           "id": "5c47a8992bfede873e4b59abb867fefcaaa74e6966c67e6cb576a2f5aa97fd92",
           "title": "Ansible.moldy",
           "desc": "",
-          "impact": 5,
+          "impact": 0.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -225,8 +217,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tThe package ansible ansible, version 2.9.3 is 5 Minor versions behind the latest version v2.14.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:31.095538Z\n",
-              "message": "",
+              "code_desc": "body:\tThe package ansible ansible, version 2.9.3 is 5 Minor versions behind the latest version v2.14.1 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:30.235759Z"
             }
           ]
@@ -235,7 +226,7 @@
           "id": "60586f9814358e1850b7e0cbe7f891a29f24233f853d00788f6ef8108e19692c",
           "title": "Capa.moldy",
           "desc": "",
-          "impact": 10,
+          "impact": 1,
           "refs": [],
           "tags": {
             "nist": [
@@ -249,8 +240,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tGitHub Repository: https://github.com/fireeye/capa.git, version: 1.2.0\nThe package fireeye capa, version 1.2.0 is 3 Major versions behind the latest version v4.0.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:42.070402Z\n",
-              "message": "",
+              "code_desc": "body:\tGitHub Repository: https://github.com/fireeye/capa.git, version: 1.2.0\nThe package fireeye capa, version 1.2.0 is 3 Major versions behind the latest version v4.0.1 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:41.811407Z"
             }
           ]
@@ -259,7 +249,7 @@
           "id": "836087667e3dfd2f7ead88d50805acd1230e7df240393f232fe3db59a49ceeb1",
           "title": "eslint.moldy",
           "desc": "",
-          "impact": 10,
+          "impact": 1,
           "refs": [],
           "tags": {
             "nist": [
@@ -273,8 +263,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tGitHub Repository: https://github.com/eslint/eslint.git, version: 7.19.0\nThe package eslint eslint, version 7.19.0 is 1 Major versions behind the latest version v8.32.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:38.121459Z\n",
-              "message": "",
+              "code_desc": "body:\tGitHub Repository: https://github.com/eslint/eslint.git, version: 7.19.0\nThe package eslint eslint, version 7.19.0 is 1 Major versions behind the latest version v8.32.0 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:37.985910Z"
             }
           ]
@@ -283,7 +272,7 @@
           "id": "8cac9b72269cae9cacfa1c0a133f3e9c9af2ecae1d2c98f3e99566bf58a5bbfb",
           "title": "eslint_plugin_prettier.moldy",
           "desc": "",
-          "impact": 10,
+          "impact": 1,
           "refs": [],
           "tags": {
             "nist": [
@@ -297,8 +286,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tGitHub Repository: https://github.com/prettier/eslint-plugin-prettier.git, version: 3.3.1\nThe package prettier eslint-plugin-prettier, version 3.3.1 is 1 Major versions behind the latest version v4.2.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:41.531293Z\n",
-              "message": "",
+              "code_desc": "body:\tGitHub Repository: https://github.com/prettier/eslint-plugin-prettier.git, version: 3.3.1\nThe package prettier eslint-plugin-prettier, version 3.3.1 is 1 Major versions behind the latest version v4.2.1 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:41.347783Z"
             }
           ]
@@ -307,7 +295,7 @@
           "id": "96d308732fe6849ee766e8a92ff621199fd748e4b488fa78de4ee920d3d52e07",
           "title": "Commander.moldy",
           "desc": "",
-          "impact": 10,
+          "impact": 1,
           "refs": [],
           "tags": {
             "nist": [
@@ -321,8 +309,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tGitHub Repository: https://github.com/tj/commander.js.git, version: 7.0.0\nThe package tj commander.js, version 7.0.0 is 3 Major versions behind the latest version v10.0.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:39.388805Z\n",
-              "message": "",
+              "code_desc": "body:\tGitHub Repository: https://github.com/tj/commander.js.git, version: 7.0.0\nThe package tj commander.js, version 7.0.0 is 3 Major versions behind the latest version v10.0.0 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:39.262084Z"
             }
           ]
@@ -331,7 +318,7 @@
           "id": "98ffd8c45f09a83c46f2425df8a21ad8d54bef3babede2579ed7d41eb5afa087",
           "title": "asn1crypto.moldy",
           "desc": "",
-          "impact": 5,
+          "impact": 0.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -345,8 +332,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tThe package wbond asn1crypto, version 1.3.0 is 2 Minor versions behind the latest version 1.5.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:33.191296Z\n",
-              "message": "",
+              "code_desc": "body:\tThe package wbond asn1crypto, version 1.3.0 is 2 Minor versions behind the latest version 1.5.1 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:32.320640Z"
             }
           ]
@@ -368,9 +354,8 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\nFinished_at2023-01-19T16:52:06.329485Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "NA",
               "start_time": "2023-01-19T16:52:06.329443Z"
             }
           ]
@@ -392,9 +377,8 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\nFinished_at2023-01-19T16:52:06.326907Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "NA",
               "start_time": "2023-01-19T16:52:06.326866Z"
             }
           ]
@@ -403,7 +387,7 @@
           "id": "c018f438552c205f2dcba991a0588f608f108a71c904ad6b8fe6c9ff2de69a9e",
           "title": "eslint_config_prettier.moldy",
           "desc": "",
-          "impact": 10,
+          "impact": 1,
           "refs": [],
           "tags": {
             "nist": [
@@ -417,8 +401,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tGitHub Repository: https://github.com/prettier/eslint-config-prettier.git, version: 7.2.0\nThe package prettier eslint-config-prettier, version 7.2.0 is 1 Major versions behind the latest version v8.6.0 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:41.221259Z\n",
-              "message": "",
+              "code_desc": "body:\tGitHub Repository: https://github.com/prettier/eslint-config-prettier.git, version: 7.2.0\nThe package prettier eslint-config-prettier, version 7.2.0 is 1 Major versions behind the latest version v8.6.0 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:39.528109Z"
             }
           ]
@@ -427,7 +410,7 @@
           "id": "c5a83b5b3fcc089187ab76af002bf48a097e724808471022a058821841d634ab",
           "title": "Terraform.moldy",
           "desc": "",
-          "impact": 10,
+          "impact": 1,
           "refs": [],
           "tags": {
             "nist": [
@@ -441,8 +424,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tGitHub Repository: https://github.com/hashicorp/terraform.git, version: 0.12.26\nThe package hashicorp terraform, version 0.12.26 is 1 Major versions behind the latest version v1.3.7 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:31.620873Z\n",
-              "message": "",
+              "code_desc": "body:\tGitHub Repository: https://github.com/hashicorp/terraform.git, version: 0.12.26\nThe package hashicorp terraform, version 0.12.26 is 1 Major versions behind the latest version v1.3.7 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:31.474340Z"
             }
           ]
@@ -451,7 +433,7 @@
           "id": "eeb09aa476aa71a1fc2523fb96b60bf1218dff261ad59f97215c2cf6fa61c188",
           "title": "ts_node.moldy",
           "desc": "",
-          "impact": 10,
+          "impact": 1,
           "refs": [],
           "tags": {
             "nist": [
@@ -465,8 +447,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tGitHub Repository: https://github.com/TypeStrong/ts-node.git, version: 9.1.1\nThe package TypeStrong ts-node, version 9.1.1 is 1 Major versions behind the latest version v10.9.1 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:36.575704Z\n",
-              "message": "",
+              "code_desc": "body:\tGitHub Repository: https://github.com/TypeStrong/ts-node.git, version: 9.1.1\nThe package TypeStrong ts-node, version 9.1.1 is 1 Major versions behind the latest version v10.9.1 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:36.390372Z"
             }
           ]
@@ -475,7 +456,7 @@
           "id": "ef39dcdf5f891018f1d8d1a281c02b6303615ba6d63025d210da179dace5ad09",
           "title": "prettier.moldy",
           "desc": "",
-          "impact": 5,
+          "impact": 0.5,
           "refs": [],
           "tags": {
             "nist": [
@@ -489,8 +470,7 @@
           "results": [
             {
               "status": "failed",
-              "code_desc": "body:\tThe package prettier prettier, version 2.2.1 is 6 Minor versions behind the latest version 2.8.3 on GitHub.\nbody_format:TEXT\nclassificaton:undefined\nFinished_at2023-01-19T16:02:37.867003Z\n",
-              "message": "",
+              "code_desc": "body:\tThe package prettier prettier, version 2.2.1 is 6 Minor versions behind the latest version 2.8.3 on GitHub.\nbody_format:TEXT\nclassificaton:TLP:W\n",
               "start_time": "2023-01-19T16:02:37.739202Z"
             }
           ]
@@ -512,15 +492,14 @@
           },
           "results": [
             {
-              "status": "failed",
-              "code_desc": "body:undefined\nbody_format:undefined\nclassificaton:undefined\nFinished_at2023-01-19T16:52:06.285156Z\n",
-              "message": "",
+              "status": "passed",
+              "code_desc": "NA",
               "start_time": "2023-01-19T16:52:06.284618Z"
             }
           ]
         }
       ],
-      "sha256": "b12a4456d3c7396dd727ab544f45ed255959dc8ec69bcc9965fbf99eba854f5b"
+      "sha256": "888d19fac1cec63541032684b7dd528f27fbb9cae7c8091f22aba18a734926a6"
     }
   ]
 }

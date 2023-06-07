@@ -2,8 +2,15 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
-const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
-
+import {
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+} from './utils/global';
+enum scannerType {
+  Moldy = 'Moldy',
+  Stigma = 'Stima', 
+  CodeQuality = 'CodeQuality',
+  Default = 'Default'
+}
 function createDescription(
   data: Record<string, unknown>,
   score: number,
@@ -11,7 +18,7 @@ function createDescription(
   type: string
 ): Record<string, unknown> {
   let desc = '';
-  if (type == 'Moldy') {
+  if (type === scannerType.Moldy) {
     desc =
       'body:' +
       _.get(data, 'body') +
@@ -20,7 +27,7 @@ function createDescription(
       '\nclassificaton:' +
       (_.get(data, 'classification') as string) +
       '\n';
-  } else if (type == 'Stigma') {
+  } else if (type === scannerType.Stigma) {
     desc =
       'body:' +
       _.get(data, 'body') +
@@ -31,7 +38,7 @@ function createDescription(
       '\nclassificaton:' +
       (_.get(data, 'classification') as string) +
       '\n';
-  } else if (type == 'CodeQuality') {
+  } else if (type === scannerType.CodeQuality) {
     desc =
       'body:' +
       _.get(data, 'body') +
@@ -56,46 +63,37 @@ function createDescription(
   };
 }
 
-function childrenfinder(output: Record<string, unknown>): string[][] {
+function childrenfinder(currLevel: Record<string, unknown>): string[][] {
   const arr: string[][] = [];
-  _.forEach(output, (value, key) => {
-    if (_.has(value, 'name')) {
-      const temp: string = _.get(value, 'name[0]') || '';
-      arr.push([key, temp]);
+  Object.entries(currLevel).map(([sha, file]) => {
+    if (_.has(file, 'name')) {
+      const name: string = _.get(file, 'name[0]') || '';
+      arr.push([sha, name]);
     }
-    if (_.has(value, 'children')) {
-      const temp: Record<string, unknown> = _.get(value, 'children') || {};
-      _.forEach(childrenfinder(temp), function (value) {
-        arr.push(value);
-      });
+    if (_.has(file, 'children')) {
+      const nextLevel: Record<string, unknown> = _.get(file, 'children') || {};
+      for ( const element of childrenfinder(nextLevel)) {
+        arr.push(element);
+      };
     }
   });
   return arr;
 }
-function shafileMapper(
-  output: Record<string, unknown>
+function sha2filenameMapper(
+  results: Record<string, unknown>
 ): Record<string, unknown> {
-  const toplevel = _.get(output, 'api_response.file_tree') as Record<
+  const toplevel = _.get(results, 'api_response.file_tree') as Record<
     string,
     unknown
   >;
-  const shamappings = {};
-  _.forEach(toplevel, (value) => {
-    if (_.has(value, 'name')) {
-      const temp: string = _.get(value, 'name[0]') || '';
-      _.set(shamappings, temp, _.get(value, 'sha256'));
-    }
-    if (_.has(value, 'children')) {
-      const temp: Record<string, unknown> = _.get(value, 'children') || {};
-      const arr = childrenfinder(temp);
-      _.forEach(arr, (value) => {
-        const temp1: string = value[0] || '';
-        const temp2: string = value[1] || '';
-        _.set(shamappings, temp1, temp2);
-      });
-    }
+  const shaMappings = {};
+  const arr = childrenfinder(toplevel)
+  arr.forEach((value) => {
+    const sha: string = value[0] || '';
+    const filename: string = value[1] || '';
+    _.set(shaMappings, sha, filename);
   });
-  return shamappings;
+  return shaMappings;
 }
 function determineStatus(score: number): ExecJSON.ControlResultStatus {
   if (score == 0) {
@@ -105,15 +103,15 @@ function determineStatus(score: number): ExecJSON.ControlResultStatus {
 }
 
 function arrayifyObject(
-  output: Record<string, unknown>,
-  mapped: Record<string, unknown>
-): unknown {
-  const res = _.get(output, 'api_response.results') as Record<string, unknown>;
+  parsed: Record<string, unknown>,
+  mappings: Record<string, unknown>
+): Record<string, unknown> {
+  const results = _.get(parsed, 'api_response.results') as Record<string, unknown>;
   const newout: Record<string, unknown>[] = [];
-  _.forEach(res, (value) => {
-    const temp = value as Record<string, unknown>;
-    const temp2: string = _.get(value, 'sha256') || '';
-    _.set(temp, 'filename', _.get(mapped, temp2));
+  _.forEach(results, (result) => {
+    const temp = result as Record<string, unknown>;
+    const sha: string = _.get(result, 'sha256') || '';
+    _.set(temp, 'filename', _.get(mappings, sha));
     const descriptions = _.map(
       _.get(temp, 'result.sections') as Record<string, unknown>[],
       (val) =>
@@ -134,8 +132,8 @@ function arrayifyObject(
     _.set(temp, 'result.sections', descriptions);
     newout.push(temp);
   });
-  const groups = _.groupBy(newout, (value) => {
-    return _.get(value, 'response.service_name');
+  const groups = _.groupBy(newout, (result) => {
+    return _.get(result, 'response.service_name');
   });
   return groups;
 }
@@ -147,7 +145,7 @@ function controlMappingConveyor(): MappedTransform<
   return {
     id: {path: 'sha256'},
     title: {path: 'filename'},
-    desc: {path: 'cve_summary'},
+    desc: '',
     impact: {
       path: 'result.score',
       transformer: (value) => {
@@ -156,7 +154,7 @@ function controlMappingConveyor(): MappedTransform<
     },
     refs: [],
     tags: {
-      nist: DEFAULT_NIST_TAG
+      nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
     },
     source_location: {
       ref: ''
@@ -181,12 +179,12 @@ export class ConveyorMapper extends BaseConverter {
         name: 'Heimdall Tools',
         release: HeimdallToolsVersion
       },
-      version: HeimdallToolsVersion,
+      version: {path: 'api_server_version'},
       statistics: {},
       profiles: [
         {
           name: this.type,
-          version: {path: 'api_server_version'},
+          version: {path: 'api_response.results[0].response.service_version'},
           title: {path: 'api_response.params.description'},
           supports: [],
           attributes: [],
@@ -205,10 +203,9 @@ export class ConveyorMapper extends BaseConverter {
   }
   constructor(
     conveyor: Record<string, unknown>,
-    meta: Record<string, unknown>,
+    data: Record<string, unknown>,
     type: string
   ) {
-    const data = meta;
     _.set(data, 'api_response.results', conveyor);
     super(data);
     this.type = type;
@@ -218,23 +215,28 @@ export class ConveyorMapper extends BaseConverter {
 }
 
 export class ConveyorResults {
-  data: unknown;
-  meta: Record<string, unknown>;
-  constructor(ConveyorJson: string) {
-    const data = JSON.parse(ConveyorJson);
-    const mapped = shafileMapper(data);
-    const newres = arrayifyObject(data, mapped);
-    this.data = newres;
-    this.meta = _.omit(data, 'api_response.results');
+  data: Record<string,unknown>;
+  constructor(conveyorJson: string) {
+    const parsed = JSON.parse(conveyorJson);
+    const mappings = sha2filenameMapper(parsed);
+    const newres = arrayifyObject(parsed, mappings);
+    this.data = _.set(parsed, 'api_response.results', newres);
   }
 
   toHdf(): Record<string, ExecJSON.Execution> {
+    /*const test =  Object.entries(this.data).map(entries => {
+      return new ConveyorMapper(
+        (entries as unknown[])[0] as Record<string, unknown>,
+        this.meta,
+        (entries as unknown[])[1] as string
+      ).toHdf
+    })*/
     const mapped = _.mapValues(
-      this.data as Record<string, unknown>,
+      _.get(this.data, 'api_response.results') as Record<string, unknown>,
       (val, key) => {
         return new ConveyorMapper(
           val as Record<string, unknown>,
-          this.meta,
+          this.data,
           key
         ).toHdf();
       }

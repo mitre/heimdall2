@@ -9,6 +9,7 @@ import {read_file_async} from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
+  ConveyorResults as ConveyorResultsMapper,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -231,6 +232,10 @@ export class InspecIntake extends VuexModule {
         return Object.values(
           new ASFFResultsMapper(convertOptions.data).toHdf()
         );
+      case INPUT_TYPES.CONVEYOR:
+        return Object.values(
+          new ConveyorResultsMapper(convertOptions.data).toHdf()
+        )
       case INPUT_TYPES.ZAP:
         return new ZapMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.NIKTO:
