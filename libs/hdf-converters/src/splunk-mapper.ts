@@ -186,7 +186,11 @@ export async function checkSplunkCredentials(
               reject(new Error('Incorrect username or password'));
             }
           } catch (error) {
-            reject(new Error('Failed to login. Please check your CORS configuration or validate that you have inputted the correct domain'));
+            reject(
+              new Error(
+                'Failed to login. Please check your CORS configuration or validate that you have inputted the correct domain'
+              )
+            );
           }
         }
       );
