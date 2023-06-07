@@ -364,7 +364,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
               logger.verbose(
                 `Successfully uploaded execution for ${report.meta.filename}`
               ),
-            (error) => reject(error.data)
+            (error) => reject(this.handleSplunkError(error))
           );
       }
       // Upload profile event(s)
@@ -382,7 +382,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             logger.verbose(
               `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
             ),
-          (error) => reject(error.data)
+          (error) => reject(this.handleSplunkError(error))
         );
 
       // Upload control event(s)
@@ -399,7 +399,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
               );
               resolve();
             },
-            (error) => reject(error.data)
+            (error) => reject(this.handleSplunkError(error))
           );
       }
     });

@@ -181,10 +181,12 @@ export async function checkSplunkCredentials(
       .then(
         (response) => resolve(response.data.sessionKey),
         (error) => {
-          if (error.status === 401) {
-            reject('Incorrect username or password');
-          } else {
-            reject(JSON.stringify(error.data));
+          try {
+            if (error.response.status === 401) {
+              reject(new Error('Incorrect username or password'));
+            }
+          } catch (error) {
+            reject(new Error('Failed to login. Please check your CORS configuration or validate that you have inputted the correct domain'));
           }
         }
       );
@@ -231,7 +233,7 @@ export class SplunkMapper {
         )
         .then(
           (response) => resolve(response.data.sid),
-          (error) => reject(error.data)
+          (error) => reject(new Error(error.message))
         );
     });
   }
@@ -344,7 +346,7 @@ export class SplunkMapper {
                 );
               }
             },
-            (error) => reject(error.data)
+            (error) => reject(new Error(error.message))
           );
       }, 50);
 
