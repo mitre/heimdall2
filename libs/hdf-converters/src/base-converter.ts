@@ -319,23 +319,24 @@ export class BaseConverter {
             pathVal = pathTransform(pathVal, file);
           }
           if (Array.isArray(pathVal)) {
-            v = pathVal.map((element: Record<string, unknown>) => {
-              return _.omit(this.convertInternal(element, lookupPath), [
-                'path',
-                'transformer',
-                'arrayTransformer',
-                'key',
-                'pathTransform'
-              ]) as unknown as T;
-            }) as any;
-            if (arrayTransformer !== undefined) {
+            if (arrayTransformer === undefined) {
+              v = pathVal.map((element: Record<string, unknown>) => {
+                return _.omit(this.convertInternal(element, lookupPath), [
+                  'path',
+                  'transformer',
+                  'arrayTransformer',
+                  'key',
+                  'pathTransform'
+                ]) as unknown as T;
+              }) as any;
+            } else {
               if (Array.isArray(arrayTransformer)) {
                 v = arrayTransformer[0].apply(arrayTransformer[1], [
-                  v,
+                  pathVal,
                   this.data
                 ]);
               } else {
-                v = arrayTransformer.apply(null, [v, this.data]) as any;
+                v = arrayTransformer.apply(null, [pathVal, this.data]) as any;
               }
             }
             if (key !== undefined) {
