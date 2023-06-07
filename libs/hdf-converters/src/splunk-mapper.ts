@@ -183,7 +183,7 @@ export async function checkSplunkCredentials(
         (error) => {
           try {
             if (error.response.status === 401) {
-              reject(new Error('Incorrect username or password'));
+              reject(new Error('Incorrect Username or Password'));
             }
           } catch (error) {
             reject(
