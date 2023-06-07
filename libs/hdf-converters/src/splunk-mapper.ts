@@ -221,7 +221,7 @@ export class SplunkMapper {
 
   async createJob(query: string): Promise<string> {
     logger.debug(`Creating job for query: ${query}`);
-    return new Promise(async (resolve, reject) => {
+    return new Promise((resolve, reject) => {
       // Post to {host}/services/search/jobs endpoint to queue search job for given query
       // Will return unique search ID (SID) assigned to that search job for future reference
       this.axiosInstance
@@ -303,11 +303,12 @@ export class SplunkMapper {
       'Authorization'
     ] = `Bearer ${authToken}`;
 
+    // Create new search job from given query
     const job = await this.createJob(query);
 
-    return new Promise(async (resolve, reject) => {
-      // Ping Splunk instance every 500 ms on status of search job
-      const awaitJob = await setInterval(() => {
+    return new Promise((resolve, reject) => {
+      // Ping Splunk instance every 50 ms on status of search job
+      const awaitJob = setInterval(() => {
         this.axiosInstance
           .get(`${this.hostname}/services/search/jobs/${job}`)
           .then(
@@ -345,7 +346,7 @@ export class SplunkMapper {
             },
             (error) => reject(error.data)
           );
-      }, 500);
+      }, 50);
 
       // Kill query after 2 minute of waiting
       // Arbitrary time used, change as needed
