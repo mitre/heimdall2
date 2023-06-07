@@ -163,9 +163,7 @@ export async function checkSplunkCredentials(
     setTimeout(
       () =>
         reject(
-          new Error(
-            'Login timed out. Please check your CORS configuration or validate that you have inputted the correct domain'
-          )
+          'Login timed out: Please check your CORS configuration or validate that you have inputted the correct domain'
         ),
       5000
     );
@@ -183,13 +181,11 @@ export async function checkSplunkCredentials(
         (error) => {
           try {
             if (error.response.status === 401) {
-              reject(new Error('Incorrect Username or Password'));
+              reject('Incorrect Username or Password');
             }
           } catch (error) {
             reject(
-              new Error(
-                'Failed to login. Please check your CORS configuration or validate that you have inputted the correct domain'
-              )
+              'Failed to login: Please check your CORS configuration or validate that you have inputted the correct domain'
             );
           }
         }
