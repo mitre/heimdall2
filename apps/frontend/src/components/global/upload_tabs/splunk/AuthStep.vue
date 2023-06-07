@@ -59,7 +59,7 @@ import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {checkSplunkCredentials} from '@mitre/hdf-converters/src/splunk-mapper';
-import {SplunkConfig} from '@mitre/splunk-sdk-no-env';
+import {SplunkConfig} from '@mitre/hdf-converters/src/converters-from-hdf/splunk/reverse-splunk-mapper';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
