@@ -27,7 +27,6 @@ import axios from 'axios';
 export interface Sample {
   filename: string;
   path: string;
-  fingerprint: string;
 }
 
 export function fetchSample(sample: Sample): Promise<File> {
@@ -39,97 +38,76 @@ export function fetchSample(sample: Sample): Promise<File> {
 export const samples: Sample[] = [
   {
     filename: 'Sonarqube Java Heimdall_tools Sample',
-    path: sonarqubeJavaSamplePath,
-    fingerprint: 'HDF Results'
+    path: sonarqubeJavaSamplePath
   },
   {
     filename: 'OWASP ZAP Webgoat Heimdall_tools Sample',
-    path: owaspZapWebgoatPath,
-    fingerprint: 'HDF Results'
+    path: owaspZapWebgoatPath
   },
   {
     filename: 'OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample',
-    path: owaspZapZeroPath,
-    fingerprint: 'HDF Results'
+    path: owaspZapZeroPath
   },
   {
     filename: 'Fortify Heimdall_tools Sample',
-    path: fortifyHToolsConvWebgoatPath,
-    fingerprint: 'HDF Results'
+    path: fortifyHToolsConvWebgoatPath
   },
   {
     filename: 'AWS S3 Permissions Check',
-    path: awsS3BaselinePath,
-    fingerprint: 'HDF Results'
+    path: awsS3BaselinePath
   },
   {
     filename: 'AWS CIS Foundations Baseline',
-    path: cisAwsFoundationsBaselinePath,
-    fingerprint: 'HDF Results'
-  },
+    path: cisAwsFoundationsBaselinePath
   {
     filename: 'NGINX Clean Sample',
-    path: goodNginxResultsPath,
-    fingerprint: 'HDF Results'
+    path: goodNginxResultsPath
   },
   {
     filename: 'NGINX With Failing Tests',
-    path: badNginxPath,
-    fingerprint: 'HDF Results'
+    path: badNginxPath
   },
   {
     filename: 'Red Hat CVE Vulnerability Scan',
-    path: rhelCveVulnerabilityScanBaselineWithFailuresPath,
-    fingerprint: 'HDF Results'
-  },
+    path: rhelCveVulnerabilityScanBaselineWithFailuresPath
   {
     filename: 'Red Hat 7 STIG Baseline',
-    path: rhel7ResultsPath,
-    fingerprint: 'HDF Results'
+    path: rhel7ResultsPath
   },
   {
     filename: 'Ubuntu STIG Baseline',
-    path: ubuntu1604BaselineResultsPath,
-    fingerprint: 'HDF Results'
+    path: ubuntu1604BaselineResultsPath
   },
   {
     filename: 'Red Hat With Failing Tests',
-    path: redhatBadPath,
-    fingerprint: 'HDF Results'
+    path: redhatBadPath
   },
   {
     filename: 'Three Layer RHEL7 Overlay Example',
-    path: threeOverlayProfilePath,
-    fingerprint: 'HDF Results'
+    path: threeOverlayProfilePath
   },
   {
     filename: 'Acme Overlay Example',
-    path: acmeOverlayPath,
-    fingerprint: 'HDF Results'
+    path: acmeOverlayPath
   },
   {
     filename: 'Clean RHEL 8 Checklist',
-    path: cleanRhel8ChecklistPath,
-    fingerprint: 'DISA Checklist'
+    path: cleanRhel8ChecklistPath
   },
   {
     filename: 'RHEL 8 Checklist',
-    path: rhel8ChecklistPath,
-    fingerprint: 'DISA Checklist'
+    path: rhel8ChecklistPath
   },
   {
     filename: 'Three Stig Checklist',
-    path: threeStigChecklistPath,
-    fingerprint: 'DISA Checklist'
+    path: threeStigChecklistPath
   },
   {
     filename: 'Ubuntu Profile',
-    path: ubuntuProfile,
-    fingerprint: 'HDF Profile'
+    path: ubuntuProfile
   },
   {
     filename: 'Veracode Exec JSON',
-    path: veracodeExecJson,
-    fingerprint: 'VeraCode'
+    path: veracodeExecJson
   }
 ];
