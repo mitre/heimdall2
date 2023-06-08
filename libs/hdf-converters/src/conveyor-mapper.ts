@@ -15,17 +15,24 @@ function createDescription(
   data: Record<string, unknown>,
   score: number,
   date: string,
-  type: string
+  type: string,
+  endTime:string
 ): Record<string, unknown> {
   let desc = '';
   if (type === scannerType.Moldy) {
     desc =
-      'body:' +
+     'title_text:' +
+      (_.get(data, 'title_text') as string) +
+      '\nbody:' +
       _.get(data, 'body') +
       '\nbody_format:' +
       (_.get(data, 'body_format') as string) +
       '\nclassificaton:' +
       (_.get(data, 'classification') as string) +
+      '\nheur_id:' +
+      (_.get(data, 'heuristic.heur_id') as string) +
+      '\nscore:' +
+      (_.get(data, 'heuristic.score') as string) +
       '\n';
   } else if (type === scannerType.Stigma) {
     desc =
@@ -59,7 +66,8 @@ function createDescription(
   return {
     status: determineStatus(score),
     code_desc: desc,
-    start_time: date
+    start_time: date,
+    run_time:  new Date(endTime).valueOf() - new Date(date).valueOf()
   };
 }
 
@@ -119,7 +127,8 @@ function arrayifyObject(
           val as Record<string, unknown>,
           _.get(temp, 'result.score') as number,
           _.get(temp, 'response.milestones.service_started') as string,
-          _.get(temp, 'response.service_name') as string
+          _.get(temp, 'response.service_name') as string,
+          _.get(temp, 'response.milestones.service_completed') as string
         )
     );
     if (descriptions.length == 0) {
@@ -154,7 +163,13 @@ function controlMappingConveyor(): MappedTransform<
     },
     refs: [],
     tags: {
+      archive_ts: {path: 'archive_ts'},
+      classification: {path:'classification'},
+      expiry_ts: {path: 'expiry_ts'},
+      size: {path:'size'},
+      type: {path:'type'},
       nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+
     },
     source_location: {
       ref: ''
@@ -164,7 +179,8 @@ function controlMappingConveyor(): MappedTransform<
         path: 'result.sections',
         status: {path: 'status'},
         code_desc: {path: 'code_desc'},
-        start_time: {path: 'start_time'}
+        start_time: {path: 'start_time'},
+        run_time: {path:'run_time'}
       }
     ]
   };
@@ -173,8 +189,11 @@ function controlMappingConveyor(): MappedTransform<
 export class ConveyorMapper extends BaseConverter {
   data: Record<string, unknown>;
   type: string;
-  defaultMapping(): MappedTransform<ExecJSON.Execution, ILookupPath> {
-    return {
+  mappings: MappedTransform<
+    ExecJSON.Execution & {passthrough: unknown},
+    ILookupPath
+  > =  {
+      passthrough: {path: 'api_reponse'},
       platform: {
         name: 'Heimdall Tools',
         release: HeimdallToolsVersion
@@ -183,7 +202,7 @@ export class ConveyorMapper extends BaseConverter {
       statistics: {},
       profiles: [
         {
-          name: this.type,
+          name: {path: 'api_response.results[0].response.service_name'},
           version: {path: 'api_response.results[0].response.service_version'},
           title: {path: 'api_response.params.description'},
           supports: [],
@@ -199,7 +218,6 @@ export class ConveyorMapper extends BaseConverter {
           sha256: ''
         }
       ]
-    };
   }
   constructor(
     conveyor: Record<string, unknown>,
@@ -210,7 +228,6 @@ export class ConveyorMapper extends BaseConverter {
     super(data);
     this.type = type;
     this.data = data;
-    this.setMappings(this.defaultMapping());
   }
 }
 
