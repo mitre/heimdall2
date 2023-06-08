@@ -9,8 +9,8 @@ describe('conveyor_mapper', () => {
         {encoding: 'utf-8'}
       )
     );
-
-    expect(omitVersions(mapper.toHdf()['Moldy'])).toEqual(
+   const mapped = mapper.toHdf()
+    expect(omitVersions(mapped['Moldy'])).toEqual(
       omitVersions(
         JSON.parse(
           fs.readFileSync(
@@ -22,7 +22,7 @@ describe('conveyor_mapper', () => {
         )
       )
     );
-    expect(omitVersions(mapper.toHdf()['Stigma'])).toEqual(
+    expect(omitVersions(mapped['Stigma'])).toEqual(
       omitVersions(
         JSON.parse(
           fs.readFileSync(

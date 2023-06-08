@@ -64,7 +64,7 @@ function createDescription(
 
 function childrenfinder(currLevel: Record<string, unknown>): string[][] {
   const arr: string[][] = [];
-  Object.entries(currLevel).map(([sha, file]) => {
+  Object.entries(currLevel).forEach(([sha, file]) => {
     if (_.has(file, 'name')) {
       const name: string = _.get(file, 'name[0]') || '';
       arr.push([sha, name]);
@@ -184,7 +184,7 @@ export class ConveyorMapper extends BaseConverter {
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
   > =  {
-      passthrough: {path: 'api_reponse'},
+      passthrough: {path: 'api_response'},
       platform: {
         name: 'Heimdall Tools',
         release: HeimdallToolsVersion
