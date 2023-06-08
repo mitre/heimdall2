@@ -185,7 +185,7 @@ export async function checkSplunkCredentials(
             }
           } catch (error) {
             reject(
-              'Failed to login: Please check your CORS configuration or validate that you have inputted the correct domain'
+              'Failed to login: Please check your CORS configuration and validate that your input has the correct domain'
             );
           }
         }
