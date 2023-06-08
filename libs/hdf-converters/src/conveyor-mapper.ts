@@ -19,7 +19,7 @@ function createDescription(
   endTime:string
 ): Record<string, unknown> {
   let desc = '';
-  if (type === scannerType.Moldy) {
+  if (type === scannerType.Moldy || type == scannerType.Stigma) {
     desc =
      'title_text:' +
       (_.get(data, 'title_text') as string) +
@@ -29,21 +29,14 @@ function createDescription(
       (_.get(data, 'body_format') as string) +
       '\nclassificaton:' +
       (_.get(data, 'classification') as string) +
-      '\nheur_id:' +
+      '\ndepth:' +
+      (_.get(data, 'depth') as string) +
+      '\nheuristic_heur_id:' +
       (_.get(data, 'heuristic.heur_id') as string) +
-      '\nscore:' +
+      '\nheuristic_score:' +
       (_.get(data, 'heuristic.score') as string) +
-      '\n';
-  } else if (type === scannerType.Stigma) {
-    desc =
-      'body:' +
-      _.get(data, 'body') +
-      '\nbody_format:' +
-      (_.get(data, 'body_format') as string) +
-      '\ntitle_text:' +
-      (_.get(data, 'title_text') as string) +
-      '\nclassificaton:' +
-      (_.get(data, 'classification') as string) +
+      '\nheuristic_name:' +
+      (_.get(data, 'heuristic.name') as string) +
       '\n';
   } else if (type === scannerType.CodeQuality) {
     desc =
@@ -55,8 +48,6 @@ function createDescription(
       (_.get(data, 'classification') as string) +
       '\ndepth:' +
       (_.get(data, 'depth') as string) +
-      '\nheuristic:' +
-      (_.get(data, 'heuristic') as string) +
       '\ntitle_text:' +
       (_.get(data, 'title_text') as string) +
       '\n';

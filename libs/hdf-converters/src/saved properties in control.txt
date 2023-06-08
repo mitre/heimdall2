@@ -1,0 +1,85 @@
+scanner results properties
+"archive_ts": preserved
+"classification": preserved
+"created": preserved
+"drop_file": always false not preserved
+"expiry_ts": preserved
+"response": {
+	"extracted": always empty not preserved
+	"milestones": {
+		"service_completed": preserved
+		"service_started": preserved
+	},
+	"service_context": (alwasy null not preserved)
+	"service_debug_info": (alwasy null not preserved)
+	"service_name": preserved
+	"service_tool_version": (alwasy empty not preserved)
+	"service_version": preserved
+	"supplementary": (alwasy empty not preserved)
+},
+"result": {
+{done by scanner}
+},
+"sha256": preserved
+"size": preserved
+"type": presereved
+
+moldy properties:
+"score": preserevd
+"sections": [
+	{
+		"auto_collapse": always null not preserved
+		"body": preserved
+		"body_format": preserved
+		"classification": preserved
+		"depth":not preserved
+		"heuristic": {
+			"attack": (alwasy empty not preserved)
+			"heur_id": preserved
+			"name": no preserved
+			"score": preserved
+			"signature": always empty not preserved
+		},
+		"tags": always empty not preserved
+		"title_text": preserved
+	}
+]
+
+stigma properties:
+
+
+	"score": preserved
+	"sections": [
+		{
+			"auto_collapse": always false not preserved
+			"body": preserved
+			"body_format": preserved
+			"classification": preserved
+			"depth": always 0 not preserved
+			"heuristic": {
+				"attack": always empty not preserved
+				"heur_id": preserved
+				"name": preserved
+				"score":preserved
+				"signature": always empty not preserved
+			},
+			"tags": always empty no preserved
+			"title_text": preserved
+		}
+	]
+
+	CodeQuality properites
+
+	"score": 0,
+	"sections": [
+		{
+			"auto_collapse":always false not preserved
+			"body": prserved
+			"body_format": preserved
+			"classification": presreved
+			"depth":preserved
+			"heuristic":always null not preserve
+			"tags":always empty not preserved
+			"title_text": preserved
+		}
+
