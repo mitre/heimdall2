@@ -439,7 +439,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       `Logging into Splunk instance at ${hostname} with user ${config.username}`
     );
 
-    logger.verbose(`Got execution: ${filename}`);
+    logger.verbose(`Found designated file to transfer: ${filename}`);
     const guid = createGUID(30);
     logger.verbose(`Using GUID: ${guid}`);
 
