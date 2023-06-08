@@ -155,7 +155,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   ];
 
   /** Category list for file metadata filtering dropdown */
-  readonly fileMetadataFilterProps = ['File Name'];
+  readonly fileMetadataFilterProps = ['File Name', 'Group', 'Tag'];
 
   // Used for toggling the side nav drawer
   isUtilityDrawerShown = false;

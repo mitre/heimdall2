@@ -103,6 +103,12 @@ export interface ControlsFilter {
   /** Filenames to search for  */
   filenameSearchTerms?: SearchEntry<FilenameSearchTerm>[];
 
+  /** User groups to search for  */
+  userGroupSearchTerms?: SearchEntry<UserGroupSearchTerm>[];
+
+  /** Evaluation tags to search for  */
+  evalTagSearchTerms?: SearchEntry<EvaluationTagSearchTerm>[];
+
   // End of "generic" filters
 
   /** The current state of the Nist Treemap. Used to further filter by nist categories etc. */
@@ -269,16 +275,24 @@ function fileMatchesFilter(file: InspecFile, filter?: FilesFilter): boolean {
       .map((t) => t.value);
   }
 
-  if (filter.filenameSearchTerms) {
-    const positive = getTerms(filter.filenameSearchTerms, false);
-    const negative = getTerms(filter.filenameSearchTerms, true);
+  const termsPropPairs = [
+    {terms: filter.filenameSearchTerms, prop: fileProperties.filename},
+    {terms: filter.userGroupSearchTerms, prop: fileProperties.groups},
+    {terms: filter.evalTagSearchTerms, prop: fileProperties.tags}
+  ];
 
-    if (positive.length > 0 && !oneMatches(fileProperties.filename, positive)) {
-      return false;
-    }
+  for (const {terms, prop} of termsPropPairs) {
+    if (terms) {
+      const positive = getTerms(terms, false);
+      const negative = getTerms(terms, true);
 
-    if (negative.length > 0 && oneMatches(fileProperties.filename, negative)) {
-      return false;
+      if (positive.length > 0 && !oneMatches(prop, positive)) {
+        return false;
+      }
+
+      if (negative.length > 0 && oneMatches(prop, negative)) {
+        return false;
+      }
     }
   }
 
@@ -649,7 +663,9 @@ export class FilteredData extends VuexModule {
       }
 
       const filesFilter = {
-        filenameSearchTerms: filter.filenameSearchTerms
+        filenameSearchTerms: filter.filenameSearchTerms,
+        userGroupSearchTerms: filter.userGroupSearchTerms,
+        evalTagSearchTerms: filter.evalTagSearchTerms
       } as FilesFilter;
 
       // Get profiles from loaded Results
