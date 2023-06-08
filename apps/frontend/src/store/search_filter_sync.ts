@@ -19,6 +19,8 @@ export type IaControlsSearchTerm = string;
 export type NistIdFilter = string;
 export type KeywordsSearchTerm = string;
 export type FilenameSearchTerm = string;
+export type UserGroupSearchTerm = string;
+export type EvaluationTagSearchTerm = string;
 
 @Module({
   namespaced: true,
