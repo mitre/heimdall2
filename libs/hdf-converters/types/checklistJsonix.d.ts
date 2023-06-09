@@ -78,10 +78,10 @@ export type Stigdata = {
   istig?: Istig[];
 };
 
-/** 
+/**
  * The population of the values to this type uses
  * lodash which can return unknown
- */ 
+ */
 export type Asset = {
   assettype: Assettype | unknown;
   hostfqdn: null | string | unknown;
