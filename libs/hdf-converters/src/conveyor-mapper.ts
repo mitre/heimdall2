@@ -64,7 +64,7 @@ function createDescription(
 
 function childrenfinder(currLevel: Record<string, unknown>): string[][] {
   const arr: string[][] = [];
-  Object.entries(currLevel).forEach(([sha, file]) => {
+  for (const [sha, file] of Object.entries(currLevel)) {
     if (_.has(file, 'name')) {
       const name: string = _.get(file, 'name[0]') || '';
       arr.push([sha, name]);
@@ -75,7 +75,7 @@ function childrenfinder(currLevel: Record<string, unknown>): string[][] {
         arr.push(element);
       };
     }
-  });
+  };
   return arr;
 }
 function sha2filenameMapper(
@@ -232,23 +232,13 @@ export class ConveyorResults {
   }
 
   toHdf(): Record<string, ExecJSON.Execution> {
-    /*const test =  Object.entries(this.data).map(entries => {
-      return new ConveyorMapper(
-        (entries as unknown[])[0] as Record<string, unknown>,
-        this.meta,
-        (entries as unknown[])[1] as string
-      ).toHdf
-    })*/
-    const mapped = _.mapValues(
-      _.get(this.data, 'api_response.results') as Record<string, unknown>,
-      (val, key) => {
-        return new ConveyorMapper(
-          val as Record<string, unknown>,
-          this.data,
-          key
-        ).toHdf();
-      }
+    const scannerRecordInput =  (Object.entries(_.get(this.data, 'api_response.results') as Record<string, unknown> ) as [string, Record<string, unknown>][]).map(([scannerName, scannerData]) =>
+      [scannerName, new ConveyorMapper(
+        scannerData,
+        this.data,
+        scannerName
+      ).toHdf()]
     );
-    return mapped;
+    return Object.fromEntries(scannerRecordInput)
   }
 }
