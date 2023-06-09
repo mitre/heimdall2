@@ -59,6 +59,7 @@ export const samples: Sample[] = [
   {
     filename: 'AWS CIS Foundations Baseline',
     path: cisAwsFoundationsBaselinePath
+  },
   {
     filename: 'NGINX Clean Sample',
     path: goodNginxResultsPath
