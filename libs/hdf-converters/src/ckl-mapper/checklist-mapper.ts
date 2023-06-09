@@ -171,14 +171,16 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   checklistXml: string;
   jsonixData: Checklist;
   checklistObject: ChecklistObject;
+  withRaw: boolean;
 
   /**
    * Creates instance of ChecklistResult object because ChecklistMapper uses the intermediate ChecklistObject to create HDF mapping
    * @param checklistXml - string of xml data
    */
-  constructor(checklistXml: string) {
+  constructor(checklistXml: string, withRaw = false) {
     super(checklistXml);
     this.checklistXml = checklistXml;
+    this.withRaw = withRaw;
     this.jsonixData = super.toJsonix(checklistMapping.jsonixMapping);
     this.checklistObject = super.toIntermediateObject(this.jsonixData);
   }

@@ -70,6 +70,7 @@ export const samples: Sample[] = [
   {
     filename: 'Red Hat CVE Vulnerability Scan',
     path: rhelCveVulnerabilityScanBaselineWithFailuresPath
+  },
   {
     filename: 'Red Hat 7 STIG Baseline',
     path: rhel7ResultsPath
