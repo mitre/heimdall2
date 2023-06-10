@@ -3281,12 +3281,12 @@
   dependencies:
     path-to-regexp "0.2.5"
 
-"@nestjs/testing@^8.0.2":
-  version "8.4.7"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-8.4.7.tgz#fe4f356c0e081e25fe8c899a65e91dd88947fd13"
-  integrity sha512-aedpeJFicTBeiTCvJWUG45WMMS53f5eu8t2fXsfjsU1t+WdDJqYcZyrlCzA4dL1B7MfbqaTURdvuVVHTmJO8ag==
+"@nestjs/testing@^9.4.2":
+  version "9.4.2"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-9.4.2.tgz#d6533195f5a50c84cf7e1df5a241585d1f360e44"
+  integrity sha512-4WZPJz85zLVZkhmWYq+Unr43MixISelg/TyuX1YFZYOeukIN+O6fRtAAPIKLqRQsiY0rE/h8FAEbYGWhNrRfSA==
   dependencies:
-    tslib "2.4.0"
+    tslib "2.5.2"
 
 "@node-ipc/js-queue@2.0.3":
   version "2.0.3"
