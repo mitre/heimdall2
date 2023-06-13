@@ -457,11 +457,14 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       'Authorization'
     ] = `Bearer ${authResponse.data.sessionKey}`;
 
+    // returnCount specifies the number of found results to return, if set to 0 returns all
+    // Per https://docs.splunk.com/Documentation/Splunk/9.0.5/RESTREF/RESTintrospect#data.2Findexes
+    const returnCount = 0;
     // Request all available indexes
     const indexResponse = await this.axiosInstance.get(
       `${hostname}/services/data/indexes`,
       {
-        params: {count: 0}
+        params: {count: returnCount}
       }
     );
 

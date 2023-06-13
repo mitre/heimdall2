@@ -333,10 +333,13 @@ export class SplunkMapper {
               ) {
                 clearInterval(awaitJob);
 
+                // returnCount specifies the number of found results to return, if set to 0 returns all
+                // Per https://docs.splunk.com/Documentation/Splunk/9.0.5/RESTREF/RESTsearch#search.2Fv2.2Fjobs.2F.7Bsearch_id.7D.2Fresults
+                const returnCount = 0;
                 const queryJob = await this.axiosInstance.get(
                   `${this.hostname}/services/search/v2/jobs/${job}/results`,
                   {
-                    params: {count: 0, output_mode: 'json_rows'}
+                    params: {count: returnCount, output_mode: 'json_rows'}
                   }
                 );
                 resolve(this.parseSplunkResponse(query, queryJob.data));
