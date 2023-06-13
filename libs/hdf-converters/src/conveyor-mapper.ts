@@ -7,50 +7,36 @@ import {
 } from './utils/global';
 enum scannerType {
   Moldy = 'Moldy',
-  Stigma = 'Stima', 
-  CodeQuality = 'CodeQuality',
-  Default = 'Default'
+  Stigma = 'Stigma', 
+  CodeQuality = 'CodeQuality'
 }
 function createDescription(
   data: Record<string, unknown>,
   score: number,
   date: string,
-  type: string,
+  scannerName: string,
   endTime:string
 ): Record<string, unknown> {
   let desc = '';
-  if (type === scannerType.Moldy || type == scannerType.Stigma) {
+  if (scannerName === scannerType.Moldy || scannerName == scannerType.Stigma) {
+    desc =`
+     title_text:${(_.get(data, 'title_text') as string)}
+      body:${ _.get(data, 'body')}
+      body_format:${(_.get(data, 'body_format') as string)}
+      classificaton:${(_.get(data, 'classification') as string)}
+      depth:${(_.get(data, 'depth') as string)}
+      heuristic_heur_id:${(_.get(data, 'heuristic.heur_id') as string)}
+      heuristic_score:${(_.get(data, 'heuristic.score') as string)}
+      heuristic_name:${(_.get(data, 'heuristic.name') as string)}
+      `;
+  } else if (scannerName === scannerType.CodeQuality) {
     desc =
-     'title_text:' +
-      (_.get(data, 'title_text') as string) +
-      '\nbody:' +
-      _.get(data, 'body') +
-      '\nbody_format:' +
-      (_.get(data, 'body_format') as string) +
-      '\nclassificaton:' +
-      (_.get(data, 'classification') as string) +
-      '\ndepth:' +
-      (_.get(data, 'depth') as string) +
-      '\nheuristic_heur_id:' +
-      (_.get(data, 'heuristic.heur_id') as string) +
-      '\nheuristic_score:' +
-      (_.get(data, 'heuristic.score') as string) +
-      '\nheuristic_name:' +
-      (_.get(data, 'heuristic.name') as string) +
-      '\n';
-  } else if (type === scannerType.CodeQuality) {
-    desc =
-      'body:' +
-      _.get(data, 'body') +
-      '\nbody_format:' +
-      (_.get(data, 'body_format') as string) +
-      '\nclassificaton:' +
-      (_.get(data, 'classification') as string) +
-      '\ndepth:' +
-      (_.get(data, 'depth') as string) +
-      '\ntitle_text:' +
-      (_.get(data, 'title_text') as string) +
-      '\n';
+      `body:${_.get(data, 'body')}
+      body_format:${(_.get(data, 'body_format') as string)}
+      classificaton:${(_.get(data, 'classification') as string)}
+      depth:${(_.get(data, 'depth') as string)}
+      title_text:${(_.get(data, 'title_text') as string)}
+      `;
   } else {
     desc = JSON.stringify(data);
   }
@@ -179,7 +165,7 @@ function controlMappingConveyor(): MappedTransform<
 
 export class ConveyorMapper extends BaseConverter {
   data: Record<string, unknown>;
-  type: string;
+  scannerName: string;
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -211,13 +197,13 @@ export class ConveyorMapper extends BaseConverter {
       ]
   }
   constructor(
-    conveyor: Record<string, unknown>,
+    remappedConveyorResults: Record<string, unknown>,
     data: Record<string, unknown>,
-    type: string
+    scannerName: string
   ) {
-    _.set(data, 'api_response.results', conveyor);
+    _.set(data, 'api_response.results', remappedConveyorResults);
     super(data);
-    this.type = type;
+    this.scannerName = scannerName;
     this.data = data;
   }
 }

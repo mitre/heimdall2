@@ -26,7 +26,7 @@ export enum INPUT_TYPES {
 // Fields to look for inside of JSON structures to determine type before passing to hdf-converters
 const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.ASFF]: ['Findings', 'AwsAccountId', 'ProductArn'],
-  [INPUT_TYPES.CONVEYOR]: [],
+  [INPUT_TYPES.CONVEYOR]: ['api_error_message', 'api_response'],
   [INPUT_TYPES.FORTIFY]: ['FVDL', 'FVDL.EngineData.EngineVersion', 'FVDL.UUID'],
   [INPUT_TYPES.IONCHANNEL]: [
     'analysis_id',

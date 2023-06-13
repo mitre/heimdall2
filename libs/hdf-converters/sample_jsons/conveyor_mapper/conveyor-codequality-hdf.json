@@ -6644,7 +6644,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:39.003137Z",
               "run_time": 20
             }
@@ -6673,7 +6673,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:28.697719Z",
               "run_time": 2942
             }
@@ -6702,7 +6702,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:15.695424Z",
               "run_time": 25
             }
@@ -6731,7 +6731,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:28.771097Z",
               "run_time": 38
             }
@@ -6760,7 +6760,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:45.974214Z",
               "run_time": 28
             }
@@ -6789,7 +6789,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:04.868569Z",
               "run_time": 22
             }
@@ -6818,7 +6818,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:46.476996Z",
               "run_time": 22
             }
@@ -6847,7 +6847,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:06.124367Z",
               "run_time": 16
             }
@@ -6876,7 +6876,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:01.742232Z",
               "run_time": 3022
             }
@@ -6905,7 +6905,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:31.778362Z",
               "run_time": 2889
             }
@@ -6934,7 +6934,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:42.860749Z",
               "run_time": 38
             }
@@ -6963,7 +6963,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:58.173233Z",
               "run_time": 21
             }
@@ -6992,7 +6992,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:24.256195Z",
               "run_time": 22
             }
@@ -7021,7 +7021,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:15.389196Z",
               "run_time": 35
             }
@@ -7050,7 +7050,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:49.430379Z",
               "run_time": 3156
             }
@@ -7079,7 +7079,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:16.462059Z",
               "run_time": 29
             }
@@ -7108,7 +7108,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:57.214608Z",
               "run_time": 25
             }
@@ -7137,7 +7137,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:47.994281Z",
               "run_time": 37
             }
@@ -7166,7 +7166,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:24.964130Z",
               "run_time": 35
             }
@@ -7195,7 +7195,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:47.680171Z",
               "run_time": 21
             }
@@ -7224,7 +7224,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:05.178982Z",
               "run_time": 37
             }
@@ -7253,7 +7253,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:05.842134Z",
               "run_time": 27
             }
@@ -7282,7 +7282,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:41.950427Z",
               "run_time": 22
             }
@@ -7311,7 +7311,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:43.417274Z",
               "run_time": 20
             }
@@ -7340,7 +7340,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:05.367120Z",
               "run_time": 19
             }
@@ -7369,7 +7369,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:41.015531Z",
               "run_time": 20
             }
@@ -7398,7 +7398,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:06.476802Z",
               "run_time": 29
             }
@@ -7427,7 +7427,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:15.959045Z",
               "run_time": 17
             }
@@ -7456,7 +7456,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:16.873298Z",
               "run_time": 18
             }
@@ -7485,7 +7485,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:46.117371Z",
               "run_time": 50
             }
@@ -7514,7 +7514,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:29.300458Z",
               "run_time": 27
             }
@@ -7543,7 +7543,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:16.218866Z",
               "run_time": 20
             }
@@ -7572,7 +7572,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:48.401109Z",
               "run_time": 21
             }
@@ -7601,7 +7601,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:05.983814Z",
               "run_time": 25
             }
@@ -7630,7 +7630,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:40.141698Z",
               "run_time": 17
             }
@@ -7659,7 +7659,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:39.519782Z",
               "run_time": 21
             }
@@ -7688,7 +7688,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:44.328645Z",
               "run_time": 27
             }
@@ -7717,7 +7717,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:24.105317Z",
               "run_time": 29
             }
@@ -7746,7 +7746,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:47.231995Z",
               "run_time": 25
             }
@@ -7775,7 +7775,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:57.390485Z",
               "run_time": 22
             }
@@ -7804,7 +7804,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:34.938593Z",
               "run_time": 19
             }
@@ -7833,7 +7833,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:41.669776Z",
               "run_time": 33
             }
@@ -7862,7 +7862,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:28.913972Z",
               "run_time": 29
             }
@@ -7891,7 +7891,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:57.698827Z",
               "run_time": 22
             }
@@ -7920,7 +7920,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:25.297746Z",
               "run_time": 28
             }
@@ -7949,7 +7949,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:49.032762Z",
               "run_time": 26
             }
@@ -7978,7 +7978,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:39.706352Z",
               "run_time": 26
             }
@@ -8007,7 +8007,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:49.282880Z",
               "run_time": 19
             }
@@ -8036,7 +8036,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:41.164897Z",
               "run_time": 28
             }
@@ -8065,7 +8065,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:34.831274Z",
               "run_time": 35
             }
@@ -8094,7 +8094,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:44.138592Z",
               "run_time": 19
             }
@@ -8123,7 +8123,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:24.814732Z",
               "run_time": 32
             }
@@ -8152,7 +8152,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:40.817143Z",
               "run_time": 17
             }
@@ -8181,7 +8181,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:39.357115Z",
               "run_time": 23
             }
@@ -8210,7 +8210,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:42.429732Z",
               "run_time": 24
             }
@@ -8239,7 +8239,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:29.042178Z",
               "run_time": 19
             }
@@ -8268,7 +8268,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:28.282624Z",
               "run_time": 22
             }
@@ -8297,7 +8297,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:24.608384Z",
               "run_time": 32
             }
@@ -8326,7 +8326,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:28.560169Z",
               "run_time": 18
             }
@@ -8355,7 +8355,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:41.442469Z",
               "run_time": 40
             }
@@ -8384,7 +8384,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:43.989295Z",
               "run_time": 30
             }
@@ -8413,7 +8413,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:35.221903Z",
               "run_time": 2658
             }
@@ -8442,7 +8442,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:45.297108Z",
               "run_time": 21
             }
@@ -8471,7 +8471,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:15.565023Z",
               "run_time": 20
             }
@@ -8500,7 +8500,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:38.021156Z",
               "run_time": 17
             }
@@ -8529,7 +8529,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:44.799668Z",
               "run_time": 17
             }
@@ -8558,7 +8558,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:47.824321Z",
               "run_time": 18
             }
@@ -8587,7 +8587,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:38.033081Z",
               "run_time": 25
             }
@@ -8616,7 +8616,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:05.493144Z",
               "run_time": 21
             }
@@ -8645,7 +8645,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:52.724609Z",
               "run_time": 33
             }
@@ -8674,7 +8674,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:34.683088Z",
               "run_time": 39
             }
@@ -8703,7 +8703,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:40.883011Z",
               "run_time": 17
             }
@@ -8732,7 +8732,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:20.053124Z",
               "run_time": 25
             }
@@ -8761,7 +8761,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:41.315163Z",
               "run_time": 21
             }
@@ -8790,7 +8790,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:45.548104Z",
               "run_time": 18
             }
@@ -8819,7 +8819,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:41.811878Z",
               "run_time": 20
             }
@@ -8848,7 +8848,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:34.177193Z",
               "run_time": 18
             }
@@ -8877,7 +8877,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:35.012254Z",
               "run_time": 21
             }
@@ -8906,7 +8906,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:43.829298Z",
               "run_time": 25
             }
@@ -8935,7 +8935,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:14.332548Z",
               "run_time": 24
             }
@@ -8964,7 +8964,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:53.014279Z",
               "run_time": 21
             }
@@ -8993,7 +8993,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:48.806570Z",
               "run_time": 41
             }
@@ -9022,7 +9022,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:38.221009Z",
               "run_time": 24
             }
@@ -9051,7 +9051,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:19.433459Z",
               "run_time": 47
             }
@@ -9080,7 +9080,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:01.541057Z",
               "run_time": 33
             }
@@ -9109,7 +9109,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:29.450284Z",
               "run_time": 3593
             }
@@ -9138,7 +9138,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:34.771131Z",
               "run_time": 26
             }
@@ -9167,7 +9167,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:46.319669Z",
               "run_time": 31
             }
@@ -9196,7 +9196,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:25.231096Z",
               "run_time": 18
             }
@@ -9225,7 +9225,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:14.464761Z",
               "run_time": 19
             }
@@ -9254,7 +9254,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:15.833647Z",
               "run_time": 19
             }
@@ -9283,7 +9283,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:45.166738Z",
               "run_time": 20
             }
@@ -9312,7 +9312,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:41.279031Z",
               "run_time": 29
             }
@@ -9341,7 +9341,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:18.879623Z",
               "run_time": 31
             }
@@ -9370,7 +9370,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:40.735512Z",
               "run_time": 21
             }
@@ -9399,7 +9399,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:28.430474Z",
               "run_time": 25
             }
@@ -9428,7 +9428,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:58.403385Z",
               "run_time": 2969
             }
@@ -9457,7 +9457,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:41.473068Z",
               "run_time": 46
             }
@@ -9486,7 +9486,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:16.323663Z",
               "run_time": 19
             }
@@ -9515,7 +9515,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:39.886596Z",
               "run_time": 22
             }
@@ -9544,7 +9544,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:48.568177Z",
               "run_time": 39
             }
@@ -9573,7 +9573,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:12.717182Z",
               "run_time": 29
             }
@@ -9602,7 +9602,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:40.279963Z",
               "run_time": 33
             }
@@ -9631,7 +9631,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:52.871576Z",
               "run_time": 27
             }
@@ -9660,7 +9660,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:19.853213Z",
               "run_time": 20
             }
@@ -9689,7 +9689,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:40.681334Z",
               "run_time": 22
             }
@@ -9718,7 +9718,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:11.941587Z",
               "run_time": 25
             }
@@ -9747,7 +9747,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:46.872487Z",
               "run_time": 36
             }
@@ -9776,7 +9776,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:24.923893Z",
               "run_time": 31
             }
@@ -9805,7 +9805,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:44.521325Z",
               "run_time": 3325
             }
@@ -9834,7 +9834,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:43.056894Z",
               "run_time": 30
             }
@@ -9863,7 +9863,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:05.626963Z",
               "run_time": 28
             }
@@ -9892,7 +9892,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:38.834122Z",
               "run_time": 20
             }
@@ -9921,7 +9921,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:42.701148Z",
               "run_time": 20
             }
@@ -9950,7 +9950,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:41.631214Z",
               "run_time": 2638
             }
@@ -9979,7 +9979,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:05.024310Z",
               "run_time": 45
             }
@@ -10008,7 +10008,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:45.419762Z",
               "run_time": 19
             }
@@ -10037,7 +10037,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:16.726482Z",
               "run_time": 19
             }
@@ -10066,7 +10066,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:20.243384Z",
               "run_time": 35
             }
@@ -10095,7 +10095,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:25.442052Z",
               "run_time": 3093
             }
@@ -10124,7 +10124,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:16.078600Z",
               "run_time": 18
             }
@@ -10153,7 +10153,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:38.165232Z",
               "run_time": 2392
             }
@@ -10182,7 +10182,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:16.996932Z",
               "run_time": 17
             }
@@ -10211,7 +10211,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:35.251451Z",
               "run_time": 2464
             }
@@ -10240,7 +10240,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:43.556836Z",
               "run_time": 22
             }
@@ -10269,7 +10269,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:14.598610Z",
               "run_time": 31
             }
@@ -10298,7 +10298,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:15.294666Z",
               "run_time": 22
             }
@@ -10327,7 +10327,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:40.009738Z",
               "run_time": 18
             }
@@ -10356,7 +10356,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:41.119418Z",
               "run_time": 19
             }
@@ -10385,7 +10385,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:06.659033Z",
               "run_time": 30
             }
@@ -10414,7 +10414,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:45.830343Z",
               "run_time": 16
             }
@@ -10443,7 +10443,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:16.601918Z",
               "run_time": 24
             }
@@ -10472,7 +10472,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:40.450937Z",
               "run_time": 37
             }
@@ -10501,7 +10501,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:19.666636Z",
               "run_time": 34
             }
@@ -10530,7 +10530,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:24.405864Z",
               "run_time": 25
             }
@@ -10559,7 +10559,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:06.295145Z",
               "run_time": 30
             }
@@ -10588,7 +10588,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:47.361355Z",
               "run_time": 22
             }
@@ -10617,7 +10617,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:40.600679Z",
               "run_time": 22
             }
@@ -10646,7 +10646,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:15.448034Z",
               "run_time": 18
             }
@@ -10675,7 +10675,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:20.415664Z",
               "run_time": 26
             }
@@ -10704,7 +10704,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:34.342343Z",
               "run_time": 44
             }
@@ -10733,7 +10733,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:25.426109Z",
               "run_time": 2709
             }
@@ -10762,7 +10762,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:14.898651Z",
               "run_time": 26
             }
@@ -10791,7 +10791,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:34.519837Z",
               "run_time": 25
             }
@@ -10820,7 +10820,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:07.094672Z",
               "run_time": 3695
             }
@@ -10849,7 +10849,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:45.672488Z",
               "run_time": 22
             }
@@ -10878,7 +10878,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:46.681012Z",
               "run_time": 33
             }
@@ -10907,7 +10907,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:25.143143Z",
               "run_time": 20
             }
@@ -10936,7 +10936,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:18.743089Z",
               "run_time": 21
             }
@@ -10965,7 +10965,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:53.205591Z",
               "run_time": 26
             }
@@ -10994,7 +10994,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:15.675860Z",
               "run_time": 2929
             }
@@ -11023,7 +11023,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:43.702638Z",
               "run_time": 24
             }
@@ -11052,7 +11052,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:57.559977Z",
               "run_time": 30
             }
@@ -11081,7 +11081,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:38.406242Z",
               "run_time": 20
             }
@@ -11110,7 +11110,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:44.515988Z",
               "run_time": 29
             }
@@ -11139,7 +11139,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:44.662802Z",
               "run_time": 18
             }
@@ -11168,7 +11168,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:20.576336Z",
               "run_time": 3362
             }
@@ -11197,7 +11197,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:44.966065Z",
               "run_time": 17
             }
@@ -11226,7 +11226,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:48.177011Z",
               "run_time": 29
             }
@@ -11255,7 +11255,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:39.170299Z",
               "run_time": 47
             }
@@ -11284,7 +11284,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:37.846776Z",
               "run_time": 36
             }
@@ -11313,7 +11313,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:15.106787Z",
               "run_time": 21
             }
@@ -11342,7 +11342,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:44.378160Z",
               "run_time": 19
             }
@@ -11371,7 +11371,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:38.537028Z",
               "run_time": 19
             }
@@ -11400,7 +11400,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:42.283987Z",
               "run_time": 31
             }
@@ -11429,7 +11429,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:12.073023Z",
               "run_time": 3130
             }
@@ -11458,7 +11458,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:43.249398Z",
               "run_time": 26
             }
@@ -11487,7 +11487,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:40.952043Z",
               "run_time": 16
             }
@@ -11516,7 +11516,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:47.510476Z",
               "run_time": 26
             }
@@ -11545,7 +11545,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:35.081975Z",
               "run_time": 20
             }
@@ -11574,7 +11574,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:17.098472Z",
               "run_time": 28
             }
@@ -11603,7 +11603,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:06.818572Z",
               "run_time": 23
             }
@@ -11632,7 +11632,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:19.221228Z",
               "run_time": 47
             }
@@ -11661,7 +11661,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:28.654963Z",
               "run_time": 23
             }
@@ -11690,7 +11690,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:57.909088Z",
               "run_time": 79
             }
@@ -11719,7 +11719,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:47.082564Z",
               "run_time": 30
             }
@@ -11748,7 +11748,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:42.108800Z",
               "run_time": 18
             }
@@ -11777,7 +11777,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:No findings within the submitted file were found for the given weakness set.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:53.368812Z",
               "run_time": 3725
             }
@@ -11806,7 +11806,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:42.569856Z",
               "run_time": 26
             }
@@ -11835,7 +11835,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:14.739028Z",
               "run_time": 17
             }
@@ -11864,7 +11864,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:29.174632Z",
               "run_time": 21
             }
@@ -11893,7 +11893,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:25.060898Z",
               "run_time": 21
             }
@@ -11922,7 +11922,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:02:34.060305Z",
               "run_time": 22
             }
@@ -11951,7 +11951,7 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:38.678946Z",
               "run_time": 28
             }
@@ -11980,14 +11980,14 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "body:File Type Not Supported.\nbody_format:TEXT\nclassificaton:TLP:W\ndepth:0\ntitle_text:Findings\n",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      title_text:Findings\n      ",
               "start_time": "2023-01-19T16:03:19.044948Z",
               "run_time": 21
             }
           ]
         }
       ],
-      "sha256": "8b14875a9daee68a5d360e7cd508598e7bcd71f818699ecf03bed5113dea3836"
+      "sha256": "68f8b970e798ddb00bf6a0f0a40bff7481e50eba0ddd82e591e56d0b03ad1531"
     }
   ]
 }
