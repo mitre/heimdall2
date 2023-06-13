@@ -83,7 +83,7 @@
     </template>
     <!-- Everything-is-filtered snackbar -->
     <v-snackbar
-      v-model="filterSnackbar"
+      v-model="enableChecklistSnackbar"
       class="mt-11"
       style="z-index: 2"
       :timeout="-1"
@@ -95,11 +95,6 @@
         <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
         filters and show all.
       </span>
-      <!-- <span v-else-if="no_files" class="subtitle-2">
-        No files are currently loaded. Press the <strong>LOAD</strong>
-        <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
-        some.
-      </span> -->
       <span v-else class="subtitle-2">
         No files are currently enabled for viewing. Open the
         <v-icon class="mx-1">mdi-arrow-right</v-icon> sidebar menu, and ensure
@@ -261,9 +256,16 @@ export default class Checklist extends RouteMixin {
    */
   clear(clearSearchBar = false) {
     SearchModule.clear();
-    this.filterSnackbar = false;
     if (clearSearchBar) {
       this.searchTerm = '';
+    }
+  }
+
+  get enableChecklistSnackbar(): boolean {
+    if (this.rules.length === 0) {
+      return true;
+    } else {
+      return false;
     }
   }
 
@@ -285,25 +287,15 @@ export default class Checklist extends RouteMixin {
       result = false;
     }
 
-    // Logic to check: are any files actually visible?
-    if (this.rules.length === 0) {
-      this.filterSnackbar = true;
-    } else {
-      this.filterSnackbar = false;
-    }
-
     // Finally, return our result
     return result;
   }
 
   get rules() {
-    const rulesList: ChecklistVuln[] = [];
-    this.getChecklist(this.fileFilter)
-      ?.stigs.map((stig) => stig.vulns)
-      .forEach((rulesItems) => {
-        rulesList.push(...rulesItems);
-      });
-
+    let rulesList: ChecklistVuln[] = [];
+    for (const stig of this.getChecklist(this.fileFilter)?.stigs ?? []) {
+      rulesList = [...rulesList, ...stig.vulns];
+    }
     return checklistRules(rulesList, this.allFilter);
   }
 
