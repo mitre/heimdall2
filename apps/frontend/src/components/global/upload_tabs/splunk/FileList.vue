@@ -40,13 +40,14 @@
 <script lang="ts">
 import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {FileMetaData, SplunkConfig} from '@mitre/hdf-converters';
+import {FileMetaData} from '@mitre/hdf-converters';
 import {SplunkReport} from '@mitre/hdf-converters/src/converters-from-hdf/splunk/splunk-report-types';
 import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
+import {SplunkConfig} from '@mitre/hdf-converters/types/splunk-config-types';
 
 @Component({})
 export default class FileList extends Vue {

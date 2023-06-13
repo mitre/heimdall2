@@ -2,8 +2,9 @@ import axios, {AxiosInstance} from 'axios';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {Logger} from 'winston';
-import {SplunkConfig} from './converters-from-hdf/splunk/reverse-splunk-mapper';
+import {SplunkConfig} from '../types/splunk-config-types';
 import {createWinstonLogger} from './utils/global';
+import {checkSplunkCredentials, generateHostname} from './utils/splunk-tools';
 
 export type Hash<T> = {[key: string]: T};
 
@@ -150,54 +151,6 @@ function consolidateFilePayloads(
   return exec as unknown as ExecJSON.Execution;
 }
 
-// Returns a string typed session key for any given valid set of credentials
-export async function checkSplunkCredentials(
-  config: SplunkConfig
-): Promise<string> {
-  const hostname = config.port
-    ? `${config.scheme}://${config.host}:${config.port}`
-    : `${config.scheme}://${config.host}:8089`;
-  const username = (config.username ??= '');
-  const password = (config.password ??= '');
-
-  return new Promise((resolve, reject) => {
-    // Time to wait (in ms) for login query response until returning bad query status
-    // Arbitrary, change as necessary
-    const loginTimeout = 5000;
-
-    setTimeout(
-      () =>
-        reject(
-          'Login timed out: Please check your CORS configuration or validate that you have inputted the correct domain'
-        ),
-      loginTimeout
-    );
-    axios
-      .post(
-        `${hostname}/services/auth/login`,
-        new URLSearchParams({
-          username: username,
-          password: password
-        }),
-        {params: {output_mode: 'json'}}
-      )
-      .then(
-        (response) => resolve(response.data.sessionKey),
-        (error) => {
-          try {
-            if (error.response.status === 401) {
-              reject('Incorrect Username or Password');
-            }
-          } catch (error) {
-            reject(
-              'Failed to login: Please check your CORS configuration and validate that your input has the correct domain'
-            );
-          }
-        }
-      );
-  });
-}
-
 function unixTimeToDate(unixTime: string): Date {
   // Splunk only currently returns ints but this could be a decimal for more precision
   return new Date(parseFloat(unixTime) * 1000);
@@ -215,9 +168,7 @@ export class SplunkMapper {
   ) {
     this.config = config;
     this.axiosInstance = axios.create({params: {output_mode: 'json'}});
-    this.hostname = config.port
-      ? `${config.scheme}://${config.host}:${config.port}`
-      : `${config.scheme}://${config.host}:8089`;
+    this.hostname = generateHostname(config);
     if (logService) {
       logger = logService;
     } else {

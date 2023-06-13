@@ -8,8 +8,10 @@ import {
 } from 'inspecjs';
 import _ from 'lodash';
 import {Logger} from 'winston';
+import {SplunkConfig} from '../../../types/splunk-config-types';
 import {MappedTransform} from '../../base-converter';
 import {createWinstonLogger} from '../../utils/global';
+import {checkSplunkCredentials, generateHostname} from '../../utils/splunk-tools';
 import {FromAnyBaseConverter} from '../reverse-any-base-converter';
 import {ILookupPathFH} from '../reverse-base-converter';
 import {SplunkControl} from './splunk-control-types';
@@ -19,20 +21,6 @@ import {SplunkReport} from './splunk-report-types';
 const HDF_SPLUNK_SCHEMA = '1.1';
 const MAPPER_NAME = 'HDF2Splunk';
 const UPLOAD_CHUNK_SIZE = 100;
-
-export type SplunkConfig = {
-  scheme: string;
-  host: string;
-  port?: number;
-  username?: string;
-  password?: string;
-  index: string;
-  owner?: string;
-  app?: string;
-  sessionKey?: string;
-  autologin?: boolean;
-  version?: string;
-};
 
 export type SplunkData = {
   profiles: SplunkProfile[];
@@ -349,9 +337,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     splunkData: SplunkData
   ): Promise<void> {
     return new Promise((resolve, reject) => {
-      const hostname = config.port
-        ? `${config.scheme}://${config.host}:${config.port}`
-        : `${config.scheme}://${config.host}:8089`;
+      const hostname = generateHostname(config);
       this.axiosInstance.defaults.params['sourcetype'] = MAPPER_NAME;
       this.axiosInstance.defaults.params['index'] = targetIndex.name;
 
@@ -432,9 +418,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   }
 
   async toSplunk(config: SplunkConfig, filename: string): Promise<string> {
-    const hostname = config.port
-      ? `${config.scheme}://${config.host}:${config.port}`
-      : `${config.scheme}://${config.host}:8089`;
+    const hostname = generateHostname(config);
     logger.info(
       `Logging into Splunk instance at ${hostname} with user ${config.username}`
     );
@@ -444,18 +428,10 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     logger.verbose(`Using GUID: ${guid}`);
 
     // Attempt to authenticate using given credentials
-    const username = (config.username ??= '');
-    const password = (config.password ??= '');
-    const authResponse = await this.axiosInstance.post(
-      `${hostname}/services/auth/login`,
-      new URLSearchParams({
-        username: username,
-        password: password
-      })
-    );
+    const authResponse = await checkSplunkCredentials(config);
     this.axiosInstance.defaults.headers.common[
       'Authorization'
-    ] = `Bearer ${authResponse.data.sessionKey}`;
+    ] = `Bearer ${authResponse}`;
 
     // returnCount specifies the number of found results to return, if set to 0 returns all
     // Per https://docs.splunk.com/Documentation/Splunk/9.0.5/RESTREF/RESTintrospect#data.2Findexes
