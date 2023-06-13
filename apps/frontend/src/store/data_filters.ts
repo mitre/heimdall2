@@ -122,7 +122,7 @@ export interface ControlsFilter {
 /** Contains common filters for a checklist. */
 export interface ChecklistFilter {
   /** Which file these objects came from. Undefined => any */
-  fromFile: FileID[];
+  fromFile: FileID;
 
   // Control specific
   /** What status the controls can have. Undefined => any */
@@ -228,7 +228,7 @@ function ruleContainsTerm(
 export class FilteredData extends VuexModule {
   selectedEvaluationIds: FileID[] = [];
   selectedProfileIds: FileID[] = [];
-  selectedChecklistIds: FileID[] = [];
+  selectedChecklistId: FileID = '';
 
   /** Filter state for the checklist view */
   checklistFilterState: SearchBarEntry = '';
@@ -345,7 +345,7 @@ export class FilteredData extends VuexModule {
 
   @Mutation
   SELECT_CHECKLIST(file: FileID): void {
-    this.selectedChecklistIds = [file];
+    this.selectedChecklistId = file;
   }
 
   @Mutation
@@ -368,10 +368,8 @@ export class FilteredData extends VuexModule {
   }
 
   @Mutation
-  CLEAR_CHECKLIST(removeId: FileID): void {
-    this.selectedChecklistIds = this.selectedChecklistIds.filter(
-      (ids) => ids !== removeId
-    );
+  CLEAR_CHECKLIST(): void {
+    this.selectedChecklistId = '';
   }
 
   @Mutation
@@ -386,7 +384,7 @@ export class FilteredData extends VuexModule {
 
   @Mutation
   CLEAR_ALL_CHECKLISTS(): void {
-    this.selectedChecklistIds = [];
+    this.selectedChecklistId = '';
   }
 
   @Action
@@ -448,8 +446,8 @@ export class FilteredData extends VuexModule {
 
   @Action
   public select_exclusive_checklist(fileID: FileID): void {
-    if (this.selectedChecklistIds.includes(fileID)) {
-      this.CLEAR_CHECKLIST(fileID);
+    if (this.selectedChecklistId === fileID) {
+      this.CLEAR_CHECKLIST();
       this.SELECT_RULE(this.emptyRule);
     } else {
       this.SELECT_CHECKLIST(fileID);
@@ -464,7 +462,7 @@ export class FilteredData extends VuexModule {
   public clear_file(fileID: FileID): void {
     this.CLEAR_EVALUATION(fileID);
     this.CLEAR_PROFILE(fileID);
-    this.CLEAR_CHECKLIST(fileID);
+    this.CLEAR_CHECKLIST();
   }
 
   /**
@@ -516,7 +514,7 @@ export class FilteredData extends VuexModule {
     return [
       ...this.selectedEvaluationIds,
       ...this.selectedProfileIds,
-      ...this.selectedChecklistIds
+      this.selectedChecklistId
     ];
   }
 
@@ -545,8 +543,7 @@ export class FilteredData extends VuexModule {
   }
 
   get checklist_selected(): Trinary {
-    if (this.selectedChecklistIds.length === 1) return Trinary.On;
-    else return Trinary.Off;
+    return this.selectedChecklistId ? Trinary.On : Trinary.Off;
   }
 
   /**

@@ -103,8 +103,8 @@
       <span v-else class="subtitle-2">
         No files are currently enabled for viewing. Open the
         <v-icon class="mx-1">mdi-arrow-right</v-icon> sidebar menu, and ensure
-        that the file(s) you wish to view are
-        <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
+        that the file you wish to view is
+        <v-icon class="mx-1">mdi-radiobox-marked</v-icon> selected.
       </span>
     </v-snackbar>
   </Base>
@@ -168,7 +168,6 @@ export default class Checklist extends RouteMixin {
 
   setSeverityOverrideSelection(value: Severity) {
     this.severityOverrideSelection = value;
-    console.log('These two: ', this.severityOverrideSelection, value);
   }
 
   /** State variable to track "Short ID" switch */
@@ -223,13 +222,13 @@ export default class Checklist extends RouteMixin {
    * The currently selected file, if one exists.
    * Controlled by router.
    */
-  get fileFilter(): FileID[] {
-    return FilteredDataModule.selectedChecklistIds;
+  get fileFilter(): FileID {
+    return FilteredDataModule.selectedChecklistId;
   }
 
-  getChecklist(fileID: FileID[]) {
+  getChecklist(fileID: FileID) {
     return InspecDataModule.allChecklistFiles.find(
-      (f) => f.uniqueId === fileID[0]
+      (f) => f.uniqueId === fileID
     );
   }
 

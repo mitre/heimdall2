@@ -3,7 +3,6 @@
  */
 
 import {
-  ChecklistFilter,
   ControlsFilter,
   filterCacheKey,
   FilteredData,
@@ -28,10 +27,10 @@ export type StatusHash = ControlStatusHash & {
 // Helper function for counting a status in a list of controls
 function count_statuses(
   data: FilteredData,
-  filter: ControlsFilter | ChecklistFilter
+  filter: ControlsFilter
 ): StatusHash {
   // Remove the status filter from the control filter
-  const newFilter: ControlsFilter | ChecklistFilter = {
+  const newFilter: ControlsFilter = {
     status: [],
     ...filter
   };
@@ -73,7 +72,7 @@ function count_statuses(
   return hash;
 }
 
-export function calculateCompliance(filter: ControlsFilter | ChecklistFilter) {
+export function calculateCompliance(filter: ControlsFilter) {
   const passed = StatusCountModule.countOf(filter, 'Passed');
   const total =
     passed +
@@ -94,11 +93,11 @@ export function calculateCompliance(filter: ControlsFilter | ChecklistFilter) {
 })
 export class StatusCount extends VuexModule {
   /** Generates a hash mapping each status -> a count of its members */
-  get hash(): (filter: ControlsFilter | ChecklistFilter) => StatusHash {
+  get hash(): (filter: ControlsFilter) => StatusHash {
     // Establish our cache and dependency
     const cache: LRUCache<string, StatusHash> = new LRUCache({max: 30});
 
-    return (filter: ControlsFilter | ChecklistFilter) => {
+    return (filter: ControlsFilter) => {
       const id = filterCacheKey(filter);
       const cached = cache.get(id);
       // If cache hits, just return

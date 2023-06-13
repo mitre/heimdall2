@@ -53,7 +53,7 @@ describe('Datatable', () => {
   it('checklist row and table data is correct', () => {
     const rules: ChecklistVuln[] = [];
     InspecDataModule.allChecklistFiles
-      .find((f) => f.uniqueId === FilteredDataModule.selectedChecklistIds[0])
+      .find((f) => f.uniqueId === FilteredDataModule.selectedChecklistId)
       ?.stigs.map((stig) => stig.vulns)
       .forEach((rulesItems) => {
         rules.push(...rulesItems);

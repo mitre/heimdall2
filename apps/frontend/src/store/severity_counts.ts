@@ -3,7 +3,6 @@
  */
 
 import {
-  ChecklistFilter,
   ControlsFilter,
   filterCacheKey,
   FilteredData,
@@ -20,10 +19,10 @@ type SeverityHash = {[key in Severity]: number};
 // Helper function for counting a status in a list of controls
 function count_severities(
   data: FilteredData,
-  filter: ControlsFilter | ChecklistFilter
+  filter: ControlsFilter
 ): SeverityHash {
   // Remove the status filter from the control filter
-  const newFilter: ControlsFilter | ChecklistFilter = {
+  const newFilter: ControlsFilter = {
     status: [],
     ...filter
   };
@@ -56,11 +55,11 @@ function count_severities(
 })
 export class SeverityCount extends VuexModule {
   /** Generates a hash mapping each status -> a count of its members */
-  get hash(): (filter: ControlsFilter | ChecklistFilter) => SeverityHash {
+  get hash(): (filter: ControlsFilter) => SeverityHash {
     // Establish our cache and dependency
     const cache: LRUCache<string, SeverityHash> = new LRUCache({max: 30});
 
-    return (filter: ControlsFilter | ChecklistFilter) => {
+    return (filter: ControlsFilter) => {
       const id = filterCacheKey(filter);
       const cached = cache.get(id);
       // If cache hits, just return
@@ -75,23 +74,23 @@ export class SeverityCount extends VuexModule {
     };
   }
 
-  get none(): (filter: ControlsFilter | ChecklistFilter) => number {
+  get none(): (filter: ControlsFilter) => number {
     return (filter) => this.hash(filter)['none'];
   }
 
-  get low(): (filter: ControlsFilter | ChecklistFilter) => number {
+  get low(): (filter: ControlsFilter) => number {
     return (filter) => this.hash(filter)['low'];
   }
 
-  get medium(): (filter: ControlsFilter | ChecklistFilter) => number {
+  get medium(): (filter: ControlsFilter) => number {
     return (filter) => this.hash(filter)['medium'];
   }
 
-  get high(): (filter: ControlsFilter | ChecklistFilter) => number {
+  get high(): (filter: ControlsFilter) => number {
     return (filter) => this.hash(filter)['high'];
   }
 
-  get critical(): (filter: ControlsFilter | ChecklistFilter) => number {
+  get critical(): (filter: ControlsFilter) => number {
     return (filter) => this.hash(filter)['critical'];
   }
 }

@@ -96,7 +96,7 @@ import _ from 'lodash';
 @Component
 export default class ChecklistRulesTable extends Vue {
   @Prop({type: Object, required: true}) readonly allFilter!: ChecklistFilter;
-  @Prop({type: Array, required: true}) readonly fileFilter!: FileID[];
+  @Prop({type: String, required: true}) readonly fileFilter!: FileID;
   @Prop({type: Boolean, required: true}) readonly shortIdEnabled!: boolean;
   @Prop({type: Array, required: true}) readonly rules!: ChecklistVuln[];
 

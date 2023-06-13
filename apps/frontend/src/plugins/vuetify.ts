@@ -10,7 +10,7 @@ export const statuses = {
   statusNotReviewed: colors.orange.base,
   statusProfileError: colors.indigo.lighten2,
   statusNotRun: colors.teal.darken2,
-  statusFromProfile: colors.teal.base,
+  statusFromProfile: colors.teal.base
 };
 
 // Get colors generated from base mitre using UtilColorGenerator.
