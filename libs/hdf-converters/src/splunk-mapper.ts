@@ -334,9 +334,9 @@ export class SplunkMapper {
                 clearInterval(awaitJob);
 
                 const queryJob = await this.axiosInstance.get(
-                  `${this.hostname}/services/search/jobs/${job}/results`,
+                  `${this.hostname}/services/search/v2/jobs/${job}/results`,
                   {
-                    params: {count: 100000, output_mode: 'json_rows'}
+                    params: {count: 0, output_mode: 'json_rows'}
                   }
                 );
                 resolve(this.parseSplunkResponse(query, queryJob.data));
