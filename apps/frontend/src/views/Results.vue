@@ -21,23 +21,23 @@
           </template>
           <v-list class="py-0">
             <v-list-item class="px-0">
-              <ExportCaat :filter="all_filter" />
+              <ExportCaat :filter="allFilter" />
             </v-list-item>
             <v-list-item v-if="is_result_view" class="px-0">
-              <ExportNist :filter="all_filter" />
+              <ExportNist :filter="allFilter" />
             </v-list-item>
             <v-list-item v-if="is_result_view" class="px-0">
-              <ExportASFFModal :filter="all_filter" />
+              <ExportASFFModal :filter="allFilter" />
             </v-list-item>
             <v-list-item v-if="is_result_view" class="px-0">
-              <ExportCKLModal :filter="all_filter" />
+              <ExportCKLModal :filter="allFilter" />
             </v-list-item>
             <v-list-item class="px-0">
-              <ExportCSVModal :filter="all_filter" />
+              <ExportCSVModal :filter="allFilter" />
             </v-list-item>
             <v-list-item v-if="is_result_view" class="px-0">
               <ExportHTMLModal
-                :filter="all_filter"
+                :filter="allFilter"
                 :file-type="current_route_name"
               />
             </v-list-item>
@@ -49,7 +49,7 @@
             </v-list-item>
             <v-list-item class="px-0">
               <ExportXCCDFResults
-                :filter="all_filter"
+                :filter="allFilter"
                 :is-result-view="is_result_view"
               />
             </v-list-item>
@@ -91,7 +91,7 @@
         </v-container>
         <!-- Count Cards -->
         <StatusCardRow
-          :filter="all_filter"
+          :filter="allFilter"
           :current-status-filter="statusFilter"
           @show-errors="showErrors"
           @show-waived="showWaived"
@@ -104,7 +104,7 @@
             <v-card id="statusCounts" class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
-                <StatusChart v-model="statusFilter" :filter="all_filter" />
+                <StatusChart v-model="statusFilter" :filter="allFilter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -114,7 +114,7 @@
                 >Severity Counts</v-card-title
               >
               <v-card-actions class="justify-center">
-                <SeverityChart v-model="severityFilter" :filter="all_filter" />
+                <SeverityChart v-model="severityFilter" :filter="allFilter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -124,7 +124,7 @@
                 >Compliance Level</v-card-title
               >
               <v-card-actions class="justify-center">
-                <ComplianceChart :filter="all_filter" />
+                <ComplianceChart :filter="allFilter" />
               </v-card-actions>
               <v-card-text style="text-align: center"
                 >[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
@@ -158,7 +158,7 @@
           <v-col xs-12>
             <v-card elevation="2">
               <ControlTable
-                :filter="all_filter"
+                :filter="allFilter"
                 :show-impact="is_result_view"
               />
             </v-card>
@@ -360,7 +360,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * Subset of all filter terms specific for Results
    */
-  get all_filter(): ControlsFilter {
+  get allFilter(): ControlsFilter {
     return {
       status: SearchModule.inFileSearchTerms.statusFilter,
       severity: SearchModule.inFileSearchTerms.severityFilter,
@@ -430,7 +430,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     }
 
     // Logic to check: are any files actually visible?
-    if (FilteredDataModule.controls(this.all_filter).length === 0) {
+    if (FilteredDataModule.controls(this.allFilter).length === 0) {
       this.filterSnackbar = true;
     } else {
       this.filterSnackbar = false;
@@ -441,7 +441,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   get waivedProfilesExist(): boolean {
-    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1;
+    return StatusCountModule.countOf(this.allFilter, 'Waived') >= 1;
   }
 
   /**
