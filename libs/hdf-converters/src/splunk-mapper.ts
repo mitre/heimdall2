@@ -326,6 +326,17 @@ export class SplunkMapper {
           .get(`${this.hostname}/services/search/jobs/${job}`)
           .then(
             async (response) => {
+              // All documented potential error states for a search job
+              // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTTUT/RESTsearches#Tips_on_accessing_searches
+              const badState = new Set([
+                'PAUSE',
+                'INTERNAL_CANCEL',
+                'USER_CANCEL',
+                'BAD_INPUT_CANCEL',
+                'QUIT',
+                'FAILED'
+              ]);
+
               // If search job is complete, kill interval loop and ping Splunk for search job results
               if (
                 response.data.entry[0].content.dispatchState === 'DONE' &&
@@ -345,12 +356,7 @@ export class SplunkMapper {
                 resolve(this.parseSplunkResponse(query, queryJob.data));
                 // If search job returns a bad state result, kill interval loop and fail the query
               } else if (
-                response.data.entry[0].content.dispatchState === 'PAUSE' ||
-                'INTERNAL_CANCEL' ||
-                'USER_CANCEL' ||
-                'BAD_INPUT_CANCEL' ||
-                'QUIT' ||
-                'FAILED'
+                badState.has(response.data.entry[0].content.dispatchState)
               ) {
                 clearInterval(awaitJob);
                 reject(
