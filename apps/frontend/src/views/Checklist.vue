@@ -95,7 +95,12 @@
         <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
         filters and show all.
       </span>
-      <span v-else class="subtitle-2">
+      <span v-else-if="noFiles" class="subtitle-2">
+        No files are currently loaded. Press the <strong>LOAD</strong>
+        <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
+        some.
+      </span>
+      <span v-else-if="fileFilter === ''" class="subtitle-2">
         No files are currently enabled for viewing. Open the
         <v-icon class="mx-1">mdi-arrow-right</v-icon> sidebar menu, and ensure
         that the file you wish to view is
@@ -121,7 +126,11 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import UploadButton from '@/components/generic/UploadButton.vue';
-import {ChecklistConverter, ChecklistVuln} from '@mitre/hdf-converters';
+import {
+  ChecklistConverter,
+  ChecklistFile,
+  ChecklistVuln
+} from '@mitre/hdf-converters';
 import {InspecDataModule} from '@/store/data_store';
 import _ from 'lodash';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
@@ -221,6 +230,20 @@ export default class Checklist extends RouteMixin {
     return FilteredDataModule.selectedChecklistId;
   }
 
+  /**
+   * Gets all loaded checklist file ids
+   */
+  get checklistIds(): ChecklistFile[] {
+    return InspecDataModule.allChecklistFiles;
+  }
+
+  /**
+   * Returns true if no checklist files are loaded
+   */
+  get noFiles(): boolean {
+    return InspecDataModule.allChecklistFiles.length == 0;
+  }
+
   getChecklist(fileID: FileID) {
     return InspecDataModule.allChecklistFiles.find(
       (f) => f.uniqueId === fileID
@@ -262,7 +285,10 @@ export default class Checklist extends RouteMixin {
   }
 
   get enableChecklistSnackbar(): boolean {
-    if (this.rules.length === 0) {
+    if (
+      this.rules.length === 0 ||
+      FilteredDataModule.selectedChecklistId === ''
+    ) {
       return true;
     } else {
       return false;
