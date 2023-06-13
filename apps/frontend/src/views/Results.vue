@@ -157,10 +157,7 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <ControlTable
-                :filter="allFilter"
-                :show-impact="is_result_view"
-              />
+              <ControlTable :filter="allFilter" :show-impact="is_result_view" />
             </v-card>
           </v-col>
         </v-row>
