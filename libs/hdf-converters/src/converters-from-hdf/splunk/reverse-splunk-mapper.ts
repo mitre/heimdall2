@@ -482,7 +482,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
           // Parse available indexes for user desired index
           if (indexNames.includes(config.index)) {
             const targetIndex = indexes.filter(
-              (index: {name: string}) => index.name == config.index
+              (index: {name: string}) => index.name === config.index
             )[0];
             logger.verbose(`Found index: ${targetIndex.name}`);
 

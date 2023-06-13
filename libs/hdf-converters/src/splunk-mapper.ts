@@ -150,6 +150,7 @@ function consolidateFilePayloads(
   return exec as unknown as ExecJSON.Execution;
 }
 
+// Returns a string typed session key for any given valid set of credentials
 export async function checkSplunkCredentials(
   config: SplunkConfig
 ): Promise<string> {
@@ -160,12 +161,16 @@ export async function checkSplunkCredentials(
   const password = (config.password ??= '');
 
   return new Promise((resolve, reject) => {
+    // Time to wait (in ms) for login query response until returning bad query status
+    // Arbitrary, change as necessary
+    const loginTimeout = 5000;
+
     setTimeout(
       () =>
         reject(
           'Login timed out: Please check your CORS configuration or validate that you have inputted the correct domain'
         ),
-      5000
+      loginTimeout
     );
     axios
       .post(
@@ -309,6 +314,12 @@ export class SplunkMapper {
     const job = await this.createJob(query);
 
     return new Promise((resolve, reject) => {
+      // Arbitrary time values for waiting (in ms), change as necessary
+      // Time interval between checking on status of search job
+      const searchJobPing = 50;
+      // Time to wait until killing search job
+      const searchJobTimeout = 120000;
+
       // Ping Splunk instance every 50 ms on status of search job
       const awaitJob = setInterval(() => {
         this.axiosInstance
@@ -317,7 +328,7 @@ export class SplunkMapper {
             async (response) => {
               // If search job is complete, kill interval loop and ping Splunk for search job results
               if (
-                response.data.entry[0].content.dispatchState == 'DONE' &&
+                response.data.entry[0].content.dispatchState === 'DONE' &&
                 response.data.entry[0].content.isDone
               ) {
                 clearInterval(awaitJob);
@@ -331,7 +342,7 @@ export class SplunkMapper {
                 resolve(this.parseSplunkResponse(query, queryJob.data));
                 // If search job returns a bad state result, kill interval loop and fail the query
               } else if (
-                response.data.entry[0].content.dispatchState == 'PAUSE' ||
+                response.data.entry[0].content.dispatchState === 'PAUSE' ||
                 'INTERNAL_CANCEL' ||
                 'USER_CANCEL' ||
                 'BAD_INPUT_CANCEL' ||
@@ -348,14 +359,14 @@ export class SplunkMapper {
             },
             (error) => reject(new Error(error.message))
           );
-      }, 50);
+      }, searchJobPing);
 
       // Kill query after 2 minute of waiting
       // Arbitrary time used, change as needed
       setTimeout(() => {
         clearInterval(awaitJob);
         reject(new Error('Search job timed out; unable to retrieve query'));
-      }, 120000);
+      }, searchJobTimeout);
     });
   }
 
