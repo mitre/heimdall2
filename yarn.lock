@@ -18377,9 +18377,9 @@ sequelize-typescript@^2.0.0:
     glob "7.2.0"
 
 sequelize@^6.4.0:
-  version "6.30.0"
-  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.30.0.tgz#e084cbf8d07b1bb6236d931375982e7f43ee44e9"
-  integrity sha512-VxQ3gB+isefL8Ic3GDUR6Y8Zwu1ctWNUlffcdSClsLkQ0mwgoLQv3cI3cDwSVn9wZJk0AEwMSm1TYFFRqmcR0A==
+  version "6.32.0"
+  resolved "https://registry.yarnpkg.com/sequelize/-/sequelize-6.32.0.tgz#566488aa0fcf32c1baa2ff2344f462a4c9eb4a01"
+  integrity sha512-gMd1M6kPANyrCeU/vtgEP5gnse7sVsiKbJyz7p4huuW8zZcRopj47UlglvdrMuIoqksZmsUPfApmMo6ZlJpcvg==
   dependencies:
     "@types/debug" "^4.1.7"
     "@types/validator" "^13.7.1"
