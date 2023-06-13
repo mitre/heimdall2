@@ -46,13 +46,13 @@ export default class ChecklistTechnologyAreaModal extends Vue {
    * The currently selected file, if one exists.
    * Controlled by router.
    */
-  get file_filter(): FileID[] {
-    return FilteredDataModule.selectedChecklistIds;
+  get file_filter(): FileID {
+    return FilteredDataModule.selectedChecklistId;
   }
 
-  getChecklist(fileID: FileID[]) {
+  getChecklist(fileID: FileID) {
     return InspecDataModule.allChecklistFiles.find(
-      (f) => f.uniqueId === fileID[0]
+      (f) => f.uniqueId === fileID
     );
   }
 
