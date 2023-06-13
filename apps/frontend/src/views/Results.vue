@@ -23,25 +23,25 @@
             <v-list-item class="px-0">
               <ExportCaat :filter="allFilter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportNist :filter="allFilter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportASFFModal :filter="allFilter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportCKLModal :filter="allFilter" />
             </v-list-item>
             <v-list-item class="px-0">
               <ExportCSVModal :filter="allFilter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportHTMLModal
                 :filter="allFilter"
                 :file-type="current_route_name"
               />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportSplunkModal />
             </v-list-item>
             <v-list-item class="px-0">
@@ -50,7 +50,7 @@
             <v-list-item v-if="is_result_view" class="px-0">
               <ExportXCCDFResults
                 :filter="allFilter"
-                :is-result-view="is_result_view"
+                :is-result-view="isResultView"
               />
             </v-list-item>
           </v-list>
@@ -158,7 +158,7 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <ControlTable :filter="allFilter" :show-impact="is_result_view" />
+              <ControlTable :filter="allFilter" :show-impact="isResultView" />
             </v-card>
           </v-col>
         </v-row>
@@ -167,7 +167,7 @@
 
     <!-- Everything-is-filtered snackbar -->
     <v-snackbar
-      v-model="filterSnackbar"
+      v-model="enableResultSnackbar"
       class="mt-11"
       style="z-index: 2"
       :timeout="-1"
@@ -179,7 +179,7 @@
         <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
         filters and show all.
       </span>
-      <span v-else-if="no_files" class="subtitle-2">
+      <span v-else-if="noFiles" class="subtitle-2">
         No files are currently loaded. Press the <strong>LOAD</strong>
         <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
         some.
@@ -188,7 +188,9 @@
         No files are currently enabled for viewing. Open the
         <v-icon class="mx-1">mdi-arrow-right</v-icon> sidebar menu, and ensure
         that the file(s) you wish to view are
-        <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
+        <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked. If you would
+        like to load a file, press the <strong>LOAD</strong>
+        <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above.
       </span>
     </v-snackbar>
   </Base>
@@ -273,8 +275,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   treeFilters: TreeMapState = [];
   controlSelection: string | null = null;
 
-  /** Model for if all-filtered snackbar should be showing */
-  filterSnackbar = false;
+  /** Determines if snackbar should be enabled */
+  get enableResultSnackbar(): boolean {
+    return FilteredDataModule.controls(this.allFilter).length === 0;
+  }
 
   evalInfo:
     | SourcedContextualizedEvaluation
@@ -313,7 +317,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * Controlled by router.
    */
   get file_filter(): FileID[] {
-    if (this.is_result_view) {
+    if (this.isResultView) {
       return FilteredDataModule.selectedEvaluationIds;
     } else {
       return FilteredDataModule.selectedProfileIds;
@@ -326,8 +330,15 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     );
   }
 
-  get activeFiles(): SourcedContextualizedEvaluation[] {
-    return this.evaluationFiles;
+  get profiles(): SourcedContextualizedProfile[] {
+    return Array.from(FilteredDataModule.profiles(this.file_filter));
+  }
+
+  get activeFiles(): (
+    | SourcedContextualizedEvaluation
+    | SourcedContextualizedProfile
+  )[] {
+    return this.isResultView ? this.evaluationFiles : this.profiles;
   }
 
   getFile(fileID: FileID) {
@@ -341,12 +352,12 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * Returns true if we're showing results
    */
-  get is_result_view(): boolean {
+  get isResultView(): boolean {
     return this.currentRoute === 'results';
   }
 
   // Returns true if no files are uploaded
-  get no_files(): boolean {
+  get noFiles(): boolean {
     return InspecDataModule.allFiles.length === 0;
   }
 
@@ -394,7 +405,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   clear(clearSearchBar = false) {
     SearchModule.clear();
-    this.filterSnackbar = false;
     this.controlSelection = null;
     this.treeFilters = [];
     if (clearSearchBar) {
@@ -420,13 +430,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       result = true;
     } else {
       result = false;
-    }
-
-    // Logic to check: are any files actually visible?
-    if (FilteredDataModule.controls(this.allFilter).length === 0) {
-      this.filterSnackbar = true;
-    } else {
-      this.filterSnackbar = false;
     }
 
     // Finally, return our result
