@@ -12,9 +12,11 @@ export class DatabaseService {
   }
 
   async cleanAll(): Promise<void> {
+    const promises: Promise<number>[] = [];
     for (const model of Object.values(this.sequelize.models)) {
-      await model.destroy({where: {}});
+      promises.push(model.destroy({where: {}}));
     }
+    await Promise.all(promises);
   }
 
   getDelta<T extends DeltaArgs>(
