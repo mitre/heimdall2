@@ -38,7 +38,9 @@ context('Splunk', () => {
       uploadModal.switchToTab('splunk');
       splunkTabVerifier.splunkPresent();
       splunkPage.splunkLogin(BAD_SPLUNK_AUTHENTICATION);
-      toastVerifier.toastTextContains('Error: Failed to login - Incorrect username or password');
+      toastVerifier.toastTextContains(
+        'Error: Failed to login - Incorrect username or password'
+      );
     });
   });
 });
