@@ -8,10 +8,6 @@ import {
   MappedTransform,
   parseXml
 } from './base-converter';
-import {
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  getCCIsForNISTTags
-} from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -103,53 +99,53 @@ function idToString(id: unknown): string {
 }
 
 export class DBProtectMapper extends BaseConverter {
-  withRaw: boolean;
-
-  mappings: MappedTransform<
-    ExecJSON.Execution & {passthrough: unknown},
-    ILookupPath
-  > = {
+  mappings: MappedTransform<ExecJSON.Execution, ILookupPath> = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion
+      release: HeimdallToolsVersion,
+      target_id: ''
     },
     version: HeimdallToolsVersion,
-    statistics: {},
+    statistics: {
+      duration: null
+    },
     profiles: [
       {
         name: {path: 'data.[0].Policy'},
+        version: '',
         title: {path: 'data.[0].Job Name'},
+        maintainer: null,
         summary: {path: 'data.[0]', transformer: formatSummary},
+        license: null,
+        copyright: null,
+        copyright_email: null,
         supports: [],
         attributes: [],
+        depends: [],
         groups: [],
         status: 'loaded',
         controls: [
           {
             path: 'data',
             key: 'id',
-            tags: {
-              nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-              cci: getCCIsForNISTTags(DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS)
-            },
-            refs: [],
-            source_location: {},
-            title: {path: 'Check'},
             id: {path: 'Check ID', transformer: idToString},
+            title: {path: 'Check'},
             desc: {transformer: formatDesc},
             impact: {
               path: 'Risk DV',
               transformer: impactMapping(IMPACT_MAPPING)
             },
-            code: {
-              transformer: (vulnerability: Record<string, unknown>): string =>
-                JSON.stringify(vulnerability, null, 2)
-            },
+            tags: {},
+            descriptions: [],
+            refs: [],
+            source_location: {},
+            code: '',
             results: [
               {
                 arrayTransformer: handleBacktrace,
                 status: {path: 'Result Status', transformer: getStatus},
                 code_desc: {path: 'Details'},
+                run_time: 0,
                 start_time: {path: 'Date'},
                 backtrace: [{path: 'Result Status', transformer: getBacktrace}]
               }
@@ -158,15 +154,9 @@ export class DBProtectMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ],
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {...(this.withRaw && {raw: data})};
-      }
-    }
+    ]
   };
-  constructor(dbProtectXml: string, withRaw = false) {
+  constructor(dbProtectXml: string) {
     super(compileFindings(parseXml(dbProtectXml)));
-    this.withRaw = withRaw;
   }
 }
