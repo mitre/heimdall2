@@ -11,7 +11,10 @@ import {Logger} from 'winston';
 import {SplunkConfig} from '../../../types/splunk-config-types';
 import {MappedTransform} from '../../base-converter';
 import {createWinstonLogger} from '../../utils/global';
-import {checkSplunkCredentials, generateHostname} from '../../utils/splunk-tools';
+import {
+  checkSplunkCredentials,
+  generateHostname
+} from '../../utils/splunk-tools';
 import {FromAnyBaseConverter} from '../reverse-any-base-converter';
 import {ILookupPathFH} from '../reverse-base-converter';
 import {SplunkControl} from './splunk-control-types';
