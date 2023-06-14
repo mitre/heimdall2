@@ -324,7 +324,9 @@ export class SplunkMapper {
           queryStatus.data.entry[0].content.isDone
         ) {
           clearInterval(awaitJob);
-        } else {
+        } else if (
+          badState.has(queryStatus.data.entry[0].content.dispatchState)
+        ) {
           // If search job returns a bad state result, kill interval loop and fail the query
           clearTimeout(queryTimer);
           clearInterval(awaitJob);
