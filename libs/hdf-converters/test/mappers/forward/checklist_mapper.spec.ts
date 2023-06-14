@@ -30,6 +30,34 @@ describe('checklist_mapper_single_stig', () => {
   });
 });
 
+describe('checklist_mapper_single_stig_with_raw', () => {
+  it('Successfully converts Checklists with raw', () => {
+    const mapper = new ChecklistResults(
+      fs.readFileSync(
+        'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl',
+        {encoding: 'utf-8'}
+      ),
+      true
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf-with-raw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf-with-raw.json',
+            {encoding: 'utf-8'}
+          )
+        )
+      )
+    );
+  });
+});
+
 describe('checklist_mapper_multi_stig_wrapper', () => {
   it('Successfully converts Checklists', () => {
     const mapper = new ChecklistResults(
