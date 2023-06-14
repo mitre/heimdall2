@@ -1,10 +1,14 @@
-import axios, {AxiosInstance} from 'axios';
+import axios, {AxiosInstance, AxiosResponse} from 'axios';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {Logger} from 'winston';
 import {SplunkConfig} from '../types/splunk-config-types';
 import {createWinstonLogger} from './utils/global';
-import {checkSplunkCredentials, generateHostname} from './utils/splunk-tools';
+import {
+  checkSplunkCredentials,
+  generateHostname,
+  handleSplunkErrorResponse
+} from './utils/splunk-tools';
 
 export type Hash<T> = {[key: string]: T};
 
@@ -179,19 +183,26 @@ export class SplunkMapper {
 
   async createJob(query: string): Promise<string> {
     logger.debug(`Creating job for query: ${query}`);
-    return new Promise((resolve, reject) => {
-      // Post to {host}/services/search/jobs endpoint to queue search job for given query
-      // Will return unique search ID (SID) assigned to that search job for future reference
-      this.axiosInstance
-        .post(
-          `${this.hostname}/services/search/jobs`,
-          `exec_mode=blocking&search=${query}`
-        )
-        .then(
-          (response) => resolve(response.data.sid),
-          (error) => reject(new Error(error.message))
-        );
-    });
+    // Post to {host}/services/search/jobs endpoint to queue search job for given query
+    let jobSID: AxiosResponse;
+    try {
+      jobSID = await this.axiosInstance.post(
+        `${this.hostname}/services/search/jobs`,
+        `exec_mode=blocking&search=${query}`
+      );
+    } catch (error) {
+      const errorCode = handleSplunkErrorResponse(error);
+      throw new Error(`Failed to create search job - ${errorCode}`);
+    }
+
+    // Return unique search ID (SID) assigned to that search job for future reference
+    if (_.has(jobSID, ['data', 'sid'])) {
+      return jobSID.data.sid;
+    } else {
+      throw new Error(
+        'Failed to create search job - Malformed search job creation response received'
+      );
+    }
   }
 
   parseSplunkResponse(
@@ -255,96 +266,148 @@ export class SplunkMapper {
   }
 
   async queryData(query: string): Promise<any[]> {
-    // Request session key for Axios instance
-    const authToken = await checkSplunkCredentials(this.config);
-    this.axiosInstance.defaults.headers.common[
-      'Authorization'
-    ] = `Bearer ${authToken}`;
+    // All documented potential error states for a search job
+    // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTTUT/RESTsearches#Tips_on_accessing_searches
+    const badState = new Set([
+      'PAUSE',
+      'INTERNAL_CANCEL',
+      'USER_CANCEL',
+      'BAD_INPUT_CANCEL',
+      'QUIT',
+      'FAILED'
+    ]);
 
-    // Create new search job from given query
-    const job = await this.createJob(query);
+    let job: string;
+    let queryStatus: AxiosResponse;
+    let queryJob: AxiosResponse;
+    let continuePing = true;
 
-    return new Promise((resolve, reject) => {
-      // Arbitrary time values for waiting (in ms), change as necessary
-      // Time interval between checking on status of search job
-      const searchJobPing = 50;
-      // Time to wait until killing search job
-      const searchJobTimeout = 120000;
+    try {
+      // Request session key for Axios instance
+      const authToken = await checkSplunkCredentials(this.config);
+      this.axiosInstance.defaults.headers.common[
+        'Authorization'
+      ] = `Bearer ${authToken}`;
 
-      // Ping Splunk instance every 50 ms on status of search job
-      const awaitJob = setInterval(() => {
-        this.axiosInstance
-          .get(`${this.hostname}/services/search/jobs/${job}`)
-          .then(
-            async (response) => {
-              // All documented potential error states for a search job
-              // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTTUT/RESTsearches#Tips_on_accessing_searches
-              const badState = new Set([
-                'PAUSE',
-                'INTERNAL_CANCEL',
-                'USER_CANCEL',
-                'BAD_INPUT_CANCEL',
-                'QUIT',
-                'FAILED'
-              ]);
+      // Create new search job from given query
+      job = await this.createJob(query);
+    } catch (error) {
+      throw error;
+    }
 
-              // If search job is complete, kill interval loop and ping Splunk for search job results
-              if (
-                response.data.entry[0].content.dispatchState === 'DONE' &&
-                response.data.entry[0].content.isDone
-              ) {
-                clearInterval(awaitJob);
+    // Arbitrary time values for waiting (in ms), change as necessary
+    // Time to wait until killing search job
+    const searchJobTimeout = 120000;
+    // Time interval between checking on status of search job
+    const searchJobPing = 50;
 
-                // returnCount specifies the number of found results to return, if set to 0 returns all
-                // Per https://docs.splunk.com/Documentation/Splunk/9.0.5/RESTREF/RESTsearch#search.2Fv2.2Fjobs.2F.7Bsearch_id.7D.2Fresults
-                const returnCount = 0;
-                const queryJob = await this.axiosInstance.get(
-                  `${this.hostname}/services/search/v2/jobs/${job}/results`,
-                  {
-                    params: {count: returnCount, output_mode: 'json_rows'}
-                  }
-                );
-                resolve(this.parseSplunkResponse(query, queryJob.data));
-                // If search job returns a bad state result, kill interval loop and fail the query
-              } else if (
-                badState.has(response.data.entry[0].content.dispatchState)
-              ) {
-                clearInterval(awaitJob);
-                reject(
-                  new Error(
-                    `Detected dispatch state ${response.data.entry[0].content.dispatchState} on search job; canceling query`
-                  )
-                );
-              }
-            },
-            (error) => reject(new Error(error.message))
-          );
-      }, searchJobPing);
+    // Kill query after 2 minute of waiting
+    // Arbitrary time used, change as needed
+    const queryTimer = setTimeout(() => {
+      continuePing = false;
+      throw new Error('Search job timed out - Unable to retrieve query');
+    }, searchJobTimeout);
 
-      // Kill query after 2 minute of waiting
-      // Arbitrary time used, change as needed
-      setTimeout(() => {
+    // Ping Splunk instance every 50 ms on status of search job
+    const awaitJob = setInterval(async () => {
+      try {
+        queryStatus = await this.axiosInstance.get(
+          `${this.hostname}/services/search/jobs/${job}`
+        );
+      } catch (error) {
+        clearTimeout(queryTimer);
         clearInterval(awaitJob);
-        reject(new Error('Search job timed out; unable to retrieve query'));
-      }, searchJobTimeout);
-    });
+        throw new Error(
+          `Failed search job - ${handleSplunkErrorResponse(error)}`
+        );
+      }
+
+      // Check if response schema is malformed
+      if (_.has(queryStatus, ['data', 'entry'])) {
+        // If search job is complete, kill interval loop and exit
+        if (
+          queryStatus.data.entry[0].content.dispatchState === 'DONE' &&
+          queryStatus.data.entry[0].content.isDone
+        ) {
+          clearInterval(awaitJob);
+        } else if (
+          badState.has(queryStatus.data.entry[0].content.dispatchState)
+        ) {
+          // If search job returns a bad state result, kill interval loop and fail the query
+          clearTimeout(queryTimer);
+          clearInterval(awaitJob);
+          throw new Error(
+            `Failed search job - Detected dispatch state ${queryStatus.data.entry[0].content.dispatchState}`
+          );
+        } else {
+          // Else just fail search job completely
+          clearTimeout(queryTimer);
+          clearInterval(awaitJob);
+          throw new Error(`Failed search job - Unexpected error`);
+        }
+      } else {
+        clearTimeout(queryTimer);
+        clearInterval(awaitJob);
+        throw new Error(
+          'Failed search job - Malformed search job response received'
+        );
+      }
+
+      // Kill loop if search job times out
+      if (!continuePing) {
+        clearInterval(awaitJob);
+      }
+    }, searchJobPing);
+
+    // Ping Splunk for search job results
+    try {
+      // returnCount specifies the number of found results to return, if set to 0 returns all
+      // Per https://docs.splunk.com/Documentation/Splunk/9.0.5/RESTREF/RESTsearch#search.2Fv2.2Fjobs.2F.7Bsearch_id.7D.2Fresults
+      const returnCount = 0;
+
+      queryJob = await this.axiosInstance.get(
+        `${this.hostname}/services/search/v2/jobs/${job}/results`,
+        {
+          params: {count: returnCount, output_mode: 'json_rows'}
+        }
+      );
+    } catch (error) {
+      clearTimeout(queryTimer);
+      throw new Error(
+        `Failed search job - ${handleSplunkErrorResponse(error)}`
+      );
+    }
+
+    // Return search job results
+    if (_.has(queryJob, ['data'])) {
+      clearTimeout(queryTimer);
+      return this.parseSplunkResponse(query, queryJob.data);
+    } else {
+      clearTimeout(queryTimer);
+      throw new Error(
+        'Failed search job - Malformed search job results response received'
+      );
+    }
   }
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
     logger.info(`Starting conversion of GUID ${guid}`);
-    return checkSplunkCredentials(this.config)
-      .then(async () => {
-        logger.info(`Credentials valid, querying data for ${guid}`);
-        const executionData = await this.queryData(
-          `search index="*" meta.guid="${guid}"`
-        );
-        logger.info(
-          `Data received, consolidating payloads for ${executionData.length} items`
-        );
-        return consolidate_payloads(executionData)[0];
-      })
-      .catch((error) => {
-        throw error;
-      });
+    try {
+      // Preliminary check of credentials
+      // Not used for later logins
+      await checkSplunkCredentials(this.config);
+      logger.info(`Credentials valid, querying data for ${guid}`);
+
+      // Start search job for query
+      const executionData = await this.queryData(
+        `search index="*" meta.guid="${guid}"`
+      );
+      logger.info(
+        `Data received, consolidating payloads for ${executionData.length} items`
+      );
+      return consolidate_payloads(executionData)[0];
+    } catch (error) {
+      throw error;
+    }
   }
 }

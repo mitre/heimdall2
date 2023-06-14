@@ -9,6 +9,31 @@ export function generateHostname(config: SplunkConfig): string {
     : `${config.scheme}://${config.host}:8089`;
 }
 
+// Parse through valid Splunk HTTP errors and report failed request cause
+// Per https://docs.splunk.com/Documentation/Splunk/latest/RESTUM/RESTusing#HTTP_Status_Codes
+export function handleSplunkErrorResponse(error: AxiosResponse): string {
+  switch (_.get(error, ['response', 'status'])) {
+    case 400:
+      return 'Malformed request received';
+    case 401:
+      return 'Incorrect username or password';
+    case 402:
+      return 'Bad license detected';
+    case 403:
+      return 'Insufficient permission for this request';
+    case 404:
+      return 'Targeted endpoint does not exist';
+    case 409:
+      return 'Invalid request operation made on endpoint';
+    case 500:
+      return 'Internal server error';
+    case 503:
+      return 'This feature is disabled by server configurations';
+    default:
+      return `Unexpected error`;
+  }
+}
+
 // Returns a string typed session key for any given valid set of credentials
 export async function checkSplunkCredentials(
   config: SplunkConfig
@@ -25,7 +50,7 @@ export async function checkSplunkCredentials(
   // Fail query if request takes too long to respond
   const loginTimer = setTimeout(() => {
     throw new Error(
-      'Login timed out: Please check your CORS configuration or validate that you have inputted the correct domain'
+      'Login timed out - Please check your CORS configuration or validate that you have inputted the correct domain'
     );
   }, loginTimeout);
 
@@ -43,29 +68,14 @@ export async function checkSplunkCredentials(
     // Kill timer since request has failed
     clearTimeout(loginTimer);
 
-    // Parse through valid Splunk HTTP errors and report failed request cause
-    // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTUM/RESTusing#HTTP_Status_Codes
-    switch (_.get(error, ['response', 'status'])) {
-      case 400:
-        throw new Error('Malformed request received');
-      case 401:
-        throw new Error('Incorrect username or password');
-      case 402:
-        throw new Error('Bad license detected');
-      case 403:
-        throw new Error('Insufficient permission for this request');
-      case 404:
-        throw new Error('Targeted endpoint does not exist');
-      case 409:
-        throw new Error('Invalid request operation made on endpoint');
-      case 500:
-        throw new Error('Internal server error');
-      case 503:
-        throw new Error('This feature is disabled by server configurations');
-      default:
-        throw new Error(
-          'Failed to login: Please check your CORS configuration and validate that your input has the correct domain'
-        );
+    // Parse error response and report why request failed
+    const errorCode = handleSplunkErrorResponse(error);
+    if (errorCode === 'Unexpected error') {
+      throw new Error(
+        'Failed to login - Please check your CORS configuration and validate that your input has the correct domain'
+      );
+    } else {
+      throw new Error(`Failed to login - ${errorCode}`);
     }
   }
 
@@ -77,7 +87,7 @@ export async function checkSplunkCredentials(
     return authRequest.data.sessionKey;
   } else {
     throw new Error(
-      'Failed to login: Malformed authentication response received'
+      'Failed to login - Malformed authentication response received'
     );
   }
 }
