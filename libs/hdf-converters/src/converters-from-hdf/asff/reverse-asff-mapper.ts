@@ -24,6 +24,7 @@ import {
   setupSevOriginal,
   setupTitle,
   setupUpdated,
+  setupWorkflow,
   statusCount
 } from './transformers';
 
@@ -126,6 +127,9 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
             ]
           },
           Status: {path: '', transformer: setupControlStatus}
+        },
+        Workflow: {
+          Status: {path: '', transformer: setupWorkflow}
         }
       }
     ]
