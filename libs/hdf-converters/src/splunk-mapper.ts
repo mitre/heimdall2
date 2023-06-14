@@ -276,24 +276,18 @@ export class SplunkMapper {
       'QUIT',
       'FAILED'
     ]);
-
-    let job: string;
     let queryStatus: AxiosResponse;
     let queryJob: AxiosResponse;
     let continuePing = true;
 
-    try {
-      // Request session key for Axios instance
-      const authToken = await checkSplunkCredentials(this.config);
-      this.axiosInstance.defaults.headers.common[
-        'Authorization'
-      ] = `Bearer ${authToken}`;
+    // Request session key for Axios instance
+    const authToken = await checkSplunkCredentials(this.config);
+    this.axiosInstance.defaults.headers.common[
+      'Authorization'
+    ] = `Bearer ${authToken}`;
 
-      // Create new search job from given query
-      job = await this.createJob(query);
-    } catch (error) {
-      throw error;
-    }
+    // Create new search job from given query
+    const job = await this.createJob(query);
 
     // Arbitrary time values for waiting (in ms), change as necessary
     // Time to wait until killing search job
@@ -330,20 +324,13 @@ export class SplunkMapper {
           queryStatus.data.entry[0].content.isDone
         ) {
           clearInterval(awaitJob);
-        } else if (
-          badState.has(queryStatus.data.entry[0].content.dispatchState)
-        ) {
+        } else {
           // If search job returns a bad state result, kill interval loop and fail the query
           clearTimeout(queryTimer);
           clearInterval(awaitJob);
           throw new Error(
             `Failed search job - Detected dispatch state ${queryStatus.data.entry[0].content.dispatchState}`
           );
-        } else {
-          // Else just fail search job completely
-          clearTimeout(queryTimer);
-          clearInterval(awaitJob);
-          throw new Error(`Failed search job - Unexpected error`);
         }
       } else {
         clearTimeout(queryTimer);
@@ -392,22 +379,18 @@ export class SplunkMapper {
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
     logger.info(`Starting conversion of GUID ${guid}`);
-    try {
-      // Preliminary check of credentials
-      // Not used for later logins
-      await checkSplunkCredentials(this.config);
-      logger.info(`Credentials valid, querying data for ${guid}`);
+    // Preliminary check of credentials
+    // Not used for later logins
+    await checkSplunkCredentials(this.config);
+    logger.info(`Credentials valid, querying data for ${guid}`);
 
-      // Start search job for query
-      const executionData = await this.queryData(
-        `search index="*" meta.guid="${guid}"`
-      );
-      logger.info(
-        `Data received, consolidating payloads for ${executionData.length} items`
-      );
-      return consolidate_payloads(executionData)[0];
-    } catch (error) {
-      throw error;
-    }
+    // Start search job for query
+    const executionData = await this.queryData(
+      `search index="*" meta.guid="${guid}"`
+    );
+    logger.info(
+      `Data received, consolidating payloads for ${executionData.length} items`
+    );
+    return consolidate_payloads(executionData)[0];
   }
 }
