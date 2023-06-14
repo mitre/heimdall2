@@ -76,9 +76,9 @@ describe('EvaluationTagsController', () => {
     user = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
   });
 
-  afterAll(async() => {
-    await databaseService.closeConnection();
-    //done();
+  afterAll((done) => {
+    databaseService.closeConnection();
+    done();
   });
 
   describe('index', () => {
