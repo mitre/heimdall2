@@ -13,7 +13,7 @@ export class DatabaseService {
 
   async cleanAll(): Promise<void> {
     for (const model of Object.values(this.sequelize.models)) {
-      await model.destroy({where: {}})
+      await model.destroy({where: {}});
     }
   }
 
