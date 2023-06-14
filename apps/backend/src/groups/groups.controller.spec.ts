@@ -73,9 +73,9 @@ describe('GroupsController', () => {
     basicUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
   });
 
-  afterAll((done) => {
-    databaseService.closeConnection();
-    done();
+  afterAll(async() => {
+    await databaseService.closeConnection();
+    //done();
   });
 
   describe('Create', () => {
