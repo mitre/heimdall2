@@ -414,6 +414,11 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       );
     }
 
+    // Check if index request reponse schema is valid
+    if (!_.has(indexResponse, ['data', 'entry'])) {
+      throw new Error('Failed to request indexes - Malformed index reponse received');
+    }
+
     // Report provided indexes
     const indexes = indexResponse.data.entry;
     if (indexes.length <= 0) {
