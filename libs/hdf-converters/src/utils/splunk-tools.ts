@@ -23,7 +23,7 @@ export async function checkSplunkCredentials(
   const loginTimeout = 5000;
 
   // Fail query if request takes too long to respond
-  setTimeout(() => {
+  const loginTimer = setTimeout(() => {
     throw new Error(
       'Login timed out: Please check your CORS configuration or validate that you have inputted the correct domain'
     );
@@ -40,6 +40,9 @@ export async function checkSplunkCredentials(
       {params: {output_mode: 'json'}}
     );
   } catch (error) {
+    // Kill timer since request has failed
+    clearTimeout(loginTimer);
+
     // Parse through valid Splunk HTTP errors and report failed request cause
     // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTUM/RESTusing#HTTP_Status_Codes
     switch (_.get(error, ['response', 'status'])) {
@@ -65,6 +68,9 @@ export async function checkSplunkCredentials(
         );
     }
   }
+
+  // Kill timer since request has passed
+  clearTimeout(loginTimer);
 
   // If successful, return session key found in response body
   if (_.has(authRequest, ['data', 'sessionKey'])) {
