@@ -13,7 +13,7 @@
           inset
           :color="item.color"
           :input-value="item.enabled"
-          @change="changeStatusToggle(item.name)"
+          @change="changeStatusToggle(item.value)"
         />
       </v-col>
     </v-row>
@@ -29,7 +29,7 @@
           inset
           :color="item.color"
           :input-value="item.enabled"
-          @change="changeSeverityToggle(item.name)"
+          @change="changeSeverityToggle(item.value)"
         />
       </v-col>
     </v-row>
@@ -39,14 +39,14 @@
 <script lang="ts">
 import {ExtendedControlStatus, FilteredDataModule} from '@/store/data_filters';
 import {SearchFilterSyncModule} from '@/store/search_filter_sync';
-import {Severity} from 'inspecjs';
+import {LowercasedControlStatus, Severity} from 'inspecjs';
 import {Component, Vue} from 'vue-property-decorator';
 
 @Component({})
 export default class QuickFilters extends Vue {
   get controlStatusSwitches(): {
     name: string;
-    value: ExtendedControlStatus;
+    value: LowercasedControlStatus;
     enabled: boolean;
     color: string;
   }[] {
@@ -66,7 +66,7 @@ export default class QuickFilters extends Vue {
     SearchFilterSyncModule.changeSeveritySwitch(name);
   }
 
-  changeStatusToggle(name: ExtendedControlStatus) {
+  changeStatusToggle(name: LowercasedControlStatus) {
     SearchFilterSyncModule.changeStatusSwitch(name);
   }
 }
