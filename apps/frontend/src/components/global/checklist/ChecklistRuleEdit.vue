@@ -74,10 +74,12 @@ export default class ChecklistRuleInfoBody extends Vue {
     {name: 'Not Reviewed', value: 'Not Reviewed'}
   ];
 
-  severityOverrideItems: {name: TitleCasedSeverity; value: Severity}[] = [
+  severityOverrideItems: {name: string; value: Severity}[] = [
     {name: 'High', value: 'high'},
     {name: 'Medium', value: 'medium'},
     {name: 'Low', value: 'low'}
+    // The default severity will be added to this array
+    // Example if severity is low: {name: 'Low (Default)', value: 'low'}
   ];
 
   checkPossibleOverrides(severity: string) {

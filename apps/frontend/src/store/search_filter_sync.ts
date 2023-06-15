@@ -1,7 +1,7 @@
 import Store from '@/store/store';
-import {Severity} from 'inspecjs';
+import {LowercasedControlStatus, Severity} from 'inspecjs';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
-import {ExtendedControlStatus, FilteredDataModule} from './data_filters';
+import {FilteredDataModule} from './data_filters';
 import {SearchModule} from './search';
 
 /* Alias types for all the search capabilities (minus status and severity as they already have a type) */
@@ -35,8 +35,7 @@ export class SearchFilterSyncData extends VuexModule {
     for (const item of FilteredDataModule.controlStatusSwitches) {
       if (
         SearchModule.inFileSearchTerms.statusFilter.some(
-          (statusFilter) =>
-            statusFilter.value.toLowerCase() === item.value.toLowerCase()
+          (statusFilter) => statusFilter.value.toLowerCase() === item.value
         )
       ) {
         item.enabled = true;
@@ -54,8 +53,7 @@ export class SearchFilterSyncData extends VuexModule {
     for (const item of FilteredDataModule.severitySwitches) {
       if (
         SearchModule.inFileSearchTerms.severityFilter.some(
-          (severityFilter) =>
-            severityFilter.value.toLowerCase() === item.value.toLowerCase()
+          (severityFilter) => severityFilter.value.toLowerCase() === item.value
         )
       ) {
         item.enabled = true;
@@ -72,22 +70,22 @@ export class SearchFilterSyncData extends VuexModule {
    *
    */
   @Action
-  changeStatusSwitch(name: ExtendedControlStatus) {
+  changeStatusSwitch(name: LowercasedControlStatus) {
     const statusSwitch = FilteredDataModule.controlStatusSwitches.find(
-      (data) => data.name.toLowerCase() === name.toLowerCase()
+      (data) => data.name.toLowerCase() === name
     );
     if (statusSwitch) {
       statusSwitch.enabled = !statusSwitch.enabled;
       if (statusSwitch.enabled) {
         SearchModule.addSearchFilter({
           field: 'status',
-          value: name.toLowerCase(),
+          value: name,
           negated: false // Defaulted as false due to switch limitation
         });
       } else {
         SearchModule.removeSearchFilter({
           field: 'status',
-          value: statusSwitch.value.toLowerCase(),
+          value: statusSwitch.value,
           negated: false // Defaulted as false due to switch limitation
         });
       }
@@ -103,20 +101,20 @@ export class SearchFilterSyncData extends VuexModule {
   @Action
   changeSeveritySwitch(name: Severity) {
     const severitySwitch = FilteredDataModule.severitySwitches.find(
-      (data) => data.name.toLowerCase() === name.toLowerCase()
+      (data) => data.name.toLowerCase() === name
     );
     if (severitySwitch) {
       severitySwitch.enabled = !severitySwitch.enabled;
       if (severitySwitch.enabled) {
         SearchModule.addSearchFilter({
           field: 'severity',
-          value: name.toLowerCase(),
+          value: name,
           negated: false // Defaulted as false due to switch limitation
         });
       } else {
         SearchModule.removeSearchFilter({
           field: 'severity',
-          value: severitySwitch.value.toLowerCase(),
+          value: severitySwitch.value,
           negated: false // Defaulted as false due to switch limitation
         });
       }

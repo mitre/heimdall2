@@ -20,6 +20,7 @@ import {
   ContextualizedControl,
   ContextualizedProfile,
   ControlStatus,
+  LowercasedControlStatus,
   NistControl,
   Severity
 } from 'inspecjs';
@@ -636,31 +637,31 @@ export class FilteredData extends VuexModule {
   /** List of status switches */
   controlStatusSwitches: {
     name: string;
-    value: ExtendedControlStatus;
+    value: LowercasedControlStatus;
     enabled: boolean;
     color: keyof typeof statuses;
   }[] = [
     {
       name: 'Passed',
-      value: 'Passed',
+      value: 'passed',
       enabled: false,
       color: 'statusPassed'
     },
     {
       name: 'Failed',
-      value: 'Failed',
+      value: 'failed',
       enabled: false,
       color: 'statusFailed'
     },
     {
       name: 'Not Applicable',
-      value: 'Not Applicable',
+      value: 'not applicable',
       enabled: false,
       color: 'statusNotApplicable'
     },
     {
       name: 'Not Reviewed',
-      value: 'Not Reviewed',
+      value: 'not reviewed',
       enabled: false,
       color: 'statusNotReviewed'
     }
