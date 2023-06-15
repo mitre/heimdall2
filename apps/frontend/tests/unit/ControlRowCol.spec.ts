@@ -29,6 +29,6 @@ describe('The Topbar', () => {
   });
 
   it('displays the proper status', async () => {
-    expect(wrapper.get('button.statusPassed').text()).toEqual('PASSED');
+    expect(wrapper.get('button.statuspassed').text()).toEqual('PASSED');
   });
 });
