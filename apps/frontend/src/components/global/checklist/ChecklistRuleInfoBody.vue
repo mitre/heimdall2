@@ -31,7 +31,9 @@
           {{ item }}: {{ cciDescription(item) }}
           <div>
             NIST 800-53 Rev 4:
-            <v-chip small>{{ nistTag(item)[2] || 'None' }}</v-chip>
+            <v-chip :href="nistUrl(item)" target="_blank" small>
+              {{ nistTag(item)[2] || 'None' }}
+            </v-chip>
           </div>
         </div>
       </div>
@@ -119,6 +121,14 @@ export default class ChecklistRuleInfoBody extends Vue {
 
   nistTag(cci: string): string[] {
     return CCI_DESCRIPTIONS[cci].nist;
+  }
+
+  nistUrl(nist: string): string {
+    return (
+      'https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/control?version=5.1&number=' +
+      this.nistTag(nist)[2].split(' ')[0] +
+      '#active-release-version'
+    );
   }
 
   cciDescription(cci: string): string {
