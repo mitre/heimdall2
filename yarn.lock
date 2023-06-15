@@ -3312,10 +3312,10 @@
     "@types/jsonwebtoken" "9.0.1"
     jsonwebtoken "9.0.0"
 
-"@nestjs/passport@^9.0.0":
-  version "9.0.3"
-  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-9.0.3.tgz#4df0e6de3176e04a5770cb432e58f129c8e49f9e"
-  integrity sha512-HplSJaimEAz1IOZEu+pdJHHJhQyBOPAYWXYHfAPQvRqWtw4FJF1VXl1Qtk9dcXQX1eKytDtH+qBzNQc19GWNEg==
+"@nestjs/passport@^10.0.0":
+  version "10.0.0"
+  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-10.0.0.tgz#92d36d4b8796b373da3f4d1a055db03cb246b127"
+  integrity sha512-IlKKc6M7JOe+4dBbW6gZsXBSD05ZYgwfGf3GJhgCmUGYVqffpDdALQSS6JftnExrE+12rACoEmHkzYwKAGVK0Q==
 
 "@nestjs/platform-express@^9.4.0":
   version "9.4.3"
