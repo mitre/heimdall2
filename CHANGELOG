@@ -1,3 +1,24 @@
+v2.6.53
+
+## Dependency Updates
+
+- Bump @typescript-eslint/eslint-plugin from 5.59.9 to 5.59.11 @dependabot (#4590)
+- Bump core-js from 3.30.2 to 3.31.0 @dependabot (#4592)
+- Bump @nestjs/platform-express from 9.4.2 to 9.4.3 @dependabot (#4593)
+- Bump @types/node from 20.2.5 to 20.3.1 @dependabot (#4596)
+- Bump @aws-sdk/client-config-service from 3.345.0 to 3.350.0 @dependabot (#4584)
+- Bump @typescript-eslint/parser from 5.59.9 to 5.59.11 @dependabot (#4594)
+- Bump sinon from 15.1.0 to 15.1.2 @dependabot (#4591)
+- Bump dottie from 2.0.3 to 2.0.4 @dependabot (#4587)
+- Bump aws-sdk from 2.1395.0 to 2.1396.0 @dependabot (#4589)
+- Bump @types/uuid from 9.0.1 to 9.0.2 @dependabot (#4581)
+- Bump aws-sdk from 2.1393.0 to 2.1395.0 @dependabot (#4583)
+- Bump aws-sdk from 2.1392.0 to 2.1393.0 @dependabot (#4577)
+- Bump apexcharts from 3.40.0 to 3.41.0 @dependabot (#4578)
+- Bump connect-pg-simple from 8.0.0 to 9.0.0 @dependabot (#4575)
+- Bump aws-sdk from 2.1391.0 to 2.1392.0 @dependabot (#4573)
+- Bump html-entities from 2.3.4 to 2.3.5 @dependabot (#4570)
+
 v2.6.52
 
 ## Dependency Updates
@@ -38,7 +59,7 @@ v2.6.50
 v2.6.49
 
 - fix wordwrap for api key modal @Amndeep7 (#4515)
-- Don't handle every array item within each array item @candrews (#4480)
+- Dont handle every array item within each array item @candrews (#4480)
 
 ## Dependency Updates
 

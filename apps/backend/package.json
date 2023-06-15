@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.6.47",
+  "version": "2.6.53",
   "description": "",
   "license": "Apache-2.0",
   "author": "",
@@ -100,7 +100,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^5.0.0",
     "rxjs": "^7.2.0",
-    "sequelize": "^6.4.0",
+    "sequelize": "^6.31.0",
     "sequelize-cli": "^6.2.0",
     "sequelize-typescript": "^2.0.0",
     "ts-loader": "^9.1.0",
