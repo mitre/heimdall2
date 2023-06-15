@@ -202,12 +202,30 @@ export default class StatusCardRow extends Vue {
     };
   }
 
+  get negatedStatuses(): string[] {
+    if (this.filter.status !== undefined) {
+      let negatedStatuses: string[] = [];
+      this.filter.status?.forEach((status) => {
+        if (status.negated) {
+          negatedStatuses.push(status.value);
+        }
+      });
+      return negatedStatuses;
+    }
+    return [];
+  }
+
   getCardColor(card: CardProps): string {
     if (
       this.filter.status?.length === 0 ||
-      this.filter.status?.some(
-        (statusFilter) => statusFilter.value.toLowerCase() === card.value
-      )
+      (!this.negatedStatuses.some(
+        (statusFilter) => statusFilter === card.value
+      ) &&
+        this.filter.status?.some(
+          (statusFilter) =>
+            statusFilter.value.toLowerCase() !== card.value &&
+            statusFilter.negated === true
+        ))
     ) {
       return card.color;
     }
