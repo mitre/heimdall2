@@ -10,7 +10,7 @@
       <v-card
         height="100%"
         :color="getCardColor(card)"
-        @click="toggleFilter(card.title)"
+        @click="toggleFilter(card.value)"
       >
         <v-card-title>
           <v-icon large left>mdi-{{ card.icon }}</v-icon>
@@ -89,17 +89,12 @@ import {StatusCountModule} from '@/store/status_counts';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {LowercasedControlStatus} from 'inspecjs';
 
 interface CardProps {
   icon: string;
   title: ExtendedControlStatus;
-  value:
-    | 'passed'
-    | 'failed'
-    | 'not reviewed'
-    | 'not applicable'
-    | 'profile error'
-    | 'waived';
+  value: LowercasedControlStatus;
   number: number;
   subtitle: string;
   color: string;
@@ -219,15 +214,15 @@ export default class StatusCardRow extends Vue {
     return '';
   }
 
-  toggleFilter(filter: ExtendedControlStatus) {
+  toggleFilter(filter: LowercasedControlStatus) {
     if (
       this.filter.status?.find((obj) => {
-        return obj.value === filter.toLowerCase();
+        return obj.value === filter;
       }) !== undefined
     ) {
-      this.$emit('remove-filter', filter.toLowerCase());
+      this.$emit('remove-filter', filter);
     } else {
-      this.$emit('add-filter', filter.toLowerCase());
+      this.$emit('add-filter', filter);
     }
   }
 }
