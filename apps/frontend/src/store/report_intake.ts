@@ -235,7 +235,7 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.CONVEYOR:
         return Object.values(
           new ConveyorResultsMapper(convertOptions.data).toHdf()
-        )
+        );
       case INPUT_TYPES.ZAP:
         return new ZapMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.NIKTO:

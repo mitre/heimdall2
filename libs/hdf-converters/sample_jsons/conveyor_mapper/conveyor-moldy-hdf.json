@@ -6579,13 +6579,7 @@
         },
         "result": {
           "score": 0,
-          "sections": [
-            {
-              "status": "passed",
-              "code_desc": "NA",
-              "start_time": "2023-01-19T16:52:06.234580Z"
-            }
-          ]
+          "sections": []
         },
         "sha256": "dc70f025da1ee18cddfe6bdfbd21df71911cad8a9b4f82f99974c493aa7a4397",
         "size": null,
@@ -6628,6 +6622,11 @@
           "impact": 0.5,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:32.104000Z",
             "archive_ts": "2023-02-03T16:02:32.102880Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:32.102915Z",
@@ -6636,15 +6635,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Minor Version\n      body:\tThe package hashicorp vault, version 1.2.0 is 10 Minor versions behind the latest version v1.12.2 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Minor Version\n      body:\tThe package hashicorp vault, version 1.2.0 is 10 Minor versions behind the latest version v1.12.2 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:31.952278Z",
               "run_time": 143
             }
@@ -6657,6 +6662,11 @@
           "impact": 0.5,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:39.146711Z",
             "archive_ts": "2023-02-03T16:02:39.145731Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:39.145760Z",
@@ -6665,15 +6675,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Minor Version\n      body:\tThe package nodeca pako, version 2.0.3 is 1 Minor versions behind the latest version 2.1.0 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Minor Version\n      body:\tThe package nodeca pako, version 2.0.3 is 1 Minor versions behind the latest version 2.1.0 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:38.234158Z",
               "run_time": 905
             }
@@ -6686,6 +6702,11 @@
           "impact": 1,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:36.269910Z",
             "archive_ts": "2023-02-03T16:02:36.269131Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:36.269160Z",
@@ -6694,15 +6715,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Major Version\n      body:\tGitHub Repository: https://github.com/sindresorhus/got.git, version: 11.8.1\nThe package sindresorhus got, version 11.8.1 is 1 Major versions behind the latest version v12.5.3 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Major Version\n      body:\tGitHub Repository: https://github.com/sindresorhus/got.git, version: 11.8.1\nThe package sindresorhus got, version 11.8.1 is 1 Major versions behind the latest version v12.5.3 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:36.084149Z",
               "run_time": 174
             }
@@ -6715,6 +6742,11 @@
           "impact": 0,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:52:06.301060Z",
             "archive_ts": "2023-02-03T16:52:06.300931Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-02-03T16:52:06.300950Z",
@@ -6723,19 +6755,18 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
-          "results": [
-            {
-              "status": "passed",
-              "code_desc": "NA",
-              "start_time": "2023-01-19T16:52:06.301210Z",
-              "run_time": ""
-            }
-          ]
+          "source_location": {},
+          "results": []
         },
         {
           "id": "286ef1b5dcf9247d7809387b4c1e0c21ee5e7cc4531361ebb42c987e5ad3841b",
@@ -6744,6 +6775,11 @@
           "impact": 0.5,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:34.711899Z",
             "archive_ts": "2023-02-03T16:02:34.710975Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:34.711026Z",
@@ -6752,15 +6788,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Minor Version\n      body:\tThe package microsoft TypeScript, version 4.1.5 is 8 Minor versions behind the latest version v4.9.4 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Minor Version\n      body:\tThe package microsoft TypeScript, version 4.1.5 is 8 Minor versions behind the latest version v4.9.4 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:34.555160Z",
               "run_time": 143
             }
@@ -6773,6 +6815,11 @@
           "impact": 0,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:52:06.287289Z",
             "archive_ts": "2023-02-03T16:52:06.287166Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-02-03T16:52:06.287188Z",
@@ -6781,19 +6828,18 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
-          "results": [
-            {
-              "status": "passed",
-              "code_desc": "NA",
-              "start_time": "2023-01-19T16:52:06.287424Z",
-              "run_time": ""
-            }
-          ]
+          "source_location": {},
+          "results": []
         },
         {
           "id": "383770a23f0261442e1af05f8f96ad744e72c7a5014946c7ebca8097e9bd3076",
@@ -6802,6 +6848,11 @@
           "impact": 0.5,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:37.632356Z",
             "archive_ts": "2023-02-03T16:02:37.631367Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:37.631402Z",
@@ -6810,15 +6861,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Minor Version\n      body:\tThe package cisco node-jose, version 2.0.0 is 1 Minor versions behind the latest version v2.1.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Minor Version\n      body:\tThe package cisco node-jose, version 2.0.0 is 1 Minor versions behind the latest version v2.1.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:36.692474Z",
               "run_time": 933
             }
@@ -6831,6 +6888,11 @@
           "impact": 0.5,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:35.976997Z",
             "archive_ts": "2023-02-03T16:02:35.975006Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:35.975031Z",
@@ -6839,15 +6901,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Minor Version\n      body:\tThe package soldair node-qrcode, version 1.4.4 is 1 Minor versions behind the latest version v1.5.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Minor Version\n      body:\tThe package soldair node-qrcode, version 1.4.4 is 1 Minor versions behind the latest version v1.5.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:34.817411Z",
               "run_time": 1151
             }
@@ -6860,6 +6928,11 @@
           "impact": 0.5,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:31.103803Z",
             "archive_ts": "2023-02-03T16:02:31.102111Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:31.102143Z",
@@ -6868,15 +6941,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Minor Version\n      body:\tThe package ansible ansible, version 2.9.3 is 5 Minor versions behind the latest version v2.14.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Minor Version\n      body:\tThe package ansible ansible, version 2.9.3 is 5 Minor versions behind the latest version v2.14.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:30.235759Z",
               "run_time": 860
             }
@@ -6889,6 +6968,11 @@
           "impact": 1,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:42.077906Z",
             "archive_ts": "2023-02-03T16:02:42.077177Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:42.077208Z",
@@ -6897,15 +6981,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Major Version\n      body:\tGitHub Repository: https://github.com/fireeye/capa.git, version: 1.2.0\nThe package fireeye capa, version 1.2.0 is 3 Major versions behind the latest version v4.0.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Major Version\n      body:\tGitHub Repository: https://github.com/fireeye/capa.git, version: 1.2.0\nThe package fireeye capa, version 1.2.0 is 3 Major versions behind the latest version v4.0.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:41.811407Z",
               "run_time": 259
             }
@@ -6918,6 +7008,11 @@
           "impact": 1,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:38.131071Z",
             "archive_ts": "2023-02-03T16:02:38.129004Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:38.129054Z",
@@ -6926,15 +7021,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Major Version\n      body:\tGitHub Repository: https://github.com/eslint/eslint.git, version: 7.19.0\nThe package eslint eslint, version 7.19.0 is 1 Major versions behind the latest version v8.32.0 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Major Version\n      body:\tGitHub Repository: https://github.com/eslint/eslint.git, version: 7.19.0\nThe package eslint eslint, version 7.19.0 is 1 Major versions behind the latest version v8.32.0 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:37.985910Z",
               "run_time": 136
             }
@@ -6947,6 +7048,11 @@
           "impact": 1,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:41.542814Z",
             "archive_ts": "2023-02-03T16:02:41.540742Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:41.540789Z",
@@ -6955,15 +7061,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Major Version\n      body:\tGitHub Repository: https://github.com/prettier/eslint-plugin-prettier.git, version: 3.3.1\nThe package prettier eslint-plugin-prettier, version 3.3.1 is 1 Major versions behind the latest version v4.2.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Major Version\n      body:\tGitHub Repository: https://github.com/prettier/eslint-plugin-prettier.git, version: 3.3.1\nThe package prettier eslint-plugin-prettier, version 3.3.1 is 1 Major versions behind the latest version v4.2.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:41.347783Z",
               "run_time": 184
             }
@@ -6976,6 +7088,11 @@
           "impact": 1,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:39.394518Z",
             "archive_ts": "2023-02-03T16:02:39.393772Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:39.393799Z",
@@ -6984,15 +7101,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Major Version\n      body:\tGitHub Repository: https://github.com/tj/commander.js.git, version: 7.0.0\nThe package tj commander.js, version 7.0.0 is 3 Major versions behind the latest version v10.0.0 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Major Version\n      body:\tGitHub Repository: https://github.com/tj/commander.js.git, version: 7.0.0\nThe package tj commander.js, version 7.0.0 is 3 Major versions behind the latest version v10.0.0 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:39.262084Z",
               "run_time": 126
             }
@@ -7005,6 +7128,11 @@
           "impact": 0.5,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:33.218870Z",
             "archive_ts": "2023-02-03T16:02:33.218126Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:33.218163Z",
@@ -7013,15 +7141,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Minor Version\n      body:\tThe package wbond asn1crypto, version 1.3.0 is 2 Minor versions behind the latest version 1.5.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Minor Version\n      body:\tThe package wbond asn1crypto, version 1.3.0 is 2 Minor versions behind the latest version 1.5.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:32.320640Z",
               "run_time": 871
             }
@@ -7034,6 +7168,11 @@
           "impact": 0,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:52:06.329355Z",
             "archive_ts": "2023-02-03T16:52:06.329281Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-02-03T16:52:06.329293Z",
@@ -7042,19 +7181,18 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
-          "results": [
-            {
-              "status": "passed",
-              "code_desc": "NA",
-              "start_time": "2023-01-19T16:52:06.329443Z",
-              "run_time": ""
-            }
-          ]
+          "source_location": {},
+          "results": []
         },
         {
           "id": "b6196122a8b0a8aff5b70078b659bd80839ac5daddd2d17238932d1b8ea46e54",
@@ -7063,6 +7201,11 @@
           "impact": 0,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:52:06.326782Z",
             "archive_ts": "2023-02-03T16:52:06.326710Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-02-03T16:52:06.326722Z",
@@ -7071,19 +7214,18 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
-          "results": [
-            {
-              "status": "passed",
-              "code_desc": "NA",
-              "start_time": "2023-01-19T16:52:06.326866Z",
-              "run_time": ""
-            }
-          ]
+          "source_location": {},
+          "results": []
         },
         {
           "id": "c018f438552c205f2dcba991a0588f608f108a71c904ad6b8fe6c9ff2de69a9e",
@@ -7092,6 +7234,11 @@
           "impact": 1,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:41.235502Z",
             "archive_ts": "2023-02-03T16:02:41.231660Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:41.231691Z",
@@ -7100,15 +7247,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Major Version\n      body:\tGitHub Repository: https://github.com/prettier/eslint-config-prettier.git, version: 7.2.0\nThe package prettier eslint-config-prettier, version 7.2.0 is 1 Major versions behind the latest version v8.6.0 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Major Version\n      body:\tGitHub Repository: https://github.com/prettier/eslint-config-prettier.git, version: 7.2.0\nThe package prettier eslint-config-prettier, version 7.2.0 is 1 Major versions behind the latest version v8.6.0 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:39.528109Z",
               "run_time": 1693
             }
@@ -7121,6 +7274,11 @@
           "impact": 1,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:31.633316Z",
             "archive_ts": "2023-02-03T16:02:31.632251Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:31.632280Z",
@@ -7129,15 +7287,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Major Version\n      body:\tGitHub Repository: https://github.com/hashicorp/terraform.git, version: 0.12.26\nThe package hashicorp terraform, version 0.12.26 is 1 Major versions behind the latest version v1.3.7 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Major Version\n      body:\tGitHub Repository: https://github.com/hashicorp/terraform.git, version: 0.12.26\nThe package hashicorp terraform, version 0.12.26 is 1 Major versions behind the latest version v1.3.7 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:31.474340Z",
               "run_time": 146
             }
@@ -7150,6 +7314,11 @@
           "impact": 1,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:36.583403Z",
             "archive_ts": "2023-02-03T16:02:36.582530Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:36.582558Z",
@@ -7158,15 +7327,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Major Version\n      body:\tGitHub Repository: https://github.com/TypeStrong/ts-node.git, version: 9.1.1\nThe package TypeStrong ts-node, version 9.1.1 is 1 Major versions behind the latest version v10.9.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Major Version\n      body:\tGitHub Repository: https://github.com/TypeStrong/ts-node.git, version: 9.1.1\nThe package TypeStrong ts-node, version 9.1.1 is 1 Major versions behind the latest version v10.9.1 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.3\n      heuristic_score:1000\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:36.390372Z",
               "run_time": 185
             }
@@ -7179,6 +7354,11 @@
           "impact": 0.5,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:02:37.887551Z",
             "archive_ts": "2023-02-03T16:02:37.886470Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-01-22T16:02:37.886496Z",
@@ -7187,15 +7367,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
+          "source_location": {},
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n     title_text:Minor Version\n      body:\tThe package prettier prettier, version 2.2.1 is 6 Minor versions behind the latest version 2.8.3 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail\n      ",
+              "code_desc": "title_text:Minor Version\n      body:\tThe package prettier prettier, version 2.2.1 is 6 Minor versions behind the latest version 2.8.3 on GitHub.\n      body_format:TEXT\n      classificaton:TLP:W\n      depth:0\n      heuristic_heur_id:MOLDY.2\n      heuristic_score:500\n      heuristic_name:Fail",
               "start_time": "2023-01-19T16:02:37.739202Z",
               "run_time": 128
             }
@@ -7208,6 +7394,11 @@
           "impact": 0,
           "refs": [],
           "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-01-19T16:52:06.284532Z",
             "archive_ts": "2023-02-03T16:52:06.284452Z",
             "classification": "TLP:W",
             "expiry_ts": "2023-02-03T16:52:06.284467Z",
@@ -7216,22 +7407,21 @@
             "nist": [
               "SA-11",
               "RA-5"
+            ],
+            "cci": [
+              {
+                "0": "CCI-003173"
+              },
+              {
+                "0": "CCI-001643"
+              }
             ]
           },
-          "source_location": {
-            "ref": ""
-          },
-          "results": [
-            {
-              "status": "passed",
-              "code_desc": "NA",
-              "start_time": "2023-01-19T16:52:06.284618Z",
-              "run_time": ""
-            }
-          ]
+          "source_location": {},
+          "results": []
         }
       ],
-      "sha256": "060c6f03bfa9e9c869daf5b8a763199bdd03c3874e060f6c37d9c56382ba8e99"
+      "sha256": "d09502e37888a325366604865560f745aa81df3f58ca4f19f63bd658eea9dd24"
     }
   ]
 }

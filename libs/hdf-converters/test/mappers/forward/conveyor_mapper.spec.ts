@@ -9,7 +9,23 @@ describe('conveyor_mapper', () => {
         {encoding: 'utf-8'}
       )
     );
-   const mapped = mapper.toHdf()
+    const mapped = mapper.toHdf();
+    //fs.writeFileSync(
+    //  'sample_jsons/conveyor_mapper/conveyor-moldy-hdf.json',
+    //  JSON.stringify(mapped['Moldy'], null, 2)
+    //);
+    //fs.writeFileSync(
+    //  'sample_jsons/conveyor_mapper/conveyor-stigma-hdf.json',
+    //  JSON.stringify(mapped['Stigma'], null, 2)
+    //);
+    //fs.writeFileSync(
+    //  'sample_jsons/conveyor_mapper/conveyor-codequality-hdf.json',
+    //  JSON.stringify(mapped['CodeQuality'], null, 2)
+    //);
+    //fs.writeFileSync(
+    //  'sample_jsons/conveyor_mapper/conveyor-hdf.json',
+    //  JSON.stringify(mapped, null, 2)
+    //);
     expect(omitVersions(mapped['Moldy'])).toEqual(
       omitVersions(
         JSON.parse(
