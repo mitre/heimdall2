@@ -90,7 +90,6 @@ import {FileID} from '@/store/report_intake';
 import {ChecklistVuln} from '@mitre/hdf-converters';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import {ControlStatus} from 'inspecjs';
-import {shortRuleId, shortStigId} from '@/utilities/checklist_util';
 import _ from 'lodash';
 
 @Component
