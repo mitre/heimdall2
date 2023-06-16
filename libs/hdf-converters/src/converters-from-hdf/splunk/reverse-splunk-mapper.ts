@@ -82,19 +82,21 @@ export function getDependencies(
 ) {
   if (profile && execution) {
     const dependencies: string[] = [];
-    profile.data.depends?.forEach((dependency) => {
-      if (dependency.name) {
-        dependencies.push(dependency.name);
-        dependencies.push(
-          ...getDependencies(
-            execution.contains.find(
-              (execProfile) => execProfile.data.name === dependency.name
-            ),
-            execution
-          )
-        );
+    if (profile.data.depends) {
+      for (const dependency of profile.data.depends) {
+        if (dependency.name) {
+          dependencies.push(dependency.name);
+          dependencies.push(
+            ...getDependencies(
+              execution.contains.find(
+                (execProfile) => execProfile.data.name === dependency.name
+              ),
+              execution
+            )
+          );
+        }
       }
-    });
+    }
     return dependencies;
   }
 
@@ -218,9 +220,9 @@ export function createControlMapping(
       transformer: (data: {label: string; data: string}[]) => {
         const descObjects: Record<string, string> = {};
         if (Array.isArray(data)) {
-          data.forEach((item) => {
+          for (const item of data) {
             descObjects[item['label']] = item['data'];
-          });
+          }
         }
         return descObjects;
       }
@@ -312,7 +314,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
         guid
       ).toSplunkExecution() as SplunkReport
     );
-    this.data.contains.forEach((profile: ContextualizedProfile) => {
+    for (const profile of this.data.contains) {
       splunkData.profiles.push(
         new FromHDFProfileToSplunkProfileMapper(
           profile,
@@ -320,7 +322,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
           guid
         ).toSplunkProfile() as SplunkProfile
       );
-      profile.contains.forEach((control) => {
+      for (const control of profile.contains) {
         splunkData.controls.push(
           new FromHDFControlToSplunkControlMapper(
             control,
@@ -330,8 +332,8 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             guid
           ).toSplunkControl() as SplunkControl
         );
-      });
-    });
+      }
+    }
     return splunkData;
   }
 

@@ -87,9 +87,9 @@ export function replaceKeyValueDescriptions(
   return controls.map((control) => {
     if (control.descriptions && !Array.isArray(control.descriptions)) {
       const extractedDescriptions: ExecJSON.ControlDescription[] = [];
-      Object.entries(control.descriptions).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(control.descriptions)) {
         extractedDescriptions.push({label: key, data: value as string});
-      });
+      }
       control.descriptions = extractedDescriptions;
     }
     return control;
@@ -320,7 +320,7 @@ export class SplunkMapper {
 
     logger.debug(`Got field _indextime at index ${indexTimeIndex}`);
     logger.verbose(`Parsing data returned by Splunk and appending timestamps`);
-    results.rows.forEach((value) => {
+    for (const value of results.rows) {
       let object;
       try {
         object = JSON.parse(value[rawDataIndex]);
@@ -343,7 +343,7 @@ export class SplunkMapper {
       }
 
       objects.push(object);
-    });
+    }
     logger.debug('Successfully parsed and added timestamps');
     return objects;
   }
