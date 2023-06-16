@@ -94,7 +94,7 @@ import {LowercasedControlStatus} from 'inspecjs';
 interface CardProps {
   icon: string;
   title: ExtendedControlStatus;
-  value: LowercasedControlStatus;
+  value: LowercasedControlStatus | 'waived';
   number: number;
   subtitle: string;
   color: string;
@@ -235,7 +235,7 @@ export default class StatusCardRow extends Vue {
   toggleFilter(filter: LowercasedControlStatus) {
     if (
       this.filter.status?.find((obj) => {
-        return obj.value === filter;
+        return obj.value.toLowerCase() === filter;
       }) !== undefined
     ) {
       this.$emit('remove-filter', filter);
