@@ -3,6 +3,7 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {Logger} from 'winston';
 import {SplunkConfig} from '../types/splunk-config-types';
+import {SplunkReport} from '../types/splunk-report-types';
 import {createWinstonLogger} from './utils/global';
 import {
   checkSplunkCredentials,
@@ -69,7 +70,7 @@ export function map_hash<T, G>(
 }
 
 export function consolidate_payloads(
-  payloads: GenericPayloadWithMetaData[]
+  payloads: SplunkReport[]
 ): ExecJSON.Execution[] {
   // Group by exec id
   const grouped = group_by(payloads, (pl) => pl.meta.guid);
@@ -97,7 +98,7 @@ export function replaceKeyValueDescriptions(
 }
 
 function consolidateFilePayloads(
-  filePayloads: GenericPayloadWithMetaData[]
+  filePayloads: SplunkReport[]
 ): ExecJSON.Execution {
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
@@ -291,11 +292,11 @@ export class SplunkMapper {
   parseSplunkResponse(
     query: string,
     results: {fields: string[]; rows: string[]}
-  ) {
+  ): SplunkReport[] {
     logger.info(`Got results for query: ${query}`);
 
     // Our data parsed as Key/Value pairs
-    const objects: Record<string, unknown>[] = [];
+    const objects: SplunkReport[] = [];
     // Find _raw field, this contains our data
     let rawDataIndex = results?.fields.findIndex(
       (field) => field.toLowerCase() === '_raw'
@@ -348,7 +349,7 @@ export class SplunkMapper {
     return objects;
   }
 
-  async queryData(query: string): Promise<any[]> {
+  async queryData(query: string): Promise<SplunkReport[]> {
     let queryJob: AxiosResponse;
 
     // Request session key for Axios instance

@@ -41,7 +41,6 @@
 import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {FileMetaData} from '@mitre/hdf-converters';
-import {SplunkReport} from '@mitre/hdf-converters/src/converters-from-hdf/splunk/splunk-report-types';
 import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
 import _ from 'lodash';
 import Vue from 'vue';
@@ -97,12 +96,12 @@ export default class FileList extends Vue {
     this.splunkConverter = new SplunkMapper(this.splunkConfig);
     const results = await this.splunkConverter.queryData(this.search);
     this.executions = [];
-    results.forEach((result: SplunkReport) => {
+    for (const result of results) {
       // Only get header objects
       if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
         this.executions.push(result.meta);
       }
-    });
+    }
     this.loading = false;
   }
 

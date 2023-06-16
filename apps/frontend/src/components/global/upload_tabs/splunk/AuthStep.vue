@@ -100,25 +100,24 @@ export default class AuthStep extends Vue {
       scheme: parsedURL.protocol.split(':')[0] || 'https'
     };
 
-    await checkSplunkCredentials(config)
-      .then(() => {
-        localUsername.set(this.username);
-        localPassword.set(this.password);
-        localHostname.set(this.hostname);
-        if (this.indexToShow === undefined) {
-          localSplunk2HDFIndex.set(this.index);
-        } else {
-          localHDF2SplunkIndex.set(this.index);
-        }
-        SnackbarModule.notify('You have successfully signed in');
-        this.$emit('authenticated', config);
-      })
-      .catch((error) => {
-        if (error !== 'Incorrect Username or Password') {
-          this.$emit('error');
-        }
-        SnackbarModule.failure(error);
-      });
+    try {
+      await checkSplunkCredentials(config);
+      localUsername.set(this.username);
+      localPassword.set(this.password);
+      localHostname.set(this.hostname);
+      if (this.indexToShow === undefined) {
+        localSplunk2HDFIndex.set(this.index);
+      } else {
+        localHDF2SplunkIndex.set(this.index);
+      }
+      SnackbarModule.notify('You have successfully signed in');
+      this.$emit('authenticated', config);
+    } catch (error) {
+      if (error !== 'Failed to login - Incorrect username or password') {
+        this.$emit('error');
+      }
+      SnackbarModule.failure(error);
+    }
   }
 
   /** Init our fields */

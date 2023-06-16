@@ -9,6 +9,9 @@ import {
 import _ from 'lodash';
 import {Logger} from 'winston';
 import {SplunkConfig} from '../../../types/splunk-config-types';
+import {SplunkControl} from '../../../types/splunk-control-types';
+import {SplunkProfile} from '../../../types/splunk-profile-types';
+import {SplunkReport} from '../../../types/splunk-report-types';
 import {MappedTransform} from '../../base-converter';
 import {createWinstonLogger} from '../../utils/global';
 import {
@@ -18,9 +21,6 @@ import {
 } from '../../utils/splunk-tools';
 import {FromAnyBaseConverter} from '../reverse-any-base-converter';
 import {ILookupPathFH} from '../reverse-base-converter';
-import {SplunkControl} from './splunk-control-types';
-import {SplunkProfile} from './splunk-profile-types';
-import {SplunkReport} from './splunk-report-types';
 
 const HDF_SPLUNK_SCHEMA = '1.1';
 const MAPPER_NAME = 'HDF2Splunk';
