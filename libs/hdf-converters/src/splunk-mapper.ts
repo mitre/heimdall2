@@ -205,6 +205,89 @@ export class SplunkMapper {
     }
   }
 
+  async trackJob(job: string): Promise<void> {
+    // All documented potential error states for a search job
+    // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTTUT/RESTsearches#Tips_on_accessing_searches
+    const badState = new Set([
+      'PAUSE',
+      'INTERNAL_CANCEL',
+      'USER_CANCEL',
+      'BAD_INPUT_CANCEL',
+      'QUIT',
+      'FAILED'
+    ]);
+    // Arbitrary time values for waiting (in ms), change as necessary
+    // Time to wait until killing search job
+    const searchJobTimeout = 120000;
+    // Time interval between checking on status of search job
+    const searchJobPing = 50;
+    let queryStatus: AxiosResponse;
+    let continuePing = true;
+
+    // Kill query after 2 minute of waiting
+    // Arbitrary time used, change as needed
+    const queryTimer = setTimeout(() => {
+      continuePing = false;
+      clearTimeout(queryTimer);
+      throw new Error('Search job timed out - Unable to retrieve query');
+    }, searchJobTimeout);
+
+    // Ping Splunk instance every 50 ms on status of search job
+    const awaitJob = setInterval(async () => {
+      try {
+        queryStatus = await this.axiosInstance.get(
+          `${this.hostname}/services/search/jobs/${job}`
+        );
+      } catch (error) {
+        clearTimeout(queryTimer);
+        clearInterval(awaitJob);
+        throw new Error(
+          `Failed search job - ${handleSplunkErrorResponse(error)}`
+        );
+      }
+
+      // Check if response schema is malformed
+      if (_.has(queryStatus, ['data', 'entry'[0], 'content'])) {
+        if (queryStatus.data.entry.length !== 1) {
+          clearTimeout(queryTimer);
+          clearInterval(awaitJob);
+          throw new Error(
+            `Failed search job - Detected malformed entry field length ${queryStatus.data.entry.length}`
+          );
+        }
+
+        // If search job is complete, kill interval loop and exit
+        if (
+          queryStatus.data.entry[0].content.dispatchState === 'DONE' &&
+          queryStatus.data.entry[0].content.isDone
+        ) {
+          clearTimeout(queryTimer);
+          clearInterval(awaitJob);
+        } else if (
+          badState.has(queryStatus.data.entry[0].content.dispatchState)
+        ) {
+          // If search job returns a bad state result, kill interval loop and fail the query
+          clearTimeout(queryTimer);
+          clearInterval(awaitJob);
+          throw new Error(
+            `Failed search job - Detected dispatch state ${queryStatus.data.entry[0].content.dispatchState}`
+          );
+        }
+      } else {
+        clearTimeout(queryTimer);
+        clearInterval(awaitJob);
+        throw new Error(
+          'Failed search job - Malformed search job response received'
+        );
+      }
+
+      // Kill loop if search job times out
+      if (!continuePing) {
+        clearInterval(awaitJob);
+      }
+    }, searchJobPing);
+  }
+
   parseSplunkResponse(
     query: string,
     results: {fields: string[]; rows: string[]}
@@ -266,19 +349,7 @@ export class SplunkMapper {
   }
 
   async queryData(query: string): Promise<any[]> {
-    // All documented potential error states for a search job
-    // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTTUT/RESTsearches#Tips_on_accessing_searches
-    const badState = new Set([
-      'PAUSE',
-      'INTERNAL_CANCEL',
-      'USER_CANCEL',
-      'BAD_INPUT_CANCEL',
-      'QUIT',
-      'FAILED'
-    ]);
-    let queryStatus: AxiosResponse;
     let queryJob: AxiosResponse;
-    let continuePing = true;
 
     // Request session key for Axios instance
     const authToken = await checkSplunkCredentials(this.config);
@@ -289,72 +360,8 @@ export class SplunkMapper {
     // Create new search job from given query
     const job = await this.createJob(query);
 
-    // Arbitrary time values for waiting (in ms), change as necessary
-    // Time to wait until killing search job
-    const searchJobTimeout = 120000;
-    // Time interval between checking on status of search job
-    const searchJobPing = 50;
-
-    // Kill query after 2 minute of waiting
-    // Arbitrary time used, change as needed
-    const queryTimer = setTimeout(() => {
-      continuePing = false;
-      throw new Error('Search job timed out - Unable to retrieve query');
-    }, searchJobTimeout);
-
-    // Ping Splunk instance every 50 ms on status of search job
-    const awaitJob = setInterval(async () => {
-      try {
-        queryStatus = await this.axiosInstance.get(
-          `${this.hostname}/services/search/jobs/${job}`
-        );
-      } catch (error) {
-        clearTimeout(queryTimer);
-        clearInterval(awaitJob);
-        throw new Error(
-          `Failed search job - ${handleSplunkErrorResponse(error)}`
-        );
-      }
-
-      // Check if response schema is malformed
-      if (_.has(queryStatus, ['data', 'entry'[0], 'content'])) {
-        if (queryStatus.data.entry.length !== 1) {
-          clearTimeout(queryTimer);
-          clearInterval(awaitJob);
-          throw new Error(
-            `Failed search job - Detected malformed entry field length ${queryStatus.data.entry.length}`
-          );
-        }
-
-        // If search job is complete, kill interval loop and exit
-        if (
-          queryStatus.data.entry[0].content.dispatchState === 'DONE' &&
-          queryStatus.data.entry[0].content.isDone
-        ) {
-          clearInterval(awaitJob);
-        } else if (
-          badState.has(queryStatus.data.entry[0].content.dispatchState)
-        ) {
-          // If search job returns a bad state result, kill interval loop and fail the query
-          clearTimeout(queryTimer);
-          clearInterval(awaitJob);
-          throw new Error(
-            `Failed search job - Detected dispatch state ${queryStatus.data.entry[0].content.dispatchState}`
-          );
-        }
-      } else {
-        clearTimeout(queryTimer);
-        clearInterval(awaitJob);
-        throw new Error(
-          'Failed search job - Malformed search job response received'
-        );
-      }
-
-      // Kill loop if search job times out
-      if (!continuePing) {
-        clearInterval(awaitJob);
-      }
-    }, searchJobPing);
+    // Track status of search job
+    await this.trackJob(job);
 
     // Ping Splunk for search job results
     try {
@@ -369,7 +376,6 @@ export class SplunkMapper {
         }
       );
     } catch (error) {
-      clearTimeout(queryTimer);
       throw new Error(
         `Failed search job - ${handleSplunkErrorResponse(error)}`
       );
@@ -377,10 +383,8 @@ export class SplunkMapper {
 
     // Return search job results
     if (_.has(queryJob, ['data'])) {
-      clearTimeout(queryTimer);
       return this.parseSplunkResponse(query, queryJob.data);
     } else {
-      clearTimeout(queryTimer);
       throw new Error(
         'Failed search job - Malformed search job results response received'
       );
