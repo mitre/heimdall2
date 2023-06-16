@@ -317,7 +317,15 @@ export class SplunkMapper {
       }
 
       // Check if response schema is malformed
-      if (_.has(queryStatus, ['data', 'entry'])) {
+      if (_.has(queryStatus, ['data', 'entry'[0], 'content'])) {
+        if (queryStatus.data.entry.length !== 1) {
+          clearTimeout(queryTimer);
+          clearInterval(awaitJob);
+          throw new Error(
+            `Failed search job - Detected malformed entry field length ${queryStatus.data.entry.length}`
+          );
+        }
+
         // If search job is complete, kill interval loop and exit
         if (
           queryStatus.data.entry[0].content.dispatchState === 'DONE' &&
