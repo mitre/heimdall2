@@ -37,7 +37,7 @@
 </template>
 
 <script lang="ts">
-import {ExtendedControlStatus, FilteredDataModule} from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import {SearchFilterSyncModule} from '@/store/search_filter_sync';
 import {LowercasedControlStatus, Severity} from 'inspecjs';
 import {Component, Vue} from 'vue-property-decorator';

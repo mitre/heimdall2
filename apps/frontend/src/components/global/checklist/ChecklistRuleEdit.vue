@@ -54,7 +54,7 @@
 
 <script lang="ts">
 import {ChecklistVuln} from '@mitre/hdf-converters';
-import {ControlStatus, Severity, TitleCasedSeverity} from 'inspecjs';
+import {ControlStatus, Severity} from 'inspecjs';
 import _ from 'lodash';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
