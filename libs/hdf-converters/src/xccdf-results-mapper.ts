@@ -1,4 +1,4 @@
-import {ExecJSON} from 'inspecjs';
+import {ExecJSON, is_control, parse_nist} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
@@ -14,6 +14,15 @@ import {
   conditionallyProvideAttribute,
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
 } from './utils/global';
+
+const nistCanonConfig = {
+  add_spaces: true,
+  allow_letters: true,
+  max_specifiers: 5,
+  pad_zeros: true,
+  add_periods: false,
+  add_parens: true
+};
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -151,11 +160,18 @@ function extractCci(input: IIdent | IIdent[]): string[] {
 }
 
 function nistTag(input: IIdent | IIdent[]): string[] {
-  const identifiers: string[] = extractCci(input);
   return CCI_NIST_MAPPING.nistFilter(
-    identifiers,
+    extractCci(input),
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
     false
+  ).concat(
+    asArray(input)
+      .filter((x) => !!x)
+      .map((x) => x.text)
+      .map(parse_nist)
+      .filter((x) => !!x)
+      .filter(is_control)
+      .map((x) => x.canonize(nistCanonConfig))
   );
 }
 
@@ -336,13 +352,27 @@ export class XCCDFResultsMapper extends BaseConverter {
                   ) as string
               },
               rule_id: {path: 'id'},
-              check: {path: 'check'},
+              check: {
+                path: 'check',
+                transformer: (
+                  data: Record<string, unknown> | Record<string, unknown>[]
+                ) => JSON.stringify(data, null, 2)
+              },
               fix_id: {path: 'fix.id'},
               fixtext_fixref: {
-                path: ['fixtext.fixref.text', 'fixtext.fixref']
+                path: ['fixtext.fixref.text', 'fixtext.fixref'],
+                transformer: (text: string) => text || undefined
               },
-              ident: {path: 'ident'},
-              reference: {path: 'reference'},
+              ident: {
+                path: 'ident',
+                transformer: (text: string) => text || undefined
+              },
+              reference: {
+                path: 'reference',
+                transformer: (data: Record<string, unknown>) => ({
+                  references: data
+                })
+              },
               selected: {path: 'selected'},
               weight: {path: 'weight'},
               profiles: [
@@ -365,7 +395,23 @@ export class XCCDFResultsMapper extends BaseConverter {
                 path: ['ruleResult']
               },
               value: {
-                path: ['values']
+                path: ['values'],
+                transformer: (
+                  values: Record<string, unknown> | Record<string, unknown>[]
+                ) =>
+                  asArray(values).map((value) => ({
+                    title: _.get(value, 'title'),
+                    description:
+                      _.get(value, 'description.text') ||
+                      _.get(value, 'description'),
+                    warning:
+                      _.get(value, 'warning.text') || _.get(value, 'warning'),
+                    value: _.get(value, 'value'),
+                    Id: _.get(value, 'Id'),
+                    id: _.get(value, 'id'),
+                    type: _.get(value, 'type'),
+                    interactive: _.get(value, 'interactive')
+                  }))
               },
               transformer: (data: Record<string, unknown>) => ({
                 ...conditionallyProvideAttribute(
@@ -375,7 +421,19 @@ export class XCCDFResultsMapper extends BaseConverter {
                 )
               })
             },
-            refs: [],
+            refs: [
+              {
+                path: 'reference',
+                ref: {
+                  path: 'text',
+                  transformer: (text: string) => text || undefined
+                },
+                url: {
+                  path: 'href',
+                  transformer: (text: string) => text || undefined
+                }
+              }
+            ],
             source_location: {},
             title: {path: ['title.text', 'title']},
             id: {path: ['id']},
@@ -392,16 +450,34 @@ export class XCCDFResultsMapper extends BaseConverter {
               {
                 data: {
                   path: ['check.check-content-ref.name'],
-                  transformer: parseHtml
+                  transformer: (text: string | string[]) =>
+                    asArray(text).join('\n') || undefined
                 },
                 label: 'check'
               },
               {
                 data: {
-                  path: ['fixtext', 'fix'],
-                  transformer: parseHtml
+                  path: ['fixtext.text', 'fixtext', 'fix.text', 'fix'],
+                  transformer: (text: string | string[]) =>
+                    asArray(text).map(parseHtml).join('\n') || undefined
                 },
                 label: 'fix'
+              },
+              {
+                data: {
+                  path: ['rationale.text', 'rationale'],
+                  transformer: (text: string | string[]) =>
+                    asArray(text).map(parseHtml).join('\n') || undefined
+                },
+                label: 'rationale'
+              },
+              {
+                data: {
+                  path: ['warning'],
+                  transformer: (text: string | string[]) =>
+                    asArray(text).map(parseHtml).join('\n') || undefined
+                },
+                label: 'warning'
               }
             ],
             impact: {
@@ -412,7 +488,10 @@ export class XCCDFResultsMapper extends BaseConverter {
                 >;
                 if (ruleResult) {
                   const result = _.get(ruleResult, 'result') as string;
-                  if (result === 'notapplicable' || result === 'informational') {
+                  if (
+                    result === 'notapplicable' ||
+                    result === 'informational'
+                  ) {
                     return 0;
                   }
                 }
