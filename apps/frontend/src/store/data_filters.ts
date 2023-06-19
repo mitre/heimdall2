@@ -180,7 +180,7 @@ export interface ChecklistFilter {
 export type TreeMapState = string[]; // Representing the current path spec, from root
 
 /**
- * Facillitates the search functionality
+ * Checks certain attributes from the given control to see if they include the given search term
  * @param term The string to search with
  * @param contextControl The control to search for term in
  */
@@ -189,7 +189,7 @@ function controlContainsTerm(
   term: string
 ): boolean {
   const asHDF = contextControl.root.hdf;
-  // Get our (non-null) searchable data
+  // Get our searchable data (some attributes are optional so may be null or undefined)
   const searchables: string[] = [
     asHDF.wraps.id,
     asHDF.wraps.title,
@@ -197,7 +197,7 @@ function controlContainsTerm(
     asHDF.severity,
     asHDF.status,
     asHDF.finding_details
-  ].filter((s) => s !== null) as string[];
+  ].filter(_.isString);
 
   // See if any contain term
   return searchables.some((s) => s.toLowerCase().includes(term));
