@@ -1,23 +1,16 @@
 <template>
   <v-card height="94vh" overflow-auto>
     <v-card-title class="pt-2">
-      <div
-        style="
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          width: 100%;
-        "
-      >
+      <div class="card-title">
         <div>
           <strong>
             Rules ({{ numItems }} shown, {{ rules.length - numItems }} hidden)
           </strong>
         </div>
-        <div style="width: fit-content">
+        <div class="short-id-container">
           <v-switch
             input-value="true"
-            style="margin-top: 0; padding-top: 0"
+            class="short-id-switch"
             dense
             inset
             label="Short ID"
@@ -180,3 +173,21 @@ export default class ChecklistRulesTable extends Vue {
   ];
 }
 </script>
+
+<style scoped>
+.card-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.short-id-container {
+  width: fit-content;
+}
+
+.short-id-switch {
+  margin-top: 0;
+  padding-top: 0;
+}
+</style>

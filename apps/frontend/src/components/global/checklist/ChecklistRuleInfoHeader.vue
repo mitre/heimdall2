@@ -1,7 +1,7 @@
 <template>
   <v-card width="100%" class="overflow-y-auto">
     <v-card-text v-if="selectedRule.stigRef !== ''" class="text-center">
-      <h3 class="d-inline-block mx-2" style="max-width: 100%">
+      <h3 class="d-inline-block mx-2 mw-100">
         {{ selectedRule.stigRef }}
       </h3>
       <v-row dense class="mt-n2 mt-xl-3">
@@ -71,3 +71,8 @@ export default class ChecklistRuleInfoHeader extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.full-width {
+}
+</style>
