@@ -230,13 +230,16 @@ function ruleContainsTerm(
   });
 }
 
-interface FilesFilter {
+export interface FilesFilter {
   filenameSearchTerms?: SearchEntry<FilenameSearchTerm>[];
   userGroupSearchTerms?: SearchEntry<UserGroupSearchTerm>[];
   evalTagSearchTerms?: SearchEntry<EvaluationTagSearchTerm>[];
 }
 
-function fileMatchesFilter(file: InspecFile, filter?: FilesFilter): boolean {
+export function fileMatchesFilter(
+  file: InspecFile,
+  filter?: FilesFilter
+): boolean {
   if (filter === undefined) return true;
 
   interface FileFilteringProperties {
