@@ -383,7 +383,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             );
         }
       );
-      Promise.all(controlEvents);
+      await Promise.all(controlEvents);
     } catch (error) {
       throw new Error(handleSplunkErrorResponse(error));
     }
