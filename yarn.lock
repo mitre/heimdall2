@@ -6843,7 +6843,7 @@ body-parser@1.20.1:
     type-is "~1.6.18"
     unpipe "1.0.0"
 
-body-parser@1.20.2, body-parser@^1.19.0, body-parser@^1.20.1:
+body-parser@1.20.2, body-parser@^1.19.0:
   version "1.20.2"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.20.2.tgz#6feb0e21c4724d06de7ff38da36dad4f57a747fd"
   integrity sha512-ml9pReCu3M61kGlqoTm2umSXTlRTuGTx0bfYj+uIUKKYycG5NtSbeetV3faSU6R7ajOPw0g/J1PvK4qNy7s5bA==
@@ -13764,7 +13764,7 @@ joi@^17.4.0:
     "@sideway/formula" "^3.0.1"
     "@sideway/pinpoint" "^2.0.0"
 
-jose@^4.12.0:
+jose@^4.14.4:
   version "4.14.4"
   resolved "https://registry.yarnpkg.com/jose/-/jose-4.14.4.tgz#59e09204e2670c3164ee24cbfe7115c6f8bff9ca"
   integrity sha512-j8GhLiKmUAh+dsFXlX1aJCbt5KMibuKb+d7j1JaOJG6s2UjX1PQlW+OKB/sD4a/5ZYF4RcmYmLSndOoU3Lt/3g==
@@ -15875,16 +15875,15 @@ oauth-sign@~0.9.0:
   resolved "https://registry.yarnpkg.com/oauth-sign/-/oauth-sign-0.9.0.tgz#47a7b016baa68b5fa0ecf3dee08a85c679ac6455"
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
 
-oauth2-mock-server@^5.0.0:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-5.0.2.tgz#b261435daef5c41b2d070f3e71cb82a61246e51e"
-  integrity sha512-zRnyogLY9KQIsKDAgADO7Bini8xeridSA61qxS9yIdLMJIHrc+vW+GIduFptNX/STM3eRUJJqIWtbNWmxEfQ/A==
+oauth2-mock-server@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-6.0.0.tgz#b922a4c76eabfcbb4d56ad638e01f5f50c11ed71"
+  integrity sha512-Btw21gMd8vUzTt6VzKHkkJDkd+wPynTRxsR/DaXNe3hBUF+o+4hmiLlyKo/9Zb1TxWjnajfL2HD2OXOZyjZWsQ==
   dependencies:
     basic-auth "^2.0.1"
-    body-parser "^1.20.1"
     cors "^2.8.5"
     express "^4.18.2"
-    jose "^4.12.0"
+    jose "^4.14.4"
     lodash.isplainobject "^4.0.6"
     uuid "^9.0.0"
 
