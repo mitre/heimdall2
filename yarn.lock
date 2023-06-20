@@ -3257,6 +3257,15 @@
   resolved "https://registry.yarnpkg.com/@mdi/js/-/js-7.2.96.tgz#a2a20be740a75e65c8b8b9e12a2b699c06a9208f"
   integrity sha512-paR9M9ZT7rKbh2boksNUynuSZMHhqRYnEZOm/KrZTjQ4/FzyhjLHuvw/8XYzP+E7fS4+/Ms/82EN1pl/OFsiIA==
 
+"@mitre/jsonix@^3.0.6":
+  version "3.0.6"
+  resolved "https://registry.yarnpkg.com/@mitre/jsonix/-/jsonix-3.0.6.tgz#4697012f995ca2e9f1088d882a401dca7ae9b106"
+  integrity sha512-L5GrvqVfTXbM+xXRd+pMqeobnrV0Ub2NVLFIaaIcCwk1romzUNy8+ucWpyKFXRhSLpuDy5jY4awLmnnE6RC2pA==
+  dependencies:
+    "@xmldom/xmldom" "^0.8.2"
+    amdefine "^0.0.4"
+    xmlhttprequest "^1.8.0"
+
 "@mitre/splunk-sdk-no-env@^1.10.0":
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/@mitre/splunk-sdk-no-env/-/splunk-sdk-no-env-1.10.0.tgz#e78a39025d27b3d558161ed7c9c14309909f2694"
@@ -5650,6 +5659,11 @@
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
 
+"@xmldom/xmldom@^0.8.2":
+  version "0.8.8"
+  resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.8.8.tgz#d0d11511cbc1de77e53342ad1546a4d487d6ea72"
+  integrity sha512-0LNz4EY8B/8xXY86wMrQ4tz6zEHZv9ehFMJPm8u2gq5lQ71cfRKdaKyxfJAx5aUoyzx0qzgURblTisPGgz3d+Q==
+
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@xtuc/ieee754/-/ieee754-1.2.0.tgz#eef014a3145ae477a1cbc00cd1e552336dceb790"
@@ -5854,6 +5868,11 @@ alphanum-sort@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
   integrity sha512-0FcBfdcmaumGPQ0qPn7Q5qTgz/ooXgIyp1rf8ik5bGX8mpE2YHjC0P/eyQvxu1GURYQgq9ozf2mteQ5ZD9YiyQ==
+
+amdefine@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-0.0.4.tgz#510e24a0f231314e1105b9c747e79aaed694a0e9"
+  integrity sha512-+9uNlaqm8kZ0bYDuhFt1mqNoLM2I4AsSeB+6dddNiSfmRlJRq38IUuNtUD4+xOzOoPltOHzSvnlSgscMfpnDDg==
 
 ansi-align@^3.0.0:
   version "3.0.1"
@@ -21752,6 +21771,11 @@ xmlchars@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
+
+xmlhttprequest@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
+  integrity sha512-58Im/U0mlVBLM38NdZjHyhuMtCqa61469k2YP/AaPbvCoV9aQGUpbJBj1QRm2ytRiVQBD/fsw7L2bJGDVQswBA==
 
 xss@^1.0.8:
   version "1.0.14"

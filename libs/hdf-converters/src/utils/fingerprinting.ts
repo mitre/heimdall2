@@ -3,6 +3,7 @@ import _ from 'lodash';
 export enum INPUT_TYPES {
   ASFF = 'asff',
   BURP = 'burp',
+  CHECKLIST = 'checklist',
   FORTIFY = 'fortify',
   GOSEC = 'gosec',
   IONCHANNEL = 'ionchannel',
@@ -54,6 +55,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.ZAP]: ['@generated', '@version', 'site'],
 
   [INPUT_TYPES.BURP]: [],
+  [INPUT_TYPES.CHECKLIST]: [],
   [INPUT_TYPES.NESSUS]: [],
   [INPUT_TYPES.PRISMA]: [],
   [INPUT_TYPES.DB_PROTECT]: [],
@@ -135,6 +137,12 @@ export function fingerprint(guessOptions: {
       guessOptions.data.indexOf('detailedreport') !== -1
     ) {
       return INPUT_TYPES.VERACODE;
+    } else if (
+      guessOptions.data.indexOf('<CHECKLIST>') !== -1 &&
+      guessOptions.data.indexOf('<STIGS>') !== -1 &&
+      guessOptions.data.indexOf('<STIG_INFO>') !== -1
+    ) {
+      return INPUT_TYPES.CHECKLIST;
     }
   }
   return INPUT_TYPES.NOT_FOUND;

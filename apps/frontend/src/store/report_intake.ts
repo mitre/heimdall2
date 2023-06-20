@@ -9,6 +9,7 @@ import {read_file_async} from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
+  ChecklistResults,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -261,6 +262,8 @@ export class InspecIntake extends VuexModule {
         return new VeracodeMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.FORTIFY:
         return new FortifyMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.CHECKLIST:
+        return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
         return new GoSecMapper(convertOptions.data).toHdf();
       default:
