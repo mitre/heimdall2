@@ -22,7 +22,7 @@
         show-select
       >
         <template #[`item.actions`]="{item}">
-          <v-icon @click="load_event(item)"> mdi-plus-circle </v-icon>
+          <v-icon @click="loadEvent(item)"> mdi-plus-circle </v-icon>
         </template>
         <template #no-data>
           No data. Try relaxing your search conditions, or expanding the date

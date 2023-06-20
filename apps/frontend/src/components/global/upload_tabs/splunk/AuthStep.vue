@@ -122,13 +122,13 @@ export default class AuthStep extends Vue {
 
   /** Init our fields */
   mounted() {
-    this.username = localUsername.get_default('');
-    this.password = localPassword.get_default('');
-    this.hostname = localHostname.get_default('');
+    this.username = localUsername.getDefault('');
+    this.password = localPassword.getDefault('');
+    this.hostname = localHostname.getDefault('');
     if (this.indexToShow === undefined) {
-      this.index = localSplunk2HDFIndex.get_default('*');
+      this.index = localSplunk2HDFIndex.getDefault('*');
     } else {
-      this.index = localSplunk2HDFIndex.get_default(this.indexToShow);
+      this.index = localSplunk2HDFIndex.getDefault(this.indexToShow);
     }
   }
 }

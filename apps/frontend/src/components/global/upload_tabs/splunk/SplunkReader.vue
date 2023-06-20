@@ -20,7 +20,7 @@
           v-if="splunkConfig"
           :splunk-config="splunkConfig"
           @signOut="onSignOut"
-          @got-files="got_files"
+          @got-files="gotFiles"
         />
       </v-stepper-content>
     </v-stepper-items>
@@ -103,7 +103,7 @@ export default class SplunkReader extends Vue {
     this.step = 2;
   }
 
-  got_files(files: FileID[]) {
+  gotFiles(files: FileID[]) {
     this.$emit('got-files', files);
   }
 

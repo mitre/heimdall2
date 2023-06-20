@@ -35,7 +35,7 @@ const MAPPER_NAME = 'Splunk2HDF';
 let logger = createWinstonLogger('Splunk2HDF');
 
 // Groups items by using the provided key function
-export function group_by<T>(
+export function groupBy<T>(
   items: Array<T>,
   keyGetter: (v: T) => string
 ): Hash<Array<T>> {
@@ -58,10 +58,7 @@ export function group_by<T>(
 }
 
 // Maps a hash to a new hash, with the same keys but each value replaced with a new (mapped) value
-export function map_hash<T, G>(
-  old: Hash<T>,
-  mapFunction: (v: T) => G
-): Hash<G> {
+export function mapHash<T, G>(old: Hash<T>, mapFunction: (v: T) => G): Hash<G> {
   const result: Hash<G> = {};
   for (const key in old) {
     result[key] = mapFunction(old[key]);
@@ -69,13 +66,13 @@ export function map_hash<T, G>(
   return result;
 }
 
-export function consolidate_payloads(
+export function consolidatePayloads(
   payloads: SplunkReport[]
 ): ExecJSON.Execution[] {
   // Group by exec id
-  const grouped = group_by(payloads, (pl) => pl.meta.guid);
+  const grouped = groupBy(payloads, (pl) => pl.meta.guid);
 
-  const built = map_hash(grouped, consolidateFilePayloads);
+  const built = mapHash(grouped, consolidateFilePayloads);
   return Object.values(built);
 }
 
@@ -102,7 +99,7 @@ function consolidateFilePayloads(
 ): ExecJSON.Execution {
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
-  const subtypes = group_by(filePayloads, (event) => event.meta.subtype);
+  const subtypes = groupBy(filePayloads, (event) => event.meta.subtype);
   const execEvents = (subtypes['header'] ||
     []) as Partial<ExecJSON.Execution>[];
   const profileEvents = (subtypes['profile'] ||
@@ -128,7 +125,7 @@ function consolidateFilePayloads(
   exec.profiles?.push(...profileEvents);
 
   // Group controls, and then put them into the profiles
-  const shaGroupedControls = group_by(
+  const shaGroupedControls = groupBy(
     controlEvents,
     (ctrl) => ctrl.meta.profile_sha256
   );
@@ -406,6 +403,6 @@ export class SplunkMapper {
     logger.info(
       `Data received, consolidating payloads for ${executionData.length} items`
     );
-    return consolidate_payloads(executionData)[0];
+    return consolidatePayloads(executionData)[0];
   }
 }
