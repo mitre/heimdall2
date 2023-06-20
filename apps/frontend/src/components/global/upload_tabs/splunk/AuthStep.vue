@@ -100,6 +100,9 @@ export default class AuthStep extends Vue {
       scheme: parsedURL.protocol.split(':')[0] || 'https'
     };
 
+    // Login error for snackbar based on piecemeal generation from checkSplunkCredentials in /hdf-converters/src/utils/splunk-tools.ts
+    const loginErrMsg = 'Failed to login - Incorrect username or password';
+
     try {
       await checkSplunkCredentials(config);
       localUsername.set(this.username);
@@ -113,7 +116,7 @@ export default class AuthStep extends Vue {
       SnackbarModule.notify('You have successfully signed in');
       this.$emit('authenticated', config);
     } catch (error) {
-      if (error !== 'Failed to login - Incorrect username or password') {
+      if (error !== loginErrMsg) {
         this.$emit('error');
       }
       SnackbarModule.failure(error);
