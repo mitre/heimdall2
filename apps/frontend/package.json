@@ -31,7 +31,6 @@
     "@heimdall/interfaces": "^2.6.45",
     "@mdi/font": "^7.0.96",
     "@mdi/js": "^7.0.96",
-    "@mitre/splunk-sdk-no-env": "^1.10.0",
     "@types/bootstrap": "^5.0.15",
     "@types/chroma-js": "^2.1.0",
     "@types/concat-stream": "^2.0.0",
