@@ -1,3 +1,34 @@
+v2.6.54
+
+- Remove Splunk SDK usage @charleshu-8 (#4549)
+- Conveyor mapper @jweissm (#4516)
+- Checklist Mapper @Hookwitz (#3859)
+- Fix Backend Test failing after Sequelize updates @Hookwitz (#4600)
+
+## New Features
+
+- Update DBProtect mapper @charleshu-8 (#4601)
+
+## Dependency Updates
+
+- Bump oauth2-mock-server from 5.0.2 to 6.0.0 @dependabot (#4623)
+- Bump aws-sdk from 2.1399.0 to 2.1400.0 @dependabot (#4628)
+- Bump dotenv from 16.1.4 to 16.3.1 @dependabot (#4622)
+- Bump @typescript-eslint/eslint-plugin from 5.59.11 to 5.60.0 @dependabot (#4626)
+- Bump @aws-sdk/client-config-service from 3.353.0 to 3.354.0 @dependabot (#4618)
+- Bump eslint from 8.42.0 to 8.43.0 @dependabot (#4619)
+- Bump aws-sdk from 2.1398.0 to 2.1399.0 @dependabot (#4617)
+- Bump @nestjs/cli from 10.0.1 to 10.0.2 @dependabot (#4615)
+- Bump @nestjs/sequelize from 9.0.2 to 10.0.0 @dependabot (#4610)
+- Bump @nestjs/jwt from 10.0.3 to 10.1.0 @dependabot (#4611)
+- Bump @aws-sdk/client-config-service from 3.352.0 to 3.353.0 @dependabot (#4613)
+- Bump @nestjs/serve-static from 3.0.1 to 4.0.0 @dependabot (#4608)
+- Bump aws-sdk from 2.1397.0 to 2.1398.0 @dependabot (#4609)
+- Bump @nestjs/cli from 9.5.0 to 10.0.1 @dependabot (#4612)
+- Bump @nestjs/passport from 9.0.3 to 10.0.0 @dependabot (#4605)
+- Bump @aws-sdk/client-config-service from 3.350.0 to 3.352.0 @dependabot (#4597)
+- Bump aws-sdk from 2.1396.0 to 2.1397.0 @dependabot (#4598)
+
 v2.6.53
 
 ## Dependency Updates
