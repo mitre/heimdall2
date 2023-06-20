@@ -12,7 +12,7 @@
         sort-by="filename"
         :sort-desc="false"
         :loading="loading"
-        @load-results="load_samples($event)"
+        @load-selected="load_samples($event)"
       />
     </v-container>
   </v-card>
@@ -22,7 +22,7 @@
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import {FileID, InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {Sample, samples} from '@/utilities/sample_util';
+import {Sample, samples, fetchSample} from '@/utilities/sample_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
@@ -44,23 +44,25 @@ export default class SampleList extends Vue {
 
   loading = false;
 
-  load_samples(sampleArray: Sample[]) {
+  load_samples(selectedSamples: Sample[]) {
+    const promises: Promise<FileID | FileID[]>[] = [];
     this.loading = true;
-    Promise.all(
-      sampleArray.map((arrayItem) => {
-        return arrayItem.data().then((data: JSON) => {
-          return InspecIntakeModule.loadText({
-            text: JSON.stringify(data),
-            filename: arrayItem.filename
-          });
+    for (const sample of selectedSamples) {
+      const requestFile = fetchSample(sample).then((data: File) => {
+        return InspecIntakeModule.loadFile({
+          file: data,
+          filename: sample.filename
         });
+      });
+      promises.push(requestFile);
+    }
+
+    Promise.all(promises)
+      .then((fileIds: (FileID | FileID[])[]) => {
+        this.$emit('got-files', fileIds.flat(2));
       })
-    )
-      .then((fileIds: FileID[]) => {
-        this.$emit('got-files', fileIds);
-      })
-      .catch((err) => {
-        SnackbarModule.failure(String(err));
+      .catch((error) => {
+        SnackbarModule.failure(String(error));
       })
       .finally(() => {
         this.loading = false;
