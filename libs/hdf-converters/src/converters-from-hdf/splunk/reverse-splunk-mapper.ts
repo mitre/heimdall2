@@ -348,15 +348,16 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
     try {
       // Upload execution event
-      for (const report of splunkData.reports) {
-        await this.axiosInstance.post(
-          `${hostname}/services/receivers/simple`,
-          JSON.stringify(report)
-        );
-        logger.verbose(
-          `Successfully uploaded execution for ${report.meta.filename}`
-        );
-      }
+      const execEvents = splunkData.reports.map((report) => {
+        return this.axiosInstance
+          .post(`${hostname}/services/receivers/simple`, JSON.stringify(report))
+          .then(() => {
+            logger.verbose(
+              `Successfully uploaded execution for ${report.meta.filename}`
+            );
+          });
+      });
+      await Promise.all(execEvents);
 
       // Upload profile event(s)
       // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
@@ -370,13 +371,19 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
       );
 
       // Upload control event(s)
-      for (const chunk of _.chunk(splunkData.controls, UPLOAD_CHUNK_SIZE)) {
-        await this.axiosInstance.post(
-          `${hostname}/services/receivers/simple`,
-          chunk.map((control) => JSON.stringify(control)).join('\n')
-        );
-        logger.verbose(`Successfully uploaded ${chunk.length} control(s)`);
-      }
+      const controlEvents = _.chunk(splunkData.controls, UPLOAD_CHUNK_SIZE).map(
+        (chunk) => {
+          return this.axiosInstance
+            .post(
+              `${hostname}/services/receivers/simple`,
+              chunk.map((control) => JSON.stringify(control)).join('\n')
+            )
+            .then(() =>
+              logger.verbose(`Successfully uploaded ${chunk.length} control(s)`)
+            );
+        }
+      );
+      Promise.all(controlEvents);
     } catch (error) {
       throw new Error(handleSplunkErrorResponse(error));
     }
