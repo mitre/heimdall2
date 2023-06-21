@@ -9,11 +9,11 @@
           >mdi-refresh</v-icon
         >
       </v-btn>
-
-      <div b-tooltip.hover title="Return to login page" @click="logout">
-        <span class="pt-4 pr-4">Sign Out</span>
-        <v-icon color="red" class="pr-2 pt-2">mdi-logout</v-icon>
-      </div>
+      <v-btn icon @click="logout">
+        <v-icon b-tooltip.hover title="Return to login page" color="red"
+          >mdi-logout</v-icon
+        >
+      </v-btn>
     </div>
 
     <h3>Scans Options</h3>

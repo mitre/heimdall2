@@ -2,11 +2,17 @@
   <span>
     <div class="d-flex flex-row-reverse" style="cursor: pointer">
       <v-btn icon @click="updateSearch">
-        <v-icon>mdi-refresh</v-icon>
+        <v-icon
+          b-tooltip.hover
+          title="Request content from the server"
+          color="blue"
+          >mdi-refresh</v-icon
+        >
       </v-btn>
-      <span class="pt-2 pr-4">Sign Out</span>
       <v-btn icon @click="logout">
-        <v-icon color="red" class="pr-2">mdi-logout</v-icon>
+        <v-icon b-tooltip.hover title="Return to login page" color="red"
+          >mdi-logout</v-icon
+        >
       </v-btn>
     </div>
 

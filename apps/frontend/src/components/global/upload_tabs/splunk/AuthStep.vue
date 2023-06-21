@@ -5,6 +5,7 @@
         v-model="username"
         label="Username"
         for="username_field"
+        :rules="[reqRule]"
         data-cy="splunkusername"
       />
       <v-text-field
@@ -12,6 +13,7 @@
         label="Password"
         for="password_field"
         type="password"
+        :rules="[reqRule]"
         data-cy="splunkpassword"
       />
       <v-container style="margin: 0; padding: 0" grid-list-md text-xs-center>
@@ -21,6 +23,7 @@
               v-model="hostname"
               label="Hostname"
               for="hostname_field"
+              :rules="[reqRule]"
               hint="https://yourdomain.com:8089"
               data-cy="splunkhostname"
             />
@@ -30,6 +33,7 @@
               v-model="index"
               label="Index"
               for="index_field"
+              :rules="[reqRule]"
               data-cy="splunkindex"
             />
           </v-flex>
@@ -46,7 +50,7 @@
         Login
       </v-btn>
       <v-spacer />
-      <v-btn @click="$emit('show-help')">
+      <v-btn class="mt-4" @click="$emit('show-help')">
         Help
         <v-icon class="ml-2"> mdi-help-circle </v-icon>
       </v-btn>
@@ -84,39 +88,47 @@ export default class AuthStep extends Vue {
   hostname = '';
   index = '';
 
+  /** Form required field rules. Maybe eventually expand to other stuff */
+  reqRule = (v: string | null | undefined) =>
+    (v || '').trim().length > 0 || 'Field is Required';
+
   async login(): Promise<void> {
-    if (!/^https?:\/\//.test(this.hostname)) {
-      this.hostname = `https://${this.hostname}`;
-    }
-
-    const parsedURL = new URL(this.hostname);
-
-    const config: SplunkConfig = {
-      host: parsedURL.hostname,
-      username: this.username,
-      password: this.password,
-      port: parseInt(parsedURL.port) || 8089,
-      index: this.index,
-      scheme: parsedURL.protocol.split(':')[0] || 'https'
-    };
-
-    try {
-      await checkSplunkCredentials(config);
-      localUsername.set(this.username);
-      localPassword.set(this.password);
-      localHostname.set(this.hostname);
-      if (this.indexToShow === undefined) {
-        localSplunk2HDFIndex.set(this.index);
-      } else {
-        localHDF2SplunkIndex.set(this.index);
+    if (this.index !== '') {
+      if (!/^https?:\/\//.test(this.hostname)) {
+        this.hostname = `https://${this.hostname}`;
       }
-      SnackbarModule.notify('You have successfully signed in');
-      this.$emit('authenticated', config);
-    } catch (error) {
-      if (error !== 'Failed to login - Incorrect username or password') {
-        this.$emit('error');
+
+      const parsedURL = new URL(this.hostname);
+
+      const config: SplunkConfig = {
+        host: parsedURL.hostname,
+        username: this.username,
+        password: this.password,
+        port: parseInt(parsedURL.port) || 8089,
+        index: this.index,
+        scheme: parsedURL.protocol.split(':')[0] || 'https'
+      };
+
+      try {
+        await checkSplunkCredentials(config);
+        localUsername.set(this.username);
+        localPassword.set(this.password);
+        localHostname.set(this.hostname);
+        if (this.indexToShow === undefined) {
+          localSplunk2HDFIndex.set(this.index);
+        } else {
+          localHDF2SplunkIndex.set(this.index);
+        }
+        SnackbarModule.notify('You have successfully signed in');
+        this.$emit('authenticated', config);
+      } catch (error) {
+        if (error !== 'Failed to login - Incorrect username or password') {
+          this.$emit('error');
+        }
+        SnackbarModule.failure(error);
       }
-      SnackbarModule.failure(error);
+    } else {
+      SnackbarModule.failure('Failed to login - A valid index is required');
     }
   }
 

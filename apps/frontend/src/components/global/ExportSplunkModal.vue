@@ -23,7 +23,7 @@
           <v-stepper-items>
             <v-stepper-content step="1">
               <AuthStep
-                index-to-show="hdf"
+                index-to-show=""
                 @authenticated="onAuthenticationComplete"
                 @error="errorCount += 1"
                 @show-help="errorCount = -1"

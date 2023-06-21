@@ -40,7 +40,7 @@
         MFA Login
       </v-btn>
       <v-spacer />
-      <v-btn @click="$emit('show-help')">
+      <v-btn class="my-2" @click="$emit('show-help')">
         Help
         <v-icon class="ml-2"> mdi-help-circle </v-icon>
       </v-btn>
