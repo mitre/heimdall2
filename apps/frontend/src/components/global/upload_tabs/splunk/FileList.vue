@@ -1,19 +1,30 @@
 <template>
   <span>
-    <div class="d-flex flex-row-reverse" style="cursor: pointer">
-      <v-btn icon @click="updateSearch">
-        <v-icon
-          b-tooltip.hover
-          title="Request content from the server"
-          color="blue"
-          >mdi-refresh</v-icon
-        >
-      </v-btn>
-      <v-btn icon @click="logout">
-        <v-icon b-tooltip.hover title="Return to login page" color="red"
-          >mdi-logout</v-icon
-        >
-      </v-btn>
+    <div class="d-flex justify-space-between">
+      <v-form>
+        <v-text-field
+          v-model="index"
+          label="Index"
+          for="index_field"
+          :rules="[reqRule]"
+          data-cy="splunkindex"
+        />
+      </v-form>
+      <div class="d-flex">
+        <v-btn class="ml-5" icon style="cursor: pointer" @click="logout">
+          <v-icon b-tooltip.hover title="Return to login page" color="red"
+            >mdi-logout</v-icon
+          >
+        </v-btn>
+        <v-btn icon style="cursor: pointer" @click="updateSearch">
+          <v-icon
+            b-tooltip.hover
+            title="Request content from the server"
+            color="blue"
+            >mdi-refresh</v-icon
+          >
+        </v-btn>
+      </div>
     </div>
 
     <div class="d-flex flex-column">
@@ -80,6 +91,12 @@ export default class FileList extends Vue {
     }
   ];
 
+  index = '';
+
+  /** Form required field rules. Maybe eventually expand to other stuff */
+  reqRule = (v: string | null | undefined) =>
+    (v || '').trim().length > 0 || 'Field is Required';
+
   @Watch('search')
   async onUpdateSearch() {
     // On first load we update the search field which triggers this function, instead of waiting this time we can just search right away
@@ -97,6 +114,9 @@ export default class FileList extends Vue {
 
   async updateSearch() {
     this.loading = true;
+    // Update index for search job if user changes targeted index
+    this.splunkConfig.index = this.index;
+    this.search = `search index="${this.index}" meta.subtype="header"`;
     this.splunkConverter = new SplunkMapper(this.splunkConfig);
     const results = await this.splunkConverter.queryData(this.search);
     this.executions = [];
@@ -111,6 +131,7 @@ export default class FileList extends Vue {
 
   async mounted() {
     this.search = `search index="${this.splunkConfig.index}" meta.subtype="header"`;
+    this.index = this.splunkConfig.index;
   }
 
   async loadResults() {
