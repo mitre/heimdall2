@@ -424,6 +424,39 @@ export class XCCDFResultsMapper extends BaseConverter {
             refs: [
               {
                 path: 'reference',
+                transformer: (
+                  data: Record<string, unknown>
+                ): ExecJSON.Reference => ({
+                  ...conditionallyProvideAttribute(
+                    'url',
+                    _.get(data, 'href'),
+                    _.has(data, 'href')
+                  ),
+                  ref: [
+                    {
+                      ...conditionallyProvideAttribute(
+                        'text',
+                        _.get(data, 'text'),
+                        _.has(data, 'text')
+                      ),
+                      ...conditionallyProvideAttribute(
+                        'publisher',
+                        _.get(data, 'publisher'),
+                        _.has(data, 'publisher')
+                      ),
+                      ...conditionallyProvideAttribute(
+                        'identifier',
+                        _.get(data, 'identifier'),
+                        _.has(data, 'identifier')
+                      ),
+                      ...conditionallyProvideAttribute(
+                        'type',
+                        _.get(data, 'type'),
+                        _.has(data, 'type')
+                      )
+                    }
+                  ]
+                }),
                 ref: {
                   path: 'text',
                   transformer: (text: string) => text || undefined

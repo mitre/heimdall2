@@ -126,11 +126,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -267,11 +269,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -408,11 +412,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -549,11 +555,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -690,11 +698,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -831,11 +841,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -972,11 +984,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1113,11 +1127,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1254,11 +1270,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1395,11 +1413,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1536,11 +1556,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1677,11 +1699,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1818,11 +1842,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1959,11 +1985,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2100,11 +2128,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2241,11 +2271,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2382,11 +2414,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2523,11 +2557,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2664,11 +2700,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2805,11 +2843,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2946,11 +2986,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3087,11 +3129,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3228,11 +3272,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3369,11 +3415,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3510,11 +3558,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3651,11 +3701,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3792,11 +3844,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3933,11 +3987,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4074,11 +4130,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4215,11 +4273,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4356,11 +4416,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4497,11 +4559,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4638,11 +4702,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4779,11 +4845,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4920,11 +4988,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5061,11 +5131,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5202,11 +5274,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5343,11 +5417,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5484,11 +5560,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5625,11 +5703,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5766,11 +5846,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5907,11 +5989,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6048,11 +6132,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6189,11 +6275,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6330,11 +6418,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6471,11 +6561,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6612,11 +6704,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6753,11 +6847,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6894,11 +6990,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7035,11 +7133,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7176,11 +7276,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7317,11 +7419,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7458,11 +7562,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7599,11 +7705,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7740,11 +7848,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7881,11 +7991,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8022,11 +8134,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8163,11 +8277,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8304,11 +8420,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8445,11 +8563,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8586,11 +8706,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8727,11 +8849,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8868,11 +8992,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9009,11 +9135,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9150,11 +9278,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9291,11 +9421,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9432,11 +9564,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9573,11 +9707,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9714,11 +9850,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9855,11 +9993,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9996,11 +10136,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10137,11 +10279,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10278,11 +10422,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10419,11 +10565,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10560,11 +10708,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10701,11 +10851,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10842,11 +10994,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10983,11 +11137,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11124,11 +11280,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11265,11 +11423,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11406,11 +11566,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11547,11 +11709,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11688,11 +11852,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11829,11 +11995,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11970,11 +12138,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12111,11 +12281,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12252,11 +12424,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12393,11 +12567,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12534,11 +12710,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12675,11 +12853,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12816,11 +12996,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12957,11 +13139,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13098,11 +13282,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13239,11 +13425,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13380,11 +13568,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13521,11 +13711,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13662,11 +13854,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13803,11 +13997,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13944,11 +14140,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14085,11 +14283,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14226,11 +14426,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14367,11 +14569,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14508,11 +14712,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14649,11 +14855,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14790,11 +14998,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14931,11 +15141,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15072,11 +15284,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15213,11 +15427,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15354,11 +15570,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15495,11 +15713,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15636,11 +15856,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15777,11 +15999,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15918,11 +16142,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16059,11 +16285,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16200,11 +16428,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16341,11 +16571,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16482,11 +16714,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16623,11 +16857,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16764,11 +17000,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16905,11 +17143,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17046,11 +17286,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17187,11 +17429,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17328,11 +17572,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17469,11 +17715,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17610,11 +17858,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17751,11 +18001,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17892,11 +18144,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18033,11 +18287,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18174,11 +18430,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18315,11 +18573,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18456,11 +18716,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18597,11 +18859,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18738,11 +19002,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18879,11 +19145,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19020,11 +19288,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19161,11 +19431,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19302,11 +19574,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19443,11 +19717,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19584,11 +19860,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19725,11 +20003,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19866,11 +20146,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20007,11 +20289,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20148,11 +20432,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20289,11 +20575,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20430,11 +20718,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20571,11 +20861,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20712,11 +21004,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20853,11 +21147,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20994,11 +21290,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21135,11 +21433,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21276,11 +21576,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21417,11 +21719,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21558,11 +21862,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21699,11 +22005,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21840,11 +22148,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21981,11 +22291,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22122,11 +22434,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22263,11 +22577,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22404,11 +22720,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22545,11 +22863,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22686,11 +23006,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22827,11 +23149,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22968,11 +23292,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23109,11 +23435,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23250,11 +23578,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23391,11 +23721,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23532,11 +23864,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23673,11 +24007,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23814,11 +24150,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23955,11 +24293,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24096,11 +24436,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24237,11 +24579,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24378,11 +24722,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24519,11 +24865,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24660,11 +25008,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24801,11 +25151,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24942,11 +25294,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25083,11 +25437,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25224,11 +25580,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25365,11 +25723,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25506,11 +25866,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25647,11 +26009,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25788,11 +26152,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25929,11 +26295,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26070,11 +26438,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26211,11 +26581,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26352,11 +26724,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26493,11 +26867,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26634,11 +27010,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26775,11 +27153,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26916,11 +27296,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27057,11 +27439,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27198,11 +27582,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27339,11 +27725,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27480,11 +27868,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27621,11 +28011,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27762,11 +28154,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27903,11 +28297,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28044,11 +28440,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28185,11 +28583,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28326,11 +28726,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28467,11 +28869,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28608,11 +29012,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28749,11 +29155,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28890,11 +29298,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29031,11 +29441,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29172,11 +29584,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29313,11 +29727,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29454,11 +29870,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29595,11 +30013,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29736,11 +30156,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29877,11 +30299,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30018,11 +30442,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30159,11 +30585,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30300,11 +30728,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30441,11 +30871,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30582,11 +31014,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30723,11 +31157,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30864,11 +31300,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31005,11 +31443,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31146,11 +31586,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31287,11 +31729,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31428,11 +31872,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31569,11 +32015,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31710,11 +32158,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31851,11 +32301,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31992,11 +32444,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -32133,11 +32587,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -32274,11 +32730,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -32415,11 +32873,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -32556,11 +33016,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -32697,11 +33159,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -32838,11 +33302,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -32979,11 +33445,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -33120,11 +33588,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -33261,11 +33731,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -33402,11 +33874,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -33543,11 +34017,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -33684,11 +34160,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -33825,11 +34303,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -33966,11 +34446,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -34107,11 +34589,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -34248,11 +34732,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -34389,11 +34875,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -34530,11 +35018,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -34671,11 +35161,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -34812,11 +35304,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -34953,11 +35447,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 8",
-              "subject": "Red Hat Enterprise Linux 8",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2921"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2921",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -34991,7 +35487,7 @@
           ]
         }
       ],
-      "sha256": "87e08dc166459768c9e38231012ca4a8f21a5a04feea8a75a7340b0d9fd1da52"
+      "sha256": "d29bb0c88f682db1126ff138ccf273d9192efdb910d6bc720d8c7416ea31d0d3"
     }
   ],
   "passthrough": {

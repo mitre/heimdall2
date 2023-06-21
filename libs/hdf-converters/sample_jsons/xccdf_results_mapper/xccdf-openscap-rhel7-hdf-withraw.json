@@ -154,11 +154,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -323,11 +325,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -504,11 +508,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -702,11 +708,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -871,11 +879,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1040,11 +1050,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1201,11 +1213,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1370,11 +1384,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1531,11 +1547,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1700,11 +1718,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -1898,11 +1918,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2096,11 +2118,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2294,11 +2318,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2492,11 +2518,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2711,11 +2739,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -2913,11 +2943,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3111,11 +3143,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3313,11 +3347,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3482,11 +3518,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3651,11 +3689,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -3820,11 +3860,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4027,11 +4069,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4188,11 +4232,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4391,11 +4437,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4552,11 +4600,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4758,11 +4808,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -4972,11 +5024,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5141,11 +5195,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5310,11 +5366,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5525,11 +5583,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5694,11 +5754,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -5863,11 +5925,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6069,11 +6133,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6238,11 +6304,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6407,11 +6475,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6576,11 +6646,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6745,11 +6817,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -6906,11 +6980,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7075,11 +7151,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7244,11 +7322,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7413,11 +7493,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7582,11 +7664,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7751,11 +7835,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -7920,11 +8006,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8089,11 +8177,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8270,11 +8360,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8431,11 +8523,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8620,11 +8714,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8789,11 +8885,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -8991,11 +9089,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9160,11 +9260,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9329,11 +9431,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9498,11 +9602,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9667,11 +9773,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9828,11 +9936,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -9997,11 +10107,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10166,11 +10278,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10335,11 +10449,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10504,11 +10620,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10673,11 +10791,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -10842,11 +10962,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11011,11 +11133,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11172,11 +11296,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11341,11 +11467,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11540,11 +11668,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11709,11 +11839,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -11888,11 +12020,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12057,11 +12191,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12218,11 +12354,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12379,11 +12517,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12540,11 +12680,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12701,11 +12843,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -12862,11 +13006,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13023,11 +13169,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13184,11 +13332,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13345,11 +13495,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13539,11 +13691,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13700,11 +13854,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -13879,11 +14035,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14058,11 +14216,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14237,11 +14397,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14416,11 +14578,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14585,11 +14749,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14754,11 +14920,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -14923,11 +15091,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15092,11 +15262,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15261,11 +15433,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15430,11 +15604,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15599,11 +15775,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15768,11 +15946,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -15937,11 +16117,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16116,11 +16298,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16295,11 +16479,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16474,11 +16660,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16653,11 +16841,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -16832,11 +17022,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17011,11 +17203,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17190,11 +17384,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17369,11 +17565,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17548,11 +17746,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17719,11 +17919,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -17908,11 +18110,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18097,11 +18301,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18286,11 +18492,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18475,11 +18683,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18664,11 +18874,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -18853,11 +19065,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19042,11 +19256,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19241,11 +19457,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19440,11 +19658,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19639,11 +19859,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -19838,11 +20060,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20037,11 +20261,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20216,11 +20442,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20395,11 +20623,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20574,11 +20804,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20753,11 +20985,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -20942,11 +21176,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21131,11 +21367,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21300,11 +21538,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21461,11 +21701,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21630,11 +21872,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21799,11 +22043,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -21968,11 +22214,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22129,11 +22377,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22328,11 +22578,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22527,11 +22779,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22726,11 +22980,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -22925,11 +23181,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23124,11 +23382,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23303,11 +23563,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23482,11 +23744,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23661,11 +23925,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -23840,11 +24106,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24019,11 +24287,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24229,11 +24499,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24418,11 +24690,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24589,11 +24863,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24750,11 +25026,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -24949,11 +25227,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25165,11 +25445,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25334,11 +25616,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25513,11 +25797,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25682,11 +25968,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -25851,11 +26139,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26020,11 +26310,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26189,11 +26481,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26368,11 +26662,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26537,11 +26833,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26706,11 +27004,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -26875,11 +27175,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27076,11 +27378,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27285,11 +27589,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27454,11 +27760,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27623,11 +27931,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27784,11 +28094,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -27945,11 +28257,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28106,11 +28420,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28267,11 +28583,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28461,11 +28779,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28655,11 +28975,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -28849,11 +29171,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29043,11 +29367,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29237,11 +29563,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29406,11 +29734,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29575,11 +29905,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29736,11 +30068,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -29945,11 +30279,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30114,11 +30450,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30283,11 +30621,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30452,11 +30792,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30621,11 +30963,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30815,11 +31159,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -30996,11 +31342,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31185,11 +31533,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31366,11 +31716,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31535,11 +31887,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31675,11 +32029,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31815,11 +32171,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31955,11 +32313,13 @@
           },
           "refs": [
             {
-              "title": "DPMS Target Red Hat Enterprise Linux 7",
-              "subject": "Red Hat Enterprise Linux 7",
-              "publisher": "DISA",
-              "type": "DPMS Target",
-              "identifier": "2899"
+              "ref": [
+                {
+                  "publisher": "DISA",
+                  "identifier": "2899",
+                  "type": "DPMS Target"
+                }
+              ]
             }
           ],
           "source_location": {},
@@ -31993,7 +32353,7 @@
           ]
         }
       ],
-      "sha256": "ece2e0b2d97955e9152d2bcad45f0f7ca9810bdb2ed2bf25be83c93ebcebdb08"
+      "sha256": "6e2c1464dbe2897e410e4341083f4741d51e882c5c43caf2c7bef6add2404acc"
     }
   ],
   "passthrough": {
