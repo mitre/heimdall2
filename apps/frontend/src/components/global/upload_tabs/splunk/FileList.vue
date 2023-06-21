@@ -1,15 +1,13 @@
 <template>
   <span>
-    <div
-      class="d-flex flex-row-reverse"
-      style="cursor: pointer"
-      @click="logout"
-    >
+    <div class="d-flex flex-row-reverse" style="cursor: pointer">
       <v-btn icon @click="updateSearch">
         <v-icon>mdi-refresh</v-icon>
       </v-btn>
       <span class="pt-2 pr-4">Sign Out</span>
-      <v-icon color="red" class="pr-2">mdi-logout</v-icon>
+      <v-btn icon @click="logout">
+        <v-icon color="red" class="pr-2">mdi-logout</v-icon>
+      </v-btn>
     </div>
 
     <div class="d-flex flex-column">
