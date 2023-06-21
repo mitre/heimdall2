@@ -201,7 +201,7 @@ export default class S3Reader extends Vue {
   /** On mount, try to look up stored auth info */
   mounted() {
     // Load our session, if there is one
-    this.assumedRole = localSessionInformation.get_default(null);
+    this.assumedRole = localSessionInformation.getDefault(null);
     if (this.assumedRole) {
       this.step = 3;
     }

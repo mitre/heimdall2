@@ -77,12 +77,13 @@
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {FileID} from '@/store/report_intake';
-import {FromHDFToSplunkMapper, SplunkConfig} from '@mitre/hdf-converters';
+import {FromHDFToSplunkMapper} from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Logger} from 'winston';
 import {SnackbarModule} from '../../store/snackbar';
 import AuthStep from '../global/upload_tabs/splunk/AuthStep.vue';
+import {SplunkConfig} from '@mitre/hdf-converters/types/splunk-config-types';
 
 @Component({
   components: {
@@ -140,7 +141,7 @@ export default class ExportSplunkModal extends Vue {
       this.statusLog += `Starting Upload of File: ${evaluation.from_file.filename}\n`;
       if (this.splunkConfig) {
         new FromHDFToSplunkMapper(evaluation, this.logger as Logger)
-          .toSplunk(this.splunkConfig, evaluation.from_file.filename, true)
+          .toSplunk(this.splunkConfig, evaluation.from_file.filename)
           .then(() => {
             this.statusLog += `Sucessfully uploaded file ${evaluation.from_file.filename}\n`;
           })
