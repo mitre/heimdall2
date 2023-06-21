@@ -103,9 +103,9 @@ export default class AuthStep extends Vue {
 
   /** Init our fields */
   mounted() {
-    this.accesskey = localAccesskey.get_default('');
-    this.secretkey = localSecretkey.get_default('');
-    this.hostname = localHostname.get_default('');
+    this.accesskey = localAccesskey.getDefault('');
+    this.secretkey = localSecretkey.getDefault('');
+    this.hostname = localHostname.getDefault('');
   }
 }
 </script>

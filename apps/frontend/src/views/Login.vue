@@ -69,7 +69,7 @@ const lastLoginTab = new LocalStorageVal<string>('login_curr_tab');
   }
 })
 export default class Login extends Vue {
-  activeTab: string = lastLoginTab.get_default(
+  activeTab: string = lastLoginTab.getDefault(
     this.anyAuthProvidersAvailable ? 'logintab-standard' : 'login-ldap'
   );
 

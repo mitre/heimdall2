@@ -1,4 +1,4 @@
-import {ILookupPathFH} from '../reverse-base-converter';
+import {ILookupPathFH} from '../src/converters-from-hdf/reverse-base-converter';
 
 export type SplunkProfile = {
   meta: Meta;
