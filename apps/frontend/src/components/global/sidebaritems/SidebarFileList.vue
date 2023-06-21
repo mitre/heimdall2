@@ -22,10 +22,7 @@
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title
-        :class="{strikethrough: fileFilteredOut(file)}"
-        v-text="file.filename"
-      />
+      <v-list-item-title v-text="file.filename" />
     </v-list-item-content>
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
@@ -45,11 +42,7 @@
 <script lang="ts">
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
-import {
-  FilteredDataModule,
-  FilesFilter,
-  fileMatchesFilter
-} from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationModule} from '@/store/evaluations';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
@@ -61,9 +54,6 @@ import Component, {mixins} from 'vue-class-component';
 import {ChecklistFile} from '@mitre/hdf-converters';
 import {Prop} from 'vue-property-decorator';
 import {AppInfoModule, views} from '@/store/app_info';
-import {InspecFile} from '@/store/report_intake';
-import {SearchModule} from '@/store/search';
-import Checklist from '@/views/Checklist.vue';
 
 @Component
 export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
@@ -191,25 +181,6 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     } else {
       return 'mdi-google-analytics';
     }
-  }
-
-  // This casting to InspecFile is pretty dirty. ChecklistFile should be refactored so that it can be treated as an InspecFile
-  get fileFilteredOut(): (file: InspecFile | ChecklistFile) => boolean {
-    return (file: InspecFile | ChecklistFile) => {
-      if (this.inChecklistView) {
-        return false;
-      }
-
-      file = file as InspecFile;
-
-      const filesFilter = {
-        filenameSearchTerms: SearchModule.fileMetadataSearchTerms.filename,
-        userGroupSearchTerms: SearchModule.fileMetadataSearchTerms.group,
-        evalTagSearchTerms: SearchModule.fileMetadataSearchTerms.evalTag
-      } as FilesFilter;
-
-      return !fileMatchesFilter(file, filesFilter);
-    };
   }
 }
 </script>

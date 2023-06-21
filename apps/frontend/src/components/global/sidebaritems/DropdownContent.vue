@@ -7,15 +7,28 @@
       <v-list dense>
         <FileList
           v-for="(file, i) in files"
+          v-if="inChecklistView || !fileFilteredOut(file)"
           :key="i"
           :file="file"
           @changed-files="$emit('changed-files')"
         />
 
-        <v-divider v-if="!inChecklistView()" />
+        <v-list-item v-if="!inChecklistView && anyFileFilteredOut">
+          Filtered Files
+        </v-list-item>
+
+        <FileList
+          v-for="(file, i) in files"
+          v-if="fileFilteredOut(file)"
+          :key="i"
+          :file="file"
+          @changed-files="$emit('changed-files')"
+        />
+
+        <v-divider v-if="!inChecklistView" />
 
         <v-list-item
-          v-if="!inChecklistView()"
+          v-if="!inChecklistView"
           :title="`${selectAllText} all ${headerText.toLowerCase()}`"
           @change="$emit('changed-files')"
           @click.stop="$emit('toggle-all')"
@@ -63,6 +76,13 @@
 
 <script lang="ts">
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
+import {
+  FilesFilter,
+  fileMatchesFilter
+} from '@/store/data_filters';
+import {InspecFile} from '@/store/report_intake';
+import {SearchModule} from '@/store/search';
+import ChecklistFile from '@/views/Checklist.vue';
 import {Trinary} from '@/enums/Trinary';
 import {AppInfoModule, views} from '@/store/app_info';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
@@ -99,8 +119,26 @@ export default class DropdownContent extends Vue {
     return this.allSelected === Trinary.On ? 'Deselect' : 'Select';
   }
 
-  inChecklistView(): boolean {
+  get inChecklistView(): boolean {
     return AppInfoModule.currentView === views.Checklist;
+  }
+
+  get anyFileFilteredOut(): boolean {
+    return this.files.some(f => this.fileFilteredOut(f))
+  }
+
+  get filesFilter(): FilesFilter {
+    return {
+        filenameSearchTerms: SearchModule.fileMetadataSearchTerms.filename,
+        userGroupSearchTerms: SearchModule.fileMetadataSearchTerms.group,
+        evalTagSearchTerms: SearchModule.fileMetadataSearchTerms.evalTag
+    } as FilesFilter;
+  }
+
+  get fileFilteredOut(): (file: InspecFile) => boolean {
+    return (file: InspecFile) => {
+      return !fileMatchesFilter(file, this.filesFilter);
+    };
   }
 }
 </script>
