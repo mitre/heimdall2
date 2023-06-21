@@ -82,7 +82,7 @@ export default class S3Reader extends Vue {
 
   /** Form required field rules. Maybe eventually expand to other stuff */
   reqRule = (v: string | null | undefined) =>
-    (v || '').trim().length > 0 || 'Field is Required';
+    (v ?? '').trim().length > 0 || 'Field is Required';
 
   // Callback for change in access token
   change_access_token(token: string) {

@@ -95,7 +95,7 @@ export default class FileList extends Vue {
 
   /** Form required field rules. Maybe eventually expand to other stuff */
   reqRule = (v: string | null | undefined) =>
-    (v || '').trim().length > 0 || 'Field is Required';
+    (v ?? '').trim().length > 0 || 'Field is Required';
 
   @Watch('search')
   async onUpdateSearch() {
