@@ -481,37 +481,41 @@ export class XCCDFResultsMapper extends BaseConverter {
             },
             descriptions: [
               {
-                data: {
-                  path: ['check.check-content-ref.name'],
-                  transformer: (text: string | string[]) =>
-                    asArray(text).join('\n') || undefined
-                },
-                label: 'check'
-              },
+                path: ['check.check-content-ref.name'],
+                transformer: (
+                  data: string | string[]
+                ): ExecJSON.ControlDescription => ({
+                  data: asArray(data).join('\n'),
+                  label: 'check'
+                })
+              } as any,
               {
-                data: {
-                  path: ['fixtext.text', 'fixtext', 'fix.text', 'fix'],
-                  transformer: (text: string | string[]) =>
-                    asArray(text).map(parseHtml).join('\n') || undefined
-                },
-                label: 'fix'
-              },
+                path: ['fixtext.text', 'fix.text'],
+                transformer: (
+                  data: string | string[]
+                ): ExecJSON.ControlDescription => ({
+                  data: asArray(data).map(parseHtml).join('\n'),
+                  label: 'fix'
+                })
+              } as any,
               {
-                data: {
-                  path: ['rationale.text', 'rationale'],
-                  transformer: (text: string | string[]) =>
-                    asArray(text).map(parseHtml).join('\n') || undefined
-                },
-                label: 'rationale'
-              },
+                path: ['rationale.text'],
+                transformer: (
+                  data: string | string[]
+                ): ExecJSON.ControlDescription => ({
+                  data: asArray(data).map(parseHtml).join('\n'),
+                  label: 'rationale'
+                })
+              } as any,
               {
-                data: {
-                  path: ['warning'],
-                  transformer: (text: string | string[]) =>
-                    asArray(text).map(parseHtml).join('\n') || undefined
-                },
-                label: 'warning'
-              }
+                path: ['warning.text'],
+                transformer: (
+                  data: string | string[]
+                ): ExecJSON.ControlDescription => ({
+                  data: asArray(data).map(parseHtml).join('\n'),
+                  label: 'warning'
+                })
+              } as any
             ],
             impact: {
               transformer: (vulnerability: Record<string, unknown>): number => {
