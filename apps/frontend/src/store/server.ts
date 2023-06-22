@@ -49,6 +49,7 @@ interface LoginData {
   name: 'ServerModule'
 })
 class Server extends VuexModule implements IServerState {
+  apiKeysEnabled = false;
   banner = '';
   classificationBannerColor = '';
   classificationBannerText = '';
@@ -95,6 +96,7 @@ class Server extends VuexModule implements IServerState {
 
   @Mutation
   SET_STARTUP_SETTINGS(settings: IStartupSettings) {
+    this.apiKeysEnabled = settings.apiKeysEnabled;
     this.banner = settings.banner;
     this.classificationBannerText = settings.classificationBannerText;
     this.classificationBannerColor = settings.classificationBannerColor;

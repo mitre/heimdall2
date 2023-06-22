@@ -58,8 +58,8 @@
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import {checkSplunkCredentials} from '@mitre/hdf-converters/src/splunk-mapper';
-import {SplunkConfig} from '@mitre/splunk-sdk-no-env';
+import {checkSplunkCredentials} from '@mitre/hdf-converters/src/utils/splunk-tools';
+import {SplunkConfig} from '@mitre/hdf-converters/types/splunk-config-types';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -100,36 +100,35 @@ export default class AuthStep extends Vue {
       scheme: parsedURL.protocol.split(':')[0] || 'https'
     };
 
-    await checkSplunkCredentials(config, true)
-      .then(() => {
-        localUsername.set(this.username);
-        localPassword.set(this.password);
-        localHostname.set(this.hostname);
-        if (this.indexToShow === undefined) {
-          localSplunk2HDFIndex.set(this.index);
-        } else {
-          localHDF2SplunkIndex.set(this.index);
-        }
-        SnackbarModule.notify('You have successfully signed in');
-        this.$emit('authenticated', config);
-      })
-      .catch((error) => {
-        if (error !== 'Incorrect Username or Password') {
-          this.$emit('error');
-        }
-        SnackbarModule.failure(error);
-      });
+    try {
+      await checkSplunkCredentials(config);
+      localUsername.set(this.username);
+      localPassword.set(this.password);
+      localHostname.set(this.hostname);
+      if (this.indexToShow === undefined) {
+        localSplunk2HDFIndex.set(this.index);
+      } else {
+        localHDF2SplunkIndex.set(this.index);
+      }
+      SnackbarModule.notify('You have successfully signed in');
+      this.$emit('authenticated', config);
+    } catch (error) {
+      if (error !== 'Failed to login - Incorrect username or password') {
+        this.$emit('error');
+      }
+      SnackbarModule.failure(error);
+    }
   }
 
   /** Init our fields */
   mounted() {
-    this.username = localUsername.get_default('');
-    this.password = localPassword.get_default('');
-    this.hostname = localHostname.get_default('');
+    this.username = localUsername.getDefault('');
+    this.password = localPassword.getDefault('');
+    this.hostname = localHostname.getDefault('');
     if (this.indexToShow === undefined) {
-      this.index = localSplunk2HDFIndex.get_default('*');
+      this.index = localSplunk2HDFIndex.getDefault('*');
     } else {
-      this.index = localSplunk2HDFIndex.get_default(this.indexToShow);
+      this.index = localSplunk2HDFIndex.getDefault(this.indexToShow);
     }
   }
 }

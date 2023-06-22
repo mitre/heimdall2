@@ -9,7 +9,8 @@ import {read_file_async} from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
-  ChecklistIntermediaryConverter,
+  ChecklistResults,
+  ConveyorResults as ConveyorResultsMapper,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -159,11 +160,6 @@ export class InspecIntake extends VuexModule {
         text: read,
         filename: filename
       });
-    } else if (await this.isChecklist(read)) {
-      return this.loadChecklist({
-        text: read,
-        filename: filename
-      });
     } else {
       const converted = await this.convertToHdf({
         fileOptions: options,
@@ -264,6 +260,10 @@ export class InspecIntake extends VuexModule {
         return Object.values(
           new ASFFResultsMapper(convertOptions.data).toHdf()
         );
+      case INPUT_TYPES.CONVEYOR:
+        return Object.values(
+          new ConveyorResultsMapper(convertOptions.data).toHdf()
+        );
       case INPUT_TYPES.ZAP:
         return new ZapMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.NIKTO:
@@ -294,6 +294,8 @@ export class InspecIntake extends VuexModule {
         return new VeracodeMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.FORTIFY:
         return new FortifyMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.CHECKLIST:
+        return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
         return new GoSecMapper(convertOptions.data).toHdf();
       default:
@@ -422,21 +424,6 @@ export class InspecIntake extends VuexModule {
     Object.freeze(evaluation);
     InspecDataModule.addExecution(evalFile);
     FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
-
-    return fileID;
-  }
-
-  @Action
-  async loadChecklist(options: ChecklistLoadOptions) {
-    const fileID: FileID = uuid();
-
-    const newChecklist = ChecklistIntermediaryConverter.toIntermediary({
-      text: options.text,
-      filename: options.filename
-    });
-
-    InspecDataModule.addChecklist({uniqueId: fileID, ...newChecklist});
-    FilteredDataModule.select_exclusive_checklist(fileID);
 
     return fileID;
   }

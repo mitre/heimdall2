@@ -1,197 +1,152 @@
 <template>
-  <Base
-    :show-search="true"
-    :title="curr_title"
-    @changed-files="evalInfo = null"
-  >
-    <!-- Topbar content - give it a search bar -->
-    <template #topbar-content>
-      <v-btn :disabled="!canClear" @click="clear">
-        <span class="d-none d-md-inline pr-2"> Clear </span>
-        <v-icon>mdi-filter-remove</v-icon>
-      </v-btn>
-      <UploadButton />
-      <div class="text-center">
-        <v-menu>
-          <template #activator="{on, attrs}">
-            <v-btn v-bind="attrs" class="mr-2" v-on="on">
-              <span class="d-none d-md-inline mr-2"> Export </span>
-              <v-icon> mdi-file-export </v-icon>
-            </v-btn>
-          </template>
-          <v-list class="py-0">
-            <v-list-item class="px-0">
-              <ExportCaat :filter="allFilter" />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportNist :filter="allFilter" />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportASFFModal :filter="allFilter" />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportCKLModal :filter="allFilter" />
-            </v-list-item>
-            <v-list-item class="px-0">
-              <ExportCSVModal :filter="allFilter" />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportHTMLModal
-                :filter="allFilter"
-                :file-type="current_route_name"
-              />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportSplunkModal />
-            </v-list-item>
-            <v-list-item class="px-0">
-              <ExportJson />
-            </v-list-item>
-            <v-list-item class="px-0">
-              <ExportXCCDFResults
-                :filter="allFilter"
-                :is-result-view="isResultView"
-              />
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
-    </template>
+  <Base :show-search="true" :title="curr_title" @changed-files="evalInfo = null">
+  <!-- Topbar content - give it a search bar -->
+  <template #topbar-content>
+    <v-btn :disabled="!canClear" @click="clear">
+      <span class="d-none d-md-inline pr-2"> Clear </span>
+      <v-icon>mdi-filter-remove</v-icon>
+    </v-btn>
+    <UploadButton />
+    <div class="text-center">
+      <v-menu>
+        <template #activator="{ on, attrs }">
+          <v-btn v-bind="attrs" class="mr-2" v-on="on">
+            <span class="d-none d-md-inline mr-2"> Export </span>
+            <v-icon> mdi-file-export </v-icon>
+          </v-btn>
+        </template>
+        <v-list class="py-0">
+          <v-list-item v-if="isResultView" class="px-0">
+            <ExportCaat :filter="allFilter" />
+          </v-list-item>
+          <v-list-item v-if="isResultView" class="px-0">
+            <ExportNist :filter="allFilter" />
+          </v-list-item>
+          <v-list-item v-if="isResultView" class="px-0">
+            <ExportASFFModal :filter="allFilter" />
+          </v-list-item>
+          <v-list-item v-if="isResultView" class="px-0">
+            <ExportCKLModal :filter="allFilter" />
+          </v-list-item>
+          <v-list-item v-if="isResultView" class="px-0">
+            <ExportCSVModal :filter="allFilter" />
+          </v-list-item>
+          <v-list-item v-if="isResultView" class="px-0">
+            <ExportHTMLModal :filter="allFilter" :file-type="current_route_name" />
+          </v-list-item>
+          <v-list-item v-if="isResultView" class="px-0">
+            <ExportSplunkModal />
+          </v-list-item>
+          <v-list-item class="px-0">
+            <ExportJson />
+          </v-list-item>
+          <v-list-item v-if="isResultView" class="px-0">
+            <ExportXCCDFResults :filter="allFilter" :is-result-view="isResultView" />
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </div>
+  </template>
 
-    <!-- The main content: cards, etc -->
-    <template #main-content>
-      <v-container fluid grid-list-md pt-0 pa-2>
-        <v-container id="fileCards" mx-0 px-0 fluid>
-          <!-- Evaluation Info -->
-          <v-row no-gutters class="mx-n3 mb-3">
-            <v-col>
-              <v-slide-group v-model="evalInfo" show-arrows>
-                <v-slide-item v-for="(file, i) in activeFiles" :key="i">
-                  <v-card
-                    width="100%"
-                    max-width="100%"
-                    class="mx-3"
-                    data-cy="profileInfo"
-                    @click="toggle_profile(file)"
-                  >
-                    <EvaluationInfo :file="file" />
-                    <v-card-subtitle class="bottom-right">
-                      File Info ↓
-                    </v-card-subtitle>
-                  </v-card>
-                </v-slide-item>
-              </v-slide-group>
-            </v-col>
-          </v-row>
-          <ProfileData
-            v-if="evalInfo != null"
-            class="my-4 mx-2"
-            :file="evalInfo"
-          />
-        </v-container>
-        <!-- Count Cards -->
-        <StatusCardRow
-          :filter="allFilter"
-          :current-status-filter="statusFilter"
-          @show-errors="showErrors"
-          @show-waived="showWaived"
-          @add-filter="addStatusSearch"
-          @remove-filter="removeStatusFilter"
-        />
-        <!-- Compliance Cards -->
-        <v-row id="complianceCards" justify="space-around">
-          <v-col xs="4">
-            <v-card id="statusCounts" class="fill-height">
-              <v-card-title class="justify-center">Status Counts</v-card-title>
-              <v-card-actions class="justify-center">
-                <StatusChart v-model="statusFilter" :filter="allFilter" />
-              </v-card-actions>
-            </v-card>
-          </v-col>
-          <v-col xs="4">
-            <v-card id="severityCounts" class="fill-height">
-              <v-card-title class="justify-center"
-                >Severity Counts</v-card-title
-              >
-              <v-card-actions class="justify-center">
-                <SeverityChart v-model="severityFilter" :filter="allFilter" />
-              </v-card-actions>
-            </v-card>
-          </v-col>
-          <v-col xs="4">
-            <v-card id="complianceLevel" class="fill-height">
-              <v-card-title class="justify-center"
-                >Compliance Level</v-card-title
-              >
-              <v-card-actions class="justify-center">
-                <ComplianceChart :filter="allFilter" />
-              </v-card-actions>
-              <v-card-text style="text-align: center"
-                >[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
-                  v-if="waivedProfilesExist"
-                >
-                  + Waived</span
-                >) * 100]</v-card-text
-              >
-            </v-card>
+  <!-- The main content: cards, etc -->
+  <template #main-content>
+    <v-container fluid grid-list-md pt-0 pa-2>
+      <v-container id="fileCards" mx-0 px-0 fluid>
+        <!-- Evaluation Info -->
+        <v-row no-gutters class="mx-n3 mb-3">
+          <v-col>
+            <v-slide-group v-model="evalInfo" show-arrows>
+              <v-slide-item v-for="(file, i) in activeFiles" :key="i">
+                <v-card width="100%" max-width="100%" class="mx-3" data-cy="profileInfo" @click="toggle_profile(file)">
+                  <EvaluationInfo :file="file" />
+                  <v-card-subtitle class="bottom-right">
+                    File Info ↓
+                  </v-card-subtitle>
+                </v-card>
+              </v-slide-item>
+            </v-slide-group>
           </v-col>
         </v-row>
-
-        <!-- TreeMap and Partition Map -->
-        <v-row>
-          <v-col xs-12>
-            <v-card elevation="2">
-              <v-card-title>Tree Map</v-card-title>
-              <v-card-text>
-                <Treemap
-                  v-model="treeFilters"
-                  :filter="treemap_full_filter"
-                  :selected_control.sync="controlSelection"
-                />
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-
-        <!-- DataTable -->
-        <v-row>
-          <v-col xs-12>
-            <v-card elevation="2">
-              <ControlTable :filter="allFilter" :show-impact="isResultView" />
-            </v-card>
-          </v-col>
-        </v-row>
+        <ProfileData v-if="evalInfo != null" class="my-4 mx-2" :file="evalInfo" />
       </v-container>
-    </template>
+      <!-- Count Cards -->
+      <StatusCardRow :filter="allFilter" :current-status-filter="statusFilter" @show-errors="showErrors"
+        @show-waived="showWaived" @add-filter="addStatusSearch" @remove-filter="removeStatusFilter" />
+      <!-- Compliance Cards -->
+      <v-row id="complianceCards" justify="space-around">
+        <v-col xs="4">
+          <v-card id="statusCounts" class="fill-height">
+            <v-card-title class="justify-center">Status Counts</v-card-title>
+            <v-card-actions class="justify-center">
+              <StatusChart v-model="statusFilter" :filter="allFilter" />
+            </v-card-actions>
+          </v-card>
+        </v-col>
+        <v-col xs="4">
+          <v-card id="severityCounts" class="fill-height">
+            <v-card-title class="justify-center">Severity Counts</v-card-title>
+            <v-card-actions class="justify-center">
+              <SeverityChart v-model="severityFilter" :filter="allFilter" />
+            </v-card-actions>
+          </v-card>
+        </v-col>
+        <v-col xs="4">
+          <v-card id="complianceLevel" class="fill-height">
+            <v-card-title class="justify-center">Compliance Level</v-card-title>
+            <v-card-actions class="justify-center">
+              <ComplianceChart :filter="allFilter" />
+            </v-card-actions>
+            <v-card-text style="text-align: center">[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
+                v-if="waivedProfilesExist">
+                + Waived</span>) * 100]</v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
 
-    <!-- Everything-is-filtered snackbar -->
-    <v-snackbar
-      v-model="enableResultSnackbar"
-      class="mt-11"
-      style="z-index: 2"
-      :timeout="-1"
-      color="warning"
-      top
-    >
-      <span v-if="file_filter.length" class="subtitle-2">
-        All results are filtered out. Use the
-        <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
-        filters and show all.
-      </span>
-      <span v-else-if="noFiles" class="subtitle-2">
-        No files are currently loaded. Press the <strong>LOAD</strong>
-        <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
-        some.
-      </span>
-      <span v-else class="subtitle-2">
-        No files are currently enabled for viewing. Open the
-        <v-icon class="mx-1">mdi-arrow-right</v-icon> sidebar menu, and ensure
-        that the file(s) you wish to view are
-        <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked. If you would
-        like to load a file, press the <strong>LOAD</strong>
-        <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above.
-      </span>
-    </v-snackbar>
+      <!-- TreeMap and Partition Map -->
+      <v-row>
+        <v-col xs-12>
+          <v-card elevation="2">
+            <v-card-title>Tree Map</v-card-title>
+            <v-card-text>
+              <Treemap v-model="treeFilters" :filter="treemap_full_filter" :selected_control.sync="controlSelection" />
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <!-- DataTable -->
+      <v-row>
+        <v-col xs-12>
+          <v-card elevation="2">
+            <ControlTable :filter="allFilter" :show-impact="isResultView" />
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </template>
+
+  <!-- Everything-is-filtered snackbar -->
+  <v-snackbar v-model="enableResultSnackbar" class="mt-11" style="z-index: 2" :timeout="-1" color="warning" top>
+    <span v-if="file_filter.length" class="subtitle-2">
+      All results are filtered out. Use the
+      <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
+      filters and show all.
+    </span>
+    <span v-else-if="noFiles" class="subtitle-2">
+      No files are currently loaded. Press the <strong>LOAD</strong>
+      <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
+      some.
+    </span>
+    <span v-else class="subtitle-2">
+      No files are currently enabled for viewing. Open the
+      <v-icon class="mx-1">mdi-arrow-right</v-icon> sidebar menu, and ensure
+      that the file(s) you wish to view are
+      <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked. If you would
+      like to load a file, press the <strong>LOAD</strong>
+      <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above.
+    </span>
+  </v-snackbar>
   </Base>
 </template>
 
@@ -221,7 +176,7 @@ import {
   FilteredDataModule,
   TreeMapState
 } from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
+import { InspecDataModule } from '@/store/data_store';
 import {
   EvaluationFile,
   FileID,
@@ -229,17 +184,17 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
-import {SearchEntry, SearchModule} from '@/store/search';
-import {ServerModule} from '@/store/server';
+import { SearchEntry, SearchModule } from '@/store/search';
+import { ServerModule } from '@/store/server';
 import Base from '@/views/Base.vue';
-import {IEvaluation} from '@heimdall/interfaces';
-import {Severity} from 'inspecjs';
-import {capitalize} from 'lodash';
-import Component, {mixins} from 'vue-class-component';
+import { IEvaluation } from '@heimdall/interfaces';
+import { Severity } from 'inspecjs';
+import { capitalize } from 'lodash';
+import Component, { mixins } from 'vue-class-component';
 import ServerMixin from '../mixins/ServerMixin';
-import {EvaluationModule} from '../store/evaluations';
-import {StatusCountModule} from '../store/status_counts';
-import {compare_times} from '../utilities/delta_util';
+import { EvaluationModule } from '../store/evaluations';
+import { StatusCountModule } from '../store/status_counts';
+import { compare_times } from '../utilities/delta_util';
 
 @Component({
   components: {
@@ -327,15 +282,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     );
   }
 
-  get profiles(): SourcedContextualizedProfile[] {
-    return Array.from(FilteredDataModule.profiles(this.file_filter));
-  }
-
-  get activeFiles(): (
-    | SourcedContextualizedEvaluation
-    | SourcedContextualizedProfile
-  )[] {
-    return this.isResultView ? this.evaluationFiles : this.profiles;
+  get activeFiles(): SourcedContextualizedEvaluation[] {
+    return this.evaluationFiles;
   }
 
   getFile(fileID: FileID) {

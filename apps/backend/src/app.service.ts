@@ -34,7 +34,7 @@ export class AppService
 
   beforeApplicationShutdown(signal: string): void {
     this.logger.info({
-      message: `Recieved ${signal}, starting shutdown for PID ${process.pid}`
+      message: `Received ${signal}, starting shutdown for PID ${process.pid}`
     });
   }
   onApplicationShutdown(signal: string): void {

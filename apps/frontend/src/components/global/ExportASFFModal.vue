@@ -149,7 +149,7 @@ export default class ExportASFFModal extends Vue {
       });
     });
     saveSingleOrMultipleFiles(fileData, 'ASFF').then(() => {
-      // Preserve AWS Account ID and Region accross exports
+      // Preserve AWS Account ID and Region across exports
       this.target = '';
       this.closeModal();
     });

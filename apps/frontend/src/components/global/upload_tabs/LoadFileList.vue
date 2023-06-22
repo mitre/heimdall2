@@ -30,7 +30,7 @@
           mobile-breakpoint="0"
         >
           <template #[`item.filename`]="{item}">
-            <span class="cursor-pointer" @click="load_results([item])">{{
+            <span class="cursor-pointer" @click="emit_selected([item])">{{
               item.filename
             }}</span>
           </template>
@@ -82,7 +82,7 @@
           block
           class="card-outter"
           :disabled="loading"
-          @click="load_results(selectedFiles)"
+          @click="emit_selected(selectedFiles)"
         >
           Load Selected
           <v-icon class="pl-2"> mdi-file-download</v-icon>
@@ -132,9 +132,9 @@ export default class LoadFileList extends Vue {
   deleteTagDialog = false;
   search = '';
 
-  load_results(evaluations: IEvaluation[]) {
+  emit_selected(selection: IEvaluation[] | Sample[]) {
     this.selectedFiles = [];
-    this.$emit('load-results', evaluations);
+    this.$emit('load-selected', selection);
   }
 
   updateEvaluations() {

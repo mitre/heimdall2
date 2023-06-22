@@ -199,7 +199,6 @@ function controlContainsTerm(
     asHDF.finding_details
   ].filter(_.isString);
 
-  // See if any contain term
   return searchables.some((s) => s.toLowerCase().includes(term));
 }
 

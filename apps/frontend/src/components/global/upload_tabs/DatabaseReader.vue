@@ -7,7 +7,7 @@
       :headers="headers"
       :files="files"
       :loading="loading"
-      @load-results="load_results($event)"
+      @load-selected="load_results($event)"
     />
   </v-container>
 </template>

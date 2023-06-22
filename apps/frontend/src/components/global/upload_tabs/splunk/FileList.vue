@@ -22,7 +22,7 @@
         show-select
       >
         <template #[`item.actions`]="{item}">
-          <v-icon @click="load_event(item)"> mdi-plus-circle </v-icon>
+          <v-icon @click="loadEvent(item)"> mdi-plus-circle </v-icon>
         </template>
         <template #no-data>
           No data. Try relaxing your search conditions, or expanding the date
@@ -40,13 +40,13 @@
 <script lang="ts">
 import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {FileMetaData, SplunkConfig} from '@mitre/hdf-converters';
-import {SplunkReport} from '@mitre/hdf-converters/src/converters-from-hdf/splunk/splunk-report-types';
+import {FileMetaData} from '@mitre/hdf-converters';
 import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
+import {SplunkConfig} from '@mitre/hdf-converters/types/splunk-config-types';
 
 @Component({})
 export default class FileList extends Vue {
@@ -93,15 +93,15 @@ export default class FileList extends Vue {
 
   async updateSearch() {
     this.loading = true;
-    this.splunkConverter = new SplunkMapper(this.splunkConfig, true);
+    this.splunkConverter = new SplunkMapper(this.splunkConfig);
     const results = await this.splunkConverter.queryData(this.search);
     this.executions = [];
-    results.forEach((result: SplunkReport) => {
+    for (const result of results) {
       // Only get header objects
       if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
         this.executions.push(result.meta);
       }
-    });
+    }
     this.loading = false;
   }
 
