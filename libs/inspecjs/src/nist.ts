@@ -7,7 +7,7 @@ const NIST_FAMILY_RE =
   /^(?:A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])$/;
 // Limit length of children to avoid potential DoS on malicious NIST Control strings
 const NIST_CONTROL_RE =
-  /^(A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])-([0-9]+)(.{0,60})$/;
+  /^(A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])-(\d+)(.{0,60})$/;
 const SPEC_SPLITTER = /[\s\(\)\.]+/; // Includes all whitespace, periods, and parenthesis
 const REV_RE = /^rev[\s_.]+(\d+)$/i; // Matches Rev_5 etc
 type ParseNist = NistControl | NistRevision | null;
