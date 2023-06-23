@@ -488,7 +488,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                   data: asArray(data).join('\n'),
                   label: 'check'
                 })
-              } as any,
+              } as unknown as ExecJSON.ControlDescription,
               {
                 path: ['fixtext.text', 'fix.text'],
                 transformer: (
@@ -497,7 +497,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                   data: asArray(data).map(parseHtml).join('\n'),
                   label: 'fix'
                 })
-              } as any,
+              } as unknown as ExecJSON.ControlDescription,
               {
                 path: ['rationale.text'],
                 transformer: (
@@ -506,7 +506,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                   data: asArray(data).map(parseHtml).join('\n'),
                   label: 'rationale'
                 })
-              } as any,
+              } as unknown as ExecJSON.ControlDescription,
               {
                 path: ['warning.text'],
                 transformer: (
@@ -515,7 +515,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                   data: asArray(data).map(parseHtml).join('\n'),
                   label: 'warning'
                 })
-              } as any
+              } as unknown as ExecJSON.ControlDescription
             ],
             impact: {
               transformer: (vulnerability: Record<string, unknown>): number => {
