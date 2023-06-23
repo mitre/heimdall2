@@ -74,7 +74,7 @@ function transformImpact(vuln: ChecklistVuln): number {
     ImpactMapping[severity.toLowerCase() as keyof typeof ImpactMapping];
   if (!impact)
     throw new Error(
-      `Severity "${severity}" does not match low, medium, or high, please check severity for ${vuln.vulnNum}`
+      `Severity "${severity}" does not match low, medium, or high, please check severity for ${vuln.vulnnum}`
     );
   return impact;
 }
@@ -249,16 +249,16 @@ export class ChecklistMapper extends BaseConverter {
             path: 'vulns',
             key: 'id',
             tags: {
-              gtitle: {path: 'groupTitle'},
-              rid: {path: 'ruleId'},
-              gid: {path: 'vulnNum'},
-              stig_id: {path: 'ruleVersion'},
+              gtitle: {path: 'grouptitle'},
+              rid: {path: 'ruleid'},
+              gid: {path: 'vulnnum'},
+              stig_id: {path: 'ruleversion'},
               cci: {
-                path: 'cciRef',
+                path: 'cciref',
                 transformer: cciRef
               },
               nist: {
-                path: 'cciRef',
+                path: 'cciref',
                 transformer: nistTag
               },
               weight: {path: 'weight'},
@@ -266,17 +266,17 @@ export class ChecklistMapper extends BaseConverter {
               // first element is the label name as it will appear in UI while the second is the ChecklistObject keyname
               transformer: (input: ChecklistVuln): Record<string, unknown> => {
                 const tags = [
-                  ['IA Controls', 'iaControls'],
-                  ['Legacy ID', 'legacyId'],
-                  ['False Positives', 'falsePositives'],
-                  ['False Negatives', 'falseNegatives'],
+                  ['IA Controls', 'iacontrols'],
+                  ['Legacy ID', 'legacyid'],
+                  ['False Positives', 'falsepositives'],
+                  ['False Negatives', 'falsenegatives'],
                   ['Mitigations', 'mitigations'],
-                  ['Mitigation Controls', 'mitigationControl'],
-                  ['Potential Impact', 'potentialImpact'],
+                  ['Mitigation Controls', 'mitigationcontrol'],
+                  ['Potential Impact', 'potentialimpact'],
                   ['Responsibility', 'responsibility'],
-                  ['STIGRef', 'stigRef'],
-                  ['Security Override Guidance', 'securityOverrideGuidance'],
-                  ['Severity Justification', 'severityJustification']
+                  ['STIGRef', 'stigref'],
+                  ['Security Override Guidance', 'securityoverrideguidance'],
+                  ['Severity Justification', 'severityjustification']
                 ];
                 const fullTags: Record<string, unknown> = {};
                 for (const [key, path] of tags) {
@@ -290,16 +290,16 @@ export class ChecklistMapper extends BaseConverter {
             },
             refs: [],
             source_location: {},
-            title: {path: 'ruleTitle'},
-            id: {path: 'vulnNum'},
-            desc: {path: 'vulnDiscuss'},
+            title: {path: 'ruletitle'},
+            id: {path: 'vulnnum'},
+            desc: {path: 'vulndiscuss'},
             descriptions: [
               {
-                data: {path: 'checkContent'},
+                data: {path: 'checkcontent'},
                 label: 'check'
               },
               {
-                data: {path: 'fixText'},
+                data: {path: 'fixtext'},
                 label: 'fix'
               },
               {
