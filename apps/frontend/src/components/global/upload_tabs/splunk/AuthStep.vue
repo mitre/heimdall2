@@ -93,42 +93,43 @@ export default class AuthStep extends Vue {
     (v ?? '').trim().length > 0 || 'Field is Required';
 
   async login(): Promise<void> {
-    if (this.index !== '') {
-      if (!/^https?:\/\//.test(this.hostname)) {
-        this.hostname = `https://${this.hostname}`;
-      }
-
-      const parsedURL = new URL(this.hostname);
-
-      const config: SplunkConfig = {
-        host: parsedURL.hostname,
-        username: this.username,
-        password: this.password,
-        port: parseInt(parsedURL.port) || 8089,
-        index: this.index,
-        scheme: parsedURL.protocol.split(':')[0] || 'https'
-      };
-
-      try {
-        await checkSplunkCredentials(config);
-        localUsername.set(this.username);
-        localPassword.set(this.password);
-        localHostname.set(this.hostname);
-        if (this.indexToShow === undefined) {
-          localSplunk2HDFIndex.set(this.index);
-        } else {
-          localHDF2SplunkIndex.set(this.index);
-        }
-        SnackbarModule.notify('You have successfully signed in');
-        this.$emit('authenticated', config);
-      } catch (error) {
-        if (error !== 'Failed to login - Incorrect username or password') {
-          this.$emit('error');
-        }
-        SnackbarModule.failure(error);
-      }
-    } else {
+    // Check if user has inputted an index
+    if (this.index === '') {
       SnackbarModule.failure('Failed to login - A valid index is required');
+      return;
+    }
+    if (!/^https?:\/\//.test(this.hostname)) {
+      this.hostname = `https://${this.hostname}`;
+    }
+
+    const parsedURL = new URL(this.hostname);
+
+    const config: SplunkConfig = {
+      host: parsedURL.hostname,
+      username: this.username,
+      password: this.password,
+      port: parseInt(parsedURL.port) || 8089,
+      index: this.index,
+      scheme: parsedURL.protocol.split(':')[0] || 'https'
+    };
+
+    try {
+      await checkSplunkCredentials(config);
+      localUsername.set(this.username);
+      localPassword.set(this.password);
+      localHostname.set(this.hostname);
+      if (this.indexToShow === undefined) {
+        localSplunk2HDFIndex.set(this.index);
+      } else {
+        localHDF2SplunkIndex.set(this.index);
+      }
+      SnackbarModule.notify('You have successfully signed in');
+      this.$emit('authenticated', config);
+    } catch (error) {
+      if (error !== 'Failed to login - Incorrect username or password') {
+        this.$emit('error');
+      }
+      SnackbarModule.failure(error);
     }
   }
 

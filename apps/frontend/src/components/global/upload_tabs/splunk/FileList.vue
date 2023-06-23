@@ -114,6 +114,12 @@ export default class FileList extends Vue {
 
   async updateSearch() {
     this.loading = true;
+    // Check if user has inputted an index
+    if (this.index === '') {
+      this.loading = false;
+      SnackbarModule.failure('Failed to login - A valid index is required');
+      return;
+    }
     // Update index for search job if user changes targeted index
     this.splunkConfig.index = this.index;
     this.search = `search index="${this.index}" meta.subtype="header"`;
