@@ -15,7 +15,7 @@ export type ChecklistObject = {
   jsonixData: Checklist;
 };
 
-type ChecklistAsset = Asset;
+export type ChecklistAsset = Asset;
 
 type ChecklistStig = {
   header: StigHeader;

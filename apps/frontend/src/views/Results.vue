@@ -20,7 +20,7 @@
             </v-btn>
           </template>
           <v-list class="py-0">
-            <v-list-item class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportCaat :filter="allFilter" />
             </v-list-item>
             <v-list-item v-if="isResultView" class="px-0">
@@ -32,7 +32,7 @@
             <v-list-item v-if="isResultView" class="px-0">
               <ExportCKLModal :filter="allFilter" />
             </v-list-item>
-            <v-list-item class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportCSVModal :filter="allFilter" />
             </v-list-item>
             <v-list-item v-if="isResultView" class="px-0">
@@ -47,7 +47,7 @@
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportXCCDFResults
                 :filter="allFilter"
                 :is-result-view="isResultView"
@@ -56,7 +56,9 @@
           </v-list>
         </v-menu>
       </div>
+      <<<<<<< HEAD
       <PrintButton />
+      ======= >>>>>>> Fixed typing and linting
     </template>
 
     <!-- The main content: cards, etc -->

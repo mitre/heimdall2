@@ -125,15 +125,6 @@ export type ExecJSONLoadOptions = {
   data: ExecJSON.Execution;
 };
 
-export type ChecklistLoadOptions = {
-  filename: string;
-  database_id?: string;
-  createdAt?: Date;
-  updatedAt?: Date;
-  tags?: Tag[];
-  text: string;
-};
-
 @Module({
   namespaced: true,
   dynamic: true,
@@ -200,19 +191,6 @@ export class InspecIntake extends VuexModule {
         return [];
       }
     }
-  }
-
-  @Action
-  async isChecklist(
-    data: string | Record<string, unknown> | undefined
-  ): Promise<boolean> {
-    if (
-      typeof data === 'string' &&
-      data.toLowerCase().includes('<checklist>')
-    ) {
-      return true;
-    }
-    return false;
   }
 
   @Action
