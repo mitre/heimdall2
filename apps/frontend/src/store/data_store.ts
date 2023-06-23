@@ -114,21 +114,30 @@ export class InspecData extends VuexModule {
   }
 
   /**
-   * Adds an execution file to the store.
-   * @param newExecution The execution to add
-   */
-  @Mutation
-  addExecution(newExecution: EvaluationFile) {
-    this.executionFiles.push(newExecution);
-  }
-
-  /**
    * Adds a checklist file to the store.
    * @param newChecklist The checklist to add
    */
   @Mutation
   addChecklist(newChecklist: ChecklistFile) {
     this.checklistFiles.push(newChecklist);
+  }
+
+  /**
+   * Adds an execution file to the store.
+   * @param newExecution The execution to add
+   */
+  @Mutation
+  addExecution(newExecution: EvaluationFile) {
+    if (
+      'passthrough' in newExecution.evaluation.data &&
+      'checklist' in newExecution.evaluation.data['passthrough']
+    ) {
+      this.addChecklist(
+        newExecution.evaluation.data['passthrough']['checklist']
+      );
+    } else {
+      this.executionFiles.push(newExecution);
+    }
   }
 
   /**
