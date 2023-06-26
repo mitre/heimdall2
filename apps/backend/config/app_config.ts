@@ -110,9 +110,7 @@ export default class AppConfig {
   }
 
   getDefaultAdmin() {
-    return {
-      username: this.get('ADMIN_EMAIL') || 'admin@heimdall.local'
-    }
+    return this.get('ADMIN_EMAIL') || 'admin@heimdall.local'
   }
 
   getDbConfig() {

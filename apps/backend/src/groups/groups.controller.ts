@@ -92,7 +92,7 @@ export class GroupsController {
   ): Promise<GroupDto> {
     const abac = this.authz.abac.createForUser(request.user);
     const group = await this.groupsService.findByPkBang(id);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
+    // ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
     const userToRemove = await this.usersService.findById(
       removeUserFromGroupDto.userId
     );
