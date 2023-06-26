@@ -73,7 +73,7 @@
             <ChecklistSeverityOverride
               :selected-rule="selectedRule"
               :sheet="sheet"
-              :severity-override-selection="severityOverrideSelection"
+              :severity-override-selection="severityoverrideSelection"
               @disable-sheet="sheet = false"
               @enable-sheet="sheet = true"
             />
@@ -122,14 +122,15 @@ import {
 } from '@/store/data_filters';
 import {
   FileID,
+  EvaluationFile,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import {
-  ChecklistConverter,
-  ChecklistFile,
-  ChecklistVuln
+  ChecklistVuln,
+  ChecklistObject,
+  Severityoverride
 } from '@mitre/hdf-converters';
 import {InspecDataModule} from '@/store/data_store';
 import _ from 'lodash';
@@ -142,7 +143,6 @@ import ChecklistRuleInfoBody from '@/components/global/checklist/ChecklistRuleIn
 import ChecklistRuleEdit from '@/components/global/checklist/ChecklistRuleEdit.vue';
 import ChecklistSeverityOverride from '@/components/global/checklist/ChecklistSeverityOverride.vue';
 import ExportButton from '@/components/generic/ExportButton.vue';
-import {Severity} from 'inspecjs';
 
 @Component({
   components: {
@@ -165,13 +165,13 @@ export default class Checklist extends RouteMixin {
   sheet = false;
 
   /** State variable to track severity justification */
-  newJustification = this.selectedRule.severityJustification;
+  newJustification = this.selectedRule.severityjustification;
 
   /** State variable to track severity override */
-  severityOverrideSelection = this.selectedRule.severityOverride;
+  severityoverrideSelection = this.selectedRule.severityoverride;
 
-  setSeverityOverrideSelection(value: Severity) {
-    this.severityOverrideSelection = value;
+  setSeverityOverrideSelection(value: Severityoverride) {
+    this.severityoverrideSelection = value;
   }
 
   /** State variable to track "Short ID" switch */
@@ -187,9 +187,10 @@ export default class Checklist extends RouteMixin {
       filename: string;
       data: string;
     };
-    const checklist = this.getChecklist(this.fileFilter);
+    const checklist = InspecDataModule.getChecklist(this.fileFilter);
     if (checklist) {
-      const checklistString = ChecklistConverter.toChecklist(checklist);
+      const checklistString = 'NEEDS FIXING';
+      //const checklistString = ChecklistConverter.toChecklist(checklist);
       const file: FileData[] = [
         {
           filename: checklist.filename,
@@ -231,23 +232,10 @@ export default class Checklist extends RouteMixin {
   }
 
   /**
-   * Gets all loaded checklist file ids
-   */
-  get checklistIds(): ChecklistFile[] {
-    return InspecDataModule.allChecklistFiles;
-  }
-
-  /**
    * Returns true if no checklist files are loaded
    */
   get noFiles(): boolean {
     return InspecDataModule.allChecklistFiles.length == 0;
-  }
-
-  getChecklist(fileID: FileID) {
-    return InspecDataModule.allChecklistFiles.find(
-      (f) => f.uniqueId === fileID
-    );
   }
 
   /**
@@ -269,7 +257,7 @@ export default class Checklist extends RouteMixin {
       nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
       codeSearchTerms: SearchModule.inFileSearchTerms.code,
       omit_overlayed_controls: true,
-      iaControlsSearchTerms: SearchModule.inFileSearchTerms.iaControls,
+      iaControlsSearchTerms: SearchModule.inFileSearchTerms.iacontrols,
       keywordsSearchTerms: SearchModule.inFileSearchTerms.keywords
     };
   }
@@ -319,7 +307,8 @@ export default class Checklist extends RouteMixin {
 
   get rules() {
     let rulesList: ChecklistVuln[] = [];
-    for (const stig of this.getChecklist(this.fileFilter)?.stigs ?? []) {
+    for (const stig of InspecDataModule.getChecklist(this.fileFilter)?.stigs ??
+      []) {
       rulesList = [...rulesList, ...stig.vulns];
     }
     return checklistRules(rulesList, this.allFilter);
@@ -330,7 +319,7 @@ export default class Checklist extends RouteMixin {
    */
   get currentTitle(): string {
     if (this.fileFilter.length !== 0) {
-      const file = this.getChecklist(this.fileFilter);
+      const file = InspecDataModule.getChecklist(this.fileFilter);
       if (file) {
         return `Checklist View (${file.filename} selected)`;
       }

@@ -10,7 +10,8 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {ChecklistFile} from '@mitre/hdf-converters';
+import {ChecklistObject} from '@mitre/hdf-converters';
+import _ from 'lodash';
 import {
   Action,
   getModule,
@@ -24,7 +25,10 @@ import {FilteredDataModule} from './data_filters';
 export function isFromProfileFile(p: SourcedContextualizedProfile) {
   return p.sourcedFrom === null;
 }
-
+/** Checklist file type  */
+export type ChecklistFile = ChecklistObject & {
+  filename: string;
+};
 @Module({
   namespaced: true,
   dynamic: true,
@@ -39,7 +43,7 @@ export class InspecData extends VuexModule {
   profileFiles: ProfileFile[] = [];
 
   /** State var containing all checklist files that have been added */
-  checklistFiles: ChecklistFile[] = [];
+  checklistFiles: EvaluationFile[] = [];
 
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
@@ -60,8 +64,34 @@ export class InspecData extends VuexModule {
   }
 
   /** Return all checklist files only */
-  get allChecklistFiles(): ChecklistFile[] {
-    return this.checklistFiles;
+  get allChecklistFiles(): EvaluationFile[] {
+    const checklistFiles: EvaluationFile[] = [];
+    const files: EvaluationFile[] = this.executionFiles;
+    for (const file of files) {
+      const checklist: ChecklistObject = _.get(
+        file.evaluation.data,
+        'passthrough.checklist'
+      ) as unknown as ChecklistObject;
+      if (checklist) {
+        checklistFiles.push(file as EvaluationFile);
+      }
+    }
+    return checklistFiles;
+  }
+
+  /** Get specific checklist file by fileID */
+  getChecklist(fileID: FileID): ChecklistFile {
+    const checklistFile = this.allChecklistFiles.find(
+      (f) => f.uniqueId === fileID
+    );
+    const checklist: ChecklistObject = _.get(
+      checklistFile?.evaluation.data,
+      'passthrough.checklist'
+    ) as unknown as ChecklistObject;
+    return {
+      ...checklist,
+      filename: checklistFile?.filename ?? 'Default Checklist Filename'
+    };
   }
 
   /**
@@ -118,7 +148,7 @@ export class InspecData extends VuexModule {
    * @param newChecklist The checklist to add
    */
   @Mutation
-  addChecklist(newChecklist: ChecklistFile) {
+  addChecklist(newChecklist: EvaluationFile) {
     this.checklistFiles.push(newChecklist);
   }
 
@@ -128,16 +158,7 @@ export class InspecData extends VuexModule {
    */
   @Mutation
   addExecution(newExecution: EvaluationFile) {
-    if (
-      'passthrough' in newExecution.evaluation.data &&
-      'checklist' in newExecution.evaluation.data['passthrough']
-    ) {
-      this.addChecklist(
-        newExecution.evaluation.data['passthrough']['checklist']
-      );
-    } else {
-      this.executionFiles.push(newExecution);
-    }
+    this.executionFiles.push(newExecution);
   }
 
   /**

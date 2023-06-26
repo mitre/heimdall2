@@ -141,7 +141,7 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
       files.includes(ckl.uniqueId)
     ).length;
     const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
-    if (numChecklists > numProfiles && numChecklists > numEvaluations) {
+    if (numChecklists > numProfiles && numChecklists >= numEvaluations) {
       if (this.currentRoute !== 'checklists')
         this.navigateWithNoErrors(`/checklists`);
     } else if (numEvaluations >= numProfiles) {

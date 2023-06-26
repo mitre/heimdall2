@@ -63,7 +63,7 @@ class Search extends VuexModule {
     classification: SearchEntry<ClassificationSearchTerm>[];
     groupName: SearchEntry<GroupNameSearchTerm>[];
     cci: SearchEntry<CciSearchTerm>[];
-    iaControls: SearchEntry<IaControlsSearchTerm>[];
+    iacontrols: SearchEntry<IaControlsSearchTerm>[];
     NISTIdFilter: SearchEntry<NistIdFilter>[];
     description: SearchEntry<DescriptionSearchTerm>[];
     statusFilter: SearchEntry<ExtendedControlStatus>[];
@@ -79,7 +79,7 @@ class Search extends VuexModule {
     classification: [],
     groupName: [],
     cci: [],
-    iaControls: [],
+    iacontrols: [],
     NISTIdFilter: [],
     description: [],
     statusFilter: [],
@@ -589,14 +589,14 @@ class Search extends VuexModule {
       | SearchEntry<IaControlsSearchTerm>
       | SearchEntry<IaControlsSearchTerm>[]
   ) {
-    this.inFileSearchTerms.iaControls =
-      this.inFileSearchTerms.iaControls.concat(iaControl);
+    this.inFileSearchTerms.iacontrols =
+      this.inFileSearchTerms.iacontrols.concat(iaControl);
   }
 
   /** Clears all CCI filters */
   @Mutation
   CLEAR_IA_CONTROLS() {
-    this.inFileSearchTerms.iaControls = [];
+    this.inFileSearchTerms.iacontrols = [];
   }
 
   /** Adds Keywords to filter */

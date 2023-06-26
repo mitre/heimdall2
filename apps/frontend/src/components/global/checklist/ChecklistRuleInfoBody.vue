@@ -43,14 +43,14 @@
           >MISC Data:
         </span>
         <!-- Rule IA Controls -->
-        <div v-if="selectedRule.iaControls" class="my-3 d-flex flex-column">
+        <div v-if="selectedRule.iacontrols" class="my-3 d-flex flex-column">
           <span>IA Controls:</span>
-          <span>{{ selectedRule.iaControls }}</span>
+          <span>{{ selectedRule.iacontrols }}</span>
         </div>
         <!-- Rule False Positives -->
-        <div v-if="selectedRule.falsePositives" class="my-3 d-flex flex-column">
+        <div v-if="selectedRule.falsepositives" class="my-3 d-flex flex-column">
           <span>False Positives:</span>
-          <span>{{ selectedRule.falsePositives }}</span>
+          <span>{{ selectedRule.falsepositives }}</span>
         </div>
         <!-- Rule Mitigations -->
         <div v-if="selectedRule.mitigations" class="my-3 d-flex flex-column">
@@ -59,43 +59,43 @@
         </div>
         <!-- Rule Potential Impact -->
         <div
-          v-if="selectedRule.potentialImpact"
+          v-if="selectedRule.potentialimpact"
           class="my-3 d-flex flex-column"
         >
           <span>Potential Impact:</span>
-          <span>{{ selectedRule.potentialImpact }}</span>
+          <span>{{ selectedRule.potentialimpact }}</span>
         </div>
         <!-- Rule Third Party Tools -->
         <div
-          v-if="selectedRule.thirdPartyTools"
+          v-if="selectedRule.thirdpartytools"
           class="my-3 d-flex flex-column"
         >
           <span>Third Party Tools:</span>
-          <span>{{ selectedRule.thirdPartyTools }}</span>
+          <span>{{ selectedRule.thirdpartytools }}</span>
         </div>
         <!-- Rule Mitigation Control -->
         <div
-          v-if="selectedRule.mitigationControl"
+          v-if="selectedRule.mitigationcontrol"
           class="my-3 d-flex flex-column"
         >
           <span>Mitigation Control:</span>
-          <span>{{ selectedRule.mitigationControl }}</span>
+          <span>{{ selectedRule.mitigationcontrol }}</span>
         </div>
         <!-- Severity Override -->
         <div
-          v-if="selectedRule.severityOverride"
+          v-if="selectedRule.severityoverride"
           class="my-3 d-flex flex-column"
         >
           <span>Severity Override:</span>
-          <span>{{ selectedRule.severityOverride }}</span>
+          <span>{{ selectedRule.severityoverride }}</span>
         </div>
         <!-- Severity Override Justification -->
         <div
-          v-if="selectedRule.severityJustification"
+          v-if="selectedRule.severityjustification"
           class="my-3 d-flex flex-column"
         >
           <span>Severity Override Justification:</span>
-          <span>{{ selectedRule.severityJustification }}</span>
+          <span>{{ selectedRule.severityjustification }}</span>
           <v-btn class="mt-2" dark @click="$emit('enable-sheet')"
             >Edit Justification<v-icon data-cy="edit" title="Edit" class="ml-3">
               mdi-pencil
@@ -137,14 +137,14 @@ export default class ChecklistRuleInfoBody extends Vue {
 
   miscDataPresent() {
     return (
-      this.selectedRule.iaControls ||
-      this.selectedRule.falsePositives ||
+      this.selectedRule.iacontrols ||
+      this.selectedRule.falsepositives ||
       this.selectedRule.mitigations ||
-      this.selectedRule.potentialImpact ||
-      this.selectedRule.thirdPartyTools ||
-      this.selectedRule.mitigationControl ||
-      this.selectedRule.severityOverride ||
-      this.selectedRule.severityJustification
+      this.selectedRule.potentialimpact ||
+      this.selectedRule.thirdpartytools ||
+      this.selectedRule.mitigationcontrol ||
+      this.selectedRule.severityoverride ||
+      this.selectedRule.severityjustification
     );
   }
 }

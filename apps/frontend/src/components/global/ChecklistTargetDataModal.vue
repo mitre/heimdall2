@@ -112,19 +112,13 @@ export default class ChecklistTargetDataModal extends Vue {
     return FilteredDataModule.selectedChecklistId;
   }
 
-  getChecklist(fileID: FileID) {
-    return InspecDataModule.allChecklistFiles.find(
-      (f) => f.uniqueId === fileID
-    );
-  }
-
   clearTextInputs() {
     this.selectedChecklistAsset.webdbsite = '';
     this.selectedChecklistAsset.webdbinstance = '';
   }
 
   get selectedChecklistAsset() {
-    const selectedChecklist = this.getChecklist(this.file_filter);
+    const selectedChecklist = InspecDataModule.getChecklist(this.file_filter);
     if (selectedChecklist) {
       return selectedChecklist.asset;
     } else {
