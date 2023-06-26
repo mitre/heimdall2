@@ -1,7 +1,7 @@
 <template>
   <v-list-item :to="link" @click="$emit('click', $event)">
     <v-list-item-avatar>
-      <v-icon small v-text="icon" />
+      <v-icon small>{{ icon }}</v-icon>
     </v-list-item-avatar>
 
     <v-list-item-content>
