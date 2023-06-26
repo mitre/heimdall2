@@ -6,6 +6,7 @@ import {Trinary} from '@/enums/Trinary';
 import {severities, statuses} from '@/plugins/vuetify';
 import {InspecDataModule} from '@/store/data_store';
 import {
+  EvaluationFile,
   FileID,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
@@ -13,8 +14,11 @@ import {
 import Store from '@/store/store';
 import {
   ChecklistAsset,
-  ChecklistFile,
-  ChecklistVuln
+  ChecklistObject,
+  ChecklistSeverity,
+  ChecklistVuln,
+  Severityoverride,
+  StatusMapping
 } from '@mitre/hdf-converters';
 import {
   ContextualizedControl,
@@ -216,6 +220,9 @@ function ruleContainsTerm(
 ): boolean {
   // See if any contain filter term
   return Object.values(rule).some((value) => {
+    if (_.isBoolean(value)) {
+      return value;
+    }
     return value?.toLowerCase().includes(filter.value);
   });
 }
@@ -278,38 +285,38 @@ export class FilteredData extends VuexModule {
 
   /** For Checklist Viewer */
   readonly emptyRule: ChecklistVuln = {
-    status: '',
-    findingDetails: '',
+    status: StatusMapping.Not_Reviewed,
+    findingdetails: '',
     comments: '',
-    severityOverride: '',
-    severityJustification: '',
-    vulnNum: '',
-    severity: '',
-    groupTitle: '',
-    ruleId: '',
-    ruleVersion: '',
-    ruleTitle: '',
-    vulnDiscuss: '',
-    iaControls: '',
-    checkContent: '',
-    fixText: '',
-    falsePositives: '',
-    falseNegatives: '',
-    documentable: '',
+    severityoverride: Severityoverride.Empty,
+    severityjustification: '',
+    vulnnum: '',
+    severity: ChecklistSeverity.Empty,
+    grouptitle: '',
+    ruleid: '',
+    ruleversion: '',
+    ruletitle: '',
+    vulndiscuss: '',
+    iacontrols: '',
+    checkcontent: '',
+    fixtext: '',
+    falsepositives: '',
+    falsenegatives: '',
+    documentable: false,
     mitigations: '',
-    potentialImpact: '',
-    thirdPartyTools: '',
-    mitigationControl: '',
+    potentialimpact: '',
+    thirdpartytools: '',
+    mitigationcontrol: '',
     responsibility: '',
-    securityOverrideGuidance: '',
-    checkContentRef: '',
+    securityoverrideguidance: '',
+    checkcontentref: '',
     weight: '',
-    class: '',
-    stigRef: '',
-    targetKey: '',
-    stigUuid: '',
-    legacyId: '',
-    cciRef: ''
+    class: 'Unclass',
+    stigref: '',
+    targetkey: '',
+    stiguuid: '',
+    legacyid: '',
+    cciref: ''
   };
 
   readonly emptyAsset: ChecklistAsset = {
@@ -447,15 +454,17 @@ export class FilteredData extends VuexModule {
 
   @Action
   public select_exclusive_checklist(fileID: FileID): void {
+    const checklist: ChecklistObject = _.get(
+      InspecDataModule.allChecklistFiles.find((f) => f.uniqueId === fileID)
+        ?.evaluation.data,
+      'passthrough.checklist'
+    ) as unknown as ChecklistObject;
     if (this.selectedChecklistId === fileID) {
       this.CLEAR_CHECKLIST();
       this.SELECT_RULE(this.emptyRule);
     } else {
       this.SELECT_CHECKLIST(fileID);
-      this.selectRule(
-        InspecDataModule.allChecklistFiles.find((f) => f.uniqueId === fileID)
-          ?.stigs[0].vulns[0] ?? this.emptyRule
-      );
+      this.selectRule(checklist.stigs[0].vulns[0] ?? this.emptyRule);
     }
   }
 
@@ -503,7 +512,7 @@ export class FilteredData extends VuexModule {
     };
   }
 
-  get checklists(): (file: FileID) => ChecklistFile[] {
+  get checklists(): (file: FileID) => EvaluationFile[] {
     return (file: FileID) => {
       return InspecDataModule.allChecklistFiles.filter(
         (e) => e.uniqueId === file
@@ -724,7 +733,7 @@ export function checklistRules(
     class: filters.classificationSearchTerms,
     groupTitle: filters.groupNameSearchTerms,
     cciRef: filters.cciSearchTerms,
-    iaControls: filters.iaControlsSearchTerms,
+    iacontrols: filters.iaControlsSearchTerms,
     status: _.filter(
       filters.status,
       (status: SearchEntry<ExtendedControlStatus>) => status.value !== 'Waived'

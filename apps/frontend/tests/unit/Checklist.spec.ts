@@ -5,10 +5,11 @@ import {
 import {InspecDataModule} from '@/store/data_store';
 import {SearchEntry, SearchModule} from '@/store/search';
 import Checklist from '@/views/Checklist.vue';
-import {ChecklistVuln} from '@mitre/hdf-converters';
+import {ChecklistObject, ChecklistVuln} from '@mitre/hdf-converters';
 import {shallowMount, Wrapper} from '@vue/test-utils';
 import {readFileSync} from 'fs';
 import 'jest';
+import _ from 'lodash';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
 import {loadChecklistFile} from '../util/testingUtils';
@@ -52,9 +53,14 @@ describe('Datatable', () => {
 
   it('checklist row and table data is correct', () => {
     const rules: ChecklistVuln[] = [];
-    InspecDataModule.allChecklistFiles
-      .find((f) => f.uniqueId === FilteredDataModule.selectedChecklistId)
-      ?.stigs.map((stig) => stig.vulns)
+    const checklist: ChecklistObject = _.get(
+      InspecDataModule.allChecklistFiles.find(
+        (f) => f.uniqueId === FilteredDataModule.selectedChecklistId
+      )?.evaluation.data,
+      'passthrough.checklist'
+    ) as unknown as ChecklistObject;
+    checklist.stigs
+      .map((stig) => stig.vulns)
       .forEach((rulesItems) => {
         rules.push(...rulesItems);
       });
@@ -65,9 +71,9 @@ describe('Datatable', () => {
           rules: Array<ChecklistVuln>;
         }
       ).rules
-        .map((item: ChecklistVuln) => item.ruleId)
+        .map((item: ChecklistVuln) => item.ruleid)
         .sort()
-    ).toEqual(rules.map((item: ChecklistVuln) => item.ruleId).sort());
+    ).toEqual(rules.map((item: ChecklistVuln) => item.ruleid).sort());
   });
 
   it('displays correct number of rules with loaded checklist and filter', async () => {

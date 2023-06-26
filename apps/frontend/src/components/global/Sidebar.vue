@@ -115,7 +115,6 @@ import RouteMixin from '@/mixins/RouteMixin';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
-import {ChecklistFile} from '@mitre/hdf-converters';
 import Component, {mixins} from 'vue-class-component';
 import {ServerModule} from '../../store/server';
 import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
@@ -223,7 +222,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   }
 
   // get all visible (uploaded) checklist files
-  get visible_checklist_files(): ChecklistFile[] {
+  get visible_checklist_files(): EvaluationFile[] {
     const files = InspecDataModule.allChecklistFiles;
     return files.sort((a, b) => a.filename.localeCompare(b.filename));
   }

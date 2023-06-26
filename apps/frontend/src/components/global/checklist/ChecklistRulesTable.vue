@@ -143,7 +143,7 @@ export default class ChecklistRulesTable extends Vue {
   }
 
   checkSelected(rule: ChecklistVuln) {
-    if (rule.ruleId === FilteredDataModule.selectedRule.ruleId) {
+    if (rule.ruleid === FilteredDataModule.selectedRule.ruleid) {
       return 'selectedRow';
     }
   }

@@ -27,25 +27,26 @@
 </template>
 
 <script lang="ts">
-import {ChecklistVuln} from '@mitre/hdf-converters';
+import {ChecklistVuln, Severityoverride} from '@mitre/hdf-converters';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
 @Component
 export default class ChecklistSeverityOverride extends Vue {
   @Prop({type: Object, required: true}) readonly selectedRule!: ChecklistVuln;
   @Prop({type: Boolean, required: true}) sheet!: boolean;
-  @Prop({type: String, required: true}) severityOverrideSelection!: string;
+  @Prop({type: String, required: true})
+  severityoverrideSelection!: Severityoverride;
 
-  newJustification = this.selectedRule.severityJustification
-    ? this.selectedRule.severityJustification
+  newJustification = this.selectedRule.severityjustification
+    ? this.selectedRule.severityjustification
     : '';
 
   validJustification = true;
   validateSecurityJustification() {
     if (this.newJustification !== '') {
       this.validJustification = true;
-      this.selectedRule.severityOverride = this.severityOverrideSelection;
-      this.selectedRule.severityJustification = this.newJustification;
+      this.selectedRule.severityoverride = this.severityoverrideSelection;
+      this.selectedRule.severityjustification = this.newJustification;
       this.$emit('disable-sheet');
       return true;
     } else {
@@ -58,7 +59,7 @@ export default class ChecklistSeverityOverride extends Vue {
   cancelSeverityOverride() {
     this.validJustification = true;
     this.$emit('disable-sheet');
-    this.selectedRule.severityJustification = '';
+    this.selectedRule.severityjustification = '';
   }
 }
 </script>

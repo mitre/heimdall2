@@ -28,7 +28,7 @@
         <v-col>
           <strong>Finding Details: </strong><br />
           <v-textarea
-            v-model="selectedRule.findingDetails"
+            v-model="selectedRule.findingdetails"
             solo
             outlined
             dense
@@ -53,8 +53,12 @@
 </template>
 
 <script lang="ts">
-import {ChecklistVuln} from '@mitre/hdf-converters';
-import {ControlStatus, Severity} from 'inspecjs';
+import {
+  ChecklistVuln,
+  ChecklistSeverity,
+  Severityoverride
+} from '@mitre/hdf-converters';
+import {ControlStatus} from 'inspecjs';
 import _ from 'lodash';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
@@ -63,8 +67,8 @@ export default class ChecklistRuleInfoBody extends Vue {
   @Prop({type: Object, required: true}) selectedRule!: ChecklistVuln;
   @Prop({type: Boolean, required: true}) sheet!: Boolean;
 
-  newOverride = this.selectedRule.severityOverride
-    ? this.selectedRule.severityOverride
+  newOverride = this.selectedRule.severityoverride
+    ? this.selectedRule.severityoverride
     : '';
 
   statusItems: {name: ControlStatus; value: ControlStatus}[] = [
@@ -74,34 +78,37 @@ export default class ChecklistRuleInfoBody extends Vue {
     {name: 'Not Reviewed', value: 'Not Reviewed'}
   ];
 
-  severityOverrideItems: {name: string; value: Severity}[] = [
-    {name: 'High', value: 'high'},
-    {name: 'Medium', value: 'medium'},
-    {name: 'Low', value: 'low'}
+  severityoverrideItems: {name: string; value: ChecklistSeverity}[] = [
+    {name: 'High', value: ChecklistSeverity.High},
+    {name: 'Medium', value: ChecklistSeverity.Medium},
+    {name: 'Low', value: ChecklistSeverity.Low}
     // The default severity will be added to this array
     // Example if severity is low: {name: 'Low (Default)', value: 'low'}
   ];
 
-  checkPossibleOverrides(severity: string) {
-    const newArr = this.severityOverrideItems.filter(
+  checkPossibleOverrides(severity: ChecklistSeverity) {
+    const newArr = this.severityoverrideItems.filter(
       (item) => item.value !== severity
     );
     // Check if it is not an empty rule
     if (
-      this.selectedRule.severity !== '' &&
-      this.selectedRule.severityOverride != ''
+      this.selectedRule.severity !== ChecklistSeverity.Empty &&
+      this.selectedRule.severityoverride != Severityoverride.Empty
     ) {
       newArr.push({
         name: `${_.capitalize(this.selectedRule.severity)} (Default)`,
-        value: this.selectedRule.severity as Severity
+        value: this.selectedRule.severity as ChecklistSeverity
       });
     }
     return newArr;
   }
 
   promptSeverityJustification() {
-    if (this.selectedRule.severityOverride === this.selectedRule.severity) {
-      this.selectedRule.severityJustification =
+    if (
+      this.selectedRule.severityoverride.valueOf() ===
+      this.selectedRule.severity.valueOf()
+    ) {
+      this.selectedRule.severityjustification =
         'Returning to default severity.';
     }
     this.$emit('update-override', this.newOverride);

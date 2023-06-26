@@ -51,16 +51,12 @@ import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
 import axios from 'axios';
 import _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
-import {ChecklistFile} from '@mitre/hdf-converters';
 import {Prop} from 'vue-property-decorator';
 import {AppInfoModule, views} from '@/store/app_info';
 
 @Component
 export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
-  @Prop({type: Object}) readonly file!:
-    | EvaluationFile
-    | ProfileFile
-    | ChecklistFile;
+  @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
 
   saving = false;
 
@@ -122,7 +118,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     return typeof this.file?.database_id !== 'undefined' || this.saving;
   }
 
-  save_to_database(file: EvaluationFile | ProfileFile | ChecklistFile) {
+  save_to_database(file: EvaluationFile | ProfileFile) {
     // TODO: handle the case of a checklist file
     this.saving = true;
 

@@ -29,7 +29,7 @@
 import Modal from '@/components/global/Modal.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
-import {FileID} from '@/store/report_intake';
+import {EvaluationFile, FileID} from '@/store/report_intake';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -50,14 +50,8 @@ export default class ChecklistTechnologyAreaModal extends Vue {
     return FilteredDataModule.selectedChecklistId;
   }
 
-  getChecklist(fileID: FileID) {
-    return InspecDataModule.allChecklistFiles.find(
-      (f) => f.uniqueId === fileID
-    );
-  }
-
   get selectedChecklistAsset() {
-    const selectedChecklist = this.getChecklist(this.file_filter);
+    const selectedChecklist = InspecDataModule.getChecklist(this.file_filter);
     if (selectedChecklist) {
       return selectedChecklist.asset;
     } else {

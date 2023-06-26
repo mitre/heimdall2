@@ -43,7 +43,7 @@ type StigHeader = {
 export type ChecklistVuln = Omit<Vuln, 'stigdata' | 'status'> & {
   status: StatusMapping;
   vulnnum: string;
-  severity: Severity;
+  severity: ChecklistSeverity;
   grouptitle: string;
   ruleid: string;
   ruleversion: string;
@@ -72,14 +72,14 @@ export type ChecklistVuln = Omit<Vuln, 'stigdata' | 'status'> & {
 };
 
 // Status mapping for going to and from checklist
-enum StatusMapping {
+export enum StatusMapping {
   NotAFinding = 'Passed',
   Open = 'Failed',
   Not_Applicable = 'Not Applicable',
   Not_Reviewed = 'Not Reviewed'
 }
 
-export enum Severity {
+export enum ChecklistSeverity {
   Empty = '',
   High = 'high',
   Low = 'low',
