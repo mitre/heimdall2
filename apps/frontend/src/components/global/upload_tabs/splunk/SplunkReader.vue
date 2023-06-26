@@ -80,6 +80,7 @@
     </v-overlay>
   </v-stepper>
 </template>
+
 <script lang="ts">
 import {FileID} from '@/store/report_intake';
 import {SplunkConfigNoIndex} from '@mitre/hdf-converters/src/splunk-mapper';
@@ -87,6 +88,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
+
 @Component({
   components: {
     AuthStep,

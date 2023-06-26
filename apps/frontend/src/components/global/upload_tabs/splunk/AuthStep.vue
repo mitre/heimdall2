@@ -83,12 +83,11 @@ const localHostname = new LocalStorageVal<string>('splunk_hostname');
 export default class AuthStep extends Vue {
   @Prop({type: String, required: false}) indexToShow?: string;
   username = '';
-
   password = '';
   hostname = '';
   index = '';
 
-  /** Form required field rules. Maybe eventually expand to other stuff */
+  // Form required field rule
   reqRule = (v: string | null | undefined) =>
     (v ?? '').trim().length > 0 || 'Field is Required';
 
@@ -98,12 +97,13 @@ export default class AuthStep extends Vue {
       SnackbarModule.failure('Failed to login - A valid index is required');
       return;
     }
+
+    // Check for scheme inclusion
     if (!/^https?:\/\//.test(this.hostname)) {
       this.hostname = `https://${this.hostname}`;
     }
 
     const parsedURL = new URL(this.hostname);
-
     const config: SplunkConfig = {
       host: parsedURL.hostname,
       username: this.username,
@@ -118,11 +118,7 @@ export default class AuthStep extends Vue {
       localUsername.set(this.username);
       localPassword.set(this.password);
       localHostname.set(this.hostname);
-      if (this.indexToShow === undefined) {
-        localSplunk2HDFIndex.set(this.index);
-      } else {
-        localHDF2SplunkIndex.set(this.index);
-      }
+      localHDF2SplunkIndex.set(this.index);
       SnackbarModule.notify('You have successfully signed in');
       this.$emit('authenticated', config);
     } catch (error) {
@@ -133,7 +129,7 @@ export default class AuthStep extends Vue {
     }
   }
 
-  /** Init our fields */
+  // Initialize fields
   mounted() {
     this.username = localUsername.getDefault('');
     this.password = localPassword.getDefault('');
