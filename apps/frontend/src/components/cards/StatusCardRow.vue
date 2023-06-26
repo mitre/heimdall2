@@ -18,7 +18,7 @@
             card.title + ': ' + card.number
           }}</span>
         </v-card-title>
-        <v-card-text v-text="card.subtitle" />
+        <v-card-text>{{ card.subtitle }}</v-card-text>
       </v-card>
     </v-col>
     <v-col
@@ -39,7 +39,7 @@
               `ALERT: ${profileErrorProps.number} ${profileErrorProps.title}s`
             }}</span>
           </v-card-title>
-          <v-card-text v-text="profileErrorProps.subtitle" />
+          <v-card-text>{{ profileErrorProps.subtitle }}</v-card-text>
         </div>
         <v-card-actions>
           <v-btn
@@ -69,7 +69,7 @@
               `INFO: ${waivedProfiles.number} ${waivedProfiles.title} Tests`
             }}</span>
           </v-card-title>
-          <v-card-text v-text="waivedProfiles.subtitle" />
+          <v-card-text>{{ waivedProfiles.subtitle }}</v-card-text>
         </div>
         <v-card-actions>
           <v-btn
