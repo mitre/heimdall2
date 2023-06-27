@@ -30,7 +30,7 @@
   </head>
 
   <body>
-    <nav class="d-flex bg-gray-100 px-3 py-3 text-black">
+    <nav class="d-flex sticky top-0 z-10 bg-gray-100 px-3 py-3 text-black">
       <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
       <a
         href="#"
@@ -38,12 +38,11 @@
         aria-current="page"
         >Profile Info</a
       >
-      <div class="relative inline-block">
+      <div class="relative inline-block" data-te-dropdown-ref>
         <button
           type="button"
           class="inline-flex px-3 py-2 text-sm font-medium hover:bg-gray-500 hover:text-white"
-          data-te-collapse-init
-          data-te-collapse-collapsed
+          data-te-dropdown-toggle-ref
           href="#navbarSupportedContent"
           role="button"
           aria-controls="navbarSupportedContent"
@@ -65,9 +64,9 @@
         </button>
         {{#showControlSets}}
         <div
-          class="absolute right-0 z-10 mt-2 w-56 origin-top-right bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          class="absolute z-10 mt-2 hidden w-56 origin-top-right bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none [&[data-te-dropdown-show]]:block"
           id="navbarSupportedContent"
-          data-te-collapse-item
+          data-te-dropdown-menu-ref
           aria-labelledby="navbarDropdown"
         >
           <ul>
@@ -75,6 +74,7 @@
             <li>
               <a
                 href="#{{fileID}}"
+                data-te-dropdown-item-ref
                 class="block px-4 py-2 text-sm text-gray-700"
                 >{{filename}}</a
               >
@@ -109,7 +109,7 @@
     </div>
 
     <div class="flex justify-evenly gap-x-8">
-      <div class="max-w-sm rounded-xl bg-success">
+      <div class="bg-success max-w-sm rounded-xl">
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
             {{{icons.circleCheck}}}
@@ -121,7 +121,7 @@
         </div>
       </div>
 
-      <div class="max-w-sm rounded-xl bg-danger">
+      <div class="bg-danger max-w-sm rounded-xl">
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
             {{{icons.circleCross}}}
@@ -135,7 +135,7 @@
         </div>
       </div>
 
-      <div class="max-w-sm rounded-xl bg-info">
+      <div class="bg-info max-w-sm rounded-xl">
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
             {{{icons.circleMinus}}}
@@ -147,7 +147,7 @@
         </div>
       </div>
 
-      <div class="max-w-sm rounded-xl bg-warning">
+      <div class="bg-warning max-w-sm rounded-xl">
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
             {{{icons.circleAlert}}}
