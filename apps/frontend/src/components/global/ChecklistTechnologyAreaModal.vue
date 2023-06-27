@@ -29,7 +29,7 @@
 import Modal from '@/components/global/Modal.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
-import {EvaluationFile, FileID} from '@/store/report_intake';
+import {FileID} from '@/store/report_intake';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';

@@ -50,7 +50,7 @@ export type Stigdata = {
   comments?: null | string;
   findingdetails?: null | string;
   severityjustification?: null | string;
-  severityoverride?: Severityoverride;
+  severityoverride?: string;
   status?: Status;
   stigdata?: StigdatumElement[];
   sidata?: Sidata[];
@@ -166,17 +166,10 @@ export type Vuln = {
   comments: null | string;
   findingdetails: null | string;
   severityjustification: null | string;
-  severityoverride: Severityoverride;
+  severityoverride: string;
   status: Status;
   stigdata: StigdatumElement[];
 };
-
-export enum Severityoverride {
-  Empty = '',
-  High = 'high',
-  Low = 'low',
-  Medium = 'medium'
-}
 
 export enum Status {
   NotAFinding = 'NotAFinding',

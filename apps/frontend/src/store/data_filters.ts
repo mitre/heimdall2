@@ -17,7 +17,6 @@ import {
   ChecklistObject,
   ChecklistSeverity,
   ChecklistVuln,
-  Severityoverride,
   StatusMapping
 } from '@mitre/hdf-converters';
 import {
@@ -288,7 +287,7 @@ export class FilteredData extends VuexModule {
     status: StatusMapping.Not_Reviewed,
     findingdetails: '',
     comments: '',
-    severityoverride: Severityoverride.Empty,
+    severityoverride: ChecklistSeverity.Empty,
     severityjustification: '',
     vulnnum: '',
     severity: ChecklistSeverity.Empty,

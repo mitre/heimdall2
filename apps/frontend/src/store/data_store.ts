@@ -65,7 +65,6 @@ export class InspecData extends VuexModule {
 
   /** Return all checklist files only */
   get allChecklistFiles(): EvaluationFile[] {
-    const checklistFiles: EvaluationFile[] = [];
     const files: EvaluationFile[] = this.executionFiles;
     for (const file of files) {
       const checklist: ChecklistObject = _.get(
@@ -73,24 +72,26 @@ export class InspecData extends VuexModule {
         'passthrough.checklist'
       ) as unknown as ChecklistObject;
       if (checklist) {
-        checklistFiles.push(file as EvaluationFile);
+        this.checklistFiles.push(file);
       }
     }
-    return checklistFiles;
+    return this.checklistFiles;
   }
 
   /** Get specific checklist file by fileID */
-  getChecklist(fileID: FileID): ChecklistFile {
-    const checklistFile = this.allChecklistFiles.find(
-      (f) => f.uniqueId === fileID
-    );
-    const checklist: ChecklistObject = _.get(
-      checklistFile?.evaluation.data,
-      'passthrough.checklist'
-    ) as unknown as ChecklistObject;
-    return {
-      ...checklist,
-      filename: checklistFile?.filename ?? 'Default Checklist Filename'
+  get getChecklist(): (fileID: FileID) => ChecklistFile {
+    return (fileID: FileID) => {
+      const checklistFile = this.allChecklistFiles.find(
+        (f) => f.uniqueId === fileID
+      );
+      const checklist: ChecklistObject = _.get(
+        checklistFile?.evaluation.data,
+        'passthrough.checklist'
+      ) as unknown as ChecklistObject;
+      return {
+        ...checklist,
+        filename: checklistFile?.filename ?? 'Default Checklist Filename'
+      };
     };
   }
 
