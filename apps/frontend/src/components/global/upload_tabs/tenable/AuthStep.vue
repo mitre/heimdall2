@@ -50,6 +50,7 @@ import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {AuthInfo, TenableUtil} from '@/utilities/tenable_util';
+import {requireFieldRule} from '@/utilities/upload_util';
 
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -69,9 +70,8 @@ export default class AuthStep extends Vue {
   secretkey = '';
   hostname = '';
 
-  /** Form required field rules. Maybe eventually expand to other stuff */
-  reqRule = (v: string | null | undefined) =>
-    (v ?? '').trim().length > 0 || 'Field is Required';
+  // Form required field rule
+  reqRule = requireFieldRule;
 
   async login(): Promise<void> {
     if (!/^https?:\/\//.test(this.hostname)) {

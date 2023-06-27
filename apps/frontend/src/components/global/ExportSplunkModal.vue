@@ -45,6 +45,8 @@
                   Are you sure that you have configured it properly?
                 </span>
                 <br />
+                <span>The 'index' field requires a valid index name from the specified Splunk instance.</span>
+                <br />
                 <span>
                   For installation instructions and further information, check
                   here:

@@ -62,6 +62,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
 import {SplunkConfig} from '@mitre/hdf-converters/types/splunk-config-types';
+import {requireFieldRule} from '@/utilities/upload_util';
 
 @Component({})
 export default class FileList extends Vue {
@@ -94,8 +95,7 @@ export default class FileList extends Vue {
   index = '';
 
   // Form required field rules
-  reqRule = (v: string | null | undefined) =>
-    (v ?? '').trim().length > 0 || 'Field is Required';
+  reqRule = requireFieldRule;
 
   @Watch('search')
   async onUpdateSearch() {

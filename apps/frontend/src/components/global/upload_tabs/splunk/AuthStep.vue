@@ -62,6 +62,7 @@
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import {SnackbarModule} from '@/store/snackbar';
 import {LocalStorageVal} from '@/utilities/helper_util';
+import {requireFieldRule} from '@/utilities/upload_util';
 import {checkSplunkCredentials} from '@mitre/hdf-converters/src/utils/splunk-tools';
 import {SplunkConfig} from '@mitre/hdf-converters/types/splunk-config-types';
 import Vue from 'vue';
@@ -88,8 +89,7 @@ export default class AuthStep extends Vue {
   index = '';
 
   // Form required field rule
-  reqRule = (v: string | null | undefined) =>
-    (v ?? '').trim().length > 0 || 'Field is Required';
+  reqRule = requireFieldRule;
 
   async login(): Promise<void> {
     // Check if user has inputted an index

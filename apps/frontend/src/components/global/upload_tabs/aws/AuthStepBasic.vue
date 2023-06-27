@@ -51,6 +51,7 @@
 <script lang="ts">
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
 import {LocalStorageVal} from '@/utilities/helper_util';
+import {requireFieldRule} from '@/utilities/upload_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -80,9 +81,8 @@ export default class S3Reader extends Vue {
    */
   valid = false;
 
-  /** Form required field rules. Maybe eventually expand to other stuff */
-  reqRule = (v: string | null | undefined) =>
-    (v ?? '').trim().length > 0 || 'Field is Required';
+  // Form required field rule
+  reqRule = requireFieldRule;
 
   // Callback for change in access token
   change_access_token(token: string) {
