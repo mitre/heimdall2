@@ -57,7 +57,7 @@ export default class ChecklistSeverityOverride extends Vue {
   }
 
   cancelSeverityOverride() {
-    this.validJustification = true;
+    this.validJustification = false;
     this.$emit('disable-sheet');
     this.selectedRule.severityjustification = '';
   }
