@@ -20,7 +20,7 @@ import VueApexCharts from 'vue-apexcharts';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
-export const MAX_DECIMAL_PRECISION = 4;
+export const MAX_DECIMAL_PRECISION = 2;
 
 @Component({
   components: {
