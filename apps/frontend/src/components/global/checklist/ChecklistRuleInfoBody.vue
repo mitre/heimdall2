@@ -1,33 +1,33 @@
 <template>
   <v-card class="overflow-auto mt-3 pt-2" width="100%">
-    <v-card-text v-if="selectedRule.ruleId !== ''">
+    <v-card-text v-if="selectedRule.ruleid !== ''">
       <!-- Rule Title -->
       <div class="my-3 d-flex flex-column">
         <span class="text-overline white--text">Rule Title: </span>
 
-        <span>{{ selectedRule.ruleTitle }}</span>
+        <span>{{ selectedRule.ruletitle }}</span>
       </div>
       <!-- Rule Discussion -->
       <div class="my-3 d-flex flex-column">
         <span class="text-overline white--text">Discussion: </span>
 
-        <span>{{ selectedRule.vulnDiscuss }}</span>
+        <span>{{ selectedRule.vulndiscuss }}</span>
       </div>
       <!-- Rule Check Text -->
       <div class="my-3 d-flex flex-column">
         <span class="text-overline white--text">Check Text: </span>
 
-        <span>{{ selectedRule.checkContent }}</span>
+        <span>{{ selectedRule.checkcontent }}</span>
       </div>
       <!-- Rule Fix Text -->
       <div class="my-3 d-flex flex-column">
         <span class="text-overline white--text">Fix Text: </span>
-        <span>{{ selectedRule.fixText }}</span>
+        <span>{{ selectedRule.fixtext }}</span>
       </div>
       <!-- Rule References -->
       <div class="my-3 d-flex flex-column">
         <span class="text-overline white--text">References: </span>
-        <div v-for="item in selectedRule.cciRef.split('; ')" :key="item">
+        <div v-for="item in selectedRule.cciref.split('; ')" :key="item">
           {{ item }}: {{ cciDescription(item) }}
           <div>
             NIST 800-53 Rev 4:

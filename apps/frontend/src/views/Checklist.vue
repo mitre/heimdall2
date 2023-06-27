@@ -301,6 +301,9 @@ export default class Checklist extends RouteMixin {
   }
 
   get rules() {
+    console.log("Im getting the rules!!!!")
+    console.log(`fileFilter from Checklist: ${this.fileFilter}`);
+    console.log(InspecDataModule.getChecklist(this.fileFilter))
     let rulesList: ChecklistVuln[] = [];
     for (const stig of InspecDataModule.getChecklist(this.fileFilter)?.stigs ??
       []) {

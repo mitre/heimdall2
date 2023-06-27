@@ -61,23 +61,24 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   saving = false;
 
   select_file() {
-    if (this.file.hasOwnProperty('evaluation')) {
-      FilteredDataModule.toggle_evaluation(this.file.uniqueId);
-    } else if (this.file.hasOwnProperty('profile')) {
-      FilteredDataModule.toggle_profile(this.file.uniqueId);
-    } else if (this.file.hasOwnProperty('asset')) {
+    console.log(this.containsChecklist(this.file))
+    if (this.containsChecklist(this.file)) {
       // Currently checklist can only be exclusively selected so there is no need for a toggle function
       FilteredDataModule.select_exclusive_checklist(this.file.uniqueId);
+    } else if (this.file.hasOwnProperty('profile')) {
+      FilteredDataModule.toggle_profile(this.file.uniqueId);
+    } else if (this.file.hasOwnProperty('evaluation')) {
+      FilteredDataModule.toggle_evaluation(this.file.uniqueId);
     }
   }
 
   select_file_exclusive() {
-    if (this.file.hasOwnProperty('evaluation')) {
-      FilteredDataModule.select_exclusive_evaluation(this.file.uniqueId);
+    if (this.containsChecklist(this.file)) {
+      FilteredDataModule.select_exclusive_checklist(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.select_exclusive_profile(this.file.uniqueId);
-    } else if (this.file.hasOwnProperty('stigs')) {
-      FilteredDataModule.select_exclusive_checklist(this.file.uniqueId);
+    } else if (this.file.hasOwnProperty('evaluation')) {
+      FilteredDataModule.select_exclusive_evaluation(this.file.uniqueId);
     }
   }
 
@@ -93,6 +94,10 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   /** Checks if file is selected */
   get selected(): boolean {
     return FilteredDataModule.selected_file_ids.includes(this.file.uniqueId);
+  }
+
+  containsChecklist(file: EvaluationFile | ProfileFile): boolean {
+    return _.get(file, 'evaluation.data.passthrough.checklist') ? true : false;
   }
 
   //removes uploaded file from the currently observed files

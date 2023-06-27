@@ -1,26 +1,26 @@
 <template>
   <v-card width="100%" class="overflow-y-auto">
-    <v-card-text v-if="selectedRule.stigRef !== ''" class="text-center">
+    <v-card-text v-if="selectedRule.stigref !== ''" class="text-center">
       <h3 class="d-inline-block mx-2 mw-100">
-        {{ selectedRule.stigRef }}
+        {{ selectedRule.stigref }}
       </h3>
       <v-row dense class="mt-n2 mt-xl-3">
         <v-col :cols="4">
           <div>
             <span class="text-overline white--text">Vul ID: </span>
-            {{ selectedRule.vulnNum }}
+            {{ selectedRule.vulnnum }}
           </div>
         </v-col>
         <v-col :cols="4">
           <div>
             <span class="text-overline white--text">Rule ID: </span>
-            {{ shortRuleId(selectedRule.ruleId) }}
+            {{ shortRuleId(selectedRule.ruleid) }}
           </div>
         </v-col>
         <v-col :cols="4">
           <div>
             <span class="text-overline white--text">STIG ID: </span>
-            {{ shortStigId(selectedRule.ruleVersion) }}
+            {{ shortStigId(selectedRule.ruleversion) }}
           </div>
         </v-col>
       </v-row>
@@ -40,7 +40,7 @@
         <v-col :cols="4">
           <div>
             <span class="text-overline white--text">Legacy IDs: </span
-            >{{ selectedRule.legacyId }}
+            >{{ selectedRule.legacyid }}
           </div>
         </v-col>
       </v-row>
