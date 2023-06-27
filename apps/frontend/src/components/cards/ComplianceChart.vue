@@ -20,6 +20,8 @@ import VueApexCharts from 'vue-apexcharts';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
+export const MAX_DECIMAL_PRECISION = 4;
+
 @Component({
   components: {
     VueApexCharts
@@ -45,7 +47,12 @@ export default class ComplianceChart extends Vue {
             show: true,
             value: {
               color: '#99a2ac',
-              fontSize: '2rem'
+              fontSize: '2rem',
+              formatter: (val: number) =>
+                `${(
+                  Math.trunc(Math.pow(10, MAX_DECIMAL_PRECISION) * val) /
+                  Math.pow(10, MAX_DECIMAL_PRECISION)
+                ).toFixed(MAX_DECIMAL_PRECISION)}%`
             }
           }
         }
