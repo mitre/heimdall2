@@ -1,271 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-  <!-- Required meta tags -->
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{exportType}} Report</title>
-  <style type="text/css">
-    .results-set {
-      min-width: 40vh;
-      padding-bottom: 10px;
-    }
-
-    .justify-center,
-    .apexcharts-canvas {
-      display: block;
-      margin: auto;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-    }
-
-    .compliance-card {
-      min-height: 300px;
-    }
-
-    .apexcharts-ycrosshairs {
-      display: none;
-    }
-
-    .apexcharts-active {
-      display: none !important;
-    }
-
-    .resize-triggers {
-      display: none !important;
-    }
-
-    #generate:hover {
-      cursor: pointer;
-    }
-
-    @media (min-width: 1101px) and (max-width: 1446px) {
-      .tall-card {
-        height: 200px;
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{{exportType}} Report</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css"
+    />
+    <script src="https://cdn.tailwindcss.com/3.3.0"></script>
+    <style type="text/tailwindcss">
+      .bg-success {
+        --tw-bg-opacity: 1;
+        background-color: rgb(76 176 79 / var(--tw-bg-opacity));
       }
-    }
-
-    @media (min-width: 1446px) and (max-width: 1886px) {
-      .tall-card {
-        height: 190px;
+      .bg-danger {
+        --tw-bg-opacity: 1;
+        background-color: rgb(243 67 53 / var(--tw-bg-opacity));
       }
-    }
-
-    @media (min-width: 1886px) {
-      .tall-card {
-        height: 130px;
+      .bg-info {
+        --tw-bg-opacity: 1;
+        background-color: rgb(3 169 244 / var(--tw-bg-opacity));
       }
-    }
-  </style>
-  <style type="text/css" media="print">
-    @page {
-      size: landscape;
-    }
-  </style>
-  <style>
-    {{{bootstrapCSS}}}
-  </style>
-</head>
+      .bg-warning {
+        --tw-bg-opacity: 1;
+        background-color: rgb(254 153 0 / var(--tw-bg-opacity));
+      }
+    </style>
+  </head>
 
-<body>
-  <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid"> <a class="navbar-brand" href="#">Heimdall Report</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"> <span
-          class="navbar-toggler-icon"></span> </button>
-      <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"> <a class="nav-link active" aria-current="page" href="#">Profile Info</a> </li>
-          {{#showControlSets}}
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
-              Control Sets
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-              {{#controlSets}}
-              <li><a class="dropdown-item" href="#{{fileID}}">{{filename}}</a>
-                {{/controlSets}}
-            </ul>
-          </li>
-          {{/showControlSets}}
-        </ul>
-      </div>
-    </div>
-  </nav>
-  <div class="container-fluid" style="margin-top: 80px;">
-    <div class="card bg-light">
-      <div class="card-body">
-        <h5 class="card-title">Profile info</h5>
-        <div id="profileInfos" class="row"> {{#files}}
-          <div class="col-xl results-set"> <span>Filename: <strong>{{filename}}</strong></span>
-            <br /> <span>Tool Version: <strong>{{toolVersion}}</strong></span>
-            <br /> <span>Platform: <strong>{{platform}}</strong></span>
-            <br /> <span>Duration: <strong>{{duration}}</strong></span>
-            <br /> </div> {{/files}} </div>
-      </div>
-    </div>
-  </div>
-  <div class="container-fluid pt-4" id="statusCards">
-    <div class="row">
-      <div class="col-md">
-        <div class="card bg-success tall-card">
-          <div class="card-body">
-            <div class="card-title">
-              <div class="h4"> {{{icons.circleCheck}}} <span id="passedCount">Passed:
-                  {{statistics.passed}}</span> </div>
-              <p id="passedCountSubtitle" class="card-text"> {{statistics.passedTests}} individual checks
-                passed. </p>
-            </div>
-          </div>
+  <body>
+    <nav class="d-flex bg-gray-100 px-3 py-3 text-black">
+      <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
+      <a
+        href="#"
+        class="px-3 py-2 text-sm font-medium hover:bg-gray-500 hover:text-white"
+        aria-current="page"
+        >Profile Info</a
+      >
+      <div class="relative inline-block">
+        <button
+          type="button"
+          class="inline-flex px-3 py-2 text-sm font-medium hover:bg-gray-500 hover:text-white"
+          data-te-collapse-init
+          data-te-collapse-collapsed
+          href="#navbarSupportedContent"
+          role="button"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          Control Sets
+          <svg
+            class="-mr-1 h-5 w-5 text-gray-400"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+        {{#showControlSets}}
+        <div
+          class="absolute right-0 z-10 mt-2 w-56 origin-top-right bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+          id="navbarSupportedContent"
+          data-te-collapse-item
+          aria-labelledby="navbarDropdown"
+        >
+          <ul>
+            {{#controlSets}}
+            <li>
+              <a
+                href="#{{fileID}}"
+                class="block px-4 py-2 text-sm text-gray-700"
+                >{{filename}}</a
+              >
+            </li>
+            {{/controlSets}}
+          </ul>
         </div>
+        {{/showControlSets}}
       </div>
-      <div class="col-md">
-        <div class="card bg-danger">
-          <div class="card-body tall-card">
-            <div class="card-title">
-              <div class="h4"> {{{icons.circleCross}}} <span id="failedCount">Failed:
-                  {{statistics.failed}}</span> </div>
-              <p class="card-text" id="failedCountSubtitle"> {{statistics.passingTestsFailedControl}} individual
-                checks passed, {{statistics.failed}} failed out of {{statistics.totalTests}} total checks </p>
-            </div>
+    </nav>
+
+    <div class="px-4 py-6">
+      <div
+        class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2"
+      >
+        <h5 class="mb-2 text-xl">Profile info</h5>
+        <div class="grid grid-cols-4 sm:gap-x-8">
+          {{#files}}
+          <div class="row-span-1 my-2">
+            <span>Filename: <strong>{{filename}}</strong></span
+            ><br />
+            <span>Tool Version: <strong>{{toolVersion}}</strong></span
+            ><br />
+            <span>Platform: <strong>{{platform}}</strong></span
+            ><br />
+            <span>Duration: <strong>{{duration}}</strong></span
+            ><br />
           </div>
-        </div>
-      </div>
-      <div class="col-md">
-        <div class="card bg-info tall-card">
-          <div class="card-body">
-            <div class="card-title">
-              <div class="h4"> {{{icons.circleMinus}}} <span id="naCount">Not Applicable:
-                  {{statistics.notApplicable}}</span> </div>
-              <p class="card-text" id="naCountSubtitle"> System exception or absent component </p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md">
-        <div class="card bg-warning tall-card">
-          <div class="card-body">
-            <div class="card-title">
-              <div class="h4"> {{{icons.circleAlert}}} <span id="nrCount">Not Reviewed:
-                  {{statistics.notReviewed}}</span> </div>
-              <p class="card-text"> Can only be tested manually at this time </p>
-            </div>
-          </div>
+          {{/files}}
         </div>
       </div>
     </div>
-  </div>
-  <div class="container-fluid pt-4">
-    <div class="row">
+
+    <div class="flex justify-evenly gap-x-8">
+      <div class="max-w-sm rounded-xl bg-success">
+        <div class="px-6 py-4">
+          <div class="flex text-lg font-bold">
+            {{{icons.circleCheck}}}
+            <span class="pl-2">Passed: {{statistics.passed}}</span>
+          </div>
+          <p class="my-2">
+            {{statistics.passedTests}} individual checks passed
+          </p>
+        </div>
+      </div>
+
+      <div class="max-w-sm rounded-xl bg-danger">
+        <div class="px-6 py-4">
+          <div class="flex text-lg font-bold">
+            {{{icons.circleCross}}}
+            <span class="pl-2">Failed: {{statistics.failed}}</span>
+          </div>
+          <p class="my-2">
+            {{statistics.passingTestsFailedControl}} individual checks passed,
+            {{statistics.failed}} failed out of {{statistics.totalTests}} total
+            checks
+          </p>
+        </div>
+      </div>
+
+      <div class="max-w-sm rounded-xl bg-info">
+        <div class="px-6 py-4">
+          <div class="flex text-lg font-bold">
+            {{{icons.circleMinus}}}
+            <span class="pl-2"
+              >Not Applicable: {{statistics.notApplicable}}</span
+            >
+          </div>
+          <p class="my-2">System exception or absent component</p>
+        </div>
+      </div>
+
+      <div class="max-w-sm rounded-xl bg-warning">
+        <div class="px-6 py-4">
+          <div class="flex text-lg font-bold">
+            {{{icons.circleAlert}}}
+            <span class="pl-2">Not Reviewed: {{statistics.notReviewed}}</span>
+          </div>
+          <p class="my-2">Can only be tested manually at this time</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="my-12 flex justify-evenly">
       {{#complianceCards}}
-      <div class="col-md">
-        <div class="card compliance-card">
-          {{{html}}}
-        </div>
-      </div>
+      <div class="rounded-xl border border-gray-300">{{{html}}}</div>
       {{/complianceCards}}
     </div>
-  </div>
-  {{#showControlSets}} {{#controlSets}}
-  <span id="{{fileID}}"></span>
-  <div style="padding-bottom: 60px"></div>
-  <div class="container-fluid" >
-    <!-- Control Set Accordion-->
-    <div class="accordion open" id="accordion-{{fileID}}">
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="header-{{fileID}}">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse"
-            data-bs-target="#collapseable-{{fileID}}" aria-expanded="true" aria-controls="collapseable-{{fileID}}">
-            {{filename}}
-          </button>
-        </h2>
-        <div id="collapseable-{{fileID}}" class="accordion-collapse collapse show" aria-labelledby="headingOne">
-          <div class="accordion-body">
-            <!-- Controls Accordion-->
-            <div class="accordion open" id="accordion-{{hdf.wraps.id}}">
-              {{#controls}}
-              <div class="accordion-item open">
-                <h2 class="accordion-header open" id="control-accordion-header-{{hdf.wraps.id}}">
-                  <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#control-accordion-body-{{hdf.wraps.id}}" aria-expanded="false"
-                    aria-controls="control-accordion-body-{{hdf.wraps.id}}">{{hdf.wraps.id}} -
-                    {{hdf.wraps.title}}</button>
-                </h2>
-                <div id="control-accordion-body-{{hdf.wraps.id}}" class="accordion-collapse collapse show"
-                  aria-labelledby="control-accordion-header-{{hdf.wraps.id}}">
-                  <div class="accordion-body">
-                    {{data.desc}}
-                    <div class="pt-2">
-                      <hr />
-                      <div class="col">
-                        <h5>Test Results</h5>
-                        <table class="table table-striped table-hover" id="testResultsTable"
-                          aria-describedby="Control test description and result">
-                          <thead>
-                            <tr>
-                              <th scope="col" style="width: 20%">Status</th>
-                              <th scope="col">Test</th>
-                              <th scope="col">Result</th>
-                            </tr>
-                          <tbody> {{#hdf.segments}}
-                            <tr>
-                              <td style="max-width: 50px; word-wrap: break-word;">
-                                {{status}}</td>
-                              <td style="max-width: 50px; word-wrap: break-word;">
-                                {{code_desc}}</td>
-                              <td style="max-width: 50px; word-wrap: break-word;">
-                                {{message}}</td>
-                            </tr> {{/hdf.segments}} </tbody>
-                          </thead>
-                          <tbody id="controlTestResultTableBody"> </tbody>
-                        </table>
-                      </div>
-                      <hr />
-                      <div class="col">
-                        <h5>Control Details</h5>
-                        <table class="table table-striped table-hover" id="controlDetailsTable"
-                          aria-describedby="Control details">
-                          <thead>
-                            <tr>
-                              <th scope="col" style="width: 20%">Name</th>
-                              <th scope="col">Value</th>
-                            </tr>
-                          </thead>
-                          <tbody> {{#details}}
-                            <tr>
-                              <td>{{name}}</td>
-                              <td>{{value}}</td>
-                            </tr> {{/details}} </tbody>
-                        </table>
-                      </div>
-                      {{#showCode}}
-                      <hr />
-                      <div class="col">
-                        <pre>
-<code>{{full_code}}</code>
-                        </pre>
-                      </div> {{/showCode}}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              {{/controls}}
+
+    {{#showControlSets}} {{#controlSets}}
+    <span id="{{fileID}}"></span>
+    <div
+      class="mx-2 rounded-t-lg border border-neutral-200 bg-white"
+      id="accordion-{{fileID}}"
+    >
+      <h2 class="mb-0" id="header-{{fileID}}">
+        <button
+          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-[15px] border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+          type="button"
+          data-te-collapse-init
+          data-te-target="#collapseable-{{fileID}}"
+          aria-expanded="true"
+          aria-controls="collapseable-{{fileID}}"
+        >
+          {{filename}}
+          <span
+            class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="h-6 w-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+              />
+            </svg>
+          </span>
+        </button>
+      </h2>
+
+      <div
+        id="collapseable-{{fileID}}"
+        class="!visible my-4"
+        data-te-collapse-item
+        data-te-collapse-show
+      >
+        {{#controls}}
+        <div
+          class="mx-4 rounded-t-lg border border-neutral-200 bg-white"
+          id="accordion-{{hdf.wraps.id}}"
+        >
+          <h2 class="mb-0" id="control-accordion-header-{{hdf.wraps.id}}">
+            <button
+              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-[15px] border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+              type="button"
+              data-te-collapse-init
+              data-te-target="#control-accordion-body-{{hdf.wraps.id}}"
+              aria-expanded="true"
+              aria-controls="control-accordion-body-{{hdf.wraps.id}}"
+            >
+              {{hdf.wraps.id}} - {{hdf.wraps.title}}
+              <span
+                class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="h-6 w-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                  />
+                </svg>
+              </span>
+            </button>
+          </h2>
+          <div
+            id="control-accordion-body-{{hdf.wraps.id}}"
+            class="!visible px-5 py-4"
+            data-te-collapse-item
+            data-te-collapse-show
+            aria-labelledby="control-accordion-header-{{hdf.wraps.id}}"
+          >
+            {{data.desc}}
+            <hr class="my-3" />
+            <div>
+              <h5 class="text-lg"><strong>Test Results</strong></h5>
+              <table
+                class="table min-w-full text-left"
+                id="testResultsTable"
+                aria-describedby="Control test description and result"
+              >
+                <thead>
+                  <th>Status</th>
+                  <th>Test</th>
+                  <th>Result</th>
+                </thead>
+                <tbody>
+                  {{#hdf.segments}}
+                  <tr class="border-b odd:bg-gray-100 even:bg-white">
+                    <td>{{status}}</td>
+                    <td>{{code_desc}}</td>
+                    <td>{{message}}</td>
+                  </tr>
+                  {{/hdf.segments}}
+                </tbody>
+                <tbody id="controlTestResultTableBody"></tbody>
+              </table>
+
+              <hr class="my-3" />
+
+              <h5 class="text-lg"><strong>Control Details</strong></h5>
+              <table
+                class="table min-w-full text-left"
+                id="controlDetailsTable"
+                aria-describedby="Control details"
+              >
+                <thead>
+                  <th>Name</th>
+                  <th>Value</th>
+                </thead>
+                <tbody>
+                  {{#details}}
+                  <tr class="border-b odd:bg-gray-100 even:bg-white">
+                    <td>{{name}}</td>
+                    <td>{{value}}</td>
+                  </tr>
+                  {{/details}}
+                </tbody>
+              </table>
             </div>
+
+            <hr class="my-3" />
+
+            {{#showCode}}
+            <code class="whitespace-pre text-sm">{{full_code}}</code>
+            {{/showCode}}
           </div>
         </div>
+        {{/controls}}
       </div>
     </div>
-  </div>
-  </div> {{/controlSets}} {{/showControlSets}}
-  <script>
-    {{{jquery}}}
-  </script>
-  <script>
-    {{{bootstrapJS}}}
-  </script>
-</body>
-
+    {{/controlSets}} {{/showControlSets}}
+    <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/tw-elements.umd.min.js"></script>
+  </body>
 </html>
