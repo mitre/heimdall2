@@ -30,7 +30,9 @@
   </head>
 
   <body>
-    <nav class="d-flex sticky top-0 z-10 bg-gray-100 px-3 py-3 text-black">
+    <nav
+      class="d-flex sticky top-0 z-10 bg-gray-100 px-3 py-3 text-black print:hidden"
+    >
       <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
       <a
         href="#"
@@ -88,12 +90,12 @@
 
     <div class="px-4 py-6">
       <div
-        class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2"
+        class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
         <h5 class="mb-2 text-xl">Profile info</h5>
-        <div class="grid grid-cols-4 sm:gap-x-8">
+        <div class="grid grid-cols-4 sm:gap-x-8 print:grid-cols-1">
           {{#files}}
-          <div class="row-span-1 my-2">
+          <div class="my-2">
             <span>Filename: <strong>{{filename}}</strong></span
             ><br />
             <span>Tool Version: <strong>{{toolVersion}}</strong></span
@@ -108,8 +110,8 @@
       </div>
     </div>
 
-    <div class="flex justify-evenly gap-x-8">
-      <div class="bg-success max-w-sm rounded-xl">
+    <div class="flex flex-wrap justify-evenly gap-x-8">
+      <div class="bg-success w-96 rounded-xl print:border print:border-black">
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
             {{{icons.circleCheck}}}
@@ -121,7 +123,7 @@
         </div>
       </div>
 
-      <div class="bg-danger max-w-sm rounded-xl">
+      <div class="bg-danger w-96 rounded-xl print:border print:border-black">
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
             {{{icons.circleCross}}}
@@ -135,7 +137,7 @@
         </div>
       </div>
 
-      <div class="bg-info max-w-sm rounded-xl">
+      <div class="bg-info w-96 rounded-xl print:border print:border-black">
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
             {{{icons.circleMinus}}}
@@ -147,7 +149,7 @@
         </div>
       </div>
 
-      <div class="bg-warning max-w-sm rounded-xl">
+      <div class="bg-warning w-96 rounded-xl print:border print:border-black">
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
             {{{icons.circleAlert}}}
@@ -301,7 +303,7 @@
             <hr class="my-3" />
 
             {{#showCode}}
-            <code class="whitespace-pre text-sm">{{full_code}}</code>
+            <code class="whitespace-pre-wrap text-sm">{{full_code}}</code>
             {{/showCode}}
           </div>
         </div>
