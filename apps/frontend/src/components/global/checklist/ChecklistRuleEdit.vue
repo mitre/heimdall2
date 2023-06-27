@@ -53,11 +53,7 @@
 </template>
 
 <script lang="ts">
-import {
-  ChecklistVuln,
-  ChecklistSeverity,
-  Severityoverride
-} from '@mitre/hdf-converters';
+import {ChecklistVuln, ChecklistSeverity} from '@mitre/hdf-converters';
 import {ControlStatus} from 'inspecjs';
 import _ from 'lodash';
 import {Component, Prop, Vue} from 'vue-property-decorator';
@@ -93,7 +89,7 @@ export default class ChecklistRuleInfoBody extends Vue {
     // Check if it is not an empty rule
     if (
       this.selectedRule.severity !== ChecklistSeverity.Empty &&
-      this.selectedRule.severityoverride != Severityoverride.Empty
+      this.selectedRule.severityoverride != ChecklistSeverity.Empty
     ) {
       newArr.push({
         name: `${_.capitalize(this.selectedRule.severity)} (Default)`,

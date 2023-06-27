@@ -122,16 +122,11 @@ import {
 } from '@/store/data_filters';
 import {
   FileID,
-  EvaluationFile,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import UploadButton from '@/components/generic/UploadButton.vue';
-import {
-  ChecklistVuln,
-  ChecklistObject,
-  Severityoverride
-} from '@mitre/hdf-converters';
+import {ChecklistVuln, ChecklistSeverity} from '@mitre/hdf-converters';
 import {InspecDataModule} from '@/store/data_store';
 import _ from 'lodash';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
@@ -170,7 +165,7 @@ export default class Checklist extends RouteMixin {
   /** State variable to track severity override */
   severityoverrideSelection = this.selectedRule.severityoverride;
 
-  setSeverityOverrideSelection(value: Severityoverride) {
+  setSeverityOverrideSelection(value: ChecklistSeverity) {
     this.severityoverrideSelection = value;
   }
 
