@@ -458,13 +458,13 @@ export class FilteredData extends VuexModule {
         ?.evaluation.data,
       'passthrough.checklist'
     ) as unknown as ChecklistObject;
-    if (this.selectedChecklistId === fileID) {
-      this.CLEAR_CHECKLIST();
-      this.SELECT_RULE(this.emptyRule);
-    } else {
+    // if (this.selectedChecklistId === fileID) {
+    //   this.CLEAR_CHECKLIST();
+    //   this.SELECT_RULE(this.emptyRule);
+    // } else {
       this.SELECT_CHECKLIST(fileID);
       this.selectRule(checklist.stigs[0].vulns[0] ?? this.emptyRule);
-    }
+    //}
   }
 
   @Action
@@ -520,11 +520,11 @@ export class FilteredData extends VuexModule {
   }
 
   get selected_file_ids(): FileID[] {
-    return [
-      ...this.selectedEvaluationIds,
-      ...this.selectedProfileIds,
-      this.selectedChecklistId
-    ];
+    return [...this.selectedEvaluationIds, ...this.selectedProfileIds];
+  }
+
+  get selected_checklist(): FileID {
+    return this.selectedChecklistId;
   }
 
   // check to see if all profiles are selected

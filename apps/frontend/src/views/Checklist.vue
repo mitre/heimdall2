@@ -41,7 +41,7 @@
             />
           </v-col>
           <!-- Rule Data -->
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" id="right-panel">
             <!-- Rule Header Info -->
             <v-row dense>
               <ChecklistRuleInfoHeader
@@ -301,9 +301,6 @@ export default class Checklist extends RouteMixin {
   }
 
   get rules() {
-    console.log("Im getting the rules!!!!")
-    console.log(`fileFilter from Checklist: ${this.fileFilter}`);
-    console.log(InspecDataModule.getChecklist(this.fileFilter))
     let rulesList: ChecklistVuln[] = [];
     for (const stig of InspecDataModule.getChecklist(this.fileFilter)?.stigs ??
       []) {

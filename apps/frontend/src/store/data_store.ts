@@ -67,7 +67,6 @@ export class InspecData extends VuexModule {
   get allChecklistFiles(): EvaluationFile[] {
     const cklFiles: EvaluationFile[] = [];
     const files: EvaluationFile[] = this.executionFiles;
-    console.log(`files: ${files}`)
     for (const file of files) {
       const checklist: ChecklistObject = _.get(
         file.evaluation.data,
@@ -83,7 +82,6 @@ export class InspecData extends VuexModule {
   /** Get specific checklist file by fileID */
   get getChecklist(): (fileID: FileID) => ChecklistFile {
     return (fileID: FileID) => {
-      console.log("Getting Checklist")
       const checklistFile = this.allChecklistFiles.find(
         (f) => f.uniqueId === fileID
       );

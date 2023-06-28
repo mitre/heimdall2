@@ -224,7 +224,6 @@ export default class Sidebar extends mixins(RouteMixin) {
   // get all visible (uploaded) checklist files
   get visible_checklist_files(): EvaluationFile[] {
     const files = InspecDataModule.allChecklistFiles;
-    console.log(`files from visible: ${files}`)
     return files.sort((a, b) => a.filename.localeCompare(b.filename));
   }
 

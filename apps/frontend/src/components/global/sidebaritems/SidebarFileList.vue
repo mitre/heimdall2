@@ -11,9 +11,8 @@
         color="blue"
       />
 
-      <!-- Due to how Vuetify handles radio buttons a value of 0 will select the radio button and -1 will deselect it-->
-      <v-radio-group v-else :value="selected ? 0 : -1">
-        <v-radio :value="0" color="blue" />
+      <v-radio-group v-else :value="selected_checklist">
+        <v-radio :value="file.uniqueId" color="blue" />
       </v-radio-group>
     </v-list-item-action>
 
@@ -61,9 +60,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   saving = false;
 
   select_file() {
-    console.log(this.containsChecklist(this.file))
-    if (this.containsChecklist(this.file)) {
-      // Currently checklist can only be exclusively selected so there is no need for a toggle function
+    if (this.inChecklistView && this.containsChecklist(this.file)) {
       FilteredDataModule.select_exclusive_checklist(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.toggle_profile(this.file.uniqueId);
@@ -73,7 +70,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   }
 
   select_file_exclusive() {
-    if (this.containsChecklist(this.file)) {
+    if (this.inChecklistView && this.containsChecklist(this.file)) {
       FilteredDataModule.select_exclusive_checklist(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.select_exclusive_profile(this.file.uniqueId);
@@ -94,6 +91,10 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   /** Checks if file is selected */
   get selected(): boolean {
     return FilteredDataModule.selected_file_ids.includes(this.file.uniqueId);
+  }
+
+  get selected_checklist(): string {
+    return FilteredDataModule.selected_checklist;
   }
 
   containsChecklist(file: EvaluationFile | ProfileFile): boolean {
