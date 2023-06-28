@@ -104,9 +104,9 @@ export default class S3Reader extends Vue {
   /** On mount, try to look up stored auth info */
   mounted() {
     // Load our credentials
-    this.change_access_token(localAccessToken.get_default(''));
-    this.change_secret_token(localSecretToken.get_default(''));
-    this.change_region(localRegion.get_default(''));
+    this.change_access_token(localAccessToken.getDefault(''));
+    this.change_secret_token(localSecretToken.getDefault(''));
+    this.change_region(localRegion.getDefault(''));
   }
 }
 </script>

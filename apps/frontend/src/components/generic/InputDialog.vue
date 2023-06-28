@@ -5,7 +5,9 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline">{{ title }}</v-card-title>
+      <v-card-title class="headline" style="word-break: break-word">{{
+        title
+      }}</v-card-title>
       <v-card-text>
         <v-text-field
           v-model="value"

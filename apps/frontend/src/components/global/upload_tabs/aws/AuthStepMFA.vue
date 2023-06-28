@@ -61,7 +61,7 @@ export default class S3Reader extends Vue {
 
   /** On mount, try to look up stored auth info */
   mounted() {
-    this.changeMFASerial(localMFASerial.get_default(''));
+    this.changeMFASerial(localMFASerial.getDefault(''));
   }
 
   /** Handles changes to mfa serial */

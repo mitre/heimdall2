@@ -1,6 +1,6 @@
 {
   "name": "@mitre/hdf-converters",
-  "version": "2.6.43",
+  "version": "2.6.54",
   "license": "Apache-2.0",
   "description": "Converter util library used to transform various scan results into HDF format",
   "files": [
@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",
-    "@mitre/splunk-sdk-no-env": "^1.10.0",
+    "@mitre/jsonix": "^3.0.6",
     "@types/csv2json": "^1.4.2",
     "@types/ms": "^0.7.31",
     "@types/mustache": "^4.1.2",
@@ -39,7 +39,7 @@
     "fast-xml-parser": "^4.2.0",
     "html-entities": "^2.3.2",
     "htmlparser2": "^6.1.0",
-    "inspecjs": "^2.6.43",
+    "inspecjs": "^2.6.47",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "ms": "^2.1.3",
@@ -48,13 +48,13 @@
     "run-script-os": "^1.1.6",
     "winston": "^3.6.0",
     "xlsx": "^0.18.5",
-    "xml2js": "^0.5.0",
+    "xml2js": "^0.6.0",
     "yaml": "^2.1.1"
   },
   "devDependencies": {
     "@types/jest": "^27.0.0",
     "@types/lodash": "^4.14.161",
-    "@types/node": "^18.11.18",
+    "@types/node": "^20.1.0",
     "jest": "^27.0.6",
     "quicktype": "^15.0.260",
     "ts-jest": "^29.1.0",
