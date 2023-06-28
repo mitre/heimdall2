@@ -35,26 +35,48 @@
           />
         </v-container>
       </template>
-      <template #[`item.users`]="{item}">
-        <span v-for="user in item.users.slice(0, 3)" :key="user.id">
+      <template #[`item.members`]="{item}">
+        <span v-for="user in item.members.slice(0, 3)" :key="user.id">
           <v-chip
             pill
             color="primary"
             class="ma-1"
-            @click="displayMembersDialog(item.users)"
+            @click="displayUsersDialog(item.members)"
           >
             {{ getMemberName(user) }}
           </v-chip>
         </span>
         <v-chip
-          v-if="item.users.length > 3"
+          v-if="item.members.length > 3"
           pill
           color="primary"
           outlined
           class="ma-1"
-          @click="displayMembersDialog(item.users)"
+          @click="displayUsersDialog(item.members)"
         >
-          {{ `+${item.users.length - 3} more` }}
+          {{ `+${item.members.length - 3} more` }}
+        </v-chip>
+      </template>
+      <template #[`item.owners`]="{item}">
+        <span v-for="user in item.owners.slice(0, 3)" :key="user.id">
+          <v-chip
+            pill
+            color="primary"
+            class="ma-1"
+            @click="displayUsersDialog(item.owners)"
+          >
+            {{ getMemberName(user) }}
+          </v-chip>
+        </span>
+        <v-chip
+          v-if="item.owners.length > 3"
+          pill
+          color="primary"
+          outlined
+          class="ma-1"
+          @click="displayUsersDialog(item.owners)"
+        >
+          {{ `+${item.owners.length - 3} more` }}
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
@@ -142,7 +164,8 @@ export default class GroupManagement extends Vue {
     },
     ...this.allGroupsHeaders,
     {text: 'Your Role', value: 'role', sortable: true},
-    {text: 'Members', value: 'users', sortable: true},
+    {text: 'Members', value: 'members', sortable: true},
+    {text: 'Owners', value: 'owners', sortable: true},
     {text: 'Actions', value: 'actions', sortable: false}
   ];
 
@@ -176,7 +199,7 @@ export default class GroupManagement extends Vue {
     }
   }
 
-  displayMembersDialog(members: ISlimUser[]) {
+  displayUsersDialog(members: ISlimUser[]) {
     this.selectedGroupUsers = members;
     this.dialogDisplayUsers = true;
   }
@@ -189,8 +212,14 @@ export default class GroupManagement extends Vue {
     return GroupsModule.allGroups;
   }
 
-  get myGroupData(): IGroup[] {
-    return GroupsModule.myGroups;
+  get myGroupData(): (IGroup & {members: ISlimUser[]; owners: ISlimUser[]})[] {
+    return GroupsModule.myGroups.map((group) => {
+      return {
+        ...group,
+        members: group.users.filter((user) => user.groupRole === 'member'),
+        owners: group.users.filter((user) => user.groupRole === 'owner')
+      };
+    });
   }
 }
 </script>

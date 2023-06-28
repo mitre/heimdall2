@@ -9,7 +9,7 @@
         data-cy="groupModalTitle"
         class="headline mitreSecondaryBlue"
         primary-title
-        >{{ 'Members' }}</v-card-title
+        >{{ role }}</v-card-title
       >
       <v-card-text>
         <Users v-model="selectedGroupUsers" :editable="false" />
@@ -40,5 +40,17 @@ import {Prop, VModel} from 'vue-property-decorator';
 export default class GroupUsers extends Vue {
   @VModel({type: Array, required: true}) selectedGroupUsers!: ISlimUser[];
   @Prop({type: Boolean, default: false}) readonly dialogDisplayUsers!: boolean;
+
+  get role() {
+    if (this.selectedGroupUsers[0].groupRole) {
+      return (
+        this.selectedGroupUsers[0].groupRole.charAt(0).toUpperCase() +
+        this.selectedGroupUsers[0].groupRole.slice(1) +
+        's'
+      );
+    } else {
+      return 'Members';
+    }
+  }
 }
 </script>
