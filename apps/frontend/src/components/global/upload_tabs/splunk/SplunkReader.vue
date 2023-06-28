@@ -29,7 +29,7 @@
       absolute="absolute"
       :value="errorCount >= 3 || errorCount < 0"
     >
-      <div class="text-center">
+      <div class="text-left">
         <p>
           <span v-if="errorCount > 0" style="color: red; font-weight: bold">
             It seems you may be having trouble connecting to Splunk. Are you
@@ -37,7 +37,7 @@
           </span>
           <br />
           <span>
-            For installation instructions and further information, check here:
+            For installation instructions and further information, check:
           </span>
           <v-btn
             target="_blank"

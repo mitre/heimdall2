@@ -38,31 +38,28 @@
             absolute="absolute"
             :value="errorCount >= 3 || errorCount < 0"
           >
-            <div class="text-center">
+            <div class="text-left">
               <p>
                 <span v-if="errorCount > 0">
                   It seems you may be having trouble using the Splunk toolkit.
                   Are you sure that you have configured it properly?
                 </span>
                 <br />
-                <span
-                  >The 'index' field requires a valid index name from the
-                  specified Splunk instance.</span
-                >
-                <br />
                 <span>
-                  For installation instructions and further information, check
-                  here:
+                  The 'index' field requires a valid index name from the
+                  specified Splunk instance.
+                  <br />
+                  For installation instructions and further information, check:
                 </span>
                 <v-btn
                   target="_blank"
-                  href="https://github.com/mitre/hdf-json-to-splunk/"
+                  href="https://github.com/mitre/saf/wiki/Splunk-Configuration"
                   text
                   color="info"
                   px-0
                 >
                   <v-icon pr-2>mdi-github-circle</v-icon>
-                  Splunk HDF Plugin
+                  Splunk Configuration
                 </v-btn>
               </p>
               <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
