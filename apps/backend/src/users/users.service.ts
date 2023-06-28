@@ -8,10 +8,10 @@ import {
 import {InjectModel} from '@nestjs/sequelize';
 import {compare, hash} from 'bcryptjs';
 import {FindOptions} from 'sequelize/types';
-import {GroupsService} from 'src/groups/groups.service';
 import {v4} from 'uuid';
 import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
+import {GroupsService} from '../groups/groups.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
