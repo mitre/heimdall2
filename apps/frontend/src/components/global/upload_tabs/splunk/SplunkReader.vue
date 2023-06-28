@@ -37,11 +37,25 @@
           </span>
           <br />
           <span>
-            For installation instructions and further information, check:
+            Accessing a Splunk instance from Heimdall requires the input of the
+            following information:
+            <br />
+            username: A qualified username recognized by the referenced Splunk
+            instance.
+            <br />
+            password: A qualified password recognized by the referenced Splunk
+            instance.
+            <br />
+            hostname: The domain name for the desired Splunk instance. Include
+            port number if available.
+            <br />
+            index: A valid index name within the referenced Splunk instance.
+            <br />
+            For installation instructions and further information, see:
           </span>
           <v-btn
             target="_blank"
-            href="https://github.com/mitre/saf/wiki/Splunk-Configuration"
+            href="https://github.com/mitre/heimdall2/wiki/Splunk-Interfacing-Guide"
             text
             color="info"
             px-0
@@ -49,31 +63,6 @@
             <v-icon pr-2>mdi-github-circle</v-icon>
             Splunk Configuration
           </v-btn>
-          <br />
-          <span>
-            The Splunk platform accepts any type of data. In particular, it
-            works with all IT streaming
-            <br />
-            and historical data. The source of the data can be event logs, web
-            logs, live application logs,
-            <br />
-            network feeds, system metrics, change monitoring, message queues,
-            archive files, and so on.
-          </span>
-          <br />
-          <span>
-            <br />
-            "A Splunk index is a repository for Splunk data."
-            <br />
-            Data that has not been previously added to Splunk is referred to as
-            raw data.
-            <br />
-            When the data is added to Splunk, it indexes the data (uses the data
-            to update its indexes),
-            <br />
-            creating event data. Individual units of this data are called
-            events.
-          </span>
         </p>
         <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
       </div>

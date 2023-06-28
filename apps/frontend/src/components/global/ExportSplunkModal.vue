@@ -46,14 +46,26 @@
                 </span>
                 <br />
                 <span>
-                  The 'index' field requires a valid index name from the
-                  specified Splunk instance.
+                  Accessing a Splunk instance from Heimdall requires the input
+                  of the following information:
                   <br />
-                  For installation instructions and further information, check:
+                  username: A qualified username recognized by the referenced
+                  Splunk instance.
+                  <br />
+                  password: A qualified password recognized by the referenced
+                  Splunk instance.
+                  <br />
+                  hostname: The domain name for the desired Splunk instance.
+                  Include port number if available.
+                  <br />
+                  index: A valid index name within the referenced Splunk
+                  instance.
+                  <br />
+                  For installation instructions and further information, see:
                 </span>
                 <v-btn
                   target="_blank"
-                  href="https://github.com/mitre/saf/wiki/Splunk-Configuration"
+                  href="https://github.com/mitre/heimdall2/wiki/Splunk-Interfacing-Guide"
                   text
                   color="info"
                   px-0
