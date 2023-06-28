@@ -1,3 +1,27 @@
+v2.6.55
+
+- No rounding in compliance chart @Amndeep7 (#4655)
+
+## Dependency Updates
+
+- Bump cypress from 12.15.0 to 12.16.0 @dependabot (#4652)
+- Bump @nestjs/cli from 10.0.3 to 10.0.5 @dependabot (#4646)
+- Bump @types/node from 20.3.1 to 20.3.2 @dependabot (#4648)
+- Bump eslint-plugin-vue from 9.15.0 to 9.15.1 @dependabot (#4654)
+- Bump @aws-sdk/client-config-service from 3.357.0 to 3.360.0 @dependabot (#4650)
+- Bump pg from 8.11.0 to 8.11.1 @dependabot (#4653)
+- Bump @typescript-eslint/parser from 5.60.0 to 5.60.1 @dependabot (#4651)
+- Bump @typescript-eslint/eslint-plugin from 5.60.0 to 5.60.1 @dependabot (#4647)
+- Bump aws-sdk from 2.1404.0 to 2.1405.0 @dependabot (#4649)
+- Bump html-entities from 2.3.6 to 2.4.0 @dependabot (#4645)
+- Bump aws-sdk from 2.1403.0 to 2.1404.0 @dependabot (#4644)
+- Bump eslint-plugin-vue from 8.7.1 to 9.15.0 @dependabot (#4627)
+- Bump cypress from 6.9.1 to 12.15.0 @dependabot (#4631)
+- Bump aws-sdk from 2.1402.0 to 2.1403.0 @dependabot (#4641)
+- Bump fast-xml-parser from 4.2.4 to 4.2.5 @dependabot (#4640)
+- Bump @aws-sdk/client-config-service from 3.356.0 to 3.357.0 @dependabot (#4636)
+- Bump aws-sdk from 2.1401.0 to 2.1402.0 @dependabot (#4637)
+
 v2.6.54
 
 - Remove Splunk SDK usage @charleshu-8 (#4549)

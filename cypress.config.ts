@@ -11,4 +11,6 @@ export default defineConfig({
     supportFile: 'test/support/index.ts',
     specPattern: 'test/integration/**/*.cy.{js,jsx,ts,tsx}',
   },
+  defaultCommandTimeout: 10000,
+  requestTimeout: 10000
 })
