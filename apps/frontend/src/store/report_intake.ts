@@ -403,6 +403,11 @@ export class InspecIntake extends VuexModule {
     InspecDataModule.addExecution(evalFile);
     FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
 
+    // Check for checklist and add to selected id for viewing
+    if (_.get(evaluation.data, 'passthrough.checklist')) {
+      FilteredDataModule.select_exclusive_checklist(evalFile.uniqueId);
+    }
+
     return fileID;
   }
 }
