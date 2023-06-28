@@ -71,7 +71,7 @@
                   px-0
                 >
                   <v-icon pr-2>mdi-github-circle</v-icon>
-                  Splunk Configuration
+                  Splunk Interfacing Guide
                 </v-btn>
               </p>
               <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
