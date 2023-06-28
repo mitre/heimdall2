@@ -174,7 +174,7 @@
     >
       <h2 class="mb-0" id="header-{{fileID}}">
         <button
-          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-[15px] border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-[15px] border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black"
           type="button"
           data-te-collapse-init
           data-te-target="#collapseable-{{fileID}}"
@@ -216,7 +216,7 @@
         >
           <h2 class="mb-0" id="control-accordion-header-{{hdf.wraps.id}}">
             <button
-              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-[15px] border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-[15px] border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black"
               type="button"
               data-te-collapse-init
               data-te-target="#control-accordion-body-{{hdf.wraps.id}}"
@@ -303,7 +303,9 @@
             <hr class="my-3" />
 
             {{#showCode}}
-            <code class="whitespace-pre-wrap text-sm">{{full_code}}</code>
+            <code class="whitespace-pre-wrap text-sm print:text-black"
+              >{{full_code}}</code
+            >
             {{/showCode}}
           </div>
         </div>

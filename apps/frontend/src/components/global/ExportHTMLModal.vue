@@ -310,6 +310,7 @@ export default class ExportHTMLModal extends Vue {
 
   async exportHTML(): Promise<void> {
     this.resetOutputData();
+
     if (this.filter.fromFile.length === 0) {
       return SnackbarModule.failure('No files have been loaded.');
     }
@@ -323,13 +324,13 @@ export default class ExportHTMLModal extends Vue {
       {html: document.getElementById('severityCounts')?.innerHTML},
       {html: document.getElementById('complianceLevel')?.innerHTML}
     ];
-
-    this.filter.fromFile.forEach(async (fileId) => {
+    for (const fileId of this.filter.fromFile) {
       const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
       if (file) {
         this.addFiledata(file);
       }
-    });
+    }
+
     const body = Mustache.render(templateRequest.data, this.outputData);
     saveAs(
       new Blob([s2ab(body)], {type: 'application/octet-stream'}),
