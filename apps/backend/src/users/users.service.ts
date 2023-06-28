@@ -8,6 +8,7 @@ import {
 import {InjectModel} from '@nestjs/sequelize';
 import {compare, hash} from 'bcryptjs';
 import {FindOptions} from 'sequelize/types';
+import {GroupsService} from 'src/groups/groups.service';
 import {v4} from 'uuid';
 import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
@@ -20,7 +21,8 @@ import {User} from './user.model';
 export class UsersService {
   constructor(
     @InjectModel(User)
-    private readonly userModel: typeof User
+    private readonly userModel: typeof User,
+    private readonly groupsService: GroupsService
   ) {}
 
   async adminFindAllUsers(): Promise<User[]> {
@@ -140,6 +142,12 @@ export class UsersService {
         'Cannot destroy only administrator account, please promote another user to administrator first'
       );
     }
+    // Clean up groups owned by user
+    (await this.groupsService.findAll()).forEach((group) => {
+      if (group.users.some((user) => user.id === userToDelete.id)) {
+        this.groupsService.setDefaultToOwner(group, userToDelete.id);
+      }
+    });
     await userToDelete.destroy();
     return userToDelete;
   }
