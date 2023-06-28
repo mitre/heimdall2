@@ -11,6 +11,7 @@ import {FindOptions} from 'sequelize/types';
 import {v4} from 'uuid';
 import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
+import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
@@ -22,6 +23,7 @@ export class UsersService {
   constructor(
     @InjectModel(User)
     private readonly userModel: typeof User,
+    @InjectModel(Group)
     private readonly groupsService: GroupsService
   ) {}
 
