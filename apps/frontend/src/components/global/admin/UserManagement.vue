@@ -118,7 +118,6 @@ export default class UserManagement extends Vue {
   }
 
   deleteUserConfirm(): void {
-    // TODO Something needs to go here to handle orphaned groups
     if (this.editedUser) {
       axios
         .delete<IUser>(`/users/${this.editedUser.id}`)
