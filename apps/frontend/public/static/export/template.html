@@ -26,6 +26,10 @@
         --tw-bg-opacity: 1;
         background-color: rgb(254 153 0 / var(--tw-bg-opacity));
       }
+      .bg-error {
+        --tw-bg-opacity: 1;
+        background-color: rgb(121 134 203 / var(--tw-bg-opacity));
+      }
     </style>
   </head>
 
@@ -169,12 +173,12 @@
     {{#showControlSets}} {{#controlSets}}
     <span id="{{fileID}}"></span>
     <div
-      class="mx-2 rounded-t-lg border border-neutral-200 bg-white"
+      class="mx-2 rounded-t-xl border border-neutral-200 bg-white"
       id="accordion-{{fileID}}"
     >
       <h2 class="mb-0" id="header-{{fileID}}">
         <button
-          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-[15px] border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black"
+          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-xl border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black"
           type="button"
           data-te-collapse-init
           data-te-target="#collapseable-{{fileID}}"
@@ -211,19 +215,41 @@
       >
         {{#controls}}
         <div
-          class="mx-4 rounded-t-lg border border-neutral-200 bg-white"
+          class="mx-4 rounded-t-xl border border-neutral-200 bg-white"
           id="accordion-{{hdf.wraps.id}}"
         >
           <h2 class="mb-0" id="control-accordion-header-{{hdf.wraps.id}}">
             <button
-              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-[15px] border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black"
+              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-xl border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black"
               type="button"
               data-te-collapse-init
               data-te-target="#control-accordion-body-{{hdf.wraps.id}}"
               aria-expanded="true"
               aria-controls="control-accordion-body-{{hdf.wraps.id}}"
             >
-              {{hdf.wraps.id}} - {{hdf.wraps.title}}
+              {{#controlStatus.isPassed}}
+              <span class="rounded bg-success text-black px-2 py-1"
+                >{{controlStatus.status}}</span
+              >
+              {{/controlStatus.isPassed}} {{#controlStatus.isFailed}}
+              <span class="rounded bg-danger text-black px-2 py-1"
+                >{{controlStatus.status}}</span
+              >
+              {{/controlStatus.isFailed}} {{#controlStatus.isNotApplicable}}
+              <span class="rounded bg-info text-black px-2 py-1"
+                >{{controlStatus.status}}</span
+              >
+              {{/controlStatus.isNotApplicable}}
+              {{#controlStatus.isNotReviewed}}
+              <span class="rounded bg-warning text-black px-2 py-1"
+                >{{controlStatus.status}}</span
+              >
+              {{/controlStatus.isNotReviewed}} {{#controlStatus.isProfileError}}
+              <span class="rounded bg-error text-black px-2 py-1"
+                >{{controlStatus.status}}</span
+              >
+              {{/controlStatus.isProfileError}}
+              <span class="pl-4">{{hdf.wraps.id}} - {{hdf.wraps.title}}</span>
               <span
                 class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
               >

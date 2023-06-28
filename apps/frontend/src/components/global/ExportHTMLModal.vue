@@ -59,11 +59,28 @@ import {InspecDataModule} from '../../store/data_store';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {SnackbarModule} from '../../store/snackbar';
 import {StatusCountModule} from '../../store/status_counts';
+import {SeverityCountModule} from '@/store/severity_counts';
 
 interface Detail {
   name: string;
   value: string;
   class?: string;
+}
+
+interface ControlStatus {
+  status: string;
+  isPassed: boolean;
+  isFailed: boolean;
+  isNotApplicable: boolean;
+  isNotReviewed: boolean;
+  isProfileError: boolean;
+}
+
+interface Severity {
+  low: number;
+  medium: number;
+  high: number;
+  critical: number;
 }
 
 interface FileInfo {
@@ -76,7 +93,9 @@ interface FileInfo {
 interface ControlSet {
   filename: string;
   fileID: string;
-  controls: (ContextualizedControl & {details: Detail[]})[];
+  controls: (ContextualizedControl & {details: Detail[]} & {
+    controlStatus: ControlStatus;
+  })[];
 }
 
 interface Statistics {
@@ -84,6 +103,7 @@ interface Statistics {
   failed: number;
   notApplicable: number;
   notReviewed: number;
+  profileError: number;
   passedTests: number;
   passingTestsFailedControl: number;
   failedTests: number;
@@ -97,6 +117,7 @@ interface Icons {
 interface OutputData {
   files: FileInfo[];
   statistics: Statistics;
+  severity: Severity;
   controlSets: ControlSet[];
   showControlSets: boolean;
   showCode: boolean;
@@ -124,10 +145,17 @@ export default class ExportHTMLModal extends Vue {
       failed: 0,
       notApplicable: 0,
       notReviewed: 0,
+      profileError: 0,
       passedTests: 0,
       passingTestsFailedControl: 0,
       failedTests: 0,
       totalTests: 0
+    },
+    severity: {
+      low: 0,
+      medium: 0,
+      high: 0,
+      critical: 0
     },
     files: [],
     controlSets: [],
@@ -231,6 +259,7 @@ export default class ExportHTMLModal extends Vue {
       failed: StatusCountModule.countOf(this.filter, 'Failed'),
       notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
       notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
+      profileError: StatusCountModule.countOf(this.filter, 'Profile Error'),
       passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
       passingTestsFailedControl: StatusCountModule.countOf(
         this.filter,
@@ -241,6 +270,12 @@ export default class ExportHTMLModal extends Vue {
         StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl') +
         StatusCountModule.countOf(this.filter, 'FailedTests')
     };
+    this.outputData.severity = {
+      low: SeverityCountModule.low(this.filter),
+      medium: SeverityCountModule.medium(this.filter),
+      high: SeverityCountModule.high(this.filter),
+      critical: SeverityCountModule.critical(this.filter)
+    };
     this.outputData.files = [];
     this.outputData.controlSets = [];
   }
@@ -248,7 +283,9 @@ export default class ExportHTMLModal extends Vue {
   addDetails(
     control: ContextualizedControl,
     controlLevels: ContextualizedControl[]
-  ): ContextualizedControl & {details: Detail[]} {
+  ): ContextualizedControl & {details: Detail[]} & {
+    controlStatus: ControlStatus;
+  } {
     return {
       ..._.set(
         control,
@@ -304,7 +341,18 @@ export default class ExportHTMLModal extends Vue {
           name: 'Fix Text',
           value: control.hdf.descriptions.fix || control.data.tags.fix
         }
-      ].filter((v) => v.value)
+      ].filter((v) => v.value),
+      controlStatus: {
+        status: control.root.hdf.status,
+        isPassed: control.root.hdf.status === 'Passed' ? true : false,
+        isFailed: control.root.hdf.status === 'Failed' ? true : false,
+        isNotApplicable:
+          control.root.hdf.status === 'Not Applicable' ? true : false,
+        isNotReviewed:
+          control.root.hdf.status === 'Not Reviewed' ? true : false,
+        isProfileError:
+          control.root.hdf.status === 'Profile Error' ? true : false
+      }
     };
   }
 
