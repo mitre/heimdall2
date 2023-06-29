@@ -14,10 +14,6 @@ const issues = parsed.issues || '';
 
 // This grabs the js/css to allow for HTML export
 const files = {
-  [require.resolve('bootstrap/dist/css/bootstrap.min.css')]:
-    'public/static/export/bootstrap.min.css',
-  [require.resolve('bootstrap/dist/js/bootstrap.min.js')]:
-    'public/static/export/bootstrap.min.js',
   [require.resolve('jquery/dist/jquery.min.js')]:
     'public/static/export/jquery.min.js'
 };
