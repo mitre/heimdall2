@@ -44,7 +44,9 @@ import {
   mdiAlertCircle,
   mdiCheckCircle,
   mdiCloseCircle,
-  mdiMinusCircle
+  mdiMinusCircle,
+  mdiAlert,
+  mdiCircle
 } from '@mdi/js';
 import axios from 'axios';
 import {saveAs} from 'file-saver';
@@ -104,6 +106,7 @@ interface Statistics {
   notApplicable: number;
   notReviewed: number;
   profileError: number;
+  totalControls: number;
   passedTests: number;
   passingTestsFailedControl: number;
   failedTests: number;
@@ -118,11 +121,11 @@ interface OutputData {
   files: FileInfo[];
   statistics: Statistics;
   severity: Severity;
+  compliance: number;
   controlSets: ControlSet[];
   showControlSets: boolean;
   showCode: boolean;
   exportType: string;
-  complianceCards: {html: string | undefined}[];
   icons: Icons;
 }
 
@@ -138,7 +141,7 @@ export default class ExportHTMLModal extends Vue {
 
   showingModal = false;
   exportType = 'executive';
-  description = 'Profile Info\nStatuses\nCompliance Donuts';
+  description = 'Profile Info\nStatuses\nCompliance Cards';
   outputData: OutputData = {
     statistics: {
       passed: 0,
@@ -146,6 +149,7 @@ export default class ExportHTMLModal extends Vue {
       notApplicable: 0,
       notReviewed: 0,
       profileError: 0,
+      totalControls: 0,
       passedTests: 0,
       passingTestsFailedControl: 0,
       failedTests: 0,
@@ -157,17 +161,22 @@ export default class ExportHTMLModal extends Vue {
       high: 0,
       critical: 0
     },
+    compliance: 0,
     files: [],
     controlSets: [],
     showControlSets: false,
     showCode: false,
     exportType: '',
-    complianceCards: [],
     icons: {
       circleCheck: this.iconDatatoSVG(mdiCheckCircle, 'white'),
       circleCross: this.iconDatatoSVG(mdiCloseCircle, 'white'),
       circleMinus: this.iconDatatoSVG(mdiMinusCircle, 'white'),
-      circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'white')
+      circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'white'),
+      triangleAlert: this.iconDatatoSVG(mdiAlert, 'white'),
+      circleLow: this.iconDatatoSVG(mdiCircle, 'rgb(255, 235, 59)'), // yellow
+      circleMedium: this.iconDatatoSVG(mdiCircle, 'rgb(255, 152, 0)'), // orange
+      circleHigh: this.iconDatatoSVG(mdiCircle, 'rgb(255, 87, 34)'), // deep orange
+      circleCritical: this.iconDatatoSVG(mdiCircle, 'rgb(244, 67, 54)') // red
     }
   };
 
@@ -175,19 +184,19 @@ export default class ExportHTMLModal extends Vue {
   onFileChanged(newValue: string, _oldValue: string) {
     switch (newValue) {
       case 'executive':
-        this.description = 'Profile Info\nStatuses\nCompliance Donuts';
+        this.description = 'Profile Info\nStatuses\nCompliance Cards';
         this.outputData.showControlSets = false;
         this.outputData.showCode = false;
         break;
       case 'manager':
         this.description =
-          'Profile Info\nStatuses\nCompliance Donuts\nTest Results and Details';
+          'Profile Info\nStatuses\nCompliance Cards\nTest Results and Details';
         this.outputData.showControlSets = true;
         this.outputData.showCode = false;
         break;
       case 'administrator':
         this.description =
-          'Profile Info\nStatuses\nCompliance Donuts\nTest Results and Details\nTest Code';
+          'Profile Info\nStatuses\nCompliance Cards\nTest Results and Details\nTest Code';
         this.outputData.showControlSets = true;
         this.outputData.showCode = true;
         break;
@@ -260,6 +269,12 @@ export default class ExportHTMLModal extends Vue {
       notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
       notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
       profileError: StatusCountModule.countOf(this.filter, 'Profile Error'),
+      totalControls:
+        StatusCountModule.countOf(this.filter, 'Passed') +
+        StatusCountModule.countOf(this.filter, 'Failed') +
+        StatusCountModule.countOf(this.filter, 'Not Applicable') +
+        StatusCountModule.countOf(this.filter, 'Not Reviewed') +
+        StatusCountModule.countOf(this.filter, 'Profile Error'),
       passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
       passingTestsFailedControl: StatusCountModule.countOf(
         this.filter,
@@ -276,6 +291,13 @@ export default class ExportHTMLModal extends Vue {
       high: SeverityCountModule.high(this.filter),
       critical: SeverityCountModule.critical(this.filter)
     };
+    this.outputData.compliance =
+      (StatusCountModule.countOf(this.filter, 'Passed') /
+        (StatusCountModule.countOf(this.filter, 'Passed') +
+          StatusCountModule.countOf(this.filter, 'Failed') +
+          StatusCountModule.countOf(this.filter, 'Not Reviewed') +
+          StatusCountModule.countOf(this.filter, 'Profile Error'))) *
+      100;
     this.outputData.files = [];
     this.outputData.controlSets = [];
   }
@@ -366,12 +388,6 @@ export default class ExportHTMLModal extends Vue {
     const templateRequest = await axios.get<string>(
       `/static/export/template.html`
     );
-
-    this.outputData.complianceCards = [
-      {html: document.getElementById('statusCounts')?.innerHTML},
-      {html: document.getElementById('severityCounts')?.innerHTML},
-      {html: document.getElementById('complianceLevel')?.innerHTML}
-    ];
     for (const fileId of this.filter.fromFile) {
       const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
       if (file) {
