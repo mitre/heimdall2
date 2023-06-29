@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-card-title v-if="!allGroups" class="pb-0">
+    <v-card-title class="pb-0">
       <GroupModal id="groupModal" :create="true">
         <template #clickable="{on, attrs}"
           ><v-btn
@@ -16,8 +16,8 @@
       </GroupModal>
     </v-card-title>
     <v-data-table
-      :headers="allGroups ? allGroupsHeaders : myGroupsHeaders"
-      :items="allGroups ? allGroupData : myGroupData"
+      :headers="groupsHeaders"
+      :items="allGroupData"
       class="elevation-0"
       dense
       :loading="loading"
@@ -80,7 +80,7 @@
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
-        <div v-if="item.role == 'owner'">
+        <div v-if="item.role == 'owner' || adminPanel">
           <GroupModal id="editGroupModal" :create="false" :group="item">
             <template #clickable="{on}"
               ><v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
@@ -135,14 +135,20 @@ import {Prop} from 'vue-property-decorator';
   }
 })
 export default class GroupManagement extends Vue {
-  @Prop({type: Boolean, default: false}) readonly allGroups!: boolean;
+  @Prop({type: Boolean, default: false}) readonly adminPanel!: boolean;
 
   editedGroup: IGroup | null = null;
   selectedGroupUsers: ISlimUser[] | null = [];
   dialogDelete = false;
   dialogDisplayUsers = false;
   search = '';
-  allGroupsHeaders: Object[] = [
+
+  groupsHeaders: Object[] = [
+    {
+      text: 'ID',
+      sortable: true,
+      value: 'id'
+    },
     {
       text: 'Group Name',
       align: 'start',
@@ -153,16 +159,7 @@ export default class GroupManagement extends Vue {
       text: 'Public',
       sortable: true,
       value: 'public'
-    }
-  ];
-
-  myGroupsHeaders: Object[] = [
-    {
-      text: 'ID',
-      sortable: true,
-      value: 'id'
     },
-    ...this.allGroupsHeaders,
     {text: 'Your Role', value: 'role', sortable: true},
     {text: 'Members', value: 'members', sortable: true},
     {text: 'Owners', value: 'owners', sortable: true},
@@ -208,12 +205,14 @@ export default class GroupManagement extends Vue {
     return GroupsModule.loading;
   }
 
-  get allGroupData(): IGroup[] {
-    return GroupsModule.allGroups;
-  }
-
-  get myGroupData(): (IGroup & {members: ISlimUser[]; owners: ISlimUser[]})[] {
-    return GroupsModule.myGroups.map((group) => {
+  get allGroupData(): (IGroup & {members: ISlimUser[]; owners: ISlimUser[]})[] {
+    const allGroups = GroupsModule.myGroups.concat(
+      GroupsModule.allGroups.filter(
+        (group) =>
+          !GroupsModule.myGroups.map((myGroup) => myGroup.id).includes(group.id)
+      )
+    );
+    return allGroups.map((group) => {
       return {
         ...group,
         members: group.users.filter((user) => user.groupRole === 'member'),

@@ -113,6 +113,7 @@ function newGroup(): IGroup {
   return {
     id: '-1',
     name: '',
+    role: '',
     public: false,
     createdAt: new Date(),
     updatedAt: new Date(),
