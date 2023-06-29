@@ -45,6 +45,7 @@
 
 <script lang="ts">
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
+import {FilteredDataModule} from '@/store/data_filters';
 import {HDFControlSegment} from 'inspecjs';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -55,8 +56,10 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
   @Prop({type: Object, required: true}) readonly result!: HDFControlSegment;
 
   get status_color(): string {
-    // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
-    return `status${this.statusCode.replace(' ', '')}`;
+    // notMatched is added due to potential but not likely undefined results of .find function
+    const statusColor: string = FilteredDataModule.controlStatusSwitches.find(
+      controlSwitch => controlSwitch.value === this.statusCode)?.color ?? "notMatched";
+    return statusColor;
   }
 
   get resultMessage(): string | undefined {
