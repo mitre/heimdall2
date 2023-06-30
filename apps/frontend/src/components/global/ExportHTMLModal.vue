@@ -121,7 +121,7 @@ interface OutputData {
   files: FileInfo[];
   statistics: Statistics;
   severity: Severity;
-  compliance: number;
+  compliance: string;
   controlSets: ControlSet[];
   showControlSets: boolean;
   showCode: boolean;
@@ -161,7 +161,7 @@ export default class ExportHTMLModal extends Vue {
       high: 0,
       critical: 0
     },
-    compliance: 0,
+    compliance: '',
     files: [],
     controlSets: [],
     showControlSets: false,
@@ -263,18 +263,32 @@ export default class ExportHTMLModal extends Vue {
   }
 
   resetOutputData() {
+    const controlCnt =
+      StatusCountModule.countOf(this.filter, 'Passed') +
+      StatusCountModule.countOf(this.filter, 'Failed') +
+      StatusCountModule.countOf(this.filter, 'Not Applicable') +
+      StatusCountModule.countOf(this.filter, 'Not Reviewed') +
+      StatusCountModule.countOf(this.filter, 'Profile Error');
+
+    const MAX_DECIMAL_PRECISION = 2;
+    if (controlCnt === 0) {
+      this.outputData.compliance = '0%';
+    } else {
+      const compliance =
+        (StatusCountModule.countOf(this.filter, 'Passed') / controlCnt) * 100;
+      this.outputData.compliance = `${(
+        Math.trunc(Math.pow(10, MAX_DECIMAL_PRECISION) * compliance) /
+        Math.pow(10, MAX_DECIMAL_PRECISION)
+      ).toFixed(MAX_DECIMAL_PRECISION)}%`;
+    }
+
     this.outputData.statistics = {
       passed: StatusCountModule.countOf(this.filter, 'Passed'),
       failed: StatusCountModule.countOf(this.filter, 'Failed'),
       notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
       notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
       profileError: StatusCountModule.countOf(this.filter, 'Profile Error'),
-      totalControls:
-        StatusCountModule.countOf(this.filter, 'Passed') +
-        StatusCountModule.countOf(this.filter, 'Failed') +
-        StatusCountModule.countOf(this.filter, 'Not Applicable') +
-        StatusCountModule.countOf(this.filter, 'Not Reviewed') +
-        StatusCountModule.countOf(this.filter, 'Profile Error'),
+      totalControls: controlCnt,
       passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
       passingTestsFailedControl: StatusCountModule.countOf(
         this.filter,
@@ -291,13 +305,6 @@ export default class ExportHTMLModal extends Vue {
       high: SeverityCountModule.high(this.filter),
       critical: SeverityCountModule.critical(this.filter)
     };
-    this.outputData.compliance =
-      (StatusCountModule.countOf(this.filter, 'Passed') /
-        (StatusCountModule.countOf(this.filter, 'Passed') +
-          StatusCountModule.countOf(this.filter, 'Failed') +
-          StatusCountModule.countOf(this.filter, 'Not Reviewed') +
-          StatusCountModule.countOf(this.filter, 'Profile Error'))) *
-      100;
     this.outputData.files = [];
     this.outputData.controlSets = [];
   }
