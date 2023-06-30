@@ -110,53 +110,60 @@ function getStatus(input: string): ExecJSON.ControlResultStatus {
  * @returns ExecJSON.ControlResult
  */
 function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
-  const findings = input as unknown as ExecJSON.ControlResult[];
+  const findings = input as ExecJSON.ControlResult[];
   const results: ExecJSON.ControlResult[] = [];
-  const statusSet = ['passed', 'failed', 'skipped', 'error'];
-
   for (const finding of findings) {
-    if (!finding.code_desc) {
-      results.push({
-        status: finding.status,
-        code_desc: finding.code_desc,
-        start_time: finding.start_time
-      });
-    } else {
-      // split into multiple findings details using heimdall2 CKLExport functionality
-      for (const details of finding.code_desc.split(
-        '--------------------------------\n'
-      )) {
-        let code_desc: string;
-        let status: ExecJSON.ControlResultStatus;
-        let message = '';
-        // split details for status
-        const [findingStatus, descAndMessage] = details.split(/\n(.*)/s, 2);
-        if (statusSet.includes(findingStatus)) {
-          // split desc and message
-          // This does not necessarily work when the code_desc has the word expected
-          // will need to update the export to add a key word that can be used to split code_desc
-          // and message values easier - maybe *results* or *details*
-          const indexOfExpected = descAndMessage.indexOf('\nexpected');
-          if (indexOfExpected > 0) {
-            code_desc = descAndMessage.slice(0, indexOfExpected - 1);
-            message = descAndMessage.slice(indexOfExpected);
-            status = getStatus(findingStatus);
-          } else {
-            code_desc = descAndMessage;
-            status = getStatus(findingStatus);
-          }
-        } else {
-          code_desc = details;
-          status = finding.status as ExecJSON.ControlResultStatus;
-        }
-        results.push({
-          code_desc,
-          status,
-          message: message ? message : null,
-          start_time: ''
-        });
-      }
+    if (finding.code_desc) {
+      return splitFindings(
+        finding.code_desc,
+        finding.status as ExecJSON.ControlResultStatus
+      );
     }
+    results.push({
+      status: finding.status,
+      code_desc: finding.code_desc,
+      start_time: finding.start_time
+    });
+  }
+  return results;
+}
+
+export function splitFindings(
+  findings: string,
+  passedStatus: ExecJSON.ControlResultStatus
+): ExecJSON.ControlResult[] {
+  const statusSet = ['passed', 'failed', 'skipped', 'error'];
+  const results: ExecJSON.ControlResult[] = [];
+  for (const details of findings.split('--------------------------------\n')) {
+    let code_desc: string;
+    let status: ExecJSON.ControlResultStatus;
+    let message = '';
+    // split details for status
+    const [findingStatus, descAndMessage] = details.split(/\n(.*)/s, 2);
+    if (statusSet.includes(findingStatus)) {
+      // split desc and message
+      // This does not necessarily work when the code_desc has the word expected
+      // will need to update the export to add a key word that can be used to split code_desc
+      // and message values easier - maybe *results* or *details*
+      const indexOfExpected = descAndMessage.indexOf('\nexpected');
+      if (indexOfExpected > 0) {
+        code_desc = descAndMessage.slice(0, indexOfExpected - 1);
+        message = descAndMessage.slice(indexOfExpected);
+        status = getStatus(findingStatus);
+      } else {
+        code_desc = descAndMessage;
+        status = getStatus(findingStatus);
+      }
+    } else {
+      code_desc = details;
+      status = passedStatus;
+    }
+    results.push({
+      code_desc,
+      status,
+      message: message ? message : null,
+      start_time: ''
+    });
   }
   return results;
 }
