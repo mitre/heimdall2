@@ -32,8 +32,8 @@
 
     <v-list-item-action v-if="inChecklistView" @click.stop="save_to_hdf">
       <v-btn data-cy="saveToHdf" icon small>
-        <v-icon color='pink lighten-3'> mdi-google-downasaur </v-icon>
-      </v-btn>    
+        <v-icon color="pink lighten-3"> mdi-google-downasaur </v-icon>
+      </v-btn>
     </v-list-item-action>
 
     <v-list-item-action @click.stop="remove_file">
@@ -50,7 +50,11 @@ import ServerMixin from '@/mixins/ServerMixin';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationModule} from '@/store/evaluations';
-import {EvaluationFile, InspecIntakeModule, ProfileFile} from '@/store/report_intake';
+import {
+  EvaluationFile,
+  InspecIntakeModule,
+  ProfileFile
+} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
 import axios from 'axios';
@@ -58,7 +62,7 @@ import _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {AppInfoModule, views} from '@/store/app_info';
-import { ChecklistMapper, ChecklistObject } from '@mitre/hdf-converters';
+import {ChecklistMapper, ChecklistObject} from '@mitre/hdf-converters';
 
 @Component
 export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
@@ -125,9 +129,13 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
       this.save_to_database(this.file);
     }
   }
+
   // takes current intermediate checklist file and maps to hdf
   save_to_hdf() {
-    const checklistObject: ChecklistObject = _.get(this.file, 'evaluation.data.passthrough.checklist') as unknown as ChecklistObject;
+    const checklistObject: ChecklistObject = _.get(
+      this.file,
+      'evaluation.data.passthrough.checklist'
+    ) as unknown as ChecklistObject;
     const newHdf = new ChecklistMapper(checklistObject).toHdf();
     const filename = this.file.filename;
     const payload = {filename, data: newHdf};

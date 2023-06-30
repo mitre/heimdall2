@@ -57,8 +57,10 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
 
   get status_color(): string {
     // notMatched is added due to potential but not likely undefined results of .find function
-    const statusColor: string = FilteredDataModule.controlStatusSwitches.find(
-      controlSwitch => controlSwitch.value === this.statusCode)?.color ?? "notMatched";
+    const statusColor: string =
+      FilteredDataModule.controlStatusSwitches.find(
+        (controlSwitch) => controlSwitch.value === this.statusCode
+      )?.color ?? 'notMatched';
     return statusColor;
   }
 
