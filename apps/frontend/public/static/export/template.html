@@ -30,6 +30,10 @@
         --tw-bg-opacity: 1;
         background-color: rgb(121 134 203 / var(--tw-bg-opacity));
       }
+      .bg-compliance-low {
+        --tw-bg-opacity: 1;
+        background-color: rgb(255 235 59 / var(--tw-bg-opacity));
+      }
     </style>
   </head>
 
@@ -116,7 +120,7 @@
 
     <div class="flex flex-wrap justify-evenly gap-x-8 gap-y-6 pb-6">
       <div
-        class="bg-success h-32 w-96 rounded-xl print:border print:border-black"
+        class="bg-success h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
       >
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
@@ -130,7 +134,7 @@
       </div>
 
       <div
-        class="bg-danger h-32 w-96 rounded-xl print:border print:border-black"
+        class="bg-danger h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
       >
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
@@ -145,7 +149,9 @@
         </div>
       </div>
 
-      <div class="bg-info h-32 w-96 rounded-xl print:border print:border-black">
+      <div
+        class="bg-info h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
+      >
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
             <div class="print:hidden">{{{icons.circleMinus}}}</div>
@@ -158,7 +164,7 @@
       </div>
 
       <div
-        class="bg-warning h-32 w-96 rounded-xl print:border print:border-black"
+        class="bg-warning h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
       >
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
@@ -172,7 +178,7 @@
       </div>
 
       <div
-        class="bg-error h-32 w-96 rounded-xl print:border print:border-black"
+        class="bg-error h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
       >
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
@@ -188,7 +194,7 @@
         </div>
       </div>
       <div
-        class="bg-slate-300 h-32 w-96 rounded-xl print:border print:border-black"
+        class="bg-slate-300 h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
       >
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
@@ -202,7 +208,7 @@
       </div>
 
       <div
-        class="bg-slate-300 h-32 w-96 rounded-xl print:border print:border-black"
+        class="bg-slate-300 h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
       >
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
@@ -230,11 +236,11 @@
       </div>
 
       <div
-        class="bg-slate-300 h-32 w-96 rounded-xl print:border print:border-black"
+        class="bg-{{compliance.color}} h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
       >
         <div class="px-6 py-4">
           <div class="flex text-lg font-bold">
-            <span>Compliance Level: {{compliance}}</span>
+            <span>Compliance Level: {{compliance.level}}</span>
           </div>
           <p class="my-2">
             [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
@@ -251,7 +257,7 @@
     >
       <h2 class="mb-0" id="header-{{fileID}}">
         <button
-          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-xl border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black"
+          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-xl border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black print:[&:not([data-te-collapse-collapsed])]:bg-white"
           type="button"
           data-te-collapse-init
           data-te-target="#collapseable-{{fileID}}"
@@ -293,7 +299,7 @@
         >
           <h2 class="mb-0" id="control-accordion-header-{{hdf.wraps.id}}">
             <button
-              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-xl border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black"
+              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-xl border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black print:[&:not([data-te-collapse-collapsed])]:bg-white"
               type="button"
               data-te-collapse-init
               data-te-target="#control-accordion-body-{{hdf.wraps.id}}"
@@ -302,28 +308,28 @@
             >
               {{#controlStatus.isPassed}}
               <span
-                class="rounded bg-success text-black px-2 py-1 print:border print:border-black"
+                class="rounded bg-success text-black px-2 py-1 print:border print:border-black print:bg-white"
                 >{{controlStatus.status}}</span
               >
               {{/controlStatus.isPassed}} {{#controlStatus.isFailed}}
               <span
-                class="rounded bg-danger text-black px-2 py-1 print:border print:border-black"
+                class="rounded bg-danger text-black px-2 py-1 print:border print:border-black print:bg-white"
                 >{{controlStatus.status}}</span
               >
               {{/controlStatus.isFailed}} {{#controlStatus.isNotApplicable}}
               <span
-                class="rounded bg-info text-black px-2 py-1 print:border print:border-black"
+                class="rounded bg-info text-black px-2 py-1 print:border print:border-black print:bg-white"
                 >{{controlStatus.status}}</span
               >
               {{/controlStatus.isNotApplicable}}
               {{#controlStatus.isNotReviewed}}
               <span
-                class="rounded bg-warning text-black px-2 py-1 print:border print:border-black"
+                class="rounded bg-warning text-black px-2 py-1 print:border print:border-black print:bg-white"
                 >{{controlStatus.status}}</span
               >
               {{/controlStatus.isNotReviewed}} {{#controlStatus.isProfileError}}
               <span
-                class="rounded bg-error text-black px-2 py-1 print:border print:border-black"
+                class="rounded bg-error text-black px-2 py-1 print:border print:border-black print:bg-white"
                 >{{controlStatus.status}}</span
               >
               {{/controlStatus.isProfileError}}
@@ -371,7 +377,9 @@
                 </thead>
                 <tbody>
                   {{#hdf.segments}}
-                  <tr class="border-b odd:bg-gray-100 even:bg-white">
+                  <tr
+                    class="border-b odd:bg-gray-100 even:bg-white print:odd:bg-white"
+                  >
                     <td>{{status}}</td>
                     <td>{{code_desc}}</td>
                     <td>{{message}}</td>
@@ -395,7 +403,9 @@
                 </thead>
                 <tbody>
                   {{#details}}
-                  <tr class="border-b odd:bg-gray-100 even:bg-white">
+                  <tr
+                    class="border-b odd:bg-gray-100 even:bg-white print:odd:bg-white"
+                  >
                     <td>{{name}}</td>
                     <td>{{value}}</td>
                   </tr>

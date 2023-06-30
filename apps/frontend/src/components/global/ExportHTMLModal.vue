@@ -63,41 +63,11 @@ import {SnackbarModule} from '../../store/snackbar';
 import {StatusCountModule} from '../../store/status_counts';
 import {SeverityCountModule} from '@/store/severity_counts';
 
-interface Detail {
-  name: string;
-  value: string;
-  class?: string;
-}
-
-interface ControlStatus {
-  status: string;
-  isPassed: boolean;
-  isFailed: boolean;
-  isNotApplicable: boolean;
-  isNotReviewed: boolean;
-  isProfileError: boolean;
-}
-
-interface Severity {
-  low: number;
-  medium: number;
-  high: number;
-  critical: number;
-}
-
 interface FileInfo {
   filename: string;
   toolVersion: string;
   platform: string;
   duration: string;
-}
-
-interface ControlSet {
-  filename: string;
-  fileID: string;
-  controls: (ContextualizedControl & {details: Detail[]} & {
-    controlStatus: ControlStatus;
-  })[];
 }
 
 interface Statistics {
@@ -113,6 +83,41 @@ interface Statistics {
   totalTests: number;
 }
 
+interface Severity {
+  low: number;
+  medium: number;
+  high: number;
+  critical: number;
+}
+
+interface Compliance {
+  level: string;
+  color: string;
+}
+
+interface Detail {
+  name: string;
+  value: string;
+  class?: string;
+}
+
+interface ControlStatus {
+  status: string;
+  isPassed: boolean;
+  isFailed: boolean;
+  isNotApplicable: boolean;
+  isNotReviewed: boolean;
+  isProfileError: boolean;
+}
+
+interface ControlSet {
+  filename: string;
+  fileID: string;
+  controls: (ContextualizedControl & {details: Detail[]} & {
+    controlStatus: ControlStatus;
+  })[];
+}
+
 interface Icons {
   [key: string]: string;
 }
@@ -121,7 +126,7 @@ interface OutputData {
   files: FileInfo[];
   statistics: Statistics;
   severity: Severity;
-  compliance: string;
+  compliance: Compliance;
   controlSets: ControlSet[];
   showControlSets: boolean;
   showCode: boolean;
@@ -161,7 +166,10 @@ export default class ExportHTMLModal extends Vue {
       high: 0,
       critical: 0
     },
-    compliance: '',
+    compliance: {
+      level: '',
+      color: ''
+    },
     files: [],
     controlSets: [],
     showControlSets: false,
@@ -271,15 +279,27 @@ export default class ExportHTMLModal extends Vue {
       StatusCountModule.countOf(this.filter, 'Profile Error');
 
     const MAX_DECIMAL_PRECISION = 2;
+    let compliance = 0;
     if (controlCnt === 0) {
-      this.outputData.compliance = '0%';
+      this.outputData.compliance.level = '0%';
     } else {
-      const compliance =
-        (StatusCountModule.countOf(this.filter, 'Passed') / controlCnt) * 100;
-      this.outputData.compliance = `${(
-        Math.trunc(Math.pow(10, MAX_DECIMAL_PRECISION) * compliance) /
-        Math.pow(10, MAX_DECIMAL_PRECISION)
-      ).toFixed(MAX_DECIMAL_PRECISION)}%`;
+      compliance =
+        Math.trunc(
+          Math.pow(10, MAX_DECIMAL_PRECISION) *
+            ((StatusCountModule.countOf(this.filter, 'Passed') / controlCnt) *
+              100)
+        ) / Math.pow(10, MAX_DECIMAL_PRECISION);
+      this.outputData.compliance.level = `${compliance.toFixed(
+        MAX_DECIMAL_PRECISION
+      )}%`;
+    }
+
+    if (compliance >= 90) {
+      this.outputData.compliance.color = 'success'; // green
+    } else if (compliance >= 60) {
+      this.outputData.compliance.color = 'compliance-medium'; // yellow
+    } else {
+      this.outputData.compliance.color = 'danger'; // red
     }
 
     this.outputData.statistics = {
