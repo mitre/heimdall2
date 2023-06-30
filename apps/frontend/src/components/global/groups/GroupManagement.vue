@@ -17,7 +17,7 @@
     </v-card-title>
     <v-data-table
       :headers="groupsHeaders"
-      :items="allGroupData"
+      :items="groupData"
       class="elevation-0"
       dense
       :loading="loading"
@@ -205,14 +205,21 @@ export default class GroupManagement extends Vue {
     return GroupsModule.loading;
   }
 
-  get allGroupData(): (IGroup & {members: ISlimUser[]; owners: ISlimUser[]})[] {
-    const allGroups = GroupsModule.myGroups.concat(
-      GroupsModule.allGroups.filter(
-        (group) =>
-          !GroupsModule.myGroups.map((myGroup) => myGroup.id).includes(group.id)
-      )
-    );
-    return allGroups.map((group) => {
+  get groupData(): (IGroup & {members: ISlimUser[]; owners: ISlimUser[]})[] {
+    let groups: IGroup[];
+    if (this.adminPanel) {
+      groups = GroupsModule.myGroups.concat(
+        GroupsModule.allGroups.filter(
+          (group) =>
+            !GroupsModule.myGroups
+              .map((myGroup) => myGroup.id)
+              .includes(group.id)
+        )
+      );
+    } else {
+      groups = GroupsModule.myGroups;
+    }
+    return groups.map((group) => {
       return {
         ...group,
         members: group.users.filter((user) => user.groupRole === 'member'),
