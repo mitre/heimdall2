@@ -133,7 +133,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     const payload = {filename, data: newHdf};
     InspecIntakeModule.loadExecJson(payload);
     InspecDataModule.REMOVE_RESULT(this.file.uniqueId);
-    this.navigateWithNoErrors(`/results/`);
+    //this.navigateWithNoErrors(`/results/`);
   }
 
   //determines if the user can save the file

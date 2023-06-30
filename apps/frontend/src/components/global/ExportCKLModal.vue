@@ -57,7 +57,7 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {ControlsFilter, FilteredDataModule} from '@/store/data_filters';
+import {ControlsFilter, FilteredDataModule, ChecklistFilter} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
@@ -137,7 +137,7 @@ type FileData = {
   }
 })
 export default class ExportCKLModal extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter | ChecklistFilter;
 
   showingModal = false;
   outputData: OutputData = {
@@ -167,18 +167,30 @@ export default class ExportCKLModal extends Vue {
   // Get our evaluation info for our export table
   get evaluations(): ExtendedEvaluationFile[] {
     const files: ExtendedEvaluationFile[] = [];
-    this.filter.fromFile.forEach(async (fileId) => {
-      const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
-      if (file) {
+    if (typeof this.filter.fromFile === 'string') {
+      const CKLfile = InspecDataModule.allFiles.find((f) => f.uniqueId === this.filter.fromFile)
+      if (CKLfile){
         files.push({
-          ...file,
-          hostname: _.get(file, 'evaluation.data.passthrough.hostname') || '',
-          fqdn: _.get(file, 'evaluation.data.passthrough.fqdn') || '',
-          mac: _.get(file, 'evaluation.data.passthrough.mac') || '',
-          ip: _.get(file, 'evaluation.data.passthrough.ip') || ''
-        });
-      }
-    });
+          ...CKLfile,
+          hostname: _.get(CKLfile, 'evaluation.data.passthrough.hostname') ?? '',
+          fqdn: _.get(CKLfile, 'evaluation.data.passthrough.fqdn') ?? '',
+          mac: _.get(CKLfile, 'evaluation.data.passthrough.mac') ?? '',
+          ip: _.get(CKLfile, 'evaluation.data.passthrough.ip') ?? ''
+        });}
+    } else {
+      this.filter.fromFile.forEach((fileId) => {
+        const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
+        if (file) {
+          files.push({
+            ...file,
+            hostname: _.get(file, 'evaluation.data.passthrough.hostname') ?? '',
+            fqdn: _.get(file, 'evaluation.data.passthrough.fqdn') ?? '',
+            mac: _.get(file, 'evaluation.data.passthrough.mac') ?? '',
+            ip: _.get(file, 'evaluation.data.passthrough.ip') ?? ''
+          });
+        }
+      });
+    }
     return files;
   }
 

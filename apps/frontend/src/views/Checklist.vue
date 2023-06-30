@@ -12,18 +12,20 @@
       </v-btn>
       <UploadButton />
       <ExportButton>
-        <v-list-item>
-          <v-tooltip top>
-            <template #activator="{on}">
-              <IconLinkItem
-                key="exportCkl"
-                text="Export as CKL"
-                icon="mdi-check-all"
-                @click="exportCkl()"
-                v-on="on"
-              />
-            </template>
-          </v-tooltip>
+        <v-list-item class="px-0">
+          <ExportCaat :filter="allFilter" />
+        </v-list-item>
+        <v-list-item class="px-0">
+          <ExportNist :filter="allFilter" />
+        </v-list-item>
+        <v-list-item  class="px-0">
+          <ExportASFFModal :filter="allFilter" />
+        </v-list-item>
+        <v-list-item  class="px-0">
+          <ExportCKLModal :filter="allFilter" />
+        </v-list-item>
+        <v-list-item  class="px-0">
+          <ExportCSVModal :filter="allFilter" />
         </v-list-item>
       </ExportButton>
     </template>
@@ -125,6 +127,15 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
+import ExportCKLModal from '@/components/global/ExportCKLModal.vue';
+import ExportASFFModal from '@/components/global/ExportASFFModal.vue';
+import ExportCaat from '@/components/global/ExportCaat.vue';
+import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
+import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
+import ExportJson from '@/components/global/ExportJson.vue';
+import ExportNist from '@/components/global/ExportNist.vue';
+import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
+import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import {ChecklistVuln, ChecklistSeverity} from '@mitre/hdf-converters';
 import {InspecDataModule} from '@/store/data_store';
@@ -144,6 +155,11 @@ import ExportButton from '@/components/generic/ExportButton.vue';
     Base,
     UploadButton,
     IconLinkItem,
+    ExportASFFModal,
+    ExportCKLModal,
+    ExportCSVModal,
+    ExportNist,
+    ExportCaat,
     ChecklistRulesTable,
     ChecklistRuleInfoHeader,
     ChecklistRuleInfoBody,
