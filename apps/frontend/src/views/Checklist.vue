@@ -18,13 +18,13 @@
         <v-list-item class="px-0">
           <ExportNist :filter="allFilter" />
         </v-list-item>
-        <v-list-item  class="px-0">
+        <v-list-item class="px-0">
           <ExportASFFModal :filter="allFilter" />
         </v-list-item>
-        <v-list-item  class="px-0">
+        <v-list-item class="px-0">
           <ExportCKLModal :filter="allFilter" />
         </v-list-item>
-        <v-list-item  class="px-0">
+        <v-list-item class="px-0">
           <ExportCSVModal :filter="allFilter" />
         </v-list-item>
       </ExportButton>
@@ -43,7 +43,7 @@
             />
           </v-col>
           <!-- Rule Data -->
-          <v-col cols="12" md="6" id="right-panel">
+          <v-col id="right-panel" cols="12" md="6">
             <!-- Rule Header Info -->
             <v-row dense>
               <ChecklistRuleInfoHeader

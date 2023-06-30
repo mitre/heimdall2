@@ -57,7 +57,11 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {ControlsFilter, FilteredDataModule, ChecklistFilter} from '@/store/data_filters';
+import {
+  ControlsFilter,
+  FilteredDataModule,
+  ChecklistFilter
+} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
@@ -137,7 +141,9 @@ type FileData = {
   }
 })
 export default class ExportCKLModal extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter | ChecklistFilter;
+  @Prop({type: Object, required: true}) readonly filter!:
+    | ControlsFilter
+    | ChecklistFilter;
 
   showingModal = false;
   outputData: OutputData = {
@@ -168,18 +174,24 @@ export default class ExportCKLModal extends Vue {
   get evaluations(): ExtendedEvaluationFile[] {
     const files: ExtendedEvaluationFile[] = [];
     if (typeof this.filter.fromFile === 'string') {
-      const CKLfile = InspecDataModule.allFiles.find((f) => f.uniqueId === this.filter.fromFile)
-      if (CKLfile){
+      const CKLfile = InspecDataModule.allFiles.find(
+        (f) => f.uniqueId === this.filter.fromFile
+      );
+      if (CKLfile) {
         files.push({
           ...CKLfile,
-          hostname: _.get(CKLfile, 'evaluation.data.passthrough.hostname') ?? '',
+          hostname:
+            _.get(CKLfile, 'evaluation.data.passthrough.hostname') ?? '',
           fqdn: _.get(CKLfile, 'evaluation.data.passthrough.fqdn') ?? '',
           mac: _.get(CKLfile, 'evaluation.data.passthrough.mac') ?? '',
           ip: _.get(CKLfile, 'evaluation.data.passthrough.ip') ?? ''
-        });}
+        });
+      }
     } else {
       this.filter.fromFile.forEach((fileId) => {
-        const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
+        const file = InspecDataModule.allFiles.find(
+          (f) => f.uniqueId === fileId
+        );
         if (file) {
           files.push({
             ...file,

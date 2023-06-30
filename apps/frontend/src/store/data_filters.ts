@@ -458,8 +458,8 @@ export class FilteredData extends VuexModule {
         ?.evaluation.data,
       'passthrough.checklist'
     ) as unknown as ChecklistObject;
-      this.SELECT_CHECKLIST(fileID);
-      this.selectRule(checklist.stigs[0].vulns[0] ?? this.emptyRule);
+    this.SELECT_CHECKLIST(fileID);
+    this.selectRule(checklist.stigs[0].vulns[0] ?? this.emptyRule);
   }
 
   @Action
