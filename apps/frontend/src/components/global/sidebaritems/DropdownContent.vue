@@ -14,16 +14,26 @@
         />
 
         <v-list-item v-if="!inChecklistView && anyFileFilteredOut">
-          Filtered Files
+          <v-list-item-content>
+            Filtered files
+          </v-list-item-content>
+
+          <v-list-item-action @click.stop="showFilteredFiles = !showFilteredFiles">
+            <v-btn icon small>
+              <v-icon>{{ showFilteredFiles ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            </v-btn>
+          </v-list-item-action>
         </v-list-item>
 
-        <FileList
-          v-for="(file, i) in files"
-          v-if="fileFilteredOut(file)"
-          :key="i"
-          :file="file"
-          @changed-files="$emit('changed-files')"
-        />
+        <v-expand-transition v-if="!inChecklistView && anyFileFilteredOut">
+          <FileList
+            v-for="(file, i) in files"
+            v-if="!inChecklistView && fileFilteredOut(file) && showFilteredFiles"
+            :key="i"
+            :file="file"
+            @changed-files="$emit('changed-files')"
+          />
+        </v-expand-transition>
 
         <v-divider v-if="!inChecklistView" />
 
@@ -82,7 +92,6 @@ import {
 } from '@/store/data_filters';
 import {InspecFile} from '@/store/report_intake';
 import {SearchModule} from '@/store/search';
-import ChecklistFile from '@/views/Checklist.vue';
 import {Trinary} from '@/enums/Trinary';
 import {AppInfoModule, views} from '@/store/app_info';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
@@ -106,6 +115,8 @@ export default class DropdownContent extends Vue {
 
   @Prop({default: false, type: Boolean, required: false})
   readonly enableCompareView!: boolean;
+
+  showFilteredFiles = false;
 
   get allSelectedValue(): boolean {
     return this.allSelected === Trinary.On;
