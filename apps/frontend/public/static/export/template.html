@@ -9,55 +9,29 @@
       href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css"
     />
     <script src="https://cdn.tailwindcss.com"></script>
-    <style type="text/tailwindcss">
-      .bg-success {
-        --tw-bg-opacity: 1;
-        background-color: rgb(76 176 79 / var(--tw-bg-opacity));
-      }
-      .bg-danger {
-        --tw-bg-opacity: 1;
-        background-color: rgb(243 67 53 / var(--tw-bg-opacity));
-      }
-      .bg-info {
-        --tw-bg-opacity: 1;
-        background-color: rgb(3 169 244 / var(--tw-bg-opacity));
-      }
-      .bg-warning {
-        --tw-bg-opacity: 1;
-        background-color: rgb(254 153 0 / var(--tw-bg-opacity));
-      }
-      .bg-error {
-        --tw-bg-opacity: 1;
-        background-color: rgb(121 134 203 / var(--tw-bg-opacity));
-      }
-      .bg-compliance-low {
-        --tw-bg-opacity: 1;
-        background-color: rgb(255 235 59 / var(--tw-bg-opacity));
-      }
-    </style>
   </head>
 
   <body>
-    <nav
-      class="d-flex sticky top-0 z-10 bg-gray-100 px-3 py-3 text-black print:hidden"
-    >
+    <!-- Stickied navbar -->
+    <nav class="d-flex sticky top-0 z-10 bg-gray-100 px-3 py-3 print:hidden">
+      <!-- Heimdall report -->
       <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
-      <a
-        href="#"
-        class="px-3 py-2 text-sm font-medium hover:bg-gray-500 hover:text-white"
-        aria-current="page"
+      <!-- Profile info link -->
+      <a href="#profileInfo" class="px-3 py-2 text-sm" aria-current="page"
         >Profile Info</a
       >
-      <div class="relative inline-block" data-te-dropdown-ref>
+      <!-- Control sets dropdown menu -->
+      <div class="inline-block" data-te-dropdown-ref>
+        <!-- Button def -->
         <button
           type="button"
-          class="inline-flex px-3 py-2 text-sm font-medium hover:bg-gray-500 hover:text-white"
+          class="inline-flex px-3 py-2 text-sm"
           data-te-dropdown-toggle-ref
-          href="#navbarSupportedContent"
+          href="#controlSetsList"
           role="button"
-          aria-controls="navbarSupportedContent"
+          aria-controls="controlSetsList"
           aria-expanded="false"
-          aria-label="Toggle navigation"
+          aria-label="Toggle navigation dropdown"
         >
           Control Sets
           <svg
@@ -72,20 +46,22 @@
             />
           </svg>
         </button>
+        <!-- Menu def -->
         {{#showControlSets}}
         <div
-          class="absolute z-10 mt-2 hidden w-56 origin-top-right bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none [&[data-te-dropdown-show]]:block"
-          id="navbarSupportedContent"
+          class="z-10 mt-2 hidden w-56 bg-white py-1 shadow-lg [&[data-te-dropdown-show]]:block"
+          id="controlSetsList"
           data-te-dropdown-menu-ref
-          aria-labelledby="navbarDropdown"
+          aria-labelledby="controlSetsList"
         >
           <ul>
+            <!-- Generate links for every control set -->
             {{#controlSets}}
             <li>
               <a
                 href="#{{fileID}}"
                 data-te-dropdown-item-ref
-                class="block px-4 py-2 text-sm text-gray-700"
+                class="block px-4 py-2 text-sm"
                 >{{filename}}</a
               >
             </li>
@@ -96,14 +72,16 @@
       </div>
     </nav>
 
-    <div class="px-4 py-6">
+    <!-- Profile info card -->
+    <div class="px-4 py-6" id="profileInfo">
       <div
         class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
         <h5 class="mb-2 text-xl">Profile info</h5>
-        <div class="grid grid-cols-4 sm:gap-x-8 print:grid-cols-1">
+        <div class="grid grid-cols-4">
+          <!-- Generate an info report for every profile -->
           {{#files}}
-          <div class="my-2">
+          <div class="mx-2 my-2 break-normal">
             <span>Filename: <strong>{{filename}}</strong></span
             ><br />
             <span>Tool Version: <strong>{{toolVersion}}</strong></span
@@ -427,6 +405,7 @@
       </div>
     </div>
     {{/controlSets}} {{/showControlSets}}
+
     <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/tw-elements.umd.min.js"></script>
   </body>
 </html>
