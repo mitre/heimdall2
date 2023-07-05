@@ -119,7 +119,7 @@
       </div>
     </div>
 
-    <!-- Profile status -->
+    <!-- Profile status card -->
     <div class="px-4 pb-6">
       <div
         class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
@@ -290,6 +290,7 @@
             <!-- Control description -->
             {{data.desc}}
             <hr class="my-3" />
+
             <!-- Control tables -->
             <div>
               <!-- Tests -->
@@ -347,6 +348,84 @@
         </div>
         {{/controls}}
       </div>
+    </div>
+
+    <!-- Control set print report -->
+    <div class="mx-2 hidden print:block">
+      <!-- File name -->
+      <div class="rounded-t-xl border border-black px-3 py-2">{{filename}}</div>
+      <!-- Generate a control report for every control -->
+      {{#controls}}
+      <div class="border border-black px-2 py-2">
+        <div class="py-1">
+          <!-- Control status indicator -->
+          <span class="rounded border border-black px-2 py-1"
+            >{{controlStatus.status}}</span
+          >
+          <!-- Control title -->
+          <span class="pl-4">{{hdf.wraps.id}} - {{hdf.wraps.title}}</span>
+        </div>
+        <hr class="my-1" />
+
+        <!-- Control description -->
+        {{data.desc}}
+        <hr class="my-1" />
+
+        <!-- Control tables -->
+        <div>
+          <!-- Tests -->
+          <h5 class="text-lg"><strong>Test Results</strong></h5>
+          <table
+            class="table min-w-full text-left"
+            aria-describedby="Control test description and result"
+          >
+            <thead>
+              <th>Status</th>
+              <th>Test</th>
+              <th>Result</th>
+            </thead>
+            <tbody>
+              <!-- Generate all available test results -->
+              {{#hdf.segments}}
+              <tr class="border-b odd:bg-gray-100 even:bg-white">
+                <td>{{status}}</td>
+                <td>{{code_desc}}</td>
+                <td>{{message}}</td>
+              </tr>
+              {{/hdf.segments}}
+            </tbody>
+          </table>
+
+          <!-- Details -->
+          <h5 class="text-lg"><strong>Control Details</strong></h5>
+          <table
+            class="table min-w-full text-left"
+            aria-describedby="Control details"
+          >
+            <thead>
+              <th>Name</th>
+              <th>Value</th>
+            </thead>
+            <tbody>
+              <!-- Generate all control details -->
+              {{#details}}
+              <tr class="border-b odd:bg-gray-100 even:bg-white">
+                <td>{{name}}</td>
+                <td>{{value}}</td>
+              </tr>
+              {{/details}}
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Control code block -->
+        {{#showCode}}
+        <code class="whitespace-pre-wrap text-sm text-black"
+          >{{full_code}}</code
+        >
+        {{/showCode}}
+      </div>
+      {{/controls}}
     </div>
     {{/controlSets}} {{/showControlSets}}
 
