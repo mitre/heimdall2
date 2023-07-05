@@ -26,9 +26,9 @@
           :items="currentUsers"
           :items-per-page="5"
         >
-          <template #[`item.full-name`]="{item}"
-            >{{ item.firstName }} {{ item.lastName }}</template
-          >
+          <template #[`item.full-name`]="{item}">
+            {{ item.firstName }} {{ item.lastName }}
+          </template>
           <template #[`item.groupRole`]="{item}">
             <v-select
               v-if="editable"

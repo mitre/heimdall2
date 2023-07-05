@@ -38,11 +38,10 @@
                     />
                   </span>
                 </template>
-                <span
-                  >This will make the group name visible to all logged in users.
-                  It will not expose any results or profiles added to the
-                  group.</span
-                >
+                <span>
+                  This will make the group name visible to all logged in users.
+                  It will not expose any results or profiles added to the group.
+                </span>
               </v-tooltip>
             </v-col>
           </v-row>
@@ -63,8 +62,9 @@
               text
               v-bind="attrs"
               v-on="on"
-              >Manage API Keys</v-btn
             >
+              Manage API Keys
+            </v-btn>
           </template>
         </GroupAPIKeysModal>
         <v-spacer />
@@ -73,16 +73,18 @@
           color="primary"
           text
           @click="dialog = false"
-          >Cancel</v-btn
         >
+          Cancel
+        </v-btn>
         <v-btn
           data-cy="closeAndSaveChanges"
           color="primary"
           text
           :disabled="!saveable"
           @click="save"
-          >Save</v-btn
         >
+          Save
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

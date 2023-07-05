@@ -9,16 +9,21 @@
         data-cy="groupModalTitle"
         class="headline mitreSecondaryBlue"
         primary-title
-        >{{ role }}</v-card-title
       >
+        {{ role }}
+      </v-card-title>
       <v-card-text>
         <Users v-model="selectedGroupUsers" :editable="false" />
       </v-card-text>
       <v-card-actions>
         <v-col class="text-right">
-          <v-btn color="primary" text @click="$emit('close-group-users-dialog')"
-            >Close</v-btn
+          <v-btn
+            color="primary"
+            text
+            @click="$emit('close-group-users-dialog')"
           >
+            Close
+          </v-btn>
         </v-col>
       </v-card-actions>
     </v-card>
