@@ -190,9 +190,12 @@
       </div>
     </div>
 
+    <!-- Control section -->
+    <!-- If empty, then this should be an executive report HTML export type -->
+    <!-- If not such export type, error has occurred -->
+    {{#showControlSets}} {{#controlSets}}
     <!-- Control set accordion -->
     <!-- Generate a control set accordion for every control set -->
-    {{#showControlSets}} {{#controlSets}}
     <span id="{{fileID}}"></span>
     <!-- Outer accordion -->
     <div

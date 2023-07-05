@@ -143,7 +143,7 @@ export default class ExportHTMLModal extends Vue {
 
   showingModal = false;
   exportType = 'executive';
-  description = 'Profile Info\nStatuses\nCompliance Cards';
+  description = 'Profile Info\nStatuses\nCompliance Level';
   outputData: OutputData = {
     statistics: {
       passed: 0,
@@ -190,19 +190,19 @@ export default class ExportHTMLModal extends Vue {
   onFileChanged(newValue: string, _oldValue: string) {
     switch (newValue) {
       case 'executive':
-        this.description = 'Profile Info\nStatuses\nCompliance Cards';
+        this.description = 'Profile Info\nStatuses\nCompliance Level';
         this.outputData.showControlSets = false;
         this.outputData.showCode = false;
         break;
       case 'manager':
         this.description =
-          'Profile Info\nStatuses\nCompliance Cards\nTest Results and Details';
+          'Profile Info\nStatuses\nCompliance Level\nTest Results and Details';
         this.outputData.showControlSets = true;
         this.outputData.showCode = false;
         break;
       case 'administrator':
         this.description =
-          'Profile Info\nStatuses\nCompliance Cards\nTest Results and Details\nTest Code';
+          'Profile Info\nStatuses\nCompliance Level\nTest Results and Details\nTest Code';
         this.outputData.showControlSets = true;
         this.outputData.showCode = true;
         break;
