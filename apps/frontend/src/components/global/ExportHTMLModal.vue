@@ -68,7 +68,7 @@ import {SeverityCountModule} from '@/store/severity_counts';
 // Generally includes everything that is not alphanumeric or characters [-,_]
 // Expand as needed
 const ILLEGAL_CHAR_SET = {
-  '\\.': '---PERIOD---'
+  '\\.': '___PERIOD___'
 };
 
 // =====================================
@@ -346,7 +346,7 @@ export default class ExportHTMLModal extends Vue {
     if (compliance >= 90) {
       this.outputData.compliance.color = 'success'; // green
     } else if (compliance >= 60) {
-      this.outputData.compliance.color = 'compliance-medium'; // yellow
+      this.outputData.compliance.color = 'compliance-yellow'; // yellow
     } else {
       this.outputData.compliance.color = 'danger'; // red
     }

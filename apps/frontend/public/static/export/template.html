@@ -30,6 +30,10 @@
         --tw-bg-opacity: 1;
         background-color: rgb(121 134 203 / var(--tw-bg-opacity));
       }
+      .bg-compliance-yellow {
+        --tw-bg-opacity: 1;
+        background-color: rgb(255 235 59 / var(--tw-bg-opacity));
+      }
     </style>
   </head>
 
@@ -184,7 +188,7 @@
           <div class="w-64 px-2 py-2">
             <strong>Compliance</strong>
             <p
-              class="my-1 rounded-full bg-{{compliance.color}} text-center text-4xl print:bg-white"
+              class="my-1 rounded-full bg-{{compliance.color}} text-center text-4xl print:bg-white print:text-2xl"
             >
               {{compliance.level}}
             </p>
@@ -358,7 +362,7 @@
     </div>
 
     <!-- Control set print report -->
-    <div class="mx-2 hidden print:block">
+    <div class="hidden print:block">
       <!-- File name -->
       <div class="rounded-t-xl border border-black px-3 py-2">{{filename}}</div>
       <!-- Generate a control report for every control -->
@@ -381,7 +385,7 @@
         <!-- Control tables -->
         <div>
           <!-- Tests -->
-          <h5 class="text-lg"><strong>Test Results</strong></h5>
+          <h5 class="py-1 text-lg"><strong>Test Results</strong></h5>
           <table
             class="table min-w-full text-left"
             aria-describedby="Control test description and result"
@@ -404,7 +408,7 @@
           </table>
 
           <!-- Details -->
-          <h5 class="text-lg"><strong>Control Details</strong></h5>
+          <h5 class="py-1 text-lg"><strong>Control Details</strong></h5>
           <table
             class="table min-w-full text-left"
             aria-describedby="Control details"
