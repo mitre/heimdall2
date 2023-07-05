@@ -48,6 +48,8 @@
           <Users
             v-model="groupInfo.users"
             :editable="true"
+            :create="create"
+            :admin="admin"
             @on-update-group-user-role="updateSaveState"
           />
         </v-form>

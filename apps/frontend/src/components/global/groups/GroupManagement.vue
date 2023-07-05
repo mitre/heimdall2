@@ -81,7 +81,12 @@
       </template>
       <template #[`item.actions`]="{item}">
         <div v-if="item.role == 'owner' || adminPanel">
-          <GroupModal id="editGroupModal" :create="false" :group="item">
+          <GroupModal
+            id="editGroupModal"
+            :create="false"
+            :admin="adminPanel"
+            :group="item"
+          >
             <template #clickable="{on}"
               ><v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
                 mdi-pencil

@@ -62,19 +62,19 @@
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import {ISlimUser} from '@heimdall/interfaces';
-import Component, {mixins} from 'vue-class-component';
+import Component from 'vue-class-component';
 import {Emit, Prop, VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import {DataTableHeader} from 'vuetify';
-import RouteMixin from '@/mixins/RouteMixin';
+import Vue from 'vue';
 
 @Component({
   components: {
     ActionDialog
   }
 })
-export default class Users extends mixins(RouteMixin) {
+export default class Users extends Vue {
   @VModel({
     type: Array,
     required: false,
@@ -86,6 +86,12 @@ export default class Users extends mixins(RouteMixin) {
 
   @Prop({type: Boolean, required: false, default: true})
   readonly editable!: boolean;
+
+  @Prop({type: Boolean, required: false, default: false})
+  readonly create!: boolean;
+
+  @Prop({type: Boolean, required: false, default: false})
+  readonly admin!: boolean;
 
   editedUserID: string = '0';
   usersToAdd: string[] = [];
@@ -194,7 +200,7 @@ export default class Users extends mixins(RouteMixin) {
     for (const user of ServerModule.allUsers) {
       if (
         !currentUserIds.includes(user.id) &&
-        (user.id !== ServerModule.userInfo.id || this.current_route === 'admin')
+        (user.id !== ServerModule.userInfo.id || this.admin || !this.create)
       ) {
         users.push({
           text: `${user.firstName || ''} ${user.lastName || ''} (${
