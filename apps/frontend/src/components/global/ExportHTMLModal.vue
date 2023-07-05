@@ -46,7 +46,8 @@ import {
   mdiCloseCircle,
   mdiMinusCircle,
   mdiAlert,
-  mdiCircle
+  mdiCircle,
+  mdiEqualBox
 } from '@mdi/js';
 import axios from 'axios';
 import {saveAs} from 'file-saver';
@@ -172,12 +173,12 @@ export default class ExportHTMLModal extends Vue {
     showCode: false,
     exportType: '',
     icons: {
-      circleCheck: this.iconDatatoSVG(mdiCheckCircle, 'black'),
-      circleCross: this.iconDatatoSVG(mdiCloseCircle, 'black'),
-      circleMinus: this.iconDatatoSVG(mdiMinusCircle, 'black'),
-      circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'black'),
-      triangleAlert: this.iconDatatoSVG(mdiAlert, 'black'),
-      circleBlack: this.iconDatatoSVG(mdiCircle, 'black'),
+      circleCheck: this.iconDatatoSVG(mdiCheckCircle, 'rgb(76, 176, 79)'), // green
+      circleCross: this.iconDatatoSVG(mdiCloseCircle, 'rgb(243, 67, 53)'), // red
+      circleMinus: this.iconDatatoSVG(mdiMinusCircle, 'rgb(3, 169, 244)'), // blue
+      circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'rgb(254, 153, 0)'), // yellow
+      triangleAlert: this.iconDatatoSVG(mdiAlert, 'rgb(121, 134, 203)'), // purple
+      squareEqual: this.iconDatatoSVG(mdiEqualBox, 'black'),
       circleLow: this.iconDatatoSVG(mdiCircle, 'rgb(255, 235, 59)'), // yellow
       circleMedium: this.iconDatatoSVG(mdiCircle, 'rgb(255, 152, 0)'), // orange
       circleHigh: this.iconDatatoSVG(mdiCircle, 'rgb(255, 87, 34)'), // deep orange

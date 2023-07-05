@@ -43,6 +43,7 @@
         >Profile Info</a
       >
       <!-- Control sets dropdown menu -->
+      {{#showControlSets}}
       <div class="inline-block" data-te-dropdown-ref>
         <!-- Button def -->
         <button
@@ -69,7 +70,6 @@
           </svg>
         </button>
         <!-- Menu def -->
-        {{#showControlSets}}
         <div
           class="z-10 mt-2 hidden w-56 bg-white py-1 shadow-lg [&[data-te-dropdown-show]]:block"
           id="controlSetsList"
@@ -90,8 +90,8 @@
             {{/controlSets}}
           </ul>
         </div>
-        {{/showControlSets}}
       </div>
+      {{/showControlSets}}
     </nav>
 
     <!-- Profile info card -->
@@ -119,64 +119,69 @@
       </div>
     </div>
 
-    <!--  -->
+    <!-- Profile status -->
     <div class="px-4 pb-6">
       <div
         class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
         <h5 class="mb-2 text-xl">Profile Status</h5>
         <div class="flex flex-wrap justify-evenly gap-x-24">
-          <div class="rounded-xl border-gray-300 px-2 py-2">
+          <!-- Status counts -->
+          <div class="px-2 py-2">
             <strong>Count</strong>
             <div class="columns-2 pt-1">
               <div class="flex">
-                <div class="print:hidden">{{{icons.circleCheck}}}</div>
+                <div class="pr-1 print:hidden">{{{icons.circleCheck}}}</div>
                 Passed: {{statistics.passed}}
               </div>
               <div class="flex">
-                <div class="print:hidden">{{{icons.circleCross}}}</div>
+                <div class="pr-1 print:hidden">{{{icons.circleCross}}}</div>
                 Failed: {{statistics.failed}}
               </div>
               <div class="flex">
-                <div class="print:hidden">{{{icons.circleMinus}}}</div>
+                <div class="pr-1 print:hidden">{{{icons.circleMinus}}}</div>
                 Not Applicable: {{statistics.notApplicable}}
               </div>
               <div class="flex">
-                <div class="print:hidden">{{{icons.circleAlert}}}</div>
+                <div class="pr-1 print:hidden">{{{icons.circleAlert}}}</div>
                 Not Reviewed: {{statistics.notReviewed}}
               </div>
               <div class="flex">
-                <div class="print:hidden">{{{icons.triangleAlert}}}</div>
+                <div class="pr-1 print:hidden">{{{icons.triangleAlert}}}</div>
                 Profile Error: {{statistics.profileError}}
               </div>
               <div class="flex">
-                <div class="print:hidden">{{{icons.circleBlack}}}</div>
+                <div class="pr-1 print:hidden">{{{icons.squareEqual}}}</div>
                 Total: {{statistics.totalControls}}
               </div>
             </div>
           </div>
-          <div class="rounded-xl border-gray-300 px-2 py-2">
+
+          <!-- Severity report -->
+          <div class="px-2 py-2">
             <strong>Severity</strong>
             <div class="columns-2 pt-1">
               <div class="flex">
-                <div class="print:hidden">{{{icons.circleLow}}}</div>
+                <div class="pr-1 print:hidden">{{{icons.circleLow}}}</div>
                 Low: {{severity.low}}
               </div>
               <div class="flex">
-                <div class="print:hidden">{{{icons.circleMedium}}}</div>
+                <div class="pr-1 print:hidden">{{{icons.circleMedium}}}</div>
                 Medium: {{severity.medium}}
               </div>
               <div class="flex">
-                <div class="print:hidden">{{{icons.circleHigh}}}</div>
+                <div class="pr-1 print:hidden">{{{icons.circleHigh}}}</div>
                 High: {{severity.high}}
               </div>
               <div class="flex">
-                <div class="print:hidden">{{{icons.circleCritical}}}</div>
+                <div class="pr-1 print:hidden">{{{icons.circleCritical}}}</div>
                 Critical: {{severity.critical}}
               </div>
             </div>
           </div>
-          <div class="w-64 rounded-xl border-gray-300 px-2 py-2">
+
+          <!-- Compliance level -->
+          <div class="w-64 px-2 py-2">
             <strong>Compliance</strong>
             <p class="my-1 text-center text-4xl">{{compliance.level}}</p>
             [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
@@ -191,12 +196,12 @@
     <span id="{{fileID}}"></span>
     <!-- Outer accordion -->
     <div
-      class="mx-2 rounded-t-xl border border-neutral-200 bg-white print:border-black"
+      class="mx-2 rounded-t-xl border border-neutral-200 bg-white print:hidden"
     >
       <h2 class="mb-0">
         <!-- Button def -->
         <button
-          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-xl border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:bg-white print:[&:not([data-te-collapse-collapsed])]:text-black"
+          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-xl border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
           type="button"
           data-te-collapse-init
           data-te-target="#collapseable-{{fileID}}"
@@ -239,7 +244,7 @@
           <h2 class="mb-0">
             <!-- Button def -->
             <button
-              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-xl border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:bg-white print:[&:not([data-te-collapse-collapsed])]:text-black"
+              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-xl border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
               type="button"
               data-te-collapse-init
               data-te-target="#control-accordion-body-{{hdf.wraps.id}}"
@@ -248,7 +253,7 @@
             >
               <!-- Control status indicator -->
               <span
-                class="bg-{{controlStatus.color}} rounded px-2 py-1 text-black print:border print:border-black print:bg-white"
+                class="bg-{{controlStatus.color}} rounded px-2 py-1 text-black"
                 >{{controlStatus.status}}</span
               >
               <!-- Control title -->
@@ -301,9 +306,7 @@
                 <tbody>
                   <!-- Generate all available test results -->
                   {{#hdf.segments}}
-                  <tr
-                    class="border-b odd:bg-gray-100 even:bg-white print:odd:bg-white"
-                  >
+                  <tr class="border-b odd:bg-gray-100 even:bg-white">
                     <td>{{status}}</td>
                     <td>{{code_desc}}</td>
                     <td>{{message}}</td>
@@ -326,9 +329,7 @@
                 <tbody>
                   <!-- Generate all control details -->
                   {{#details}}
-                  <tr
-                    class="border-b odd:bg-gray-100 even:bg-white print:odd:bg-white"
-                  >
+                  <tr class="border-b odd:bg-gray-100 even:bg-white">
                     <td>{{name}}</td>
                     <td>{{value}}</td>
                   </tr>
@@ -340,9 +341,7 @@
 
             <!-- Control code block -->
             {{#showCode}}
-            <code class="whitespace-pre-wrap text-sm print:text-black"
-              >{{full_code}}</code
-            >
+            <code class="whitespace-pre-wrap text-sm">{{full_code}}</code>
             {{/showCode}}
           </div>
         </div>
