@@ -143,7 +143,12 @@ export default class GroupManagement extends Vue {
   dialogDisplayUsers = false;
   search = '';
 
-  groupsHeaders: Object[] = [
+  groupsHeaders: {
+    text: string;
+    value: string;
+    sortable?: boolean;
+    align?: string;
+  }[] = [
     {
       text: 'ID',
       sortable: true,
@@ -161,8 +166,8 @@ export default class GroupManagement extends Vue {
       value: 'public'
     },
     {text: 'Your Role', value: 'role', sortable: true},
-    {text: 'Members', value: 'members', sortable: true},
     {text: 'Owners', value: 'owners', sortable: true},
+    {text: 'Members', value: 'members', sortable: true},
     {text: 'Actions', value: 'actions', sortable: false}
   ];
 

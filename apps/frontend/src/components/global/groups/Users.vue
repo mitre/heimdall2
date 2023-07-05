@@ -62,19 +62,19 @@
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import {ISlimUser} from '@heimdall/interfaces';
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import {Emit, Prop, VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import {DataTableHeader} from 'vuetify';
+import RouteMixin from '@/mixins/RouteMixin';
 
 @Component({
   components: {
     ActionDialog
   }
 })
-export default class Users extends Vue {
+export default class Users extends mixins(RouteMixin) {
   @VModel({
     type: Array,
     required: false,
@@ -138,11 +138,6 @@ export default class Users extends Vue {
   onUpdateGroupUserRole(newRole: string) {
     let saveable = true;
     // If a role is being changed to member, check that there is at least 1 owner.
-    if (newRole === 'member') {
-      if (this.numberOfOwners() <= 1) {
-        saveable = false;
-      }
-    }
     const editedUser = this.getEditedUser();
     const userToUpdate = this.currentUsers.indexOf(editedUser);
     const updatedGroupUser: ISlimUser = {
@@ -150,6 +145,10 @@ export default class Users extends Vue {
       groupRole: newRole
     };
     this.currentUsers[userToUpdate] = updatedGroupUser;
+
+    if (this.numberOfOwners() < 1) {
+      saveable = false;
+    }
     return saveable;
   }
 
@@ -175,6 +174,7 @@ export default class Users extends Vue {
         1
       );
     }
+    this.onUpdateGroupUserRole('');
     this.closeActionDialog();
   }
 
@@ -194,7 +194,7 @@ export default class Users extends Vue {
     for (const user of ServerModule.allUsers) {
       if (
         !currentUserIds.includes(user.id) &&
-        user.id !== ServerModule.userInfo.id
+        (user.id !== ServerModule.userInfo.id || this.current_route === 'admin')
       ) {
         users.push({
           text: `${user.firstName || ''} ${user.lastName || ''} (${

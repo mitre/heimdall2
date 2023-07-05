@@ -29,7 +29,8 @@
               text="Admin Panel"
               icon="mdi-shield-account"
               link="/admin"
-              >Admin Panel
+            >
+              Admin Panel
             </IconLinkItem>
             <v-divider />
           </div>
@@ -39,7 +40,8 @@
             text="Groups"
             icon="mdi-account-group"
             link="/manage-groups"
-            >Groups
+          >
+            Groups
           </IconLinkItem>
           <v-divider />
           <UserModal id="userModal" :user="userInfo">
@@ -50,7 +52,8 @@
                 text="User Info"
                 icon="mdi-account"
                 v-on="on"
-                >My Profile
+              >
+                My Profile
               </IconLinkItem>
             </template>
           </UserModal>
@@ -65,8 +68,9 @@
               text="Help"
               icon="mdi-help-circle"
               v-on="on"
-              >Help</IconLinkItem
             >
+              Help
+            </IconLinkItem>
           </template>
         </HelpModal>
         <AboutModal>
@@ -77,8 +81,9 @@
               text="About"
               icon="mdi-information"
               v-on="on"
-              >About</IconLinkItem
             >
+              About
+            </IconLinkItem>
           </template>
         </AboutModal>
       </v-list>
