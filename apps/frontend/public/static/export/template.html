@@ -183,7 +183,11 @@
           <!-- Compliance level -->
           <div class="w-64 px-2 py-2">
             <strong>Compliance</strong>
-            <p class="my-1 text-center text-4xl">{{compliance.level}}</p>
+            <p
+              class="my-1 rounded-full bg-{{compliance.color}} text-center text-4xl print:bg-white"
+            >
+              {{compliance.level}}
+            </p>
             [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
           </div>
         </div>
@@ -250,9 +254,9 @@
               class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-xl border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
               type="button"
               data-te-collapse-init
-              data-te-target="#control-accordion-body-{{hdf.wraps.id}}"
+              data-te-target="#control-accordion-body-{{controlID}}"
               aria-expanded="true"
-              aria-controls="control-accordion-body-{{hdf.wraps.id}}"
+              aria-controls="control-accordion-body-{{controlID}}"
             >
               <!-- Control status indicator -->
               <span
@@ -284,11 +288,11 @@
 
           <!-- Accordion body def -->
           <div
-            id="control-accordion-body-{{hdf.wraps.id}}"
+            id="control-accordion-body-{{controlID}}"
             class="!visible px-5 py-4"
             data-te-collapse-item
             data-te-collapse-show
-            aria-labelledby="control-accordion-header-{{hdf.wraps.id}}"
+            aria-labelledby="control-accordion-header-{{controlID}}"
           >
             <!-- Control description -->
             {{data.desc}}

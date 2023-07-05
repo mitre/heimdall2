@@ -64,6 +64,18 @@ import {SnackbarModule} from '../../store/snackbar';
 import {StatusCountModule} from '../../store/status_counts';
 import {SeverityCountModule} from '@/store/severity_counts';
 
+// Illegal characters which are not accepted by HTML id attribute
+// Generally includes everything that is not alphanumeric or characters [-,_]
+// Expand as needed
+const ILLEGAL_CHAR_SET = {
+  '\\.': '---PERIOD---'
+};
+
+// =====================================
+// TEMPLATE RENDER DATA INTERFACES START
+// =====================================
+
+// Basic info for exported files; lvl 1
 interface FileInfo {
   filename: string;
   toolVersion: string;
@@ -71,6 +83,7 @@ interface FileInfo {
   duration: string;
 }
 
+// Info used for profile status reporting; lvl 1
 interface Statistics {
   passed: number;
   failed: number;
@@ -84,6 +97,7 @@ interface Statistics {
   totalTests: number;
 }
 
+// Info used for profile control severity reporting; lvl 1
 interface Severity {
   low: number;
   medium: number;
@@ -91,34 +105,42 @@ interface Severity {
   critical: number;
 }
 
+// Info used for profile compliance reporting; lvl 1
 interface Compliance {
   level: string;
   color: string;
 }
 
+// Container for specific info on each control; lvl 2
 interface Detail {
   name: string;
   value: string;
   class?: string;
 }
 
+// Status of each control; lvl 2
 interface ControlStatus {
   status: string;
   color: string;
 }
 
+// Container for all controls; lvl 1
 interface ControlSet {
   filename: string;
   fileID: string;
   controls: (ContextualizedControl & {details: Detail[]} & {
+    controlID: string;
+  } & {
     controlStatus: ControlStatus;
   })[];
 }
 
+// All used icons; lvl 1
 interface Icons {
   [key: string]: string;
 }
 
+// Top level interface; lvl 0
 interface OutputData {
   files: FileInfo[];
   statistics: Statistics;
@@ -131,6 +153,10 @@ interface OutputData {
   icons: Icons;
 }
 
+// ===================================
+// TEMPLATE RENDER DATA INTERFACES END
+// ===================================
+
 @Component({
   components: {
     LinkItem
@@ -141,10 +167,12 @@ export default class ExportHTMLModal extends Vue {
   // If we are exporting a profile we can remove the test/results table
   @Prop({type: String, required: true}) readonly fileType!: string;
 
+  // Default attributes
   showingModal = false;
   exportType = 'executive';
   description = 'Profile Info\nStatuses\nCompliance Level';
   outputData: OutputData = {
+    // Used for profile status reporting
     statistics: {
       passed: 0,
       failed: 0,
@@ -157,12 +185,14 @@ export default class ExportHTMLModal extends Vue {
       failedTests: 0,
       totalTests: 0
     },
+    // Used for profile severity reporting
     severity: {
       low: 0,
       medium: 0,
       high: 0,
       critical: 0
     },
+    // Used for profile compliance reporting
     compliance: {
       level: '',
       color: ''
@@ -172,20 +202,32 @@ export default class ExportHTMLModal extends Vue {
     showControlSets: false,
     showCode: false,
     exportType: '',
+    // Series of icons used for profile-related detail reports
     icons: {
+      // Passed
       circleCheck: this.iconDatatoSVG(mdiCheckCircle, 'rgb(76, 176, 79)'), // green
+      // Failed
       circleCross: this.iconDatatoSVG(mdiCloseCircle, 'rgb(243, 67, 53)'), // red
+      // Not applicable
       circleMinus: this.iconDatatoSVG(mdiMinusCircle, 'rgb(3, 169, 244)'), // blue
+      // Not reviewed
       circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'rgb(254, 153, 0)'), // yellow
+      // Profile error
       triangleAlert: this.iconDatatoSVG(mdiAlert, 'rgb(121, 134, 203)'), // purple
+      // Total count
       squareEqual: this.iconDatatoSVG(mdiEqualBox, 'black'),
+      // Low severity
       circleLow: this.iconDatatoSVG(mdiCircle, 'rgb(255, 235, 59)'), // yellow
+      // Medium severity
       circleMedium: this.iconDatatoSVG(mdiCircle, 'rgb(255, 152, 0)'), // orange
+      // High severity
       circleHigh: this.iconDatatoSVG(mdiCircle, 'rgb(255, 87, 34)'), // deep orange
+      // Critical severity
       circleCritical: this.iconDatatoSVG(mdiCircle, 'rgb(244, 67, 54)') // red
     }
   };
 
+  // Configures outputData object's report type based on user input
   @Watch('exportType')
   onFileChanged(newValue: string, _oldValue: string) {
     switch (newValue) {
@@ -209,6 +251,7 @@ export default class ExportHTMLModal extends Vue {
     }
   }
 
+  // Generate SVG HTML for icons for injection into export template
   iconDatatoSVG(
     iconData: string,
     fill: string,
@@ -229,6 +272,7 @@ export default class ExportHTMLModal extends Vue {
     this.showingModal = true;
   }
 
+  // Pulls and sets high level attributes of outputData object from file
   addFiledata(file: EvaluationFile | ProfileFile) {
     this.outputData.files.push({
       filename: file.filename,
@@ -268,7 +312,9 @@ export default class ExportHTMLModal extends Vue {
     });
   }
 
+  // Takes all available existing file data to use as default settings/data for outputData object
   resetOutputData() {
+    // Total control count
     const controlCnt =
       StatusCountModule.countOf(this.filter, 'Passed') +
       StatusCountModule.countOf(this.filter, 'Failed') +
@@ -276,11 +322,15 @@ export default class ExportHTMLModal extends Vue {
       StatusCountModule.countOf(this.filter, 'Not Reviewed') +
       StatusCountModule.countOf(this.filter, 'Profile Error');
 
+    // Calculate & set compliance level from control statuses
     const MAX_DECIMAL_PRECISION = 2;
     let compliance = 0;
+    // If no controls, default to 0% compliance
     if (controlCnt === 0) {
       this.outputData.compliance.level = '0%';
     } else {
+      // Formula: compliance = Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100
+      // Truncate to hundredths decimal place
       compliance =
         Math.trunc(
           Math.pow(10, MAX_DECIMAL_PRECISION) *
@@ -292,6 +342,7 @@ export default class ExportHTMLModal extends Vue {
       )}%`;
     }
 
+    // Set coloring for compliance based on level of compliance
     if (compliance >= 90) {
       this.outputData.compliance.color = 'success'; // green
     } else if (compliance >= 60) {
@@ -300,6 +351,7 @@ export default class ExportHTMLModal extends Vue {
       this.outputData.compliance.color = 'danger'; // red
     }
 
+    // Set following attributes from existing file data
     this.outputData.statistics = {
       passed: StatusCountModule.countOf(this.filter, 'Passed'),
       failed: StatusCountModule.countOf(this.filter, 'Failed'),
@@ -327,10 +379,22 @@ export default class ExportHTMLModal extends Vue {
     this.outputData.controlSets = [];
   }
 
+  // Replace all found illegal characters in string with compliant string equivalent
+  replaceIllegalChar(text: string): string {
+    for (const illegalChar in ILLEGAL_CHAR_SET) {
+      text = text.replace(
+        new RegExp(`${illegalChar}`, 'g'),
+        ILLEGAL_CHAR_SET[illegalChar as keyof typeof ILLEGAL_CHAR_SET]
+      );
+    }
+    return text;
+  }
+
+  // Specifying info attributes for each control
   addDetails(
     control: ContextualizedControl,
     controlLevels: ContextualizedControl[]
-  ): ContextualizedControl & {details: Detail[]} & {
+  ): ContextualizedControl & {details: Detail[]} & {controlID: string} & {
     controlStatus: ControlStatus;
   } {
     // Check status of individual control to assign corresponding color
@@ -411,6 +475,7 @@ export default class ExportHTMLModal extends Vue {
           value: control.hdf.descriptions.fix || control.data.tags.fix
         }
       ].filter((v) => v.value),
+      controlID: this.replaceIllegalChar(control.hdf.wraps.id),
       controlStatus: {
         status: control.root.hdf.status,
         color: statusColor
