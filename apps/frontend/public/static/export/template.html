@@ -30,10 +30,6 @@
         --tw-bg-opacity: 1;
         background-color: rgb(121 134 203 / var(--tw-bg-opacity));
       }
-      .bg-compliance-low {
-        --tw-bg-opacity: 1;
-        background-color: rgb(255 235 59 / var(--tw-bg-opacity));
-      }
     </style>
   </head>
 
@@ -103,165 +99,104 @@
       <div
         class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
-        <h5 class="mb-2 text-xl">Profile info</h5>
+        <h5 class="mb-2 text-xl">Profile Info</h5>
         <div class="grid grid-cols-4">
           <!-- Generate an info report for every profile -->
           {{#files}}
-          <div class="mx-2 my-2 break-normal">
-            <span>Filename: <strong>{{filename}}</strong></span
-            ><br />
-            <span>Tool Version: <strong>{{toolVersion}}</strong></span
-            ><br />
-            <span>Platform: <strong>{{platform}}</strong></span
-            ><br />
-            <span>Duration: <strong>{{duration}}</strong></span
-            ><br />
+          <div class="mx-2 my-2 break-words">
+            <span>
+              Filename: <strong>{{filename}}</strong>
+              <br />
+              Tool Version: <strong>{{toolVersion}}</strong>
+              <br />
+              Platform: <strong>{{platform}}</strong>
+              <br />
+              Duration: <strong>{{duration}}</strong>
+            </span>
           </div>
           {{/files}}
         </div>
       </div>
     </div>
 
-    <div class="flex flex-wrap justify-evenly gap-x-8 gap-y-6 pb-6">
+    <!--  -->
+    <div class="px-4 pb-6">
       <div
-        class="bg-success h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
+        class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
-        <div class="px-6 py-4">
-          <div class="flex text-lg font-bold">
-            <div class="print:hidden">{{{icons.circleCheck}}}</div>
-            <span class="pl-2 print:pl-0">Passed: {{statistics.passed}}</span>
-          </div>
-          <p class="my-2">
-            {{statistics.passedTests}} individual checks passed
-          </p>
-        </div>
-      </div>
-
-      <div
-        class="bg-danger h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
-      >
-        <div class="px-6 py-4">
-          <div class="flex text-lg font-bold">
-            <div class="print:hidden">{{{icons.circleCross}}}</div>
-            <span class="pl-2 print:pl-0">Failed: {{statistics.failed}}</span>
-          </div>
-          <p class="my-2">
-            {{statistics.passingTestsFailedControl}} individual checks passed,
-            {{statistics.failed}} failed out of {{statistics.totalTests}} total
-            checks
-          </p>
-        </div>
-      </div>
-
-      <div
-        class="bg-info h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
-      >
-        <div class="px-6 py-4">
-          <div class="flex text-lg font-bold">
-            <div class="print:hidden">{{{icons.circleMinus}}}</div>
-            <span class="pl-2 print:pl-0"
-              >Not Applicable: {{statistics.notApplicable}}</span
-            >
-          </div>
-          <p class="my-2">System exception or absent component</p>
-        </div>
-      </div>
-
-      <div
-        class="bg-warning h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
-      >
-        <div class="px-6 py-4">
-          <div class="flex text-lg font-bold">
-            <div class="print:hidden">{{{icons.circleAlert}}}</div>
-            <span class="pl-2 print:pl-0"
-              >Not Reviewed: {{statistics.notReviewed}}</span
-            >
-          </div>
-          <p class="my-2">Can only be tested manually at this time</p>
-        </div>
-      </div>
-
-      <div
-        class="bg-error h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
-      >
-        <div class="px-6 py-4">
-          <div class="flex text-lg font-bold">
-            <div class="print:hidden">{{{icons.triangleAlert}}}</div>
-            <span class="pl-2 print:pl-0"
-              >Profile Error: {{statistics.profileError}}</span
-            >
-          </div>
-          <p class="my-2">
-            Errors running test - check profile run privileges or check with the
-            author of profile
-          </p>
-        </div>
-      </div>
-      <div
-        class="bg-slate-300 h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
-      >
-        <div class="px-6 py-4">
-          <div class="flex text-lg font-bold">
-            <span>Total Controls: {{statistics.totalControls}}</span>
-          </div>
-          <p class="my-2">
-            {{statistics.totalControls}} total controls containing
-            {{statistics.totalTests}} total tests
-          </p>
-        </div>
-      </div>
-
-      <div
-        class="bg-slate-300 h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
-      >
-        <div class="px-6 py-4">
-          <div class="flex text-lg font-bold">
-            <span>Severity Count</span>
-          </div>
-          <div class="my-2 columns-2 justify-evenly gap-y-2">
-            <div class="flex">
-              <div class="print:hidden">{{{icons.circleLow}}}</div>
-              <p class="pl-2 print:pl-0">Low: {{severity.low}}</p>
-            </div>
-            <div class="flex">
-              <div class="print:hidden">{{{icons.circleMedium}}}</div>
-              <p class="pl-2 print:pl-0">Medium: {{severity.medium}}</p>
-            </div>
-            <div class="flex">
-              <div class="print:hidden">{{{icons.circleHigh}}}</div>
-              <p class="pl-2 print:pl-0">High: {{severity.high}}</p>
-            </div>
-            <div class="flex">
-              <div class="print:hidden">{{{icons.circleCritical}}}</div>
-              <p class="pl-2 print:pl-0">Critical: {{severity.critical}}</p>
+        <h5 class="mb-2 text-xl">Profile Status</h5>
+        <div class="flex flex-wrap justify-evenly gap-x-24">
+          <div class="rounded-xl border-gray-300 px-2 py-2">
+            <strong>Count</strong>
+            <div class="columns-2 pt-1">
+              <div class="flex">
+                <div class="print:hidden">{{{icons.circleCheck}}}</div>
+                Passed: {{statistics.passed}}
+              </div>
+              <div class="flex">
+                <div class="print:hidden">{{{icons.circleCross}}}</div>
+                Failed: {{statistics.failed}}
+              </div>
+              <div class="flex">
+                <div class="print:hidden">{{{icons.circleMinus}}}</div>
+                Not Applicable: {{statistics.notApplicable}}
+              </div>
+              <div class="flex">
+                <div class="print:hidden">{{{icons.circleAlert}}}</div>
+                Not Reviewed: {{statistics.notReviewed}}
+              </div>
+              <div class="flex">
+                <div class="print:hidden">{{{icons.triangleAlert}}}</div>
+                Profile Error: {{statistics.profileError}}
+              </div>
+              <div class="flex">
+                <div class="print:hidden">{{{icons.circleBlack}}}</div>
+                Total: {{statistics.totalControls}}
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div
-        class="bg-{{compliance.color}} h-32 w-96 rounded-xl print:border print:border-black print:bg-white"
-      >
-        <div class="px-6 py-4">
-          <div class="flex text-lg font-bold">
-            <span>Compliance Level: {{compliance.level}}</span>
+          <div class="rounded-xl border-gray-300 px-2 py-2">
+            <strong>Severity</strong>
+            <div class="columns-2 pt-1">
+              <div class="flex">
+                <div class="print:hidden">{{{icons.circleLow}}}</div>
+                Low: {{severity.low}}
+              </div>
+              <div class="flex">
+                <div class="print:hidden">{{{icons.circleMedium}}}</div>
+                Medium: {{severity.medium}}
+              </div>
+              <div class="flex">
+                <div class="print:hidden">{{{icons.circleHigh}}}</div>
+                High: {{severity.high}}
+              </div>
+              <div class="flex">
+                <div class="print:hidden">{{{icons.circleCritical}}}</div>
+                Critical: {{severity.critical}}
+              </div>
+            </div>
           </div>
-          <p class="my-2">
+          <div class="w-64 rounded-xl border-gray-300 px-2 py-2">
+            <strong>Compliance</strong>
+            <p class="my-1 text-center text-4xl">{{compliance.level}}</p>
             [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
-          </p>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- Control set accordion -->
+    <!-- Generate a control set accordion for every control set -->
     {{#showControlSets}} {{#controlSets}}
     <span id="{{fileID}}"></span>
+    <!-- Outer accordion -->
     <div
       class="mx-2 rounded-t-xl border border-neutral-200 bg-white print:border-black"
-      id="accordion-{{fileID}}"
     >
-      <h2 class="mb-0" id="header-{{fileID}}">
+      <h2 class="mb-0">
+        <!-- Button def -->
         <button
-          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-xl border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black print:[&:not([data-te-collapse-collapsed])]:bg-white"
+          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-xl border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:bg-white print:[&:not([data-te-collapse-collapsed])]:text-black"
           type="button"
           data-te-collapse-init
           data-te-target="#collapseable-{{fileID}}"
@@ -290,53 +225,33 @@
         </button>
       </h2>
 
+      <!-- Inner accordion -->
+      <!-- Accordion body def -->
       <div
         id="collapseable-{{fileID}}"
         class="!visible my-4"
         data-te-collapse-item
         data-te-collapse-show
       >
+        <!-- Generate a control accordion for every control -->
         {{#controls}}
-        <div
-          class="mx-4 rounded-t-xl border border-neutral-200 bg-white print:border-black"
-          id="accordion-{{hdf.wraps.id}}"
-        >
-          <h2 class="mb-0" id="control-accordion-header-{{hdf.wraps.id}}">
+        <div class="mx-4 rounded-t-xl border border-neutral-200 bg-white">
+          <h2 class="mb-0">
+            <!-- Button def -->
             <button
-              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-xl border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:text-black print:[&:not([data-te-collapse-collapsed])]:bg-white"
+              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-xl border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)] print:[&:not([data-te-collapse-collapsed])]:bg-white print:[&:not([data-te-collapse-collapsed])]:text-black"
               type="button"
               data-te-collapse-init
               data-te-target="#control-accordion-body-{{hdf.wraps.id}}"
               aria-expanded="true"
               aria-controls="control-accordion-body-{{hdf.wraps.id}}"
             >
-              {{#controlStatus.isPassed}}
+              <!-- Control status indicator -->
               <span
-                class="rounded bg-success text-black px-2 py-1 print:border print:border-black print:bg-white"
+                class="bg-{{controlStatus.color}} rounded px-2 py-1 text-black print:border print:border-black print:bg-white"
                 >{{controlStatus.status}}</span
               >
-              {{/controlStatus.isPassed}} {{#controlStatus.isFailed}}
-              <span
-                class="rounded bg-danger text-black px-2 py-1 print:border print:border-black print:bg-white"
-                >{{controlStatus.status}}</span
-              >
-              {{/controlStatus.isFailed}} {{#controlStatus.isNotApplicable}}
-              <span
-                class="rounded bg-info text-black px-2 py-1 print:border print:border-black print:bg-white"
-                >{{controlStatus.status}}</span
-              >
-              {{/controlStatus.isNotApplicable}}
-              {{#controlStatus.isNotReviewed}}
-              <span
-                class="rounded bg-warning text-black px-2 py-1 print:border print:border-black print:bg-white"
-                >{{controlStatus.status}}</span
-              >
-              {{/controlStatus.isNotReviewed}} {{#controlStatus.isProfileError}}
-              <span
-                class="rounded bg-error text-black px-2 py-1 print:border print:border-black print:bg-white"
-                >{{controlStatus.status}}</span
-              >
-              {{/controlStatus.isProfileError}}
+              <!-- Control title -->
               <span class="pl-4">{{hdf.wraps.id}} - {{hdf.wraps.title}}</span>
               <span
                 class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
@@ -358,6 +273,8 @@
               </span>
             </button>
           </h2>
+
+          <!-- Accordion body def -->
           <div
             id="control-accordion-body-{{hdf.wraps.id}}"
             class="!visible px-5 py-4"
@@ -365,13 +282,15 @@
             data-te-collapse-show
             aria-labelledby="control-accordion-header-{{hdf.wraps.id}}"
           >
+            <!-- Control description -->
             {{data.desc}}
             <hr class="my-3" />
+            <!-- Control tables -->
             <div>
+              <!-- Tests -->
               <h5 class="text-lg"><strong>Test Results</strong></h5>
               <table
                 class="table min-w-full text-left"
-                id="testResultsTable"
                 aria-describedby="Control test description and result"
               >
                 <thead>
@@ -380,6 +299,7 @@
                   <th>Result</th>
                 </thead>
                 <tbody>
+                  <!-- Generate all available test results -->
                   {{#hdf.segments}}
                   <tr
                     class="border-b odd:bg-gray-100 even:bg-white print:odd:bg-white"
@@ -390,15 +310,13 @@
                   </tr>
                   {{/hdf.segments}}
                 </tbody>
-                <tbody id="controlTestResultTableBody"></tbody>
               </table>
-
               <hr class="my-3" />
 
+              <!-- Details -->
               <h5 class="text-lg"><strong>Control Details</strong></h5>
               <table
                 class="table min-w-full text-left"
-                id="controlDetailsTable"
                 aria-describedby="Control details"
               >
                 <thead>
@@ -406,6 +324,7 @@
                   <th>Value</th>
                 </thead>
                 <tbody>
+                  <!-- Generate all control details -->
                   {{#details}}
                   <tr
                     class="border-b odd:bg-gray-100 even:bg-white print:odd:bg-white"
@@ -417,9 +336,9 @@
                 </tbody>
               </table>
             </div>
-
             <hr class="my-3" />
 
+            <!-- Control code block -->
             {{#showCode}}
             <code class="whitespace-pre-wrap text-sm print:text-black"
               >{{full_code}}</code

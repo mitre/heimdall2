@@ -103,11 +103,7 @@ interface Detail {
 
 interface ControlStatus {
   status: string;
-  isPassed: boolean;
-  isFailed: boolean;
-  isNotApplicable: boolean;
-  isNotReviewed: boolean;
-  isProfileError: boolean;
+  color: string;
 }
 
 interface ControlSet {
@@ -176,11 +172,12 @@ export default class ExportHTMLModal extends Vue {
     showCode: false,
     exportType: '',
     icons: {
-      circleCheck: this.iconDatatoSVG(mdiCheckCircle, 'white'),
-      circleCross: this.iconDatatoSVG(mdiCloseCircle, 'white'),
-      circleMinus: this.iconDatatoSVG(mdiMinusCircle, 'white'),
-      circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'white'),
-      triangleAlert: this.iconDatatoSVG(mdiAlert, 'white'),
+      circleCheck: this.iconDatatoSVG(mdiCheckCircle, 'black'),
+      circleCross: this.iconDatatoSVG(mdiCloseCircle, 'black'),
+      circleMinus: this.iconDatatoSVG(mdiMinusCircle, 'black'),
+      circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'black'),
+      triangleAlert: this.iconDatatoSVG(mdiAlert, 'black'),
+      circleBlack: this.iconDatatoSVG(mdiCircle, 'black'),
       circleLow: this.iconDatatoSVG(mdiCircle, 'rgb(255, 235, 59)'), // yellow
       circleMedium: this.iconDatatoSVG(mdiCircle, 'rgb(255, 152, 0)'), // orange
       circleHigh: this.iconDatatoSVG(mdiCircle, 'rgb(255, 87, 34)'), // deep orange
@@ -335,6 +332,28 @@ export default class ExportHTMLModal extends Vue {
   ): ContextualizedControl & {details: Detail[]} & {
     controlStatus: ControlStatus;
   } {
+    // Check status of individual control to assign corresponding color
+    let statusColor;
+    switch (control.root.hdf.status) {
+      case 'Passed':
+        statusColor = 'success'; // green
+        break;
+      case 'Failed':
+        statusColor = 'danger'; // red
+        break;
+      case 'Not Applicable':
+        statusColor = 'info'; // blue
+        break;
+      case 'Not Reviewed':
+        statusColor = 'warning'; // yellow
+        break;
+      case 'Profile Error':
+        statusColor = 'error'; // purple
+        break;
+      default:
+        statusColor = 'white';
+    }
+
     return {
       ..._.set(
         control,
@@ -393,14 +412,7 @@ export default class ExportHTMLModal extends Vue {
       ].filter((v) => v.value),
       controlStatus: {
         status: control.root.hdf.status,
-        isPassed: control.root.hdf.status === 'Passed' ? true : false,
-        isFailed: control.root.hdf.status === 'Failed' ? true : false,
-        isNotApplicable:
-          control.root.hdf.status === 'Not Applicable' ? true : false,
-        isNotReviewed:
-          control.root.hdf.status === 'Not Reviewed' ? true : false,
-        isProfileError:
-          control.root.hdf.status === 'Profile Error' ? true : false
+        color: statusColor
       }
     };
   }
