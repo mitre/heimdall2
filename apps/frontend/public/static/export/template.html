@@ -108,7 +108,7 @@
         aria-expanded="true"
         aria-controls="control-accordion-body"
       >
-        Toggle Control Set Accordions
+        Collapse/Expand Result Sets
       </button>
       <!-- Toggle control accordion collapse state -->
       <button
@@ -119,7 +119,7 @@
         aria-expanded="true"
         aria-controls="control-accordion-body"
       >
-        Toggle Control Accordions
+        Collapse/Expand Results
       </button>
       {{/showControlSets}}
     </nav>
@@ -130,18 +130,18 @@
         class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
         <h5 class="mb-2 text-xl">Profile Info</h5>
-        <div class="grid grid-cols-4">
+        <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           <!-- Generate an info report for every profile -->
           {{#files}}
           <div class="mx-2 my-2 break-words">
             <span>
-              Filename: <strong>{{filename}}</strong>
+              <strong>Filename:</strong> {{filename}}
               <br />
-              Tool Version: <strong>{{toolVersion}}</strong>
+              <strong>Tool Version:</strong> {{toolVersion}}
               <br />
-              Platform: <strong>{{platform}}</strong>
+              <strong>Platform:</strong> {{platform}}
               <br />
-              Duration: <strong>{{duration}}</strong>
+              <strong>Duration:</strong> {{duration}}
             </span>
           </div>
           {{/files}}
@@ -155,7 +155,7 @@
         class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
         <h5 class="mb-2 text-xl">Profile Status</h5>
-        <div class="flex flex-wrap justify-evenly gap-x-24">
+        <div class="grid md:grid-flow-row lg:grid-flow-col justify-between">
           <!-- Status counts -->
           <div class="px-2 py-2">
             <strong>Count</strong>
@@ -293,15 +293,15 @@
                 class="bg-{{controlStatus.color}} rounded px-2 py-1 text-black"
                 >{{controlStatus.status}}</span
               >
-              <!-- Control title -->
-              <span class="pl-4 pr-4"
-                >{{hdf.wraps.id}} - {{hdf.wraps.title}}</span
-              >
+              <!-- Control ID -->
+              <span class="pl-4 pr-4">{{hdf.wraps.id}}</span>
               <!-- Control severity indicator -->
               <span
                 class="bg-{{controlSeverity.color}} rounded px-2 py-1 text-black"
                 >{{controlSeverity.severity}}</span
               >
+              <!-- Control title -->
+              <span class="pl-4 pr-4">{{hdf.wraps.title}}</span>
               <span
                 class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
               >

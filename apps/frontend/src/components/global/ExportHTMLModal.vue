@@ -336,7 +336,9 @@ export default class ExportHTMLModal extends Vue {
       compliance =
         Math.trunc(
           Math.pow(10, MAX_DECIMAL_PRECISION) *
-            ((StatusCountModule.countOf(this.filter, 'Passed') / controlCnt) *
+            ((StatusCountModule.countOf(this.filter, 'Passed') /
+              (controlCnt -
+                StatusCountModule.countOf(this.filter, 'Not Applicable'))) *
               100)
         ) / Math.pow(10, MAX_DECIMAL_PRECISION);
       this.outputData.compliance.level = `${compliance.toFixed(
