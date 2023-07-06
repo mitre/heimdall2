@@ -4,7 +4,8 @@
       <div class="card-title">
         <div>
           <strong>
-            Rules ({{ numItems }} shown, {{ rules.length - numItems }} hidden)
+            Rules ({{ rules.length }} shown,
+            {{ numTotalRules - rules.length }} hidden)
           </strong>
         </div>
         <div class="short-id-container">
@@ -54,8 +55,7 @@
         :headers="headers"
         hide-default-footer
         class="overflow-auto"
-        height="68vh"
-        @current-items="getFiltered"
+        height="70vh"
         @click:row="showRule"
       >
         <template #[`item.status`]="{item}">
@@ -91,6 +91,7 @@ export default class ChecklistRulesTable extends Vue {
   @Prop({type: String, required: true}) readonly fileFilter!: FileID;
   @Prop({type: Boolean, required: true}) readonly shortIdEnabled!: boolean;
   @Prop({type: Array, required: true}) readonly rules!: ChecklistVuln[];
+  @Prop({type: Number, required: true}) readonly numTotalRules!: number;
 
   shortRuleId(ruleId: string) {
     return this.shortIdEnabled ? ruleId.split('r')[0] || ruleId : ruleId;
