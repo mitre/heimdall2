@@ -38,7 +38,8 @@
               :all-filter="allFilter"
               :file-filter="fileFilter"
               :short-id-enabled="shortIdEnabled"
-              :rules="rules"
+              :rules="filteredRules"
+              :num-total-rules="allRules.length"
               @toggle-short-id="shortIdEnabled = !shortIdEnabled"
             />
           </v-col>
@@ -214,13 +215,13 @@ export default class Checklist extends RouteMixin {
 
   get selectedRule() {
     if (
-      this.rules.some((rule) =>
+      this.filteredRules.some((rule) =>
         _.isEqual(FilteredDataModule.selectedRule, rule)
       )
     ) {
       return FilteredDataModule.selectedRule;
     }
-    return this.rules[0] ?? FilteredDataModule.emptyRule;
+    return this.filteredRules[0] ?? FilteredDataModule.emptyRule;
   }
 
   /**
@@ -285,7 +286,7 @@ export default class Checklist extends RouteMixin {
 
   get enableChecklistSnackbar(): boolean {
     if (
-      this.rules.length === 0 ||
+      this.filteredRules.length === 0 ||
       FilteredDataModule.selectedChecklistId === ''
     ) {
       return true;
@@ -316,13 +317,17 @@ export default class Checklist extends RouteMixin {
     return result;
   }
 
-  get rules() {
+  get allRules() {
     let rulesList: ChecklistVuln[] = [];
     for (const stig of InspecDataModule.getChecklist(this.fileFilter)?.stigs ??
       []) {
       rulesList = [...rulesList, ...stig.vulns];
     }
-    return checklistRules(rulesList, this.allFilter);
+    return rulesList;
+  }
+
+  get filteredRules() {
+    return checklistRules(this.allRules, this.allFilter);
   }
 
   /**
