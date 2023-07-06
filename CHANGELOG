@@ -1,3 +1,15 @@
+v2.6.56
+
+## Dependency Updates
+
+- Bump @nestjs/cli from 10.1.1 to 10.1.4 @dependabot (#4680)
+- Bump aws-sdk from 2.1409.0 to 2.1410.0 @dependabot (#4675)
+- Bump @nestjs/cli from 10.1.0 to 10.1.1 @dependabot (#4679)
+- Bump @typescript-eslint/eslint-plugin from 5.60.1 to 5.61.0 @dependabot (#4677)
+- Bump @typescript-eslint/parser from 5.60.1 to 5.61.0 @dependabot (#4676)
+- Bump aws-sdk from 2.1408.0 to 2.1409.0 @dependabot (#4672)
+- Bump @nestjs/cli from 10.0.5 to 10.1.0 @dependabot (#4668)
+
 v2.6.55
 
 - No rounding in compliance chart @Amndeep7 (#4655)
