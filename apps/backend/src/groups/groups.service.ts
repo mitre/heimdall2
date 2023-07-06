@@ -80,9 +80,14 @@ export class GroupsService {
     if (owners.length < 2 && owners.some((owner) => owner.id === id)) {
       const appConfig = new AppConfig();
       // If default admin is not found, use admin with lowest ID
-      const admin = await this.userModel.findOne({
-        where: {role: 'admin', email: appConfig.getDefaultAdmin()}
-      });
+      const admin =
+        (await this.userModel.findOne({
+          where: {role: 'admin', email: appConfig.getDefaultAdmin()}
+        })) ||
+        (await this.userModel.findOne({
+          where: {role: 'admin'},
+          order: [['id', 'ASC']]
+        }));
       if (admin !== null) {
         // If admin is in the group, promote it. If not, add as owner
         const adminId = admin.id;
