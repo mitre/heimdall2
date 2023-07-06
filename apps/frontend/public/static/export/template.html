@@ -34,6 +34,10 @@
         --tw-bg-opacity: 1;
         background-color: rgb(255 235 59 / var(--tw-bg-opacity));
       }
+      .bg-compliance-orange {
+        --tw-bg-opacity: 1;
+        background-color: rgb(255 87 34 / var(--tw-bg-opacity));
+      }
     </style>
   </head>
 
@@ -268,7 +272,14 @@
                 >{{controlStatus.status}}</span
               >
               <!-- Control title -->
-              <span class="pl-4">{{hdf.wraps.id}} - {{hdf.wraps.title}}</span>
+              <span class="pl-4 pr-4"
+                >{{hdf.wraps.id}} - {{hdf.wraps.title}}</span
+              >
+              <!-- Control severity indicator -->
+              <span
+                class="bg-{{controlSeverity.color}} rounded px-2 py-1 text-black"
+                >{{controlSeverity.severity}}</span
+              >
               <span
                 class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
               >
@@ -374,7 +385,11 @@
             >{{controlStatus.status}}</span
           >
           <!-- Control title -->
-          <span class="pl-4">{{hdf.wraps.id}} - {{hdf.wraps.title}}</span>
+          <span class="pl-4 pr-4">{{hdf.wraps.id}} - {{hdf.wraps.title}}</span>
+          <!-- Control severity indicator -->
+          <span class="rounded border border-black px-2 py-1"
+            >{{controlSeverity.severity}}</span
+          >
         </div>
         <hr class="my-1" />
 

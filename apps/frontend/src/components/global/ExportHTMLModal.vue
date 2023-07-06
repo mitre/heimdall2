@@ -118,9 +118,15 @@ interface Detail {
   class?: string;
 }
 
-// Status of each control; lvl 2
+// Status of a specific control; lvl 2
 interface ControlStatus {
   status: string;
+  color: string;
+}
+
+// Severity of a specific control; lvl 2
+interface ControlSeverity {
+  severity: string;
   color: string;
 }
 
@@ -130,9 +136,7 @@ interface ControlSet {
   fileID: string;
   controls: (ContextualizedControl & {details: Detail[]} & {
     controlID: string;
-  } & {
-    controlStatus: ControlStatus;
-  })[];
+  } & {controlStatus: ControlStatus} & {controlSeverity: ControlSeverity})[];
 }
 
 // All used icons; lvl 1
@@ -261,9 +265,7 @@ export default class ExportHTMLModal extends Vue {
     return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}"><path fill="${fill}" d="${iconData}"/></svg>`;
   }
 
-  /**
-   * Invoked when file(s) are loaded.
-   */
+  // Invoked when file(s) are loaded.
   closeModal() {
     this.showingModal = false;
   }
@@ -272,7 +274,7 @@ export default class ExportHTMLModal extends Vue {
     this.showingModal = true;
   }
 
-  // Pulls and sets high level attributes of outputData object from file
+  // Pulls and sets high level attributes of outputData object from file data
   addFiledata(file: EvaluationFile | ProfileFile) {
     this.outputData.files.push({
       filename: file.filename,
@@ -390,13 +392,13 @@ export default class ExportHTMLModal extends Vue {
     return text;
   }
 
-  // Specifying info attributes for each control
+  // Sets attributes for each specific control
   addDetails(
     control: ContextualizedControl,
     controlLevels: ContextualizedControl[]
   ): ContextualizedControl & {details: Detail[]} & {controlID: string} & {
     controlStatus: ControlStatus;
-  } {
+  } & {controlSeverity: ControlSeverity} {
     // Check status of individual control to assign corresponding color
     let statusColor;
     switch (control.root.hdf.status) {
@@ -417,6 +419,29 @@ export default class ExportHTMLModal extends Vue {
         break;
       default:
         statusColor = 'white';
+    }
+
+    // Severity is recorded as all lowercase by default; for aesthetic purposes, uppercase the first letter
+    const severity =
+      control.root.hdf.severity[0].toUpperCase() +
+      control.root.hdf.severity.slice(1);
+    // Check severity of individual control to assign corresponding color
+    let severityColor;
+    switch (control.root.hdf.severity) {
+      case 'low':
+        severityColor = 'compliance-yellow'; // yellow
+        break;
+      case 'medium':
+        severityColor = 'warning'; // orange
+        break;
+      case 'high':
+        severityColor = 'compliance-orange'; // deep orange
+        break;
+      case 'critical':
+        severityColor = 'danger'; // red
+        break;
+      default:
+        severityColor = 'white';
     }
 
     return {
@@ -479,6 +504,10 @@ export default class ExportHTMLModal extends Vue {
       controlStatus: {
         status: control.root.hdf.status,
         color: statusColor
+      },
+      controlSeverity: {
+        severity: severity,
+        color: severityColor
       }
     };
   }
@@ -490,6 +519,7 @@ export default class ExportHTMLModal extends Vue {
       return SnackbarModule.failure('No files have been loaded.');
     }
 
+    // Pull export template and create outputData object containing data to fill template with
     const templateRequest = await axios.get<string>(
       `/static/export/template.html`
     );
@@ -500,6 +530,7 @@ export default class ExportHTMLModal extends Vue {
       }
     }
 
+    // Render template and export generated HTML file
     const body = Mustache.render(templateRequest.data, this.outputData);
     saveAs(
       new Blob([s2ab(body)], {type: 'application/octet-stream'}),
