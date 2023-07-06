@@ -99,6 +99,28 @@
           </ul>
         </div>
       </div>
+      <!-- Toggle control set accordion collapse state -->
+      <button
+        class="px-3 py-2 text-sm"
+        type="button"
+        data-te-collapse-init
+        data-te-target=".multi-collapse-outer"
+        aria-expanded="true"
+        aria-controls="control-accordion-body"
+      >
+        Toggle Control Set Accordions
+      </button>
+      <!-- Toggle control accordion collapse state -->
+      <button
+        class="px-3 py-2 text-sm"
+        type="button"
+        data-te-collapse-init
+        data-te-target=".multi-collapse-inner"
+        aria-expanded="true"
+        aria-controls="control-accordion-body"
+      >
+        Toggle Control Accordions
+      </button>
       {{/showControlSets}}
     </nav>
 
@@ -249,7 +271,7 @@
       <!-- Accordion body def -->
       <div
         id="collapseable-{{fileID}}"
-        class="my-4"
+        class="my-4 multi-collapse-outer"
         data-te-collapse-item
         data-te-collapse-show
       >
@@ -304,7 +326,7 @@
           <!-- Accordion body def -->
           <div
             id="control-accordion-body-{{controlID}}"
-            class="px-5 py-4"
+            class="px-5 py-4 multi-collapse-inner"
             data-te-collapse-item
             data-te-collapse-show
             aria-labelledby="control-accordion-header-{{controlID}}"
