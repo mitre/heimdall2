@@ -46,6 +46,12 @@
               </v-tooltip>
             </v-col>
           </v-row>
+          <v-textarea
+            v-model="groupInfo.desc"
+            label="Description"
+            rows="1"
+            auto-grow
+          />
           <Users
             v-model="groupInfo.users"
             :editable="true"
@@ -116,6 +122,7 @@ function newGroup(): IGroup {
     public: false,
     createdAt: new Date(),
     updatedAt: new Date(),
+    desc: '',
     users: []
   };
 }
