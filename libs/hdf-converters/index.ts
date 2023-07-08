@@ -11,6 +11,7 @@ export * from './src/conveyor-mapper';
 export * from './src/dbprotect-mapper';
 export * from './src/fortify-mapper';
 export * from './src/gosec-mapper';
+export * from './src/grype-mapper';
 export * from './src/ionchannel-mapper';
 export * from './src/jfrog-xray-mapper';
 export * as AwsConfigMappingData from './src/mappings/AwsConfigMappingData';
