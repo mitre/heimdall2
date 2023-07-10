@@ -50,7 +50,6 @@ function getId(item: unknown): string {
   }
 }
 function getTitle(item: unknown): string {
-  debugger;
   if (_.has(item, 'compliance-check-name')) {
     return _.get(item, 'compliance-check-name') as unknown as string;
   } else {
