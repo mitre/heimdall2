@@ -35,6 +35,7 @@ import { UserDto } from './dto/user.dto';
 import { User } from './user.model';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
+import { GROUPS_SERVICE_MOCK } from 'test/constants/groups-test.constant';
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
@@ -46,13 +47,6 @@ describe('UsersController Unit Tests', () => {
 
   let basicUser: User;
   let adminUser: User;
-
-  const groupsServiceMock = {
-    async setDefaultToOwner(): Promise<void> { },
-    async findAll(): Promise<Group[]> {
-      return [];
-    }
-  };
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -73,7 +67,7 @@ describe('UsersController Unit Tests', () => {
         AuthzService,
         DatabaseService,
         UsersService,
-        { provide: GroupsService, useValue: groupsServiceMock }
+        { provide: GroupsService, useValue: GROUPS_SERVICE_MOCK }
       ]
     }).compile();
 
