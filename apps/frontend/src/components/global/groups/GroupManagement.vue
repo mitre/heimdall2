@@ -80,7 +80,7 @@
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
-        <div v-if="item.role == 'owner' || adminPanel">
+        <div v-if="item.role === 'owner' || adminPanel">
           <GroupModal
             id="editGroupModal"
             :create="false"
