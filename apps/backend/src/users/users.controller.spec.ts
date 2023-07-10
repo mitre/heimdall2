@@ -1,12 +1,12 @@
-import { ForbiddenError } from '@casl/ability';
+import {ForbiddenError} from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
   NotFoundException
 } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { Test, TestingModule } from '@nestjs/testing';
-import { ValidationError } from 'sequelize';
+import {SequelizeModule} from '@nestjs/sequelize';
+import {Test, TestingModule} from '@nestjs/testing';
+import {ValidationError} from 'sequelize';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
@@ -20,23 +20,20 @@ import {
   UPDATE_USER_DTO_TEST_OBJ,
   UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
 } from '../../test/constants/users-test.constant';
-import { AuthzService } from '../authz/authz.service';
-import { ConfigModule } from '../config/config.module';
-import { ConfigService } from '../config/config.service';
-import { DatabaseModule } from '../database/database.module';
-import { DatabaseService } from '../database/database.service';
-import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
-import { Evaluation } from '../evaluations/evaluation.model';
-import { GroupEvaluation } from '../group-evaluations/group-evaluation.model';
-import { GroupUser } from '../group-users/group-user.model';
-import { Group } from '../groups/group.model';
-import { UserDto } from './dto/user.dto';
-import { User } from './user.model';
-import { UsersController } from './users.controller';
-import { UsersService } from './users.service';
-import { GroupsService } from '../groups/groups.service';
-
-
+import {AuthzService} from '../authz/authz.service';
+import {ConfigModule} from '../config/config.module';
+import {ConfigService} from '../config/config.service';
+import {DatabaseModule} from '../database/database.module';
+import {DatabaseService} from '../database/database.service';
+import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
+import {Group} from '../groups/group.model';
+import {UserDto} from './dto/user.dto';
+import {User} from './user.model';
+import {UsersController} from './users.controller';
+import {UsersService} from './users.service';
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
@@ -49,8 +46,11 @@ describe('UsersController Unit Tests', () => {
   let basicUser: User;
   let adminUser: User;
 
-  let groupsServiceMock = {
-    async setDefaultToOwner(): Promise<void> { }
+  const groupsServiceMock = {
+    async setDefaultToOwner(): Promise<void> {},
+    async findAll(): Promise<Group[]> {
+      return [];
+    }
   };
 
   beforeAll(async () => {
@@ -68,7 +68,12 @@ describe('UsersController Unit Tests', () => {
           EvaluationTag
         ])
       ],
-      providers: [AuthzService, DatabaseService, UsersService, { provide: GroupsService, useValue: groupsServiceMock }]
+      providers: [
+        AuthzService,
+        DatabaseService,
+        UsersService,
+        {provide: GroupsService, useValue: groupsServiceMock}
+      ]
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
@@ -91,7 +96,7 @@ describe('UsersController Unit Tests', () => {
       expect.assertions(1);
 
       expect(
-        await usersController.findUserById(basicUser.id, { user: basicUser })
+        await usersController.findUserById(basicUser.id, {user: basicUser})
       ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
     });
 
@@ -100,7 +105,7 @@ describe('UsersController Unit Tests', () => {
       expect.assertions(1);
 
       await expect(async () => {
-        await usersController.findUserById(ID, { user: basicUser });
+        await usersController.findUserById(ID, {user: basicUser});
       }).rejects.toThrow(NotFoundException);
     });
   });
@@ -191,7 +196,7 @@ describe('UsersController Unit Tests', () => {
       expect(
         await usersController.update(
           basicUser.id,
-          { user: basicUser },
+          {user: basicUser},
           UPDATE_USER_DTO_TEST_OBJ
         )
       ).toEqual(new UserDto(await usersService.findById(basicUser.id)));
@@ -204,7 +209,7 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.update(
           ID,
-          { user: basicUser },
+          {user: basicUser},
           UPDATE_USER_DTO_TEST_OBJ
         );
       }).rejects.toThrow(NotFoundException);
@@ -217,7 +222,7 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.update(
           basicUser.id,
-          { user: basicUser },
+          {user: basicUser},
           UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD
         );
       }).rejects.toThrow(ForbiddenException);
@@ -232,7 +237,7 @@ describe('UsersController Unit Tests', () => {
       expect(
         await usersController.remove(
           basicUser.id,
-          { user: basicUser },
+          {user: basicUser},
           DELETE_USER_DTO_TEST_OBJ
         )
       ).toEqual(new UserDto(basicUser));
@@ -245,7 +250,7 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.remove(
           ID,
-          { user: adminUser },
+          {user: adminUser},
           DELETE_USER_DTO_TEST_OBJ
         );
       }).rejects.toThrow(NotFoundException);
@@ -258,7 +263,7 @@ describe('UsersController Unit Tests', () => {
       await expect(async () => {
         await usersController.remove(
           basicUser.id,
-          { user: basicUser },
+          {user: basicUser},
           DELETE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD
         );
       }).rejects.toThrow(ForbiddenException);
