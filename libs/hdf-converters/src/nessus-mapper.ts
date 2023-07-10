@@ -23,7 +23,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['iii', 0.3],
   ['0', 0.0]
 ]);
-const COMPLIANCE_PATH = 'cm:compliance-reference';
+const COMPLIANCE_PATH = 'compliance-reference';
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
@@ -50,15 +50,16 @@ function getId(item: unknown): string {
   }
 }
 function getTitle(item: unknown): string {
-  if (_.has(item, 'cm:compliance-check-name')) {
-    return _.get(item, 'cm:compliance-check-name') as unknown as string;
+  debugger;
+  if (_.has(item, 'compliance-check-name')) {
+    return _.get(item, 'compliance-check-name') as unknown as string;
   } else {
     return _.get(item, 'pluginName') as unknown as string;
   }
 }
 function getDesc(item: unknown): string {
-  if (_.has(item, 'cm:compliance-info')) {
-    return parseHtml(_.get(item, 'cm:compliance-info'));
+  if (_.has(item, 'compliance-info')) {
+    return parseHtml(_.get(item, 'compliance-info'));
   } else {
     return parseHtml(formatDesc(item));
   }
@@ -97,8 +98,8 @@ function getImpact(item: unknown): number {
 }
 
 function getCheck(item: unknown): string {
-  if (_.has(item, 'cm:compliance-solution')) {
-    return parseHtml(_.get(item, 'cm:compliance-solution'));
+  if (_.has(item, 'compliance-solution')) {
+    return parseHtml(_.get(item, 'compliance-solution'));
   } else {
     return '';
   }
@@ -147,7 +148,7 @@ function getStig(item: unknown): string {
   }
 }
 function getStatus(item: unknown): ExecJSON.ControlResultStatus {
-  const result: string = _.get(item, 'cm:compliance-result', '');
+  const result: string = _.get(item, 'compliance-result', '');
   switch (result) {
     case 'PASSED':
       return ExecJSON.ControlResultStatus.Passed;
@@ -328,7 +329,7 @@ export class NessusMapper extends BaseConverter {
                 status: {transformer: getStatus},
                 code_desc: {transformer: formatCodeDesc},
                 message: {
-                  path: ['plugin_output', 'cm:compliance-actual-value'],
+                  path: ['plugin_output', 'compliance-actual-value'],
                   transformer: (value: unknown) => {
                     if (value === null || value === undefined) {
                       return value;
