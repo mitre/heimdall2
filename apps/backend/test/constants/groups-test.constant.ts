@@ -1,9 +1,8 @@
-import { Group } from 'src/groups/group.model';
+import { Group } from '../../src/groups/group.model';
 import { CreateGroupDto } from '../../src/groups/dto/create-group.dto';
-import { User } from 'src/users/user.model';
-import { UpdateGroupUserRoleDto } from 'src/groups/dto/update-group-user.dto';
-import { GroupUser } from 'src/group-users/group-user.model';
-import { Evaluation } from 'src/evaluations/evaluation.model';
+import { User } from '../../src/users/user.model';
+import { UpdateGroupUserRoleDto } from '../../src/groups/dto/update-group-user.dto';
+import { GroupUser } from '../../src/group-users/group-user.model';
 
 export const GROUP_1 = {
   name: 'Heimdall Group',

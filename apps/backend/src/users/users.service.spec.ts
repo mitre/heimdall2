@@ -45,8 +45,8 @@ import { SlimUserDto } from './dto/slim-user.dto';
 import { UserDto } from './dto/user.dto';
 import { User } from './user.model';
 import { UsersService } from './users.service';
-import { GROUPS_SERVICE_MOCK } from 'test/constants/groups-test.constant';
-import { GroupsService } from 'src/groups/groups.service';
+import { GROUPS_SERVICE_MOCK } from '../../test/constants/groups-test.constant';
+import { GroupsService } from '../groups/groups.service';
 
 describe('UsersService', () => {
   let authzService: AuthzService;

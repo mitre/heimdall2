@@ -35,7 +35,7 @@ import { UserDto } from './dto/user.dto';
 import { User } from './user.model';
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { GROUPS_SERVICE_MOCK } from 'test/constants/groups-test.constant';
+import { GROUPS_SERVICE_MOCK } from '../../test/constants/groups-test.constant';
 
 // Test suite for the UsersController
 describe('UsersController Unit Tests', () => {
