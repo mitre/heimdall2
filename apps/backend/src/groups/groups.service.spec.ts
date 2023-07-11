@@ -5,7 +5,7 @@ import {
   EVALUATION_1,
   EVALUATION_WITH_TAGS_1
 } from '../../test/constants/evaluations-test.constant';
-import { GROUP_1 } from '../../test/constants/groups-test.constant';
+import { GROUPS_SERVICE_MOCK, GROUP_1 } from '../../test/constants/groups-test.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2,
@@ -43,7 +43,7 @@ describe('GroupsService', () => {
         UsersModule
       ],
       providers: [
-        GroupsService,
+        { provide: GroupsService, useValue: GROUPS_SERVICE_MOCK },
         DatabaseService,
         { provide: UsersService, useValue: USERS_SERVICE_MOCK },
         EvaluationsService

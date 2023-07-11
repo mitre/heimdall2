@@ -3,6 +3,7 @@ import { CreateGroupDto } from '../../src/groups/dto/create-group.dto';
 import { User } from '../../src/users/user.model';
 import { UpdateGroupUserRoleDto } from '../../src/groups/dto/update-group-user.dto';
 import { GroupUser } from '../../src/group-users/group-user.model';
+import { Evaluation } from '../../src/evaluations/evaluation.model';
 
 export const GROUP_1 = {
   name: 'Heimdall Group',
@@ -27,5 +28,10 @@ export const GROUPS_SERVICE_MOCK = {
   async addUserToGroup(group: Group, user: User, role: string): Promise<void> { },
   async updateGroupUserRole(group: Group, updateGroupUser: UpdateGroupUserRoleDto): Promise<GroupUser | undefined> { return undefined },
   async removeUserFromGroup(group: Group, user: User): Promise<Group> { return new Group },
-  async setDefaultToOwner(): Promise<void> { }
+  async setDefaultToOwner(): Promise<void> { },
+  async addEvaluationToGroup(group: Group, evaluation: Evaluation): Promise<void> { },
+  async removeEvaluationFromGroup(group: Group, evaluation: Evaluation): Promise<Group> { return new Group },
+  async create(createGroupDto: CreateGroupDto): Promise<Group> { return new Group },
+  async update(groupToUpdate: Group, groupDto: CreateGroupDto): Promise<Group> { return new Group },
+  async remove(groupToDelete: Group): Promise<Group> { return new Group }
 };
