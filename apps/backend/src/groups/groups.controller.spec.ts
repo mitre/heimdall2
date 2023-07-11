@@ -9,7 +9,8 @@ import {
 } from '../../test/constants/groups-test.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
-  CREATE_USER_DTO_TEST_OBJ_2
+  CREATE_USER_DTO_TEST_OBJ_2,
+  USERS_SERVICE_MOCK
 } from '../../test/constants/users-test.constant';
 import { AuthzService } from '../authz/authz.service';
 import { ConfigModule } from '../config/config.module';
@@ -26,7 +27,6 @@ import { UsersService } from '../users/users.service';
 import { Group } from './group.model';
 import { GroupsController } from './groups.controller';
 import { GroupsService } from './groups.service';
-import { GROUPS_SERVICE_MOCK } from '../../test/constants/groups-test.constant';
 
 describe('GroupsController', () => {
   let groupsController: GroupsController;
@@ -56,8 +56,8 @@ describe('GroupsController', () => {
       providers: [
         AuthzService,
         DatabaseService,
-        { provide: GroupsService, useValue: GROUPS_SERVICE_MOCK },
-        UsersService,
+        GroupsService,
+        { provide: UsersService, useValue: USERS_SERVICE_MOCK },
         EvaluationsService
       ]
     }).compile();

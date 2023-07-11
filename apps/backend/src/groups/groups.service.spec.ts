@@ -43,7 +43,7 @@ describe('GroupsService', () => {
         UsersModule
       ],
       providers: [
-        { provide: GroupsService, useValue: GROUPS_SERVICE_MOCK },
+        GroupsService,
         DatabaseService,
         { provide: UsersService, useValue: USERS_SERVICE_MOCK },
         EvaluationsService
