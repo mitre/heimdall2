@@ -155,7 +155,7 @@
         class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
         <h5 class="mb-2 text-xl"><strong>Profile Status</strong></h5>
-        <div class="grid sm:grid-flow-row lg:grid-flow-col justify-between">
+        <div class="grid grid-flow-row xl:grid-flow-col justify-between">
           <!-- Status counts -->
           <div class="px-2 py-2">
             <strong>Count</strong>
@@ -185,6 +185,15 @@
                 Total: {{statistics.totalControls}}
               </div>
             </div>
+          </div>
+
+          <!-- Control tests -->
+          <div class="w-11/12 px-2 py-2 whitespace-pre-line">
+            <strong>Checks</strong>
+            Passed results: {{statistics.passedTests}} individual checks passed
+            Failed results: {{statistics.passingTestsFailedControl}} individual
+            checks passed, {{statistics.failed}} failed out of
+            {{statistics.totalTests}} total checks
           </div>
 
           <!-- Severity report -->
@@ -288,7 +297,7 @@
               aria-expanded="true"
               aria-controls="control-accordion-body-{{controlID}}"
             >
-              <div class="lg:w-36">
+              <div class="w-36">
                 <!-- Control status indicator -->
                 <span
                   class="bg-{{controlStatus.color}} rounded px-2 py-1 text-black"
@@ -307,7 +316,7 @@
                 >
               </div>
               <!-- Control title -->
-              <span class="pl-4 pr-4 break-words">{{hdf.wraps.title}}</span>
+              <span class="pl-4 pr-4 w-2/3 break-all">{{hdf.wraps.title}}</span>
               <span
                 class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
               >
