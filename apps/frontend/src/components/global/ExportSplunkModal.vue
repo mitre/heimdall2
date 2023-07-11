@@ -23,7 +23,7 @@
           <v-stepper-items>
             <v-stepper-content step="1">
               <AuthStep
-                index-to-show="hdf"
+                index-to-show=""
                 @authenticated="onAuthenticationComplete"
                 @error="errorCount += 1"
                 @show-help="errorCount = -1"
@@ -38,7 +38,7 @@
             absolute="absolute"
             :value="errorCount >= 3 || errorCount < 0"
           >
-            <div class="text-center">
+            <div class="text-left">
               <p>
                 <span v-if="errorCount > 0">
                   It seems you may be having trouble using the Splunk toolkit.
@@ -46,18 +46,32 @@
                 </span>
                 <br />
                 <span>
-                  For installation instructions and further information, check
-                  here:
+                  Accessing a Splunk instance from Heimdall requires the input
+                  of the following information:
+                  <br />
+                  username: A qualified username recognized by the referenced
+                  Splunk instance.
+                  <br />
+                  password: A qualified password recognized by the referenced
+                  Splunk instance.
+                  <br />
+                  hostname: The domain name for the desired Splunk instance.
+                  Include port number if available.
+                  <br />
+                  index: A valid index name within the referenced Splunk
+                  instance.
+                  <br />
+                  For installation instructions and further information, see:
                 </span>
                 <v-btn
                   target="_blank"
-                  href="https://github.com/mitre/hdf-json-to-splunk/"
+                  href="https://github.com/mitre/heimdall2/wiki/Splunk-Interfacing-Guide"
                   text
                   color="info"
                   px-0
                 >
                   <v-icon pr-2>mdi-github-circle</v-icon>
-                  Splunk HDF Plugin
+                  Splunk Interfacing Guide
                 </v-btn>
               </p>
               <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>

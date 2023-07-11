@@ -1,3 +1,30 @@
+v2.6.57
+
+- Admin panel @Rlin232 (#4659)
+- Improving Splunk Interface @charleshu-8 (#4632)
+
+## Bug Fixes
+
+- Improving Splunk Interface @charleshu-8 (#4632)
+- resolves #4698 @wdower (#4699) (fixes bug in nessus-mapper)
+
+## Dependency Updates
+
+- Bump @types/node from 20.4.0 to 20.4.1 @dependabot (#4697)
+- Bump @types/passport-jwt from 3.0.8 to 3.0.9 @dependabot (#4704)
+- Bump @typescript-eslint/parser from 5.61.0 to 5.62.0 @dependabot (#4701)
+- Bump semver from 5.7.1 to 5.7.2 @dependabot (#4706)
+- Bump cypress from 12.17.0 to 12.17.1 @dependabot (#4700)
+- Bump aws-sdk from 2.1412.0 to 2.1413.0 @dependabot (#4696)
+- Bump express-rate-limit from 6.7.0 to 6.7.1 @dependabot (#4694)
+- Bump cypress from 12.16.0 to 12.17.0 @dependabot (#4691)
+- Bump aws-sdk from 2.1411.0 to 2.1412.0 @dependabot (#4692)
+- Bump vuetify from 2.6.15 to 2.7.0 @dependabot (#4687)
+- Bump core-js from 3.31.0 to 3.31.1 @dependabot (#4689)
+- Bump @types/node from 20.3.3 to 20.4.0 @dependabot (#4688)
+- Bump aws-sdk from 2.1410.0 to 2.1411.0 @dependabot (#4686)
+
+
 v2.6.56
 
 ## Dependency Updates
