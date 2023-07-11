@@ -27,6 +27,7 @@ import { UsersService } from '../users/users.service';
 import { Group } from './group.model';
 import { GroupsController } from './groups.controller';
 import { GroupsService } from './groups.service';
+import { UsersModule } from '../users/users.module';
 
 describe('GroupsController', () => {
   let groupsController: GroupsController;
@@ -51,7 +52,8 @@ describe('GroupsController', () => {
           Evaluation,
           EvaluationTag,
           User
-        ])
+        ]),
+        UsersModule
       ],
       providers: [
         AuthzService,
