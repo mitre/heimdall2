@@ -8,7 +8,8 @@ import {
 import { GROUP_1 } from '../../test/constants/groups-test.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
-  CREATE_USER_DTO_TEST_OBJ_2
+  CREATE_USER_DTO_TEST_OBJ_2,
+  USERS_SERVICE_MOCK
 } from '../../test/constants/users-test.constant';
 import { DatabaseModule } from '../database/database.module';
 import { DatabaseService } from '../database/database.service';
@@ -24,7 +25,6 @@ import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { Group } from './group.model';
 import { GroupsService } from './groups.service';
-import { GROUPS_SERVICE_MOCK } from '../../test/constants/groups-test.constant';
 
 describe('GroupsService', () => {
   let groupsService: GroupsService;
@@ -43,9 +43,9 @@ describe('GroupsService', () => {
         UsersModule
       ],
       providers: [
-        { provide: GroupsService, useValue: GROUPS_SERVICE_MOCK },
+        GroupsService,
         DatabaseService,
-        UsersService,
+        { provide: UsersService, useValue: USERS_SERVICE_MOCK },
         EvaluationsService
       ]
     }).compile();
