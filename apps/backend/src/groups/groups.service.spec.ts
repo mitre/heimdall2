@@ -45,7 +45,7 @@ describe('GroupsService', () => {
       providers: [
         GroupsService,
         DatabaseService,
-        { provide: UsersService, useValue: USERS_SERVICE_MOCK },
+        UsersService,
         EvaluationsService
       ]
     }).compile();
