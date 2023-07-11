@@ -53,13 +53,12 @@ describe('GroupsController', () => {
           EvaluationTag,
           User
         ]),
-        UsersModule
       ],
       providers: [
         AuthzService,
         DatabaseService,
         GroupsService,
-        { provide: UsersService, useValue: USERS_SERVICE_MOCK },
+        UsersService,
         EvaluationsService
       ]
     }).compile();
