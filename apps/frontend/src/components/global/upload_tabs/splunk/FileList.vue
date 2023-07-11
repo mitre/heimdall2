@@ -120,7 +120,7 @@ export default class FileList extends Vue {
       SnackbarModule.failure('Failed to login - A valid index is required');
       return;
     }
-    // Update index for search job if user changes targeted index
+    // Update index for search job if user changes targeted index; otherwise retains existing index
     this.splunkConfig.index = this.index;
     this.search = `search index="${this.index}" meta.subtype="header"`;
     this.splunkConverter = new SplunkMapper(this.splunkConfig);
