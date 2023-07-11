@@ -1,7 +1,7 @@
 <template>
   <span>
-    <div class="d-flex flex-row-reverse" style="cursor: pointer">
-      <v-btn icon @click="updateSearch">
+    <div class="d-flex flex-row-reverse">
+      <v-btn icon style="cursor: pointer" @click="updateSearch">
         <v-icon
           b-tooltip.hover
           title="Request content from the server"
@@ -9,11 +9,11 @@
           >mdi-refresh</v-icon
         >
       </v-btn>
-
-      <div b-tooltip.hover title="Return to login page" @click="logout">
-        <span class="pt-4 pr-4">Sign Out</span>
-        <v-icon color="red" class="pr-2 pt-2">mdi-logout</v-icon>
-      </div>
+      <v-btn icon style="cursor: pointer" @click="logout">
+        <v-icon b-tooltip.hover title="Return to login page" color="red"
+          >mdi-logout</v-icon
+        >
+      </v-btn>
     </div>
 
     <h3>Scans Options</h3>
