@@ -5,5 +5,5 @@ export abstract class JsonixIntermediateConverter<
   V
 > extends JsonixConverter<T> {
   abstract toIntermediateObject(jsonixObj: T): V;
-  //abstract fromIntermediateObject(intermediateObj: V): T;
+  abstract fromIntermediateObject(intermediateObj: V): T;
 }

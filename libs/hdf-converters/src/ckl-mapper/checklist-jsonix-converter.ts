@@ -1,18 +1,31 @@
+import {ExecJSON} from 'inspecjs';
+import {ControlResultStatus} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import {
   Asset,
+  Assettype,
   Checklist,
   Istig,
+  LocalPartEnum,
+  Name,
+  Role,
+  Severityoverride,
   Sidata,
+  Sidname,
+  Status,
   Stigdata,
-  Vuln
+  StigdatumElement,
+  Techarea,
+  Vuln,
+  Vulnattribute
 } from '../../types/checklistJsonix';
 import {JsonixIntermediateConverter} from '../jsonix-intermediate-converter';
+import {getDescription} from '../utils/global';
 
 export type ChecklistObject = {
   asset: ChecklistAsset;
   stigs: ChecklistStig[];
-  jsonixData: Checklist;
+  jsonixData?: Checklist;
 };
 
 type ChecklistAsset = Asset;
@@ -76,7 +89,13 @@ enum StatusMapping {
   NotAFinding = 'Passed',
   Open = 'Failed',
   Not_Applicable = 'Not Applicable',
-  Not_Reviewed = 'Not Reviewed'
+  Not_Reviewed = 'Not Reviewed',
+  Passed = 'NotAFinding',
+  Failed = 'Open',
+  Error = 'Not_Reviewed',
+  SkippedImpactEqZero = 'Not_Applicable',
+  SkippedImpactGtZero = 'Not_Reviewed',
+  Default = 'Not_Reviewed'
 }
 
 export enum Severity {
@@ -86,6 +105,74 @@ export enum Severity {
   Medium = 'medium'
 }
 
+export const EmptyChecklistObject: ChecklistObject = {
+  asset: {
+    assettype: 'Computing',
+    hostfqdn: null,
+    hostip: null,
+    hostmac: null,
+    hostname: null,
+    role: 'None',
+    targetkey: null,
+    techarea: '',
+    webdbinstance: null,
+    webdbsite: null,
+    webordatabase: null
+  },
+  stigs: [
+    {
+      header: {
+        version: '',
+        classification: 'UNCLASSIFIED',
+        stigid: '',
+        description: '',
+        filename: '',
+        title: '',
+        uuid: ''
+      },
+      vulns: [
+        {
+          status: StatusMapping.Not_Reviewed,
+          vulnNum: '',
+          severity: Severity.Low,
+          groupTitle: '',
+          ruleId: '',
+          ruleVersion: '',
+          ruleTitle: '',
+          vulnDiscuss: '',
+          iaControls: '',
+          checkContent: '',
+          fixText: '',
+          falsePositives: '',
+          falseNegatives: '',
+          documentable: false,
+          mitigations: '',
+          potentialImpact: '',
+          thirdPartyTools: '',
+          mitigationControl: '',
+          responsibility: '',
+          securityOverrideGuidance: '',
+          checkContentRef: '',
+          weight: '',
+          class: 'Unclass',
+          stigRef: '',
+          targetKey: '',
+          stigUuid: '',
+          legacyId: '',
+          cciRef: '',
+          comments: null,
+          findingdetails: null,
+          severityjustification: null,
+          severityoverride: Severityoverride.Empty
+        }
+      ]
+    }
+  ]
+};
+
+/**
+ * Checklist jsonix converter
+ */
 export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   Checklist,
   ChecklistObject
@@ -287,6 +374,217 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       asset: asset,
       stigs: stigs,
       jsonixData: jsonixData
+    };
+    return checklistObject;
+  }
+
+  flattenHeader(header: StigHeader): Sidata[] {
+    const sidata: Sidata[] = [];
+    for (const [name, data] of Object.entries(header)) {
+      sidata.push({
+        sidname: name as Sidname,
+        siddata: data
+      });
+    }
+    return sidata;
+  }
+
+  flattenVulns(checklistVulns: ChecklistVuln[]): Vuln[] {
+    const vulns: Vuln[] = [];
+    for (const checklistVuln of checklistVulns) {
+      const stigdata: StigdatumElement[] = [];
+      for (const [attributeName, data] of Object.entries(checklistVuln)) {
+        if (attributeName in Vulnattribute) {
+          stigdata.push({
+            vulnattribute: attributeName as Vulnattribute,
+            attributedata: data as string
+          });
+        }
+      }
+      const vuln: Vuln = {
+        comments: checklistVuln.comments,
+        findingdetails: checklistVuln.findingdetails,
+        severityjustification: checklistVuln.severityjustification,
+        severityoverride: checklistVuln.severityoverride,
+        status: Object.keys(StatusMapping)[
+          Object.values(StatusMapping).indexOf(checklistVuln.status)
+        ] as Status,
+        stigdata: stigdata
+      };
+      vulns.push(vuln);
+    }
+    return vulns;
+  }
+
+  fromIntermediateObject(intermediateObj: ChecklistObject): Checklist {
+    const name: Name = {
+      localPart: LocalPartEnum.Checklist
+    };
+    const istigs: Istig[] = [];
+    for (const stig of intermediateObj.stigs) {
+      const istig: Istig = {
+        stiginfo: {
+          sidata: this.flattenHeader(stig.header)
+        },
+        vuln: this.flattenVulns(stig.vulns)
+      };
+      istigs.push(istig);
+    }
+    const value: Stigdata = {
+      asset: {...intermediateObj.asset},
+      stigs: {
+        istig: istigs
+      }
+    };
+    const checklist: Checklist = {
+      name: name,
+      value: value
+    };
+
+    return checklist;
+  }
+
+  getStatus(results: ExecJSON.ControlResult[], impact: number): StatusMapping {
+    const statuses: ControlResultStatus[] = results.map((result) => {
+      return result.status;
+    }) as unknown as ControlResultStatus[];
+    const allPassed = (status: ControlResultStatus) =>
+      status === ControlResultStatus.Passed;
+
+    if (statuses.every(allPassed)) {
+      return StatusMapping.Passed;
+    } else if (statuses.includes(ControlResultStatus.Failed)) {
+      return StatusMapping.Failed;
+    } else if (statuses.includes(ControlResultStatus.Error)) {
+      return StatusMapping.Error;
+    } else if (statuses.includes(ControlResultStatus.Skipped)) {
+      if (impact === 0) {
+        return StatusMapping.SkippedImpactEqZero;
+      } else {
+        return StatusMapping.SkippedImpactGtZero;
+      }
+    } else {
+      return StatusMapping.Default;
+    }
+  }
+
+  severityMap(impact: number): Severity {
+    if (impact < 0.4) {
+      return Severity.Low;
+    } else if (impact < 0.7) {
+      return Severity.Medium;
+    } else {
+      return Severity.High;
+    }
+  }
+
+  getDescriptions(
+    descriptions: ExecJSON.ControlDescription[],
+    label: string
+  ): string {
+    for (const description of descriptions) {
+      if (description.label === label) {
+        return description.data;
+      }
+    }
+    throw new Error(
+      `Unable to match description label "${label}" within descriptions.`
+    );
+  }
+
+  hdfToIntermediateObject(hdf: ExecJSON.Execution): ChecklistObject {
+    const stigs: ChecklistStig[] = [];
+    const vulns: ChecklistVuln[] = [];
+    for (const profile of hdf.profiles) {
+      // if profile is overlay or parent profile, skip
+      if (!profile.depends?.length) {
+        continue;
+      }
+      const header: StigHeader = {
+        version: profile.version as string,
+        classification: 'UNCLASSIFIED',
+        customname: '',
+        stigid: '',
+        description: profile.description as string,
+        filename: '',
+        releaseinfo: '',
+        title: profile.title as string,
+        uuid: '',
+        notice: profile.license as string,
+        source: 'STIG.DOD.MIL'
+      };
+      for (const control of profile.controls) {
+        const vuln: ChecklistVuln = {
+          status: this.getStatus(control.results, control.impact),
+          vulnNum: control.id,
+          severity: this.severityMap(control.impact),
+          groupTitle: control.tags.gtitle ?? '',
+          ruleId: control.tags.rid ?? '',
+          ruleVersion: control.tags.stig_id ?? '',
+          ruleTitle: control.title ?? '',
+          vulnDiscuss: control.desc ?? '',
+          iaControls: control.tags.IA_Controls ?? '',
+          checkContent: getDescription(
+            control.descriptions as ExecJSON.ControlDescription[],
+            'check'
+          ) as string,
+          fixText: getDescription(
+            control.descriptions as ExecJSON.ControlDescription[],
+            'fix'
+          ) as string,
+          falsePositives: control.tags.False_Positives ?? '',
+          falseNegatives: control.tags.False_Negatives ?? '',
+          documentable: false,
+          mitigations: control.tags.Mitigations ?? '',
+          potentialImpact: control.tags.Potential_Impact ?? '',
+          thirdPartyTools: '',
+          mitigationControl: control.tags.Mitigation_Control ?? '',
+          responsibility: control.tags.Responsibility ?? '',
+          securityOverrideGuidance:
+            control.tags.Security_Override_Guidance ?? '',
+          checkContentRef: 'M',
+          weight: control.tags.weight ?? '10.0', // default found on checklists svaed from stigviewer has always been 10.0
+          class: 'Unclass',
+          stigRef: control.tags.STIGRef ?? '',
+          targetKey: '',
+          stigUuid: '',
+          legacyId: control.tags.Legacy_ID ?? '',
+          cciRef: '', //this.getCciRefs(control.)'',
+          comments: null,
+          findingdetails: null,
+          severityjustification: null,
+          severityoverride: Severityoverride.Empty
+        };
+        vulns.push(vuln);
+      }
+      stigs.push({header, vulns});
+    }
+    const checklistObject: ChecklistObject = {
+      asset: {
+        assettype:
+          _.get(hdf, 'passthrough.checklist.asset.assettype') ||
+          Assettype.Computing,
+        hostfqdn: _.get(hdf, 'passthrough.checklist.asset.hostfqdn'),
+        hostguid: _.get(hdf, 'passthrough.checklist.asset.hostguid'),
+        hostip: _.get(hdf, 'passthrough.checklist.asset.hostip'),
+        hostmac: _.get(hdf, 'passthrough.checklist.asset.hostmac'),
+        hostname: _.get(hdf, 'passthrough.checklist.asset.hostname'),
+        marking: _.get(hdf, 'passthrough.checklist.asset.marking') || 'CUI',
+        role: _.get(hdf, 'passthrough.checklist.asset.role') || Role.None,
+        stigguid: null,
+        targetcomment: _.get(hdf, 'passthrough.checklist.asset.targetcomment'),
+        targetkey: null,
+        techarea:
+          _.get(hdf, 'passthrough.checklist.asset.techarea') || Techarea.Empty,
+        webdbinstance: _.get(hdf, 'passthrough.checklist.asset.webdbinstance'),
+        webdbsite: _.get(hdf, 'passthrough.checklist.asset.webdbsite'),
+        webordatabase:
+          (_.get(
+            hdf,
+            'passthrough.checklist.asset.webordatabase'
+          ) as unknown as boolean) || false
+      },
+      stigs: stigs
     };
     return checklistObject;
   }

@@ -1,15 +1,19 @@
 import {Jsonix} from '@mitre/jsonix';
 
 export abstract class JsonixConverter<T> {
-  xmlString: string;
+  context: Jsonix.Context;
 
-  constructor(xmlString: string) {
-    this.xmlString = xmlString;
+  constructor(mapping: Record<string, unknown>) {
+    this.context = new Jsonix.Context([mapping]);
   }
 
-  toJsonix(mapping: Record<string, unknown>): T {
-    const context = new Jsonix.Context([mapping]);
-    const unmarshaller = context.createUnmarshaller();
-    return unmarshaller.unmarshalString(this.xmlString) as T;
+  toJsonix(xmlString: string): T {
+    const unmarshaller = this.context.createUnmarshaller();
+    return unmarshaller.unmarshalString(xmlString) as T;
+  }
+
+  fromJsonix(object: T): string {
+    const marshaller = this.context.createMarshaller();
+    return marshaller.marshalString(object as Record<string, unknown>);
   }
 }

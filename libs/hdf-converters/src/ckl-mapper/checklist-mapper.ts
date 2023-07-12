@@ -161,6 +161,16 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   return results;
 }
 
+function containsChecklist(object: ExecJSON.Execution): boolean {
+  return _.has(object, 'passthrough.checklist');
+}
+
+export function getChecklistObjectFromHdf(
+  hdf: ExecJSON.Execution
+): ChecklistObject {
+  return _.get(hdf, 'passthrough.checklist') as unknown as ChecklistObject;
+}
+
 /**
  * ChecklistResults is a wrapper for ChecklistMapper using the intakeType
  *  default returns a single hdf object without any modifications
@@ -168,7 +178,7 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
  *  wrapper returns a single hdf object with an additional profile created using file name as profile name and adds parent_profile key to each mapped profile
  */
 export class ChecklistResults extends ChecklistJsonixConverter {
-  checklistXml: string;
+  data: string | ExecJSON.Execution;
   jsonixData: Checklist;
   checklistObject: ChecklistObject;
   withRaw: boolean;
@@ -177,12 +187,27 @@ export class ChecklistResults extends ChecklistJsonixConverter {
    * Creates instance of ChecklistResult object because ChecklistMapper uses the intermediate ChecklistObject to create HDF mapping
    * @param checklistXml - string of xml data
    */
-  constructor(checklistXml: string, withRaw = false) {
-    super(checklistXml);
-    this.checklistXml = checklistXml;
+  constructor(data: string | ExecJSON.Execution, withRaw = false) {
+    super(checklistMapping.jsonixMapping);
+    this.data = data;
+    if (typeof data === 'string') {
+      this.jsonixData = super.toJsonix(data);
+      this.checklistObject = super.toIntermediateObject(this.jsonixData);
+    } else {
+      if (containsChecklist(data)) {
+        this.checklistObject = getChecklistObjectFromHdf(data);
+        this.jsonixData = super.fromIntermediateObject(this.checklistObject);
+      } else {
+        // CREATE Intermediate Object from HDF
+        this.checklistObject = super.hdfToIntermediateObject(data);
+        this.jsonixData = super.fromIntermediateObject(this.checklistObject);
+      }
+    }
     this.withRaw = withRaw;
-    this.jsonixData = super.toJsonix(checklistMapping.jsonixMapping);
-    this.checklistObject = super.toIntermediateObject(this.jsonixData);
+  }
+
+  fromHdf(): string {
+    return super.fromJsonix(this.jsonixData);
   }
 
   toHdf(): ExecJSON.Execution {
@@ -266,17 +291,17 @@ export class ChecklistMapper extends BaseConverter {
               // first element is the label name as it will appear in UI while the second is the ChecklistObject keyname
               transformer: (input: ChecklistVuln): Record<string, unknown> => {
                 const tags = [
-                  ['IA Controls', 'iaControls'],
-                  ['Legacy ID', 'legacyId'],
-                  ['False Positives', 'falsePositives'],
-                  ['False Negatives', 'falseNegatives'],
+                  ['IA_Controls', 'iaControls'],
+                  ['Legacy_ID', 'legacyId'],
+                  ['False_Positives', 'falsePositives'],
+                  ['False_Negatives', 'falseNegatives'],
                   ['Mitigations', 'mitigations'],
-                  ['Mitigation Controls', 'mitigationControl'],
-                  ['Potential Impact', 'potentialImpact'],
+                  ['Mitigation_Controls', 'mitigationControl'],
+                  ['Potential_Impact', 'potentialImpact'],
                   ['Responsibility', 'responsibility'],
                   ['STIGRef', 'stigRef'],
-                  ['Security Override Guidance', 'securityOverrideGuidance'],
-                  ['Severity Justification', 'severityJustification']
+                  ['Security_Override_Guidance', 'securityOverrideGuidance'],
+                  ['Severity_Justification', 'severityJustification']
                 ];
                 const fullTags: Record<string, unknown> = {};
                 for (const [key, path] of tags) {
