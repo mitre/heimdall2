@@ -48,6 +48,7 @@
           </v-row>
           <v-textarea
             v-model="groupInfo.desc"
+            data-cy="desc"
             label="Description"
             rows="1"
             auto-grow

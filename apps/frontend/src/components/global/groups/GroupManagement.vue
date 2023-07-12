@@ -35,6 +35,22 @@
           />
         </v-container>
       </template>
+      <template #[`item.name`]="{item}">
+        <v-tooltip v-if="item.desc !== ''" color="secondary" bottom>
+          <template #activator="{on}">
+            <div v-on="on">{{ item.name }}</div>
+          </template>
+          <v-card color="transparent" flat max-width="300px">
+            <v-card-title> Group Description </v-card-title>
+            <v-card-text>
+              <div v-for="(line, index) in item.desc.split('\n')" :key="index">
+                {{ line }} <br />
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-tooltip>
+        <span v-else>{{ item.name }}</span>
+      </template>
       <template #[`item.users`]="{item}">
         <span v-for="user in item.users.slice(0, 3)" :key="user.id">
           <v-chip
