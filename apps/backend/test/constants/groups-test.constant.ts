@@ -27,7 +27,7 @@ export const GROUPS_SERVICE_MOCK = {
   async findByIds(id: string[]): Promise<Group[]> { return [] },
   async addUserToGroup(group: Group, user: User, role: string): Promise<void> { },
   async updateGroupUserRole(group: Group, updateGroupUser: UpdateGroupUserRoleDto): Promise<GroupUser | undefined> { return undefined },
-  async removeUserFromGroup(group: Group, user: User): Promise<Group> { return new Group() },
+  async removeUserFromGroup(group: Group, user: User): Promise<Group> { return group.$remove('user', user); },
   async setDefaultToOwner(): Promise<void> { },
   async addEvaluationToGroup(group: Group, evaluation: Evaluation): Promise<void> { },
   async removeEvaluationFromGroup(group: Group, evaluation: Evaluation): Promise<Group> { return new Group() },
