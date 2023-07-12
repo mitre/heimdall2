@@ -18,11 +18,6 @@ module.exports = {
         allowNull: false,
         defaultValue: false
       },
-      desc: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        defaultValue: ''
-      },
       createdAt: {
         type: Sequelize.DATE,
         allowNull: false
