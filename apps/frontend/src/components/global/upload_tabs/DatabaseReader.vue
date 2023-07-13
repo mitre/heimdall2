@@ -7,7 +7,7 @@
       :headers="headers"
       :files="files"
       :loading="loading"
-      @load-results="load_results($event)"
+      @load-selected="load_results($event)"
     />
   </v-container>
 </template>
@@ -42,6 +42,11 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
       align: 'start',
       sortable: true,
       value: 'filename'
+    },
+    {
+      text: 'Groups',
+      value: 'groups',
+      sortable: true
     },
     {
       text: 'Tags',

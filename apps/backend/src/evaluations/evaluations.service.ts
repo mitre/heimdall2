@@ -33,7 +33,8 @@ export class EvaluationsService {
     evaluationTags: CreateEvaluationTagDto[] | undefined;
     public: boolean;
     data: unknown;
-    userId: string;
+    userId?: string;
+    groupId?: string;
   }): Promise<Evaluation> {
     return Evaluation.create<Evaluation>(
       {

@@ -326,7 +326,7 @@ export default class Compare extends Vue {
       // loaded then something has been added/removed and should be displayed.
       return (
         controls.some((control) => control !== controls[0]) ||
-        controls.length !== FilteredDataModule.selected_file_ids.length
+        controls.length !== this.files.length
       );
     });
   }
@@ -405,16 +405,23 @@ export default class Compare extends Vue {
     const field = this.sortControlSetsBy.split('Passthrough Field: ')[1];
     const aPassthroughField = _.get(a.data, `passthrough.${field}`);
     const bPassthroughField = _.get(b.data, `passthrough.${field}`);
-    if (typeof aPassthroughField === typeof bPassthroughField) {
+    if (
+      aPassthroughField !== null &&
+      bPassthroughField !== null &&
+      aPassthroughField !== undefined &&
+      bPassthroughField !== undefined &&
+      aPassthroughField === typeof bPassthroughField
+    ) {
       if (typeof aPassthroughField === 'string') {
-        return aPassthroughField.localeCompare(bPassthroughField);
+        return (aPassthroughField as string).localeCompare(
+          bPassthroughField as string
+        );
       } else if (typeof aPassthroughField === 'number') {
         return aPassthroughField - bPassthroughField;
       } else if (typeof aPassthroughField === 'boolean') {
         return Number(aPassthroughField) - Number(bPassthroughField);
       }
     }
-
     return 0;
   }
 

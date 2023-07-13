@@ -1,11 +1,14 @@
 export {ASFFResults} from './src/asff-mapper/asff-mapper';
 export * from './src/aws-config-mapper';
 export * from './src/burpsuite-mapper';
+export * from './src/ckl-mapper/checklist-mapper';
 export * from './src/converters-from-hdf/asff/reverse-asff-mapper';
 export * from './src/converters-from-hdf/splunk/reverse-splunk-mapper';
 export * from './src/converters-from-hdf/xccdf/reverse-xccdf-mapper';
+export * from './src/conveyor-mapper';
 export * from './src/dbprotect-mapper';
 export * from './src/fortify-mapper';
+export * from './src/gosec-mapper';
 export * from './src/ionchannel-mapper';
 export * from './src/jfrog-xray-mapper';
 export * as AwsConfigMappingData from './src/mappings/AwsConfigMappingData';

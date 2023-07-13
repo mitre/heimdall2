@@ -5,20 +5,21 @@ on:
 
 jobs:
   build-deploy:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v3
 
       - name: setup node
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
-          node-version: "14.x"
+          node-version: "16.x"
+          cache: 'yarn'
 
       - name: Install project dependencies
         run: yarn frontend install --frozen-lockfile
 
       - name: Build Heimdall Lite
-        run: yarn frontend build
+        run: yarn frontend build --mode development
 
       - name: Write Heimdall-Lite CNAME file
         run: 'echo "heimdall-lite.mitre.org" > ./dist/frontend/CNAME'

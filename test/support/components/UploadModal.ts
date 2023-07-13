@@ -5,16 +5,16 @@ export default class UploadModal {
 
   loadSample(name: string): void {
     this.switchToTab('sample');
-    this.loadFile(name);
+    this.loadFile('uploadtab-sample', name);
   }
 
   loadFromDatabase(name: string): void {
     this.switchToTab('database');
-    this.loadFile(name);
+    this.loadFile('uploadtab-database', name);
   }
 
-  loadFile(name: string): void {
-    cy.get('[data-cy=loadFileList]').within(() => {
+  loadFile(parentTabId: string, name: string): void {
+    cy.get(`#${parentTabId} [data-cy=loadFileList]`).within(() => {
       cy.contains(name).click({force: true});
     });
   }

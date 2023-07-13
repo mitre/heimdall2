@@ -57,11 +57,26 @@
         </template>
 
         <template #id>
-          <ColumnHeader
-            text="ID"
-            :sort="sortId"
-            @input="set_sort('id', $event)"
-          />
+          <v-row class="pa-3">
+            <ColumnHeader
+              text="ID"
+              :sort="sortId"
+              @input="set_sort('id', $event)"
+            />
+            <v-tooltip bottom>
+              <template #activator="{on, attrs}">
+                <v-icon
+                  class="ml-0"
+                  small
+                  style="cursor: pointer"
+                  v-bind="attrs"
+                  v-on="on"
+                  >mdi-information-outline</v-icon
+                >
+              </template>
+              <span>ID <br />(Legacy ID) </span>
+            </v-tooltip>
+          </v-row>
         </template>
 
         <template #severity>
@@ -343,7 +358,10 @@ export default class ControlTable extends Vue {
         severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
           d.root.hdf.severity
         ),
-        filename: _.get(d, 'sourcedFrom.sourcedFrom.from_file.filename')
+        filename: _.get(
+          d,
+          'sourcedFrom.sourcedFrom.from_file.filename'
+        ) as unknown as string
       };
     });
   }

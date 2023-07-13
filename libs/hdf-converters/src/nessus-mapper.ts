@@ -23,7 +23,12 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['iii', 0.3],
   ['0', 0.0]
 ]);
-const COMPLIANCE_PATH = 'cm:compliance-reference';
+const COMPLIANCE_PATH = 'compliance-reference';
+const COMPLIANCE_CHECK_NAME = 'compliance-check-name';
+const COMPLIANCE_INFO = 'compliance-info';
+const COMPLIANCE_SOLUTION = 'compliance-solution';
+const COMPLIANCE_RESULT = 'compliance-result';
+const COMPLIANCE_ACTUAL_VALUE = 'compliance-actual-value';
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
@@ -41,21 +46,24 @@ function getVersion(): string {
 
 function getId(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH), 'Vuln-ID')[0];
+    return parseRef(
+      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      'Vuln-ID'
+    )[0];
   } else {
-    return _.get(item, 'pluginID');
+    return _.get(item, 'pluginID') as unknown as string;
   }
 }
 function getTitle(item: unknown): string {
-  if (_.has(item, 'cm:compliance-check-name')) {
-    return _.get(item, 'cm:compliance-check-name');
+  if (_.has(item, COMPLIANCE_CHECK_NAME)) {
+    return _.get(item, COMPLIANCE_CHECK_NAME) as unknown as string;
   } else {
-    return _.get(item, 'pluginName');
+    return _.get(item, 'pluginName') as unknown as string;
   }
 }
 function getDesc(item: unknown): string {
-  if (_.has(item, 'cm:compliance-info')) {
-    return parseHtml(_.get(item, 'cm:compliance-info'));
+  if (_.has(item, COMPLIANCE_INFO)) {
+    return parseHtml(_.get(item, COMPLIANCE_INFO));
   } else {
     return parseHtml(formatDesc(item));
   }
@@ -68,8 +76,8 @@ function formatDesc(issue: unknown): string {
   return desc.join('; ') + ';';
 }
 function pluginNistTag(item: unknown): string[] {
-  const family = _.get(item, 'pluginFamily');
-  const id = _.get(item, 'pluginID');
+  const family = _.get(item, 'pluginFamily') as unknown as string;
+  const id = _.get(item, 'pluginID') as unknown as string;
   return NESSUS_PLUGINS_NIST_MAPPING.nistFilter(family, id, DEFAULT_NIST_TAG);
 }
 function cciNistTag(input: string): string[] {
@@ -84,7 +92,9 @@ function parseRef(input: string, key: string): string[] {
 function getImpact(item: unknown): number {
   if (_.has(item, COMPLIANCE_PATH)) {
     return impactMapping(IMPACT_MAPPING)(
-      parseRef(_.get(item, COMPLIANCE_PATH), 'CAT').join('')
+      parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'CAT').join(
+        ''
+      )
     );
   } else {
     return impactMapping(IMPACT_MAPPING)(_.get(item, 'severity'));
@@ -92,8 +102,8 @@ function getImpact(item: unknown): number {
 }
 
 function getCheck(item: unknown): string {
-  if (_.has(item, 'cm:compliance-solution')) {
-    return parseHtml(_.get(item, 'cm:compliance-solution'));
+  if (_.has(item, COMPLIANCE_SOLUTION)) {
+    return parseHtml(_.get(item, COMPLIANCE_SOLUTION));
   } else {
     return '';
   }
@@ -109,34 +119,40 @@ function getFix(item: unknown): string {
 
 function getNist(item: unknown): string[] {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return cciNistTag(_.get(item, COMPLIANCE_PATH));
+    return cciNistTag(_.get(item, COMPLIANCE_PATH) as unknown as string);
   } else {
     return pluginNistTag(item);
   }
 }
 function getCci(item: unknown): string[] {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH), 'CCI');
+    return parseRef(_.get(item, COMPLIANCE_PATH) as unknown as string, 'CCI');
   } else {
     return [];
   }
 }
 function getRid(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH), 'Rule-ID').join(',');
+    return parseRef(
+      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      'Rule-ID'
+    ).join(',');
   } else {
-    return _.get(item, 'pluginID');
+    return _.get(item, 'pluginID') as unknown as string;
   }
 }
 function getStig(item: unknown): string {
   if (_.has(item, COMPLIANCE_PATH)) {
-    return parseRef(_.get(item, COMPLIANCE_PATH), 'STIG-ID').join(',');
+    return parseRef(
+      _.get(item, COMPLIANCE_PATH) as unknown as string,
+      'STIG-ID'
+    ).join(',');
   } else {
     return '';
   }
 }
 function getStatus(item: unknown): ExecJSON.ControlResultStatus {
-  const result = _.get(item, 'cm:compliance-result');
+  const result: string = _.get(item, COMPLIANCE_RESULT, '');
   switch (result) {
     case 'PASSED':
       return ExecJSON.ControlResultStatus.Passed;
@@ -164,7 +180,7 @@ function getStartTime(tag: unknown): string {
       'text'
     );
   } else {
-    return _.get(tag, 'text');
+    return _.get(tag, 'text') as unknown as string;
   }
 }
 
@@ -317,7 +333,7 @@ export class NessusMapper extends BaseConverter {
                 status: {transformer: getStatus},
                 code_desc: {transformer: formatCodeDesc},
                 message: {
-                  path: ['plugin_output', 'cm:compliance-actual-value'],
+                  path: ['plugin_output', COMPLIANCE_ACTUAL_VALUE],
                   transformer: (value: unknown) => {
                     if (value === null || value === undefined) {
                       return value;

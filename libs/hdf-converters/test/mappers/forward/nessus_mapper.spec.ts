@@ -13,6 +13,22 @@ describe('nessus_mapper', () => {
     );
 
     const converted = mapper.toHdf();
+
+    /*
+    fs.writeFileSync(
+      'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3.json',
+      JSON.stringify((converted as ExecJSON.Execution[])[0], null, 2)
+    );
+    fs.writeFileSync(
+      'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.2.json',
+      JSON.stringify((converted as ExecJSON.Execution[])[1], null, 2)
+    );
+    fs.writeFileSync(
+      'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.1.json',
+      JSON.stringify((converted as ExecJSON.Execution[])[2], null, 2)
+    );
+    */
+
     const expectedSet = [
       JSON.parse(
         fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3.json', {
@@ -54,6 +70,22 @@ describe('nessus_mapper_withraw', () => {
     );
 
     const converted = mapper.toHdf();
+
+    /*
+    fs.writeFileSync(
+      'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3-withraw.json',
+      JSON.stringify((converted as ExecJSON.Execution[])[0], null, 2)
+    );
+    fs.writeFileSync(
+      'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.2-withraw.json',
+      JSON.stringify((converted as ExecJSON.Execution[])[1], null, 2)
+    );
+    fs.writeFileSync(
+      'sample_jsons/nessus_mapper/nessus-hdf-10.0.0.1-withraw.json',
+      JSON.stringify((converted as ExecJSON.Execution[])[2], null, 2)
+    );
+    */
+
     const expectedSet = [
       JSON.parse(
         fs.readFileSync(

@@ -46,6 +46,7 @@ export class ConfigService {
 
   frontendStartupSettings(): StartupSettingsDto {
     return new StartupSettingsDto({
+      apiKeysEnabled: this.get('API_KEY_SECRET') ? true : false,
       banner: this.get('WARNING_BANNER') || '',
       classificationBannerColor:
         this.get('CLASSIFICATION_BANNER_COLOR') || 'red',
@@ -64,7 +65,7 @@ export class ConfigService {
     return this.appConfig.getDbConfig();
   }
 
-  getSSLConfig(): false | {rejectUnauthorized: boolean} {
+  getSSLConfig(): false | Record<string, unknown> {
     return this.appConfig.getSSLConfig();
   }
 

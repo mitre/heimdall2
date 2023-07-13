@@ -6,8 +6,10 @@ import {
 import {InjectModel} from '@nestjs/sequelize';
 import {Op} from 'sequelize';
 import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
 import {User} from '../users/user.model';
 import {CreateGroupDto} from './dto/create-group.dto';
+import {UpdateGroupUserRoleDto} from './dto/update-group-user.dto';
 import {Group} from './group.model';
 
 @Injectable()
@@ -49,6 +51,16 @@ export class GroupsService {
     });
   }
 
+  async updateGroupUserRole(
+    group: Group,
+    updateGroupUser: UpdateGroupUserRoleDto
+  ): Promise<GroupUser | undefined> {
+    const groupUser = await GroupUser.findOne({
+      where: {groupId: group.id, userId: updateGroupUser.userId}
+    });
+    return groupUser?.update({role: updateGroupUser.groupRole});
+  }
+
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {
     const owners = (await group.$get('users')).filter(
       (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
@@ -78,7 +90,8 @@ export class GroupsService {
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
-    const group = new Group(createGroupDto);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const group = new Group(createGroupDto as any);
     return group.save();
   }
 

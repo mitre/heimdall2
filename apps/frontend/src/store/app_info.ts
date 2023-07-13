@@ -64,7 +64,7 @@ export class AppInfo extends VuexModule implements IAppInfoState {
             // Null out the request headers for this request
             // in order to avoid sending the local app authorization
             // to Github.
-            headers: {common: ''}
+            headers: new axios.AxiosHeaders({common: ''})
           }
         )
         .then(({data}) => {

@@ -184,7 +184,10 @@ export default class ExportCKLModal extends Vue {
 
   getProfileInfo(file: EvaluationFile | ProfileFile) {
     let result = '';
-    const profile: ExecJSONProfile = _.get(file, 'evaluation.data.profiles[0]');
+    const profile = _.get(
+      file,
+      'evaluation.data.profiles[0]'
+    ) as unknown as ExecJSONProfile;
     if (file.filename) {
       result += `File Name: ${file.filename}\n`;
     }
@@ -210,15 +213,18 @@ export default class ExportCKLModal extends Vue {
   }
 
   addFiledata(file: ExtendedEvaluationFile) {
-    const profileName = _.get(file, 'evaluation.data.profiles[0].name');
+    const profileName = _.get(
+      file,
+      'evaluation.data.profiles[0].name'
+    ) as unknown as string;
     const controls = FilteredDataModule.controls({
       ...this.filter,
       fromFile: [file.uniqueId]
     });
 
-    const rootControls = _.uniqBy(controls, 'root.hdf.wraps.id').map(
-      ({root}) => root
-    );
+    const rootControls = _.uniqBy(controls, (control) =>
+      _.get(control, 'root.hdf.wraps.id')
+    ).map(({root}) => root);
 
     this.outputData.controlSets.push({
       fileName: file.filename,
@@ -288,7 +294,7 @@ export default class ExportCKLModal extends Vue {
 
   getDetails(control: ContextualizedControl, profileName: string): Control {
     return {
-      vid: control.data.id,
+      vid: control.data.tags.gid || control.data.id,
       rid: control.data.tags.rid || control.data.id,
       gid: control.data.tags.gid || control.data.id,
       ruleVersion: control.data.tags.stig_id || control.data.id,
@@ -299,7 +305,10 @@ export default class ExportCKLModal extends Vue {
       checkText: control.hdf.descriptions.check || control.data.tags.check,
       fixText: control.hdf.descriptions.fix || control.data.tags.fix,
       profileName: profileName,
-      startTime: _.get(control, 'hdf.segments![0].start_time'),
+      startTime: _.get(
+        control,
+        'hdf.segments![0].start_time'
+      ) as unknown as string,
       targetKey: 0,
       uuidV4: v4(),
       ccis: control.data.tags.cci,

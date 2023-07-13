@@ -12,17 +12,28 @@
           <span>Supported Formats:</span>
           <ul>
             <li>InSpec/Heimdall Data Format</li>
+            <li>AWS Security Finding Format (ASFF)</li>
             <li>Burp Suite</li>
+            <li>Checklist</li>
             <li>DBProtect</li>
+            <li>Fortify</li>
+            <li>Golang Security Checker (GoSec)</li>
+            <li>Ion Channel</li>
             <li>JFrog Xray</li>
             <li>Nessus</li>
             <li>Netsparker</li>
             <li>Nikto</li>
+            <li>OWASP ZAP</li>
+            <li>Prisma</li>
             <li>Static Analysis Results Interchange Format (SARIF)</li>
             <li>Scoutsuite</li>
             <li>Snyk</li>
-            <li>XCCDF Results</li>
-            <li>OWASP ZAP</li>
+            <li>Tenable (API)</li>
+            <li>Twistlock</li>
+            <li>Veracode</li>
+            <li>
+              XCCDF Results (Supports native OpenSCAP output and SCC output)
+            </li>
           </ul>
         </v-tooltip>
       </v-row>
@@ -40,7 +51,8 @@
           <v-col cols="12" align="center">
             <div class="d-flex flex-column justify-center">
               <span :class="title_class">Heimdall</span>
-              <span v-if="!serverMode" :class="title_class">Lite</span>
+              <span v-if="serverMode" :class="title_class">Server</span>
+              <span v-else :class="title_class">Lite</span>
             </div>
           </v-col>
         </v-row>
@@ -107,10 +119,12 @@ export default class FileReader extends mixins(ServerMixin) {
   /** Callback for our file reader */
   commit_files(files: File[]) {
     Promise.all(
-      files.map((file) => {
-        return InspecIntakeModule.loadFile({file}).catch((err) => {
+      files.map(async (file) => {
+        try {
+          return await InspecIntakeModule.loadFile({file});
+        } catch (err) {
           SnackbarModule.failure(String(err));
-        });
+        }
       })
     )
       // Since some HDF converters can return multiple results sets, we can sometimes have multiple file IDs returned
