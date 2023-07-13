@@ -151,7 +151,7 @@ function extractCci(input: IIdent | IIdent[]): string[] {
 }
 
 function nistTag(input: IIdent | IIdent[]): string[] {
-  return CCI_NIST_MAPPING.nistFilter(
+  return _.uniq(CCI_NIST_MAPPING.nistFilter(
     extractCci(input),
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
     false
@@ -163,7 +163,7 @@ function nistTag(input: IIdent | IIdent[]): string[] {
       .filter((x) => !!x)
       .filter(is_control)
       .map((x) => x.canonize())
-  );
+  ));
 }
 
 /**

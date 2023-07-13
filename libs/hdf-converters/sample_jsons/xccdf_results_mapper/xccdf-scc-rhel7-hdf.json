@@ -361,7 +361,6 @@
             ],
             "nist": [
               "IA-2 (11)",
-              "IA-2 (12)",
               "IA-2 (12)"
             ],
             "severity": "medium",
@@ -8255,7 +8254,6 @@
             ],
             "nist": [
               "IA-3",
-              "IA-3",
               "CM-6 b"
             ],
             "severity": "medium",
@@ -8589,8 +8587,7 @@
             ],
             "nist": [
               "IA-3",
-              "CM-6 b",
-              "IA-3"
+              "CM-6 b"
             ],
             "severity": "medium",
             "description": "Automatically mounting file systems permits easy introduction of unknown devices, thereby facilitating malicious activity.\n\nSatisfies: SRG-OS-000114-GPOS-00059, SRG-OS-000378-GPOS-00163, SRG-OS-000480-GPOS-00227",
@@ -21970,9 +21967,7 @@
             ],
             "nist": [
               "AC-2 (4)",
-              "AU-12 c",
-              "AC-2 (4)",
-              "AC-2 (4)"
+              "AU-12 c"
             ],
             "severity": "medium",
             "description": "Without generating audit records that are specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.\n\nAudit records can be generated from various components within the information system (e.g., module or policy filter).\n\nSatisfies: SRG-OS-000004-GPOS-00004, SRG-OS-000239-GPOS-00089, SRG-OS-000240-GPOS-00090, SRG-OS-000241-GPOS-00091, SRG-OS-000303-GPOS-00120, SRG-OS-000476-GPOS-00221",
@@ -22165,9 +22160,7 @@
             ],
             "nist": [
               "AC-2 (4)",
-              "AC-2 (4)",
-              "AU-12 c",
-              "AC-2 (4)"
+              "AU-12 c"
             ],
             "severity": "medium",
             "description": "Without generating audit records that are specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.\n\nAudit records can be generated from various components within the information system (e.g., module or policy filter).",
@@ -22360,9 +22353,7 @@
             ],
             "nist": [
               "AC-2 (4)",
-              "AU-12 c",
-              "AC-2 (4)",
-              "AC-2 (4)"
+              "AU-12 c"
             ],
             "severity": "medium",
             "description": "Without generating audit records that are specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.\n\nAudit records can be generated from various components within the information system (e.g., module or policy filter).",
@@ -22555,9 +22546,7 @@
             ],
             "nist": [
               "AC-2 (4)",
-              "AU-12 c",
-              "AC-2 (4)",
-              "AC-2 (4)"
+              "AU-12 c"
             ],
             "severity": "medium",
             "description": "Without generating audit records that are specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.\n\nAudit records can be generated from various components within the information system (e.g., module or policy filter).",
@@ -22750,9 +22739,7 @@
             ],
             "nist": [
               "AC-2 (4)",
-              "AU-12 c",
-              "AC-2 (4)",
-              "AC-2 (4)"
+              "AU-12 c"
             ],
             "severity": "medium",
             "description": "Without generating audit records that are specific to the security and mission needs of the organization, it would be difficult to establish, correlate, and investigate the events relating to an incident or identify those responsible for one.\n\nAudit records can be generated from various components within the information system (e.g., module or policy filter).",
@@ -24367,7 +24354,6 @@
             "nist": [
               "SC-8 (2)",
               "SC-8",
-              "SC-8 (2)",
               "SC-8 (1)"
             ],
             "severity": "medium",
@@ -30280,7 +30266,6 @@
             ],
             "nist": [
               "IA-2 (12)",
-              "IA-2 (12)",
               "IA-2 (11)"
             ],
             "severity": "medium",
@@ -30457,7 +30442,6 @@
             ],
             "nist": [
               "IA-2 (11)",
-              "IA-2 (12)",
               "IA-2 (12)"
             ],
             "severity": "medium",
@@ -30641,7 +30625,6 @@
               "CCI-001948"
             ],
             "nist": [
-              "IA-2 (12)",
               "IA-2 (12)",
               "IA-2 (11)"
             ],
@@ -30976,7 +30959,7 @@
           ]
         }
       ],
-      "sha256": "0a2846f49c3ff1e32b1aae5fe5f7742c3d23d39aae2fe0b0eeaa063b40134eef"
+      "sha256": "ace55b38024622a4ddea85d6c4af083d3df516e99cf5337419f9e4dd9a1c91db"
     }
   ],
   "passthrough": {
