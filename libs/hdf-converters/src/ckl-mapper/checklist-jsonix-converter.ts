@@ -478,20 +478,28 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     }
   }
 
-  getDescriptions(
-    descriptions: ExecJSON.ControlDescription[],
-    label: string
-  ): string {
-    for (const description of descriptions) {
-      if (description.label === label) {
-        return description.data;
-      }
+  getFindingDetails(results: ExecJSON.ControlResult[]): string {
+    if (typeof results === 'undefined') {
+      return '';
+    } else {
+      return results.map((result) => {
+        if (result.message) {
+          return `${result.status}\n${result.code_desc}\n${result.message}`;
+        } else if (result.skip_message) {
+          return `${result.status}\n${result.code_desc}\n${result.skip_message}`;
+        } else {
+          return `${result.status}\n${result.code_desc}`;
+        }
+      }).join('\n--------------------------------\n');
     }
-    throw new Error(
-      `Unable to match description label "${label}" within descriptions.`
-    );
   }
 
+/**
+ * This function is assuming the hdf does not have 'passthrough.checklist' object
+ * therefore would also not have checklist specific control.tags
+ * @param hdf 
+ * @returns 
+ */
   hdfToIntermediateObject(hdf: ExecJSON.Execution): ChecklistObject {
     const stigs: ChecklistStig[] = [];
     const vulns: ChecklistVuln[] = [];
@@ -549,9 +557,9 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           targetKey: '',
           stigUuid: '',
           legacyId: control.tags.Legacy_ID ?? '',
-          cciRef: '', //this.getCciRefs(control.)'',
-          comments: null,
-          findingdetails: null,
+          cciRef: control.tags.cci ?? '',
+          comments: getDescription(control.descriptions as ExecJSON.ControlDescription[], 'comments') ?? null,
+          findingdetails: this.getFindingDetails(control.results) ?? '',
           severityjustification: null,
           severityoverride: Severityoverride.Empty
         };
