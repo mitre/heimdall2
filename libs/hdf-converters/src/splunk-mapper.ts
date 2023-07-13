@@ -245,7 +245,7 @@ export class SplunkMapper {
       }
 
       // Check if response schema is malformed
-      if (_.has(queryStatus, ['data', 'entry'[0], 'content'])) {
+      if (_.has(queryStatus, 'data.entry[0].content')) {
         if (queryStatus.data.entry.length !== 1) {
           clearTimeout(queryTimer);
           clearInterval(awaitJob);
