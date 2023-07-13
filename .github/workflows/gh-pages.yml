@@ -19,7 +19,7 @@ jobs:
         run: yarn frontend install --frozen-lockfile
 
       - name: Build Heimdall Lite
-        run: yarn frontend build
+        run: yarn frontend build --mode development
 
       - name: Write Heimdall-Lite CNAME file
         run: 'echo "heimdall-lite.mitre.org" > ./dist/frontend/CNAME'

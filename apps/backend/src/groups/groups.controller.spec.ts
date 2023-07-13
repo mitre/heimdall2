@@ -120,8 +120,11 @@ describe('GroupsController', () => {
     it('findForUser should return groups the user is a member of', async () => {
       expect.assertions(1);
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
+      const publicGroups = (await groupsService.findAll()).filter(
+        (group) => group.public && group.id !== privateGroup.id
+      );
       const groups = await groupsController.findForUser({user: basicUser});
-      expect(groups.length).toEqual(1);
+      expect(groups.length).toEqual(1 + publicGroups.length);
     });
 
     it('findForUser should return users in groups the user is a member of', async () => {

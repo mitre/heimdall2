@@ -16,88 +16,100 @@ const threeOverlayProfilePath = '/static/samples/example-3-layer-overlay.json';
 const ubuntu1604BaselineResultsPath =
   '/static/samples/ubuntu-16.04-baseline-results.json';
 const acmeOverlayPath = '/static/samples/wrapper-acme-run.json';
+const cleanRhel8ChecklistPath = '/static/samples/clean_rhel_8_checklist.ckl';
+const rhel8ChecklistPath = '/static/samples/rhel_8_checklist.ckl';
+const threeStigChecklistPath = '/static/samples/three_stig_checklist.ckl';
+const ubuntuProfile = '/static/samples/ubuntu_profile.json';
+const veracodeExecJson = '/static/samples/veracode.xml';
 
 import axios from 'axios';
 
 export interface Sample {
   filename: string;
-  data: Function;
   path: string;
 }
 
-function fetch(sample: string) {
-  return axios.get(sample).then(({data}) => data);
+export function fetchSample(sample: Sample): Promise<File> {
+  return axios
+    .get(sample.path, {responseType: 'blob'})
+    .then(({data}) => new File([data], sample.filename));
 }
 
 export const samples: Sample[] = [
   {
     filename: 'Sonarqube Java Heimdall_tools Sample',
-    data: () => fetch(sonarqubeJavaSamplePath),
     path: sonarqubeJavaSamplePath
   },
   {
     filename: 'OWASP ZAP Webgoat Heimdall_tools Sample',
-    data: () => fetch(owaspZapWebgoatPath),
     path: owaspZapWebgoatPath
   },
   {
     filename: 'OWASP ZAP Zero_WebAppSecurity Heimdall_tools Sample',
-    data: () => fetch(owaspZapZeroPath),
     path: owaspZapZeroPath
   },
   {
     filename: 'Fortify Heimdall_tools Sample',
-    data: () => fetch(fortifyHToolsConvWebgoatPath),
     path: fortifyHToolsConvWebgoatPath
   },
   {
     filename: 'AWS S3 Permissions Check',
-    data: () => fetch(awsS3BaselinePath),
     path: awsS3BaselinePath
   },
   {
     filename: 'AWS CIS Foundations Baseline',
-    data: () => fetch(cisAwsFoundationsBaselinePath),
     path: cisAwsFoundationsBaselinePath
   },
   {
     filename: 'NGINX Clean Sample',
-    data: () => fetch(goodNginxResultsPath),
     path: goodNginxResultsPath
   },
   {
     filename: 'NGINX With Failing Tests',
-    data: () => fetch(badNginxPath),
     path: badNginxPath
   },
   {
     filename: 'Red Hat CVE Vulnerability Scan',
-    data: () => fetch(rhelCveVulnerabilityScanBaselineWithFailuresPath),
     path: rhelCveVulnerabilityScanBaselineWithFailuresPath
   },
   {
     filename: 'Red Hat 7 STIG Baseline',
-    data: () => fetch(rhel7ResultsPath),
     path: rhel7ResultsPath
   },
   {
     filename: 'Ubuntu STIG Baseline',
-    data: () => fetch(ubuntu1604BaselineResultsPath),
     path: ubuntu1604BaselineResultsPath
   },
   {
     filename: 'Red Hat With Failing Tests',
-    data: () => fetch(redhatBadPath),
     path: redhatBadPath
   },
   {
     filename: 'Three Layer RHEL7 Overlay Example',
-    data: () => fetch(threeOverlayProfilePath),
     path: threeOverlayProfilePath
   },
   {
     filename: 'Acme Overlay Example',
-    data: () => fetch(acmeOverlayPath),
     path: acmeOverlayPath
+  },
+  {
+    filename: 'Clean RHEL 8 Checklist',
+    path: cleanRhel8ChecklistPath
+  },
+  {
+    filename: 'RHEL 8 Checklist',
+    path: rhel8ChecklistPath
+  },
+  {
+    filename: 'Three Stig Checklist',
+    path: threeStigChecklistPath
+  },
+  {
+    filename: 'Ubuntu Profile',
+    path: ubuntuProfile
+  },
+  {
+    filename: 'Veracode Exec JSON',
+    path: veracodeExecJson
   }
 ];
