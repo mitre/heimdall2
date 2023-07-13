@@ -33,9 +33,7 @@ export const DEFAULT_CANONIZATION_CONFIG = {
 function default_partial_config(
   c?: CanonizationConfig
 ): Required<CanonizationConfig> {
-  return c
-    ? {...DEFAULT_CANONIZATION_CONFIG, ...c}
-    : DEFAULT_CANONIZATION_CONFIG;
+  return {...DEFAULT_CANONIZATION_CONFIG, ...c};
 }
 
 /** Represents a single nist control, or group of controls if the sub specs are vague enoug. */
