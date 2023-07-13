@@ -82,7 +82,7 @@
       <template #[`item.actions`]="{item}">
         <v-tooltip color="secondary" left>
           <template #activator="{on}">
-            <v-icon small title="Info" data-cy="edit" class="mr-2" v-on="on">
+            <v-icon small title="Info" data-cy="info" class="mr-2" v-on="on">
               mdi-information
             </v-icon>
           </template>
