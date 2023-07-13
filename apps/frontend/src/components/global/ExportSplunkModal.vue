@@ -65,7 +65,7 @@
                 </span>
                 <v-btn
                   target="_blank"
-                  href="https://github.com/mitre/heimdall2/wiki/Splunk-Interfacing-Guide"
+                  href="https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections"
                   text
                   color="info"
                   px-0
