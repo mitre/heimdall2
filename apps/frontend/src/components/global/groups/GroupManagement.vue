@@ -2,8 +2,8 @@
   <v-card>
     <v-card-title class="pb-0">
       <GroupModal id="groupModal" :create="true">
-        <template #clickable="{on, attrs}"
-          ><v-btn
+        <template #clickable="{on, attrs}">
+          <v-btn
             color="primary"
             data-cy="createNewGroupBtn"
             class="mb-2"
@@ -34,22 +34,6 @@
             hide-details
           />
         </v-container>
-      </template>
-      <template #[`item.name`]="{item}">
-        <v-tooltip v-if="item.desc !== ''" color="secondary" bottom>
-          <template #activator="{on}">
-            <div v-on="on">{{ item.name }}</div>
-          </template>
-          <v-card color="transparent" flat max-width="300px">
-            <v-card-title> Group Description </v-card-title>
-            <v-card-text>
-              <div v-for="(line, index) in item.desc.split('\n')" :key="index">
-                {{ line }} <br />
-              </div>
-            </v-card-text>
-          </v-card>
-        </v-tooltip>
-        <span v-else>{{ item.name }}</span>
       </template>
       <template #[`item.members`]="{item}">
         <span v-for="user in item.members.slice(0, 3)" :key="user.id">
@@ -96,15 +80,44 @@
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
-        <div v-if="item.role === 'owner' || adminPanel">
+        <v-tooltip color="secondary" left>
+          <template #activator="{on}">
+            <v-icon small title="Info" data-cy="edit" class="mr-2" v-on="on">
+              mdi-information
+            </v-icon>
+          </template>
+          <v-card color="transparent" flat max-width="300px">
+            <span>
+              <v-card-title>{{ item.name }}</v-card-title>
+              <v-card-text>
+                Visibility: {{ item.public ? 'Public' : 'Private' }} <br />
+                Created At: {{ item.createdAt }} <br />
+                Updated At: {{ item.updatedAt }}
+              </v-card-text>
+              <v-card-subtitle>
+                <strong>Group Description</strong>
+              </v-card-subtitle>
+              <v-card-text v-if="item.desc !== ''">
+                <div
+                  v-for="(line, index) in item.desc.split('\n')"
+                  :key="index"
+                >
+                  {{ line }} <br />
+                </div>
+              </v-card-text>
+              <v-card-text v-else>None</v-card-text>
+            </span>
+          </v-card>
+        </v-tooltip>
+        <span v-if="item.role === 'owner' || adminPanel">
           <GroupModal
             id="editGroupModal"
             :create="false"
             :admin="adminPanel"
             :group="item"
           >
-            <template #clickable="{on}"
-              ><v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
+            <template #clickable="{on}">
+              <v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
                 mdi-pencil
               </v-icon>
             </template>
@@ -117,7 +130,7 @@
           >
             mdi-delete
           </v-icon>
-        </div>
+        </span>
       </template>
       <template #no-data> No groups match current selection. </template>
     </v-data-table>
