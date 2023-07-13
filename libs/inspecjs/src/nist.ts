@@ -13,9 +13,7 @@ const REV_RE = /^rev[\s_.]+(\d+)$/i; // Matches Rev_5 etc
 type ParseNist = NistControl | NistRevision | null;
 
 export interface CanonizationConfig {
-  max_specifiers: number;
-
-  // All are assumed false
+  max_specifiers?: number; // default 5: $ rg '<number>' SP_800-53_v5_1_XML.xml | awk -F'[^ ]' '{print length($1)}' | sort -nr | head -1 | xargs -I{} expr \( {} - 6 \) / 3 # this equals 5 as of rev5
   pad_zeros?: boolean; // default false
   allow_letters?: boolean; // default true
   add_spaces?: boolean; // default true
@@ -23,15 +21,21 @@ export interface CanonizationConfig {
   add_periods?: boolean; // default true
 }
 
-function default_partial_config(c: CanonizationConfig): CanonizationConfig {
-  return {
-    pad_zeros: false,
-    allow_letters: true,
-    add_spaces: true,
-    add_parens: true,
-    add_periods: true,
-    ...c
-  };
+export const DEFAULT_CANONIZATION_CONFIG = {
+  max_specifiers: 5,
+  pad_zeros: false,
+  allow_letters: true,
+  add_spaces: true,
+  add_parens: true,
+  add_periods: true
+};
+
+function default_partial_config(
+  c?: CanonizationConfig
+): Required<CanonizationConfig> {
+  return c
+    ? {...DEFAULT_CANONIZATION_CONFIG, ...c}
+    : DEFAULT_CANONIZATION_CONFIG;
 }
 
 /** Represents a single nist control, or group of controls if the sub specs are vague enoug. */
@@ -126,8 +130,8 @@ export class NistControl {
    * This is, unfortunately, slightly expensive.
    * Avoid repeating this if possible.
    */
-  canonize(config: CanonizationConfig): string {
-    config = default_partial_config(config);
+  canonize(c?: CanonizationConfig): string {
+    const config = default_partial_config(c);
     const ss = this.subSpecifiers;
 
     // Build our string. Start with family

@@ -15,15 +15,6 @@ import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
 } from './utils/global';
 
-const nistCanonConfig = {
-  add_spaces: true,
-  allow_letters: true,
-  max_specifiers: 5,
-  pad_zeros: true,
-  add_periods: false,
-  add_parens: true
-};
-
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
   ['high', 0.7],
@@ -171,7 +162,7 @@ function nistTag(input: IIdent | IIdent[]): string[] {
       .map(parse_nist)
       .filter((x) => !!x)
       .filter(is_control)
-      .map((x) => x.canonize(nistCanonConfig))
+      .map((x) => x.canonize())
   );
 }
 
