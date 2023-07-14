@@ -130,7 +130,7 @@
         class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
         <h5 class="mb-2 text-xl"><strong>Profile Info</strong></h5>
-        <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           <!-- Generate an info report for every profile -->
           {{#files}}
           <div class="mx-2 my-2 break-words">
@@ -155,11 +155,13 @@
         class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
         <h5 class="mb-2 text-xl"><strong>Profile Status</strong></h5>
-        <div class="grid grid-flow-row xl:grid-flow-col justify-between">
+        <div
+          class="grid grid-flow-row xl:grid-flow-col justify-between gap-y-4"
+        >
           <!-- Status counts -->
           <div class="px-2 py-2">
             <strong>Count</strong>
-            <div class="columns-2 pt-1">
+            <div class="grid grid-cols-2 pt-1 gap-x-2">
               <div class="flex">
                 <div class="pr-1 print:hidden">{{{icons.circleCheck}}}</div>
                 Passed: {{statistics.passed}}
@@ -188,18 +190,25 @@
           </div>
 
           <!-- Control tests -->
-          <div class="w-11/12 px-2 py-2 whitespace-pre-line">
+          <div class="w-80 px-2 py-2">
             <strong>Checks</strong>
-            Passed results: {{statistics.passedTests}} individual checks passed
-            Failed results: {{statistics.passingTestsFailedControl}} individual
-            checks passed, {{statistics.failed}} failed out of
-            {{statistics.totalTests}} total checks
+            <div class="whitespace-line">
+              <p>
+                Passed results: {{statistics.passedTests}} individual checks
+                passed
+              </p>
+              <p>
+                Failed results: {{statistics.passingTestsFailedControl}}
+                individual checks passed, {{statistics.failedTests}} failed out of
+                {{statistics.totalTests}} total checks
+              </p>
+            </div>
           </div>
 
           <!-- Severity report -->
           <div class="px-2 py-2">
             <strong>Severity</strong>
-            <div class="columns-2 pt-1">
+            <div class="grid grid-cols-2 pt-1 gap-x-2">
               <div class="flex">
                 <div class="pr-1 print:hidden">{{{icons.circleLow}}}</div>
                 Low: {{severity.low}}
@@ -247,7 +256,7 @@
       <h2 class="mb-0">
         <!-- Button def -->
         <button
-          class="[&:not([data-te-collapse-collapsed])]:text-primary group relative flex w-full items-center rounded-t-xl border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+          class="[&:not([data-te-collapse-collapsed])]:text-blue-900 group relative flex w-full items-center rounded-t-xl border-0 bg-white px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
           type="button"
           data-te-collapse-init
           data-te-target="#collapseable-{{fileID}}"
@@ -290,7 +299,7 @@
           <h2 class="mb-0">
             <!-- Button def -->
             <button
-              class="[&:not([data-te-collapse-collapsed])]:text-primary bg-blue group relative flex w-full items-center rounded-t-xl border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+              class="[&:not([data-te-collapse-collapsed])]:text-blue-900 bg-blue group relative flex w-full items-center rounded-t-xl border-0 px-5 py-4 text-left text-base text-neutral-800 transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
               type="button"
               data-te-collapse-init
               data-te-target="#control-accordion-body-{{controlID}}"
@@ -316,7 +325,7 @@
                 >
               </div>
               <!-- Control title -->
-              <span class="pl-4 pr-4 w-2/3 break-all">{{hdf.wraps.title}}</span>
+              <span class="pl-4 pr-4 w-2/3 break-words">{{hdf.wraps.title}}</span>
               <span
                 class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
               >
@@ -416,7 +425,7 @@
       <!-- Generate a control report for every control -->
       {{#controls}}
       <div class="border border-black px-2 py-2">
-        <div class="py-1">
+        <div class="inline-block py-1">
           <!-- Control status indicator -->
           <span class="rounded border border-black px-2 py-1"
             >{{controlStatus.status}}</span
