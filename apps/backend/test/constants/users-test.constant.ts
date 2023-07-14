@@ -1,10 +1,10 @@
-import { Ability } from '@casl/ability';
-import { CreateUserDto } from '../../src/users/dto/create-user.dto';
-import { DeleteUserDto } from '../../src/users/dto/delete-user.dto';
-import { UpdateUserDto } from '../../src/users/dto/update-user.dto';
-import { UserDto } from '../../src/users/dto/user.dto';
-import { User } from '../../src/users/user.model';
-import { FindOptions } from 'sequelize';
+import {Ability} from '@casl/ability';
+import {FindOptions} from 'sequelize';
+import {CreateUserDto} from '../../src/users/dto/create-user.dto';
+import {DeleteUserDto} from '../../src/users/dto/delete-user.dto';
+import {UpdateUserDto} from '../../src/users/dto/update-user.dto';
+import {UserDto} from '../../src/users/dto/user.dto';
+import {User} from '../../src/users/user.model';
 
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
@@ -259,17 +259,17 @@ export const CREATE_USER_DTO_TEST_OBJ_2: CreateUserDto = {
 };
 
 export const CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS: CreateUserDto =
-{
-  email: 'abc@yahoo.com',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123%%%tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  organization: 'Fake Org',
-  role: 'user',
-  creationMethod: 'local'
-};
+  {
+    email: 'abc@yahoo.com',
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123%%%tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_FIRST_NAME: CreateUserDto = {
@@ -297,16 +297,16 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_LAST_NAME: CreateUserDto = {
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ORGANIZATION: CreateUserDto =
-{
-  email: 'abc@yahoo.com',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  role: 'user',
-  creationMethod: 'local'
-};
+  {
+    email: 'abc@yahoo.com',
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_TITLE: CreateUserDto = {
@@ -322,56 +322,56 @@ export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_TITLE: CreateUserDto = {
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_EMAIL_FIELD: CreateUserDto =
-{
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  organization: 'Fake Org',
-  role: 'user',
-  creationMethod: 'local'
-};
+  {
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_EMAIL_FIELD: CreateUserDto =
-{
-  email: 'NotAValidEmail',
-  password: 'LETmeiN123$$$tP',
-  passwordConfirmation: 'LETmeiN123$$$tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  organization: 'Fake Org',
-  role: 'user',
-  creationMethod: 'local'
-};
+  {
+    email: 'NotAValidEmail',
+    password: 'LETmeiN123$$$tP',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD: CreateUserDto =
-{
-  email: 'abc@yahoo.com',
-  passwordConfirmation: 'LETmeiN123$$$tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  organization: 'Fake Org',
-  role: 'user',
-  creationMethod: 'local'
-};
+  {
+    email: 'abc@yahoo.com',
+    passwordConfirmation: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_CONFIRMATION_FIELD: CreateUserDto =
-{
-  email: 'abc@yahoo.com',
-  password: 'LETmeiN123$$$tP',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  title: 'fake title',
-  organization: 'Fake Org',
-  role: 'user',
-  creationMethod: 'local'
-};
+  {
+    email: 'abc@yahoo.com',
+    password: 'LETmeiN123$$$tP',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    title: 'fake title',
+    organization: 'Fake Org',
+    role: 'user',
+    creationMethod: 'local'
+  };
 
 // @ts-ignore
 export const CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_ROLE: CreateUserDto = {
@@ -546,16 +546,16 @@ export const UPDATE_USER_DTO_WITH_ADMIN_ROLE: UpdateUserDto = {
 
 // @ts-ignore
 export const UPDATE_USER_DTO_TEST_WITHOUT_PASSWORD_CONFIRMATION: UpdateUserDto =
-{
-  email: 'abc@yahoo.com',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  organization: 'Fake Org',
-  title: 'fake title',
-  role: 'user',
-  password: 'ABCdefG456!@#pT',
-  currentPassword: 'LETmeiN123$$$tP'
-};
+  {
+    email: 'abc@yahoo.com',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    organization: 'Fake Org',
+    title: 'fake title',
+    role: 'user',
+    password: 'ABCdefG456!@#pT',
+    currentPassword: 'LETmeiN123$$$tP'
+  };
 
 // @ts-ignore
 export const UPDATE_USER_DTO_TEST_WITHOUT_ROLE: UpdateUserDto = {
@@ -571,10 +571,10 @@ export const UPDATE_USER_DTO_TEST_WITHOUT_ROLE: UpdateUserDto = {
 
 // @ts-ignore
 export const UPDATE_USER_DTO_TEST_WITHOUT_FORCE_PASSWORD_CHANGE: UpdateUserDto =
-{
-  email: 'changed@yahoo.com',
-  currentPassword: 'LETmeiN123$$$tP'
-};
+  {
+    email: 'changed@yahoo.com',
+    currentPassword: 'LETmeiN123$$$tP'
+  };
 
 // @ts-ignore
 export const UPDATE_USER_DTO_SETUP_FORCE_PASSWORD_CHANGE: UpdateUserDto = {
@@ -595,31 +595,31 @@ export const UPDATE_USER_DTO_TEST_WITH_NOT_COMPLEX_PASSWORD: UpdateUserDto = {
 };
 
 export const UPDATE_USER_DTO_TEST_OBJ_WITH_MISSMATCHING_PASSWORDS: UpdateUserDto =
-{
-  email: 'updatedemail@yahoo.com',
-  firstName: 'Updated',
-  lastName: 'Name',
-  organization: 'Updated Org',
-  title: 'updated title',
-  role: 'user',
-  password: 'ABCdefG456!@#pT',
-  passwordConfirmation: 'defABCg789*(%Pt',
-  currentPassword: 'LETmeiN123$$$tP',
-  forcePasswordChange: false
-};
+  {
+    email: 'updatedemail@yahoo.com',
+    firstName: 'Updated',
+    lastName: 'Name',
+    organization: 'Updated Org',
+    title: 'updated title',
+    role: 'user',
+    password: 'ABCdefG456!@#pT',
+    passwordConfirmation: 'defABCg789*(%Pt',
+    currentPassword: 'LETmeiN123$$$tP',
+    forcePasswordChange: false
+  };
 
 // @ts-ignore
 export const UPDATE_USER_DTO_WITH_MISSING_CURRENT_PASSWORD_FIELD: UpdateUserDto =
-{
-  email: 'abc@yahoo.com',
-  firstName: 'Test',
-  lastName: 'Dummy',
-  organization: 'Fake Org',
-  title: 'fake title',
-  role: 'user',
-  password: 'ABCdefG456!@#pT',
-  passwordConfirmation: 'ABCdefG456!@#pT'
-};
+  {
+    email: 'abc@yahoo.com',
+    firstName: 'Test',
+    lastName: 'Dummy',
+    organization: 'Fake Org',
+    title: 'fake title',
+    role: 'user',
+    password: 'ABCdefG456!@#pT',
+    passwordConfirmation: 'ABCdefG456!@#pT'
+  };
 
 export const DELETE_USER_DTO_TEST_OBJ: DeleteUserDto = {
   password: 'LETmeiN123$$$tP'
@@ -661,18 +661,48 @@ export const USER_DTO_WITHOUT_TITLE = new UserDto(TEST_USER_WITHOUT_TITLE);
 export const USER_DTO_ARRAY: UserDto[] = [USER_ONE_DTO, USER_TWO_DTO];
 
 export const USERS_SERVICE_MOCK = {
-  async adminFindAllUsers(): Promise<User[]> { return [] },
-  async findAllUsers(): Promise<User[]> { return [] },
-  async count(): Promise<number> { return 1 },
-  async findById(id: string): Promise<User> { return new User() },
-  async findByEmail(email: string): Promise<User> { return new User() },
-  async create(createUserDto: CreateUserDto): Promise<User> { return new User() },
-  async update(userToUpdate: User, updateUserDto: UpdateUserDto, abac: Ability): Promise<User> { return new User() },
-  async updateLoginMetadata(user: User): Promise<void> { },
-  async updateUserSecret(user: User): Promise<void> { },
-  async remove(userToDelete: User, deleteUserDto: DeleteUserDto, abac: Ability): Promise<User> { return new User() },
-  async findByPkBang(identifier: string | number | Buffer | undefined): Promise<User> { return new User() },
-  async findOneBang(options: FindOptions | undefined): Promise<User> { return new User() }
-}
+  async adminFindAllUsers(): Promise<User[]> {
+    return [];
+  },
+  async findAllUsers(): Promise<User[]> {
+    return [];
+  },
+  async count(): Promise<number> {
+    return 1;
+  },
+  async findById(id: string): Promise<User> {
+    return new User();
+  },
+  async findByEmail(email: string): Promise<User> {
+    return new User();
+  },
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    return new User();
+  },
+  async update(
+    userToUpdate: User,
+    updateUserDto: UpdateUserDto,
+    abac: Ability
+  ): Promise<User> {
+    return new User();
+  },
+  async updateLoginMetadata(user: User): Promise<void> {},
+  async updateUserSecret(user: User): Promise<void> {},
+  async remove(
+    userToDelete: User,
+    deleteUserDto: DeleteUserDto,
+    abac: Ability
+  ): Promise<User> {
+    return new User();
+  },
+  async findByPkBang(
+    identifier: string | number | Buffer | undefined
+  ): Promise<User> {
+    return new User();
+  },
+  async findOneBang(options: FindOptions | undefined): Promise<User> {
+    return new User();
+  }
+};
 
 /* eslint-enable @typescript-eslint/ban-ts-comment */

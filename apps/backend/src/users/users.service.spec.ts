@@ -1,11 +1,12 @@
-import { Ability } from '@casl/ability';
+import {Ability} from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
   NotFoundException
 } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { Test } from '@nestjs/testing';
+import {SequelizeModule} from '@nestjs/sequelize';
+import {Test} from '@nestjs/testing';
+import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
 import {
   CREATE_ADMIN_DTO,
   CREATE_SECOND_ADMIN_DTO,
@@ -32,21 +33,20 @@ import {
   UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
   USER_ONE_DTO
 } from '../../test/constants/users-test.constant';
-import { AuthzModule } from '../authz/authz.module';
-import { AuthzService } from '../authz/authz.service';
-import { DatabaseModule } from '../database/database.module';
-import { DatabaseService } from '../database/database.service';
-import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
-import { Evaluation } from '../evaluations/evaluation.model';
-import { GroupEvaluation } from '../group-evaluations/group-evaluation.model';
-import { GroupUser } from '../group-users/group-user.model';
-import { Group } from '../groups/group.model';
-import { SlimUserDto } from './dto/slim-user.dto';
-import { UserDto } from './dto/user.dto';
-import { User } from './user.model';
-import { UsersService } from './users.service';
-import { GROUPS_SERVICE_MOCK } from '../../test/constants/groups-test.constant';
-import { GroupsService } from '../groups/groups.service';
+import {AuthzModule} from '../authz/authz.module';
+import {AuthzService} from '../authz/authz.service';
+import {DatabaseModule} from '../database/database.module';
+import {DatabaseService} from '../database/database.service';
+import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupUser} from '../group-users/group-user.model';
+import {Group} from '../groups/group.model';
+import {GroupsService} from '../groups/groups.service';
+import {SlimUserDto} from './dto/slim-user.dto';
+import {UserDto} from './dto/user.dto';
+import {User} from './user.model';
+import {UsersService} from './users.service';
 
 describe('UsersService', () => {
   let authzService: AuthzService;
@@ -69,7 +69,12 @@ describe('UsersService', () => {
         ]),
         AuthzModule
       ],
-      providers: [UsersService, DatabaseService, AuthzService, { provide: GroupsService, useValue: GROUPS_SERVICE_MOCK }]
+      providers: [
+        UsersService,
+        DatabaseService,
+        AuthzService,
+        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK}
+      ]
     }).compile();
 
     authzService = module.get<AuthzService>(AuthzService);
@@ -371,7 +376,7 @@ describe('UsersService', () => {
 
     it('should update a user without updating password', async () => {
       expect.assertions(8);
-      const { encryptedPassword } = user;
+      const {encryptedPassword} = user;
 
       await usersService.update(
         user,
@@ -397,7 +402,7 @@ describe('UsersService', () => {
 
     it('should update a user without matching password when admin', async () => {
       expect.assertions(2);
-      const { encryptedPassword } = user;
+      const {encryptedPassword} = user;
 
       const updateUser = await usersService.update(
         user,
@@ -453,7 +458,7 @@ describe('UsersService', () => {
     describe('UpdateLoginMetadata', () => {
       it('should update user lastLogin and loginCount', async () => {
         expect.assertions(2);
-        const { lastLogin } = user;
+        const {lastLogin} = user;
 
         await usersService.updateLoginMetadata(user);
 
