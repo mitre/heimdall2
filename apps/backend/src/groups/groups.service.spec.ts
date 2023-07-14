@@ -25,6 +25,8 @@ import { UsersModule } from '../users/users.module';
 import { UsersService } from '../users/users.service';
 import { Group } from './group.model';
 import { GroupsService } from './groups.service';
+import { GroupUser } from '../group-users/group-user.model';
+import { User } from '../users/user.model';
 
 describe('GroupsService', () => {
   let groupsService: GroupsService;
@@ -36,16 +38,18 @@ describe('GroupsService', () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([Group, Evaluation]),
+        SequelizeModule.forFeature([Group, GroupUser, Evaluation, User]),
         GroupEvaluationsModule,
         GroupUsersModule,
         EvaluationsModule,
-        UsersModule
+        // UsersModule
       ],
       providers: [
-        { provide: GroupsService, useValue: GROUPS_SERVICE_MOCK },
+        // { provide: GroupsService, useValue: GROUPS_SERVICE_MOCK },
+        GroupsService,
         DatabaseService,
-        { provide: UsersService, useValue: USERS_SERVICE_MOCK },
+        // { provide: UsersService, useValue: USERS_SERVICE_MOCK },
+        UsersService,
         EvaluationsService
       ]
     }).compile();
