@@ -143,12 +143,10 @@ export class UsersService {
       );
     }
     // Clean up groups owned by user
-    (await this.groupsService.findAll()).forEach((group) => {
-      (async () => {
-        if (group.users.some((user) => user.id === userToDelete.id)) {
-          await this.groupsService.setDefaultToOwner(group, userToDelete.id);
-        }
-      })
+    (await this.groupsService.findAll()).forEach(async (group) => {
+      if (group.users.some((user) => user.id === userToDelete.id)) {
+        await this.groupsService.setDefaultToOwner(group, userToDelete.id);
+      }
     });
     await userToDelete.destroy();
     return userToDelete;
