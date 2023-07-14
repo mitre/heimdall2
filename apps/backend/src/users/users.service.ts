@@ -1,21 +1,21 @@
-import {Ability} from '@casl/ability';
+import { Ability } from '@casl/ability';
 import {
   BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException
 } from '@nestjs/common';
-import {InjectModel} from '@nestjs/sequelize';
-import {compare, hash} from 'bcryptjs';
-import {FindOptions} from 'sequelize/types';
-import {v4} from 'uuid';
-import {AuthnService} from '../authn/authn.service';
-import {Action} from '../casl/casl-ability.factory';
-import {GroupsService} from '../groups/groups.service';
-import {CreateUserDto} from './dto/create-user.dto';
-import {DeleteUserDto} from './dto/delete-user.dto';
-import {UpdateUserDto} from './dto/update-user.dto';
-import {User} from './user.model';
+import { InjectModel } from '@nestjs/sequelize';
+import { compare, hash } from 'bcryptjs';
+import { FindOptions } from 'sequelize/types';
+import { v4 } from 'uuid';
+import { AuthnService } from '../authn/authn.service';
+import { Action } from '../casl/casl-ability.factory';
+import { GroupsService } from '../groups/groups.service';
+import { CreateUserDto } from './dto/create-user.dto';
+import { DeleteUserDto } from './dto/delete-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './user.model';
 
 @Injectable()
 export class UsersService {
@@ -23,7 +23,7 @@ export class UsersService {
     @InjectModel(User)
     private readonly userModel: typeof User,
     private readonly groupsService: GroupsService
-  ) {}
+  ) { }
 
   async adminFindAllUsers(): Promise<User[]> {
     return this.userModel.findAll<User>();
@@ -134,7 +134,7 @@ export class UsersService {
         );
       }
     }
-    const adminCount = await this.userModel.count({where: {role: 'admin'}});
+    const adminCount = await this.userModel.count({ where: { role: 'admin' } });
     // Do not allow the administrator to destroy the only
     // administrator account
     if (userToDelete.role === 'admin' && adminCount < 2) {
@@ -143,10 +143,12 @@ export class UsersService {
       );
     }
     // Clean up groups owned by user
-    (await this.groupsService.findAll()).forEach(async (group) => {
-      if (group.users.some((user) => user.id === userToDelete.id)) {
-        await this.groupsService.setDefaultToOwner(group, userToDelete.id);
-      }
+    (await this.groupsService.findAll()).forEach((group) => {
+      (async () => {
+        if (group.users.some((user) => user.id === userToDelete.id)) {
+          await this.groupsService.setDefaultToOwner(group, userToDelete.id);
+        }
+      })
     });
     await userToDelete.destroy();
     return userToDelete;
