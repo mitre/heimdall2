@@ -1,32 +1,29 @@
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
-import { SequelizeModule } from '@nestjs/sequelize';
-import { Test } from '@nestjs/testing';
+import {ForbiddenException, NotFoundException} from '@nestjs/common';
+import {SequelizeModule} from '@nestjs/sequelize';
+import {Test} from '@nestjs/testing';
 import {
   EVALUATION_1,
   EVALUATION_WITH_TAGS_1
 } from '../../test/constants/evaluations-test.constant';
-import { GROUPS_SERVICE_MOCK, GROUP_1 } from '../../test/constants/groups-test.constant';
+import {GROUP_1} from '../../test/constants/groups-test.constant';
 import {
   CREATE_USER_DTO_TEST_OBJ,
-  CREATE_USER_DTO_TEST_OBJ_2,
-  USERS_SERVICE_MOCK
+  CREATE_USER_DTO_TEST_OBJ_2
 } from '../../test/constants/users-test.constant';
-import { DatabaseModule } from '../database/database.module';
-import { DatabaseService } from '../database/database.service';
-import { EvaluationTagDto } from '../evaluation-tags/dto/evaluation-tag.dto';
-import { EvaluationTag } from '../evaluation-tags/evaluation-tag.model';
-import { Evaluation } from '../evaluations/evaluation.model';
-import { EvaluationsModule } from '../evaluations/evaluations.module';
-import { EvaluationsService } from '../evaluations/evaluations.service';
-import { GroupEvaluationsModule } from '../group-evaluations/group-evaluations.module';
-import { GroupUsersModule } from '../group-users/group-users.module';
-import { UserDto } from '../users/dto/user.dto';
-import { UsersModule } from '../users/users.module';
-import { UsersService } from '../users/users.service';
-import { Group } from './group.model';
-import { GroupsService } from './groups.service';
-import { GroupUser } from '../group-users/group-user.model';
-import { User } from '../users/user.model';
+import {DatabaseModule} from '../database/database.module';
+import {DatabaseService} from '../database/database.service';
+import {EvaluationTagDto} from '../evaluation-tags/dto/evaluation-tag.dto';
+import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
+import {Evaluation} from '../evaluations/evaluation.model';
+import {EvaluationsService} from '../evaluations/evaluations.service';
+import {GroupEvaluationsModule} from '../group-evaluations/group-evaluations.module';
+import {GroupUser} from '../group-users/group-user.model';
+import {GroupUsersModule} from '../group-users/group-users.module';
+import {UserDto} from '../users/dto/user.dto';
+import {User} from '../users/user.model';
+import {UsersService} from '../users/users.service';
+import {Group} from './group.model';
+import {GroupsService} from './groups.service';
 
 describe('GroupsService', () => {
   let groupsService: GroupsService;
@@ -38,17 +35,19 @@ describe('GroupsService', () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([Group, GroupUser, Evaluation, EvaluationTag, User]),
+        SequelizeModule.forFeature([
+          Group,
+          GroupUser,
+          Evaluation,
+          EvaluationTag,
+          User
+        ]),
         GroupEvaluationsModule,
-        GroupUsersModule,
-        // EvaluationsModule,
-        // UsersModule
+        GroupUsersModule
       ],
       providers: [
-        // { provide: GroupsService, useValue: GROUPS_SERVICE_MOCK },
         GroupsService,
         DatabaseService,
-        // { provide: UsersService, useValue: USERS_SERVICE_MOCK },
         UsersService,
         EvaluationsService
       ]
@@ -163,7 +162,7 @@ describe('GroupsService', () => {
       });
       await groupsService.addEvaluationToGroup(group, evaluation);
       const groupEvaluations = await group.$get('evaluations', {
-        include: [{ model: EvaluationTag }]
+        include: [{model: EvaluationTag}]
       });
       expect(groupEvaluations).toHaveLength(1);
       expect(groupEvaluations[0].filename).toEqual(evaluation.filename);
@@ -193,7 +192,7 @@ describe('GroupsService', () => {
       expect(await group.$get('evaluations')).toHaveLength(2);
       await groupsService.removeEvaluationFromGroup(group, evaluationOne);
       const groupEvaluations = await group.$get('evaluations', {
-        include: [{ model: EvaluationTag }]
+        include: [{model: EvaluationTag}]
       });
       expect(groupEvaluations).toHaveLength(1);
       expect(groupEvaluations[0].filename).toEqual(evaluationTwo.filename);
