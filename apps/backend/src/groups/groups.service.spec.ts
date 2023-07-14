@@ -38,10 +38,10 @@ describe('GroupsService', () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([Group, GroupUser, Evaluation, User]),
+        SequelizeModule.forFeature([Group, GroupUser, Evaluation, EvaluationTag, User]),
         GroupEvaluationsModule,
         GroupUsersModule,
-        EvaluationsModule,
+        // EvaluationsModule,
         // UsersModule
       ],
       providers: [
