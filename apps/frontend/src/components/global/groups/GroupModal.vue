@@ -24,7 +24,7 @@
                 v-model="groupInfo.name"
                 data-cy="name"
                 label="Group Name"
-                @keyup.enter="save"
+                @input="checkUniqueName"
               />
             </v-col>
             <v-col>
@@ -82,7 +82,7 @@
           data-cy="closeAndSaveChanges"
           color="primary"
           text
-          :disabled="!saveable"
+          :disabled="!saveable || !uniqueName"
           @click="save"
         >
           Save
@@ -170,6 +170,15 @@ export default class GroupModal extends Vue {
       if (!saveable) SnackbarModule.failure(`Must have at least 1 owner`);
       this.saveable = saveable;
     }
+  }
+
+  // Upon group name change, the component will detect whether the current state is acceptable
+  uniqueName = true;
+  checkUniqueName(name: string) {
+    this.uniqueName = !GroupsModule.allGroups.some(
+      (group) => group.name === name && group.id !== this.groupInfo.id
+    );
+    if (!this.uniqueName) SnackbarModule.failure(`Group names must be unique`);
   }
 
   async save(): Promise<void> {

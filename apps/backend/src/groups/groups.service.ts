@@ -90,14 +90,28 @@ export class GroupsService {
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
+    if (
+      (await this.groupModel.findAll({where: {name: createGroupDto.name}}))
+        .length > 0
+    ) {
+      throw new ForbiddenException(
+        'Duplicate key detected. The names of groups must be unique.'
+      );
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const group = new Group(createGroupDto as any);
     return group.save();
   }
 
   async update(groupToUpdate: Group, groupDto: CreateGroupDto): Promise<Group> {
+    if (
+      (await this.groupModel.findAll({where: {name: groupDto.name}})).length > 1
+    ) {
+      throw new ForbiddenException(
+        'Duplicate key detected. The names of groups must be unique.'
+      );
+    }
     groupToUpdate.update(groupDto);
-
     return groupToUpdate.save();
   }
 
