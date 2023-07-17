@@ -670,37 +670,41 @@ export const USERS_SERVICE_MOCK = {
   async count(): Promise<number> {
     return 1;
   },
-  async findById(id: string): Promise<User> {
+  async findById(_id: string): Promise<User> {
     return new User();
   },
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(_email: string): Promise<User> {
     return new User();
   },
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(_createUserDto: CreateUserDto): Promise<User> {
     return new User();
   },
   async update(
-    userToUpdate: User,
-    updateUserDto: UpdateUserDto,
-    abac: Ability
+    _userToUpdate: User,
+    _updateUserDto: UpdateUserDto,
+    _abac: Ability
   ): Promise<User> {
     return new User();
   },
-  async updateLoginMetadata(user: User): Promise<void> {},
-  async updateUserSecret(user: User): Promise<void> {},
+  async updateLoginMetadata(_user: User): Promise<void> {
+    return;
+  },
+  async updateUserSecret(_user: User): Promise<void> {
+    return;
+  },
   async remove(
-    userToDelete: User,
-    deleteUserDto: DeleteUserDto,
-    abac: Ability
+    _userToDelete: User,
+    _deleteUserDto: DeleteUserDto,
+    _abac: Ability
   ): Promise<User> {
     return new User();
   },
   async findByPkBang(
-    identifier: string | number | Buffer | undefined
+    _identifier: string | number | Buffer | undefined
   ): Promise<User> {
     return new User();
   },
-  async findOneBang(options: FindOptions | undefined): Promise<User> {
+  async findOneBang(_options: FindOptions | undefined): Promise<User> {
     return new User();
   }
 };

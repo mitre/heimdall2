@@ -27,44 +27,53 @@ export const GROUPS_SERVICE_MOCK = {
   async count(): Promise<number> {
     return 1;
   },
-  async findByPkBang(id: string): Promise<Group> {
+  async findByPkBang(_id: string): Promise<Group> {
     return new Group();
   },
-  async findByIds(id: string[]): Promise<Group[]> {
+  async findByIds(_id: string[]): Promise<Group[]> {
     return [];
   },
   async addUserToGroup(
-    group: Group,
-    user: User,
-    role: string
-  ): Promise<void> {},
+    _group: Group,
+    _user: User,
+    _role: string
+  ): Promise<void> {
+    return;
+  },
   async updateGroupUserRole(
-    group: Group,
-    updateGroupUser: UpdateGroupUserRoleDto
+    _group: Group,
+    _updateGroupUser: UpdateGroupUserRoleDto
   ): Promise<GroupUser | undefined> {
     return undefined;
   },
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {
     return group.$remove('user', user);
   },
-  async setDefaultToOwner(): Promise<void> {},
+  async setDefaultToOwner(): Promise<void> {
+    return;
+  },
   async addEvaluationToGroup(
-    group: Group,
-    evaluation: Evaluation
-  ): Promise<void> {},
+    _group: Group,
+    _evaluation: Evaluation
+  ): Promise<void> {
+    return;
+  },
   async removeEvaluationFromGroup(
-    group: Group,
-    evaluation: Evaluation
+    _group: Group,
+    _evaluation: Evaluation
   ): Promise<Group> {
     return new Group();
   },
-  async create(createGroupDto: CreateGroupDto): Promise<Group> {
+  async create(_createGroupDto: CreateGroupDto): Promise<Group> {
     return new Group();
   },
-  async update(groupToUpdate: Group, groupDto: CreateGroupDto): Promise<Group> {
+  async update(
+    _groupToUpdate: Group,
+    _groupDto: CreateGroupDto
+  ): Promise<Group> {
     return new Group();
   },
-  async remove(groupToDelete: Group): Promise<Group> {
+  async remove(_groupToDelete: Group): Promise<Group> {
     return new Group();
   }
 };
