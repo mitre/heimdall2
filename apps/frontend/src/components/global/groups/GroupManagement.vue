@@ -2,8 +2,8 @@
   <v-card>
     <v-card-title class="pb-0">
       <GroupModal id="groupModal" :create="true">
-        <template #clickable="{on, attrs}"
-          ><v-btn
+        <template #clickable="{on, attrs}">
+          <v-btn
             color="primary"
             data-cy="createNewGroupBtn"
             class="mb-2"
@@ -80,15 +80,44 @@
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
-        <div v-if="item.role === 'owner' || adminPanel">
+        <v-tooltip color="secondary" left>
+          <template #activator="{on}">
+            <v-icon small title="Info" data-cy="info" class="mr-2" v-on="on">
+              mdi-information
+            </v-icon>
+          </template>
+          <v-card color="transparent" flat max-width="600px" overflow-y-auto>
+            <span>
+              <v-card-title>{{ item.name }}</v-card-title>
+              <v-card-text>
+                <div>Visibility: {{ item.public ? 'Public' : 'Private' }}</div>
+                <div>Created At: {{ item.createdAt }}</div>
+                <div>Updated At: {{ item.updatedAt }}</div>
+              </v-card-text>
+              <v-card-subtitle>
+                <strong>Group Description</strong>
+              </v-card-subtitle>
+              <v-card-text v-if="item.desc !== ''">
+                <div
+                  v-for="(line, index) in item.desc.split('\n')"
+                  :key="index"
+                >
+                  {{ line }} <br />
+                </div>
+              </v-card-text>
+              <v-card-text v-else>None</v-card-text>
+            </span>
+          </v-card>
+        </v-tooltip>
+        <span v-if="item.role === 'owner' || adminPanel">
           <GroupModal
             id="editGroupModal"
             :create="false"
             :admin="adminPanel"
             :group="item"
           >
-            <template #clickable="{on}"
-              ><v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
+            <template #clickable="{on}">
+              <v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
                 mdi-pencil
               </v-icon>
             </template>
@@ -101,7 +130,7 @@
           >
             mdi-delete
           </v-icon>
-        </div>
+        </span>
       </template>
       <template #no-data> No groups match current selection. </template>
     </v-data-table>

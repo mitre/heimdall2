@@ -7,17 +7,20 @@ import {User} from '../../src/users/user.model';
 
 export const GROUP_1 = {
   name: 'Heimdall Group',
-  public: true
+  public: true,
+  desc: ''
 };
 
 export const PRIVATE_GROUP = {
   name: 'Private Heimdall Group',
-  public: false
+  public: false,
+  desc: 'Test description'
 };
 
 export const UPDATE_GROUP: CreateGroupDto = {
   name: 'Updated Group',
-  public: true
+  public: true,
+  desc: 'Updated test description'
 };
 
 export const GROUPS_SERVICE_MOCK = {
