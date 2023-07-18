@@ -90,9 +90,9 @@
             <span>
               <v-card-title>{{ item.name }}</v-card-title>
               <v-card-text>
-                Visibility: {{ item.public ? 'Public' : 'Private' }} <br />
-                Created At: {{ item.createdAt }} <br />
-                Updated At: {{ item.updatedAt }}
+                <div>Visibility: {{ item.public ? 'Public' : 'Private' }}</div>
+                <div>Created At: {{ item.createdAt }}</div>
+                <div>Updated At: {{ item.updatedAt }}</div>
               </v-card-text>
               <v-card-subtitle>
                 <strong>Group Description</strong>

@@ -37,7 +37,7 @@ export class Group extends Model {
 
   @AllowNull(false)
   @Default('')
-  @Column(DataType.STRING)
+  @Column(DataType.TEXT)
   desc!: string;
 
   @CreatedAt

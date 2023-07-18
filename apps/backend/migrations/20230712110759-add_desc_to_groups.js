@@ -5,7 +5,7 @@ module.exports = {
     return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         queryInterface.addColumn('Groups', 'desc', {
-          type: Sequelize.STRING,
+          type: Sequelize.TEXT,
           allowNull: false,
           defaultValue: ''
         }, { transaction: t }),
