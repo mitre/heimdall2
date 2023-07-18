@@ -20,7 +20,7 @@
           v-if="splunkConfig"
           :splunk-config="splunkConfig"
           @signOut="onSignOut"
-          @got-files="got_files"
+          @got-files="gotFiles"
         />
       </v-stepper-content>
     </v-stepper-items>
@@ -29,25 +29,39 @@
       absolute="absolute"
       :value="errorCount >= 3 || errorCount < 0"
     >
-      <div class="text-center">
+      <div class="text-left">
         <p>
-          <span v-if="errorCount > 0">
+          <span v-if="errorCount > 0" style="color: red; font-weight: bold">
             It seems you may be having trouble connecting to Splunk. Are you
             sure that you have configured it properly?
           </span>
           <br />
           <span>
-            For installation instructions and further information, check here:
+            Accessing a Splunk instance from Heimdall requires the input of the
+            following information:
+            <br />
+            username: A qualified username recognized by the referenced Splunk
+            instance.
+            <br />
+            password: A qualified password recognized by the referenced Splunk
+            instance.
+            <br />
+            hostname: The domain name for the desired Splunk instance. Include
+            port number if available.
+            <br />
+            index: A valid index name within the referenced Splunk instance.
+            <br />
+            For installation instructions and further information, see:
           </span>
           <v-btn
             target="_blank"
-            href="https://github.com/mitre/saf/wiki/Splunk-Configuration"
+            href="https://github.com/mitre/heimdall2#splunk"
             text
             color="info"
             px-0
           >
             <v-icon pr-2>mdi-github-circle</v-icon>
-            Splunk Configuration
+            Splunk Interfacing Guide
           </v-btn>
         </p>
         <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
@@ -55,6 +69,7 @@
     </v-overlay>
   </v-stepper>
 </template>
+
 <script lang="ts">
 import {FileID} from '@/store/report_intake';
 import {SplunkConfigNoIndex} from '@mitre/hdf-converters/src/splunk-mapper';
@@ -62,6 +77,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import AuthStep from './AuthStep.vue';
 import FileList from './FileList.vue';
+
 @Component({
   components: {
     AuthStep,
@@ -78,7 +94,7 @@ export default class SplunkReader extends Vue {
     this.step = 2;
   }
 
-  got_files(files: FileID[]) {
+  gotFiles(files: FileID[]) {
     this.$emit('got-files', files);
   }
 

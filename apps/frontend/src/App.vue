@@ -8,7 +8,6 @@
     >
     <!-- Router view. Typically a "subclass" of Base -->
     <router-view :key="$route.fullPath" :class="classification ? 'pt-5' : ''" />
-
     <!-- Footer -->
     <v-spacer />
     <Footer />

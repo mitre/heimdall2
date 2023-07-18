@@ -6,11 +6,8 @@
       <slot name="clickable" :on="on" />
     </template>
     <v-card>
-      <v-card-title v-if="!serverMode" class="headline grey" primary-title>
-        About Heimdall Lite
-      </v-card-title>
-      <v-card-title v-else class="headline grey" primary-title>
-        About Heimdall
+      <v-card-title class="headline grey" primary-title>
+        About Heimdall {{ instanceMode }}
       </v-card-title>
 
       <v-card-text>
@@ -62,6 +59,11 @@ import Component, {mixins} from 'vue-class-component';
 @Component
 export default class AboutModal extends mixins(ServerMixin) {
   dialog = false;
+
+  // serverMode is define in ServerMixin
+  get instanceMode(): string {
+    return this.serverMode ? 'Server' : 'Lite';
+  }
 
   get version(): string {
     return AppInfoModule.version;

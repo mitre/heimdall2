@@ -9,4 +9,8 @@ export class CreateGroupDto implements ICreateGroup {
   @IsOptional()
   @IsBoolean()
   readonly public!: boolean;
+
+  @IsOptional()
+  @IsString()
+  readonly desc!: string;
 }

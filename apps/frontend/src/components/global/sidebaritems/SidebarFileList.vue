@@ -9,11 +9,11 @@
     </v-list-item-action>
 
     <v-list-item-avatar>
-      <v-icon small v-text="icon" />
+      <v-icon small>{{ icon }}</v-icon>
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title v-text="file.filename" />
+      <v-list-item-title>{{ file.filename }}</v-list-item-title>
     </v-list-item-content>
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">

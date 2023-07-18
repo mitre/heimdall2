@@ -31,6 +31,9 @@
       "**/samples": true,
       "**/parse_testbed": true
     },
-    "xml.downloadExternalResources.enabled": true
+    "xml.downloadExternalResources.enabled": true,
+    "cSpell.words": [
+      "fontface"
+    ]
   }
 }

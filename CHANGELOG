@@ -1,3 +1,239 @@
+v2.6.58
+- Admin panel @Rlin232 (#4659)
+- Improving Splunk Interface @charleshu-8 (#4632)
+- resolves #4698 @wdower (#4699)
+
+## Dependency Updates
+- Bump @types/node from 20.4.0 to 20.4.1 @dependabot (#4697)
+- Bump @types/passport-jwt from 3.0.8 to 3.0.9 @dependabot (#4704)
+- Bump @typescript-eslint/parser from 5.61.0 to 5.62.0 @dependabot (#4701)
+- Bump semver from 5.7.1 to 5.7.2 @dependabot (#4706)
+- Bump cypress from 12.17.0 to 12.17.1 @dependabot (#4700)
+- Bump aws-sdk from 2.1412.0 to 2.1413.0 @dependabot (#4696)
+- Bump express-rate-limit from 6.7.0 to 6.7.1 @dependabot (#4694)
+- Bump cypress from 12.16.0 to 12.17.0 @dependabot (#4691)
+- Bump aws-sdk from 2.1411.0 to 2.1412.0 @dependabot (#4692)
+- Bump vuetify from 2.6.15 to 2.7.0 @dependabot (#4687)
+- Bump core-js from 3.31.0 to 3.31.1 @dependabot (#4689)
+- Bump @types/node from 20.3.3 to 20.4.0 @dependabot (#4688)
+- Bump aws-sdk from 2.1410.0 to 2.1411.0 @dependabot (#4686)
+
+v2.6.57
+
+- Admin panel @Rlin232 (#4659)
+- Improving Splunk Interface @charleshu-8 (#4632)
+- resolves #4698 @wdower (#4699) (fixes bug in nessus-mapper)
+
+## Dependency Updates
+
+- Bump @types/node from 20.4.0 to 20.4.1 @dependabot (#4697)
+- Bump @types/passport-jwt from 3.0.8 to 3.0.9 @dependabot (#4704)
+- Bump @typescript-eslint/parser from 5.61.0 to 5.62.0 @dependabot (#4701)
+- Bump semver from 5.7.1 to 5.7.2 @dependabot (#4706)
+- Bump cypress from 12.17.0 to 12.17.1 @dependabot (#4700)
+- Bump aws-sdk from 2.1412.0 to 2.1413.0 @dependabot (#4696)
+- Bump express-rate-limit from 6.7.0 to 6.7.1 @dependabot (#4694)
+- Bump cypress from 12.16.0 to 12.17.0 @dependabot (#4691)
+- Bump aws-sdk from 2.1411.0 to 2.1412.0 @dependabot (#4692)
+- Bump vuetify from 2.6.15 to 2.7.0 @dependabot (#4687)
+- Bump core-js from 3.31.0 to 3.31.1 @dependabot (#4689)
+- Bump @types/node from 20.3.3 to 20.4.0 @dependabot (#4688)
+- Bump aws-sdk from 2.1410.0 to 2.1411.0 @dependabot (#4686)
+
+v2.6.56
+
+## Dependency Updates
+
+- Bump @nestjs/cli from 10.1.1 to 10.1.4 @dependabot (#4680)
+- Bump aws-sdk from 2.1409.0 to 2.1410.0 @dependabot (#4675)
+- Bump @nestjs/cli from 10.1.0 to 10.1.1 @dependabot (#4679)
+- Bump @typescript-eslint/eslint-plugin from 5.60.1 to 5.61.0 @dependabot (#4677)
+- Bump @typescript-eslint/parser from 5.60.1 to 5.61.0 @dependabot (#4676)
+- Bump aws-sdk from 2.1408.0 to 2.1409.0 @dependabot (#4672)
+- Bump @nestjs/cli from 10.0.5 to 10.1.0 @dependabot (#4668)
+
+v2.6.55
+
+- No rounding in compliance chart @Amndeep7 (#4655)
+
+## Dependency Updates
+
+- Bump cypress from 12.15.0 to 12.16.0 @dependabot (#4652)
+- Bump @nestjs/cli from 10.0.3 to 10.0.5 @dependabot (#4646)
+- Bump @types/node from 20.3.1 to 20.3.2 @dependabot (#4648)
+- Bump eslint-plugin-vue from 9.15.0 to 9.15.1 @dependabot (#4654)
+- Bump @aws-sdk/client-config-service from 3.357.0 to 3.360.0 @dependabot (#4650)
+- Bump pg from 8.11.0 to 8.11.1 @dependabot (#4653)
+- Bump @typescript-eslint/parser from 5.60.0 to 5.60.1 @dependabot (#4651)
+- Bump @typescript-eslint/eslint-plugin from 5.60.0 to 5.60.1 @dependabot (#4647)
+- Bump aws-sdk from 2.1404.0 to 2.1405.0 @dependabot (#4649)
+- Bump html-entities from 2.3.6 to 2.4.0 @dependabot (#4645)
+- Bump aws-sdk from 2.1403.0 to 2.1404.0 @dependabot (#4644)
+- Bump eslint-plugin-vue from 8.7.1 to 9.15.0 @dependabot (#4627)
+- Bump cypress from 6.9.1 to 12.15.0 @dependabot (#4631)
+- Bump aws-sdk from 2.1402.0 to 2.1403.0 @dependabot (#4641)
+- Bump fast-xml-parser from 4.2.4 to 4.2.5 @dependabot (#4640)
+- Bump @aws-sdk/client-config-service from 3.356.0 to 3.357.0 @dependabot (#4636)
+- Bump aws-sdk from 2.1401.0 to 2.1402.0 @dependabot (#4637)
+
+v2.6.54
+
+- Remove Splunk SDK usage @charleshu-8 (#4549)
+- Conveyor mapper @jweissm (#4516)
+- Checklist Mapper @Hookwitz (#3859)
+- Fix Backend Test failing after Sequelize updates @Hookwitz (#4600)
+
+## New Features
+
+- Update DBProtect mapper @charleshu-8 (#4601)
+
+## Dependency Updates
+
+- Bump oauth2-mock-server from 5.0.2 to 6.0.0 @dependabot (#4623)
+- Bump aws-sdk from 2.1399.0 to 2.1400.0 @dependabot (#4628)
+- Bump dotenv from 16.1.4 to 16.3.1 @dependabot (#4622)
+- Bump @typescript-eslint/eslint-plugin from 5.59.11 to 5.60.0 @dependabot (#4626)
+- Bump @aws-sdk/client-config-service from 3.353.0 to 3.354.0 @dependabot (#4618)
+- Bump eslint from 8.42.0 to 8.43.0 @dependabot (#4619)
+- Bump aws-sdk from 2.1398.0 to 2.1399.0 @dependabot (#4617)
+- Bump @nestjs/cli from 10.0.1 to 10.0.2 @dependabot (#4615)
+- Bump @nestjs/sequelize from 9.0.2 to 10.0.0 @dependabot (#4610)
+- Bump @nestjs/jwt from 10.0.3 to 10.1.0 @dependabot (#4611)
+- Bump @aws-sdk/client-config-service from 3.352.0 to 3.353.0 @dependabot (#4613)
+- Bump @nestjs/serve-static from 3.0.1 to 4.0.0 @dependabot (#4608)
+- Bump aws-sdk from 2.1397.0 to 2.1398.0 @dependabot (#4609)
+- Bump @nestjs/cli from 9.5.0 to 10.0.1 @dependabot (#4612)
+- Bump @nestjs/passport from 9.0.3 to 10.0.0 @dependabot (#4605)
+- Bump @aws-sdk/client-config-service from 3.350.0 to 3.352.0 @dependabot (#4597)
+- Bump aws-sdk from 2.1396.0 to 2.1397.0 @dependabot (#4598)
+
+v2.6.53
+
+## Dependency Updates
+
+- Bump @typescript-eslint/eslint-plugin from 5.59.9 to 5.59.11 @dependabot (#4590)
+- Bump core-js from 3.30.2 to 3.31.0 @dependabot (#4592)
+- Bump @nestjs/platform-express from 9.4.2 to 9.4.3 @dependabot (#4593)
+- Bump @types/node from 20.2.5 to 20.3.1 @dependabot (#4596)
+- Bump @aws-sdk/client-config-service from 3.345.0 to 3.350.0 @dependabot (#4584)
+- Bump @typescript-eslint/parser from 5.59.9 to 5.59.11 @dependabot (#4594)
+- Bump sinon from 15.1.0 to 15.1.2 @dependabot (#4591)
+- Bump dottie from 2.0.3 to 2.0.4 @dependabot (#4587)
+- Bump aws-sdk from 2.1395.0 to 2.1396.0 @dependabot (#4589)
+- Bump @types/uuid from 9.0.1 to 9.0.2 @dependabot (#4581)
+- Bump aws-sdk from 2.1393.0 to 2.1395.0 @dependabot (#4583)
+- Bump aws-sdk from 2.1392.0 to 2.1393.0 @dependabot (#4577)
+- Bump apexcharts from 3.40.0 to 3.41.0 @dependabot (#4578)
+- Bump connect-pg-simple from 8.0.0 to 9.0.0 @dependabot (#4575)
+- Bump aws-sdk from 2.1391.0 to 2.1392.0 @dependabot (#4573)
+- Bump html-entities from 2.3.4 to 2.3.5 @dependabot (#4570)
+
+v2.6.52
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1390.0 to 2.1391.0 @dependabot (#4564)
+- Bump sequelize-cli from 6.6.0 to 6.6.1 @dependabot (#4566)
+- Bump dotenv from 16.1.3 to 16.1.4 @dependabot (#4568)
+- Bump typedoc from 0.24.7 to 0.24.8 @dependabot (#4563)
+- Bump @typescript-eslint/parser from 5.59.8 to 5.59.9 @dependabot (#4569)
+- Bump html-entities from 2.3.3 to 2.3.4 @dependabot (#4567)
+- Bump fast-xml-parser from 4.2.2 to 4.2.4 @dependabot (#4562)
+- Bump eslint from 8.41.0 to 8.42.0 @dependabot (#4556)
+- Bump aws-sdk from 2.1388.0 to 2.1390.0 @dependabot (#4557)
+- Bump @aws-sdk/client-config-service from 3.343.0 to 3.345.0 @dependabot (#4554)
+- Bump d3 from 7.8.4 to 7.8.5 @dependabot (#4555)
+- Bump aws-sdk from 2.1387.0 to 2.1388.0 @dependabot (#4546)
+- Bump dotenv from 16.1.0 to 16.1.3 @dependabot (#4547)
+- Bump @aws-sdk/client-config-service from 3.342.0 to 3.343.0 @dependabot (#4545)
+- Bump @aws-sdk/client-config-service from 3.341.0 to 3.342.0 @dependabot (#4544)
+- Bump dotenv from 16.0.3 to 16.1.0 @dependabot (#4543)
+
+v2.6.50
+
+## Dependency Updates
+
+- Bump xml2js from 0.5.0 to 0.6.0 @dependabot (#4530)
+- Bump aws-sdk from 2.1385.0 to 2.1386.0 @dependabot (#4536)
+- Bump @typescript-eslint/parser from 5.59.7 to 5.59.8 @dependabot (#4538)
+- Bump @typescript-eslint/eslint-plugin from 5.59.7 to 5.59.8 @dependabot (#4540)
+- Bump @types/node from 20.2.3 to 20.2.5 @dependabot (#4533)
+- Bump @aws-sdk/client-config-service from 3.338.0 to 3.341.0 @dependabot (#4532)
+- Bump yaml from 2.3.0 to 2.3.1 @dependabot (#4535)
+- Bump winston from 3.8.2 to 3.9.0 @dependabot (#4537)
+- Bump @types/lodash from 4.14.194 to 4.14.195 @dependabot (#4531)
+- Bump aws-sdk from 2.1384.0 to 2.1385.0 @dependabot (#4528)
+- Bump aws-sdk from 2.1382.0 to 2.1384.0 @dependabot (#4522)
+
+v2.6.49
+
+- fix wordwrap for api key modal @Amndeep7 (#4515)
+- Dont handle every array item within each array item @candrews (#4480)
+
+## Dependency Updates
+
+- Bump ts-loader from 9.4.2 to 9.4.3 @dependabot (#4514)
+- Bump @aws-sdk/client-config-service from 3.337.0 to 3.338.0 @dependabot (#4510)
+- Bump @nestjs/platform-express from 9.4.1 to 9.4.2 @dependabot (#4511)
+- Bump yaml from 2.2.2 to 2.3.0 @dependabot (#4512)
+- Bump aws-sdk from 2.1381.0 to 2.1382.0 @dependabot (#4503)
+- Bump @typescript-eslint/parser from 5.59.6 to 5.59.7 @dependabot (#4507)
+- Bump @types/node from 20.2.1 to 20.2.3 @dependabot (#4505)
+- Bump @typescript-eslint/eslint-plugin from 5.59.6 to 5.59.7 @dependabot (#4504)
+- Bump @aws-sdk/client-config-service from 3.335.0 to 3.337.0 @dependabot (#4502)
+- Bump @aws-sdk/client-config-service from 3.332.0 to 3.335.0 @dependabot (#4497)
+- Bump eslint from 8.40.0 to 8.41.0 @dependabot (#4499)
+- Bump aws-sdk from 2.1380.0 to 2.1381.0 @dependabot (#4500)
+- Bump aws-sdk from 2.1378.0 to 2.1380.0 @dependabot (#4496)
+- Bump @types/node from 20.2.0 to 20.2.1 @dependabot (#4498)
+- Bump sinon from 15.0.4 to 15.1.0 @dependabot (#4495)
+- Bump @nestjs/cli from 9.4.2 to 9.5.0 @dependabot (#4488)
+- Bump @nestjs/schematics from 9.1.0 to 9.2.0 @dependabot (#4489)
+- Bump @types/node from 20.1.7 to 20.2.0 @dependabot (#4491)
+- Bump rimraf from 5.0.0 to 5.0.1 @dependabot (#4490)
+
+## Dependency Updates
+
+- Bump @types/sinon from 10.0.14 to 10.0.15 @dependabot (#4477)
+- Bump @types/node from 20.1.4 to 20.1.5 @dependabot (#4479)
+- Bump pg from 8.10.0 to 8.11.0 @dependabot (#4476)
+- Bump @typescript-eslint/eslint-plugin from 5.59.5 to 5.59.6 @dependabot (#4474)
+- Bump @typescript-eslint/parser from 5.59.5 to 5.59.6 @dependabot (#4473)
+- Bump aws-sdk from 2.1377.0 to 2.1378.0 @dependabot (#4478)
+- Bump @types/node from 20.1.3 to 20.1.4 @dependabot (#4472)
+- Bump jquery from 3.6.4 to 3.7.0 @dependabot (#4468)
+- Bump aws-sdk from 2.1376.0 to 2.1377.0 @dependabot (#4469)
+- Bump @aws-sdk/client-config-service from 3.329.0 to 3.332.0 @dependabot (#4470)
+- Bump @types/node from 20.1.1 to 20.1.3 @dependabot (#4467)
+
+v2.6.47
+
+- Tenable Frontend @georgedias (#4410)
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1374.0 to 2.1375.0 @dependabot (#4457)
+- Bump @types/validator from 13.7.16 to 13.7.17 @dependabot (#4458)
+- Bump @types/node from 20.1.0 to 20.1.1 @dependabot (#4449)
+- Bump @aws-sdk/client-config-service from 3.328.0 to 3.329.0 @dependabot (#4445)
+- Bump @typescript-eslint/eslint-plugin from 5.59.2 to 5.59.5 @dependabot (#4455)
+- Bump @types/validator from 13.7.15 to 13.7.16 @dependabot (#4453)
+- Bump core-js from 3.30.1 to 3.30.2 @dependabot (#4450)
+- Bump typedoc from 0.24.6 to 0.24.7 @dependabot (#4451)
+- Bump @types/vuelidate from 0.7.17 to 0.7.18 @dependabot (#4446)
+- Bump aws-sdk from 2.1373.0 to 2.1374.0 @dependabot (#4452)
+- Bump @typescript-eslint/parser from 5.59.2 to 5.59.5 @dependabot (#4447)
+- Bump eslint from 8.39.0 to 8.40.0 @dependabot (#4439)
+- Bump @aws-sdk/client-config-service from 3.327.0 to 3.328.0 @dependabot (#4441)
+- Bump aws-sdk from 2.1372.0 to 2.1373.0 @dependabot (#4442)
+- Bump @types/node from 18.16.3 to 20.1.0 @dependabot (#4440)
+- Bump @aws-sdk/client-config-service from 3.326.0 to 3.327.0 @dependabot (#4438)
+- Bump aws-sdk from 2.1370.0 to 2.1372.0 @dependabot (#4435)
+- Bump @aws-sdk/client-config-service from 3.321.1 to 3.326.0 @dependabot (#4432)
+- Bump @typescript-eslint/eslint-plugin from 5.59.1 to 5.59.2 @dependabot (#4437)
+- Bump @types/vuelidate from 0.7.16 to 0.7.17 @dependabot (#4428)
+- Bump @nestjs/cli from 8.2.8 to 9.4.2 @dependabot (#4394)
+
 v2.6.46
 
 ## Dependency Updates
