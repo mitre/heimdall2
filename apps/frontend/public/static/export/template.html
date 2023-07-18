@@ -279,6 +279,16 @@
         data-te-collapse-item
         data-te-collapse-show
       >
+        <!-- Control header -->
+        <div class="mx-4 bg-gray-100 rounded-t-xl border border-neutral-200">
+          <div class="flex w-full shrink mx-6 my-4">
+            <div class="hidden w-32 sm:block">Status</div>
+            <div class="w-28 sm:pl-3 sm:block md:lg-4 lg:pl-7">ID</div>
+            <div class="hidden w-20 sm:block md:pl-2 lg:pl-11">Severity</div>
+            <div class="w-2/3 pl-7 sm:pl-3 sm:block lg:pl-14">Title</div>
+          </div>
+        </div>
+
         <!-- Generate a control accordion for every control -->
         {{#controls}}
         <div class="mx-4 rounded-t-xl border border-neutral-200 bg-white">
@@ -292,19 +302,42 @@
               aria-expanded="true"
               aria-controls="control-accordion-body-{{controlID}}"
             >
-              <div class="w-36">
-                <!-- Control status indicator -->
+              <!-- Small breakpoint -->
+              <div class="grid grid-cols-1 gap-y-2 sm:hidden">
+                <!-- Control ID -->
+                <div class="w-32">
+                  <span>{{hdf.wraps.id}}</span>
+                </div>
+                <div>
+                  <!-- Control status indicator -->
+                  <span
+                    class="bg-{{controlStatus.color}} rounded px-2 py-1 text-black"
+                    >{{controlStatus.status}}</span
+                  >
+                </div>
+                <div>
+                  <!-- Control severity indicator -->
+                  <span
+                    class="bg-{{controlSeverity.color}} rounded px-2 py-1 text-black"
+                    >{{controlSeverity.severity}}</span
+                  >
+                </div>
+              </div>
+
+              <!-- Greater breakpoints -->
+              <!-- Control status indicator -->
+              <div class="w-36 hidden sm:block">
                 <span
                   class="bg-{{controlStatus.color}} rounded px-2 py-1 text-black"
                   >{{controlStatus.status}}</span
                 >
               </div>
-              <div class="w-32 lg:w-36">
-                <!-- Control ID -->
+              <!-- Control ID -->
+              <div class="w-32 lg:w-36 hidden sm:block">
                 <span class="pl-4 pr-4">{{hdf.wraps.id}}</span>
               </div>
-              <div class="w-20">
-                <!-- Control severity indicator -->
+              <!-- Control severity indicator -->
+              <div class="w-20 hidden sm:block">
                 <span
                   class="bg-{{controlSeverity.color}} rounded px-2 py-1 text-black"
                   >{{controlSeverity.severity}}</span
