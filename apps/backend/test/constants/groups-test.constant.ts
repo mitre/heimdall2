@@ -9,11 +9,11 @@ export const GROUP_1 = {
 export const PRIVATE_GROUP = {
   name: 'Private Heimdall Group',
   public: false,
-  desc: ''
+  desc: 'Test description'
 };
 
 export const UPDATE_GROUP: CreateGroupDto = {
   name: 'Updated Group',
   public: true,
-  desc: ''
+  desc: 'Updated test description'
 };
