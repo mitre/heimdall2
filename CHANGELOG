@@ -1,10 +1,6 @@
 v2.6.58
 - Admin panel @Rlin232 (#4659)
 - Improving Splunk Interface @charleshu-8 (#4632)
-
-## Bug Fixes
-
-- Improving Splunk Interface @charleshu-8 (#4632)
 - resolves #4698 @wdower (#4699)
 
 ## Dependency Updates
@@ -25,10 +21,6 @@ v2.6.58
 v2.6.57
 
 - Admin panel @Rlin232 (#4659)
-- Improving Splunk Interface @charleshu-8 (#4632)
-
-## Bug Fixes
-
 - Improving Splunk Interface @charleshu-8 (#4632)
 - resolves #4698 @wdower (#4699) (fixes bug in nessus-mapper)
 
