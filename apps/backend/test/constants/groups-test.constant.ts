@@ -49,7 +49,7 @@ export const GROUPS_SERVICE_MOCK = {
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {
     return group.$remove('user', user);
   },
-  async setDefaultToOwner(): Promise<void> {
+  async ensureGroupHasOwner(): Promise<void> {
     return;
   },
   async addEvaluationToGroup(

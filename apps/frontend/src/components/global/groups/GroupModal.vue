@@ -248,7 +248,7 @@ export default class GroupModal extends Vue {
     });
     return Promise.all([...addedUserPromises, ...updatedUserPromises]).then(
       () => {
-        return removedUserPromises;
+        return Promise.all(removedUserPromises);
       }
     );
   }
