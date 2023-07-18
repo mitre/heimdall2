@@ -118,22 +118,18 @@ export class UsersService {
     deleteUserDto: DeleteUserDto,
     abac: Ability
   ): Promise<User> {
-    if (abac.cannot(Action.DeleteNoPassword, userToDelete)) {
-      try {
-        if (
-          !(await compare(
-            deleteUserDto.password || '',
-            userToDelete.encryptedPassword
-          ))
-        ) {
-          throw new ForbiddenException();
-        }
-      } catch {
-        throw new ForbiddenException(
-          'Password was incorrect, could not delete account'
-        );
-      }
+    if (
+      abac.cannot(Action.DeleteNoPassword, userToDelete) &&
+      !(await compare(
+        deleteUserDto.password || '',
+        userToDelete.encryptedPassword
+      ))
+    ) {
+      throw new ForbiddenException(
+        'Password was incorrect, could not delete account'
+      );
     }
+
     const adminCount = await this.userModel.count({where: {role: 'admin'}});
     // Do not allow the administrator to destroy the only
     // administrator account
@@ -148,7 +144,7 @@ export class UsersService {
         await this.groupsService.findAll()
       ).map(async (group) => {
         if (group.users.some((user) => user.id === userToDelete.id)) {
-          await this.groupsService.setDefaultToOwner(group, userToDelete.id);
+          await this.groupsService.ensureGroupHasOwner(group, userToDelete);
         }
       })
     );
