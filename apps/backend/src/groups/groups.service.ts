@@ -54,30 +54,17 @@ export class GroupsService {
     });
   }
 
-  async updateGroupUserRole(
-    group: Group,
-    updateGroupUser: UpdateGroupUserRoleDto
-  ): Promise<GroupUser | undefined> {
-    const groupUser = await GroupUser.findOne({
-      where: {groupId: group.id, userId: updateGroupUser.userId}
-    });
-    if (groupUser) {
-      await this.setDefaultToOwner(group, groupUser.userId);
-    }
-    return groupUser?.update({role: updateGroupUser.groupRole});
-  }
-
-  async removeUserFromGroup(group: Group, user: User): Promise<Group> {
-    await this.setDefaultToOwner(group, user.id);
-    return group.$remove('user', user);
-  }
-
-  async setDefaultToOwner(group: Group, id: string) {
+  async ensureGroupHasOwner(group: Group, user: User | GroupUser) {
     const owners = (await group.$get('users')).filter(
       (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
     );
     // If there are no more owners, set an admin to owner
-    if (owners.length < 2 && owners.some((owner) => owner.id === id)) {
+    if (
+      owners.length < 2 &&
+      owners.some(
+        (owner) => owner.id === ('userId' in user ? user.userId : user.id)
+      )
+    ) {
       const appConfig = new AppConfig();
       // If default admin is not found, use admin with lowest ID
       const admin =
@@ -102,6 +89,24 @@ export class GroupsService {
         throw new ForbiddenException('No admin to be promoted');
       }
     }
+  }
+
+  async updateGroupUserRole(
+    group: Group,
+    updateGroupUser: UpdateGroupUserRoleDto
+  ): Promise<GroupUser | undefined> {
+    const groupUser = await GroupUser.findOne({
+      where: {groupId: group.id, userId: updateGroupUser.userId}
+    });
+    if (groupUser) {
+      await this.ensureGroupHasOwner(group, groupUser);
+    }
+    return groupUser?.update({role: updateGroupUser.groupRole});
+  }
+
+  async removeUserFromGroup(group: Group, user: User): Promise<Group> {
+    await this.ensureGroupHasOwner(group, user);
+    return group.$remove('user', user);
   }
 
   async addEvaluationToGroup(
