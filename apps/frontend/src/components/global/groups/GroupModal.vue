@@ -51,6 +51,7 @@
             :create="create"
             :admin="admin"
             @on-update-group-user-role="updateSaveState"
+            @delete-user-confirm="updateSaveState"
           />
         </v-form>
       </v-card-text>
@@ -74,7 +75,7 @@
           data-cy="closeAndDiscardChanges"
           color="primary"
           text
-          @click="dialog = false"
+          @click="cancel"
         >
           Cancel
         </v-btn>
@@ -172,6 +173,11 @@ export default class GroupModal extends Vue {
     }
   }
 
+  async cancel(): Promise<void> {
+    this.dialog = false;
+    location.reload();
+  }
+
   async save(): Promise<void> {
     const groupInfo: ICreateGroup = {
       ...this.groupInfo
@@ -181,8 +187,8 @@ export default class GroupModal extends Vue {
       ? this.createGroup(groupInfo)
       : this.updateExistingGroup(groupInfo));
     const group = response.data;
-    await this.syncUsersWithGroup(group);
     await GroupsModule.UpdateGroupById(group.id);
+    await this.syncUsersWithGroup(group);
     // This clears when creating a new Group.
     // Calling clear on edit makes it impossible to edit the same group twice.
     if (this.create) {
@@ -224,12 +230,6 @@ export default class GroupModal extends Vue {
       };
       return axios.post(`/groups/${group.id}/user`, addUserDto);
     });
-    const removedUserPromises = toRemove.map((user) => {
-      const removeUserDto: IRemoveUserFromGroup = {
-        userId: user.id
-      };
-      return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
-    });
     const updatedUserPromises = toUpdate.map((user) => {
       const updateGroupUserRole: IUpdateGroupUser = {
         userId: user.id,
@@ -240,11 +240,17 @@ export default class GroupModal extends Vue {
         updateGroupUserRole
       );
     });
-    return Promise.all([
-      ...addedUserPromises,
-      ...removedUserPromises,
-      ...updatedUserPromises
-    ]);
+    const removedUserPromises = toRemove.map((user) => {
+      const removeUserDto: IRemoveUserFromGroup = {
+        userId: user.id
+      };
+      return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
+    });
+    return Promise.all([...addedUserPromises, ...updatedUserPromises]).then(
+      () => {
+        return Promise.all(removedUserPromises);
+      }
+    );
   }
 }
 </script>

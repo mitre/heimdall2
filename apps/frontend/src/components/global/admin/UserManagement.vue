@@ -60,6 +60,7 @@
       <ActionDialog
         v-model="dialogDelete"
         type="user"
+        message="Any ownerless groups left by this user will be transfered to an admin."
         @cancel="closeActionDialog"
         @confirm="deleteUserConfirm"
       />
