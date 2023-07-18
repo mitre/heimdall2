@@ -93,7 +93,7 @@ export default class Users extends Vue {
   @Prop({type: Boolean, required: false, default: false})
   readonly admin!: boolean;
 
-  editedUserID: string = '0';
+  editedUserID: string = '0'; // Default to '0', as the id indices start at '1'
   usersToAdd: string[] = [];
 
   dialogDelete = false;
@@ -173,15 +173,22 @@ export default class Users extends Vue {
     this.editedUserID = '0';
   }
 
-  deleteUserConfirm(): void {
+  @Emit()
+  deleteUserConfirm(): boolean {
+    let saveable = true;
+    const userToDelete = this.currentUsers.indexOf(this.getEditedUser());
+    if (
+      this.currentUsers[userToDelete].groupRole === 'owner' &&
+      this.numberOfOwners() < 2
+    ) {
+      saveable = false;
+    }
     if (this.editedUserID !== '0') {
-      this.currentUsers.splice(
-        this.currentUsers.indexOf(this.getEditedUser()),
-        1
-      );
+      this.currentUsers.splice(userToDelete, 1);
     }
     this.onUpdateGroupUserRole('');
     this.closeActionDialog();
+    return saveable;
   }
 
   getEditedUser(): ISlimUser {
