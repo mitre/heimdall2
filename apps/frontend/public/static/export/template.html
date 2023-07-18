@@ -282,10 +282,15 @@
         <!-- Control header -->
         <div class="mx-4 bg-gray-100 rounded-t-xl border border-neutral-200">
           <div class="flex w-full shrink mx-6 my-4">
-            <div class="hidden w-32 sm:block">Status</div>
-            <div class="w-28 sm:pl-3 sm:block md:lg-4 lg:pl-7">ID</div>
-            <div class="hidden w-20 sm:block md:pl-2 lg:pl-11">Severity</div>
-            <div class="w-2/3 pl-7 sm:pl-3 sm:block lg:pl-14">Title</div>
+            <div class="hidden sm:block w-32">Status</div>
+            <div class="sm:block w-28 md:pl-3">ID</div>
+            <div class="hidden sm:block w-20 md:pl-6 lg:pl-11">Severity</div>
+            <div class="sm:block w-1/2 pl-6 sm:pl-1 md:pl-10 lg:pl-16">
+              Title
+            </div>
+            <div class="hidden lg:block lg:w-36 xl:w-52 pl-6">
+              800-53 Controls & CCIs
+            </div>
           </div>
         </div>
 
@@ -322,6 +327,13 @@
                     >{{controlSeverity.severity}}</span
                   >
                 </div>
+                {{#controlTags}}
+                <div class="w-16">
+                  <span class="bg-gray-100 rounded px-2 py-1 text-black"
+                    >{{.}}</span
+                  >
+                </div>
+                {{/controlTags}}
               </div>
 
               <!-- Greater breakpoints -->
@@ -333,8 +345,16 @@
                 >
               </div>
               <!-- Control ID -->
-              <div class="w-32 lg:w-36 hidden sm:block">
-                <span class="pl-4 pr-4">{{hdf.wraps.id}}</span>
+              <div class="w-32 lg:w-36 hidden sm:grid grid-cols-1 gap-y-2">
+                <span class="pr-4 break-all">{{hdf.wraps.id}}</span>
+                <!-- NIST & CCI controls; appear once past large breakpoint -->
+                {{#controlTags}}
+                <div class="lg:hidden w-16">
+                  <span class="bg-gray-100 rounded px-2 py-1 text-black"
+                    >{{.}}</span
+                  >
+                </div>
+                {{/controlTags}}
               </div>
               <!-- Control severity indicator -->
               <div class="w-20 hidden sm:block">
@@ -344,9 +364,22 @@
                 >
               </div>
               <!-- Control title -->
-              <span class="pl-4 pr-4 w-2/3 break-words"
+              <span class="pl-4 pr-4 w-1/2 break-words"
                 >{{hdf.wraps.title}}</span
               >
+              <!-- Control tags -->
+              <div
+                class="hidden lg:grid grid-cols-1 xl:grid-cols-2 gap-x-6 gap-y-2"
+              >
+                {{#controlTags}}
+                <div class="w-16">
+                  <span class="bg-gray-100 rounded px-2 py-1 text-black"
+                    >{{.}}</span
+                  >
+                </div>
+                {{/controlTags}}
+              </div>
+
               <span
                 class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
               >
@@ -431,7 +464,9 @@
 
             <!-- Control code block -->
             {{#showCode}}
-            <code class="whitespace-pre-wrap text-sm">{{full_code}}</code>
+            <code class="whitespace-pre-wrap text-sm text-red-700"
+              >{{full_code}}</code
+            >
             {{/showCode}}
           </div>
         </div>

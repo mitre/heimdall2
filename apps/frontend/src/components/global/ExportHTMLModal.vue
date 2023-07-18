@@ -136,7 +136,9 @@ interface ControlSet {
   fileID: string;
   controls: (ContextualizedControl & {details: Detail[]} & {
     controlID: string;
-  } & {controlStatus: ControlStatus} & {controlSeverity: ControlSeverity})[];
+  } & {controlStatus: ControlStatus} & {controlSeverity: ControlSeverity} & {
+    controlTags: string[];
+  })[];
 }
 
 // All used icons; lvl 1
@@ -400,7 +402,7 @@ export default class ExportHTMLModal extends Vue {
     controlLevels: ContextualizedControl[]
   ): ContextualizedControl & {details: Detail[]} & {controlID: string} & {
     controlStatus: ControlStatus;
-  } & {controlSeverity: ControlSeverity} {
+  } & {controlSeverity: ControlSeverity} & {controlTags: string[]} {
     // Check status of individual control to assign corresponding color
     let statusColor;
     switch (control.root.hdf.status) {
@@ -445,6 +447,16 @@ export default class ExportHTMLModal extends Vue {
       default:
         severityColor = 'white';
     }
+
+    // Grab NIST & CCI controls
+    const allControls = _.filter(
+      [control.hdf.rawNistTags, control.hdf.wraps.tags.cci],
+      Boolean
+    ).flat();
+    // Remove `Rev_4` item and replace `unmapped` with proper `UM-1` naming
+    const filteredControls = allControls
+      .map((control) => (control === 'unmapped' ? 'UM-1' : control))
+      .filter((control) => control !== 'Rev_4');
 
     return {
       ..._.set(
@@ -510,7 +522,8 @@ export default class ExportHTMLModal extends Vue {
       controlSeverity: {
         severity: severity,
         color: severityColor
-      }
+      },
+      controlTags: filteredControls
     };
   }
 
