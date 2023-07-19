@@ -147,7 +147,7 @@ describe('GroupsController', () => {
     });
 
     it('should allow owners of a group to update a group', async () => {
-      expect.assertions(3);
+      expect.assertions(4);
 
       const owner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(privateGroup, owner, 'owner');
@@ -161,6 +161,7 @@ describe('GroupsController', () => {
       expect(response.id).toEqual(privateGroup.id);
       expect(response.name).toEqual(UPDATE_GROUP.name);
       expect(response.public).toEqual(UPDATE_GROUP.public);
+      expect(response.desc).toEqual(UPDATE_GROUP.desc);
     });
 
     it('should stop regular users and others from updating a group', async () => {
@@ -295,6 +296,7 @@ describe('GroupsController', () => {
       expect(response.id).toEqual(privateGroup.id);
       expect(response.name).toEqual(privateGroup.name);
       expect(response.public).toEqual(privateGroup.public);
+      expect(response.desc).toEqual(privateGroup.desc);
     });
 
     it('should stop users and others from deleting a group', async () => {
