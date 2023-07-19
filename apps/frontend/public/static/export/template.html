@@ -489,25 +489,64 @@
       <!-- Generate a control report for every control -->
       {{#controls}}
       <div class="border border-black px-2 py-2">
-        <div class="flex items-center py-1">
-          <!-- Control status indicator -->
-          <span class="rounded border border-black px-2 py-1"
-            >{{controlStatus.status}}</span
-          >
-          <!-- Control ID -->
-          <span class="pl-4 pr-4">{{hdf.wraps.id}}</span>
-          <!-- Control severity indicator -->
-          <span class="rounded border border-black px-2 py-1"
-            >{{controlSeverity.severity}}</span
-          >
-          <!-- Control title -->
-          <span class="pl-4 pr-4">{{hdf.wraps.title}}</span>
-        </div>
-        <hr class="my-1" />
+        <!-- Control header -->
+        <table class="border-separate border-spacing-x-2">
+          <thead>
+            <tr>
+              <td><b>Status</b></td>
+              <td><b>ID</b></td>
+              <td><b>Severity</b></td>
+              <td><b>Title</b></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <!-- Control status indicator -->
+                <div class="rounded border border-black px-2 py-1">
+                  {{controlStatus.status}}
+                </div>
+              </td>
+              <td>
+                <!-- Control ID -->
+                <div class="break-all">{{hdf.wraps.id}}</div>
+              </td>
+              <td>
+                <!-- Control severity indicator -->
+                <div class="rounded border border-black px-2 py-1">
+                  {{controlSeverity.severity}}
+                </div>
+              </td>
+              <!-- Control title -->
+              <td>{{hdf.wraps.title}}</td>
+            </tr>
+          </tbody>
+        </table>
+        <hr class="h-1 my-1" />
+        <table class="border-separate border-spacing-x-2">
+          <thead>
+            <tr>
+              <td><b>800-53 Controls & CCIs</b></td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <!-- Control tags -->
+                <div class="flex flex-wrap gap-x-2 gap-y-1">
+                  {{#controlTags}}
+                  <div class="rounded border border-black px-2 py-1">{{.}}</div>
+                  {{/controlTags}}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <hr class="h-1 my-1" />
 
         <!-- Control description -->
         {{data.desc}}
-        <hr class="my-1" />
+        <hr class="h-1 my-1" />
 
         <!-- Control tables -->
         <div>
@@ -533,6 +572,7 @@
               {{/hdf.segments}}
             </tbody>
           </table>
+          <hr class="h-1 my-1" />
 
           <!-- Details -->
           <h5 class="py-1 text-lg"><strong>Control Details</strong></h5>
@@ -558,6 +598,7 @@
 
         <!-- Control code block -->
         {{#showCode}}
+        <hr class="h-1 my-1" />
         <code class="whitespace-pre-wrap text-sm text-black"
           >{{full_code}}</code
         >
