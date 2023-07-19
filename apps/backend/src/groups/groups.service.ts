@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {Op} from 'sequelize';
+import AppConfig from '../../config/app_config';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {User} from '../users/user.model';
@@ -16,7 +17,9 @@ import {Group} from './group.model';
 export class GroupsService {
   constructor(
     @InjectModel(Group)
-    private readonly groupModel: typeof Group
+    private readonly groupModel: typeof Group,
+    @InjectModel(User)
+    private readonly userModel: typeof User
   ) {}
 
   async findAll(): Promise<Group[]> {
@@ -51,6 +54,43 @@ export class GroupsService {
     });
   }
 
+  async ensureGroupHasOwner(group: Group, user: User | GroupUser) {
+    const owners = (await group.$get('users')).filter(
+      (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
+    );
+    // If there are no more owners, set an admin to owner
+    if (
+      owners.length < 2 &&
+      owners.some(
+        (owner) => owner.id === ('userId' in user ? user.userId : user.id)
+      )
+    ) {
+      const appConfig = new AppConfig();
+      // If default admin is not found, use admin with lowest ID
+      const admin =
+        (await this.userModel.findOne({
+          where: {role: 'admin', email: appConfig.getDefaultAdmin()}
+        })) ||
+        (await this.userModel.findOne({
+          where: {role: 'admin'},
+          order: [['id', 'ASC']]
+        }));
+      if (admin !== null) {
+        // If admin is in the group, promote it. If not, add as owner
+        const adminId = admin.id;
+        const adminInGroup = (await group.$get('users')).find(
+          (userOnGroup) => userOnGroup.id === adminId
+        );
+        adminInGroup
+          ? await adminInGroup.GroupUser.update({role: 'owner'})
+          : await this.addUserToGroup(group, admin, 'owner');
+      } else {
+        // No admin found in system
+        throw new ForbiddenException('No admin to be promoted');
+      }
+    }
+  }
+
   async updateGroupUserRole(
     group: Group,
     updateGroupUser: UpdateGroupUserRoleDto
@@ -58,18 +98,14 @@ export class GroupsService {
     const groupUser = await GroupUser.findOne({
       where: {groupId: group.id, userId: updateGroupUser.userId}
     });
+    if (groupUser) {
+      await this.ensureGroupHasOwner(group, groupUser);
+    }
     return groupUser?.update({role: updateGroupUser.groupRole});
   }
 
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {
-    const owners = (await group.$get('users')).filter(
-      (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
-    );
-    if (owners.length < 2 && owners.some((owner) => owner.id === user.id)) {
-      throw new ForbiddenException(
-        'Cannot remove only group owner, please promote another user to owner first'
-      );
-    }
+    await this.ensureGroupHasOwner(group, user);
     return group.$remove('user', user);
   }
 
