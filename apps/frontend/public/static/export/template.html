@@ -490,13 +490,16 @@
       {{#controls}}
       <div class="border border-black px-2 py-2">
         <!-- Control header -->
-        <table class="border-separate border-spacing-x-2">
+        <table
+          class="border-separate border-spacing-x-2"
+          aria-labelledby="Control header"
+        >
           <thead>
-            <tr>
-              <td><b>Status</b></td>
-              <td><b>ID</b></td>
-              <td><b>Severity</b></td>
-              <td><b>Title</b></td>
+            <tr class="text-left">
+              <th>Status</th>
+              <th>ID</th>
+              <th>Severity</th>
+              <th>Title</th>
             </tr>
           </thead>
           <tbody>
@@ -523,10 +526,13 @@
           </tbody>
         </table>
         <hr class="h-1 my-1" />
-        <table class="border-separate border-spacing-x-2">
+        <table
+          class="border-separate border-spacing-x-2"
+          aria-labelledby="800-53 controls and CCIs"
+        >
           <thead>
-            <tr>
-              <td><b>800-53 Controls & CCIs</b></td>
+            <tr class="text-left">
+              <th>800-53 Controls & CCIs</th>
             </tr>
           </thead>
           <tbody>
