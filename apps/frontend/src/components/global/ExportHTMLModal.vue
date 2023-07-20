@@ -211,25 +211,65 @@ export default class ExportHTMLModal extends Vue {
     // Series of icons used for profile-related detail reports
     icons: {
       // Passed
-      circleCheck: this.iconDatatoSVG(mdiCheckCircle, 'rgb(76, 176, 79)'), // green
+      circleCheck: this.iconDatatoSVG(
+        mdiCheckCircle,
+        'rgb(76, 176, 79)',
+        'A green circle with a check'
+      ), // green
       // Failed
-      circleCross: this.iconDatatoSVG(mdiCloseCircle, 'rgb(243, 67, 53)'), // red
+      circleCross: this.iconDatatoSVG(
+        mdiCloseCircle,
+        'rgb(243, 67, 53)',
+        'A red circle with a cross'
+      ), // red
       // Not applicable
-      circleMinus: this.iconDatatoSVG(mdiMinusCircle, 'rgb(3, 169, 244)'), // blue
+      circleMinus: this.iconDatatoSVG(
+        mdiMinusCircle,
+        'rgb(3, 169, 244)',
+        'A blue circle with a minus'
+      ), // blue
       // Not reviewed
-      circleAlert: this.iconDatatoSVG(mdiAlertCircle, 'rgb(254, 153, 0)'), // yellow
+      circleAlert: this.iconDatatoSVG(
+        mdiAlertCircle,
+        'rgb(254, 153, 0)',
+        'A yellow circle with an exclamation point'
+      ), // yellow
       // Profile error
-      triangleAlert: this.iconDatatoSVG(mdiAlert, 'rgb(121, 134, 203)'), // purple
+      triangleAlert: this.iconDatatoSVG(
+        mdiAlert,
+        'rgb(121, 134, 203)',
+        'A purple triangle with an exclamation point'
+      ), // purple
       // Total count
-      squareEqual: this.iconDatatoSVG(mdiEqualBox, 'black'),
+      squareEqual: this.iconDatatoSVG(
+        mdiEqualBox,
+        'black',
+        'A black square with an equal'
+      ),
       // Low severity
-      circleLow: this.iconDatatoSVG(mdiCircle, 'rgb(255, 235, 59)'), // yellow
+      circleLow: this.iconDatatoSVG(
+        mdiCircle,
+        'rgb(255, 235, 59)',
+        'A yellow circle'
+      ), // yellow
       // Medium severity
-      circleMedium: this.iconDatatoSVG(mdiCircle, 'rgb(255, 152, 0)'), // orange
+      circleMedium: this.iconDatatoSVG(
+        mdiCircle,
+        'rgb(255, 152, 0)',
+        'An orange circle'
+      ), // orange
       // High severity
-      circleHigh: this.iconDatatoSVG(mdiCircle, 'rgb(255, 87, 34)'), // deep orange
+      circleHigh: this.iconDatatoSVG(
+        mdiCircle,
+        'rgb(255, 87, 34)',
+        'A deep orange circle'
+      ), // deep orange
       // Critical severity
-      circleCritical: this.iconDatatoSVG(mdiCircle, 'rgb(244, 67, 54)') // red
+      circleCritical: this.iconDatatoSVG(
+        mdiCircle,
+        'rgb(244, 67, 54)',
+        'A red circle'
+      ) // red
     }
   };
 
@@ -261,10 +301,11 @@ export default class ExportHTMLModal extends Vue {
   iconDatatoSVG(
     iconData: string,
     fill: string,
+    desc: string,
     widthPx = 24,
     heightPx = 24
   ): string {
-    return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}"><path fill="${fill}" d="${iconData}"/></svg>`;
+    return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}" role="img" title="${desc}" aria-label="${desc}"><path fill="${fill}" d="${iconData}"/></svg>`;
   }
 
   // Invoked when file(s) are loaded.
