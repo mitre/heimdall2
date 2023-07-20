@@ -120,8 +120,11 @@ describe('GroupsController', () => {
     it('findForUser should return groups the user is a member of', async () => {
       expect.assertions(1);
       await groupsService.addUserToGroup(privateGroup, basicUser, 'member');
+      const publicGroups = (await groupsService.findAll()).filter(
+        (group) => group.public && group.id !== privateGroup.id
+      );
       const groups = await groupsController.findForUser({user: basicUser});
-      expect(groups.length).toEqual(1);
+      expect(groups.length).toEqual(1 + publicGroups.length);
     });
 
     it('findForUser should return users in groups the user is a member of', async () => {
@@ -144,7 +147,7 @@ describe('GroupsController', () => {
     });
 
     it('should allow owners of a group to update a group', async () => {
-      expect.assertions(3);
+      expect.assertions(4);
 
       const owner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(privateGroup, owner, 'owner');
@@ -158,6 +161,7 @@ describe('GroupsController', () => {
       expect(response.id).toEqual(privateGroup.id);
       expect(response.name).toEqual(UPDATE_GROUP.name);
       expect(response.public).toEqual(UPDATE_GROUP.public);
+      expect(response.desc).toEqual(UPDATE_GROUP.desc);
     });
 
     it('should stop regular users and others from updating a group', async () => {
@@ -292,6 +296,7 @@ describe('GroupsController', () => {
       expect(response.id).toEqual(privateGroup.id);
       expect(response.name).toEqual(privateGroup.name);
       expect(response.public).toEqual(privateGroup.public);
+      expect(response.desc).toEqual(privateGroup.desc);
     });
 
     it('should stop users and others from deleting a group', async () => {

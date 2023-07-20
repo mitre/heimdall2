@@ -51,7 +51,13 @@ export class GroupsController {
   @Get('/my')
   async findForUser(@Request() request: {user: User}): Promise<GroupDto[]> {
     const groups = await request.user.$get('groups', {include: [User]});
-    return groups.map((group) => new GroupDto(group));
+    const groupIds = groups.map((g) => g.id);
+    const publicGroups = (await this.groupsService.findAll()).filter(
+      (group) => group.public && !groupIds.includes(group.id)
+    );
+    return groups
+      .map((group) => new GroupDto(group))
+      .concat(publicGroups.map((group) => new GroupDto(group)));
   }
 
   @Post()
@@ -90,9 +96,11 @@ export class GroupsController {
     @Request() request: {user: User},
     @Body() removeUserFromGroupDto: RemoveUserFromGroupDto
   ): Promise<GroupDto> {
-    const abac = this.authz.abac.createForUser(request.user);
     const group = await this.groupsService.findByPkBang(id);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
+    if (request.user.role !== 'admin') {
+      const abac = this.authz.abac.createForUser(request.user);
+      ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
+    }
     const userToRemove = await this.usersService.findById(
       removeUserFromGroupDto.userId
     );

@@ -1,6 +1,6 @@
 {
   "name": "@heimdall/cypress-tests",
-  "version": "2.6.54",
+  "version": "2.6.57",
   "private": true,
   "description": "",
   "scripts": {
@@ -10,7 +10,7 @@
     "mock-openid": "node support/server/oidc-server.js"
   },
   "devDependencies": {
-    "cypress": "6.9.1"
+    "cypress": "12.17.1"
   },
   "dependencies": {
     "cypress-wait-until": "^1.7.1",
