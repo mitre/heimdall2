@@ -30,6 +30,7 @@ export default class SeverityChart extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   categories: Category<Severity>[] = [
+    {label: 'None', value: 'none', color: 'severityNone'},
     {label: 'Low', value: 'low', color: 'severityLow'},
     {
       label: 'Medium',
@@ -50,6 +51,7 @@ export default class SeverityChart extends Vue {
 
   get series(): number[] {
     return [
+      SeverityCountModule.none(this.filter),
       SeverityCountModule.low(this.filter),
       SeverityCountModule.medium(this.filter),
       SeverityCountModule.high(this.filter),
