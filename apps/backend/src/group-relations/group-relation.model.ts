@@ -1,4 +1,4 @@
-import {Model} from 'sequelize';
+import { Model } from 'sequelize';
 import {
   AllowNull,
   AutoIncrement,
@@ -8,9 +8,10 @@ import {
   ForeignKey,
   PrimaryKey,
   Table,
+  Unique,
   UpdatedAt
 } from 'sequelize-typescript';
-import {Group} from '../groups/group.model';
+import { Group } from '../groups/group.model';
 
 @Table
 export class GroupRelation extends Model {
@@ -26,6 +27,7 @@ export class GroupRelation extends Model {
 
   @ForeignKey(() => Group)
   @Column(DataType.BIGINT)
+  @Unique
   childId!: string;
 
   @CreatedAt
