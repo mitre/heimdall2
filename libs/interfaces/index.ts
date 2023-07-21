@@ -17,7 +17,6 @@ export * from './group/evaluation-group.interface';
 export * from './group/group.interface';
 export * from './group/remove-parent-from-group.interface';
 export * from './group/remove-user-from-group.interface';
-export * from './group/update-group-relation.interface';
 export * from './group/update-group-user.interface';
 export * from './statistics/statistics.interface';
 export * from './user/create-user.interface';
