@@ -1,4 +1,4 @@
-import { Model } from 'sequelize';
+import {Model} from 'sequelize';
 import {
   AllowNull,
   AutoIncrement,
@@ -11,7 +11,7 @@ import {
   Unique,
   UpdatedAt
 } from 'sequelize-typescript';
-import { Group } from '../groups/group.model';
+import {Group} from '../groups/group.model';
 
 @Table
 export class GroupRelation extends Model {

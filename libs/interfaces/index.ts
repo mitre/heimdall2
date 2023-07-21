@@ -15,7 +15,6 @@ export * from './group/add-user-to-group.interface';
 export * from './group/create-group.interface';
 export * from './group/evaluation-group.interface';
 export * from './group/group.interface';
-export * from './group/remove-group-relation.interface';
 export * from './group/remove-user-from-group.interface';
 export * from './group/update-group-relation.interface';
 export * from './group/update-group-user.interface';
