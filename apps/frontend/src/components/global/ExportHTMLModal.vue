@@ -99,6 +99,7 @@ interface Statistics {
 
 // Info used for profile control severity reporting; lvl 1
 interface Severity {
+  none: number;
   low: number;
   medium: number;
   high: number;
@@ -193,6 +194,7 @@ export default class ExportHTMLModal extends Vue {
     },
     // Used for profile severity reporting
     severity: {
+      none: 0,
       low: 0,
       medium: 0,
       high: 0,
@@ -245,6 +247,12 @@ export default class ExportHTMLModal extends Vue {
         mdiEqualBox,
         'black',
         'A black square with an equal'
+      ),
+      // No severity
+      circleNone: this.iconDatatoSVG(
+        mdiCircle,
+        'rgb(3, 169, 244)',
+        'A blue circle'
       ),
       // Low severity
       circleLow: this.iconDatatoSVG(
@@ -417,6 +425,7 @@ export default class ExportHTMLModal extends Vue {
         StatusCountModule.countOf(this.filter, 'FailedTests')
     };
     this.outputData.severity = {
+      none: SeverityCountModule.none(this.filter),
       low: SeverityCountModule.low(this.filter),
       medium: SeverityCountModule.medium(this.filter),
       high: SeverityCountModule.high(this.filter),
@@ -473,6 +482,9 @@ export default class ExportHTMLModal extends Vue {
     // Check severity of individual control to assign corresponding color
     let severityColor;
     switch (control.root.hdf.severity) {
+      case 'none':
+        severityColor = 'info'; // blue
+        break;
       case 'low':
         severityColor = 'compliance-yellow'; // yellow
         break;
