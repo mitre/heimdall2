@@ -207,10 +207,6 @@ export class GroupsService {
     }
 
     // Add user to existing groups that they aren't in yet
-    for (const existingGroup of existingGroups) {
-      if (!currentGroups.some((group) => group.name === existingGroup.name)) {
-        this.addUserToGroup(existingGroup, user, 'member');
-      }
-    }
+    await Promise.all(existingGroups.filter(existingGroup => !currentGroups.some((group) => group.name === existingGroup.name)).map(this.addUserToGroup(existingGroup, user, 'member')));
   }
 }
