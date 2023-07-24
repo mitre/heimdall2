@@ -24,6 +24,28 @@
             <pre class="pt-5" v-text="description" />
           </v-col>
         </v-row>
+        <v-row class="mb-1">
+          <v-spacer />
+          <v-btn @click="printHelp = true">
+            Printing
+            <v-icon class="ml-2"> mdi-help-circle </v-icon>
+          </v-btn>
+          <v-overlay :opacity="50" absolute="absolute" :value="printHelp">
+            <div class="text-left mx-10">
+              <p>
+                Heimdall supports PDF and physical paper printing of results via
+                HTML exports, which leverage custom stylings specifically
+                tailored for PDF generation and physical print mediums. After
+                downloading an HTML export of your results, use your browser's
+                built-in print view (accessible through the browser's general
+                drop-down menu or using the shortcut command CTRL + P
+                (Windows)/CMD + P (MacOS)) to configure and print your PDF/paper
+                copy.
+              </p>
+              <v-btn color="info" @click="printHelp = false"> Close </v-btn>
+            </div>
+          </v-overlay>
+        </v-row>
       </v-card-text>
       <v-divider />
       <v-card-actions>
@@ -178,6 +200,7 @@ export default class ExportHTMLModal extends Vue {
   showingModal = false;
   exportType = 'executive';
   description = 'Profile Info\nStatuses\nCompliance Level';
+  printHelp = false;
   outputData: OutputData = {
     // Used for profile status reporting
     statistics: {
@@ -378,13 +401,11 @@ export default class ExportHTMLModal extends Vue {
     // Calculate & set compliance level from control statuses
     const MAX_DECIMAL_PRECISION = 2;
     let compliance = 0;
-    // If no controls, default to 0% compliance
-    if (controlCnt === 0) {
-      this.outputData.compliance.level = '0%';
-    } else {
+    // If controls exist, calculate compliance level
+    if (controlCnt > 0) {
       // Formula: compliance = Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100
       // Truncate to hundredths decimal place
-      compliance =
+      const calculatedCompliance =
         Math.trunc(
           Math.pow(10, MAX_DECIMAL_PRECISION) *
             ((StatusCountModule.countOf(this.filter, 'Passed') /
@@ -392,18 +413,25 @@ export default class ExportHTMLModal extends Vue {
                 StatusCountModule.countOf(this.filter, 'Not Applicable'))) *
               100)
         ) / Math.pow(10, MAX_DECIMAL_PRECISION);
-      this.outputData.compliance.level = `${compliance.toFixed(
-        MAX_DECIMAL_PRECISION
-      )}%`;
+      // Check if calculated compliance is valid
+      if (!isNaN(calculatedCompliance)) {
+        // Check if calculated compliance is a natural number
+        if (calculatedCompliance >= 0) {
+          compliance = calculatedCompliance;
+        }
+      }
     }
+    this.outputData.compliance.level = `${compliance.toFixed(
+      MAX_DECIMAL_PRECISION
+    )}%`;
 
     // Set coloring for compliance based on level of compliance
     if (compliance >= 90) {
-      this.outputData.compliance.color = 'success'; // green
+      this.outputData.compliance.color = 'high'; // green
     } else if (compliance >= 60) {
-      this.outputData.compliance.color = 'compliance-yellow'; // yellow
+      this.outputData.compliance.color = 'medium'; // yellow
     } else {
-      this.outputData.compliance.color = 'danger'; // red
+      this.outputData.compliance.color = 'low'; // red
     }
 
     // Set following attributes from existing file data
@@ -457,22 +485,46 @@ export default class ExportHTMLModal extends Vue {
     let statusColor;
     switch (control.root.hdf.status) {
       case 'Passed':
-        statusColor = 'success'; // green
+        statusColor = this.iconDatatoSVG(
+          mdiCheckCircle,
+          'rgb(76, 176, 79)',
+          'A green circle with a check'
+        ); // green
         break;
       case 'Failed':
-        statusColor = 'danger'; // red
+        statusColor = this.iconDatatoSVG(
+          mdiCloseCircle,
+          'rgb(243, 67, 53)',
+          'A red circle with a cross'
+        ); // red
         break;
       case 'Not Applicable':
-        statusColor = 'info'; // blue
+        statusColor = this.iconDatatoSVG(
+          mdiMinusCircle,
+          'rgb(3, 169, 244)',
+          'A blue circle with a minus'
+        ); // blue
         break;
       case 'Not Reviewed':
-        statusColor = 'warning'; // yellow
+        statusColor = this.iconDatatoSVG(
+          mdiAlertCircle,
+          'rgb(254, 153, 0)',
+          'A yellow circle with an exclamation point'
+        ); // yellow
         break;
       case 'Profile Error':
-        statusColor = 'error'; // purple
+        statusColor = this.iconDatatoSVG(
+          mdiAlert,
+          'rgb(121, 134, 203)',
+          'A purple triangle with an exclamation point'
+        ); // purple
         break;
       default:
-        statusColor = 'white';
+        statusColor = this.iconDatatoSVG(
+          mdiCircle,
+          'rgb(0, 0, 0)',
+          'A white circle'
+        );
     }
 
     // Severity is recorded as all lowercase by default; for aesthetic purposes, uppercase the first letter
@@ -483,22 +535,46 @@ export default class ExportHTMLModal extends Vue {
     let severityColor;
     switch (control.root.hdf.severity) {
       case 'none':
-        severityColor = 'info'; // blue
+        severityColor = this.iconDatatoSVG(
+          mdiCircle,
+          'rgb(3, 169, 244)',
+          'A blue circle'
+        ); // blue
         break;
       case 'low':
-        severityColor = 'compliance-yellow'; // yellow
+        severityColor = this.iconDatatoSVG(
+          mdiCircle,
+          'rgb(255, 235, 59)',
+          'A yellow circle'
+        ); // yellow
         break;
       case 'medium':
-        severityColor = 'warning'; // orange
+        severityColor = this.iconDatatoSVG(
+          mdiCircle,
+          'rgb(255, 152, 0)',
+          'An orange circle'
+        ); // orange
         break;
       case 'high':
-        severityColor = 'compliance-orange'; // deep orange
+        severityColor = this.iconDatatoSVG(
+          mdiCircle,
+          'rgb(255, 87, 34)',
+          'A deep orange circle'
+        ); // deep orange
         break;
       case 'critical':
-        severityColor = 'danger'; // red
+        severityColor = this.iconDatatoSVG(
+          mdiCircle,
+          'rgb(244, 67, 54)',
+          'A red circle'
+        ); // red
         break;
       default:
-        severityColor = 'white';
+        severityColor = this.iconDatatoSVG(
+          mdiCircle,
+          'rgb(0, 0, 0)',
+          'A white circle'
+        );
     }
 
     // Grab NIST & CCI controls

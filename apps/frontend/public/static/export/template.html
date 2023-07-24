@@ -9,41 +9,27 @@
       href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css"
     />
     <script src="https://cdn.tailwindcss.com"></script>
-    <style type="text/tailwindcss">
-      .bg-success {
-        --tw-bg-opacity: 1;
-        background-color: rgb(76 176 79 / var(--tw-bg-opacity));
+    <style>
+      .border-low {
+        --tw-border-opacity: 1;
+        border-color: rgb(243 67 53 / var(--tw-border-opacity));
       }
-      .bg-danger {
-        --tw-bg-opacity: 1;
-        background-color: rgb(243 67 53 / var(--tw-bg-opacity));
+      .border-medium {
+        --tw-border-opacity: 1;
+        border-color: rgb(255 235 59 / var(--tw-border-opacity));
       }
-      .bg-info {
-        --tw-bg-opacity: 1;
-        background-color: rgb(3 169 244 / var(--tw-bg-opacity));
-      }
-      .bg-warning {
-        --tw-bg-opacity: 1;
-        background-color: rgb(254 153 0 / var(--tw-bg-opacity));
-      }
-      .bg-error {
-        --tw-bg-opacity: 1;
-        background-color: rgb(121 134 203 / var(--tw-bg-opacity));
-      }
-      .bg-compliance-yellow {
-        --tw-bg-opacity: 1;
-        background-color: rgb(255 235 59 / var(--tw-bg-opacity));
-      }
-      .bg-compliance-orange {
-        --tw-bg-opacity: 1;
-        background-color: rgb(255 87 34 / var(--tw-bg-opacity));
+      .border-high {
+        --tw-border-opacity: 1;
+        border-color: rgb(76 176 79 / var(--tw-border-opacity));
       }
     </style>
   </head>
 
   <body>
     <!-- Stickied navbar -->
-    <nav class="d-flex sticky top-0 z-10 bg-gray-100 px-3 py-3 print:hidden">
+    <nav
+      class="d-flex sticky top-0 z-10 bg-gray-100 px-3 py-3 print:hidden border-b border-gray-300 shadow-lg"
+    >
       <!-- Heimdall report -->
       <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
       <!-- Profile info link -->
@@ -227,7 +213,7 @@
           <div class="w-64 px-2 py-2">
             <strong>Compliance</strong>
             <p
-              class="my-1 rounded-full bg-{{compliance.color}} text-center text-4xl print:bg-white print:text-2xl"
+              class="my-1 rounded-full text-center text-4xl print:text-2xl border border-{{compliance.color}} border-4 print:border-none"
             >
               {{compliance.level}}
             </p>
@@ -245,9 +231,7 @@
     <!-- Generate a control set accordion for every control set -->
     <span id="{{fileID}}"></span>
     <!-- Outer accordion -->
-    <div
-      class="mx-2 rounded-t-xl border border-neutral-200 bg-white print:hidden"
-    >
+    <div class="mx-2 rounded-t-xl border border-gray-300 bg-white print:hidden">
       <h2 class="mb-0">
         <!-- Button def -->
         <button
@@ -292,10 +276,10 @@
         data-te-collapse-show
       >
         <!-- Control header -->
-        <div class="mx-4 bg-gray-100 rounded-t-xl border border-neutral-200">
+        <div class="mx-4 bg-gray-100 rounded-t-xl border border-gray-300">
           <div class="flex w-full shrink mx-6 my-4">
-            <div class="hidden sm:block w-32">Status</div>
-            <div class="sm:block w-28 md:pl-3">
+            <div class="hidden sm:block w-40">Status</div>
+            <div class="sm:block w-28 lg:w-32 md:pl-6">
               <div>ID</div>
               <hr class="sm:hidden bg-neutral-400 h-1" />
               <div class="sm:hidden">Status</div>
@@ -304,11 +288,9 @@
               <hr class="lg:hidden bg-neutral-400 h-1 sm:w-12" />
               <div class="lg:hidden">800-53 Controls & CCIs</div>
             </div>
-            <div class="hidden sm:block w-20 md:pl-6 lg:pl-11">Severity</div>
-            <div class="sm:block w-1/2 pl-6 sm:pl-1 md:pl-10 lg:pl-16">
-              Title
-            </div>
-            <div class="hidden lg:block lg:w-36 xl:w-52 pl-6">
+            <div class="hidden sm:block w-28 pl-3">Severity</div>
+            <div class="sm:block w-1/2 pl-8 sm:pl-5 lg:pl-9">Title</div>
+            <div class="hidden lg:block lg:w-36 xl:w-52">
               800-53 Controls & CCIs
             </div>
           </div>
@@ -316,7 +298,7 @@
 
         <!-- Generate a control accordion for every control -->
         {{#controls}}
-        <div class="mx-4 rounded-t-xl border border-neutral-200 bg-white">
+        <div class="mx-4 rounded-t-xl border border-gray-300 bg-white">
           <h2 class="mb-0">
             <!-- Button def -->
             <button
@@ -335,17 +317,21 @@
                 </div>
                 <div>
                   <!-- Control status indicator -->
-                  <span
-                    class="bg-{{controlStatus.color}} rounded px-2 py-1 text-black"
-                    >{{controlStatus.status}}</span
+                  <div
+                    class="grid grid-flow-col items-center bg-gray-100 rounded text-black px-2 py-1 border border-gray-300"
                   >
+                    <div>{{{controlStatus.color}}}</div>
+                    <span>{{controlStatus.status}}</span>
+                  </div>
                 </div>
                 <div>
                   <!-- Control severity indicator -->
-                  <span
-                    class="bg-{{controlSeverity.color}} rounded px-2 py-1 text-black"
-                    >{{controlSeverity.severity}}</span
+                  <div
+                    class="grid grid-flow-col items-center bg-gray-100 rounded text-black px-2 py-1 border border-gray-300"
                   >
+                    <div>{{{controlSeverity.color}}}</div>
+                    <span>{{controlSeverity.severity}}</span>
+                  </div>
                 </div>
                 {{#controlTags}}
                 <div class="w-16">
@@ -358,42 +344,42 @@
 
               <!-- Greater breakpoints -->
               <!-- Control status indicator -->
-              <div class="w-36 hidden sm:block">
-                <span
-                  class="bg-{{controlStatus.color}} rounded px-2 py-1 text-black"
-                  >{{controlStatus.status}}</span
-                >
+              <div
+                class="w-40 hidden sm:grid grid-flow-col items-center bg-gray-100 rounded text-black px-2 py-1 border border-gray-300"
+              >
+                <div>{{{controlStatus.color}}}</div>
+                <span>{{controlStatus.status}}</span>
               </div>
               <!-- Control ID -->
-              <div class="w-32 lg:w-36 hidden sm:grid grid-cols-1 gap-y-2">
-                <span class="pr-4 break-all">{{hdf.wraps.id}}</span>
+              <div class="w-32 lg:w-36 hidden sm:grid grid-cols-1 gap-y-2 px-6">
+                <span class="break-all">{{hdf.wraps.id}}</span>
                 <!-- NIST & CCI controls; appear once past large breakpoint -->
                 {{#controlTags}}
                 <div class="lg:hidden w-16">
-                  <span class="bg-gray-100 rounded px-2 py-1 text-black"
+                  <span
+                    class="bg-gray-100 rounded px-2 py-1 text-black border border-gray-300"
                     >{{.}}</span
                   >
                 </div>
                 {{/controlTags}}
               </div>
               <!-- Control severity indicator -->
-              <div class="w-20 hidden sm:block">
-                <span
-                  class="bg-{{controlSeverity.color}} rounded px-2 py-1 text-black"
-                  >{{controlSeverity.severity}}</span
-                >
+              <div
+                class="w-28 hidden sm:grid grid-flow-col items-center bg-gray-100 rounded text-black px-2 py-1 border border-gray-300"
+              >
+                <div>{{{controlSeverity.color}}}</div>
+                <span>{{controlSeverity.severity}}</span>
               </div>
               <!-- Control title -->
-              <span class="pl-4 pr-4 w-1/2 break-words"
-                >{{hdf.wraps.title}}</span
-              >
+              <span class="px-6 w-1/2 break-words">{{hdf.wraps.title}}</span>
               <!-- Control tags -->
               <div
                 class="hidden lg:grid grid-cols-1 xl:grid-cols-2 gap-x-6 gap-y-2"
               >
                 {{#controlTags}}
                 <div class="w-24">
-                  <span class="bg-gray-100 rounded px-2 py-1 text-black"
+                  <span
+                    class="bg-gray-100 rounded px-2 py-1 text-black border border-gray-300"
                     >{{.}}</span
                   >
                 </div>
