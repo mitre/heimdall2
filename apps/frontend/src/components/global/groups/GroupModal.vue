@@ -49,6 +49,8 @@
             v-model="parentGroupId"
             :items="availableGroups"
             label="Parent Group (optional)"
+            chips
+            deletable-chips
           />
           <v-textarea
             v-model="groupInfo.desc"
@@ -109,6 +111,7 @@
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import GroupAPIKeysModal from '@/components/global/groups/GroupAPIKeysModal.vue';
 import Users from '@/components/global/groups/Users.vue';
+import {GroupRelationsModule} from '@/store/group_relations';
 import {GroupsModule} from '@/store/groups';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
@@ -164,7 +167,10 @@ export default class GroupModal extends Vue {
   dialog = false;
   changePassword = false;
   groupInfo: IGroup = _.cloneDeep(this.group);
-  parentGroupId: string = '-1';
+  parentGroupId: string | null =
+    GroupRelationsModule.allGroupRelations.find(
+      (groupRelation) => groupRelation.childId === this.groupInfo.id
+    )?.parentId || null;
 
   currentPassword = '';
   newPassword = '';
@@ -194,16 +200,6 @@ export default class GroupModal extends Vue {
     });
   }
 
-  // getInitialParentId(): string {
-  //   let parentId: string = '-1';
-  //   axios.get<IGroupRelation[]>('/group-relations').then((response) => {
-  //     parentId =
-  //       response.data.find((relation) => relation.childId === this.groupInfo.id)
-  //         ?.parentId || '-1';
-  //   });
-  //   return parentId;
-  // }
-
   // Upon user role update, the child component will emit whether the current state is acceptable
   saveable = true;
   updateSaveState(saveable: boolean) {
@@ -229,10 +225,38 @@ export default class GroupModal extends Vue {
     const group = response.data;
     await GroupsModule.UpdateGroupById(group.id);
     await this.syncUsersWithGroup(group);
+
+    let groupRelation = GroupRelationsModule.allGroupRelations.find(
+      (groupRelation) => groupRelation.childId === this.groupInfo.id
+    );
+    // If there is an existing relation, either update or delete it. If not, add a new one.
+    if (groupRelation) {
+      if (this.parentGroupId) {
+        await this.updateExistingGroupRelation({
+          parentId: this.parentGroupId,
+          childId: this.groupInfo.id
+        });
+      } else {
+        await GroupRelationsModule.DeleteGroupRelation(groupRelation);
+      }
+    } else {
+      if (this.parentGroupId) {
+        groupRelation = (
+          await this.addGroupRelation({
+            parentId: this.parentGroupId,
+            childId: this.groupInfo.id
+          })
+        ).data;
+      }
+    }
+    if (groupRelation)
+      await GroupRelationsModule.UpdateGroupRelationById(groupRelation.id);
+
     // This clears when creating a new Group.
     // Calling clear on edit makes it impossible to edit the same group twice.
     if (this.create) {
       this.groupInfo = newGroup();
+      this.parentGroupId = null;
     }
     this.dialog = false;
     SnackbarModule.notify(`Group Successfully Saved`);
@@ -248,16 +272,6 @@ export default class GroupModal extends Vue {
   ): Promise<AxiosResponse<IGroup>> {
     return axios.put<IGroup>(`/groups/${this.groupInfo.id}`, groupToUpdate);
   }
-
-  // async addGroupRelation(
-  //   addGroupRelation: IAddGroupRelation
-  // ): Promise<AxiosResponse<IGroupRelation>> {
-  //   return axios.post<IGroupRelation>('/group-relations', addGroupRelation);
-  // }
-
-  // async updateGroupRelation(groupRelationToUpdate: IAddGroupRelation) {
-  //   return axios.put<IGroupRelation>(`/group-relations/`);
-  // }
 
   async syncUsersWithGroup(group: IGroup) {
     const originalIds = this.group.users.map((user) => user.id);
@@ -300,6 +314,25 @@ export default class GroupModal extends Vue {
       () => {
         return Promise.all(removedUserPromises);
       }
+    );
+  }
+
+  async addGroupRelation(
+    addGroupRelation: IAddGroupRelation
+  ): Promise<AxiosResponse<IGroupRelation>> {
+    return axios.post<IGroupRelation>('/group-relations', addGroupRelation);
+  }
+
+  async updateExistingGroupRelation(
+    groupRelationToUpdate: IAddGroupRelation
+  ): Promise<AxiosResponse<IGroupRelation>> {
+    return axios.put<IGroupRelation>(
+      `/group-relations/${
+        GroupRelationsModule.allGroupRelations.find(
+          (groupRelation) => groupRelation.childId === this.groupInfo.id
+        )?.id
+      }`,
+      groupRelationToUpdate
     );
   }
 }
