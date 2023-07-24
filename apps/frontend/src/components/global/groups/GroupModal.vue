@@ -45,6 +45,11 @@
               </v-tooltip>
             </v-col>
           </v-row>
+          <v-autocomplete
+            v-model="parentGroupId"
+            :items="availableGroups"
+            label="Parent Group (optional)"
+          />
           <v-textarea
             v-model="groupInfo.desc"
             data-cy="desc"
@@ -107,10 +112,13 @@ import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
+import {IVuetifyItems} from '@/utilities/helper_util';
 import {
+  IAddGroupRelation,
   IAddUserToGroup,
   ICreateGroup,
   IGroup,
+  IGroupRelation,
   IRemoveUserFromGroup,
   ISlimUser,
   IUpdateGroupUser
@@ -156,6 +164,7 @@ export default class GroupModal extends Vue {
   dialog = false;
   changePassword = false;
   groupInfo: IGroup = _.cloneDeep(this.group);
+  parentGroupId: string = '-1';
 
   currentPassword = '';
   newPassword = '';
@@ -171,6 +180,29 @@ export default class GroupModal extends Vue {
   get apiKeysEnabled(): boolean {
     return ServerModule.apiKeysEnabled;
   }
+
+  get availableGroups(): IVuetifyItems[] {
+    // TODO: Change this when we add the "visibility" part of things
+    const groups = GroupsModule.myGroups.filter(
+      (group) => group.id !== this.groupInfo.id
+    );
+    return groups.map((group) => {
+      return {
+        text: group.name,
+        value: group.id
+      };
+    });
+  }
+
+  // getInitialParentId(): string {
+  //   let parentId: string = '-1';
+  //   axios.get<IGroupRelation[]>('/group-relations').then((response) => {
+  //     parentId =
+  //       response.data.find((relation) => relation.childId === this.groupInfo.id)
+  //         ?.parentId || '-1';
+  //   });
+  //   return parentId;
+  // }
 
   // Upon user role update, the child component will emit whether the current state is acceptable
   saveable = true;
@@ -216,6 +248,16 @@ export default class GroupModal extends Vue {
   ): Promise<AxiosResponse<IGroup>> {
     return axios.put<IGroup>(`/groups/${this.groupInfo.id}`, groupToUpdate);
   }
+
+  // async addGroupRelation(
+  //   addGroupRelation: IAddGroupRelation
+  // ): Promise<AxiosResponse<IGroupRelation>> {
+  //   return axios.post<IGroupRelation>('/group-relations', addGroupRelation);
+  // }
+
+  // async updateGroupRelation(groupRelationToUpdate: IAddGroupRelation) {
+  //   return axios.put<IGroupRelation>(`/group-relations/`);
+  // }
 
   async syncUsersWithGroup(group: IGroup) {
     const originalIds = this.group.users.map((user) => user.id);
