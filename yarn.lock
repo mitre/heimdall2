@@ -2981,9 +2981,9 @@
     glob-to-regexp "^0.3.0"
 
 "@nestjs/cli@^10.0.1":
-  version "10.1.9"
-  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-10.1.9.tgz#97d37103962571ee28ef0d00ab080c86bc4dda7a"
-  integrity sha512-kD+QZUPZ5T9dCfp5pjYXQ+tulLiszARQiXuTi56ZvsKg0MVW3jrF90zfMD5thU5XyfmUYFCpB1kpCMXiOYhLcg==
+  version "10.1.10"
+  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-10.1.10.tgz#ae4cdc26e9e02602f653237a4e68d94f764c0722"
+  integrity sha512-5adPl6m2X0uOrK4IPUbzBJUqZ//UKsKi9c7yAR3uCu+moSDMieG/YeKt+zGLnF2gaCdHdgeWWoxI0nfMVE5uCA==
   dependencies:
     "@angular-devkit/core" "16.1.4"
     "@angular-devkit/schematics" "16.1.4"
@@ -4648,9 +4648,9 @@
   integrity sha512-MUSpfpW0yZbTgjekDbH0shMYBUD+X/uJJJMm9LXN1d5yjl5lCY1vN/eWKD6D1tOtjA6206K0zcIPnUaFMurdNA==
 
 "@types/node@*", "@types/node@^20.1.0":
-  version "20.4.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.2.tgz#129cc9ae69f93824f92fac653eebfb4812ab4af9"
-  integrity sha512-Dd0BYtWgnWJKwO1jkmTrzofjK2QXXcai0dmtzvIBhcA+RsG5h8R3xlyta0kGOZRNfL9GuRtb1knmPEhQrePCEw==
+  version "20.4.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.4.3.tgz#ca83a5a006e0d5709a3fe8966112f26436071d81"
+  integrity sha512-Yu3+r4Mn/iY6Mf0aihncZQ1qOjOUrCiodbHHY1hds5O+7BbKp9t+Li7zLO13zO8j9L2C6euz8xsYQP0rjGvVXw==
 
 "@types/node@^10.1.0":
   version "10.17.60"
@@ -6467,9 +6467,9 @@ available-typed-arrays@^1.0.5:
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
 aws-sdk@^2.1046.0, aws-sdk@^2.573.0:
-  version "2.1416.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1416.0.tgz#6f88c74a72cc7bc6e5af1b0711f24106445e22c5"
-  integrity sha512-AP36hsRZhyceyCoTYrsV9FH04CEcAegQYcrg2ybsYB4axo5uvwM67YLFcwc9jAAbk4l2ALWv2XnI0e7HZFCGqQ==
+  version "2.1418.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1418.0.tgz#3c04e3484b9c826492b1d1d10f4ba19f4860e2a0"
+  integrity sha512-6WDMJQAWKwVt+44+61c/SAXKpUSwToqBMeaqizhEe3GN8TWfxMc9RfCnsYIIwS+L+5hedmKC5oc6Fg2ujs8KUQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -8672,10 +8672,10 @@ cypress-wait-until@^1.7.1:
   resolved "https://registry.yarnpkg.com/cypress-wait-until/-/cypress-wait-until-1.7.2.tgz#7f534dd5a11c89b65359e7a0210f20d3dfc22107"
   integrity sha512-uZ+M8/MqRcpf+FII/UZrU7g1qYZ4aVlHcgyVopnladyoBrpoaMJ4PKZDrdOJ05H5RHbr7s9Tid635X3E+ZLU/Q==
 
-cypress@12.17.1:
-  version "12.17.1"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-12.17.1.tgz#777fdcceec4ecd642fc90795f5994853b6ea03f8"
-  integrity sha512-eKfBgO6t8waEyhegL4gxD7tcI6uTCGttu+ZU7y9Hq8BlpMztd7iLeIF4AJFAnbZH1xjX+wwgg4cRKFNSvv3VWQ==
+cypress@12.17.2:
+  version "12.17.2"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-12.17.2.tgz#040ac55de1e811f6e037d231a2869d5ab8c29c85"
+  integrity sha512-hxWAaWbqQBzzMuadSGSuQg5PDvIGOovm6xm0hIfpCVcORsCAj/gF2p0EvfnJ4f+jK2PCiDgP6D2eeE9/FK4Mjg==
   dependencies:
     "@cypress/request" "^2.88.11"
     "@cypress/xvfb" "^1.2.4"
@@ -10497,9 +10497,9 @@ express-history-api-fallback@^2.2.1:
   integrity sha512-swxwm3aP8vrOOvlzOdZvHlSZtJGwHKaY94J6AkrAgCTmcbko3IRwbkhLv2wKV1WeZhjxX58aLMpP3atDBnKuZg==
 
 express-rate-limit@*, express-rate-limit@^6.0.1:
-  version "6.7.1"
-  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-6.7.1.tgz#ca93de8eaa25878b539d478948fc94592742e526"
-  integrity sha512-eH4VgI64Nowd2vC5Xylx0lLYovWIp2gRFtTklWDbhSDydGAPQUjvr1B7aQ2/ZADrAi6bJ51qSizKIXWAZ1WCQw==
+  version "6.8.0"
+  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-6.8.0.tgz#4f1f8238ba209caee2a43be921813f1b70e29beb"
+  integrity sha512-yVeDWczkh8qgo9INJB1tT4j7LFu+n6ei/oqSMsqpsUIGYjTM+gk+Q3wv19TMUdo8chvus8XohAuOhG7RYRM9ZQ==
 
 express-session@^1.17.1:
   version "1.17.3"
@@ -21522,9 +21522,9 @@ wmf@~1.0.1:
   integrity sha512-/p9K7bEh0Dj6WbXg4JG0xvLQmIadrner1bi45VMJTfnbVHsc7yIajZyoSoK60/dtVBs12Fm6WkUI5/3WAVsNMw==
 
 word-wrap@~1.2.3:
-  version "1.2.3"
-  resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.3.tgz#610636f6b1f703891bd34771ccb17fb93b47079c"
-  integrity sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
+  version "1.2.4"
+  resolved "https://registry.yarnpkg.com/word-wrap/-/word-wrap-1.2.4.tgz#cb4b50ec9aca570abd1f52f33cd45b6c61739a9f"
+  integrity sha512-2V81OA4ugVo5pRo46hAoD2ivUJx8jXmWXfUkY4KFNw0hEptvN0QfH3K4nHiwzGeKl5rFKedV48QVoqYavy4YpA==
 
 word@~0.3.0:
   version "0.3.0"
