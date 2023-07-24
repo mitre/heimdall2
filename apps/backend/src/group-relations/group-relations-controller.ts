@@ -6,23 +6,16 @@ import {
   Param,
   Post,
   Put,
-  Request,
-  UseInterceptors
+  Request
 } from '@nestjs/common';
-import {AuthzService} from '../authz/authz.service';
-import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {AddGroupRelationDto} from './dto/add-group-relation.dto';
 import {GroupRelationDto} from './dto/group-relation.dto';
 import {GroupRelationsService} from './group-relations.service';
 
 @Controller('group-relations')
-@UseInterceptors(LoggingInterceptor)
 export class GroupRelationsController {
-  constructor(
-    private readonly groupRelationsService: GroupRelationsService,
-    private readonly authz: AuthzService
-  ) {}
+  constructor(private readonly groupRelationsService: GroupRelationsService) {}
 
   @Get()
   async findAll(@Request() request: {user: User}): Promise<GroupRelationDto[]> {

@@ -1,4 +1,3 @@
-import {Model} from 'sequelize';
 import {
   AllowNull,
   AutoIncrement,
@@ -6,6 +5,7 @@ import {
   CreatedAt,
   DataType,
   ForeignKey,
+  Model,
   PrimaryKey,
   Table,
   Unique,
@@ -25,9 +25,9 @@ export class GroupRelation extends Model {
   @Column(DataType.BIGINT)
   parentId!: string;
 
+  @Unique
   @ForeignKey(() => Group)
   @Column(DataType.BIGINT)
-  @Unique
   childId!: string;
 
   @CreatedAt

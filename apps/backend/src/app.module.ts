@@ -13,6 +13,7 @@ import {DatabaseModule} from './database/database.module';
 import {EvaluationTagsModule} from './evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from './evaluations/evaluations.module';
 import {GroupEvaluationsModule} from './group-evaluations/group-evaluations.module';
+import {GroupRelationsModule} from './group-relations/group-relations.module';
 import {GroupUsersModule} from './group-users/group-users.module';
 import {GroupsModule} from './groups/groups.module';
 import {StatisticsModule} from './statistics/statistics.module';
@@ -33,6 +34,7 @@ import {UsersModule} from './users/users.module';
     EvaluationTagsModule,
     EvaluationsModule,
     GroupEvaluationsModule,
+    GroupRelationsModule,
     GroupsModule,
     GroupUsersModule,
     StatisticsModule
