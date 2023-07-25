@@ -189,7 +189,7 @@ export default class GroupModal extends Vue {
     );
     if (!this.uniqueName) SnackbarModule.failure(`Group names must be unique`);
   }
-  
+
   async save(): Promise<void> {
     const groupInfo: ICreateGroup = {
       ...this.groupInfo
@@ -210,7 +210,7 @@ export default class GroupModal extends Vue {
     SnackbarModule.notify(`Group Successfully Saved`);
     location.reload();
   }
-  
+
   async cancel(): Promise<void> {
     this.dialog = false;
     location.reload();
