@@ -13,6 +13,7 @@ context('Groups', () => {
   const toastVerifier = new ToastVerifier();
   const dataTableVerifier = new DataTableVerifier();
   const groupName = 'Test Group';
+  const updatedGroupName = 'Updated Test Group';
 
   // Run before each test
   beforeEach(() => {
@@ -29,19 +30,16 @@ context('Groups', () => {
     });
 
     it('allows a user to update a group', () => {
-      const updatedGroupName = 'Updated Test Group';
       dropdown.openGroupsPage();
-      groupPage.createGroup(groupName);
       groupPage.updateGroup('Test Group', updatedGroupName);
       dataTableVerifier.verifyTextPresent(updatedGroupName);
     });
 
     it('allows a user to delete a group', () => {
       dropdown.openGroupsPage();
-      groupPage.createGroup(groupName);
-      groupPage.deleteGroup(groupName);
+      groupPage.deleteGroup(updatedGroupName);
       toastVerifier.toastTextContains(
-        `Successfully deleted group ${groupName}`
+        `Successfully deleted group ${updatedGroupName}`
       );
       dataTableVerifier.verifyTextPresent('No groups match current selection.');
     });
