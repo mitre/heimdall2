@@ -24,28 +24,6 @@
             <pre class="pt-5" v-text="description" />
           </v-col>
         </v-row>
-        <v-row class="mb-1">
-          <v-spacer />
-          <v-btn @click="printHelp = true">
-            Printing
-            <v-icon class="ml-2"> mdi-help-circle </v-icon>
-          </v-btn>
-          <v-overlay :opacity="50" absolute="absolute" :value="printHelp">
-            <div class="text-left mx-10">
-              <p>
-                Heimdall supports PDF and physical paper printing of results via
-                HTML exports, which leverage custom stylings specifically
-                tailored for PDF generation and physical print mediums. After
-                downloading an HTML export of your results, use your browser's
-                built-in print view (accessible through the browser's general
-                drop-down menu or using the shortcut command CTRL + P
-                (Windows)/CMD + P (MacOS)) to configure and print your PDF/paper
-                copy.
-              </p>
-              <v-btn color="info" @click="printHelp = false"> Close </v-btn>
-            </div>
-          </v-overlay>
-        </v-row>
       </v-card-text>
       <v-divider />
       <v-card-actions>
