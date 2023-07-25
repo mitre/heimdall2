@@ -1,22 +1,35 @@
-v2.6.58
-- Admin panel @Rlin232 (#4659)
-- Improving Splunk Interface @charleshu-8 (#4632)
-- resolves #4698 @wdower (#4699)
+v2.6.59
+
+ - Add None category to severity summary chart @charleshu-8 (#4735)
+ - Update Netsparker mapper @charleshu-8 (#4602)
 
 ## Dependency Updates
-- Bump @types/node from 20.4.0 to 20.4.1 @dependabot (#4697)
-- Bump @types/passport-jwt from 3.0.8 to 3.0.9 @dependabot (#4704)
-- Bump @typescript-eslint/parser from 5.61.0 to 5.62.0 @dependabot (#4701)
-- Bump semver from 5.7.1 to 5.7.2 @dependabot (#4706)
-- Bump cypress from 12.17.0 to 12.17.1 @dependabot (#4700)
-- Bump aws-sdk from 2.1412.0 to 2.1413.0 @dependabot (#4696)
-- Bump express-rate-limit from 6.7.0 to 6.7.1 @dependabot (#4694)
-- Bump cypress from 12.16.0 to 12.17.0 @dependabot (#4691)
-- Bump aws-sdk from 2.1411.0 to 2.1412.0 @dependabot (#4692)
-- Bump vuetify from 2.6.15 to 2.7.0 @dependabot (#4687)
-- Bump core-js from 3.31.0 to 3.31.1 @dependabot (#4689)
-- Bump @types/node from 20.3.3 to 20.4.0 @dependabot (#4688)
-- Bump aws-sdk from 2.1410.0 to 2.1411.0 @dependabot (#4686)
+- Bump aws-sdk from 2.1416.0 to 2.1418.0 @dependabot (#4732)
+- Bump word-wrap from 1.2.3 to 1.2.4 @dependabot (#4733)
+- Bump @nestjs/cli from 10.1.9 to 10.1.10 @dependabot (#4731)
+
+v2.6.58
+
+- Group Descriptions @Rlin232 (#4695)
+- Reassign group owners upon user deletion @Rlin232 (#4403)
+- Improve xccdf_results_mapper when converting XCCDF Results to HDF Results @candrews (#4255)
+- Update Splunk links @charleshu-8 (#4716)
+
+
+## Dependency Updates
+- Bump eslint from 8.44.0 to 8.45.0 @dependabot (#4721)
+- Bump @nestjs/cli from 10.1.8 to 10.1.9 @dependabot (#4725)
+- Bump aws-sdk from 2.1415.0 to 2.1416.0 @dependabot (#4723)
+- Bump jsonwebtoken from 9.0.0 to 9.0.1 @dependabot (#4684)
+- Bump @aws-sdk/client-config-service from 3.369.0 to 3.370.0 @dependabot (#4720)
+- Bump @types/node from 20.4.1 to 20.4.2 @dependabot (#4714)
+- Bump prettier-plugin-organize-imports from 3.2.2 to 3.2.3 @dependabot (#4719)
+- Bump aws-sdk from 2.1414.0 to 2.1415.0 @dependabot (#4718)
+- Bump aws-sdk from 2.1413.0 to 2.1414.0 @dependabot (#4711)
+- Bump @aws-sdk/client-config-service from 3.363.0 to 3.369.0 @dependabot (#4712)
+- Bump winston from 3.9.0 to 3.10.0 @dependabot (#4702)
+- Bump @nestjs/cli from 10.1.7 to 10.1.8 @dependabot (#4710)
+- Bump @typescript-eslint/eslint-plugin from 5.61.0 to 5.62.0 @dependabot (#4705)
 
 v2.6.57
 
