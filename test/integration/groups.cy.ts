@@ -12,8 +12,9 @@ context('Groups', () => {
   const dropdown = new Dropdown();
   const toastVerifier = new ToastVerifier();
   const dataTableVerifier = new DataTableVerifier();
-  const groupName = 'Test Group';
-  const updatedGroupName = 'Updated Test Group';
+  const groupName1 = 'Test Group 1';
+  const groupName2 = 'Test Group 2';
+  const groupName3 = 'Test Group 3';
 
   // Run before each test
   beforeEach(() => {
@@ -25,21 +26,24 @@ context('Groups', () => {
   describe('CRUD', () => {
     it('allows a user to create a group', () => {
       dropdown.openGroupsPage();
-      groupPage.createGroup(groupName);
-      dataTableVerifier.verifyTextPresent(groupName);
+      groupPage.createGroup(groupName1);
+      dataTableVerifier.verifyTextPresent(groupName1);
     });
 
     it('allows a user to update a group', () => {
+      const updatedGroupName = 'Updated Test Group';
       dropdown.openGroupsPage();
-      groupPage.updateGroup('Test Group', updatedGroupName);
+      groupPage.createGroup(groupName2);
+      groupPage.updateGroup(groupName2, updatedGroupName);
       dataTableVerifier.verifyTextPresent(updatedGroupName);
     });
 
     it('allows a user to delete a group', () => {
       dropdown.openGroupsPage();
-      groupPage.deleteGroup(updatedGroupName);
+      groupPage.createGroup(groupName3);
+      groupPage.deleteGroup(groupName3);
       toastVerifier.toastTextContains(
-        `Successfully deleted group ${updatedGroupName}`
+        `Successfully deleted group ${groupName3}`
       );
       dataTableVerifier.verifyTextPresent('No groups match current selection.');
     });
