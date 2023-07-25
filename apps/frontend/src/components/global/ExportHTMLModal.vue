@@ -144,13 +144,13 @@ interface Detail {
 // Status of a specific control; lvl 2
 interface ControlStatus {
   status: string;
-  color: string;
+  icon: string;
 }
 
 // Severity of a specific control; lvl 2
 interface ControlSeverity {
   severity: string;
-  color: string;
+  icon: string;
 }
 
 // Container for all controls; lvl 1
@@ -196,6 +196,78 @@ export default class ExportHTMLModal extends Vue {
   // If we are exporting a profile we can remove the test/results table
   @Prop({type: String, required: true}) readonly fileType!: string;
 
+  // Generated injectable HTML for icons
+  private iconHTMLStore = {
+    // Passed; green
+    circleCheck: this.iconDatatoSVG(
+      mdiCheckCircle,
+      'rgb(76, 176, 79)',
+      'A green circle with a check'
+    ),
+    // Failed; red
+    circleCross: this.iconDatatoSVG(
+      mdiCloseCircle,
+      'rgb(243, 67, 53)',
+      'A red circle with a cross'
+    ),
+    // Not applicable; blue
+    circleMinus: this.iconDatatoSVG(
+      mdiMinusCircle,
+      'rgb(3, 169, 244)',
+      'A blue circle with a minus'
+    ),
+    // Not reviewed; yellow
+    circleAlert: this.iconDatatoSVG(
+      mdiAlertCircle,
+      'rgb(254, 153, 0)',
+      'A yellow circle with an exclamation point'
+    ),
+    // Profile error; purple
+    triangleAlert: this.iconDatatoSVG(
+      mdiAlert,
+      'rgb(121, 134, 203)',
+      'A purple triangle with an exclamation point'
+    ),
+    // Total count; black
+    squareEqual: this.iconDatatoSVG(
+      mdiEqualBox,
+      'black',
+      'A black square with an equal'
+    ),
+    // No severity; blue
+    circleNone: this.iconDatatoSVG(
+      mdiCircle,
+      'rgb(3, 169, 244)',
+      'A blue circle'
+    ),
+    // Low severity; yellow
+    circleLow: this.iconDatatoSVG(
+      mdiCircle,
+      'rgb(255, 235, 59)',
+      'A yellow circle'
+    ),
+    // Medium severity; orange
+    circleMedium: this.iconDatatoSVG(
+      mdiCircle,
+      'rgb(255, 152, 0)',
+      'An orange circle'
+    ),
+    // High severity; deep orange
+    circleHigh: this.iconDatatoSVG(
+      mdiCircle,
+      'rgb(255, 87, 34)',
+      'A deep orange circle'
+    ),
+    // Critical severity; red
+    circleCritical: this.iconDatatoSVG(
+      mdiCircle,
+      'rgb(244, 67, 54)',
+      'A red circle'
+    ),
+    // Generic circle
+    circleWhite: this.iconDatatoSVG(mdiCircle, 'rgb(0, 0, 0)', 'A white circle')
+  };
+
   // Default attributes
   showingModal = false;
   exportType = 'executive';
@@ -236,71 +308,27 @@ export default class ExportHTMLModal extends Vue {
     // Series of icons used for profile-related detail reports
     icons: {
       // Passed
-      circleCheck: this.iconDatatoSVG(
-        mdiCheckCircle,
-        'rgb(76, 176, 79)',
-        'A green circle with a check'
-      ), // green
+      circleCheck: this.iconHTMLStore.circleCheck,
       // Failed
-      circleCross: this.iconDatatoSVG(
-        mdiCloseCircle,
-        'rgb(243, 67, 53)',
-        'A red circle with a cross'
-      ), // red
+      circleCross: this.iconHTMLStore.circleCross,
       // Not applicable
-      circleMinus: this.iconDatatoSVG(
-        mdiMinusCircle,
-        'rgb(3, 169, 244)',
-        'A blue circle with a minus'
-      ), // blue
+      circleMinus: this.iconHTMLStore.circleMinus,
       // Not reviewed
-      circleAlert: this.iconDatatoSVG(
-        mdiAlertCircle,
-        'rgb(254, 153, 0)',
-        'A yellow circle with an exclamation point'
-      ), // yellow
+      circleAlert: this.iconHTMLStore.circleAlert,
       // Profile error
-      triangleAlert: this.iconDatatoSVG(
-        mdiAlert,
-        'rgb(121, 134, 203)',
-        'A purple triangle with an exclamation point'
-      ), // purple
+      triangleAlert: this.iconHTMLStore.triangleAlert,
       // Total count
-      squareEqual: this.iconDatatoSVG(
-        mdiEqualBox,
-        'black',
-        'A black square with an equal'
-      ),
+      squareEqual: this.iconHTMLStore.squareEqual,
       // No severity
-      circleNone: this.iconDatatoSVG(
-        mdiCircle,
-        'rgb(3, 169, 244)',
-        'A blue circle'
-      ),
+      circleNone: this.iconHTMLStore.circleNone,
       // Low severity
-      circleLow: this.iconDatatoSVG(
-        mdiCircle,
-        'rgb(255, 235, 59)',
-        'A yellow circle'
-      ), // yellow
+      circleLow: this.iconHTMLStore.circleLow,
       // Medium severity
-      circleMedium: this.iconDatatoSVG(
-        mdiCircle,
-        'rgb(255, 152, 0)',
-        'An orange circle'
-      ), // orange
+      circleMedium: this.iconHTMLStore.circleMedium,
       // High severity
-      circleHigh: this.iconDatatoSVG(
-        mdiCircle,
-        'rgb(255, 87, 34)',
-        'A deep orange circle'
-      ), // deep orange
+      circleHigh: this.iconHTMLStore.circleHigh,
       // Critical severity
-      circleCritical: this.iconDatatoSVG(
-        mdiCircle,
-        'rgb(244, 67, 54)',
-        'A red circle'
-      ) // red
+      circleCritical: this.iconHTMLStore.circleCritical
     }
   };
 
@@ -481,100 +509,50 @@ export default class ExportHTMLModal extends Vue {
   ): ContextualizedControl & {details: Detail[]} & {controlID: string} & {
     controlStatus: ControlStatus;
   } & {controlSeverity: ControlSeverity} & {controlTags: string[]} {
-    // Check status of individual control to assign corresponding color
+    // Check status of individual control to assign corresponding icon
     let statusColor;
     switch (control.root.hdf.status) {
       case 'Passed':
-        statusColor = this.iconDatatoSVG(
-          mdiCheckCircle,
-          'rgb(76, 176, 79)',
-          'A green circle with a check'
-        ); // green
+        statusColor = this.iconHTMLStore.circleCheck;
         break;
       case 'Failed':
-        statusColor = this.iconDatatoSVG(
-          mdiCloseCircle,
-          'rgb(243, 67, 53)',
-          'A red circle with a cross'
-        ); // red
+        statusColor = this.iconHTMLStore.circleCross;
         break;
       case 'Not Applicable':
-        statusColor = this.iconDatatoSVG(
-          mdiMinusCircle,
-          'rgb(3, 169, 244)',
-          'A blue circle with a minus'
-        ); // blue
+        statusColor = this.iconHTMLStore.circleMinus;
         break;
       case 'Not Reviewed':
-        statusColor = this.iconDatatoSVG(
-          mdiAlertCircle,
-          'rgb(254, 153, 0)',
-          'A yellow circle with an exclamation point'
-        ); // yellow
+        statusColor = this.iconHTMLStore.circleAlert;
         break;
       case 'Profile Error':
-        statusColor = this.iconDatatoSVG(
-          mdiAlert,
-          'rgb(121, 134, 203)',
-          'A purple triangle with an exclamation point'
-        ); // purple
+        statusColor = this.iconHTMLStore.triangleAlert;
         break;
       default:
-        statusColor = this.iconDatatoSVG(
-          mdiCircle,
-          'rgb(0, 0, 0)',
-          'A white circle'
-        );
+        statusColor = this.iconHTMLStore.circleWhite;
     }
 
     // Severity is recorded as all lowercase by default; for aesthetic purposes, uppercase the first letter
-    const severity =
-      control.root.hdf.severity[0].toUpperCase() +
-      control.root.hdf.severity.slice(1);
-    // Check severity of individual control to assign corresponding color
+    const severity = _.capitalize(control.root.hdf.severity);
+    // Check severity of individual control to assign corresponding icon
     let severityColor;
     switch (control.root.hdf.severity) {
       case 'none':
-        severityColor = this.iconDatatoSVG(
-          mdiCircle,
-          'rgb(3, 169, 244)',
-          'A blue circle'
-        ); // blue
+        severityColor = this.iconHTMLStore.circleNone;
         break;
       case 'low':
-        severityColor = this.iconDatatoSVG(
-          mdiCircle,
-          'rgb(255, 235, 59)',
-          'A yellow circle'
-        ); // yellow
+        severityColor = this.iconHTMLStore.circleLow;
         break;
       case 'medium':
-        severityColor = this.iconDatatoSVG(
-          mdiCircle,
-          'rgb(255, 152, 0)',
-          'An orange circle'
-        ); // orange
+        severityColor = this.iconHTMLStore.circleMedium;
         break;
       case 'high':
-        severityColor = this.iconDatatoSVG(
-          mdiCircle,
-          'rgb(255, 87, 34)',
-          'A deep orange circle'
-        ); // deep orange
+        severityColor = this.iconHTMLStore.circleHigh;
         break;
       case 'critical':
-        severityColor = this.iconDatatoSVG(
-          mdiCircle,
-          'rgb(244, 67, 54)',
-          'A red circle'
-        ); // red
+        severityColor = this.iconHTMLStore.circleCritical;
         break;
       default:
-        severityColor = this.iconDatatoSVG(
-          mdiCircle,
-          'rgb(0, 0, 0)',
-          'A white circle'
-        );
+        severityColor = this.iconHTMLStore.circleWhite;
     }
 
     // Grab NIST & CCI controls
@@ -646,11 +624,11 @@ export default class ExportHTMLModal extends Vue {
       controlID: this.replaceIllegalChar(control.hdf.wraps.id),
       controlStatus: {
         status: control.root.hdf.status,
-        color: statusColor
+        icon: statusColor
       },
       controlSeverity: {
         severity: severity,
-        color: severityColor
+        icon: severityColor
       },
       controlTags: filteredControls
     };
