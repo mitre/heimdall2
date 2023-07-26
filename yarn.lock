@@ -282,13 +282,13 @@
     tslib "^1.11.1"
 
 "@aws-sdk/client-config-service@^3.23.0", "@aws-sdk/client-config-service@^3.95.0":
-  version "3.370.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.370.0.tgz#2c18160c6b1eb9f4d1b6e1e337aaca4a9a220e01"
-  integrity sha512-eB7OzaODtFOhMUEb6sMPvhM+ZFzugzcPLsqjFiUnfBGwKWoND5XFwITsvYF+ni1b9CzxX4tkC3ClDOTM8rUeRQ==
+  version "3.377.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.377.0.tgz#027b12f8b310deef049b65ed7b96300d98f06f7a"
+  integrity sha512-1KjSKc1s972c3RAOORJG906mN4K9hjM0c4mzEdNe5wTHpOK69cYdFuPRXHDaoT/QxfNAOuTk82DdU3RMUw7+CA==
   dependencies:
     "@aws-crypto/sha256-browser" "3.0.0"
     "@aws-crypto/sha256-js" "3.0.0"
-    "@aws-sdk/client-sts" "3.370.0"
+    "@aws-sdk/client-sts" "3.377.0"
     "@aws-sdk/credential-provider-node" "3.370.0"
     "@aws-sdk/middleware-host-header" "3.370.0"
     "@aws-sdk/middleware-logger" "3.370.0"
@@ -401,10 +401,10 @@
     "@smithy/util-utf8" "^1.0.1"
     tslib "^2.5.0"
 
-"@aws-sdk/client-sts@3.370.0":
-  version "3.370.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.370.0.tgz#65879fa35b396035dcab446c782056ef768f48af"
-  integrity sha512-utFxOPWIzbN+3kc415Je2o4J72hOLNhgR2Gt5EnRSggC3yOnkC4GzauxG8n7n5gZGBX45eyubHyPOXLOIyoqQA==
+"@aws-sdk/client-sts@3.377.0":
+  version "3.377.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-sts/-/client-sts-3.377.0.tgz#a8345709f2c07725391905e768500cc1f5eb6fab"
+  integrity sha512-K/yTHxVtTIwU42qCxbv78eT74j+GZMCcQ5TUd2fwxEWeq8HcIWcTIhujv7F6UtdrQHrou20wZ/+jMQtVKfkXXQ==
   dependencies:
     "@aws-crypto/sha256-browser" "3.0.0"
     "@aws-crypto/sha256-js" "3.0.0"
