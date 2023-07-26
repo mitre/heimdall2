@@ -89,10 +89,11 @@ export class GroupsService {
     );
     // If there are no more owners, set an admin to owner
     if (
-      owners.length < 2 &&
-      owners.some(
-        (owner) => owner.id === ('userId' in user ? user.userId : user.id)
-      )
+      (owners.length < 2 &&
+        owners.some(
+          (owner) => owner.id === ('userId' in user ? user.userId : user.id)
+        )) ||
+      owners.length === 0
     ) {
       const appConfig = new AppConfig();
       // If default admin is not found, use admin with lowest ID
@@ -181,7 +182,6 @@ export class GroupsService {
     const groupsToLeave = currentGroups.filter(
       (group) => !groups.includes(group.name)
     );
-    const existingGroups: Group[] = [];
 
     // Remove user from any groups that they should not be in
     for (const groupToLeave of groupsToLeave) {
@@ -191,6 +191,8 @@ export class GroupsService {
         this.logger.warn(`Failed to remove user from group: ${err}`);
       }
     }
+
+    const existingGroups: Group[] = [];
 
     // Find existing groups to add user to
     for (const group of groups) {
@@ -207,6 +209,24 @@ export class GroupsService {
     }
 
     // Add user to existing groups that they aren't in yet
-    await Promise.all(existingGroups.filter(existingGroup => !currentGroups.some((group) => group.name === existingGroup.name)).map(this.addUserToGroup(existingGroup, user, 'member')));
+    await Promise.all(
+      existingGroups
+        .filter(
+          (existingGroup) =>
+            !currentGroups.some((group) => group.name === existingGroup.name)
+        )
+        .map((existingGroup) =>
+          this.addUserToGroup(existingGroup, user, 'member')
+        )
+    );
+
+    // Ensure we didn't leave any dangling groups
+    await Promise.all(
+      (
+        await this.findAll()
+      ).map(async (group) => {
+        await this.ensureGroupHasOwner(group, user);
+      })
+    );
   }
 }

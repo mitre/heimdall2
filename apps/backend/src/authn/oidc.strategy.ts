@@ -56,7 +56,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
             configService.get('OIDC_EXTERNAL_GROUPS') === 'true' &&
             groups !== undefined
           ) {
-            groupsService.syncUserGroups(user, groups);
+            await groupsService.syncUserGroups(user, groups);
           }
 
           return done(null, user);
