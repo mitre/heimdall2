@@ -14,8 +14,6 @@ const issues = parsed.issues || '';
 
 // This grabs the js/css to allow for HTML export
 const files = {
-  [require.resolve('jquery/dist/jquery.min.js')]:
-    'public/static/export/jquery.min.js',
   [require.resolve('tw-elements/dist/js/tw-elements.umd.min.js')]:
     'public/static/export/tw-elements.min.js'
 };
