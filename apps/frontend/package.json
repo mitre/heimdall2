@@ -15,7 +15,7 @@
   "scripts": {
     "prebuild": "rimraf ../../dist/frontend",
     "build": "vue-cli-service build",
-    "build:tailwind": "npx tailwindcss -i ./src/tailwind.css -o ./public/static/export/style.css",
+    "build:tailwind": "npx tailwindcss -i ./src/tailwind.css -o ./public/static/export/style.css --minify",
     "lint": "vue-cli-service lint",
     "lint:ci": "vue-cli-service lint --no-fix  --maxWarnings 0",
     "make:component": "vue-cli-service make:component",
