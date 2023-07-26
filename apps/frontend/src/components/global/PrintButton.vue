@@ -14,12 +14,6 @@
         <v-card-title class="headline"> Print </v-card-title>
         <v-card-text>
           <p>
-            Heimdall supports physical paper and PDF printing of displayed
-            results through the HTML export feature, which leverages custom
-            stylings specifically tailored for physical print and PDF
-            generation.
-            <br />
-            <br />
             To print, select Export | Export to HTML. Open the HTML and print.
           </p>
         </v-card-text>
