@@ -4,11 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{exportType}} Report</title>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/tw-elements/dist/css/tw-elements.min.css"
-    />
-    <script src="https://cdn.tailwindcss.com"></script>
     <style>
       .border-low {
         --tw-border-opacity: 1;
@@ -621,6 +616,12 @@
     </div>
     {{/controlSets}} {{/showControlSets}}
 
-    <script src="https://cdn.jsdelivr.net/npm/tw-elements/dist/js/tw-elements.umd.min.js"></script>
+    <script type="text/javascript">
+      {{{twElements}}}
+    </script>
   </body>
 </html>
+
+<style>
+  {{{twStyles}}}
+</style>

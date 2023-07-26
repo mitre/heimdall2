@@ -149,6 +149,8 @@ interface Icons {
 
 // Top level interface; lvl 0
 interface OutputData {
+  twStyles: string;
+  twElements: string;
   files: FileInfo[];
   statistics: Statistics;
   severity: Severity;
@@ -252,6 +254,8 @@ export default class ExportHTMLModal extends Vue {
   description = 'Profile Info\nStatuses\nCompliance Level';
   printHelp = false;
   outputData: OutputData = {
+    twStyles: '',
+    twElements: '',
     // Used for profile status reporting
     statistics: {
       passed: 0,
@@ -619,10 +623,22 @@ export default class ExportHTMLModal extends Vue {
       return SnackbarModule.failure('No files have been loaded.');
     }
 
-    // Pull export template and create outputData object containing data to fill template with
-    const templateRequest = await axios.get<string>(
-      `/static/export/template.html`
+    // Pull export template + styles and create outputData object containing data to fill template with
+    const templateRequest = axios.get<string>(`/static/export/template.html`);
+    const twStylesRequest = axios.get<string>('/static/export/style.css');
+    const twElementsRequest = axios.get<string>(
+      '/static/export/tw-elements.min.js'
     );
+    const responses = await axios.all([
+      templateRequest,
+      twStylesRequest,
+      twElementsRequest
+    ]);
+
+    const template = responses[0].data;
+    this.outputData.twStyles = responses[1].data;
+    this.outputData.twElements = responses[2].data;
+
     for (const fileId of this.filter.fromFile) {
       const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
       if (file) {
@@ -631,7 +647,7 @@ export default class ExportHTMLModal extends Vue {
     }
 
     // Render template and export generated HTML file
-    const body = Mustache.render(templateRequest.data, this.outputData);
+    const body = Mustache.render(template, this.outputData);
     saveAs(
       new Blob([s2ab(body)], {type: 'application/octet-stream'}),
       `${_.capitalize(
