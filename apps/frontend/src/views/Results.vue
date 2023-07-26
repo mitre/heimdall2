@@ -41,9 +41,6 @@
                 :file-type="current_route_name"
               />
             </v-list-item>
-            <v-list-item class="px-0">
-              <ExportPrintModal />
-            </v-list-item>
             <v-list-item v-if="is_result_view" class="px-0">
               <ExportSplunkModal />
             </v-list-item>
@@ -59,6 +56,7 @@
           </v-list>
         </v-menu>
       </div>
+      <PrintButton />
     </template>
 
     <!-- The main content: cards, etc -->
@@ -216,7 +214,7 @@ import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
-import ExportPrintModal from '@/components/global/ExportPrintModal.vue';
+import PrintButton from '@/components/global/PrintButton.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import RouteMixin from '@/mixins/RouteMixin';
@@ -263,7 +261,7 @@ import {compare_times} from '../utilities/delta_util';
     ExportXCCDFResults,
     ExportCKLModal,
     ExportHTMLModal,
-    ExportPrintModal,
+    PrintButton,
     EvaluationInfo,
     ExportSplunkModal,
     ProfileData,
