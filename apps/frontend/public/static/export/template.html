@@ -25,9 +25,9 @@
 
   <body>
     <div class="overflow-hidden">
-      <!-- Stickied navbar -->
+      <!-- Navbar -->
       <nav
-        class="d-flex sticky top-0 z-10 border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden"
+        class="fixed top-0 z-10 min-w-full border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden"
       >
         <!-- Heimdall report -->
         <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
@@ -343,7 +343,7 @@
                     </div>
                   </div>
                   {{#controlTags}}
-                  <div class="w-16">
+                  <div class="w-24">
                     <span class="rounded bg-gray-100 px-2 py-1 text-black"
                       >{{.}}</span
                     >
@@ -438,7 +438,7 @@
                 <!-- Tests -->
                 <h5 class="text-lg font-bold">Test Results</h5>
                 <table
-                  class="table min-w-full text-left"
+                  class="table min-w-full text-left break-words"
                   aria-describedby="Control test description and result"
                 >
                   <!-- Generate all available test results -->
