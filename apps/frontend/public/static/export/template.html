@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{{exportType}} Report</title>
     <style>
+      {{{twStyles}}}
+    </style>
+    <style>
       .border-low {
         --tw-border-opacity: 1;
         border-color: rgb(243 67 53 / var(--tw-border-opacity));
@@ -21,607 +24,620 @@
   </head>
 
   <body>
-    <!-- Stickied navbar -->
-    <nav
-      class="d-flex sticky top-0 z-10 border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden"
-    >
-      <!-- Heimdall report -->
-      <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
-      <!-- Profile info link -->
-      <button role="button" aria-label="Jump to profile info card">
-        <a href="#profileInfo" class="px-3 py-2 text-sm" aria-current="page"
-          >Profile Info</a
-        >
-      </button>
-      <!-- Control sets dropdown menu -->
-      {{#showControlSets}}
-      <div class="inline-block" data-te-dropdown-ref>
-        <!-- Button def -->
-        <button
-          type="button"
-          class="inline-flex px-3 py-2 text-sm"
-          data-te-dropdown-toggle-ref
-          href="#controlSetsList"
-          role="button"
-          aria-controls="controlSetsList"
-          aria-expanded="false"
-          aria-label="Toggle navigation dropdown"
-        >
-          Control Sets
-          <svg
-            class="-mr-1 h-5 w-5 text-gray-400"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            role="img"
-            title="Downward facing gray arrow"
-            aria-label="Downward facing gray arrow"
+    <div class="overflow-hidden">
+      <!-- Stickied navbar -->
+      <nav
+        class="d-flex sticky top-0 z-10 border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden"
+      >
+        <!-- Heimdall report -->
+        <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
+        <!-- Profile info link -->
+        <button role="button" aria-label="Jump to profile info card">
+          <a href="#profileInfo" class="px-3 py-2 text-sm" aria-current="page"
+            >Profile Info</a
           >
-            <path
-              fill-rule="evenodd"
-              d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-              clip-rule="evenodd"
-            />
-          </svg>
         </button>
-        <!-- Menu def -->
-        <div
-          class="z-10 mt-2 hidden w-56 bg-white py-1 shadow-lg [&[data-te-dropdown-show]]:block"
-          id="controlSetsList"
-          data-te-dropdown-menu-ref
-          aria-labelledby="controlSetsList"
-        >
-          <ul>
-            <!-- Generate links for every control set -->
-            {{#controlSets}}
-            <li>
-              <a
-                href="#{{fileID}}"
-                data-te-dropdown-item-ref
-                class="block px-4 py-2 text-sm"
-                >{{filename}}</a
-              >
-            </li>
-            {{/controlSets}}
-          </ul>
-        </div>
-      </div>
-      <!-- Toggle control set accordion collapse state -->
-      <button
-        class="px-3 py-2 text-sm"
-        type="button"
-        data-te-collapse-init
-        data-te-target=".multi-collapse-outer"
-        aria-expanded="true"
-        aria-controls="control-accordion-body"
-      >
-        Collapse/Expand Result Sets
-      </button>
-      <!-- Toggle control accordion collapse state -->
-      <button
-        class="px-3 py-2 text-sm"
-        type="button"
-        data-te-collapse-init
-        data-te-target=".multi-collapse-inner"
-        aria-expanded="true"
-        aria-controls="control-accordion-body"
-      >
-        Collapse/Expand Results
-      </button>
-      {{/showControlSets}}
-    </nav>
-
-    <!-- Profile info card -->
-    <div class="px-4 py-6" id="profileInfo">
-      <div
-        class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
-      >
-        <h5 class="mb-2 text-xl font-bold">Profile Info</h5>
-        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          <!-- Generate an info report for every profile -->
-          {{#files}}
-          <div class="mx-2 my-2 break-words">
-            <span>
-              <strong>Filename:</strong> {{filename}}
-              <br />
-              <strong>Tool Version:</strong> {{toolVersion}}
-              <br />
-              <strong>Platform:</strong> {{platform}}
-              <br />
-              <strong>Duration:</strong> {{duration}}
-            </span>
-          </div>
-          {{/files}}
-        </div>
-      </div>
-    </div>
-
-    <!-- Profile status card -->
-    <div class="px-4 pb-6">
-      <div
-        class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
-      >
-        <h5 class="mb-2 text-xl font-bold">Profile Status</h5>
-        <div class="grid grid-flow-row justify-between xl:grid-flow-col">
-          <!-- Status counts -->
-          <div class="px-2 py-2">
-            <div class="font-bold">Count</div>
-            <div class="pt-1">
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleCheck}}}</span>
-                Passed: {{statistics.passed}} ({{statistics.passedTests}}
-                individual checks passed)
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleCross}}}</span>
-                Failed: {{statistics.failed}}
-                ({{statistics.passingTestsFailedControl}} individual checks
-                passed, {{statistics.failedTests}} failed out of
-                {{statistics.totalTests}} total checks)
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleMinus}}}</span>
-                Not Applicable: {{statistics.notApplicable}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleAlert}}}</span>
-                Not Reviewed: {{statistics.notReviewed}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.triangleAlert}}}</span>
-                Profile Error: {{statistics.profileError}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.squareEqual}}}</span>
-                Total: {{statistics.totalControls}}
-              </div>
-            </div>
-          </div>
-
-          <!-- Severity report -->
-          <div class="px-2 py-2">
-            <div class="font-bold">Severity</div>
-            <div class="pt-1">
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleNone}}}</span>
-                None: {{severity.none}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleLow}}}</span>
-                Low: {{severity.low}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleMedium}}}</span>
-                Medium: {{severity.medium}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden">{{{icons.circleHigh}}}</span>
-                High: {{severity.high}}
-              </div>
-              <div class="flex">
-                <span class="pr-1 print:hidden"
-                  >{{{icons.circleCritical}}}</span
-                >
-                Critical: {{severity.critical}}
-              </div>
-            </div>
-          </div>
-
-          <!-- Compliance level -->
-          <div class="w-64 px-2 py-2">
-            <div class="font-bold">Compliance</div>
-            <div>
-              <div
-                class="my-1 rounded-full text-center text-4xl print:text-2xl border border-{{compliance.color}} border-4 print:border-none"
-              >
-                {{compliance.level}}
-              </div>
-              [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Control section -->
-    <!-- If empty, then this should be an executive report HTML export type -->
-    <!-- If not such export type, error has occurred -->
-    {{#showControlSets}} {{#controlSets}}
-    <!-- Control set accordion -->
-    <!-- Generate a control set accordion for every control set -->
-    <!-- Outer accordion -->
-    <div
-      class="mx-2 rounded-t-xl border border-gray-300 bg-white print:hidden"
-      id="{{fileID}}"
-    >
-      <div class="mb-0">
-        <!-- Button def -->
-        <button
-          class="group flex w-full items-center rounded-t-xl bg-white px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
-          type="button"
-          data-te-collapse-init
-          data-te-target="#collapseable-{{fileID}}"
-          aria-expanded="true"
-          aria-controls="collapseable-{{fileID}}"
-        >
-          {{filename}}
-          <span
-            class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+        <!-- Control sets dropdown menu -->
+        {{#showControlSets}}
+        <div class="inline-block" data-te-dropdown-ref>
+          <!-- Button def -->
+          <button
+            type="button"
+            class="inline-flex px-3 py-2 text-sm"
+            data-te-dropdown-toggle-ref
+            href="#controlSetsList"
+            role="button"
+            aria-controls="controlSetsList"
+            aria-expanded="false"
+            aria-label="Toggle navigation dropdown"
           >
+            Control Sets
             <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="h-6 w-6"
+              class="-mr-1 h-5 w-5 text-gray-400"
+              viewBox="0 0 20 20"
+              fill="currentColor"
               role="img"
-              title="An arrow indicating accordion collapse state"
-              aria-label="An arrow indicating accordion collapse state"
+              title="Downward facing gray arrow"
+              aria-label="Downward facing gray arrow"
             >
               <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                fill-rule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                clip-rule="evenodd"
               />
             </svg>
-          </span>
-        </button>
-      </div>
-
-      <!-- Inner accordion -->
-      <!-- Accordion body def -->
-      <div
-        id="collapseable-{{fileID}}"
-        class="multi-collapse-outer my-4"
-        data-te-collapse-item
-        data-te-collapse-show
-      >
-        <!-- Control header -->
-        <div class="mx-4 rounded-t-xl border border-gray-300 bg-gray-100">
-          <div class="mx-6 my-4 flex w-full shrink">
-            <span class="hidden w-40 sm:block">Status</span>
-            <div class="w-28 sm:block md:pl-5 lg:w-32">
-              ID
-              <hr class="h-1 bg-gray-300 sm:hidden" />
-              <span class="sm:hidden">Status</span>
-              <hr class="h-1 bg-gray-300 sm:hidden" />
-              <span class="sm:hidden">Severity</span>
-              <hr class="h-1 bg-gray-300 sm:w-12 lg:hidden" />
-              <span class="lg:hidden">800-53 Controls & CCIs</span>
-            </div>
-            <span class="hidden w-28 pl-3 sm:block">Severity</span>
-            <span class="w-1/2 pl-8 sm:block sm:pl-5 lg:pl-9">Title</span>
-            <span class="hidden lg:block lg:w-36 xl:w-52"
-              >800-53 Controls & CCIs</span
-            >
-          </div>
-        </div>
-
-        <!-- Generate a control accordion for every control -->
-        {{#controls}}
-        <div class="mx-4 rounded-t-xl border border-gray-300">
-          <div class="mb-0">
-            <!-- Button def -->
-            <button
-              class="bg-blue group flex w-full items-center rounded-t-xl px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
-              type="button"
-              data-te-collapse-init
-              data-te-target="#control-accordion-body-{{controlID}}"
-              aria-expanded="true"
-              aria-controls="control-accordion-body-{{controlID}}"
-            >
-              <!-- Small breakpoint -->
-              <div class="grid grid-cols-1 gap-y-2 sm:hidden">
-                <!-- Control ID -->
-                <div class="w-32">
-                  <span>{{hdf.wraps.id}}</span>
-                </div>
-                <div>
-                  <!-- Control status indicator -->
-                  <div
-                    class="grid grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                  >
-                    <span>{{{controlStatus.icon}}}</span>
-                    <span>{{controlStatus.status}}</span>
-                  </div>
-                </div>
-                <div>
-                  <!-- Control severity indicator -->
-                  <div
-                    class="grid grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                  >
-                    <span>{{{controlSeverity.icon}}}</span>
-                    <span>{{controlSeverity.severity}}</span>
-                  </div>
-                </div>
-                {{#controlTags}}
-                <div class="w-16">
-                  <span class="rounded bg-gray-100 px-2 py-1 text-black"
-                    >{{.}}</span
-                  >
-                </div>
-                {{/controlTags}}
-              </div>
-
-              <!-- Greater breakpoints -->
-              <!-- Control status indicator -->
-              <div
-                class="hidden w-40 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black sm:grid"
-              >
-                <span>{{{controlStatus.icon}}}</span>
-                <span>{{controlStatus.status}}</span>
-              </div>
-              <!-- Control ID -->
-              <div class="hidden w-32 grid-cols-1 gap-y-2 px-6 sm:grid lg:w-36">
-                <span class="break-all">{{hdf.wraps.id}}</span>
-                <!-- NIST & CCI controls; appear once past large breakpoint -->
-                {{#controlTags}}
-                <div class="w-16 lg:hidden">
-                  <span
-                    class="rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                    >{{.}}</span
-                  >
-                </div>
-                {{/controlTags}}
-              </div>
-              <!-- Control severity indicator -->
-              <div
-                class="hidden w-28 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black sm:grid"
-              >
-                <span>{{{controlSeverity.icon}}}</span>
-                <span>{{controlSeverity.severity}}</span>
-              </div>
-              <!-- Control title -->
-              <span class="w-1/2 break-words px-6">{{hdf.wraps.title}}</span>
-              <!-- Control tags -->
-              <div
-                class="hidden grid-cols-1 gap-x-6 gap-y-2 lg:grid xl:grid-cols-2"
-              >
-                {{#controlTags}}
-                <div class="w-24">
-                  <span
-                    class="rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                    >{{.}}</span
-                  >
-                </div>
-                {{/controlTags}}
-              </div>
-
-              <span
-                class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="h-6 w-6"
-                  role="img"
-                  title="An arrow indicating accordion collapse state"
-                  aria-label="An arrow indicating accordion collapse state"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                  />
-                </svg>
-              </span>
-            </button>
-          </div>
-
-          <!-- Accordion body def -->
+          </button>
+          <!-- Menu def -->
           <div
-            class="multi-collapse-inner px-5 py-4"
-            id="control-accordion-body-{{controlID}}"
-            data-te-collapse-item
-            data-te-collapse-show
-            aria-labelledby="control-accordion-header-{{controlID}}"
+            class="z-10 mt-2 hidden w-56 bg-white py-1 shadow-lg [&[data-te-dropdown-show]]:block"
+            id="controlSetsList"
+            data-te-dropdown-menu-ref
+            aria-labelledby="controlSetsList"
           >
-            <!-- Control description -->
-            {{data.desc}}
-            <hr class="my-3" />
-
-            <!-- Control tables -->
-            <div>
-              <!-- Tests -->
-              <h5 class="text-lg font-bold">Test Results</h5>
-              <table
-                class="table min-w-full text-left"
-                aria-describedby="Control test description and result"
-              >
-                <thead>
-                  <th>Status</th>
-                  <th>Test</th>
-                  <th>Result</th>
-                </thead>
-                <tbody>
-                  <!-- Generate all available test results -->
-                  {{#hdf.segments}}
-                  <tr class="border-b odd:bg-gray-100 even:bg-white">
-                    <td>{{status}}</td>
-                    <td>{{code_desc}}</td>
-                    <td>{{message}}</td>
-                  </tr>
-                  {{/hdf.segments}}
-                </tbody>
-              </table>
-              <hr class="my-3" />
-
-              <!-- Details -->
-              <h5 class="text-lg font-bold">Control Details</h5>
-              <table
-                class="table min-w-full text-left"
-                aria-describedby="Control details"
-              >
-                <thead>
-                  <th>Name</th>
-                  <th>Value</th>
-                </thead>
-                <tbody>
-                  <!-- Generate all control details -->
-                  {{#details}}
-                  <tr class="border-b odd:bg-gray-100 even:bg-white">
-                    <td>{{name}}</td>
-                    <td>{{value}}</td>
-                  </tr>
-                  {{/details}}
-                </tbody>
-              </table>
-            </div>
-            <hr class="my-3" />
-
-            <!-- Control code block -->
-            {{#showCode}}
-            <code class="whitespace-pre-wrap text-sm text-red-700"
-              >{{full_code}}</code
-            >
-            {{/showCode}}
+            <ul>
+              <!-- Generate links for every control set -->
+              {{#controlSets}}
+              <li>
+                <a
+                  href="#{{fileID}}"
+                  data-te-dropdown-item-ref
+                  class="block px-4 py-2 text-sm"
+                  >{{filename}}</a
+                >
+              </li>
+              {{/controlSets}}
+            </ul>
           </div>
         </div>
-        {{/controls}}
-      </div>
-    </div>
+        <!-- Toggle control set accordion collapse state -->
+        <button
+          class="px-3 py-2 text-sm"
+          type="button"
+          data-te-collapse-init
+          data-te-target=".multi-collapse-outer"
+          aria-expanded="true"
+          aria-controls="control-accordion-body"
+        >
+          Collapse/Expand Result Sets
+        </button>
+        <!-- Toggle control accordion collapse state -->
+        <button
+          class="px-3 py-2 text-sm"
+          type="button"
+          data-te-collapse-init
+          data-te-target=".multi-collapse-inner"
+          aria-expanded="true"
+          aria-controls="control-accordion-body"
+        >
+          Collapse/Expand Results
+        </button>
+        {{/showControlSets}}
+      </nav>
 
-    <!-- Control set print report -->
-    <div class="hidden print:block">
-      <!-- File name -->
-      <div class="rounded-t-xl border border-black px-3 py-2">{{filename}}</div>
-      <!-- Generate a control report for every control -->
-      {{#controls}}
-      <div class="border border-black px-2 py-2">
-        <!-- Control header -->
-        <table
-          class="border-separate border-spacing-x-2"
-          aria-labelledby="Control header"
+      <!-- Profile info card -->
+      <div class="px-4 py-6" id="profileInfo">
+        <div
+          class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
         >
-          <thead>
-            <tr class="text-left">
-              <th>Status</th>
-              <th>ID</th>
-              <th>Severity</th>
-              <th>Title</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <!-- Control status indicator -->
-                <div class="rounded border border-black px-2 py-1">
-                  {{controlStatus.status}}
-                </div>
-              </td>
-              <td>
-                <!-- Control ID -->
-                <div class="break-all">{{hdf.wraps.id}}</div>
-              </td>
-              <td>
-                <!-- Control severity indicator -->
-                <div class="rounded border border-black px-2 py-1">
-                  {{controlSeverity.severity}}
-                </div>
-              </td>
-              <!-- Control title -->
-              <td>{{hdf.wraps.title}}</td>
-            </tr>
-          </tbody>
-        </table>
-        <hr class="my-1 h-1" />
-        <table
-          class="border-separate border-spacing-x-2"
-          aria-labelledby="800-53 controls and CCIs"
+          <h5 class="mb-2 text-xl font-bold">Profile Info</h5>
+          <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            <!-- Generate an info report for every profile -->
+            {{#files}}
+            <div class="mx-2 my-2 break-words">
+              <span>
+                <strong>Filename:</strong> {{filename}}
+                <br />
+                <strong>Tool Version:</strong> {{toolVersion}}
+                <br />
+                <strong>Platform:</strong> {{platform}}
+                <br />
+                <strong>Duration:</strong> {{duration}}
+              </span>
+            </div>
+            {{/files}}
+          </div>
+        </div>
+      </div>
+
+      <!-- Profile status card -->
+      <div class="px-4 pb-6">
+        <div
+          class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
         >
-          <thead>
-            <tr class="text-left">
-              <th>800-53 Controls & CCIs</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <!-- Control tags -->
-                <div class="flex flex-wrap gap-x-2 gap-y-1">
+          <h5 class="mb-2 text-xl font-bold">Profile Status</h5>
+          <div class="grid grid-flow-row justify-between xl:grid-flow-col">
+            <!-- Status counts -->
+            <div class="px-2 py-2">
+              <div class="font-bold">Count</div>
+              <div class="pt-1">
+                <div class="flex">
+                  <span class="pr-1 print:hidden">{{{icons.circleCheck}}}</span>
+                  Passed: {{statistics.passed}} ({{statistics.passedTests}}
+                  individual checks passed)
+                </div>
+                <div class="flex">
+                  <span class="pr-1 print:hidden">{{{icons.circleCross}}}</span>
+                  Failed: {{statistics.failed}}
+                  ({{statistics.passingTestsFailedControl}} individual checks
+                  passed, {{statistics.failedTests}} failed out of
+                  {{statistics.totalTests}} total checks)
+                </div>
+                <div class="flex">
+                  <span class="pr-1 print:hidden">{{{icons.circleMinus}}}</span>
+                  Not Applicable: {{statistics.notApplicable}}
+                </div>
+                <div class="flex">
+                  <span class="pr-1 print:hidden">{{{icons.circleAlert}}}</span>
+                  Not Reviewed: {{statistics.notReviewed}}
+                </div>
+                <div class="flex">
+                  <span class="pr-1 print:hidden"
+                    >{{{icons.triangleAlert}}}</span
+                  >
+                  Profile Error: {{statistics.profileError}}
+                </div>
+                <div class="flex">
+                  <span class="pr-1 print:hidden">{{{icons.squareEqual}}}</span>
+                  Total: {{statistics.totalControls}}
+                </div>
+              </div>
+            </div>
+
+            <!-- Severity report -->
+            <div class="px-2 py-2">
+              <div class="font-bold">Severity</div>
+              <div class="pt-1">
+                <div class="flex">
+                  <span class="pr-1 print:hidden">{{{icons.circleNone}}}</span>
+                  None: {{severity.none}}
+                </div>
+                <div class="flex">
+                  <span class="pr-1 print:hidden">{{{icons.circleLow}}}</span>
+                  Low: {{severity.low}}
+                </div>
+                <div class="flex">
+                  <span class="pr-1 print:hidden"
+                    >{{{icons.circleMedium}}}</span
+                  >
+                  Medium: {{severity.medium}}
+                </div>
+                <div class="flex">
+                  <span class="pr-1 print:hidden">{{{icons.circleHigh}}}</span>
+                  High: {{severity.high}}
+                </div>
+                <div class="flex">
+                  <span class="pr-1 print:hidden"
+                    >{{{icons.circleCritical}}}</span
+                  >
+                  Critical: {{severity.critical}}
+                </div>
+              </div>
+            </div>
+
+            <!-- Compliance level -->
+            <div class="w-64 px-2 py-2">
+              <div class="font-bold">Compliance</div>
+              <div>
+                <div
+                  class="my-1 rounded-full text-center text-4xl print:text-2xl border border-{{compliance.color}} border-4 print:border-none"
+                >
+                  {{compliance.level}}
+                </div>
+                [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Control section -->
+      <!-- If empty, then this should be an executive report HTML export type -->
+      <!-- If not such export type, error has occurred -->
+      {{#showControlSets}} {{#controlSets}}
+      <!-- Control set accordion -->
+      <!-- Generate a control set accordion for every control set -->
+      <!-- Outer accordion -->
+      <div
+        class="mx-2 rounded-t-xl border border-gray-300 bg-white print:hidden"
+        id="{{fileID}}"
+      >
+        <div class="mb-0">
+          <!-- Button def -->
+          <button
+            class="group flex w-full items-center rounded-t-xl bg-white px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+            type="button"
+            data-te-collapse-init
+            data-te-target="#collapseable-{{fileID}}"
+            aria-expanded="true"
+            aria-controls="collapseable-{{fileID}}"
+          >
+            {{filename}}
+            <span
+              class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="h-6 w-6"
+                role="img"
+                title="An arrow indicating accordion collapse state"
+                aria-label="An arrow indicating accordion collapse state"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                />
+              </svg>
+            </span>
+          </button>
+        </div>
+
+        <!-- Inner accordion -->
+        <!-- Accordion body def -->
+        <div
+          id="collapseable-{{fileID}}"
+          class="multi-collapse-outer my-4"
+          data-te-collapse-item
+          data-te-collapse-show
+        >
+          <!-- Control header -->
+          <div class="mx-4 rounded-t-xl border border-gray-300 bg-gray-100">
+            <div class="mx-6 my-4 flex w-full shrink">
+              <span class="hidden w-40 sm:block">Status</span>
+              <div class="w-28 sm:block md:pl-5 lg:w-32">
+                ID
+                <hr class="h-1 bg-gray-300 sm:hidden" />
+                <span class="sm:hidden">Status</span>
+                <hr class="h-1 bg-gray-300 sm:hidden" />
+                <span class="sm:hidden">Severity</span>
+                <hr class="h-1 bg-gray-300 sm:w-12 lg:hidden" />
+                <span class="lg:hidden">800-53 Controls & CCIs</span>
+              </div>
+              <span class="hidden w-28 pl-3 sm:block">Severity</span>
+              <span class="w-1/2 pl-8 sm:block sm:pl-5 lg:pl-9">Title</span>
+              <span class="hidden lg:block lg:w-36 xl:w-52"
+                >800-53 Controls & CCIs</span
+              >
+            </div>
+          </div>
+
+          <!-- Generate a control accordion for every control -->
+          {{#controls}}
+          <div class="mx-4 rounded-t-xl border border-gray-300">
+            <div class="mb-0">
+              <!-- Button def -->
+              <button
+                class="bg-blue group flex w-full items-center rounded-t-xl px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+                type="button"
+                data-te-collapse-init
+                data-te-target="#control-accordion-body-{{controlID}}"
+                aria-expanded="true"
+                aria-controls="control-accordion-body-{{controlID}}"
+              >
+                <!-- Small breakpoint -->
+                <div class="grid grid-cols-1 gap-y-2 sm:hidden">
+                  <!-- Control ID -->
+                  <div class="w-32">
+                    <span>{{hdf.wraps.id}}</span>
+                  </div>
+                  <div>
+                    <!-- Control status indicator -->
+                    <div
+                      class="grid grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
+                    >
+                      <span>{{{controlStatus.icon}}}</span>
+                      <span>{{controlStatus.status}}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <!-- Control severity indicator -->
+                    <div
+                      class="grid grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
+                    >
+                      <span>{{{controlSeverity.icon}}}</span>
+                      <span>{{controlSeverity.severity}}</span>
+                    </div>
+                  </div>
                   {{#controlTags}}
-                  <div class="rounded border border-black px-2 py-1">{{.}}</div>
+                  <div class="w-16">
+                    <span class="rounded bg-gray-100 px-2 py-1 text-black"
+                      >{{.}}</span
+                    >
+                  </div>
                   {{/controlTags}}
                 </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-        <hr class="my-1 h-1" />
 
-        <!-- Control description -->
-        {{data.desc}}
-        <hr class="my-1 h-1" />
+                <!-- Greater breakpoints -->
+                <!-- Control status indicator -->
+                <div
+                  class="hidden w-40 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black sm:grid"
+                >
+                  <span>{{{controlStatus.icon}}}</span>
+                  <span>{{controlStatus.status}}</span>
+                </div>
+                <!-- Control ID -->
+                <div
+                  class="hidden w-32 grid-cols-1 gap-y-2 px-6 sm:grid lg:w-36"
+                >
+                  <span class="break-all">{{hdf.wraps.id}}</span>
+                  <!-- NIST & CCI controls; appear once past large breakpoint -->
+                  {{#controlTags}}
+                  <div class="w-16 lg:hidden">
+                    <span
+                      class="rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
+                      >{{.}}</span
+                    >
+                  </div>
+                  {{/controlTags}}
+                </div>
+                <!-- Control severity indicator -->
+                <div
+                  class="hidden w-28 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black sm:grid"
+                >
+                  <span>{{{controlSeverity.icon}}}</span>
+                  <span>{{controlSeverity.severity}}</span>
+                </div>
+                <!-- Control title -->
+                <span class="w-1/2 break-words px-6">{{hdf.wraps.title}}</span>
+                <!-- Control tags -->
+                <div
+                  class="hidden grid-cols-1 gap-x-6 gap-y-2 lg:grid xl:grid-cols-2"
+                >
+                  {{#controlTags}}
+                  <div class="w-24">
+                    <span
+                      class="rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
+                      >{{.}}</span
+                    >
+                  </div>
+                  {{/controlTags}}
+                </div>
 
-        <!-- Control tables -->
-        <div>
-          <!-- Tests -->
-          <h5 class="py-1 text-lg font-bold">Test Results</h5>
+                <span
+                  class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="h-6 w-6"
+                    role="img"
+                    title="An arrow indicating accordion collapse state"
+                    aria-label="An arrow indicating accordion collapse state"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </div>
+
+            <!-- Accordion body def -->
+            <div
+              class="multi-collapse-inner px-5 py-4"
+              id="control-accordion-body-{{controlID}}"
+              data-te-collapse-item
+              data-te-collapse-show
+              aria-labelledby="control-accordion-header-{{controlID}}"
+            >
+              <!-- Control description -->
+              {{data.desc}}
+              <hr class="my-3" />
+
+              <!-- Control tables -->
+              <div>
+                <!-- Tests -->
+                <h5 class="text-lg font-bold">Test Results</h5>
+                <table
+                  class="table min-w-full text-left"
+                  aria-describedby="Control test description and result"
+                >
+                  <!-- Generate all available test results -->
+                  {{#hdf.segments}}
+                  <thead>
+                    <th>Name</th>
+                    <th>Value</th>
+                  </thead>
+                  <tbody>
+                    <tr class="border-b odd:bg-gray-100 even:bg-white">
+                      <td>Status</td>
+                      <td>{{status}}</td>
+                    </tr>
+                    <tr class="border-b odd:bg-gray-100 even:bg-white">
+                      <td>Test</td>
+                      <td>{{code_desc}}</td>
+                    </tr>
+                    <tr class="border-b odd:bg-gray-100 even:bg-white">
+                      <td>Result</td>
+                      <td>{{message}}</td>
+                    </tr>
+                  </tbody>
+                  {{/hdf.segments}}
+                </table>
+                <hr class="my-3" />
+
+                <!-- Details -->
+                <h5 class="text-lg font-bold">Control Details</h5>
+                <table
+                  class="table min-w-full text-left"
+                  aria-describedby="Control details"
+                >
+                  <thead>
+                    <th>Name</th>
+                    <th>Value</th>
+                  </thead>
+                  <tbody>
+                    <!-- Generate all control details -->
+                    {{#details}}
+                    <tr class="border-b odd:bg-gray-100 even:bg-white">
+                      <td>{{name}}</td>
+                      <td>{{value}}</td>
+                    </tr>
+                    {{/details}}
+                  </tbody>
+                </table>
+              </div>
+              <hr class="my-3" />
+
+              <!-- Control code block -->
+              {{#showCode}}
+              <code class="whitespace-pre-wrap break-words text-sm text-red-700"
+                >{{full_code}}</code
+              >
+              {{/showCode}}
+            </div>
+          </div>
+          {{/controls}}
+        </div>
+      </div>
+
+      <!-- Control set print report -->
+      <div class="hidden print:block">
+        <!-- File name -->
+        <div class="rounded-t-xl border border-black px-3 py-2">
+          {{filename}}
+        </div>
+        <!-- Generate a control report for every control -->
+        {{#controls}}
+        <div class="border border-black px-2 py-2">
+          <!-- Control header -->
           <table
-            class="table min-w-full text-left"
-            aria-describedby="Control test description and result"
+            class="border-separate border-spacing-x-2"
+            aria-labelledby="Control header"
           >
             <thead>
-              <th>Status</th>
-              <th>Test</th>
-              <th>Result</th>
+              <tr class="text-left">
+                <th>Status</th>
+                <th>ID</th>
+                <th>Severity</th>
+                <th>Title</th>
+              </tr>
             </thead>
             <tbody>
-              <!-- Generate all available test results -->
-              {{#hdf.segments}}
-              <tr class="border-b odd:bg-gray-100 even:bg-white">
-                <td>{{status}}</td>
-                <td>{{code_desc}}</td>
-                <td>{{message}}</td>
+              <tr>
+                <td>
+                  <!-- Control status indicator -->
+                  <div class="rounded border border-black px-2 py-1">
+                    {{controlStatus.status}}
+                  </div>
+                </td>
+                <td>
+                  <!-- Control ID -->
+                  <div class="break-all">{{hdf.wraps.id}}</div>
+                </td>
+                <td>
+                  <!-- Control severity indicator -->
+                  <div class="rounded border border-black px-2 py-1">
+                    {{controlSeverity.severity}}
+                  </div>
+                </td>
+                <!-- Control title -->
+                <td>{{hdf.wraps.title}}</td>
               </tr>
-              {{/hdf.segments}}
+            </tbody>
+          </table>
+          <hr class="my-1 h-1" />
+          <table
+            class="border-separate border-spacing-x-2"
+            aria-labelledby="800-53 controls and CCIs"
+          >
+            <thead>
+              <tr class="text-left">
+                <th>800-53 Controls & CCIs</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <!-- Control tags -->
+                  <div class="flex flex-wrap gap-x-2 gap-y-1">
+                    {{#controlTags}}
+                    <div class="rounded border border-black px-2 py-1">
+                      {{.}}
+                    </div>
+                    {{/controlTags}}
+                  </div>
+                </td>
+              </tr>
             </tbody>
           </table>
           <hr class="my-1 h-1" />
 
-          <!-- Details -->
-          <h5 class="py-1 text-lg font-bold">Control Details</h5>
-          <table
-            class="table min-w-full text-left"
-            aria-describedby="Control details"
+          <!-- Control description -->
+          {{data.desc}}
+          <hr class="my-1 h-1" />
+
+          <!-- Control tables -->
+          <div>
+            <!-- Tests -->
+            <h5 class="py-1 text-lg font-bold">Test Results</h5>
+            <table
+              class="table min-w-full text-left"
+              aria-describedby="Control test description and result"
+            >
+              <thead>
+                <th>Status</th>
+                <th>Test</th>
+                <th>Result</th>
+              </thead>
+              <tbody>
+                <!-- Generate all available test results -->
+                {{#hdf.segments}}
+                <tr class="border-b odd:bg-gray-100 even:bg-white">
+                  <td>{{status}}</td>
+                  <td>{{code_desc}}</td>
+                  <td>{{message}}</td>
+                </tr>
+                {{/hdf.segments}}
+              </tbody>
+            </table>
+            <hr class="my-1 h-1" />
+
+            <!-- Details -->
+            <h5 class="py-1 text-lg font-bold">Control Details</h5>
+            <table
+              class="table min-w-full text-left"
+              aria-describedby="Control details"
+            >
+              <thead>
+                <th>Name</th>
+                <th>Value</th>
+              </thead>
+              <tbody>
+                <!-- Generate all control details -->
+                {{#details}}
+                <tr class="border-b odd:bg-gray-100 even:bg-white">
+                  <td>{{name}}</td>
+                  <td>{{value}}</td>
+                </tr>
+                {{/details}}
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Control code block -->
+          {{#showCode}}
+          <hr class="my-1 h-1" />
+          <code class="whitespace-pre-wrap text-sm text-black"
+            >{{full_code}}</code
           >
-            <thead>
-              <th>Name</th>
-              <th>Value</th>
-            </thead>
-            <tbody>
-              <!-- Generate all control details -->
-              {{#details}}
-              <tr class="border-b odd:bg-gray-100 even:bg-white">
-                <td>{{name}}</td>
-                <td>{{value}}</td>
-              </tr>
-              {{/details}}
-            </tbody>
-          </table>
+          {{/showCode}}
         </div>
-
-        <!-- Control code block -->
-        {{#showCode}}
-        <hr class="my-1 h-1" />
-        <code class="whitespace-pre-wrap text-sm text-black"
-          >{{full_code}}</code
-        >
-        {{/showCode}}
+        {{/controls}}
       </div>
-      {{/controls}}
+      {{/controlSets}} {{/showControlSets}}
     </div>
-    {{/controlSets}} {{/showControlSets}}
-
     <script type="text/javascript">
       {{{twElements}}}
     </script>
   </body>
 </html>
-
-<style>
-  {{{twStyles}}}
-</style>
