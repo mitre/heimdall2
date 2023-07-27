@@ -15,6 +15,7 @@ context('Groups', () => {
   const groupName1 = 'Test Group 1';
   const groupName2 = 'Test Group 2';
   const groupName3 = 'Test Group 3';
+  const groupName4 = 'Test Group 4';
 
   // Run before each test
   beforeEach(() => {
@@ -50,8 +51,11 @@ context('Groups', () => {
 
     it('fails to create a group with a duplicate name', () => {
       dropdown.openGroupsPage();
-      groupPage.testGroupName(groupName1);
-      toastVerifier.toastTextContains('Group names must be unique');
+      groupPage.createGroup(groupName4);
+      groupPage.testGroupName(groupName4);
+      toastVerifier.toastTextContains(
+        'Duplicate key detected. The names of groups must be unique.'
+      );
     });
   });
 });
