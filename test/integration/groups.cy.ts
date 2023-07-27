@@ -50,7 +50,7 @@ context('Groups', () => {
 
     it('fails to create a group with a duplicate name', () => {
       dropdown.openGroupsPage();
-      groupPage.createGroup(groupName1);
+      groupPage.testGroupName(groupName1);
       toastVerifier.toastTextContains('Group names must be unique');
     });
   });
