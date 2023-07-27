@@ -222,9 +222,7 @@ export class GroupsService {
 
     // Ensure we didn't leave any dangling groups
     await Promise.all(
-      (
-        await this.findAll()
-      ).map(async (group) => {
+      groupsToLeave.map(async (group) => {
         await this.ensureGroupHasOwner(group, user);
       })
     );
