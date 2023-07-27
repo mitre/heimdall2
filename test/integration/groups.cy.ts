@@ -53,9 +53,7 @@ context('Groups', () => {
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName4);
       groupPage.testGroupName(groupName4);
-      toastVerifier.toastTextContains(
-        'Duplicate key detected. The names of groups must be unique.'
-      );
+      toastVerifier.toastTextContains('Group names must be unique.');
     });
   });
 });

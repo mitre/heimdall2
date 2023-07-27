@@ -188,7 +188,7 @@ export default class GroupModal extends Vue {
       (group) => group.name === name && group.id !== this.groupInfo.id
     );
     if (this.duplicateName) {
-      SnackbarModule.failure(`Group names must be unique`);
+      SnackbarModule.failure(`Group names must be unique.`);
     }
   }
 
