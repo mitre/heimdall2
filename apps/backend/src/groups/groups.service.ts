@@ -54,7 +54,10 @@ export class GroupsService {
     });
   }
 
-  async ensureGroupHasOwner(group: Group, user: User | GroupUser) {
+  async ensureGroupHasOwner(
+    group: Group,
+    user: User | GroupUser
+  ): Promise<void> {
     const owners = (await group.$get('users')).filter(
       (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
     );
@@ -147,8 +150,7 @@ export class GroupsService {
         'Duplicate key detected. The names of groups must be unique.'
       );
     }
-    groupToUpdate.update(groupDto);
-    return groupToUpdate.save();
+    return groupToUpdate.update(groupDto);
   }
 
   async remove(groupToDelete: Group): Promise<Group> {
