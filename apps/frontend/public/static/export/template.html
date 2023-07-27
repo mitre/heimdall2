@@ -27,7 +27,7 @@
     <div class="overflow-hidden">
       <!-- Navbar -->
       <nav
-        class="fixed top-0 z-10 min-w-full border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden"
+        class="sticky sm:fixed top-0 z-10 min-w-full border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden"
       >
         <!-- Heimdall report -->
         <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
@@ -438,7 +438,7 @@
                 <!-- Tests -->
                 <h5 class="text-lg font-bold">Test Results</h5>
                 <table
-                  class="table min-w-full text-left break-all sm:break-words"
+                  class="table min-w-full text-left"
                   aria-describedby="Control test description and result"
                 >
                   <!-- Generate all available test results -->
@@ -450,15 +450,15 @@
                   <tbody>
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td>Status</td>
-                      <td>{{status}}</td>
+                      <td class="break-all">{{status}}</td>
                     </tr>
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td>Test</td>
-                      <td>{{code_desc}}</td>
+                      <td class="break-all">{{code_desc}}</td>
                     </tr>
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td>Result</td>
-                      <td>{{message}}</td>
+                      <td class="break-all">{{message}}</td>
                     </tr>
                   </tbody>
                   {{/hdf.segments}}
