@@ -285,7 +285,7 @@
             <div class="mx-6 my-4 flex w-full shrink">
               <!-- Status indicator -->
               <!-- Headers eventually collapse under status column -->
-              <span class="grid w-32 grid-cols-1 sm:w-40">
+              <span class="grid w-36 grid-cols-1 sm:w-40">
                 <!-- ID -->
                 <span class="sm:hidden">ID</span>
                 <hr class="h-1 w-32 bg-gray-300 sm:hidden" />
@@ -303,7 +303,7 @@
               <!-- Severity indicator -->
               <span class="hidden w-28 pl-3 lg:block">Severity</span>
               <!-- Title -->
-              <span class="w-1/2 pl-4 sm:block sm:pl-8 lg:pl-9">Title</span>
+              <span class="w-1/2 pl-8 sm:block lg:pl-9">Title</span>
               <!-- Control tags -->
               <span class="hidden lg:block lg:w-36 xl:w-52"
                 >800-53 Controls & CCIs</span
@@ -333,7 +333,7 @@
                   </div>
                   <!-- Control status indicator -->
                   <div
-                    class="hidden w-40 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black sm:grid"
+                    class="grid w-40 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
                   >
                     <span>{{{controlStatus.icon}}}</span>
                     <span>{{controlStatus.status}}</span>
