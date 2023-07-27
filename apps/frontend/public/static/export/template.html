@@ -571,21 +571,27 @@
               class="table min-w-full text-left"
               aria-describedby="Control test description and result"
             >
+              <!-- Generate all available test results -->
+              {{#hdf.segments}}
               <thead>
-                <th>Status</th>
-                <th>Test</th>
-                <th>Result</th>
+                <th>Name</th>
+                <th>Value</th>
               </thead>
               <tbody>
-                <!-- Generate all available test results -->
-                {{#hdf.segments}}
                 <tr class="border-b odd:bg-gray-100 even:bg-white">
-                  <td>{{status}}</td>
-                  <td>{{code_desc}}</td>
-                  <td>{{message}}</td>
+                  <td>Status</td>
+                  <td class="break-all">{{status}}</td>
                 </tr>
-                {{/hdf.segments}}
+                <tr class="border-b odd:bg-gray-100 even:bg-white">
+                  <td>Test</td>
+                  <td class="break-all">{{code_desc}}</td>
+                </tr>
+                <tr class="border-b odd:bg-gray-100 even:bg-white">
+                  <td>Result</td>
+                  <td class="break-all">{{message}}</td>
+                </tr>
               </tbody>
+              {{/hdf.segments}}
             </table>
             <hr class="my-1 h-1" />
 
