@@ -24,212 +24,208 @@
   </head>
 
   <body>
-    <div class="overflow-hidden">
-      <!-- Navbar -->
-      <nav
-        class="sticky sm:fixed top-0 z-10 min-w-full border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden"
+    <!-- Navbar -->
+    <nav
+      class="relative top-0 z-10 min-w-full border-b border-gray-300 bg-gray-100 px-3 py-3 shadow-lg print:hidden md:sticky"
+    >
+      <!-- Heimdall report -->
+      <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
+      <!-- Profile info link -->
+      <button role="button" aria-label="Jump to profile info card">
+        <a href="#profileInfo" class="px-3 py-2 text-sm" aria-current="page"
+          >Profile Info</a
+        >
+      </button>
+      <!-- Control sets dropdown menu -->
+      {{#showControlSets}}
+      <div class="inline-block" data-te-dropdown-ref>
+        <!-- Button def -->
+        <button
+          type="button"
+          class="inline-flex px-3 py-2 text-sm"
+          data-te-dropdown-toggle-ref
+          href="#controlSetsList"
+          role="button"
+          aria-controls="controlSetsList"
+          aria-expanded="false"
+          aria-label="Toggle navigation dropdown"
+        >
+          Control Sets
+          <svg
+            class="-mr-1 h-5 w-5 text-gray-400"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+            role="img"
+            title="Downward facing gray arrow"
+            aria-label="Downward facing gray arrow"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+              clip-rule="evenodd"
+            />
+          </svg>
+        </button>
+        <!-- Menu def -->
+        <div
+          class="z-10 mt-2 hidden w-56 bg-white py-1 shadow-lg [&[data-te-dropdown-show]]:block"
+          id="controlSetsList"
+          data-te-dropdown-menu-ref
+          aria-labelledby="controlSetsList"
+        >
+          <ul>
+            <!-- Generate links for every control set -->
+            {{#controlSets}}
+            <li>
+              <a
+                href="#{{fileID}}"
+                data-te-dropdown-item-ref
+                class="block px-4 py-2 text-sm"
+                >{{filename}}</a
+              >
+            </li>
+            {{/controlSets}}
+          </ul>
+        </div>
+      </div>
+      <!-- Toggle control set accordion collapse state -->
+      <button
+        class="px-3 py-2 text-sm"
+        type="button"
+        data-te-collapse-init
+        data-te-target=".multi-collapse-outer"
+        aria-expanded="true"
+        aria-controls="control-accordion-body"
       >
-        <!-- Heimdall report -->
-        <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
-        <!-- Profile info link -->
-        <button role="button" aria-label="Jump to profile info card">
-          <a href="#profileInfo" class="px-3 py-2 text-sm" aria-current="page"
-            >Profile Info</a
-          >
-        </button>
-        <!-- Control sets dropdown menu -->
-        {{#showControlSets}}
-        <div class="inline-block" data-te-dropdown-ref>
-          <!-- Button def -->
-          <button
-            type="button"
-            class="inline-flex px-3 py-2 text-sm"
-            data-te-dropdown-toggle-ref
-            href="#controlSetsList"
-            role="button"
-            aria-controls="controlSetsList"
-            aria-expanded="false"
-            aria-label="Toggle navigation dropdown"
-          >
-            Control Sets
-            <svg
-              class="-mr-1 h-5 w-5 text-gray-400"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              role="img"
-              title="Downward facing gray arrow"
-              aria-label="Downward facing gray arrow"
-            >
-              <path
-                fill-rule="evenodd"
-                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-                clip-rule="evenodd"
-              />
-            </svg>
-          </button>
-          <!-- Menu def -->
-          <div
-            class="z-10 mt-2 hidden w-56 bg-white py-1 shadow-lg [&[data-te-dropdown-show]]:block"
-            id="controlSetsList"
-            data-te-dropdown-menu-ref
-            aria-labelledby="controlSetsList"
-          >
-            <ul>
-              <!-- Generate links for every control set -->
-              {{#controlSets}}
-              <li>
-                <a
-                  href="#{{fileID}}"
-                  data-te-dropdown-item-ref
-                  class="block px-4 py-2 text-sm"
-                  >{{filename}}</a
-                >
-              </li>
-              {{/controlSets}}
-            </ul>
-          </div>
-        </div>
-        <!-- Toggle control set accordion collapse state -->
-        <button
-          class="px-3 py-2 text-sm"
-          type="button"
-          data-te-collapse-init
-          data-te-target=".multi-collapse-outer"
-          aria-expanded="true"
-          aria-controls="control-accordion-body"
-        >
-          Collapse/Expand Result Sets
-        </button>
-        <!-- Toggle control accordion collapse state -->
-        <button
-          class="px-3 py-2 text-sm"
-          type="button"
-          data-te-collapse-init
-          data-te-target=".multi-collapse-inner"
-          aria-expanded="true"
-          aria-controls="control-accordion-body"
-        >
-          Collapse/Expand Results
-        </button>
-        {{/showControlSets}}
-      </nav>
+        Collapse/Expand Result Sets
+      </button>
+      <!-- Toggle control accordion collapse state -->
+      <button
+        class="px-3 py-2 text-sm"
+        type="button"
+        data-te-collapse-init
+        data-te-target=".multi-collapse-inner"
+        aria-expanded="true"
+        aria-controls="control-accordion-body"
+      >
+        Collapse/Expand Results
+      </button>
+      {{/showControlSets}}
+    </nav>
 
-      <!-- Profile info card -->
-      <div class="px-4 py-6" id="profileInfo">
-        <div
-          class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
-        >
-          <h5 class="mb-2 text-xl font-bold">Profile Info</h5>
-          <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            <!-- Generate an info report for every profile -->
-            {{#files}}
-            <div class="mx-2 my-2 break-words">
-              <span>
-                <strong>Filename:</strong> {{filename}}
-                <br />
-                <strong>Tool Version:</strong> {{toolVersion}}
-                <br />
-                <strong>Platform:</strong> {{platform}}
-                <br />
-                <strong>Duration:</strong> {{duration}}
-              </span>
-            </div>
-            {{/files}}
+    <!-- Profile info card -->
+    <div class="px-4 py-6" id="profileInfo">
+      <div
+        class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
+      >
+        <h5 class="mb-2 text-xl font-bold">Profile Info</h5>
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          <!-- Generate an info report for every profile -->
+          {{#files}}
+          <div class="mx-2 my-2 break-words">
+            <span>
+              <strong>Filename:</strong> {{filename}}
+              <br />
+              <strong>Tool Version:</strong> {{toolVersion}}
+              <br />
+              <strong>Platform:</strong> {{platform}}
+              <br />
+              <strong>Duration:</strong> {{duration}}
+            </span>
           </div>
+          {{/files}}
         </div>
       </div>
+    </div>
 
-      <!-- Profile status card -->
-      <div class="px-4 pb-6">
-        <div
-          class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
-        >
-          <h5 class="mb-2 text-xl font-bold">Profile Status</h5>
-          <div class="grid grid-flow-row justify-between xl:grid-flow-col">
-            <!-- Status counts -->
-            <div class="px-2 py-2">
-              <div class="font-bold">Count</div>
-              <div class="pt-1">
-                <div class="flex">
-                  <span class="pr-1 print:hidden">{{{icons.circleCheck}}}</span>
-                  Passed: {{statistics.passed}} ({{statistics.passedTests}}
-                  individual checks passed)
-                </div>
-                <div class="flex">
-                  <span class="pr-1 print:hidden">{{{icons.circleCross}}}</span>
-                  Failed: {{statistics.failed}}
-                  ({{statistics.passingTestsFailedControl}} individual checks
-                  passed, {{statistics.failedTests}} failed out of
-                  {{statistics.totalTests}} total checks)
-                </div>
-                <div class="flex">
-                  <span class="pr-1 print:hidden">{{{icons.circleMinus}}}</span>
-                  Not Applicable: {{statistics.notApplicable}}
-                </div>
-                <div class="flex">
-                  <span class="pr-1 print:hidden">{{{icons.circleAlert}}}</span>
-                  Not Reviewed: {{statistics.notReviewed}}
-                </div>
-                <div class="flex">
-                  <span class="pr-1 print:hidden"
-                    >{{{icons.triangleAlert}}}</span
-                  >
-                  Profile Error: {{statistics.profileError}}
-                </div>
-                <div class="flex">
-                  <span class="pr-1 print:hidden">{{{icons.squareEqual}}}</span>
-                  Total: {{statistics.totalControls}}
-                </div>
+    <!-- Profile status card -->
+    <div class="px-4 pb-6">
+      <div
+        class="max-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
+      >
+        <h5 class="mb-2 text-xl font-bold">Profile Status</h5>
+        <div class="grid grid-flow-row justify-between xl:grid-flow-col">
+          <!-- Status counts -->
+          <div class="px-2 py-2">
+            <div class="font-bold">Count</div>
+            <div class="pt-1">
+              <div class="flex">
+                <span class="pr-1 print:hidden">{{{icons.circleCheck}}}</span>
+                Passed: {{statistics.passed}} ({{statistics.passedTests}}
+                individual checks passed)
+              </div>
+              <div class="flex">
+                <span class="pr-1 print:hidden">{{{icons.circleCross}}}</span>
+                Failed: {{statistics.failed}}
+                ({{statistics.passingTestsFailedControl}} individual checks
+                passed, {{statistics.failedTests}} failed out of
+                {{statistics.totalTests}} total checks)
+              </div>
+              <div class="flex">
+                <span class="pr-1 print:hidden">{{{icons.circleMinus}}}</span>
+                Not Applicable: {{statistics.notApplicable}}
+              </div>
+              <div class="flex">
+                <span class="pr-1 print:hidden">{{{icons.circleAlert}}}</span>
+                Not Reviewed: {{statistics.notReviewed}}
+              </div>
+              <div class="flex">
+                <span class="pr-1 print:hidden">{{{icons.triangleAlert}}}</span>
+                Profile Error: {{statistics.profileError}}
+              </div>
+              <div class="flex">
+                <span class="pr-1 print:hidden">{{{icons.squareEqual}}}</span>
+                Total: {{statistics.totalControls}}
               </div>
             </div>
+          </div>
 
-            <!-- Severity report -->
-            <div class="px-2 py-2">
-              <div class="font-bold">Severity</div>
-              <div class="pt-1">
-                <div class="flex">
-                  <span class="pr-1 print:hidden">{{{icons.circleNone}}}</span>
-                  None: {{severity.none}}
-                </div>
-                <div class="flex">
-                  <span class="pr-1 print:hidden">{{{icons.circleLow}}}</span>
-                  Low: {{severity.low}}
-                </div>
-                <div class="flex">
-                  <span class="pr-1 print:hidden"
-                    >{{{icons.circleMedium}}}</span
-                  >
-                  Medium: {{severity.medium}}
-                </div>
-                <div class="flex">
-                  <span class="pr-1 print:hidden">{{{icons.circleHigh}}}</span>
-                  High: {{severity.high}}
-                </div>
-                <div class="flex">
-                  <span class="pr-1 print:hidden"
-                    >{{{icons.circleCritical}}}</span
-                  >
-                  Critical: {{severity.critical}}
-                </div>
+          <!-- Severity report -->
+          <div class="px-2 py-2">
+            <div class="font-bold">Severity</div>
+            <div class="pt-1">
+              <div class="flex">
+                <span class="pr-1 print:hidden">{{{icons.circleNone}}}</span>
+                None: {{severity.none}}
               </div>
-            </div>
-
-            <!-- Compliance level -->
-            <div class="w-64 px-2 py-2">
-              <div class="font-bold">Compliance</div>
-              <div>
-                <div
-                  class="my-1 rounded-full text-center text-4xl print:text-2xl border border-{{compliance.color}} border-4 print:border-none"
+              <div class="flex">
+                <span class="pr-1 print:hidden">{{{icons.circleLow}}}</span>
+                Low: {{severity.low}}
+              </div>
+              <div class="flex">
+                <span class="pr-1 print:hidden">{{{icons.circleMedium}}}</span>
+                Medium: {{severity.medium}}
+              </div>
+              <div class="flex">
+                <span class="pr-1 print:hidden">{{{icons.circleHigh}}}</span>
+                High: {{severity.high}}
+              </div>
+              <div class="flex">
+                <span class="pr-1 print:hidden"
+                  >{{{icons.circleCritical}}}</span
                 >
-                  {{compliance.level}}
-                </div>
-                [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
+                Critical: {{severity.critical}}
               </div>
+            </div>
+          </div>
+
+          <!-- Compliance level -->
+          <div class="w-64 px-2 py-2">
+            <div class="font-bold">Compliance</div>
+            <div>
+              <div
+                class="my-1 rounded-full text-center text-4xl print:text-2xl border border-{{compliance.color}} border-4 print:border-none"
+              >
+                {{compliance.level}}
+              </div>
+              [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
             </div>
           </div>
         </div>
       </div>
+    </div>
 
+    <div class="overflow-hidden">
       <!-- Control section -->
       <!-- If empty, then this should be an executive report HTML export type -->
       <!-- If not such export type, error has occurred -->
@@ -287,18 +283,28 @@
           <!-- Control header -->
           <div class="mx-4 rounded-t-xl border border-gray-300 bg-gray-100">
             <div class="mx-6 my-4 flex w-full shrink">
-              <span class="hidden w-40 sm:block">Status</span>
-              <div class="w-28 sm:block md:pl-5 lg:w-32">
-                ID
-                <hr class="h-1 bg-gray-300 sm:hidden" />
-                <span class="sm:hidden">Status</span>
-                <hr class="h-1 bg-gray-300 sm:hidden" />
-                <span class="sm:hidden">Severity</span>
-                <hr class="h-1 bg-gray-300 sm:w-12 lg:hidden" />
+              <!-- Status indicator -->
+              <!-- Headers eventually collapse under status column -->
+              <span class="grid w-32 grid-cols-1 sm:w-40">
+                <!-- ID -->
+                <span class="sm:hidden">ID</span>
+                <hr class="h-1 w-32 bg-gray-300 sm:hidden" />
+                <!-- Status indicator -->
+                <span>Status</span>
+                <hr class="h-1 w-32 bg-gray-300 lg:hidden" />
+                <!-- Severity indicator -->
+                <span class="lg:hidden">Severity</span>
+                <hr class="h-1 w-32 bg-gray-300 lg:hidden" />
+                <!-- Control tags -->
                 <span class="lg:hidden">800-53 Controls & CCIs</span>
-              </div>
-              <span class="hidden w-28 pl-3 sm:block">Severity</span>
-              <span class="w-1/2 pl-8 sm:block sm:pl-5 lg:pl-9">Title</span>
+              </span>
+              <!-- ID -->
+              <span class="hidden w-28 pl-4 sm:block sm:block lg:w-32">ID</span>
+              <!-- Severity indicator -->
+              <span class="hidden w-28 pl-3 lg:block">Severity</span>
+              <!-- Title -->
+              <span class="w-1/2 pl-4 sm:block sm:pl-8 lg:pl-9">Title</span>
+              <!-- Control tags -->
               <span class="hidden lg:block lg:w-36 xl:w-52"
                 >800-53 Controls & CCIs</span
               >
@@ -318,55 +324,30 @@
                 aria-expanded="true"
                 aria-controls="control-accordion-body-{{controlID}}"
               >
-                <!-- Small breakpoint -->
-                <div class="grid grid-cols-1 gap-y-2 sm:hidden">
+                <!-- Control status indicator wrapper -->
+                <!-- All headers eventually collapse under status column -->
+                <div class="grid grid-cols-1 gap-y-2">
                   <!-- Control ID -->
-                  <div class="w-32">
+                  <div class="w-32 sm:hidden">
                     <span>{{hdf.wraps.id}}</span>
                   </div>
-                  <div>
-                    <!-- Control status indicator -->
-                    <div
-                      class="grid grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                    >
-                      <span>{{{controlStatus.icon}}}</span>
-                      <span>{{controlStatus.status}}</span>
-                    </div>
+                  <!-- Control status indicator -->
+                  <div
+                    class="hidden w-40 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black sm:grid"
+                  >
+                    <span>{{{controlStatus.icon}}}</span>
+                    <span>{{controlStatus.status}}</span>
                   </div>
-                  <div>
-                    <!-- Control severity indicator -->
-                    <div
-                      class="grid grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                    >
-                      <span>{{{controlSeverity.icon}}}</span>
-                      <span>{{controlSeverity.severity}}</span>
-                    </div>
+                  <!-- Control severity indicator -->
+                  <div
+                    class="grid w-28 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:hidden"
+                  >
+                    <span>{{{controlSeverity.icon}}}</span>
+                    <span>{{controlSeverity.severity}}</span>
                   </div>
+                  <!-- Control tags -->
                   {{#controlTags}}
-                  <div class="w-24">
-                    <span class="rounded bg-gray-100 px-2 py-1 text-black"
-                      >{{.}}</span
-                    >
-                  </div>
-                  {{/controlTags}}
-                </div>
-
-                <!-- Greater breakpoints -->
-                <!-- Control status indicator -->
-                <div
-                  class="hidden w-40 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black sm:grid"
-                >
-                  <span>{{{controlStatus.icon}}}</span>
-                  <span>{{controlStatus.status}}</span>
-                </div>
-                <!-- Control ID -->
-                <div
-                  class="hidden w-32 grid-cols-1 gap-y-2 px-6 sm:grid lg:w-36"
-                >
-                  <span class="break-all">{{hdf.wraps.id}}</span>
-                  <!-- NIST & CCI controls; appear once past large breakpoint -->
-                  {{#controlTags}}
-                  <div class="w-16 lg:hidden">
+                  <div class="w-24 lg:hidden">
                     <span
                       class="rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
                       >{{.}}</span
@@ -374,9 +355,15 @@
                   </div>
                   {{/controlTags}}
                 </div>
+                <!-- Control ID -->
+                <span
+                  class="hidden w-32 grid-cols-1 gap-y-2 break-all px-6 sm:grid lg:w-36"
+                >
+                  {{hdf.wraps.id}}
+                </span>
                 <!-- Control severity indicator -->
                 <div
-                  class="hidden w-28 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black sm:grid"
+                  class="hidden w-28 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:grid"
                 >
                   <span>{{{controlSeverity.icon}}}</span>
                   <span>{{controlSeverity.severity}}</span>
