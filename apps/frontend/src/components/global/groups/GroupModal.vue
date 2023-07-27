@@ -90,7 +90,7 @@
           data-cy="closeAndSaveChanges"
           color="primary"
           text
-          :disabled="!saveable || !uniqueName"
+          :disabled="!saveable || duplicateName"
           @click="save"
         >
           Save
@@ -182,12 +182,14 @@ export default class GroupModal extends Vue {
   }
 
   // Upon group name change, the component will detect whether the current state is acceptable
-  uniqueName = true;
+  duplicateName = false;
   checkUniqueName(name: string) {
-    this.uniqueName = !GroupsModule.allGroups.some(
+    this.duplicateName = GroupsModule.allGroups.some(
       (group) => group.name === name && group.id !== this.groupInfo.id
     );
-    if (!this.uniqueName) SnackbarModule.failure(`Group names must be unique`);
+    if (this.duplicateName) {
+      SnackbarModule.failure(`Group names must be unique`);
+    }
   }
 
   async save(): Promise<void> {
