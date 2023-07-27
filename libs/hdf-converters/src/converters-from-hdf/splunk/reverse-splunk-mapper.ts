@@ -3,7 +3,6 @@ import {
   ContextualizedControl,
   ContextualizedEvaluation,
   ContextualizedProfile,
-  contextualizeEvaluation,
   ExecJSON
 } from 'inspecjs';
 import _ from 'lodash';
@@ -13,7 +12,7 @@ import {SplunkControl} from '../../../types/splunk-control-types';
 import {SplunkProfile} from '../../../types/splunk-profile-types';
 import {SplunkReport} from '../../../types/splunk-report-types';
 import {MappedTransform} from '../../base-converter';
-import {createWinstonLogger} from '../../utils/global';
+import {createWinstonLogger, ensureContextualizedEvaluation} from '../../utils/global';
 import {
   checkSplunkCredentials,
   generateHostname,
@@ -43,16 +42,6 @@ export function createGUID(length: number) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-}
-
-export function contextualizeIfNeeded(
-  data: ExecJSON.Execution | ContextualizedEvaluation
-) {
-  if ('contains' in data) {
-    return data;
-  } else {
-    return contextualizeEvaluation(data);
-  }
 }
 
 export function createReportMapping(
@@ -296,7 +285,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     } else {
       logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     }
-    super(contextualizeIfNeeded(data));
+    super(ensureContextualizedEvaluation(data));
     this.axiosInstance = axios.create({params: {output_mode: 'json'}});
     logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
