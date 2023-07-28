@@ -369,7 +369,7 @@
                   <span>{{controlSeverity.severity}}</span>
                 </div>
                 <!-- Control title -->
-                <span class="w-1/2 break-words px-6">{{hdf.wraps.title}}</span>
+                <span class="w-1/2 break-all px-6 sm:break-words">{{hdf.wraps.title}}</span>
                 <!-- Control tags -->
                 <div
                   class="hidden grid-cols-1 gap-x-6 gap-y-2 lg:grid xl:grid-cols-2"
@@ -465,11 +465,9 @@
                   <tbody>
                     <!-- Generate all control details -->
                     {{#details}}
-                    <tr
-                      class="break-all border-b odd:bg-gray-100 even:bg-white"
-                    >
+                    <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td>{{name}}</td>
-                      <td>{{value}}</td>
+                      <td class="break-all">{{value}}</td>
                     </tr>
                     {{/details}}
                   </tbody>
