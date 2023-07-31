@@ -1,24 +1,24 @@
 // ASFF (AWS Security Finding Format) is intended as being another data exchange format to be used in displaying data within AWS SecurityHub - in this regard, it is analogous to HDF and Heimdall.
 // Like in every scenario where there is an open specification, people interpret the intent of each of the attributes in slightly different ways.  Consequently, while many products provide 'ASFF' output, providing a mapper back to HDF can be complicated.
 
-import { encode } from 'html-entities';
-import { ExecJSON } from 'inspecjs';
-import { compare } from 'compare-versions';
+import {compare} from 'compare-versions';
+import {encode} from 'html-entities';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
-import { version as HeimdallToolsVersion } from '../../package.json';
-import { BaseConverter, ILookupPath, MappedTransform } from '../base-converter';
+import {version as HeimdallToolsVersion} from '../../package.json';
+import {BaseConverter, ILookupPath, MappedTransform} from '../base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   getCCIsForNISTTags
 } from '../utils/global';
-import { getCMSInSpec } from './case-cms-inspec';
-import { getFirewallManager } from './case-firewall-manager';
-import { getGuardDuty } from './case-guardduty';
-import { getInspector } from './case-inspector';
-import { getPreviouslyHDF } from './case-previously-hdf';
-import { getProwler } from './case-prowler';
-import { getSecurityHub } from './case-security-hub';
-import { getTrivy } from './case-trivy';
+import {getCMSInSpec} from './case-cms-inspec';
+import {getFirewallManager} from './case-firewall-manager';
+import {getGuardDuty} from './case-guardduty';
+import {getInspector} from './case-inspector';
+import {getPreviouslyHDF} from './case-previously-hdf';
+import {getProwler} from './case-prowler';
+import {getSecurityHub} from './case-security-hub';
+import {getTrivy} from './case-trivy';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['CRITICAL', 0.9],
@@ -137,7 +137,7 @@ function externalProductHandler<T>(
   ) {
     let keywords: Record<string, unknown> = {};
     if (context.supportingDocs.has(product)) {
-      keywords = { ...context.supportingDocs.get(product) };
+      keywords = {...context.supportingDocs.get(product)};
     }
     return _.get(SPECIAL_CASE_MAPPING.get(product), func)?.apply(context, [
       data,
@@ -219,9 +219,9 @@ function handleIdGroup(
           element &&
           element.data !== '' &&
           index ===
-          arr.findIndex(
-            (e) => e !== null && e !== undefined && e.data === element.data
-          ) // https://stackoverflow.com/a/36744732/645647
+            arr.findIndex(
+              (e) => e !== null && e !== undefined && e.data === element.data
+            ) // https://stackoverflow.com/a/36744732/645647
       ) as ExecJSON.ControlDescription[],
     refs: group
       .map((d) => d.refs)
@@ -236,7 +236,7 @@ function handleIdGroup(
       } else if (locs.length === 1) {
         return locs[0];
       } else {
-        return { ref: JSON.stringify(locs) };
+        return {ref: JSON.stringify(locs)};
       }
     })(),
     ...(Object.keys(waiverData || {}).length !== 0 && {
@@ -247,7 +247,7 @@ function handleIdGroup(
       whichSpecialCase(findings[0]),
       group,
       'code',
-      JSON.stringify({ Findings: findings }, null, 2)
+      JSON.stringify({Findings: findings}, null, 2)
     ),
     results: group.map((d) => d.results).flat()
   } as ExecJSON.Control;
@@ -295,9 +295,9 @@ function wrapWithFindingsObject(
 ): Record<string, Record<string, unknown>[]> {
   if (!_.has(output, 'Findings')) {
     if (Array.isArray(output)) {
-      output = { Findings: output };
+      output = {Findings: output};
     } else {
-      output = { Findings: [output] };
+      output = {Findings: [output]};
     }
   }
   return output as Record<string, Record<string, unknown>[]>;
@@ -423,7 +423,7 @@ export class ASFFMapper extends BaseConverter {
                     (_.get(finding, SEVERITY_LABEL) as string | undefined)
                       ? (_.get(finding, SEVERITY_LABEL) as string)
                       : (_.get(finding, 'Severity.Normalized') as number) /
-                      100.0;
+                        100.0;
                   impact = externalProductHandler<string | number>(
                     this,
                     whichSpecialCase(finding),
@@ -636,7 +636,7 @@ export class ASFFMapper extends BaseConverter {
                     }
                   })();
                   return {
-                    ...(message !== undefined && { message }),
+                    ...(message !== undefined && {message}),
                     ...(skipMessage !== undefined && {
                       skip_message: skipMessage
                     })
