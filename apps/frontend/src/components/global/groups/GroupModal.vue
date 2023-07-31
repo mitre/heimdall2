@@ -227,14 +227,14 @@ export default class GroupModal extends Vue {
     await this.syncUsersWithGroup(group);
 
     let groupRelation = GroupRelationsModule.allGroupRelations.find(
-      (groupRelation) => groupRelation.childId === this.groupInfo.id
+      (groupRelation) => groupRelation.childId === group.id
     );
     // If there is an existing relation, either update or delete it. If not, add a new one.
     if (groupRelation) {
       if (this.parentGroupId) {
         await this.updateExistingGroupRelation({
           parentId: this.parentGroupId,
-          childId: this.groupInfo.id
+          childId: group.id
         });
       } else {
         await GroupRelationsModule.DeleteGroupRelation(groupRelation);
@@ -244,7 +244,7 @@ export default class GroupModal extends Vue {
         groupRelation = (
           await this.addGroupRelation({
             parentId: this.parentGroupId,
-            childId: this.groupInfo.id
+            childId: group.id
           })
         ).data;
       }
