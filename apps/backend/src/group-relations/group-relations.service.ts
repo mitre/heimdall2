@@ -31,8 +31,7 @@ export class GroupRelationsService {
 
   async findByIds(id: string[]): Promise<GroupRelation[]> {
     return this.groupRelationModel.findAll({
-      where: {id: {[Op.in]: id}},
-      include: 'users'
+      where: {id: {[Op.in]: id}}
     });
   }
 
