@@ -14,7 +14,7 @@
 
         <v-list-item v-if="anyFileFilteredOut">
           <v-list-item-content>
-            Filtered files
+            Filtered-out {{ headerText }}
           </v-list-item-content>
 
           <v-list-item-action @click.stop="showFilteredOutFiles = !showFilteredOutFiles">
