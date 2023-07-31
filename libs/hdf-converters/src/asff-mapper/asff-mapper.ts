@@ -1,7 +1,7 @@
 // ASFF (AWS Security Finding Format) is intended as being another data exchange format to be used in displaying data within AWS SecurityHub - in this regard, it is analogous to HDF and Heimdall.
 // Like in every scenario where there is an open specification, people interpret the intent of each of the attributes in slightly different ways.  Consequently, while many products provide 'ASFF' output, providing a mapper back to HDF can be complicated.
 
-import {compare} from 'compare-versions';
+import {compare, validate} from 'compare-versions';
 import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
@@ -70,10 +70,14 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
       (type: string) => {
         const delimitedType = type.split('/');
         const version = delimitedType[delimitedType.length - 1].split('-')[0];
-        if (compare(version, '2.6.20', '>')) {
-          return _.startsWith(type, 'MITRE/SAF/');
-        } else {
-          return false;
+        try {
+          if (validate(version) && compare(version, '2.6.20', '>')) {
+            return _.startsWith(type, 'MITRE/SAF/');
+          } else {
+            return false;
+          }
+        } catch (e) {
+          console.log(e.message);
         }
       }
     )
