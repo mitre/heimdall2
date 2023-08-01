@@ -1,3 +1,5 @@
+/*eslint-disable cypress/no-async-tests*/
+
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_INVALID_PASSWORD,
@@ -13,14 +15,11 @@ context('Registration', () => {
   const registrationVerifier = new RegistrationVerifier();
   const toastVerifier = new ToastVerifier();
 
-  // Run before each test
-  beforeEach(() => {
-    cy.visit('/signup');
-  });
-
   // The test
   describe('Registration Form', () => {
-    it('allows a user to create an account', () => {
+    it('allows a user to create an account', async () => {
+      cy.visit('/signup');
+
       registrationVerifier.registerFormPresent();
       registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
       toastVerifier.toastTextContains(
@@ -29,12 +28,16 @@ context('Registration', () => {
     });
 
     it('rejects emails that already exist', async () => {
+      cy.visit('/signup');
+
       registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
       registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
       toastVerifier.toastTextContains('Email must be unique');
     });
 
-    it('rejects a weak password', () => {
+    it('rejects a weak password', async () => {
+      cy.visit('/signup');
+
       cy.on('uncaught:exception', (err) => {
         expect(err.response.status).to.equal(400);
 
@@ -49,7 +52,9 @@ context('Registration', () => {
       registrationVerifier.registerButtonDisabled();
     });
 
-    it('rejects mismatching passwords', () => {
+    it('rejects mismatching passwords', async () => {
+      cy.visit('/signup');
+
       registrationPage.registerNoSubmit(
         CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
       );
