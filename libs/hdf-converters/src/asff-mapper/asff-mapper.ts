@@ -68,13 +68,12 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     _.some(
       _.get(finding, 'FindingProviderFields.Types') as string[],
       (type: string) => {
-        const delimitedType = type.split('/');
-        const version = delimitedType[delimitedType.length - 1].split('-')[0];
-        if (validate(version) && compare(version, '2.6.20', '>')) {
-          return _.startsWith(type, 'MITRE/SAF/');
-        } else {
+        // 'type' should look like "MITRE/SAF/2.6.29-hdf2asff"
+        if (!_.startsWith(type, 'MITRE/SAF/')) {
           return false;
         }
+        const version = type.split('/').pop()?.split('-')[0] ?? '';
+        return validate(version) && compare(version, '2.6.20', '>'); // older versions aren't supported by the 'PreviouslyHDF' specialcasing and instead use the default casing
       }
     )
   ) {
