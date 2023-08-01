@@ -2,6 +2,7 @@ import {Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import {Strategy} from 'passport-openidconnect';
 import {ConfigService} from '../config/config.service';
+import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from './authn.service';
 
 interface OIDCProfile {
@@ -10,6 +11,7 @@ interface OIDCProfile {
     family_name: string;
     email: string;
     email_verified: boolean;
+    groups: string[];
   };
 }
 
@@ -17,7 +19,8 @@ interface OIDCProfile {
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
   constructor(
     private readonly authnService: AuthnService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
+    private readonly groupsService: GroupsService
   ) {
     super(
       {
@@ -31,7 +34,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         callbackURL: `${configService.get('EXTERNAL_URL')}/authn/oidc/callback`,
         scope: 'openid profile email'
       },
-      function (
+      async function (
         _accessToken: string,
         _refreshToken: string,
         profile: OIDCProfile,
@@ -39,14 +42,23 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         done: any
       ) {
         const userData = profile._json;
-        const {given_name, family_name, email, email_verified} = userData;
+        const {given_name, family_name, email, email_verified, groups} =
+          userData;
         if (email_verified) {
-          const user = authnService.validateOrCreateUser(
+          const user = await authnService.validateOrCreateUser(
             email,
             given_name,
             family_name,
             'oidc'
           );
+
+          if (
+            configService.get('OIDC_EXTERNAL_GROUPS') === 'true' &&
+            groups !== undefined
+          ) {
+            await groupsService.syncUserGroups(user, groups);
+          }
+
           return done(null, user);
         } else {
           throw new UnauthorizedException(

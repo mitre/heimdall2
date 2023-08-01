@@ -3,6 +3,7 @@ import {PassportModule} from '@nestjs/passport';
 import {ApiKeyService} from '../apikeys/apikey.service';
 import {ApiKeyModule} from '../apikeys/apikeys.module';
 import {ConfigModule} from '../config/config.module';
+import {GroupsModule} from '../groups/groups.module';
 import {TokenModule} from '../token/token.module';
 import {UsersModule} from '../users/users.module';
 import {APIKeyStrategy} from './apikey.strategy';
@@ -23,7 +24,8 @@ import {OktaStrategy} from './okta.strategy';
     UsersModule,
     PassportModule,
     TokenModule,
-    ConfigModule
+    ConfigModule,
+    GroupsModule
   ],
   providers: [
     AuthnService,
