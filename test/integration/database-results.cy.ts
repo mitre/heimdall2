@@ -1,4 +1,5 @@
 /*eslint-disable cypress/no-async-tests*/
+
 import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
