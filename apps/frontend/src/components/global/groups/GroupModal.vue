@@ -167,10 +167,20 @@ export default class GroupModal extends Vue {
   dialog = false;
   changePassword = false;
   groupInfo: IGroup = _.cloneDeep(this.group);
-  parentGroupId: string | null =
-    GroupRelationsModule.allGroupRelations.find(
-      (groupRelation) => groupRelation.childId === this.groupInfo.id
-    )?.parentId || null;
+
+  parentGroupIdInternal: string | null = null;
+
+  get parentGroupId(): string | null {
+    return (
+      GroupRelationsModule.allGroupRelations.find(
+        (groupRelation) => groupRelation.childId === this.groupInfo.id
+      )?.parentId || null
+    );
+  }
+
+  set parentGroupId(updatedParentGroupId: string | null) {
+    this.parentGroupIdInternal = updatedParentGroupId;
+  }
 
   currentPassword = '';
   newPassword = '';
@@ -231,19 +241,19 @@ export default class GroupModal extends Vue {
     );
     // If there is an existing relation, either update or delete it. If not, add a new one.
     if (groupRelation) {
-      if (this.parentGroupId) {
+      if (this.parentGroupIdInternal) {
         await this.updateExistingGroupRelation({
-          parentId: this.parentGroupId,
+          parentId: this.parentGroupIdInternal,
           childId: group.id
         });
       } else {
         await GroupRelationsModule.DeleteGroupRelation(groupRelation);
       }
     } else {
-      if (this.parentGroupId) {
+      if (this.parentGroupIdInternal) {
         groupRelation = (
           await this.addGroupRelation({
-            parentId: this.parentGroupId,
+            parentId: this.parentGroupIdInternal,
             childId: group.id
           })
         ).data;
@@ -256,7 +266,6 @@ export default class GroupModal extends Vue {
     // Calling clear on edit makes it impossible to edit the same group twice.
     if (this.create) {
       this.groupInfo = newGroup();
-      this.parentGroupId = null;
     }
     this.dialog = false;
     SnackbarModule.notify(`Group Successfully Saved`);
