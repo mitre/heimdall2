@@ -15,6 +15,31 @@
         </template>
       </GroupModal>
     </v-card-title>
+    <v-btn color="primary" @click="printDescendants">Print Descendants</v-btn>
+    <v-row>
+      <v-col>
+        <v-treeview
+          hoverable
+          activatable
+          :items="groupTree"
+          @update:active="setSelectedGroup"
+        >
+          <template #label="{item}">
+            <span>{{ item.name }}</span>
+          </template>
+        </v-treeview>
+      </v-col>
+      <v-divider vertical />
+      <v-col>
+        <template v-if="selectedGroup.id === '-1'">
+          No group selected.
+        </template>
+        <template v-else>
+          {{ selectedGroup.name }}
+        </template>
+      </v-col>
+    </v-row>
+
     <v-data-table
       :headers="groupsHeaders"
       :items="groupData"
@@ -154,12 +179,18 @@ import GroupModal from '@/components/global/groups/GroupModal.vue';
 import GroupUsers from '@/components/global/groups/GroupUsers.vue';
 import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
+import {GroupRelationsModule} from '@/store/group_relations';
 import {SnackbarModule} from '@/store/snackbar';
 import {IGroup, ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
+export type Tree = {
+  id: string;
+  name: string;
+  children?: Tree[];
+};
 @Component({
   components: {
     ActionDialog,
@@ -176,6 +207,16 @@ export default class GroupManagement extends Vue {
   dialogDelete = false;
   dialogDisplayUsers = false;
   search = '';
+  selectedGroup: IGroup = {
+    id: '-1',
+    name: '',
+    role: '',
+    public: false,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    desc: '',
+    users: []
+  };
 
   groupsHeaders: {
     text: string;
@@ -204,6 +245,52 @@ export default class GroupManagement extends Vue {
     {text: 'Members', value: 'members', sortable: true},
     {text: 'Actions', value: 'actions', sortable: false}
   ];
+
+  // TODO: Remove this function and the associated button
+  async printDescendants() {
+    console.log(GroupRelationsModule.GetAllDescendants('1'));
+  }
+
+  setSelectedGroup(selectedId: string[]) {
+    const updatedGroup = GroupsModule.allGroups.find(
+      (group) => group.id === selectedId[0]
+    );
+    if (updatedGroup) {
+      this.selectedGroup = updatedGroup;
+    }
+  }
+
+  get groupTree() {
+    const baseGroups = GroupsModule.allGroups.filter(
+      (group) =>
+        !GroupRelationsModule.allGroupRelations.some(
+          (relation) => relation.childId === group.id
+        )
+    );
+    return baseGroups.map((group) => {
+      return {
+        id: group.id,
+        name: group.name,
+        children: this.getDescendants(group.id)
+      };
+    });
+  }
+
+  getDescendants(parentId: string): Tree[] {
+    const adjacentRelations = GroupRelationsModule.allGroupRelations.filter(
+      (relation) => relation.parentId === parentId
+    );
+    return adjacentRelations.map((relation) => {
+      const group = GroupsModule.allGroups.find(
+        (group) => group.id === relation.childId
+      );
+      return {
+        id: group?.id,
+        name: group?.name,
+        children: this.getDescendants(group?.id || '-1')
+      } as Tree;
+    });
+  }
 
   deleteGroupDialog(group: IGroup): void {
     this.editedGroup = group;

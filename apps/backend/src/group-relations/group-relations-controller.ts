@@ -18,7 +18,9 @@ export class GroupRelationsController {
   constructor(private readonly groupRelationsService: GroupRelationsService) {}
 
   @Get()
-  async findAll(@Request() request: {user: User}): Promise<GroupRelationDto[]> {
+  async findAll(
+    @Request() _request: {user: User}
+  ): Promise<GroupRelationDto[]> {
     const groupRelations = await this.groupRelationsService.findAll();
     return groupRelations.map(
       (groupRelation) => new GroupRelationDto(groupRelation)
@@ -27,7 +29,7 @@ export class GroupRelationsController {
 
   @Post()
   async create(
-    @Request() request: {user: User},
+    @Request() _request: {user: User},
     @Body() addGroupRelationDto: AddGroupRelationDto
   ) {
     const groupRelation = await this.groupRelationsService.create(
@@ -39,7 +41,7 @@ export class GroupRelationsController {
   // TODO: Figure out how the "ability factory" works
   @Put(':id')
   async update(
-    @Request() request: {user: User},
+    @Request() _request: {user: User},
     @Param('id') id: string,
     @Body() updateGroupRelation: AddGroupRelationDto
   ): Promise<GroupRelationDto> {
@@ -56,7 +58,7 @@ export class GroupRelationsController {
 
   @Delete(':id')
   async remove(
-    @Request() request: {user: User},
+    @Request() _request: {user: User},
     @Param('id') id: string
   ): Promise<GroupRelationDto> {
     const groupRelationToDelete = await this.groupRelationsService.findByPkBang(
@@ -69,21 +71,20 @@ export class GroupRelationsController {
 
   @Get('/all-descendants/:id')
   async getAllDescendants(
-    @Request() request: {user: User},
+    @Request() _request: {user: User},
     @Param('id') parentId: string
   ): Promise<string[]> {
     const allDescendants = await this.groupRelationsService.getAllDescendants(
       parentId
     );
-    console.log(allDescendants);
     return allDescendants;
   }
 
-  @Get('/adjacent-descendants/:parent-id')
+  @Get('/adjacent-descendants/:id')
   async getAdjacentDescendants(
-    @Request() request: {user: User},
-    @Param('parent-id') parentId: string
+    @Request() _request: {user: User},
+    @Param('id') parentId: string
   ): Promise<string[]> {
-    return await this.groupRelationsService.getAdjacentDescendants(parentId);
+    return this.groupRelationsService.getAdjacentDescendants(parentId);
   }
 }

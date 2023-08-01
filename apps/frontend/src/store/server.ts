@@ -254,10 +254,10 @@ class Server extends VuexModule implements IServerState {
           // then clear their token and refresh the page
           this.Logout()
         )
-        .then(() => {
+        .then(async () => {
           this.FetchAllUsers();
-          GroupsModule.FetchGroupData();
-          GroupRelationsModule.FetchGroupRelationData();
+          await GroupRelationsModule.FetchGroupRelationData();
+          await GroupsModule.FetchGroupData();
         });
     }
   }
