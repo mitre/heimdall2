@@ -102,6 +102,25 @@ export class GroupRelations extends VuexModule {
   ): Promise<AxiosResponse<IGroupRelation[]>> {
     return axios.get<IGroupRelation[]>(endpoint);
   }
+
+  @Action
+  public async GetAllDescendants(
+    parentId: string
+  ): Promise<AxiosResponse<string[]>> {
+    const allDescendants = await axios.get<string[]>(
+      `/group-relations/all-descendants/${parentId}`
+    );
+    return allDescendants;
+  }
+
+  @Action
+  public async GetAdjacentDescendants(
+    parentId: string
+  ): Promise<AxiosResponse<string[]>> {
+    return axios.get<string[]>(
+      `/group-relations/adjacent-descendants/${parentId}`
+    );
+  }
 }
 
 export const GroupRelationsModule = getModule(GroupRelations);
