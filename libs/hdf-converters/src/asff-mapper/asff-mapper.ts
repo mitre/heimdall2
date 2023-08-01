@@ -70,14 +70,10 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
       (type: string) => {
         const delimitedType = type.split('/');
         const version = delimitedType[delimitedType.length - 1].split('-')[0];
-        try {
-          if (validate(version) && compare(version, '2.6.20', '>')) {
-            return _.startsWith(type, 'MITRE/SAF/');
-          } else {
-            return false;
-          }
-        } catch (e) {
-          console.log(e.message);
+        if (validate(version) && compare(version, '2.6.20', '>')) {
+          return _.startsWith(type, 'MITRE/SAF/');
+        } else {
+          return false;
         }
       }
     )
