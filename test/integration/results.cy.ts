@@ -23,7 +23,7 @@ context('Results', () => {
 
   // The test
   describe('Results', () => {
-    it('displays correct data for the Acme Overlay Example sample', () => {
+    it('displays correct data for the Acme Overlay Example sample', async () => {
       cy.register(CREATE_USER_DTO_TEST_OBJ);
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION);
@@ -42,7 +42,7 @@ context('Results', () => {
   });
 
   describe('User Modal', () => {
-    it('successfully opens and displays the user modal and allows users to change their data', () => {
+    it('successfully opens and displays the user modal and allows users to change their data', async () => {
       cy.register(CREATE_USER_DTO_TEST_OBJ);
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION);
