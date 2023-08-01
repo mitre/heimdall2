@@ -1,5 +1,3 @@
-/*eslint-disable cypress/no-async-tests*/
-
 import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
@@ -16,22 +14,21 @@ context('Groups', () => {
   const dataTableVerifier = new DataTableVerifier();
   const groupName = 'Test Group';
 
-  describe('CRUD', async () => {
-    it('allows a user to create a group', () => {
-      cy.register(CREATE_USER_DTO_TEST_OBJ);
-      cy.visit('/login');
-      cy.login(LOGIN_AUTHENTICATION);
+  // Run before each test
+  beforeEach(() => {
+    cy.register(CREATE_USER_DTO_TEST_OBJ);
+    cy.visit('/login');
+    cy.login(LOGIN_AUTHENTICATION);
+  });
 
+  describe('CRUD', () => {
+    it('allows a user to create a group', () => {
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName);
       dataTableVerifier.verifyTextPresent(groupName);
     });
 
-    it('allows a user to update a group', async () => {
-      cy.register(CREATE_USER_DTO_TEST_OBJ);
-      cy.visit('/login');
-      cy.login(LOGIN_AUTHENTICATION);
-
+    it('allows a user to update a group', () => {
       const updatedGroupName = 'Updated Test Group';
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName);
@@ -39,11 +36,7 @@ context('Groups', () => {
       dataTableVerifier.verifyTextPresent(updatedGroupName);
     });
 
-    it('allows a user to delete a group', async () => {
-      cy.register(CREATE_USER_DTO_TEST_OBJ);
-      cy.visit('/login');
-      cy.login(LOGIN_AUTHENTICATION);
-
+    it('allows a user to delete a group', () => {
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName);
       groupPage.deleteGroup(groupName);
