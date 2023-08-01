@@ -20,7 +20,7 @@ context('Splunk', () => {
 
   // The test
   describe('Splunk Form', () => {
-    it('authenticates a user with valid Splunk credentials', async () => {
+    it('authenticates a user with valid Splunk credentials', () => {
       cy.register(CREATE_USER_DTO_TEST_OBJ);
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION);
@@ -33,7 +33,7 @@ context('Splunk', () => {
       toastVerifier.toastTextContains('You have successfully signed in');
     });
 
-    it('fails to authenticate a Splunk user with invalid credentials', async () => {
+    it('fails to authenticate a Splunk user with invalid credentials', () => {
       cy.register(CREATE_USER_DTO_TEST_OBJ);
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION);
