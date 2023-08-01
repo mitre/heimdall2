@@ -66,4 +66,24 @@ export class GroupRelationsController {
       await this.groupRelationsService.remove(groupRelationToDelete)
     );
   }
+
+  @Get('/all-descendants/:id')
+  async getAllDescendants(
+    @Request() request: {user: User},
+    @Param('id') parentId: string
+  ): Promise<string[]> {
+    const allDescendants = await this.groupRelationsService.getAllDescendants(
+      parentId
+    );
+    console.log(allDescendants);
+    return allDescendants;
+  }
+
+  @Get('/adjacent-descendants/:parent-id')
+  async getAdjacentDescendants(
+    @Request() request: {user: User},
+    @Param('parent-id') parentId: string
+  ): Promise<string[]> {
+    return await this.groupRelationsService.getAdjacentDescendants(parentId);
+  }
 }

@@ -57,4 +57,28 @@ export class GroupRelationsService {
 
     return groupRelationToDelete;
   }
+
+  async getAdjacentRelations(parentId: string): Promise<GroupRelation[]> {
+    return (await this.findAll()).filter(
+      (relation) => relation.parentId === parentId
+    );
+  }
+
+  async getAdjacentDescendants(parentId: string): Promise<string[]> {
+    return (await this.getAdjacentRelations(parentId)).map(
+      (relation) => relation.childId
+    );
+  }
+
+  async getAllDescendants(parentId: string): Promise<string[]> {
+    let descendants: string[] = [];
+    const adjacentRelations = await this.getAdjacentRelations(parentId);
+    for (const relation of adjacentRelations) {
+      descendants.push(relation.childId);
+      descendants = descendants.concat(
+        await this.getAllDescendants(relation.childId)
+      );
+    }
+    return descendants;
+  }
 }
