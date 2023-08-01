@@ -67,7 +67,7 @@ module.exports = {
         }, { transaction: t })
       } catch (error) {
         await t.rollback();
-        throw `TRANSACTION_ERROR: ${error.message}`;
+        throw error;
       }
     })
   },
