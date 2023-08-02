@@ -56,9 +56,6 @@ manifest.yml
 nginx/certs/ssl_certificate.crt
 nginx/certs/ssl_certificate_key.key
 
-# HTML Export Dependencies
-apps/frontend/public/static/export/tw-elements.min.js
-
 # Ignore yarn 2 new files
 .yarn/*
 !.yarn/patches

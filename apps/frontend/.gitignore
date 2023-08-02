@@ -27,3 +27,7 @@ tests/hdf_data/inspec_tools_info
 *.njsproj
 *.sln
 *.sw?
+
+# HTML Export Dependencies
+public/static/export/style.css
+public/static/export/tw-elements.min.js
