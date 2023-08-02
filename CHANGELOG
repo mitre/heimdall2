@@ -1,6 +1,6 @@
 v2.7.0
 
-- Unique Group Names @Rlin232 (#4722)
+- Unique Group Names @Rlin232 (#4722) - make sure to run the db migration scripts and be ready for your group names potentially being changed in order to enforce the uniqueness constraint
 - Using Semver Compare for ASFF "Previously HDF" Special Casing @Rlin232 (#4767)
 - Implemented OIDC external group import @akey77 (#3922)
 - Map XCCDF result value of "notselected" to HDF impact of 0 @candrews (#4758)
