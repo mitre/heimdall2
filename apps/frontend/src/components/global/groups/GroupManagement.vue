@@ -15,98 +15,154 @@
         </template>
       </GroupModal>
     </v-card-title>
-    <v-btn color="primary" @click="printDescendants">Print Descendants</v-btn>
-    <v-row>
-      <v-col>
-        <v-treeview
-          hoverable
-          activatable
-          :items="groupTree"
-          @update:active="setSelectedGroup"
-        >
-          <template #label="{item}">
-            <span>{{ item.name }}</span>
-          </template>
-        </v-treeview>
+    <v-container>
+      <v-text-field
+        v-model="search"
+        append-icon="mdi-magnify"
+        label="Search"
+        single-line
+        dense
+        hide-details
+      />
+    </v-container>
+    <v-row class="pa-4" justify="space-between">
+      <v-col cols="5">
+        <span>
+          <v-treeview
+            hoverable
+            activatable
+            :items="groupTree"
+            :search="search"
+            open-all
+            @update:active="setSelectedGroup"
+          >
+            <template #label="{item}">
+              <span>{{ item.name }}</span>
+            </template>
+          </v-treeview>
+        </span>
       </v-col>
       <v-divider vertical />
-      <v-col>
-        <template v-if="selectedGroup.id === '-1'">
-          No group selected.
-        </template>
-        <template v-else>
-          {{ selectedGroup.name }}
-        </template>
+      <v-col cols="7">
+        <v-container overflow-x-auto>
+          <v-scroll-y-transition mode="out-in">
+            <v-card v-if="selectedGroup.id === '-1'" flat>
+              <v-card-title> No Group Selected. </v-card-title>
+            </v-card>
+            <v-card v-else :key="selectedGroup.id" flat>
+              <v-card-actions
+                v-if="selectedGroup.role === 'owner' || adminPanel"
+              >
+                <GroupModal
+                  id="editGroupModal"
+                  :create="false"
+                  :admin="adminPanel"
+                  :group="selectedGroup"
+                >
+                  <template #clickable="{on}">
+                    <v-btn title="Edit" data-cy="edit" text v-on="on">
+                      Edit <v-icon small>mdi-pencil</v-icon>
+                    </v-btn>
+                  </template>
+                </GroupModal>
+                <v-btn
+                  title="Delete"
+                  data-cy="delete"
+                  text
+                  @click="deleteGroupDialog(selectedGroup)"
+                >
+                  Delete <v-icon small>mdi-delete</v-icon>
+                </v-btn>
+              </v-card-actions>
+              <v-card-title>
+                {{ selectedGroup.name }}
+                <v-tooltip color="secondary" right>
+                  <template #activator="{on}">
+                    <v-icon
+                      small
+                      title="Info"
+                      data-cy="info"
+                      class="ml-2"
+                      v-on="on"
+                    >
+                      mdi-information
+                    </v-icon>
+                  </template>
+                  <v-card
+                    color="transparent"
+                    flat
+                    max-width="600px"
+                    overflow-y-auto
+                  >
+                    <span>
+                      <v-card-text>
+                        <div>Created At: {{ selectedGroup.createdAt }}</div>
+                        <div>Updated At: {{ selectedGroup.updatedAt }}</div>
+                      </v-card-text>
+                    </span>
+                  </v-card>
+                </v-tooltip>
+              </v-card-title>
+              <v-card-text>
+                <div>
+                  <strong>Your Role:</strong>
+                  {{
+                    selectedGroup.role
+                      ? selectedGroup.role === 'owner'
+                        ? 'Owner'
+                        : 'Member'
+                      : 'None'
+                  }}
+                </div>
+                <div>
+                  <strong>Visibility:</strong>
+                  {{ selectedGroup.public ? 'Public' : 'Private' }}
+                </div>
+              </v-card-text>
+              <v-card-subtitle>
+                <strong>Group Description</strong>
+              </v-card-subtitle>
+              <v-card-text v-if="selectedGroup.desc !== ''">
+                <div
+                  v-for="(line, index) in selectedGroup.desc.split('\n')"
+                  :key="index"
+                >
+                  {{ line }} <br />
+                </div>
+              </v-card-text>
+              <v-card-text v-else>None</v-card-text>
+            </v-card>
+          </v-scroll-y-transition>
+        </v-container>
       </v-col>
     </v-row>
-
-    <v-data-table
-      :headers="groupsHeaders"
-      :items="groupData"
-      class="elevation-0"
-      dense
-      :loading="loading"
-      :search="search"
-    >
-      <template #top>
-        <v-container>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            dense
-            hide-details
-          />
-        </v-container>
-      </template>
-      <template #[`item.members`]="{item}">
+    <!-- <v-data-table :headers="groupsHeaders" :items="groupData" class="elevation-0" dense :loading="loading"
+      :search="search">
+      <template #[`item.members`]="{ item }">
         <span v-for="user in item.members.slice(0, 3)" :key="user.id">
-          <v-chip
-            pill
-            color="primary"
-            class="ma-1"
-            @click="displayUsersDialog(item.members)"
-          >
+          <v-chip pill color="primary" class="ma-1" @click="displayUsersDialog(item.members)">
             {{ getMemberName(user) }}
           </v-chip>
         </span>
-        <v-chip
-          v-if="item.members.length > 3"
-          pill
-          color="primary"
-          outlined
-          class="ma-1"
-          @click="displayUsersDialog(item.members)"
-        >
+        <v-chip v-if="item.members.length > 3" pill color="primary" outlined class="ma-1"
+          @click="displayUsersDialog(item.members)">
           {{ `+${item.members.length - 3} more` }}
         </v-chip>
       </template>
-      <template #[`item.owners`]="{item}">
+      <template #[`item.owners`]="{ item }">
         <span v-for="user in item.owners.slice(0, 3)" :key="user.id">
-          <v-chip
-            pill
-            color="primary"
-            class="ma-1"
-            @click="displayUsersDialog(item.owners)"
-          >
+          <v-chip pill color="primary" class="ma-1" @click="displayUsersDialog(item.owners)">
             {{ getMemberName(user) }}
           </v-chip>
         </span>
-        <v-chip
-          v-if="item.owners.length > 3"
-          pill
-          color="primary"
-          outlined
-          class="ma-1"
-          @click="displayUsersDialog(item.owners)"
-        >
+        <v-chip v-if="item.owners.length > 3" pill color="primary" outlined class="ma-1"
+          @click="displayUsersDialog(item.owners)">
           {{ `+${item.owners.length - 3} more` }}
         </v-chip>
       </template>
-      <template #[`item.actions`]="{item}">
+      <template #[`item.actions`]="{ item }">
         <v-tooltip color="secondary" left>
-          <template #activator="{on}">
+          <template #activator="{ on }">
             <v-icon small title="Info" data-cy="info" class="mr-2" v-on="on">
               mdi-information
             </v-icon>
@@ -123,10 +179,7 @@
                 <strong>Group Description</strong>
               </v-card-subtitle>
               <v-card-text v-if="item.desc !== ''">
-                <div
-                  v-for="(line, index) in item.desc.split('\n')"
-                  :key="index"
-                >
+                <div v-for="(line, index) in item.desc.split('\n')" :key="index">
                   {{ line }} <br />
                 </div>
               </v-card-text>
@@ -135,30 +188,20 @@
           </v-card>
         </v-tooltip>
         <span v-if="item.role === 'owner' || adminPanel">
-          <GroupModal
-            id="editGroupModal"
-            :create="false"
-            :admin="adminPanel"
-            :group="item"
-          >
-            <template #clickable="{on}">
+          <GroupModal id="editGroupModal" :create="false" :admin="adminPanel" :group="item">
+            <template #clickable="{ on }">
               <v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
                 mdi-pencil
               </v-icon>
             </template>
           </GroupModal>
-          <v-icon
-            small
-            title="Delete"
-            data-cy="delete"
-            @click="deleteGroupDialog(item)"
-          >
+          <v-icon small title="Delete" data-cy="delete" @click="deleteGroupDialog(item)">
             mdi-delete
           </v-icon>
         </span>
       </template>
       <template #no-data> No groups match current selection. </template>
-    </v-data-table>
+    </v-data-table> -->
     <ActionDialog
       v-model="dialogDelete"
       type="group"
@@ -203,11 +246,11 @@ export default class GroupManagement extends Vue {
   @Prop({type: Boolean, default: false}) readonly adminPanel!: boolean;
 
   editedGroup: IGroup | null = null;
-  selectedGroupUsers: ISlimUser[] | null = [];
+  selectedGroupUsers: ISlimUser[] = [];
   dialogDelete = false;
   dialogDisplayUsers = false;
   search = '';
-  selectedGroup: IGroup = {
+  selectedGroup: IGroup & {members: ISlimUser[]; owners: ISlimUser[]} = {
     id: '-1',
     name: '',
     role: '',
@@ -215,7 +258,9 @@ export default class GroupManagement extends Vue {
     createdAt: new Date(),
     updatedAt: new Date(),
     desc: '',
-    users: []
+    users: [],
+    members: [],
+    owners: []
   };
 
   groupsHeaders: {
@@ -246,22 +291,57 @@ export default class GroupManagement extends Vue {
     {text: 'Actions', value: 'actions', sortable: false}
   ];
 
-  // TODO: Remove this function and the associated button
-  async printDescendants() {
-    console.log(GroupRelationsModule.GetAllDescendants('1'));
-  }
-
   setSelectedGroup(selectedId: string[]) {
-    const updatedGroup = GroupsModule.allGroups.find(
-      (group) => group.id === selectedId[0]
-    );
-    if (updatedGroup) {
-      this.selectedGroup = updatedGroup;
+    if (selectedId.length === 0) {
+      this.selectedGroup = {
+        id: '-1',
+        name: '',
+        role: '',
+        public: false,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        desc: '',
+        users: [],
+        members: [],
+        owners: []
+      };
+    } else {
+      const updatedGroup = this.visibleGroups().find(
+        (group) => group.id === selectedId[0]
+      );
+      if (updatedGroup) {
+        this.selectedGroup = {
+          ...updatedGroup,
+          members: updatedGroup.users.filter(
+            (user) => user.groupRole === 'member'
+          ),
+          owners: updatedGroup.users.filter(
+            (user) => user.groupRole === 'owner'
+          )
+        };
+      }
     }
   }
 
+  visibleGroups() {
+    let groups: IGroup[] = GroupsModule.myGroups;
+    if (this.adminPanel) {
+      groups = GroupsModule.myGroups.concat(
+        GroupsModule.allGroups.filter(
+          (group) =>
+            !GroupsModule.myGroups
+              .map((myGroup) => myGroup.id)
+              .includes(group.id)
+        )
+      );
+    } else {
+      groups = GroupsModule.myGroups;
+    }
+    return groups;
+  }
+
   get groupTree() {
-    const baseGroups = GroupsModule.allGroups.filter(
+    const baseGroups = this.visibleGroups().filter(
       (group) =>
         !GroupRelationsModule.allGroupRelations.some(
           (relation) => relation.childId === group.id
