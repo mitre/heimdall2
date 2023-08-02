@@ -83,7 +83,10 @@ export class GroupsService {
     });
   }
 
-  async ensureGroupHasOwner(group: Group, user: User | GroupUser) {
+  async ensureGroupHasOwner(
+    group: Group,
+    user: User | GroupUser
+  ): Promise<void> {
     const owners = (await group.$get('users')).filter(
       (userOnGroup) => userOnGroup.GroupUser.role === 'owner'
     );
@@ -156,15 +159,28 @@ export class GroupsService {
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
+    if (
+      (await this.groupModel.findAll({where: {name: createGroupDto.name}}))
+        .length > 0
+    ) {
+      throw new ForbiddenException(
+        'Duplicate key detected. The names of groups must be unique.'
+      );
+    }
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const group = new Group(createGroupDto as any);
     return group.save();
   }
 
   async update(groupToUpdate: Group, groupDto: CreateGroupDto): Promise<Group> {
-    groupToUpdate.update(groupDto);
-
-    return groupToUpdate.save();
+    if (
+      (await this.groupModel.findAll({where: {name: groupDto.name}})).length > 1
+    ) {
+      throw new ForbiddenException(
+        'Duplicate key detected. The names of groups must be unique.'
+      );
+    }
+    return groupToUpdate.update(groupDto);
   }
 
   async remove(groupToDelete: Group): Promise<Group> {
