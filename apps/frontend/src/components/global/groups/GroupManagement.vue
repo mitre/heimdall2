@@ -27,7 +27,7 @@
     </v-container>
     <v-row class="pa-4" justify="space-between">
       <v-col cols="5">
-        <span>
+        <v-container>
           <v-treeview
             hoverable
             activatable
@@ -37,14 +37,16 @@
             @update:active="setSelectedGroup"
           >
             <template #label="{item}">
-              <span>{{ item.name }}</span>
+              <span>
+                {{ item.name }}
+              </span>
             </template>
           </v-treeview>
-        </span>
+        </v-container>
       </v-col>
       <v-divider vertical />
       <v-col cols="7">
-        <v-container overflow-x-auto>
+        <v-container>
           <v-scroll-y-transition mode="out-in">
             <v-card v-if="selectedGroup.id === '-1'" flat>
               <v-card-title> No Group Selected. </v-card-title>
@@ -103,6 +105,9 @@
                   </v-card>
                 </v-tooltip>
               </v-card-title>
+              <v-card-subtitle class="pt-1">
+                (id={{ selectedGroup.id }})
+              </v-card-subtitle>
               <v-card-text>
                 <div>
                   <strong>Your Role:</strong>
