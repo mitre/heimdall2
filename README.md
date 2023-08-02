@@ -83,7 +83,7 @@ This repository contains the source code for Heimdall's [Backend](https://github
 
 ## Heimdall (Lite) vs Heimdall with Backend (Server)
 
-There are two ways to deploy MITRE Heimdall - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
+There are two ways to deploy the MITRE Heimdall application - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
 
 ### Heimdall-Lite
 

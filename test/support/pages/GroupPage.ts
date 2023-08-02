@@ -21,4 +21,12 @@ export default class GroupPage {
     cy.contains('td', name).parent().get('[data-cy=delete]').click();
     cy.get('[data-cy=deleteConfirm]').click();
   }
+
+  testGroupName(name: string): void {
+    cy.get('[data-cy=createNewGroupBtn]').click();
+    cy.get('[data-cy=createGroupForm').within(() => {
+      cy.get('[data-cy=name]').clear();
+      cy.get('[data-cy=name]').type(name);
+    });
+  }
 }
