@@ -47,7 +47,10 @@ export default class GroupUsers extends Vue {
   @Prop({type: Boolean, default: false}) readonly dialogDisplayUsers!: boolean;
 
   get role() {
-    if (this.selectedGroupUsers[0].groupRole) {
+    if (
+      this.selectedGroupUsers.length > 0 &&
+      this.selectedGroupUsers[0].groupRole
+    ) {
       return (
         this.selectedGroupUsers[0].groupRole.charAt(0).toUpperCase() +
         this.selectedGroupUsers[0].groupRole.slice(1) +
