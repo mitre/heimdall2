@@ -168,7 +168,7 @@ export default class GroupModal extends Vue {
   changePassword = false;
   groupInfo: IGroup = _.cloneDeep(this.group);
 
-  parentGroupIdInternal: string | null = null;
+  parentGroupIdInternal: string | null = this.parentGroupId;
 
   get parentGroupId(): string | null {
     return (
@@ -259,8 +259,9 @@ export default class GroupModal extends Vue {
         ).data;
       }
     }
-    if (groupRelation)
+    if (groupRelation) {
       await GroupRelationsModule.UpdateGroupRelationById(groupRelation.id);
+    }
 
     // This clears when creating a new Group.
     // Calling clear on edit makes it impossible to edit the same group twice.
