@@ -2,14 +2,17 @@ import Sidebar from '@/components/global/Sidebar.vue';
 import {ExtendedControlStatus, FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {SearchModule} from '@/store/search';
-import {createLocalVue, shallowMount, Wrapper} from '@vue/test-utils';
-import {Severity} from 'inspecjs';
+import {createLocalVue, mount, shallowMount, Wrapper} from '@vue/test-utils';
+import {LowercasedControlStatus, Severity} from 'inspecjs';
 import 'jest';
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import {EvaluationFile, ProfileFile} from '../../src/store/report_intake';
 import {loadAll} from '../util/testingUtils';
+import QuickFilters from '@/components/global/sidebaritems/QuickFilters.vue'
+import DropdownFilters from '@/components/global/sidebaritems/DropdownFilters.vue'
+import SelectedFilterTable from '@/components/global/sidebaritems/SelectedFilterTable.vue'
 
 const vuetify = new Vuetify();
 const localVue = createLocalVue();
@@ -23,19 +26,57 @@ const wrapper: Wrapper<Vue> = shallowMount(Sidebar, {
   propsData: {}
 });
 
+const quickFiltersWrapper: Wrapper<Vue> = shallowMount(QuickFilters, {
+  localVue,
+  router,
+  vuetify,
+  propsData: {}
+});
+
+const selectedFilterTableWrapper: Wrapper<Vue> = shallowMount(SelectedFilterTable, {
+  localVue,
+  router,
+  vuetify,
+  propsData: {}
+});
+
+const dropdownFiltersWrapper: Wrapper<Vue> = shallowMount(DropdownFilters, {
+  localVue,
+  router,
+  vuetify,
+  propsData: {
+    properties: [
+      'Keywords',
+      'ID',
+      'Vul ID',
+      'Rule ID',
+      'Title',
+      'Nist',
+      'Description',
+      'Code',
+      'Stig ID',
+      'Classification',
+      'IA Control',
+      'Group Name',
+      'CCIs'
+    ],
+    header: "Category Filters"
+  }
+});
+
 describe('Sidebar tests', () => {
   it('will properly toggle filters', () => {
     // Toggle all status switches
-    const statuses: ExtendedControlStatus[] = [
-      'Passed',
-      'Failed',
-      'Not Applicable',
-      'Not Reviewed'
+    const statuses: LowercasedControlStatus[] = [
+      'passed',
+      'failed',
+      'not applicable',
+      'not reviewed'
     ];
-    statuses.forEach((status: ExtendedControlStatus) => {
+    statuses.forEach((status: LowercasedControlStatus) => {
       (
-        wrapper.vm as Vue & {
-          changeStatusToggle: (name: ExtendedControlStatus) => void;
+        quickFiltersWrapper.vm as Vue & {
+          changeStatusToggle: (name: LowercasedControlStatus) => void;
         }
       ).changeStatusToggle(status);
     });
@@ -44,7 +85,7 @@ describe('Sidebar tests', () => {
     const severities: Severity[] = ['critical', 'high', 'medium', 'low'];
     severities.forEach((severity: Severity) => {
       (
-        wrapper.vm as Vue & {
+        quickFiltersWrapper.vm as Vue & {
           changeSeverityToggle: (name: Severity) => void;
         }
       ).changeSeverityToggle(severity);
@@ -52,7 +93,7 @@ describe('Sidebar tests', () => {
 
     // Add a category filter
     (
-      wrapper.vm as Vue & {
+      dropdownFiltersWrapper.vm as Vue & {
         addCategoryFilter: (field: string, value: string) => void;
       }
     ).addCategoryFilter('Rule ID', 'SV-864');
@@ -61,13 +102,13 @@ describe('Sidebar tests', () => {
     let search = SearchModule.searchTerm;
     // Current filter from parsed search term
     let currentFilters = (
-      wrapper.vm as Vue & {
+      selectedFilterTableWrapper.vm as Vue & {
         currentFilters: Array<object>;
       }
     ).currentFilters;
     // Items in the data table
     let tableFilters = (
-      wrapper.vm as Vue & {
+      selectedFilterTableWrapper.vm as Vue & {
         convertFilterData: (
           filters: {keyword: string; value: string; negated: boolean}[]
         ) => Array<{keyword: string; value: string; negated: string}>;
@@ -83,19 +124,19 @@ describe('Sidebar tests', () => {
 
     // After remove all function is called from selected filters table
     (
-      wrapper.vm as Vue & {
+      selectedFilterTableWrapper.vm as Vue & {
         removeAllFilters: () => void;
       }
     ).removeAllFilters();
     search = SearchModule.searchTerm;
     SearchModule.parseSearch();
     currentFilters = (
-      wrapper.vm as Vue & {
+      selectedFilterTableWrapper.vm as Vue & {
         currentFilters: Array<object>;
       }
     ).currentFilters;
     tableFilters = (
-      wrapper.vm as Vue & {
+      selectedFilterTableWrapper.vm as Vue & {
         convertFilterData: (
           filters: {keyword: string; value: string; negated: boolean}[]
         ) => Array<{keyword: string; value: string; negated: string}>;
