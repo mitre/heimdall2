@@ -1,4 +1,8 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException
+} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {Op} from 'sequelize';
 import {AddGroupRelationDto} from './dto/add-group-relation.dto';
@@ -38,18 +42,38 @@ export class GroupRelationsService {
   async create(
     addGroupRelationDto: AddGroupRelationDto
   ): Promise<GroupRelation> {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const groupRelation = new GroupRelation(addGroupRelationDto as any);
-    return groupRelation.save();
+    const descendants = this.getAllDescendants(addGroupRelationDto.childId);
+    if (
+      (await descendants).some(
+        (descendant) => descendant === addGroupRelationDto.parentId
+      )
+    ) {
+      throw new ForbiddenException(
+        'Parent group cannot be descendant of child group'
+      );
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const groupRelation = new GroupRelation(addGroupRelationDto as any);
+      return groupRelation.save();
+    }
   }
 
   async update(
     groupRelationToUpdate: GroupRelation,
     updateGroupRelationDto: UpdateGroupRelationDto
   ) {
-    groupRelationToUpdate.update(updateGroupRelationDto);
-
-    return groupRelationToUpdate.save();
+    const descendants = this.getAllDescendants(updateGroupRelationDto.childId);
+    if (
+      (await descendants).some(
+        (descendant) => descendant === updateGroupRelationDto.parentId
+      )
+    ) {
+      throw new ForbiddenException(
+        'Parent group cannot be descendant of child group'
+      );
+    } else {
+      return groupRelationToUpdate.update(updateGroupRelationDto);
+    }
   }
 
   async remove(groupRelationToDelete: GroupRelation): Promise<GroupRelation> {
