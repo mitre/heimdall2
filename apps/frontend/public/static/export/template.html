@@ -124,15 +124,10 @@
           <!-- Generate an info report for every profile -->
           {{#files}}
           <div class="mx-2 my-2 break-words">
-            <span>
-              <strong>Filename:</strong> {{filename}}
-              <br />
-              <strong>Tool Version:</strong> {{toolVersion}}
-              <br />
-              <strong>Platform:</strong> {{platform}}
-              <br />
-              <strong>Duration:</strong> {{duration}}
-            </span>
+            <div><strong>Filename:</strong> {{filename}}</div>
+            <div><strong>Tool Version:</strong> {{toolVersion}}</div>
+            <div><strong>Platform:</strong> {{platform}}</div>
+            <div><strong>Duration:</strong> {{duration}}</div>
           </div>
           {{/files}}
         </div>
@@ -370,7 +365,9 @@
                   <span>{{controlSeverity.severity}}</span>
                 </div>
                 <!-- Control title -->
-                <span class="w-1/2 break-all px-6 sm:break-words">{{hdf.wraps.title}}</span>
+                <span class="w-1/2 break-all px-6 sm:break-words"
+                  >{{hdf.wraps.title}}</span
+                >
                 <!-- Control tags -->
                 <div
                   class="hidden grid-cols-1 gap-x-6 gap-y-2 lg:grid xl:grid-cols-2"
@@ -468,7 +465,9 @@
                     {{#details}}
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td>{{name}}</td>
-                      <td class="break-all sm:break-words lg:break-normal">{{value}}</td>
+                      <td class="break-all sm:break-words lg:break-normal">
+                        {{value}}
+                      </td>
                     </tr>
                     {{/details}}
                   </tbody>
@@ -632,7 +631,13 @@
       {{/controlSets}} {{/showControlSets}}
     </div>
     <script type="text/javascript">
-      {{{tailwindElements}}}
+      {
+        {
+          {
+            tailwindElements;
+          }
+        }
+      }
     </script>
   </body>
 </html>
