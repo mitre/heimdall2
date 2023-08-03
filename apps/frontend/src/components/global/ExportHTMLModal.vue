@@ -67,7 +67,7 @@ import {SeverityCountModule} from '@/store/severity_counts';
 // Illegal characters which are not accepted by HTML id attribute
 // Generally includes everything that is not alphanumeric or characters [-,_]
 // Expand as needed
-const ILLEGAL_CHAR_SET = {
+const ILLEGAL_CHARACTER_SET = {
   '\\.': '___PERIOD___'
 };
 
@@ -149,8 +149,8 @@ interface Icons {
 
 // Top level interface; lvl 0
 interface OutputData {
-  twStyles: string;
-  twElements: string;
+  tailwindStyles: string;
+  tailwindElements: string;
   files: FileInfo[];
   statistics: Statistics;
   severity: Severity;
@@ -179,73 +179,73 @@ export default class ExportHTMLModal extends Vue {
   // Generated injectable HTML for icons
   private iconHTMLStore = {
     // Passed; green
-    circleCheck: this.iconDatatoSVG(
+    circleCheck: this.iconDataToSVG(
       mdiCheckCircle,
       'rgb(76, 176, 79)',
       'A green circle with a check'
     ),
     // Failed; red
-    circleCross: this.iconDatatoSVG(
+    circleCross: this.iconDataToSVG(
       mdiCloseCircle,
       'rgb(243, 67, 53)',
       'A red circle with a cross'
     ),
     // Not applicable; blue
-    circleMinus: this.iconDatatoSVG(
+    circleMinus: this.iconDataToSVG(
       mdiMinusCircle,
       'rgb(3, 169, 244)',
       'A blue circle with a minus'
     ),
     // Not reviewed; yellow
-    circleAlert: this.iconDatatoSVG(
+    circleAlert: this.iconDataToSVG(
       mdiAlertCircle,
       'rgb(254, 153, 0)',
       'A yellow circle with an exclamation point'
     ),
     // Profile error; purple
-    triangleAlert: this.iconDatatoSVG(
+    triangleAlert: this.iconDataToSVG(
       mdiAlert,
       'rgb(121, 134, 203)',
       'A purple triangle with an exclamation point'
     ),
     // Total count; black
-    squareEqual: this.iconDatatoSVG(
+    squareEqual: this.iconDataToSVG(
       mdiEqualBox,
       'black',
       'A black square with an equal'
     ),
     // No severity; blue
-    circleNone: this.iconDatatoSVG(
+    circleNone: this.iconDataToSVG(
       mdiCircle,
       'rgb(3, 169, 244)',
       'A blue circle'
     ),
     // Low severity; yellow
-    circleLow: this.iconDatatoSVG(
+    circleLow: this.iconDataToSVG(
       mdiCircle,
       'rgb(255, 235, 59)',
       'A yellow circle'
     ),
     // Medium severity; orange
-    circleMedium: this.iconDatatoSVG(
+    circleMedium: this.iconDataToSVG(
       mdiCircle,
       'rgb(255, 152, 0)',
       'An orange circle'
     ),
     // High severity; deep orange
-    circleHigh: this.iconDatatoSVG(
+    circleHigh: this.iconDataToSVG(
       mdiCircle,
       'rgb(255, 87, 34)',
       'A deep orange circle'
     ),
     // Critical severity; red
-    circleCritical: this.iconDatatoSVG(
+    circleCritical: this.iconDataToSVG(
       mdiCircle,
       'rgb(244, 67, 54)',
       'A red circle'
     ),
     // Generic circle
-    circleWhite: this.iconDatatoSVG(mdiCircle, 'rgb(0, 0, 0)', 'A white circle')
+    circleWhite: this.iconDataToSVG(mdiCircle, 'rgb(0, 0, 0)', 'A white circle')
   };
 
   // Default attributes
@@ -254,8 +254,8 @@ export default class ExportHTMLModal extends Vue {
   description = 'Profile Info\nStatuses\nCompliance Level';
   printHelp = false;
   outputData: OutputData = {
-    twStyles: '',
-    twElements: '',
+    tailwindStyles: '',
+    tailwindElements: '',
     // Used for profile status reporting
     statistics: {
       passed: 0,
@@ -339,7 +339,7 @@ export default class ExportHTMLModal extends Vue {
   }
 
   // Generate SVG HTML for icons for injection into export template
-  iconDatatoSVG(
+  iconDataToSVG(
     iconData: string,
     fill: string,
     desc: string,
@@ -401,7 +401,7 @@ export default class ExportHTMLModal extends Vue {
   // Takes all available existing file data to use as default settings/data for outputData object
   resetOutputData() {
     // Total control count
-    const controlCnt =
+    const controlCount =
       StatusCountModule.countOf(this.filter, 'Passed') +
       StatusCountModule.countOf(this.filter, 'Failed') +
       StatusCountModule.countOf(this.filter, 'Not Applicable') +
@@ -412,14 +412,14 @@ export default class ExportHTMLModal extends Vue {
     const MAX_DECIMAL_PRECISION = 2;
     let compliance = 0;
     // If controls exist, calculate compliance level
-    if (controlCnt > 0) {
+    if (controlCount > 0) {
       // Formula: compliance = Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100
       // Truncate to hundredths decimal place
       const calculatedCompliance =
         Math.trunc(
           Math.pow(10, MAX_DECIMAL_PRECISION) *
             ((StatusCountModule.countOf(this.filter, 'Passed') /
-              (controlCnt -
+              (controlCount -
                 StatusCountModule.countOf(this.filter, 'Not Applicable'))) *
               100)
         ) / Math.pow(10, MAX_DECIMAL_PRECISION);
@@ -451,7 +451,7 @@ export default class ExportHTMLModal extends Vue {
       notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
       notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
       profileError: StatusCountModule.countOf(this.filter, 'Profile Error'),
-      totalControls: controlCnt,
+      totalControls: controlCount,
       passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
       passingTestsFailedControl: StatusCountModule.countOf(
         this.filter,
@@ -474,11 +474,13 @@ export default class ExportHTMLModal extends Vue {
   }
 
   // Replace all found illegal characters in string with compliant string equivalent
-  replaceIllegalChar(text: string): string {
-    for (const illegalChar in ILLEGAL_CHAR_SET) {
+  replaceIllegalCharacters(text: string): string {
+    for (const illegalCharacter in ILLEGAL_CHARACTER_SET) {
       text = text.replace(
-        new RegExp(`${illegalChar}`, 'g'),
-        ILLEGAL_CHAR_SET[illegalChar as keyof typeof ILLEGAL_CHAR_SET]
+        new RegExp(`${illegalCharacter}`, 'g'),
+        ILLEGAL_CHARACTER_SET[
+          illegalCharacter as keyof typeof ILLEGAL_CHARACTER_SET
+        ]
       );
     }
     return text;
@@ -603,7 +605,7 @@ export default class ExportHTMLModal extends Vue {
           value: control.hdf.descriptions.fix || control.data.tags.fix
         }
       ].filter((v) => v.value),
-      controlID: this.replaceIllegalChar(control.hdf.wraps.id),
+      controlID: this.replaceIllegalCharacters(control.hdf.wraps.id),
       controlStatus: {
         status: control.root.hdf.status,
         icon: statusColor
@@ -625,19 +627,19 @@ export default class ExportHTMLModal extends Vue {
 
     // Pull export template + styles and create outputData object containing data to fill template with
     const templateRequest = axios.get<string>(`/static/export/template.html`);
-    const twStylesRequest = axios.get<string>('/static/export/style.css');
-    const twElementsRequest = axios.get<string>(
+    const tailwindStylesRequest = axios.get<string>('/static/export/style.css');
+    const tailwindElementsRequest = axios.get<string>(
       '/static/export/tw-elements.min.js'
     );
     const responses = await axios.all([
       templateRequest,
-      twStylesRequest,
-      twElementsRequest
+      tailwindStylesRequest,
+      tailwindElementsRequest
     ]);
 
     const template = responses[0].data;
-    this.outputData.twStyles = responses[1].data;
-    this.outputData.twElements = responses[2].data;
+    this.outputData.tailwindStyles = responses[1].data;
+    this.outputData.tailwindElements = responses[2].data;
 
     for (const fileId of this.filter.fromFile) {
       const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
