@@ -63,6 +63,10 @@ import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {SnackbarModule} from '../../store/snackbar';
 import {StatusCountModule} from '../../store/status_counts';
 import {SeverityCountModule} from '@/store/severity_counts';
+import {
+  formatCompliance,
+  translateCompliance
+} from '@/utilities/compliance_util';
 
 // Illegal characters which are not accepted by HTML id attribute
 // Generally includes everything that is not alphanumeric or characters [-,_]
@@ -408,40 +412,24 @@ export default class ExportHTMLModal extends Vue {
       StatusCountModule.countOf(this.filter, 'Not Reviewed') +
       StatusCountModule.countOf(this.filter, 'Profile Error');
 
-    // Calculate & set compliance level from control statuses
-    const MAX_DECIMAL_PRECISION = 2;
-    let compliance = 0;
+    // Calculate & set compliance level and color from control statuses
+    // Set default complaince level and color
+    this.outputData.compliance.level = '0.00%';
+    this.outputData.compliance.color = 'low'
     // If controls exist, calculate compliance level
     if (controlCount > 0) {
       // Formula: compliance = Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100
-      // Truncate to hundredths decimal place
-      const calculatedCompliance =
-        Math.trunc(
-          Math.pow(10, MAX_DECIMAL_PRECISION) *
-            ((StatusCountModule.countOf(this.filter, 'Passed') /
-              (controlCount -
-                StatusCountModule.countOf(this.filter, 'Not Applicable'))) *
-              100)
-        ) / Math.pow(10, MAX_DECIMAL_PRECISION);
-      // Check if calculated compliance is valid
-      if (!isNaN(calculatedCompliance)) {
-        // Check if calculated compliance is a natural number
-        if (calculatedCompliance >= 0) {
-          compliance = calculatedCompliance;
-        }
-      }
-    }
-    this.outputData.compliance.level = `${compliance.toFixed(
-      MAX_DECIMAL_PRECISION
-    )}%`;
-
-    // Set coloring for compliance based on level of compliance
-    if (compliance >= 90) {
-      this.outputData.compliance.color = 'high'; // green
-    } else if (compliance >= 60) {
-      this.outputData.compliance.color = 'medium'; // yellow
-    } else {
-      this.outputData.compliance.color = 'low'; // red
+      const complianceLevel = formatCompliance(
+        (StatusCountModule.countOf(this.filter, 'Passed') /
+          (controlCount -
+            StatusCountModule.countOf(this.filter, 'Not Applicable'))) *
+          100
+      );
+      // Set compliance level
+      this.outputData.compliance.level = complianceLevel;
+      // Determine color of compliance level
+      // High compliance is green, medium is yellow, low is red
+      this.outputData.compliance.color = translateCompliance(complianceLevel);
     }
 
     // Set following attributes from existing file data
