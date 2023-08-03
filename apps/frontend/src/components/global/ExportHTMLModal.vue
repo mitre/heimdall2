@@ -75,6 +75,20 @@ const ILLEGAL_CHARACTER_SET = {
   '\\.': '___PERIOD___'
 };
 
+// All selectable export types for an HTML export
+const enum FileExportTypes {
+  executive = 'executive',
+  manager = 'manager',
+  administrator = 'administrator'
+}
+
+// All corresponding descriptions for export types
+const enum FileExportDescriptions {
+  executive = 'Profile Info\nStatuses\nCompliance Level',
+  manager = 'Profile Info\nStatuses\nCompliance Level\nTest Results and Details',
+  administrator = 'Profile Info\nStatuses\nCompliance Level\nTest Results and Details\nTest Code'
+}
+
 // =====================================
 // TEMPLATE RENDER DATA INTERFACES START
 // =====================================
@@ -254,8 +268,8 @@ export default class ExportHTMLModal extends Vue {
 
   // Default attributes
   showingModal = false;
-  exportType = 'executive';
-  description = 'Profile Info\nStatuses\nCompliance Level';
+  exportType = FileExportTypes.executive;
+  description = FileExportDescriptions.executive;
   printHelp = false;
   outputData: OutputData = {
     tailwindStyles: '',
@@ -322,20 +336,18 @@ export default class ExportHTMLModal extends Vue {
   @Watch('exportType')
   onFileChanged(newValue: string, _oldValue: string) {
     switch (newValue) {
-      case 'executive':
-        this.description = 'Profile Info\nStatuses\nCompliance Level';
+      case FileExportTypes.executive:
+        this.description = FileExportDescriptions.executive;
         this.outputData.showControlSets = false;
         this.outputData.showCode = false;
         break;
-      case 'manager':
-        this.description =
-          'Profile Info\nStatuses\nCompliance Level\nTest Results and Details';
+      case FileExportTypes.manager:
+        this.description = FileExportDescriptions.manager;
         this.outputData.showControlSets = true;
         this.outputData.showCode = false;
         break;
-      case 'administrator':
-        this.description =
-          'Profile Info\nStatuses\nCompliance Level\nTest Results and Details\nTest Code';
+      case FileExportTypes.administrator:
+        this.description = FileExportDescriptions.administrator;
         this.outputData.showControlSets = true;
         this.outputData.showCode = true;
         break;
@@ -415,7 +427,7 @@ export default class ExportHTMLModal extends Vue {
     // Calculate & set compliance level and color from control statuses
     // Set default complaince level and color
     this.outputData.compliance.level = '0.00%';
-    this.outputData.compliance.color = 'low'
+    this.outputData.compliance.color = 'low';
     // If controls exist, calculate compliance level
     if (controlCount > 0) {
       // Formula: compliance = Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100
