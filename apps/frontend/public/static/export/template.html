@@ -426,24 +426,28 @@
                   class="table min-w-full text-left"
                   aria-describedby="Control test description and result"
                 >
+                  <thead class="hidden">
+                    <th>Name</th>
+                    <th>Value</th>
+                  </thead>
                   <!-- Generate all available test results -->
                   {{#hdf.segments}}
                   <tbody>
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td class="border-r border-gray-300">Status</td>
-                      <td class="whitespace-pre-wrap break-all lg:break-normal">
+                      <td class="whitespace-pre-line break-all lg:break-normal">
                         {{status}}
                       </td>
                     </tr>
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td class="border-r border-gray-300">Test</td>
-                      <td class="whitespace-pre-wrap break-all lg:break-normal">
+                      <td class="whitespace-pre-line break-all lg:break-normal">
                         {{code_desc}}
                       </td>
                     </tr>
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td class="border-r border-gray-300">Result</td>
-                      <td class="whitespace-pre-wrap break-all lg:break-normal">
+                      <td class="whitespace-pre-line break-all lg:break-normal">
                         {{message}}
                       </td>
                     </tr>
@@ -458,6 +462,10 @@
                   class="table min-w-full text-left"
                   aria-describedby="Control details"
                 >
+                  <thead class="hidden">
+                    <th>Name</th>
+                    <th>Value</th>
+                  </thead>
                   <tbody>
                     <!-- Generate all control details -->
                     {{#details}}
@@ -572,6 +580,10 @@
               class="table min-w-full text-left"
               aria-describedby="Control test description and result"
             >
+              <thead class="hidden">
+                <th>Name</th>
+                <th>Value</th>
+              </thead>
               <!-- Generate all available test results -->
               {{#hdf.segments}}
               <tbody>
@@ -598,6 +610,10 @@
               class="table min-w-full text-left"
               aria-describedby="Control details"
             >
+              <thead class="hidden">
+                <th>Name</th>
+                <th>Value</th>
+              </thead>
               <tbody>
                 <!-- Generate all control details -->
                 {{#details}}
