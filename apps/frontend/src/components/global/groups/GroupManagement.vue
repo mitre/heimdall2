@@ -78,15 +78,11 @@
               </v-card-actions>
               <v-card-title>
                 {{ selectedGroup.name }}
+              </v-card-title>
+              <v-card-subtitle class="pt-2">
                 <v-tooltip color="secondary" right>
                   <template #activator="{on}">
-                    <v-icon
-                      small
-                      title="Info"
-                      data-cy="info"
-                      class="ml-2"
-                      v-on="on"
-                    >
+                    <v-icon small title="Info" data-cy="info" v-on="on">
                       mdi-information
                     </v-icon>
                   </template>
@@ -104,8 +100,6 @@
                     </span>
                   </v-card>
                 </v-tooltip>
-              </v-card-title>
-              <v-card-subtitle class="pt-1">
                 (id={{ selectedGroup.id }})
               </v-card-subtitle>
               <v-card-text>
