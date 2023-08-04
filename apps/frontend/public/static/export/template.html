@@ -68,24 +68,19 @@
         </button>
         <!-- Menu def -->
         <div
-          class="z-10 mt-2 hidden w-56 bg-white py-1 shadow-lg [&[data-te-dropdown-show]]:block"
+          class="z-10 mt-2 hidden grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 [&[data-te-dropdown-show]]:grid"
           id="controlSetsList"
           data-te-dropdown-menu-ref
           aria-labelledby="controlSetsList"
         >
-          <ul>
-            <!-- Generate links for every control set -->
-            {{#controlSets}}
-            <li>
-              <a
-                href="#{{fileID}}"
-                data-te-dropdown-item-ref
-                class="block px-4 py-2 text-sm"
-                >{{filename}}</a
-              >
-            </li>
-            {{/controlSets}}
-          </ul>
+          <!-- Generate links for every control set -->
+          {{#controlSets}}
+          <div
+            class="block w-56 break-words border border-gray-300 bg-white px-4 py-3 text-sm shadow-lg"
+          >
+            <a href="#{{fileID}}" data-te-dropdown-item-ref>{{filename}}</a>
+          </div>
+          {{/controlSets}}
         </div>
       </div>
       <!-- Toggle control set accordion collapse state -->
