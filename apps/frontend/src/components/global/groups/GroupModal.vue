@@ -295,13 +295,15 @@ export default class GroupModal extends Vue {
       this.groupInfo = newGroup();
     }
     this.dialog = false;
+    await GroupsModule.FetchGroupData();
+    await GroupRelationsModule.FetchGroupRelationData();
+    this.$emit('group-saved', [group.id]);
     SnackbarModule.notify(`Group Successfully Saved`);
-    location.reload();
   }
 
   async cancel(): Promise<void> {
     this.dialog = false;
-    location.reload();
+    this.groupInfo = _.cloneDeep(this.group); // Reset the working state of the edit operation
   }
 
   async createGroup(createGroup: ICreateGroup): Promise<AxiosResponse<IGroup>> {

@@ -216,6 +216,7 @@ export default class RegistrationModal extends Vue {
             SnackbarModule.notify(
               'You have successfully registered a new user'
             );
+            ServerModule.FetchAllUsers();
             this.$emit('close-modal');
             this.$emit('update-user-table');
           } else {

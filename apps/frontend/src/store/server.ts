@@ -255,7 +255,7 @@ class Server extends VuexModule implements IServerState {
           this.Logout()
         )
         .then(async () => {
-          this.FetchAllUsers();
+          await this.FetchAllUsers();
           await GroupRelationsModule.FetchGroupRelationData();
           await GroupsModule.FetchGroupData();
         });

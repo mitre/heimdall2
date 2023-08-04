@@ -34,7 +34,7 @@
             :items="groupTree"
             :search="search"
             open-all
-            @update:active="setSelectedGroup"
+            @update:active="setSelectedGroupId"
           >
             <template #label="{item}">
               <span>
@@ -52,14 +52,13 @@
               <v-card-title> No Group Selected. </v-card-title>
             </v-card>
             <v-card v-else :key="selectedGroup.id" flat>
-              <v-card-actions
-                v-if="selectedGroup.role === 'owner' || adminPanel"
-              >
+              <v-card-actions v-if="isOwner || adminPanel">
                 <GroupModal
                   id="editGroupModal"
                   :create="false"
                   :admin="adminPanel"
                   :group="selectedGroup"
+                  @group-saved="setSelectedGroupId"
                 >
                   <template #clickable="{on}">
                     <v-btn title="Edit" data-cy="edit" text v-on="on">
@@ -249,18 +248,7 @@ export default class GroupManagement extends Vue {
   dialogDelete = false;
   dialogDisplayUsers = false;
   search = '';
-  selectedGroup: IGroup & {members: ISlimUser[]; owners: ISlimUser[]} = {
-    id: '-1',
-    name: '',
-    role: '',
-    public: false,
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    desc: '',
-    users: [],
-    members: [],
-    owners: []
-  };
+  selectedGroupId: string = '-1';
 
   groupsHeaders: {
     text: string;
@@ -290,9 +278,20 @@ export default class GroupManagement extends Vue {
     {text: 'Actions', value: 'actions', sortable: false}
   ];
 
-  setSelectedGroup(selectedId: string[]) {
-    if (selectedId.length === 0) {
-      this.selectedGroup = {
+  get selectedGroup(): IGroup & {members: ISlimUser[]; owners: ISlimUser[]} {
+    const updatedGroup = this.visibleGroups.find(
+      (group) => group.id === this.selectedGroupId
+    );
+    if (updatedGroup) {
+      return {
+        ...updatedGroup,
+        members: updatedGroup.users.filter(
+          (user) => user.groupRole === 'member'
+        ),
+        owners: updatedGroup.users.filter((user) => user.groupRole === 'owner')
+      };
+    } else {
+      return {
         id: '-1',
         name: '',
         role: '',
@@ -304,25 +303,18 @@ export default class GroupManagement extends Vue {
         members: [],
         owners: []
       };
-    } else {
-      const updatedGroup = this.visibleGroups().find(
-        (group) => group.id === selectedId[0]
-      );
-      if (updatedGroup) {
-        this.selectedGroup = {
-          ...updatedGroup,
-          members: updatedGroup.users.filter(
-            (user) => user.groupRole === 'member'
-          ),
-          owners: updatedGroup.users.filter(
-            (user) => user.groupRole === 'owner'
-          )
-        };
-      }
     }
   }
 
-  visibleGroups() {
+  get isOwner() {
+    return this.selectedGroup.role === 'owner';
+  }
+
+  setSelectedGroupId(selectedId: string[]) {
+    this.selectedGroupId = selectedId[0] || '-1';
+  }
+
+  get visibleGroups() {
     let groups: IGroup[] = GroupsModule.myGroups;
     if (this.adminPanel) {
       groups = GroupsModule.myGroups.concat(
@@ -340,7 +332,7 @@ export default class GroupManagement extends Vue {
   }
 
   get groupTree() {
-    const baseGroups = this.visibleGroups().filter(
+    const baseGroups = this.visibleGroups.filter(
       (group) =>
         !GroupRelationsModule.allGroupRelations.some(
           (relation) => relation.childId === group.id
