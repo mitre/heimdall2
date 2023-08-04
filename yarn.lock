@@ -4593,10 +4593,10 @@
   dependencies:
     lru-cache "*"
 
-"@types/luxon@^2.0.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-2.4.0.tgz#897d3abc23b68d78b69d76a12c21e01eb5adab95"
-  integrity sha512-oCavjEjRXuR6URJEtQm0eBdfsBiEcGBZbq21of8iGkeKxU1+1xgKuFPClaBZl2KB8ZZBSWlgk61tH6Mf+nvZVw==
+"@types/luxon@^3.3.1":
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/@types/luxon/-/luxon-3.3.1.tgz#08727da7d81ee6a6c702b9dc6c8f86be010eb4dc"
+  integrity sha512-XOS5nBcgEeP2PpcqJHjCWhUCAzGfXIU8ILOSLpx2FhxqMW9KdxgCGXNOEKGVBfveKtIpztHzKK5vSRVLyW/NqA==
 
 "@types/mime@*":
   version "3.0.1"
