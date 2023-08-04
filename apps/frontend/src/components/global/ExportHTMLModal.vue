@@ -71,9 +71,7 @@ import {
 // Illegal characters which are not accepted by HTML id attribute
 // Generally includes everything that is not alphanumeric or characters [-,_]
 // Expand as needed
-const ILLEGAL_CHARACTER_SET = {
-  '\\.': '___PERIOD___'
-};
+const ILLEGAL_CHARACTER_SET = [['\\.', '___PERIOD___']];
 
 // All selectable export types for an HTML export
 const enum FileExportTypes {
@@ -431,12 +429,10 @@ export default class ExportHTMLModal extends Vue {
 
   // Replace all found illegal characters in string with compliant string equivalent
   replaceIllegalCharacters(text: string): string {
-    for (const illegalCharacter in ILLEGAL_CHARACTER_SET) {
+    for (const illegalCharacter of ILLEGAL_CHARACTER_SET) {
       text = text.replace(
-        new RegExp(`${illegalCharacter}`, 'g'),
-        ILLEGAL_CHARACTER_SET[
-          illegalCharacter as keyof typeof ILLEGAL_CHARACTER_SET
-        ]
+        new RegExp(`${illegalCharacter[0]}`, 'g'),
+        illegalCharacter[1]
       );
     }
     return text;
