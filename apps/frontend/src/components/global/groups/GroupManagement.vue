@@ -45,7 +45,7 @@
         </v-container>
       </v-col>
       <v-divider vertical />
-      <v-col cols="7">
+      <v-col cols="3">
         <v-container>
           <v-scroll-y-transition mode="out-in">
             <v-card v-if="selectedGroup.id === '-1'" flat>
@@ -133,83 +133,27 @@
           </v-scroll-y-transition>
         </v-container>
       </v-col>
+      <v-divider vertical />
+      <v-col cols="4">
+        <v-tabs v-model="activeTab" fixed-tabs dark>
+          <v-tab key="owners"> Owners </v-tab>
+          <v-tab key="members"> Members </v-tab>
+        </v-tabs>
+        <v-tabs-items v-model="activeTab">
+          <v-tab-item key="owners">
+            <Users v-model="selectedGroup.owners" :editable="false" />
+          </v-tab-item>
+          <v-tab-item key="members">
+            <Users v-model="selectedGroup.members" :editable="false" />
+          </v-tab-item>
+        </v-tabs-items>
+      </v-col>
     </v-row>
-    <!-- <v-data-table :headers="groupsHeaders" :items="groupData" class="elevation-0" dense :loading="loading"
-      :search="search">
-      <template #[`item.members`]="{ item }">
-        <span v-for="user in item.members.slice(0, 3)" :key="user.id">
-          <v-chip pill color="primary" class="ma-1" @click="displayUsersDialog(item.members)">
-            {{ getMemberName(user) }}
-          </v-chip>
-        </span>
-        <v-chip v-if="item.members.length > 3" pill color="primary" outlined class="ma-1"
-          @click="displayUsersDialog(item.members)">
-          {{ `+${item.members.length - 3} more` }}
-        </v-chip>
-      </template>
-      <template #[`item.owners`]="{ item }">
-        <span v-for="user in item.owners.slice(0, 3)" :key="user.id">
-          <v-chip pill color="primary" class="ma-1" @click="displayUsersDialog(item.owners)">
-            {{ getMemberName(user) }}
-          </v-chip>
-        </span>
-        <v-chip v-if="item.owners.length > 3" pill color="primary" outlined class="ma-1"
-          @click="displayUsersDialog(item.owners)">
-          {{ `+${item.owners.length - 3} more` }}
-        </v-chip>
-      </template>
-      <template #[`item.actions`]="{ item }">
-        <v-tooltip color="secondary" left>
-          <template #activator="{ on }">
-            <v-icon small title="Info" data-cy="info" class="mr-2" v-on="on">
-              mdi-information
-            </v-icon>
-          </template>
-          <v-card color="transparent" flat max-width="600px" overflow-y-auto>
-            <span>
-              <v-card-title>{{ item.name }}</v-card-title>
-              <v-card-text>
-                <div>Visibility: {{ item.public ? 'Public' : 'Private' }}</div>
-                <div>Created At: {{ item.createdAt }}</div>
-                <div>Updated At: {{ item.updatedAt }}</div>
-              </v-card-text>
-              <v-card-subtitle>
-                <strong>Group Description</strong>
-              </v-card-subtitle>
-              <v-card-text v-if="item.desc !== ''">
-                <div v-for="(line, index) in item.desc.split('\n')" :key="index">
-                  {{ line }} <br />
-                </div>
-              </v-card-text>
-              <v-card-text v-else>None</v-card-text>
-            </span>
-          </v-card>
-        </v-tooltip>
-        <span v-if="item.role === 'owner' || adminPanel">
-          <GroupModal id="editGroupModal" :create="false" :admin="adminPanel" :group="item">
-            <template #clickable="{ on }">
-              <v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
-                mdi-pencil
-              </v-icon>
-            </template>
-          </GroupModal>
-          <v-icon small title="Delete" data-cy="delete" @click="deleteGroupDialog(item)">
-            mdi-delete
-          </v-icon>
-        </span>
-      </template>
-      <template #no-data> No groups match current selection. </template>
-    </v-data-table> -->
     <ActionDialog
       v-model="dialogDelete"
       type="group"
       @cancel="closeActionDialog"
       @confirm="deleteGroupConfirm"
-    />
-    <GroupUsers
-      v-model="selectedGroupUsers"
-      :dialog-display-users="dialogDisplayUsers"
-      @close-group-users-dialog="dialogDisplayUsers = false"
     />
   </v-card>
 </template>
@@ -244,11 +188,11 @@ export default class GroupManagement extends Vue {
   @Prop({type: Boolean, default: false}) readonly adminPanel!: boolean;
 
   editedGroup: IGroup | null = null;
-  selectedGroupUsers: ISlimUser[] = [];
   dialogDelete = false;
   dialogDisplayUsers = false;
   search = '';
   selectedGroupId: string = '-1';
+  activeTab = 'owners';
 
   groupsHeaders: {
     text: string;
@@ -383,19 +327,6 @@ export default class GroupManagement extends Vue {
   closeActionDialog() {
     this.dialogDelete = false;
     this.editedGroup = null;
-  }
-
-  getMemberName(users: ISlimUser): string {
-    if (!users.firstName && !users.lastName) {
-      return users.email;
-    } else {
-      return `${users.firstName}${users.lastName ? ' ' + users.lastName : ''}`;
-    }
-  }
-
-  displayUsersDialog(members: ISlimUser[]) {
-    this.selectedGroupUsers = members;
-    this.dialogDisplayUsers = true;
   }
 
   get loading(): boolean {
