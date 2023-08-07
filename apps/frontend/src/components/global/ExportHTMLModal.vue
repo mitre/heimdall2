@@ -193,7 +193,7 @@ export default class ExportHTMLModal extends Vue {
   @Prop({type: String, required: true}) readonly fileType!: string;
 
   // Generated injectable HTML for icons
-  // Icons colors should align with Vue colors used in general dashboard
+  // Icons colors should align with Vue colors used in general dashboard from apps/frontend/src/store/color_hack.ts
   private iconHTMLStore = {
     // Passed; green
     circleCheck: this.iconDataToSVG(mdiCheckCircle, 'rgb(76, 176, 79)'),
@@ -313,10 +313,15 @@ export default class ExportHTMLModal extends Vue {
   iconDataToSVG(
     iconData: string,
     fill: string,
+    description = 'None',
     widthPx = 24,
     heightPx = 24
   ): string {
-    return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}" role="img" aria-hidden="true"><path fill="${fill}" d="${iconData}"/></svg>`;
+    if (description === 'None') {
+      return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}" role="img" aria-hidden="true"><path fill="${fill}" d="${iconData}"/></svg>`;
+    } else {
+      return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}" role="img" title="${description}" aria-label="${description}"><path fill="${fill}" d="${iconData}"/></svg>`;
+    }
   }
 
   // Invoked when file(s) are loaded.
