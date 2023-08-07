@@ -33,9 +33,9 @@
       <a href="#" class="px-3 py-2 text-lg font-medium">Heimdall Report</a>
       <!-- Profile info link -->
       <button role="button" aria-label="Jump to profile info card">
-        <a href="#profileInfo" class="px-3 py-2 text-sm" aria-current="page"
-          >Profile Info</a
-        >
+        <a href="#profileInfo" class="px-3 py-2 text-sm" aria-current="page">
+          Profile Info
+        </a>
       </button>
       <!-- Result sets dropdown menu -->
       {{#showResultSets}}
@@ -191,9 +191,9 @@
                 High: {{severity.high}}
               </div>
               <div class="flex">
-                <span class="pr-1 print:hidden"
-                  >{{{icons.circleCritical}}}</span
-                >
+                <span class="pr-1 print:hidden">
+                  {{{icons.circleCritical}}}
+                </span>
                 Critical: {{severity.critical}}
               </div>
             </div>
@@ -294,9 +294,9 @@
               <!-- Title -->
               <span class="w-1/2 pl-8 sm:block lg:pl-9">Title</span>
               <!-- Control tags -->
-              <span class="hidden lg:block lg:w-36 xl:w-52"
-                >800-53 Controls & CCIs</span
-              >
+              <span class="hidden lg:block lg:w-36 xl:w-52">
+                800-53 Controls & CCIs
+              </span>
             </div>
           </div>
 
@@ -339,8 +339,9 @@
                   <div class="w-24 lg:hidden">
                     <span
                       class="rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                      >{{.}}</span
                     >
+                      {{.}}
+                    </span>
                   </div>
                   {{/controlTags}}
                 </div>
@@ -358,9 +359,9 @@
                   <span>{{resultSeverity.severity}}</span>
                 </div>
                 <!-- Result title -->
-                <span class="w-1/2 break-all px-6 sm:break-words"
-                  >{{hdf.wraps.title}}</span
-                >
+                <span class="w-1/2 break-all px-6 sm:break-words">
+                  {{hdf.wraps.title}}
+                </span>
                 <!-- Control tags -->
                 <div
                   class="hidden grid-cols-1 gap-x-6 gap-y-2 lg:grid xl:grid-cols-2"
@@ -369,8 +370,9 @@
                   <div class="w-24">
                     <span
                       class="rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
-                      >{{.}}</span
                     >
+                      {{.}}
+                    </span>
                   </div>
                   {{/controlTags}}
                 </div>
@@ -476,6 +478,7 @@
               <hr class="my-3" />
 
               <!-- Result code block -->
+              <!-- Sensitive to whitespace, requires awkward tag placement -->
               {{#showCode}}
               <code class="whitespace-pre-wrap break-words text-sm text-red-700"
                 >{{full_code}}</code
@@ -619,6 +622,7 @@
           </div>
 
           <!-- Result code block -->
+          <!-- Sensitive to whitespace, requires awkward tag placement -->
           {{#showCode}}
           <hr class="my-1 h-1" />
           <code class="whitespace-pre-wrap text-sm text-black"
