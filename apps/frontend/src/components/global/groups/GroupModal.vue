@@ -197,20 +197,26 @@ export default class GroupModal extends Vue {
       ...this.groupInfo
     };
 
-    const response = await (this.create
-      ? this.createGroup(groupInfo)
-      : this.updateExistingGroup(groupInfo));
-    const group = response.data;
-    await GroupsModule.UpdateGroupById(group.id);
-    await this.syncUsersWithGroup(group);
-    // This clears when creating a new Group.
-    // Calling clear on edit makes it impossible to edit the same group twice.
-    if (this.create) {
-      this.groupInfo = newGroup();
+    try {
+      const response = await (this.create
+        ? this.createGroup(groupInfo)
+        : this.updateExistingGroup(groupInfo));
+      const group = response.data;
+      await GroupsModule.UpdateGroupById(group.id);
+      await this.syncUsersWithGroup(group);
+      // This clears when creating a new Group.
+      // Calling clear on edit makes it impossible to edit the same group twice.
+      if (this.create) {
+        this.groupInfo = newGroup();
+      }
+      this.dialog = false;
+      // This updates the store after the change propagates through the database
+      // Not calling this would result in reactivity delays on the frontend
+      await GroupsModule.FetchGroupData();
+      SnackbarModule.notify(`Group Successfully Saved`);
+    } catch (err) {
+      SnackbarModule.failure(`Failed to Save Group: ${err}`);
     }
-    this.dialog = false;
-    await GroupsModule.FetchGroupData();
-    SnackbarModule.notify(`Group Successfully Saved`);
   }
 
   async cancel(): Promise<void> {
