@@ -425,25 +425,26 @@
                     <th>Value</th>
                   </thead>
                   <!-- Generate all available test results -->
+                  <!-- Sensitive to whitespace, requires awkward tag placement -->
                   {{#hdf.segments}}
                   <tbody>
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td class="border-r border-gray-300">Status</td>
-                      <td class="whitespace-pre-line break-all lg:break-normal">
-                        {{status}}
-                      </td>
+                      <td class="whitespace-pre-line break-all lg:break-normal"
+                        >{{status}}</td
+                      >
                     </tr>
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td class="border-r border-gray-300">Test</td>
-                      <td class="whitespace-pre-line break-all lg:break-normal">
-                        {{code_desc}}
-                      </td>
+                      <td class="whitespace-pre-line break-all lg:break-normal"
+                        >{{code_desc}}</td
+                      >
                     </tr>
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td class="border-r border-gray-300">Result</td>
-                      <td class="whitespace-pre-line break-all lg:break-normal">
-                        {{message}}
-                      </td>
+                      <td class="whitespace-pre-line break-all lg:break-normal"
+                        >{{message}}</td
+                      >
                     </tr>
                   </tbody>
                   {{/hdf.segments}}
@@ -462,14 +463,14 @@
                   </thead>
                   <tbody>
                     <!-- Generate all result details -->
+                    <!-- Sensitive to whitespace, requires awkward tag placement -->
                     {{#details}}
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td class="border-r border-gray-300">{{name}}</td>
                       <td
                         class="whitespace-pre-line break-all sm:break-words lg:break-normal"
+                        >{{value}}</td
                       >
-                        {{value}}
-                      </td>
                     </tr>
                     {{/details}}
                   </tbody>
