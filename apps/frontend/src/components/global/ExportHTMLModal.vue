@@ -193,7 +193,8 @@ export default class ExportHTMLModal extends Vue {
   @Prop({type: String, required: true}) readonly fileType!: string;
 
   // Generated injectable HTML for icons
-  // Icons colors should align with Vue colors used in general dashboard from apps/frontend/src/store/color_hack.ts
+  // NOTE: Icons colors should align with Vue colors used in general dashboard from apps/frontend/src/store/color_hack.ts
+  // ARIA NOTE: Since icons are supplementary, descriptions are not required
   private iconHTMLStore = {
     // Passed; green
     circleCheck: this.iconDataToSVG(mdiCheckCircle, 'rgb(76, 176, 79)'),
