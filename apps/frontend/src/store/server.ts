@@ -247,7 +247,7 @@ class Server extends VuexModule implements IServerState {
     if (this.userInfo.id) {
       const userInfo = await axios.get<IUser>(`/users/${this.userInfo.id}`);
       try {
-        this.context.commit('SET_USER_INFO', userInfo);
+        this.context.commit('SET_USER_INFO', userInfo.data);
       } catch {
         // If an error occurs fetching the users profile
         // then clear their token and refresh the page
