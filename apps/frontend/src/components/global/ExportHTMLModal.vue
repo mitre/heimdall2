@@ -75,16 +75,16 @@ const ILLEGAL_CHARACTER_SET = [['\\.', '___PERIOD___']];
 
 // All selectable export types for an HTML export
 const enum FileExportTypes {
-  executive = 'executive',
-  manager = 'manager',
-  administrator = 'administrator'
+  Executive = 'executive',
+  Manager = 'manager',
+  Administrator = 'administrator'
 }
 
 // All corresponding descriptions for export types
 const enum FileExportDescriptions {
-  executive = 'Profile Info\nStatuses\nCompliance Level',
-  manager = 'Profile Info\nStatuses\nCompliance Level\nTest Results and Details',
-  administrator = 'Profile Info\nStatuses\nCompliance Level\nTest Results and Details\nTest Code'
+  Executive = 'Profile Info\nStatuses\nCompliance Level',
+  Manager = 'Profile Info\nStatuses\nCompliance Level\nTest Results and Details',
+  Administrator = 'Profile Info\nStatuses\nCompliance Level\nTest Results and Details\nTest Code'
 }
 
 // =====================================
@@ -224,8 +224,8 @@ export default class ExportHTMLModal extends Vue {
 
   // Default attributes
   showingModal = false;
-  exportType = FileExportTypes.executive;
-  description = FileExportDescriptions.executive;
+  exportType = FileExportTypes.Executive;
+  description = FileExportDescriptions.Executive;
   printHelp = false;
   outputData: OutputData = {
     tailwindStyles: '',
@@ -292,18 +292,18 @@ export default class ExportHTMLModal extends Vue {
   @Watch('exportType')
   onFileChanged(newValue: string, _oldValue: string) {
     switch (newValue) {
-      case FileExportTypes.executive:
-        this.description = FileExportDescriptions.executive;
+      case FileExportTypes.Executive:
+        this.description = FileExportDescriptions.Executive;
         this.outputData.showResultSets = false;
         this.outputData.showCode = false;
         break;
-      case FileExportTypes.manager:
-        this.description = FileExportDescriptions.manager;
+      case FileExportTypes.Manager:
+        this.description = FileExportDescriptions.Manager;
         this.outputData.showResultSets = true;
         this.outputData.showCode = false;
         break;
-      case FileExportTypes.administrator:
-        this.description = FileExportDescriptions.administrator;
+      case FileExportTypes.Administrator:
+        this.description = FileExportDescriptions.Administrator;
         this.outputData.showResultSets = true;
         this.outputData.showCode = true;
         break;
