@@ -290,7 +290,7 @@ export default class ExportHTMLModal extends Vue {
 
   // Configures outputData object's report type based on user input
   @Watch('exportType')
-  onFileChanged(newValue: string) {
+  onExportTypeChanged(newValue: string) {
     switch (newValue) {
       case FileExportTypes.Executive:
         this.description = FileExportDescriptions.Executive;
