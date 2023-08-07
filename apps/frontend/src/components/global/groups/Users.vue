@@ -44,9 +44,7 @@
               mdi-delete
             </v-icon>
           </template>
-          <template #no-data>
-            No users currently added to this group.
-          </template>
+          <template #no-data> No users currently selected. </template>
         </v-data-table>
       </v-col>
     </v-row>

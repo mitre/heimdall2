@@ -161,7 +161,6 @@
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import GroupModal from '@/components/global/groups/GroupModal.vue';
-import GroupUsers from '@/components/global/groups/GroupUsers.vue';
 import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
 import {GroupRelationsModule} from '@/store/group_relations';
@@ -180,8 +179,7 @@ export type Tree = {
   components: {
     ActionDialog,
     GroupModal,
-    Users,
-    GroupUsers
+    Users
   }
 })
 export default class GroupManagement extends Vue {
