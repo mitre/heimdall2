@@ -210,24 +210,20 @@ export default class RegistrationModal extends Vue {
         creationMethod: 'local'
       };
 
-      ServerModule.Register(creds)
-        .then(() => {
-          if (this.adminRegisterMode) {
-            SnackbarModule.notify(
-              'You have successfully registered a new user'
-            );
-            this.$emit('close-modal');
-            this.$emit('update-user-table');
-          } else {
-            this.$router.push('/login');
-            SnackbarModule.notify(
-              'You have successfully registered, please sign in'
-            );
-          }
-        })
-        .finally(() => {
-          this.buttonLoading = false;
-        });
+      await ServerModule.Register(creds);
+
+      if (this.adminRegisterMode) {
+        SnackbarModule.notify('You have successfully registered a new user');
+        await ServerModule.FetchAllUsers();
+        this.$emit('close-modal');
+        this.$emit('update-user-table');
+      } else {
+        this.$router.push('/login');
+        SnackbarModule.notify(
+          'You have successfully registered, please sign in'
+        );
+      }
+      this.buttonLoading = false;
     }
   }
 
