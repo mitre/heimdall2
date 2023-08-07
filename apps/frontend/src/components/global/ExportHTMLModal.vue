@@ -106,14 +106,14 @@ interface Statistics {
   notApplicable: number;
   notReviewed: number;
   profileError: number;
-  totalControls: number;
+  totalResults: number;
   passedTests: number;
-  passingTestsFailedControl: number;
+  passingTestsFailedResult: number;
   failedTests: number;
   totalTests: number;
 }
 
-// Info used for profile control severity reporting; lvl 1
+// Info used for profile result severity reporting; lvl 1
 interface Severity {
   none: number;
   low: number;
@@ -128,32 +128,32 @@ interface Compliance {
   color: string;
 }
 
-// Container for specific info on each control; lvl 2
+// Container for specific info on each result; lvl 2
 interface Detail {
   name: string;
   value: string;
   class?: string;
 }
 
-// Status of a specific control; lvl 2
-interface ControlStatus {
+// Status of a specific result; lvl 2
+interface ResultStatus {
   status: string;
   icon: string;
 }
 
-// Severity of a specific control; lvl 2
-interface ControlSeverity {
+// Severity of a specific result; lvl 2
+interface ResultSeverity {
   severity: string;
   icon: string;
 }
 
-// Container for all controls; lvl 1
-interface ControlSet {
+// Container for all results; lvl 1
+interface ResultSet {
   filename: string;
   fileID: string;
-  controls: (ContextualizedControl & {details: Detail[]} & {
-    controlID: string;
-  } & {controlStatus: ControlStatus} & {controlSeverity: ControlSeverity} & {
+  results: (ContextualizedControl & {details: Detail[]} & {
+    resultID: string;
+  } & {resultStatus: ResultStatus} & {resultSeverity: ResultSeverity} & {
     controlTags: string[];
   })[];
 }
@@ -171,8 +171,8 @@ interface OutputData {
   statistics: Statistics;
   severity: Severity;
   compliance: Compliance;
-  controlSets: ControlSet[];
-  showControlSets: boolean;
+  resultSets: ResultSet[];
+  showResultSets: boolean;
   showCode: boolean;
   exportType: string;
   icons: Icons;
@@ -236,9 +236,9 @@ export default class ExportHTMLModal extends Vue {
       notApplicable: 0,
       notReviewed: 0,
       profileError: 0,
-      totalControls: 0,
+      totalResults: 0,
       passedTests: 0,
-      passingTestsFailedControl: 0,
+      passingTestsFailedResult: 0,
       failedTests: 0,
       totalTests: 0
     },
@@ -256,8 +256,8 @@ export default class ExportHTMLModal extends Vue {
       color: ''
     },
     files: [],
-    controlSets: [],
-    showControlSets: false,
+    resultSets: [],
+    showResultSets: false,
     showCode: false,
     exportType: '',
     // Series of icons used for profile-related detail reports
@@ -293,17 +293,17 @@ export default class ExportHTMLModal extends Vue {
     switch (newValue) {
       case FileExportTypes.executive:
         this.description = FileExportDescriptions.executive;
-        this.outputData.showControlSets = false;
+        this.outputData.showResultSets = false;
         this.outputData.showCode = false;
         break;
       case FileExportTypes.manager:
         this.description = FileExportDescriptions.manager;
-        this.outputData.showControlSets = true;
+        this.outputData.showResultSets = true;
         this.outputData.showCode = false;
         break;
       case FileExportTypes.administrator:
         this.description = FileExportDescriptions.administrator;
-        this.outputData.showControlSets = true;
+        this.outputData.showResultSets = true;
         this.outputData.showCode = true;
         break;
     }
@@ -343,25 +343,25 @@ export default class ExportHTMLModal extends Vue {
       ) as unknown as string
     });
     this.outputData.exportType = _.capitalize(this.exportType);
-    const allControlLevels = FilteredDataModule.controls({
+    const allResultLevels = FilteredDataModule.controls({
       ...this.filter,
       fromFile: [file.uniqueId],
       omit_overlayed_controls: false
     });
-    const controls = FilteredDataModule.controls({
+    const results = FilteredDataModule.controls({
       ...this.filter,
       fromFile: [file.uniqueId],
       omit_overlayed_controls: true
     });
     // Convert them into rows
-    this.outputData.controlSets.push({
+    this.outputData.resultSets.push({
       filename: file.filename,
       fileID: file.uniqueId,
-      controls: controls.map((control) =>
+      results: results.map((result) =>
         this.addDetails(
-          control,
-          allControlLevels.filter(
-            (searchingControl) => searchingControl.data.id === control.data.id
+          result,
+          allResultLevels.filter(
+            (searchingResult) => searchingResult.data.id === result.data.id
           )
         )
       )
@@ -370,24 +370,24 @@ export default class ExportHTMLModal extends Vue {
 
   // Takes all available existing file data to use as default settings/data for outputData object
   resetOutputData() {
-    // Total control count
-    const controlCount =
+    // Total result count
+    const resultCount =
       StatusCountModule.countOf(this.filter, 'Passed') +
       StatusCountModule.countOf(this.filter, 'Failed') +
       StatusCountModule.countOf(this.filter, 'Not Applicable') +
       StatusCountModule.countOf(this.filter, 'Not Reviewed') +
       StatusCountModule.countOf(this.filter, 'Profile Error');
 
-    // Calculate & set compliance level and color from control statuses
+    // Calculate & set compliance level and color from result statuses
     // Set default complaince level and color
     this.outputData.compliance.level = '0.00%';
     this.outputData.compliance.color = 'low';
-    // If controls exist, calculate compliance level
-    if (controlCount > 0) {
+    // If results exist, calculate compliance level
+    if (resultCount > 0) {
       // Formula: compliance = Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100
       const complianceLevel = formatCompliance(
         (StatusCountModule.countOf(this.filter, 'Passed') /
-          (controlCount -
+          (resultCount -
             StatusCountModule.countOf(this.filter, 'Not Applicable'))) *
           100
       );
@@ -405,9 +405,9 @@ export default class ExportHTMLModal extends Vue {
       notApplicable: StatusCountModule.countOf(this.filter, 'Not Applicable'),
       notReviewed: StatusCountModule.countOf(this.filter, 'Not Reviewed'),
       profileError: StatusCountModule.countOf(this.filter, 'Profile Error'),
-      totalControls: controlCount,
+      totalResults: resultCount,
       passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
-      passingTestsFailedControl: StatusCountModule.countOf(
+      passingTestsFailedResult: StatusCountModule.countOf(
         this.filter,
         'PassingTestsFailedControl'
       ),
@@ -424,7 +424,7 @@ export default class ExportHTMLModal extends Vue {
       critical: SeverityCountModule.critical(this.filter)
     };
     this.outputData.files = [];
-    this.outputData.controlSets = [];
+    this.outputData.resultSets = [];
   }
 
   // Replace all found illegal characters in string with compliant string equivalent
@@ -438,16 +438,16 @@ export default class ExportHTMLModal extends Vue {
     return text;
   }
 
-  // Sets attributes for each specific control
+  // Sets attributes for each specific result
   addDetails(
-    control: ContextualizedControl,
-    controlLevels: ContextualizedControl[]
-  ): ContextualizedControl & {details: Detail[]} & {controlID: string} & {
-    controlStatus: ControlStatus;
-  } & {controlSeverity: ControlSeverity} & {controlTags: string[]} {
-    // Check status of individual control to assign corresponding icon
+    result: ContextualizedControl,
+    resultLevels: ContextualizedControl[]
+  ): ContextualizedControl & {details: Detail[]} & {resultID: string} & {
+    resultStatus: ResultStatus;
+  } & {resultSeverity: ResultSeverity} & {controlTags: string[]} {
+    // Check status of individual result to assign corresponding icon
     let statusColor;
-    switch (control.root.hdf.status) {
+    switch (result.root.hdf.status) {
       case 'Passed':
         statusColor = this.iconHTMLStore.circleCheck;
         break;
@@ -468,10 +468,10 @@ export default class ExportHTMLModal extends Vue {
     }
 
     // Severity is recorded as all lowercase by default; for aesthetic purposes, uppercase the first letter
-    const severity = _.capitalize(control.root.hdf.severity);
-    // Check severity of individual control to assign corresponding icon
+    const severity = _.capitalize(result.root.hdf.severity);
+    // Check severity of individual result to assign corresponding icon
     let severityColor;
-    switch (control.root.hdf.severity) {
+    switch (result.root.hdf.severity) {
       case 'none':
         severityColor = this.iconHTMLStore.circleNone;
         break;
@@ -493,7 +493,7 @@ export default class ExportHTMLModal extends Vue {
 
     // Grab NIST & CCI controls
     const allControls = _.filter(
-      [control.hdf.rawNistTags, control.hdf.wraps.tags.cci],
+      [result.hdf.rawNistTags, result.hdf.wraps.tags.cci],
       Boolean
     ).flat();
     // Remove `Rev_4` item and replace `unmapped` with proper `UM-1` naming
@@ -503,66 +503,66 @@ export default class ExportHTMLModal extends Vue {
 
     return {
       ..._.set(
-        control,
+        result,
         'hdf.segments',
         ([] as HDFControlSegment[]).concat.apply(
           [],
-          controlLevels.map((controlLevel) => controlLevel.hdf.segments || [])
+          resultLevels.map((resultLevel) => resultLevel.hdf.segments || [])
         )
       ),
-      full_code: control.full_code,
+      full_code: result.full_code,
       details: [
         {
           name: 'Control',
-          value: control.data.id
+          value: result.data.id
         },
         {
           name: 'Title',
-          value: control.data.title
+          value: result.data.title
         },
         {
           name: 'Caveat',
-          value: control.hdf.descriptions.caveat
+          value: result.hdf.descriptions.caveat
         },
         {
           name: 'Desc',
-          value: control.data.desc
+          value: result.data.desc
         },
         {
           name: 'Rationale',
-          value: control.hdf.descriptions.rationale
+          value: result.hdf.descriptions.rationale
         },
         {
           name: 'Justification',
-          value: control.hdf.descriptions.justification
+          value: result.hdf.descriptions.justification
         },
         {
           name: 'Severity',
-          value: control.root.hdf.severity
+          value: result.root.hdf.severity
         },
         {
           name: 'Impact',
-          value: control.data.impact
+          value: result.data.impact
         },
         {
-          name: 'Nist controls',
-          value: control.hdf.rawNistTags.join(', ')
+          name: 'Nist Controls',
+          value: result.hdf.rawNistTags.join(', ')
         },
         {
           name: 'Check Text',
-          value: control.hdf.descriptions.check || control.data.tags.check
+          value: result.hdf.descriptions.check || result.data.tags.check
         },
         {
           name: 'Fix Text',
-          value: control.hdf.descriptions.fix || control.data.tags.fix
+          value: result.hdf.descriptions.fix || result.data.tags.fix
         }
       ].filter((v) => v.value),
-      controlID: this.replaceIllegalCharacters(control.hdf.wraps.id),
-      controlStatus: {
-        status: control.root.hdf.status,
+      resultID: this.replaceIllegalCharacters(result.hdf.wraps.id),
+      resultStatus: {
+        status: result.root.hdf.status,
         icon: statusColor
       },
-      controlSeverity: {
+      resultSeverity: {
         severity: severity,
         icon: severityColor
       },

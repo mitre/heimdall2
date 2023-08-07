@@ -37,17 +37,17 @@
           >Profile Info</a
         >
       </button>
-      <!-- Control sets dropdown menu -->
-      {{#showControlSets}}
+      <!-- Result sets dropdown menu -->
+      {{#showResultSets}}
       <div class="inline-block" data-te-dropdown-ref>
         <!-- Button def -->
         <button
           type="button"
           class="inline-flex px-3 py-2 text-sm"
           data-te-dropdown-toggle-ref
-          href="#controlSetsList"
+          href="#resultSetsList"
           role="button"
-          aria-controls="controlSetsList"
+          aria-results="resultSetsList"
           aria-expanded="false"
           aria-label="Toggle navigation dropdown"
         >
@@ -69,43 +69,43 @@
         <!-- Menu def -->
         <div
           class="z-10 mt-2 hidden grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 [&[data-te-dropdown-show]]:grid"
-          id="controlSetsList"
+          id="resultSetsList"
           data-te-dropdown-menu-ref
-          aria-labelledby="controlSetsList"
+          aria-labelledby="resultSetsList"
         >
-          <!-- Generate links for every control set -->
-          {{#controlSets}}
+          <!-- Generate links for every result set -->
+          {{#resultSets}}
           <div
             class="block w-56 break-words border border-gray-300 bg-white px-4 py-3 text-sm shadow-lg"
           >
             <a href="#{{fileID}}" data-te-dropdown-item-ref>{{filename}}</a>
           </div>
-          {{/controlSets}}
+          {{/resultSets}}
         </div>
       </div>
-      <!-- Toggle control set accordion collapse state -->
+      <!-- Toggle result set accordion collapse state -->
       <button
         class="px-3 py-2 text-sm"
         type="button"
         data-te-collapse-init
         data-te-target=".multi-collapse-outer"
         aria-expanded="true"
-        aria-controls="control-accordion-body"
+        aria-results="result-accordion-body"
       >
         Collapse/Expand Result Sets
       </button>
-      <!-- Toggle control accordion collapse state -->
+      <!-- Toggle result accordion collapse state -->
       <button
         class="px-3 py-2 text-sm"
         type="button"
         data-te-collapse-init
         data-te-target=".multi-collapse-inner"
         aria-expanded="true"
-        aria-controls="control-accordion-body"
+        aria-results="result-accordion-body"
       >
         Collapse/Expand Results
       </button>
-      {{/showControlSets}}
+      {{/showResultSets}}
     </nav>
 
     <!-- Profile info card -->
@@ -147,7 +147,7 @@
               <div class="flex">
                 <span class="pr-1 print:hidden">{{{icons.circleCross}}}</span>
                 Failed: {{statistics.failed}}
-                ({{statistics.passingTestsFailedControl}} individual checks
+                ({{statistics.passingTestsFailedResult}} individual checks
                 passed, {{statistics.failedTests}} failed out of
                 {{statistics.totalTests}} total checks)
               </div>
@@ -165,7 +165,7 @@
               </div>
               <div class="flex">
                 <span class="pr-1 print:hidden">{{{icons.squareEqual}}}</span>
-                Total: {{statistics.totalControls}}
+                Total: {{statistics.totalResults}}
               </div>
             </div>
           </div>
@@ -216,12 +216,12 @@
     </div>
 
     <div class="overflow-hidden">
-      <!-- Control section -->
+      <!-- Result section -->
       <!-- If empty, then this should be an executive report HTML export type -->
       <!-- If not such export type, error has occurred -->
-      {{#showControlSets}} {{#controlSets}}
-      <!-- Control set accordion -->
-      <!-- Generate a control set accordion for every control set -->
+      {{#showResultSets}} {{#resultSets}}
+      <!-- Result set accordion -->
+      <!-- Generate a result set accordion for every result set -->
       <!-- Outer accordion -->
       <div
         class="mx-2 rounded-t-xl border border-gray-300 bg-white print:hidden"
@@ -235,7 +235,7 @@
             data-te-collapse-init
             data-te-target="#collapseable-{{fileID}}"
             aria-expanded="true"
-            aria-controls="collapseable-{{fileID}}"
+            aria-results="collapseable-{{fileID}}"
           >
             {{filename}}
             <span
@@ -269,7 +269,7 @@
           data-te-collapse-item
           data-te-collapse-show
         >
-          <!-- Control header -->
+          <!-- Result header -->
           <div class="mx-4 rounded-t-xl border border-gray-300 bg-gray-100">
             <div class="mx-6 my-4 flex w-full shrink">
               <!-- Status indicator -->
@@ -300,8 +300,8 @@
             </div>
           </div>
 
-          <!-- Generate a control accordion for every control -->
-          {{#controls}}
+          <!-- Generate a result accordion for every result -->
+          {{#results}}
           <div class="mx-4 rounded-t-xl border border-gray-300">
             <div class="mb-0">
               <!-- Button def -->
@@ -309,30 +309,30 @@
                 class="bg-blue group flex w-full items-center rounded-t-xl px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
                 type="button"
                 data-te-collapse-init
-                data-te-target="#control-accordion-body-{{controlID}}"
+                data-te-target="#result-accordion-body-{{resultID}}"
                 aria-expanded="true"
-                aria-controls="control-accordion-body-{{controlID}}"
+                aria-results="result-accordion-body-{{resultID}}"
               >
-                <!-- Control status indicator wrapper -->
+                <!-- Result status indicator wrapper -->
                 <!-- All headers eventually collapse under status column -->
                 <div class="grid grid-cols-1 gap-y-2">
-                  <!-- Control ID -->
+                  <!-- Result ID -->
                   <div class="w-36 sm:hidden">
                     <span>{{hdf.wraps.id}}</span>
                   </div>
-                  <!-- Control status indicator -->
+                  <!-- Result status indicator -->
                   <div
                     class="grid w-40 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black"
                   >
-                    <span>{{{controlStatus.icon}}}</span>
-                    <span>{{controlStatus.status}}</span>
+                    <span>{{{resultStatus.icon}}}</span>
+                    <span>{{resultStatus.status}}</span>
                   </div>
-                  <!-- Control severity indicator -->
+                  <!-- Result severity indicator -->
                   <div
                     class="grid w-28 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:hidden"
                   >
-                    <span>{{{controlSeverity.icon}}}</span>
-                    <span>{{controlSeverity.severity}}</span>
+                    <span>{{{resultSeverity.icon}}}</span>
+                    <span>{{resultSeverity.severity}}</span>
                   </div>
                   <!-- Control tags -->
                   {{#controlTags}}
@@ -344,20 +344,20 @@
                   </div>
                   {{/controlTags}}
                 </div>
-                <!-- Control ID -->
+                <!-- Result ID -->
                 <span
                   class="hidden w-32 grid-cols-1 gap-y-2 break-all px-6 sm:grid lg:w-36"
                 >
                   {{hdf.wraps.id}}
                 </span>
-                <!-- Control severity indicator -->
+                <!-- Result severity indicator -->
                 <div
                   class="hidden w-28 grid-flow-col items-center rounded border border-gray-300 bg-gray-100 px-2 py-1 text-black lg:grid"
                 >
-                  <span>{{{controlSeverity.icon}}}</span>
-                  <span>{{controlSeverity.severity}}</span>
+                  <span>{{{resultSeverity.icon}}}</span>
+                  <span>{{resultSeverity.severity}}</span>
                 </div>
-                <!-- Control title -->
+                <!-- Result title -->
                 <span class="w-1/2 break-all px-6 sm:break-words"
                   >{{hdf.wraps.title}}</span
                 >
@@ -401,22 +401,22 @@
             <!-- Accordion body def -->
             <div
               class="multi-collapse-inner px-5 py-4"
-              id="control-accordion-body-{{controlID}}"
+              id="result-accordion-body-{{resultID}}"
               data-te-collapse-item
               data-te-collapse-show
-              aria-labelledby="control-accordion-header-{{controlID}}"
+              aria-labelledby="result-accordion-header-{{resultID}}"
             >
-              <!-- Control description -->
+              <!-- Result description -->
               {{data.desc}}
               <hr class="my-3" />
 
-              <!-- Control tables -->
+              <!-- Result tables -->
               <div>
                 <!-- Tests -->
                 <h5 class="text-lg font-bold">Test Results</h5>
                 <table
                   class="table min-w-full text-left"
-                  aria-describedby="Control test description and result"
+                  aria-describedby="Test description and results"
                 >
                   <thead class="hidden">
                     <th>Name</th>
@@ -449,17 +449,17 @@
                 <hr class="my-3" />
 
                 <!-- Details -->
-                <h5 class="text-lg font-bold">Control Details</h5>
+                <h5 class="text-lg font-bold">Result Details</h5>
                 <table
                   class="table min-w-full text-left"
-                  aria-describedby="Control details"
+                  aria-describedby="Result details"
                 >
                   <thead class="hidden">
                     <th>Name</th>
                     <th>Value</th>
                   </thead>
                   <tbody>
-                    <!-- Generate all control details -->
+                    <!-- Generate all result details -->
                     {{#details}}
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
                       <td class="border-r border-gray-300">{{name}}</td>
@@ -475,7 +475,7 @@
               </div>
               <hr class="my-3" />
 
-              <!-- Control code block -->
+              <!-- Result code block -->
               {{#showCode}}
               <code class="whitespace-pre-wrap break-words text-sm text-red-700"
                 >{{full_code}}</code
@@ -483,23 +483,23 @@
               {{/showCode}}
             </div>
           </div>
-          {{/controls}}
+          {{/results}}
         </div>
       </div>
 
-      <!-- Control set print report -->
+      <!-- Result set print report -->
       <div class="hidden print:block">
         <!-- File name -->
         <div class="rounded-t-xl border border-black px-3 py-2">
           {{filename}}
         </div>
-        <!-- Generate a control report for every control -->
-        {{#controls}}
+        <!-- Generate a result report for every result -->
+        {{#results}}
         <div class="border border-black px-2 py-2">
-          <!-- Control header -->
+          <!-- Result header -->
           <table
             class="border-separate border-spacing-x-2"
-            aria-labelledby="Control header"
+            aria-labelledby="Result header"
           >
             <thead>
               <tr class="text-left">
@@ -512,28 +512,28 @@
             <tbody>
               <tr>
                 <td>
-                  <!-- Control status indicator -->
+                  <!-- Result status indicator -->
                   <div class="rounded border border-black px-2 py-1">
-                    {{controlStatus.status}}
+                    {{resultStatus.status}}
                   </div>
                 </td>
                 <td>
-                  <!-- Control ID -->
+                  <!-- Result ID -->
                   <div class="break-all">{{hdf.wraps.id}}</div>
                 </td>
                 <td>
-                  <!-- Control severity indicator -->
+                  <!-- Result severity indicator -->
                   <div class="rounded border border-black px-2 py-1">
-                    {{controlSeverity.severity}}
+                    {{resultSeverity.severity}}
                   </div>
                 </td>
-                <!-- Control title -->
+                <!-- Result title -->
                 <td>{{hdf.wraps.title}}</td>
               </tr>
             </tbody>
           </table>
           <hr class="my-1 h-1" />
-          <!-- Secondary control header -->
+          <!-- Secondary result header -->
           <table
             class="border-separate border-spacing-x-2"
             aria-labelledby="800-53 controls and CCIs"
@@ -560,17 +560,17 @@
           </table>
           <hr class="my-1 h-1" />
 
-          <!-- Control description -->
+          <!-- Result description -->
           {{data.desc}}
           <hr class="my-1 h-1" />
 
-          <!-- Control tables -->
+          <!-- Result tables -->
           <div>
             <!-- Tests -->
             <h5 class="py-1 text-lg font-bold">Test Results</h5>
             <table
               class="table min-w-full text-left"
-              aria-describedby="Control test description and result"
+              aria-describedby="Test description and results"
             >
               <thead class="hidden">
                 <th>Name</th>
@@ -597,17 +597,17 @@
             <hr class="my-1 h-1" />
 
             <!-- Details -->
-            <h5 class="py-1 text-lg font-bold">Control Details</h5>
+            <h5 class="py-1 text-lg font-bold">Result Details</h5>
             <table
               class="table min-w-full text-left"
-              aria-describedby="Control details"
+              aria-describedby="Result details"
             >
               <thead class="hidden">
                 <th>Name</th>
                 <th>Value</th>
               </thead>
               <tbody>
-                <!-- Generate all control details -->
+                <!-- Generate all result details -->
                 {{#details}}
                 <tr class="border-b odd:bg-gray-100 even:bg-white">
                   <td class="border-r border-gray-300">{{name}}</td>
@@ -618,7 +618,7 @@
             </table>
           </div>
 
-          <!-- Control code block -->
+          <!-- Result code block -->
           {{#showCode}}
           <hr class="my-1 h-1" />
           <code class="whitespace-pre-wrap text-sm text-black"
@@ -626,9 +626,9 @@
           >
           {{/showCode}}
         </div>
-        {{/controls}}
+        {{/results}}
       </div>
-      {{/controlSets}} {{/showControlSets}}
+      {{/resultSets}} {{/showResultSets}}
     </div>
     <script type="text/javascript">
       {{{tailwindElements}}}
