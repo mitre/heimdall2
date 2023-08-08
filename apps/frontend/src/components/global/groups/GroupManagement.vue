@@ -26,7 +26,7 @@
       />
     </v-container>
     <v-row class="pa-4" justify="space-between">
-      <v-col cols="5">
+      <v-col xs="12" sm="12" lg="5">
         <v-container>
           <v-treeview
             hoverable
@@ -44,8 +44,8 @@
           </v-treeview>
         </v-container>
       </v-col>
-      <v-divider vertical />
-      <v-col cols="3">
+      <v-divider vertical class="hidden-sm-and-down" />
+      <v-col xs="12" sm="12" lg="3">
         <v-container>
           <v-scroll-y-transition mode="out-in">
             <v-card v-if="selectedGroup.id === '-1'" flat>
@@ -133,8 +133,8 @@
           </v-scroll-y-transition>
         </v-container>
       </v-col>
-      <v-divider vertical />
-      <v-col cols="4">
+      <v-divider vertical class="hidden-sm-and-down" />
+      <v-col xs="12" sm="12" lg="4">
         <v-tabs v-model="activeTab" fixed-tabs dark>
           <v-tab key="owners"> Owners </v-tab>
           <v-tab key="members"> Members </v-tab>
