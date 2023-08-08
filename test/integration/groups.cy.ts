@@ -23,7 +23,7 @@ context('Groups', () => {
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION).as('loginAuth');
 
-      cy.wait('@loginAuth').then(() => {
+      cy.wait('@loginAuth').then(async () => {
         dropdown.openGroupsPage();
         groupPage.createGroup(groupName1);
         dataTableVerifier.verifyTextPresent(groupName1);
@@ -35,7 +35,7 @@ context('Groups', () => {
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION).as('loginAuth');
 
-      cy.wait('@loginAuth').then(() => {
+      cy.wait('@loginAuth').then(async () => {
         const updatedGroupName = 'Updated Test Group';
         dropdown.openGroupsPage();
         groupPage.createGroup(groupName2);
@@ -49,7 +49,7 @@ context('Groups', () => {
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION).as('loginAuth');
 
-      cy.wait('@loginAuth').then(() => {
+      cy.wait('@loginAuth').then(async () => {
         dropdown.openGroupsPage();
         groupPage.createGroup(groupName3);
         groupPage.deleteGroup(groupName3);
@@ -67,7 +67,7 @@ context('Groups', () => {
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION).as('loginAuth');
 
-      cy.wait('@loginAuth').then(() => {
+      cy.wait('@loginAuth').then(async () => {
         dropdown.openGroupsPage();
         groupPage.createGroup(groupName4);
         groupPage.testGroupName(groupName4);
