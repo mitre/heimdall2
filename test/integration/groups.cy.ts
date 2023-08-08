@@ -17,15 +17,12 @@ context('Groups', () => {
   const groupName3 = 'Test Group 3';
   const groupName4 = 'Test Group 4';
 
-  // Run before each test
-  beforeEach(() => {
-    cy.register(CREATE_USER_DTO_TEST_OBJ).as('createUser');
-    cy.visit('/login');
-    cy.login(LOGIN_AUTHENTICATION).as('loginAuth');
-  });
-
   describe('CRUD', () => {
     it('allows a user to create a group', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ).as('createUser');
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION).as('loginAuth');
+
       cy.wait(['@createUser', '@loginAuth']).then(() => {
         dropdown.openGroupsPage();
         groupPage.createGroup(groupName1);
@@ -34,6 +31,10 @@ context('Groups', () => {
     });
 
     it('allows a user to update a group', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ).as('createUser');
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION).as('loginAuth');
+
       cy.wait(['@createUser', '@loginAuth']).then(() => {
         const updatedGroupName = 'Updated Test Group';
         dropdown.openGroupsPage();
@@ -44,6 +45,10 @@ context('Groups', () => {
     });
 
     it('allows a user to delete a group', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ).as('createUser');
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION).as('loginAuth');
+
       cy.wait(['@createUser', '@loginAuth']).then(() => {
         dropdown.openGroupsPage();
         groupPage.createGroup(groupName3);
@@ -58,6 +63,10 @@ context('Groups', () => {
     });
 
     it('fails to create a group with a duplicate name', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ).as('createUser');
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION).as('loginAuth');
+
       cy.wait(['@createUser', '@loginAuth']).then(() => {
         dropdown.openGroupsPage();
         groupPage.createGroup(groupName4);
