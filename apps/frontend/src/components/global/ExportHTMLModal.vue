@@ -15,9 +15,18 @@
         <v-row>
           <v-col>
             <v-radio-group v-model="exportType">
-              <v-radio label="Executive Report" value="executive" />
-              <v-radio label="Manager Report" value="manager" />
-              <v-radio label="Administrator Report" value="administrator" />
+              <v-radio
+                label="Executive Report"
+                :value="FileExportTypes.Executive"
+              />
+              <v-radio
+                label="Manager Report"
+                :value="FileExportTypes.Manager"
+              />
+              <v-radio
+                label="Administrator Report"
+                :value="FileExportTypes.Administrator"
+              />
             </v-radio-group>
           </v-col>
           <v-col>
@@ -74,10 +83,10 @@ import {
 const ILLEGAL_CHARACTER_SET = [['\\.', '___PERIOD___']];
 
 // All selectable export types for an HTML export
-const enum FileExportTypes {
-  Executive = 'executive',
-  Manager = 'manager',
-  Administrator = 'administrator'
+enum FileExportTypes {
+  Executive = 'Executive',
+  Manager = 'Manager',
+  Administrator = 'Administrator'
 }
 
 // All corresponding descriptions for export types
@@ -222,6 +231,8 @@ export default class ExportHTMLModal extends Vue {
     circleWhite: this.iconDataToSVG(mdiCircle, 'rgb(0, 0, 0)')
   };
 
+  FileExportTypes = FileExportTypes;
+
   // Default attributes
   showingModal = false;
   exportType = FileExportTypes.Executive;
@@ -291,6 +302,9 @@ export default class ExportHTMLModal extends Vue {
   // Configures outputData object's report type based on user input
   @Watch('exportType')
   onExportTypeChanged(newValue: FileExportTypes) {
+    console.log(newValue);
+    console.log(typeof newValue);
+    console.log(newValue === FileExportTypes.Executive);
     switch (newValue) {
       case FileExportTypes.Executive:
         this.description = FileExportDescriptions.Executive;
@@ -348,7 +362,7 @@ export default class ExportHTMLModal extends Vue {
         'evaluation.data.statistics.duration'
       ) as unknown as string
     });
-    this.outputData.exportType = _.capitalize(this.exportType);
+    this.outputData.exportType = this.exportType;
     const allResultLevels = FilteredDataModule.controls({
       ...this.filter,
       fromFile: [file.uniqueId],
@@ -610,9 +624,10 @@ export default class ExportHTMLModal extends Vue {
     const body = Mustache.render(template, this.outputData);
     saveAs(
       new Blob([s2ab(body)], {type: 'application/octet-stream'}),
-      `${_.capitalize(
-        this.exportType
-      )}_Report_${new Date().toString()}.html`.replace(/[ :]/g, '_')
+      `${this.exportType}_Report_${new Date().toString()}.html`.replace(
+        /[ :]/g,
+        '_'
+      )
     );
 
     this.closeModal();
