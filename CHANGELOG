@@ -1,3 +1,17 @@
+v2.7.1
+
+- Avoid Hard Refresh When Saving Group @Rlin232 (#4792)
+
+## Dependency Updates
+
+- Bump aws-sdk from 2.1429.0 to 2.1430.0 @dependabot (#4796)
+- Bump @aws-sdk/client-config-service from 3.382.0 to 3.385.0 @dependabot (#4795)
+- Bump @types/luxon from 2.4.0 to 3.3.1 @dependabot (#4794)
+- Bump @types/node from 20.4.5 to 20.4.7 @dependabot (#4788)
+- Bump eslint-config-prettier from 8.9.0 to 8.10.0 @dependabot (#4791)
+- Bump aws-sdk from 2.1428.0 to 2.1429.0 @dependabot (#4786)
+- Bump aws-sdk from 2.1427.0 to 2.1428.0 @dependabot (#4783)
+
 v2.7.0
 
 - Unique Group Names @Rlin232 (#4722) - make sure to run the db migration scripts and be ready for your group names potentially being changed in order to enforce the uniqueness constraint
