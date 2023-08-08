@@ -255,50 +255,57 @@ export default class GroupModal extends Vue {
       ...this.groupInfo
     };
 
-    const response = await (this.create
-      ? this.createGroup(groupInfo)
-      : this.updateExistingGroup(groupInfo));
-    const group = response.data;
-    await GroupsModule.UpdateGroupById(group.id);
-    await this.syncUsersWithGroup(group);
+    try {
+      const response = await (this.create
+        ? this.createGroup(groupInfo)
+        : this.updateExistingGroup(groupInfo));
+      const group = response.data;
+      await GroupsModule.UpdateGroupById(group.id);
+      await this.syncUsersWithGroup(group);
 
-    let groupRelation = GroupRelationsModule.allGroupRelations.find(
-      (groupRelation) => groupRelation.childId === group.id
-    );
-    // If there is an existing relation, either update or delete it. If not, add a new one.
-    if (groupRelation) {
-      if (this.parentGroupIdInternal) {
-        await this.updateExistingGroupRelation({
-          parentId: this.parentGroupIdInternal,
-          childId: group.id
-        });
-      } else {
-        await GroupRelationsModule.DeleteGroupRelation(groupRelation);
-      }
-    } else {
-      if (this.parentGroupIdInternal) {
-        groupRelation = (
-          await this.addGroupRelation({
+      let groupRelation = GroupRelationsModule.allGroupRelations.find(
+        (groupRelation) => groupRelation.childId === group.id
+      );
+      // If there is an existing relation, either update or delete it. If not, add a new one.
+      if (groupRelation) {
+        if (this.parentGroupIdInternal) {
+          await this.updateExistingGroupRelation({
             parentId: this.parentGroupIdInternal,
             childId: group.id
-          })
-        ).data;
+          });
+        } else {
+          await GroupRelationsModule.DeleteGroupRelation(groupRelation);
+        }
+      } else {
+        if (this.parentGroupIdInternal) {
+          groupRelation = (
+            await this.addGroupRelation({
+              parentId: this.parentGroupIdInternal,
+              childId: group.id
+            })
+          ).data;
+        }
       }
-    }
-    if (groupRelation) {
-      await GroupRelationsModule.UpdateGroupRelationById(groupRelation.id);
-    }
+      if (groupRelation) {
+        await GroupRelationsModule.UpdateGroupRelationById(groupRelation.id);
+      }
 
-    // This clears when creating a new Group.
-    // Calling clear on edit makes it impossible to edit the same group twice.
-    if (this.create) {
-      this.groupInfo = newGroup();
+      // This clears when creating a new Group.
+      // Calling clear on edit makes it impossible to edit the same group twice.
+      if (this.create) {
+        this.groupInfo = newGroup();
+      }
+      this.dialog = false;
+      
+      // This updates the store after the change propagates through the database
+      // Not calling this would result in reactivity delays on the frontend
+      await GroupsModule.FetchGroupData();
+      await GroupRelationsModule.FetchGroupRelationData();
+      this.$emit('group-saved', [group.id]);
+      SnackbarModule.notify(`Group Successfully Saved`);
+    } catch (err) {
+      SnackbarModule.failure(`Failed to Save Group: ${err}`);
     }
-    this.dialog = false;
-    await GroupsModule.FetchGroupData();
-    await GroupRelationsModule.FetchGroupRelationData();
-    this.$emit('group-saved', [group.id]);
-    SnackbarModule.notify(`Group Successfully Saved`);
   }
 
   async cancel(): Promise<void> {

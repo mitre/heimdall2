@@ -246,19 +246,17 @@ class Server extends VuexModule implements IServerState {
   @Action
   public async GetUserInfo(): Promise<void> {
     if (this.userInfo.id) {
-      return axios
-        .get<IUser>(`/users/${this.userInfo.id}`)
-        .then(({data}) => this.context.commit('SET_USER_INFO', data))
-        .catch(() =>
-          // If an error occurs fetching the users profile
-          // then clear their token and refresh the page
-          this.Logout()
-        )
-        .then(async () => {
-          await this.FetchAllUsers();
-          await GroupRelationsModule.FetchGroupRelationData();
-          await GroupsModule.FetchGroupData();
-        });
+      const userInfo = await axios.get<IUser>(`/users/${this.userInfo.id}`);
+      try {
+        this.context.commit('SET_USER_INFO', userInfo.data);
+      } catch {
+        // If an error occurs fetching the users profile
+        // then clear their token and refresh the page
+        this.Logout();
+      }
+      await this.FetchAllUsers();
+      await GroupRelationsModule.FetchGroupRelationData();
+      await GroupsModule.FetchGroupData();
     }
   }
 
