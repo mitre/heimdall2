@@ -5,9 +5,11 @@
 import {Trinary} from '@/enums/Trinary';
 import {severities, statuses} from '@/plugins/vuetify';
 import {InspecDataModule} from '@/store/data_store';
+import {EvaluationModule} from '@/store/evaluations';
 import {
   EvaluationFile,
   FileID,
+  InspecFile,
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
@@ -43,6 +45,7 @@ import {
   CodeSearchTerm,
   ControlIdSearchTerm,
   DescriptionSearchTerm,
+  EvaluationTagSearchTerm,
   FilenameSearchTerm,
   GroupNameSearchTerm,
   IaControlsSearchTerm,
@@ -51,6 +54,7 @@ import {
   RuleIdSearchTerm,
   StigIdSearchTerm,
   TitleSearchTerm,
+  UserGroupSearchTerm,
   VulIdSearchTerm
 } from './search_filter_sync';
 
@@ -102,6 +106,12 @@ export interface ControlsFilter {
 
   /** Filenames to search for  */
   filenameSearchTerms?: SearchEntry<FilenameSearchTerm>[];
+
+  /** User groups to search for  */
+  userGroupSearchTerms?: SearchEntry<UserGroupSearchTerm>[];
+
+  /** Evaluation tags to search for  */
+  evalTagSearchTerms?: SearchEntry<EvaluationTagSearchTerm>[];
 
   // End of "generic" filters
 
@@ -224,6 +234,78 @@ function ruleContainsTerm(
     }
     return value?.toLowerCase().includes(filter.value);
   });
+}
+
+export interface FilesFilter {
+  filenameSearchTerms?: SearchEntry<FilenameSearchTerm>[];
+  userGroupSearchTerms?: SearchEntry<UserGroupSearchTerm>[];
+  evalTagSearchTerms?: SearchEntry<EvaluationTagSearchTerm>[];
+}
+
+export function fileMatchesFilter(
+  file: InspecFile,
+  filter?: FilesFilter
+): boolean {
+  if (filter === undefined) return true;
+
+  interface FileFilteringProperties {
+    filename: string[];
+    groups: string[];
+    tags: string[];
+  }
+
+  // note we wrap the filename in an array so it can be filtered using the same functions used for tags and groups
+  const fileProperties: FileFilteringProperties = {
+    filename: [file.filename.toLowerCase()],
+    groups: [],
+    tags: []
+  };
+
+  // if an evaluation exists from the database, populate the group names and tag values
+  const evaluation = EvaluationModule.evaluationForFile(file);
+  if (evaluation) {
+    fileProperties.groups = evaluation.groups.map((g) => g.name.toLowerCase());
+    fileProperties.tags = evaluation.evaluationTags.map((t) =>
+      t.value.toLowerCase()
+    );
+  }
+
+  // return true if any filter term matches any of the property values
+  function oneMatches(fileProperty: string[], filterTerms: string[]): boolean {
+    return filterTerms.some((term) =>
+      fileProperty.some((p) => p.includes(term.toLowerCase()))
+    );
+  }
+
+  // just get the term values, either the negated or not negated
+  function getTerms(terms: SearchEntry<string>[], negated: boolean) {
+    return terms
+      .filter((t) => (negated ? t.negated : !t.negated))
+      .map((t) => t.value);
+  }
+
+  const termsPropPairs = [
+    {terms: filter.filenameSearchTerms, prop: fileProperties.filename},
+    {terms: filter.userGroupSearchTerms, prop: fileProperties.groups},
+    {terms: filter.evalTagSearchTerms, prop: fileProperties.tags}
+  ];
+
+  for (const {terms, prop} of termsPropPairs) {
+    if (terms) {
+      const positive = getTerms(terms, false);
+      const negative = getTerms(terms, true);
+
+      if (positive.length > 0 && !oneMatches(prop, positive)) {
+        return false;
+      }
+
+      if (negative.length > 0 && oneMatches(prop, negative)) {
+        return false;
+      }
+    }
+  }
+
+  return true;
 }
 
 @Module({
@@ -474,21 +556,25 @@ export class FilteredData extends VuexModule {
    * Get all evaluations from the specified file ids
    */
   get evaluations(): (
-    files: FileID[]
+    files: FileID[],
+    filter?: FilesFilter
   ) => readonly SourcedContextualizedEvaluation[] {
-    return (files: FileID[]) => {
-      return InspecDataModule.contextualExecutions.filter((e) =>
-        files.includes(e.from_file.uniqueId)
+    return (files: FileID[], filter?: FilesFilter) => {
+      return InspecDataModule.contextualExecutions.filter(
+        (e) =>
+          files.includes(e.from_file.uniqueId) &&
+          fileMatchesFilter(e.from_file, filter)
       );
     };
   }
 
   get profiles_for_evaluations(): (
-    files: FileID[]
+    files: FileID[],
+    filter?: FilesFilter
   ) => readonly ContextualizedProfile[] {
-    return (files: FileID[]) => {
+    return (files: FileID[], filter?: FilesFilter) => {
       // Filter to those that match our filter. In this case that just means come from the right file id
-      return this.evaluations(files).flatMap(
+      return this.evaluations(files, filter).flatMap(
         (evaluation) => evaluation.contains
       );
     };
@@ -498,11 +584,16 @@ export class FilteredData extends VuexModule {
    * Parameterized getter.
    * Get all profiles from the specified file ids.
    */
-  get profiles(): (files: FileID[]) => readonly SourcedContextualizedProfile[] {
-    return (files: FileID[]) => {
-      return InspecDataModule.contextualProfiles.filter((e) => {
-        return files.includes(e.from_file.uniqueId);
-      });
+  get profiles(): (
+    files: FileID[],
+    filter?: FilesFilter
+  ) => readonly SourcedContextualizedProfile[] {
+    return (files: FileID[], filter?: FilesFilter) => {
+      return InspecDataModule.contextualProfiles.filter(
+        (e) =>
+          files.includes(e.from_file.uniqueId) &&
+          fileMatchesFilter(e.from_file, filter)
+      );
     };
   }
 
@@ -574,12 +665,18 @@ export class FilteredData extends VuexModule {
         return cached;
       }
 
+      const filesFilter = {
+        filenameSearchTerms: filter.filenameSearchTerms,
+        userGroupSearchTerms: filter.userGroupSearchTerms,
+        evalTagSearchTerms: filter.evalTagSearchTerms
+      } as FilesFilter;
+
       // Get profiles from loaded Results
       let profiles: readonly ContextualizedProfile[] =
-        this.profiles_for_evaluations(filter.fromFile);
+        this.profiles_for_evaluations(filter.fromFile, filesFilter);
 
       // Get profiles from loaded Profiles
-      profiles = profiles.concat(this.profiles(filter.fromFile));
+      profiles = profiles.concat(this.profiles(filter.fromFile, filesFilter));
 
       // And all the controls they contain
       let controls: readonly ContextualizedControl[] = profiles.flatMap(
@@ -606,7 +703,6 @@ export class FilteredData extends VuexModule {
           filter.status,
           (status) => status.value !== 'Waived'
         ),
-        'root.sourcedFrom.from_file.filename': filter.filenameSearchTerms,
         keywords: filter.keywordsSearchTerms
       };
 

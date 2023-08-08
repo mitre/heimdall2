@@ -80,11 +80,6 @@ export interface SourcedContextualizedProfile extends ContextualizedProfile {
   from_file: ProfileFile;
 }
 
-export interface SourcedContextualizedChildProfile
-  extends ContextualizedProfile {
-  from_file: EvaluationFile;
-}
-
 /** Represents a file containing an Inspec Execution output */
 export type EvaluationFile = InspecFile & {
   evaluation: SourcedContextualizedEvaluation;
@@ -337,11 +332,6 @@ export class InspecIntake extends VuexModule {
         result['1_0_ExecJson']
       ) as unknown as SourcedContextualizedEvaluation;
       evaluation.from_file = evalFile;
-
-      // Link back the child profiles back to the EvaluationFile that they came from
-      for (const profile of evaluation.contains as SourcedContextualizedChildProfile[]) {
-        profile.from_file = evalFile;
-      }
 
       // Set and freeze
       evalFile.evaluation = evaluation;
