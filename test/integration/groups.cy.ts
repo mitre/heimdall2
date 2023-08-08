@@ -12,51 +12,57 @@ context('Groups', () => {
   const dropdown = new Dropdown();
   const toastVerifier = new ToastVerifier();
   const dataTableVerifier = new DataTableVerifier();
-  const groupName = 'Test Group';
+  const groupName1 = 'Test Group 1';
+  const groupName2 = 'Test Group 2';
+  const groupName3 = 'Test Group 3';
+  const groupName4 = 'Test Group 4';
+
+  // Run before each test
+  beforeEach(() => {
+    cy.register(CREATE_USER_DTO_TEST_OBJ).as('createUser');
+    cy.visit('/login');
+    cy.login(LOGIN_AUTHENTICATION).as('loginAuth');
+  });
 
   describe('CRUD', () => {
     it('allows a user to create a group', () => {
-      cy.register(CREATE_USER_DTO_TEST_OBJ);
-      cy.visit('/login');
-      cy.login(LOGIN_AUTHENTICATION);
-
-      cy.then(async () => {
+      cy.wait(['@createUser', 'loginAuth']).then(() => {
         dropdown.openGroupsPage();
-        groupPage.createGroup(groupName);
-        dataTableVerifier.verifyTextPresent(groupName);
+        groupPage.createGroup(groupName1);
+        dataTableVerifier.verifyTextPresent(groupName1);
       });
     });
 
     it('allows a user to update a group', () => {
-      const updatedGroupName = 'Updated Test Group';
-
-      cy.register(CREATE_USER_DTO_TEST_OBJ);
-      cy.visit('/login');
-      cy.login(LOGIN_AUTHENTICATION);
-
-      cy.then(async () => {
+      cy.wait(['@createUser', 'loginAuth']).then(() => {
+        const updatedGroupName = 'Updated Test Group';
         dropdown.openGroupsPage();
-        groupPage.createGroup(groupName);
-        groupPage.updateGroup('Test Group', updatedGroupName);
+        groupPage.createGroup(groupName2);
+        groupPage.updateGroup(groupName2, updatedGroupName);
         dataTableVerifier.verifyTextPresent(updatedGroupName);
       });
     });
 
     it('allows a user to delete a group', () => {
-      cy.register(CREATE_USER_DTO_TEST_OBJ);
-      cy.visit('/login');
-      cy.login(LOGIN_AUTHENTICATION);
-
-      cy.then(async () => {
+      cy.wait(['@createUser', 'loginAuth']).then(() => {
         dropdown.openGroupsPage();
-        groupPage.createGroup(groupName);
-        groupPage.deleteGroup(groupName);
+        groupPage.createGroup(groupName3);
+        groupPage.deleteGroup(groupName3);
         toastVerifier.toastTextContains(
-          `Successfully deleted group ${groupName}`
+          `Successfully deleted group ${groupName3}`
         );
         dataTableVerifier.verifyTextPresent(
           'No groups match current selection.'
         );
+      });
+    });
+
+    it('fails to create a group with a duplicate name', () => {
+      cy.wait(['@createUser', 'loginAuth']).then(() => {
+        dropdown.openGroupsPage();
+        groupPage.createGroup(groupName4);
+        groupPage.testGroupName(groupName4);
+        toastVerifier.toastTextContains('Group names must be unique.');
       });
     });
   });
