@@ -6,16 +6,37 @@
     <v-expansion-panel-content v-if="files.length > 0">
       <v-list dense>
         <FileList
-          v-for="(file, i) in files"
+          v-for="(file, i) in filteredInFiles"
           :key="i"
           :file="file"
           @changed-files="$emit('changed-files')"
         />
 
-        <v-divider v-if="!inChecklistView()" />
+        <v-list-item v-if="anyFileFilteredOut">
+          <v-list-item-content>
+            Filtered-out {{ headerText }}
+          </v-list-item-content>
+
+          <v-list-item-action @click.stop="showFilteredOutFiles = !showFilteredOutFiles">
+            <v-btn icon small>
+              <v-icon>{{ showFilteredOutFiles ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+            </v-btn>
+          </v-list-item-action>
+        </v-list-item>
+
+        <v-expand-transition v-if="anyFileFilteredOut && showFilteredOutFiles">
+          <FileList
+            v-for="(file, i) in filteredOutFiles"
+            :key="i"
+            :file="file"
+            @changed-files="$emit('changed-files')"
+          />
+        </v-expand-transition>
+
+        <v-divider v-if="!inChecklistView" />
 
         <v-list-item
-          v-if="!inChecklistView()"
+          v-if="!inChecklistView"
           :title="`${selectAllText} all ${headerText.toLowerCase()}`"
           @change="$emit('changed-files')"
           @click.stop="$emit('toggle-all')"
@@ -63,9 +84,14 @@
 
 <script lang="ts">
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
+import {
+  FilesFilter,
+  fileMatchesFilter
+} from '@/store/data_filters';
+import {InspecFile} from '@/store/report_intake';
+import {SearchModule} from '@/store/search';
 import {Trinary} from '@/enums/Trinary';
 import {AppInfoModule, views} from '@/store/app_info';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
 @Component({
@@ -76,9 +102,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 export default class DropdownContent extends Vue {
   @Prop({type: String, required: true}) readonly headerText!: string;
   @Prop({type: String, required: false}) readonly allSelected!: Trinary;
-  @Prop({type: Array, required: true}) readonly files!:
-    | EvaluationFile[]
-    | ProfileFile[];
+  @Prop({type: Array, required: true}) readonly files!: InspecFile[];
 
   @Prop({type: String, required: false}) readonly route!: string;
   @Prop({default: false, type: Boolean, required: false})
@@ -86,6 +110,22 @@ export default class DropdownContent extends Vue {
 
   @Prop({default: false, type: Boolean, required: false})
   readonly enableCompareView!: boolean;
+
+  showFilteredOutFiles = false;
+
+  get filteredInFiles(): InspecFile[] {
+    if (this.inChecklistView) return this.files;
+    else return this.files.filter((file) => !this.fileFilteredOut(file));
+  }
+
+  get filteredOutFiles(): InspecFile[] {
+    if (this.inChecklistView) return [];
+    else return this.files.filter((file) => this.fileFilteredOut(file));
+  }
+
+  get anyFileFilteredOut(): boolean {
+    return !this.inChecklistView && this.files.some(f => this.fileFilteredOut(f));
+  }
 
   get allSelectedValue(): boolean {
     return this.allSelected === Trinary.On;
@@ -99,8 +139,22 @@ export default class DropdownContent extends Vue {
     return this.allSelected === Trinary.On ? 'Deselect' : 'Select';
   }
 
-  inChecklistView(): boolean {
+  get inChecklistView(): boolean {
     return AppInfoModule.currentView === views.Checklist;
+  }
+
+  get filesFilter(): FilesFilter {
+    return {
+        filenameSearchTerms: SearchModule.fileMetadataSearchTerms.filename,
+        userGroupSearchTerms: SearchModule.fileMetadataSearchTerms.group,
+        evalTagSearchTerms: SearchModule.fileMetadataSearchTerms.evalTag
+    } as FilesFilter;
+  }
+
+  get fileFilteredOut(): (file: InspecFile) => boolean {
+    return (file: InspecFile) => {
+      return !fileMatchesFilter(file, this.filesFilter);
+    };
   }
 }
 </script>

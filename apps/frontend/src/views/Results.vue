@@ -380,6 +380,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       omit_overlayed_controls: true,
       control_id: this.controlSelection || undefined,
       filenameSearchTerms: SearchModule.fileMetadataSearchTerms.filename,
+      userGroupSearchTerms: SearchModule.fileMetadataSearchTerms.group,
+      evalTagSearchTerms: SearchModule.fileMetadataSearchTerms.evalTag,
       keywordsSearchTerms: SearchModule.inFileSearchTerms.keywords
     };
   }

@@ -15,11 +15,10 @@ import {
 } from 'vuex-module-decorators';
 import {InspecDataModule} from './data_store';
 import {
-  EvaluationFile,
   FileID,
   FileLoadOptions,
-  InspecIntakeModule,
-  ProfileFile
+  InspecFile,
+  InspecIntakeModule
 } from './report_intake';
 import {SnackbarModule} from './snackbar';
 
@@ -33,8 +32,8 @@ export class Evaluation extends VuexModule {
   allEvaluations: IEvaluation[] = [];
   loading = true;
 
-  get evaluationForFile(): Function {
-    return (file: EvaluationFile | ProfileFile) => {
+  get evaluationForFile(): (file: InspecFile) => IEvaluation | undefined {
+    return (file: InspecFile) => {
       return this.allEvaluations.find((e) => {
         return e.id === file.database_id?.toString();
       });

@@ -44,7 +44,7 @@
       <div v-if="isUtilityDrawerShown">
         <v-expansion-panels v-model="active_path" accordion>
           <DropdownContent
-            header-text="Results"
+            header-text="Result Sets"
             :files="visible_evaluation_files"
             :all-selected="all_evaluations_selected"
             :enable-compare-view="true"
@@ -97,7 +97,7 @@
           />
           <v-divider class="my-5" />
           <DropdownFilters
-            header="File Filters"
+            :header="fileFilterTypeName + ' Filters'"
             :properties="fileMetadataFilterProps"
           />
           <v-divider class="my-5" />
@@ -154,7 +154,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   ];
 
   /** Category list for file metadata filtering dropdown */
-  readonly fileMetadataFilterProps = ['File Name'];
+  readonly fileMetadataFilterProps = ['File Name', 'Group', 'Tag'];
 
   // Used for toggling the side nav drawer
   isUtilityDrawerShown = false;
@@ -192,6 +192,15 @@ export default class Sidebar extends mixins(RouteMixin) {
       return 0;
     } else {
       return -1;
+    }
+  }
+
+  get fileFilterTypeName(): string {
+    switch (this.active_path) {
+      case 0: return "Result Set";
+      case 1: return "Profile";
+      case 2: return "Checklist";
+      default: return "File";
     }
   }
 
