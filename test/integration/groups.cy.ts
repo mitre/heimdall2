@@ -20,7 +20,7 @@ context('Groups', () => {
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION);
 
-      cy.then(() => {
+      cy.then(async () => {
         dropdown.openGroupsPage();
         groupPage.createGroup(groupName);
         dataTableVerifier.verifyTextPresent(groupName);
@@ -34,7 +34,7 @@ context('Groups', () => {
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION);
 
-      cy.then(() => {
+      cy.then(async () => {
         dropdown.openGroupsPage();
         groupPage.createGroup(groupName);
         groupPage.updateGroup('Test Group', updatedGroupName);
@@ -47,7 +47,7 @@ context('Groups', () => {
       cy.visit('/login');
       cy.login(LOGIN_AUTHENTICATION);
 
-      cy.then(() => {
+      cy.then(async () => {
         dropdown.openGroupsPage();
         groupPage.createGroup(groupName);
         groupPage.deleteGroup(groupName);
