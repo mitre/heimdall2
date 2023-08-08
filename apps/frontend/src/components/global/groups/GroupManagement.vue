@@ -313,22 +313,26 @@ export default class GroupManagement extends Vue {
 
   deleteGroupConfirm(): void {
     if (this.editedGroup) {
+      // First delete the group relations
+      const associatedRelations: IGroupRelation[] =
+        GroupRelationsModule.allGroupRelations.filter(
+          (relation) =>
+            relation.childId === this.editedGroup?.id ||
+            relation.parentId === this.editedGroup?.id
+        );
+      associatedRelations.forEach(async (relation) => {
+        await GroupRelationsModule.DeleteGroupRelation(relation);
+      });
+
+      // Then delete the group itself
       GroupsModule.DeleteGroup(this.editedGroup)
-        .then((data) => {
-          const associatedRelations: IGroupRelation[] =
-            GroupRelationsModule.allGroupRelations.filter(
-              (relation) =>
-                relation.childId === data.id || relation.parentId === data.id
-            );
-          associatedRelations.forEach((relation) => {
-            GroupRelationsModule.DeleteGroupRelation(relation);
-          });
-          return data;
-        })
         .then((data) => {
           SnackbarModule.notify(`Successfully deleted group ${data.name}`);
         })
-        .finally(() => {
+        .finally(async () => {
+          // If we do not fetch the group data upon deletion,
+          // the tree will not react to the database change
+          await GroupsModule.FetchGroupData();
           this.closeActionDialog();
         });
     }
