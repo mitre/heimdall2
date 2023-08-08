@@ -296,7 +296,7 @@ export default class GroupModal extends Vue {
         this.groupInfo = newGroup();
       }
       this.dialog = false;
-      
+
       // This updates the store after the change propagates through the database
       // Not calling this would result in reactivity delays on the frontend
       await GroupsModule.FetchGroupData();
