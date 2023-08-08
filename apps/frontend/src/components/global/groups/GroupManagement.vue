@@ -152,6 +152,7 @@
     <ActionDialog
       v-model="dialogDelete"
       type="group"
+      message="Deleting this group will move all children to the top level."
       @cancel="closeActionDialog"
       @confirm="deleteGroupConfirm"
     />
@@ -165,7 +166,7 @@ import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
 import {GroupRelationsModule} from '@/store/group_relations';
 import {SnackbarModule} from '@/store/snackbar';
-import {IGroup, ISlimUser} from '@heimdall/interfaces';
+import {IGroup, IGroupRelation, ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -313,6 +314,17 @@ export default class GroupManagement extends Vue {
   deleteGroupConfirm(): void {
     if (this.editedGroup) {
       GroupsModule.DeleteGroup(this.editedGroup)
+        .then((data) => {
+          const associatedRelations: IGroupRelation[] =
+            GroupRelationsModule.allGroupRelations.filter(
+              (relation) =>
+                relation.childId === data.id || relation.parentId === data.id
+            );
+          associatedRelations.forEach((relation) => {
+            GroupRelationsModule.DeleteGroupRelation(relation);
+          });
+          return data;
+        })
         .then((data) => {
           SnackbarModule.notify(`Successfully deleted group ${data.name}`);
         })
