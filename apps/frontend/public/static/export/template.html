@@ -419,71 +419,72 @@
               <div>
                 <!-- Tests -->
                 <h5 class="text-lg font-bold">Test Results</h5>
-                <table
-                  class="table min-w-full text-left"
-                  aria-describedby="Test description and results"
-                >
-                  <thead class="hidden">
-                    <th>Name</th>
-                    <th>Value</th>
-                  </thead>
+                <hr class="h-1 w-28 bg-gray-300 mb-2" />
+                <!-- Sensitive to whitespace, requires awkward tag placement -->
+                <div class="min-w-full border border-gray-300">
                   <!-- Generate all available test results -->
-                  <!-- Sensitive to whitespace, requires awkward tag placement -->
                   {{#hdf.segments}}
-                  <tbody>
-                    <tr class="border-b odd:bg-gray-100 even:bg-white">
-                      <td class="border-r border-gray-300">Status</td>
-                      <td class="whitespace-pre-line break-all lg:break-normal"
-                        >{{status}}</td
-                      >
-                    </tr>
-                    <tr class="border-b odd:bg-gray-100 even:bg-white">
-                      <td class="border-r border-gray-300">Test</td>
-                      <td class="whitespace-pre-line break-all lg:break-normal"
-                        >{{code_desc}}</td
-                      >
-                    </tr>
-                    <tr class="border-b odd:bg-gray-100 even:bg-white">
-                      <td class="border-r border-gray-300">Result</td>
-                      <td class="whitespace-pre-line break-all lg:break-normal"
-                        >{{message}}</td
-                      >
-                    </tr>
-                  </tbody>
+                  <div
+                    class="bg-gray-100 grid grid-cols-1 sm:grid-cols-[10%_90%]"
+                  >
+                    <span
+                      class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal"
+                      >Status</span
+                    >
+                    <span class="whitespace-pre-line break-all lg:break-normal"
+                      >{{status}}</span
+                    >
+                  </div>
+                  <div class="grid grid-cols-1 sm:grid-cols-[10%_90%]">
+                    <span
+                      class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal"
+                      >Test</span
+                    >
+                    <span class="whitespace-pre-line break-all lg:break-normal"
+                      >{{code_desc}}</span
+                    >
+                  </div>
+                  <div
+                    class="bg-gray-100 grid grid-cols-1 sm:grid-cols-[10%_90%]"
+                  >
+                    <span
+                      class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal"
+                      >Result</span
+                    >
+                    <span class="whitespace-pre-line break-all lg:break-normal"
+                      >{{message}}</span
+                    >
+                  </div>
                   {{/hdf.segments}}
-                </table>
-                <hr class="my-3" />
+                </div>
 
                 <!-- Details -->
-                <h5 class="text-lg font-bold">Result Details</h5>
-                <table
-                  class="table min-w-full text-left"
-                  aria-describedby="Result details"
-                >
-                  <thead class="hidden">
-                    <th>Name</th>
-                    <th>Value</th>
-                  </thead>
-                  <tbody>
-                    <!-- Generate all result details -->
-                    <!-- Sensitive to whitespace, requires awkward tag placement -->
-                    {{#details}}
-                    <tr class="border-b odd:bg-gray-100 even:bg-white">
-                      <td class="border-r border-gray-300">{{name}}</td>
-                      <td
-                        class="whitespace-pre-line break-all sm:break-words lg:break-normal"
-                        >{{value}}</td
-                      >
-                    </tr>
-                    {{/details}}
-                  </tbody>
-                </table>
+                <h5 class="text-lg font-bold mt-3">Result Details</h5>
+                <hr class="h-1 w-32 bg-gray-300 mb-2" />
+                <!-- Sensitive to whitespace, requires awkward tag placement -->
+                <div class="min-w-full border border-gray-300">
+                  <!-- Generate all result details -->
+                  {{#details}}
+                  <div
+                    class="odd:bg-gray-100 even:bg-white grid grid-cols-1 sm:grid-cols-[10%_90%]"
+                  >
+                    <span
+                      class="border-r border-gray-300 sm:no-underline underline font-bold sm:font-normal"
+                      >{{name}}</span
+                    >
+                    <span
+                      class="whitespace-pre-line break-all sm:break-words lg:break-normal"
+                      >{{value}}</span
+                    >
+                  </div>
+                  {{/details}}
+                </div>
               </div>
-              <hr class="my-3" />
 
               <!-- Result code block -->
               <!-- Sensitive to whitespace, requires awkward tag placement -->
               {{#showCode}}
+              <hr class="my-3" />
               <code class="whitespace-pre-wrap break-words text-sm text-red-700"
                 >{{full_code}}</code
               >
@@ -574,7 +575,8 @@
           <!-- Result tables -->
           <div>
             <!-- Tests -->
-            <h5 class="py-1 text-lg font-bold">Test Results</h5>
+            <h5 class="text-lg font-bold">Test Results</h5>
+            <hr class="h-1 w-28 bg-gray-300 mb-2" />
             <table
               class="table min-w-full text-left"
               aria-describedby="Test description and results"
@@ -585,7 +587,7 @@
               </thead>
               <!-- Generate all available test results -->
               {{#hdf.segments}}
-              <tbody>
+              <tbody class="border border-gray-300">
                 <tr class="border-b odd:bg-gray-100 even:bg-white">
                   <td class="border-r border-gray-300">Status</td>
                   <td class="whitespace-pre-line break-all">{{status}}</td>
@@ -601,10 +603,10 @@
               </tbody>
               {{/hdf.segments}}
             </table>
-            <hr class="my-1 h-1" />
 
             <!-- Details -->
-            <h5 class="py-1 text-lg font-bold">Result Details</h5>
+            <h5 class="text-lg font-bold mt-3">Result Details</h5>
+            <hr class="h-1 w-32 bg-gray-300 mb-2" />
             <table
               class="table min-w-full text-left"
               aria-describedby="Result details"
@@ -613,7 +615,7 @@
                 <th>Name</th>
                 <th>Value</th>
               </thead>
-              <tbody>
+              <tbody class="border border-gray-300">
                 <!-- Generate all result details -->
                 {{#details}}
                 <tr class="border-b odd:bg-gray-100 even:bg-white">
