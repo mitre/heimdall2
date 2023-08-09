@@ -159,6 +159,8 @@ If you would prefer to run the bleeding edge version of Heimdall-Lite, replace `
 
 Given that Heimdall requires at least a database service, we use Docker and Docker Compose to provide a simple deployment experience. This process will also deploy an NGINX webserver in front of Heimdall to handle TLS.
 
+Heimdall's frontend container image is distributed on [DockerHub](https://hub.docker.com/r/mitre/heimdall2), and on [Iron Bank](https://ironbank.dso.mil/repomap/details;registry1Path=mitre%252Fsaf%252Fheimdall2).
+
 #### Setup Docker Container (Clean Install)
 
 1. Install Docker
