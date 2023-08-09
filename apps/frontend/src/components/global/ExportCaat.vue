@@ -17,7 +17,7 @@
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {s2ab} from '@/utilities/export_util';
 import {saveAs} from 'file-saver';
-import {FromHDFtoCAATMapper} from '@mitre/hdf-converters';
+import {FromHDFToCAATMapper} from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -34,7 +34,7 @@ export default class ExportCaat extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   exportCaat() {
-    const inputData = this.filter.fromFile.map((fileId) => {
+    const inputData = this.filter.fromFile.map((fileId: string) => {
       const file = (
         InspecDataModule.allEvaluationFiles as EvaluationFile[]
       ).find((f) => f.uniqueId === fileId);
@@ -43,13 +43,13 @@ export default class ExportCaat extends Vue {
       const controls = FilteredDataModule.controls({
         ...this.filter,
         fromFile: [fileId]
-      });
+      }).slice();
       return {data, filename, controls};
     });
     const caat = new FromHDFToCAATMapper(inputData).toCAAT(false);
     saveAs(
       new Blob([s2ab(caat)], {type: 'application/octet-stream'}),
-      `CAAT-${FromHDFtoCAATMapper.formatDate(new Date(), '-')}.xlsx`
+      `CAAT-${FromHDFToCAATMapper.formatDate(new Date(), '-')}.xlsx`
     );
   }
 }
