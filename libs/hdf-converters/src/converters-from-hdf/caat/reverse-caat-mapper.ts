@@ -1,92 +1,257 @@
-import {ContextualizedEvaluation, ExecJSON} from 'inspecjs';
+import {
+  CanonizationConfig,
+  ContextualizedControl,
+  ContextualizedEvaluation,
+  convertFileContextual,
+  ExecJSON,
+  HDFControl,
+  isContextualizedEvaluation
+} from 'inspecjs';
 import _ from 'lodash';
+import XLSX from 'xlsx';
 import {ensureContextualizedEvaluation} from '../../utils/global';
-import {version as HeimdallToolsVersion} from '../../../package.json';
+
+export type InputData = {
+  data: string | ExecJSON.Execution | ContextualizedEvaluation;
+  filename?: string;
+  controls?: ContextualizedControl[];
+};
+
+type Data = InputData & {data: ContextualizedEvaluation; filename: string};
+
+export const CAATHeaders = [
+  'Control Number',
+  'Finding Title',
+  'Date Identified',
+  'Finding ID',
+  'Information System or Program Name',
+  'Repeat Findings',
+  'Repeat Finding Weakness ID',
+  'Finding Description',
+  'Weakness Description',
+  'Control Weakness Type',
+  'Source',
+  'Assessment/Audit Company',
+  'Test Method',
+  'Test Objective',
+  'Test Result Description',
+  'Test Result',
+  'Recommended Corrective Action(s)',
+  'Effect on Business',
+  'Likelihood',
+  'Impact'
+] as const;
+
+type CAATRow = Partial<
+  Record<(typeof CAATHeaders)[number], string | undefined>
+>;
 
 export class FromHDFToCAATMapper {
-  data: ContextualizedEvaluation;
+  static readonly MaxCellSize = 32000;
 
-  constructor(data: string | ExecJSON.Execution | ContextualizedEvaluation) {
-    if (_.isString(data)) {
-      data = ExecJSON.Convert.toExecJSON(data)
-    }
-    this.data = ensureContextualizedEvaluation(data);
+  static readonly NistCanonizationConfig: CanonizationConfig = {
+    max_specifiers: 3,
+    pad_zeros: true,
+    allow_letters: false,
+    add_spaces: false
+  };
+
+  static readonly FileSettings: XLSX.Properties = {
+    Title: 'Compliance Assessment/Audit Tracking (CAAT) Spreadsheet',
+    Subject: 'Assessment Data',
+    Author: 'MITRE SAF',
+    CreatedDate: new Date()
+  };
+
+  static readonly SheetOptions: XLSX.JSON2SheetOpts = {
+    header: CAATHeaders.slice() // CAATHeaders is immutable but the type expects a mutable string
+  };
+
+  static formatDate(date: Date, delimiter: string): string {
+    return [
+      Intl.DateTimeFormat('en-US', {month: '2-digit'}),
+      Intl.DateTimeFormat('en-US', {day: '2-digit'}),
+      Intl.DateTimeFormat('en-US', {year: 'numeric'})
+    ]
+      .map((formatter) => formatter.format(date))
+      .join(delimiter);
   }
 
-  toCAAT() {
-    const passthrough = _.get(this.data, 'passthrough');
-    let passthroughString = '';
-    if (typeof passthrough === 'object') {
-      passthroughString = JSON.stringify(passthrough);
-    } else if (typeof passthrough !== 'undefined') {
-      passthroughString = String(passthrough);
+  data: Data[];
+
+  // ensure input is turned into an array of contextualized evaluations with some additional metadata
+  constructor(data: InputData | InputData[]) {
+    if (!Array.isArray(data)) {
+      data = [data];
+    }
+    this.data = data.map((datum) => {
+      let contextualizedEvaluation = datum.data;
+      if (_.isString(contextualizedEvaluation)) {
+        const contextualizedFile = convertFileContextual(
+          contextualizedEvaluation
+        );
+        if (!isContextualizedEvaluation(contextualizedFile)) {
+          throw new Error('Input string was not an HDF ExecJSON');
+        }
+        contextualizedEvaluation = contextualizedFile;
+      }
+      contextualizedEvaluation = ensureContextualizedEvaluation(
+        contextualizedEvaluation
+      );
+      // if provided a filename use that, otherwise the name of the first profile in the execjson (usually there's either only one or if there are multiple then the one at the top is the wrapper or overlay profile) otherwise if there are no profiles at all then a default of 'ExecJSON'
+      return {
+        ...datum,
+        data: contextualizedEvaluation,
+        filename:
+          datum.filename ??
+          contextualizedEvaluation.data.profiles.at(0)?.name ??
+          'ExecJSON'
+      };
+    });
+  }
+
+  // ensure we're using Windows style newlines and fit within the maximum length
+  fix(str: string | null | undefined): string {
+    return (str ?? '')
+      .replace(/(\r\n|\n|\r)/gmu, '\r\n')
+      .slice(0, FromHDFToCAATMapper.MaxCellSize);
+  }
+
+  createCaveat(hdf: HDFControl): string {
+    const caveat = hdf.descriptions.caveat
+      ? `(Caveat: ${this.fix(hdf.descriptions.caveat)})\r\n`
+      : '';
+    return `${caveat}${this.fix(hdf.wraps.desc)}`;
+  }
+
+  createTestResultDescription(hdf: HDFControl): string {
+    const controlStatus = `${hdf.status}:\r\n\r\n`;
+    const description =
+      hdf.segments?.map((result) => {
+        const statusAndTest = `${result.status.toUpperCase()} -- Test: ${
+          result.code_desc
+        }\r\n`;
+        const message = result.message
+          ? `Message: ${result.message}\r\n\r\n`
+          : '\r\n';
+        return `${statusAndTest}${message}`;
+      }) ?? '';
+    return `${controlStatus}${description}`;
+  }
+
+  createTestResult(hdf: HDFControl): string {
+    return hdf.status === 'Passed' ? 'Satisfied' : 'Other Than Satisfied';
+  }
+
+  createImpact(hdf: HDFControl): string {
+    const controlSeverity =
+      hdf.severity === 'medium' ? 'moderate' : hdf.severity;
+    return this.fix(hdf.wraps.impact === 0 ? 'none' : controlSeverity);
+  }
+
+  getRow(control: ContextualizedControl, filename: string): CAATRow[] {
+    const hdf = control.hdf;
+    const allRows: CAATRow[] = _.compact(
+      hdf
+        .canonized_nist(FromHDFToCAATMapper.NistCanonizationConfig)
+        .map((formattedNistTag) => {
+          // I don't think the canonized_nist function would return something that wasn't a nist tag, but this check was there originally quite probably for a reason, but I've not been able to find a sample that triggers this case myself
+          if (!formattedNistTag) {
+            // early exiting forces us to use the compact function to get rid of empty values in the array
+            return;
+          }
+
+          const row: CAATRow = {};
+          row['Control Number'] = formattedNistTag;
+          row['Finding Title'] = `Test ${this.fix(hdf.wraps.id)} - ${this.fix(
+            hdf.wraps.title
+          )}`;
+          if (hdf.start_time) {
+            row['Date Identified'] = FromHDFToCAATMapper.formatDate(
+              new Date(hdf.start_time),
+              '/'
+            );
+          }
+          row['Finding ID'] = `${filename} - Test ${this.fix(hdf.wraps.id)}`;
+          row['Finding Description'] = this.fix(hdf.wraps.title);
+          row['Weakness Description'] = this.createCaveat(hdf);
+          row['Control Weakness Type'] = 'Security';
+          row['Source'] = 'Self-Assessment';
+          row['Test Method'] = 'Test';
+          row['Test Objective'] = this.fix(
+            hdf.descriptions.check ?? hdf.wraps.tags.check
+          );
+          row['Test Result Description'] = this.fix(
+            this.createTestResultDescription(hdf)
+          );
+          row['Test Result'] = this.createTestResult(hdf);
+          row['Recommended Corrective Action(s)'] = this.fix(
+            hdf.descriptions.fix ?? hdf.wraps.tags.fix
+          );
+          row['Impact'] = this.createImpact(hdf);
+          return row;
+        })
+    );
+    return allRows;
+  }
+
+  // returnWorkBook: true -> raw workbook class
+  // returnWorkBook: false | undefined -> binary string
+  toCAAT(returnWorkBook?: false) {
+    // Sheet names must be unique across the workbook
+    const takenSheetNames: string[] = [];
+
+    // Define our workbook
+    const wb = XLSX.utils.book_new();
+
+    // For each contextualized evaluation
+    for (const d of this.data) {
+      // Ensure sheet name uniqueness
+      let renameCount = 2;
+      let sheetName: string = `${
+        d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON'
+      }`.substring(0, 31);
+      while (takenSheetNames.includes(sheetName)) {
+        sheetName =
+          `${
+            d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON'
+          } `.substring(0, 26) + ` (${renameCount})`;
+        renameCount++;
+      }
+      takenSheetNames.push(sheetName);
+
+      // Create a new Sheet
+      wb.SheetNames.push(sheetName);
+      wb.Props = FromHDFToCAATMapper.FileSettings;
+
+      // Get the controls for the current evaluation
+      const processedControls = new Set();
+      const rows: CAATRow[] = [];
+      // Convert them into rows
+      for (const control of d.controls ??
+        d.data.contains.flatMap((profile) => profile.contains)) {
+        const root = control.root;
+
+        // Overlay profiles will usually share controls
+        if (processedControls.has(root.hdf.wraps.id)) {
+          continue;
+        }
+
+        processedControls.add(root.hdf.wraps.id);
+        rows.push(...this.getRow(root, d.filename));
+      }
+
+      // Add rows to sheet
+      const ws = XLSX.utils.json_to_sheet(
+        rows,
+        FromHDFToCAATMapper.SheetOptions
+      );
+      wb.Sheets[sheetName] = ws;
     }
 
-    const mappedData: MappedXCCDFtoHDF = {
-      Benchmark: {
-        id: 'xccdf_mitre.hdf-converters.xccdf_benchmark_hdf2xccdf',
-        title: this.data.profiles[0].title || 'HDF to XCCDF Benchmark',
-        date: this.dateOverride
-          ? TESTING_DATE_OVERRIDE
-          : this.getExecutionTime(),
-        metadata: {
-          copyright: this.data.profiles[0].copyright || '',
-          maintainer: this.data.profiles[0].maintainer || ''
-        },
-        passthrough: passthroughString,
-        version: HeimdallToolsVersion,
-        Profile: [],
-        Rule: [],
-        TestResult: {
-          endTime: this.dateOverride
-            ? TESTING_DATETIME_OVERRIDE
-            : this.getExecutionTime(true),
-          hasAttributes: false,
-          attributes: [],
-          results: []
-        }
-      }
-    };
-
-    this.data.profiles.forEach((profile) => {
-      // Add Profile to Profile list
-      mappedData.Benchmark.Profile.push({
-        id:
-          'xccdf_mitre.hdf-converters_profile_hdf2xccdf_' +
-          // Replace all non-word characters and spaces with underscores
-          (profile.title?.replace(/[^\w-.]/g, '_') || 'profile_missing_title'),
-        title: profile.title || '',
-        description: profile.description || '',
-        // All control IDs
-        select: profile.controls.map(
-          (control) =>
-            'xccdf_hdf_rule_' +
-            (control.tags.rid ||
-              control.id.replace(/_/g, '-').replace(/[^\w-.]/g, '_') + '_rule')
-        )
-      });
-      mappedData.Benchmark.TestResult.attributes.push(
-        ...(profile.attributes || [])
-      );
-      if (mappedData.Benchmark.TestResult.attributes.length > 0) {
-        mappedData.Benchmark.TestResult.hasAttributes = true;
-      }
-
-      profile.controls.forEach((control) => {
-        if (control.results) {
-          // Add results info
-          mappedData.Benchmark.TestResult.results.push(
-            this.getControlResultsInfo(control)
-          );
-        }
-      });
-    });
-
-    // Add the control metadata for the top-level profile
-    this.data.profiles[0].controls.forEach((control) => {
-      mappedData.Benchmark.Rule.push(this.getControlInfo(control));
-    });
-
-    return Mustache.render(this.xccdfTemplate, mappedData);
+    if (returnWorkBook) {
+      return wb;
+    }
+    return XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
   }
 }
