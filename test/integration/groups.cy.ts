@@ -17,21 +17,22 @@ context('Groups', () => {
   const groupName3 = 'Test Group 3';
   const groupName4 = 'Test Group 4';
 
-  // Run before each test
-  beforeEach(() => {
-    cy.register(CREATE_USER_DTO_TEST_OBJ);
-    cy.visit('/login');
-    cy.login(LOGIN_AUTHENTICATION);
-  });
-
   describe('CRUD', () => {
     it('allows a user to create a group', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ);
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION);
+
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName1);
       dataTableVerifier.verifyTextPresent(groupName1);
     });
 
     it('allows a user to update a group', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ);
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION);
+
       const updatedGroupName = 'Updated Test Group';
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName2);
@@ -40,6 +41,10 @@ context('Groups', () => {
     });
 
     it('allows a user to delete a group', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ);
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION);
+
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName3);
       groupPage.deleteGroup(groupName3);
@@ -50,6 +55,10 @@ context('Groups', () => {
     });
 
     it('fails to create a group with a duplicate name', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ);
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION);
+
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName4);
       groupPage.testGroupName(groupName4);

@@ -18,16 +18,13 @@ context('Database results', () => {
   const databasePage = new DatabasePage();
   const sampleToLoad = 'Acme Overlay Example';
 
-  // Run before each test
-  beforeEach(() => {
-    cy.register(CREATE_USER_DTO_TEST_OBJ);
-    cy.visit('/login');
-    cy.login(LOGIN_AUTHENTICATION);
-    cy.get('#hide-snackbar').click();
-  });
-
   describe('CRUD', () => {
     it('allows a user to save a result', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ);
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION);
+      cy.get('#hide-snackbar').click();
+
       uploadModal.loadSample(sampleToLoad);
       sidebar.save(sampleToLoad);
       toastVerifier.toastTextContains('File saved successfully');
@@ -37,6 +34,11 @@ context('Database results', () => {
     });
 
     it('allows a user to load a result', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ);
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION);
+      cy.get('#hide-snackbar').click();
+
       uploadModal.loadSample(sampleToLoad);
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
@@ -46,6 +48,11 @@ context('Database results', () => {
     });
 
     it('allows a user to update a result', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ);
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION);
+      cy.get('#hide-snackbar').click();
+
       const updatedName = 'Updated Filename';
       uploadModal.loadSample(sampleToLoad);
       sidebar.save(sampleToLoad);
@@ -57,6 +64,11 @@ context('Database results', () => {
     });
 
     it('allows a user to delete a result', () => {
+      cy.register(CREATE_USER_DTO_TEST_OBJ);
+      cy.visit('/login');
+      cy.login(LOGIN_AUTHENTICATION);
+      cy.get('#hide-snackbar').click();
+
       uploadModal.loadSample(sampleToLoad);
       sidebar.save(sampleToLoad);
       sidebar.close(sampleToLoad);
