@@ -1,4 +1,8 @@
-import {ExecJSON, ContextualizedEvaluation, contextualizeEvaluation} from 'inspecjs';
+import {
+  ContextualizedEvaluation,
+  contextualizeEvaluation,
+  ExecJSON
+} from 'inspecjs';
 import _ from 'lodash';
 import {createLogger, format, transports} from 'winston';
 import {data as NistCciMappingData} from '../mappings/NistCciMappingData';
@@ -95,4 +99,3 @@ export function ensureContextualizedEvaluation(
     return contextualizeEvaluation(data);
   }
 }
-

@@ -12,7 +12,10 @@ import {SplunkControl} from '../../../types/splunk-control-types';
 import {SplunkProfile} from '../../../types/splunk-profile-types';
 import {SplunkReport} from '../../../types/splunk-report-types';
 import {MappedTransform} from '../../base-converter';
-import {createWinstonLogger, ensureContextualizedEvaluation} from '../../utils/global';
+import {
+  createWinstonLogger,
+  ensureContextualizedEvaluation
+} from '../../utils/global';
 import {
   checkSplunkCredentials,
   generateHostname,
