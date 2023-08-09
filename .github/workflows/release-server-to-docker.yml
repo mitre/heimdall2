@@ -3,7 +3,6 @@ name: Push Heimdall Server to Docker Hub on every release and tag as release-lat
 on:
   release:
     types: [published]
-  workflow_dispatch:
 
 jobs:
   docker:
@@ -33,21 +32,20 @@ jobs:
           context: .
           push: true
           platforms: "linux/amd64"
-          tags: mitre/heimdall2:sophos-test
+          tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced }}
       - name: Get Docker SHA
         shell: bash
         id: get-docker-sha
-        run: echo "DOCKER_SHA=$(docker manifest inspect --verbose docker.io/mitre/heimdall2:sophos-test | jq -r '.Descriptor.digest')" >> $GITHUB_ENV
+        run: echo "DOCKER_SHA=$(docker manifest inspect --verbose docker.io/mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} | jq -r '.Descriptor.digest')" >> $GITHUB_ENV
       - name: Sophos Factory pipeline
         uses: sophos/factory-run-pipeline@master
         with:
           project_id: 601c48ad71a5df94e698a9ad
           job_id: 644185303992f67e1d9412f2
           api_token: ${{ secrets.SOPHOS_FACTORY_TOKEN }}
-          api_url: https://api.factory.sophos.com/v1
           variables: |
             {
               "gitlabHost": "repo1.dso.mil",
-              "heimdallVersion": "sophos-test",
+              "heimdallVersion": "${{ steps.format-tag.outputs.replaced }}",
               "heimdallDockerURL": "docker://docker.io/mitre/heimdall2@${{ env.DOCKER_SHA }}"
             }
