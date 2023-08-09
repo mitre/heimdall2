@@ -100,12 +100,12 @@ export class FromHDFToCAATMapper {
       );
       // if provided a filename use that, otherwise the name of the first profile in the execjson (usually there's either only one or if there are multiple then the one at the top is the wrapper or overlay profile) otherwise if there are no profiles at all then a default of 'ExecJSON'
       return {
-        ...datum,
         data: contextualizedEvaluation,
         filename:
           datum.filename ??
           contextualizedEvaluation.data.profiles.at(0)?.name ??
-          'ExecJSON'
+          'ExecJSON',
+        controls: datum.controls
       };
     });
   }
