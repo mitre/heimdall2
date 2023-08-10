@@ -1,41 +1,42 @@
-/// <reference types="cypress" />
+import {UpdateUserDto} from '../../../apps/backend/src/users/dto/update-user.dto';
 
-import 'cypress-wait-until';
-import RegistrationPage from '../support/pages/RegistrationPage';
-import DatabaseHelper from './helpers/DatabaseHelper';
+export default class Dropdown {
+  openGroupsPage(): void {
+    cy.get('#dropdown').click();
+    cy.get('#dropdownList').get('#groups-link').click();
+  }
 
-const databaseHelper = new DatabaseHelper();
+  openUserModal(): void {
+    cy.get('#dropdown').click();
+    cy.get('#dropdownList').get('#user-link').click();
+  }
 
-beforeEach(function () {
-  // This mocks the 'check for updates' functionality to avoid
-  // 403 errors on testing
-  cy.intercept('https://api.github.com/repos/mitre/heimdall2/tags', [
-    {
-      name: 'v9.9.9'
-    }
-  ]);
+  changeUserData(user: UpdateUserDto): void {
+    cy.get('#firstName').clear();
+    cy.get('#lastName').clear();
+    cy.get('#email_field').clear();
+    cy.get('#title').clear();
+    cy.get('#organization').clear();
+    cy.get('#password_field').clear();
+    cy.get('#toggleChangePassword').click();
+    cy.get('#new_password_field').clear();
+    cy.get('#repeat_password_field').clear();
 
-  databaseHelper.clear();
-});
+    cy.get('#firstName').type(user.firstName);
+    cy.get('#lastName').type(user.lastName);
+    cy.get('#email_field').type(user.email);
+    cy.get('#title').type(user.title);
+    cy.get('#organization').type(user.organization);
+    cy.get('#password_field').type(user.currentPassword);
+    cy.get('#toggleChangePassword').click();
+    cy.get('#new_password_field').type(user.password);
+    cy.get('#repeat_password_field').type(user.passwordConfirmation);
 
-// There seems to be an issue with v-slide-group that causes it to throw
-// "Uncaught TypeError: Cannot read property 'getBoundingClientRect' of undefined"
-// On a null-obj
-Cypress.on('uncaught:exception', (err) => {
-  // Return false if the error messaage includes `getBoundingClientRect`
-  return !err.message.includes('getBoundingClientRect');
-});
+    cy.get('#closeAndSaveChanges').click();
+  }
 
-Cypress.Commands.add('login', ({email, password}) => {
-  cy.get('input[name=email]').clear();
-  cy.get('input[name=email]').type(email);
-  cy.get('input[name=password]').clear();
-  cy.get('input[name=password]').type(password);
-  cy.get('#login_button').click();
-});
-
-Cypress.Commands.add('register', (user) => {
-  const registrationPage = new RegistrationPage();
-
-  registrationPage.register(user);
-});
+  logout(): void {
+    cy.get('#dropdown').click();
+    cy.get('#logout_button').click();
+  }
+}
