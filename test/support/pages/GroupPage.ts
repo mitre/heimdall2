@@ -13,7 +13,6 @@ export default class GroupPage {
     cy.get('[data-cy=updateGroupForm').within(() => {
       cy.get('[data-cy=name]').clear();
       cy.get('[data-cy=name]').type(updatedName);
-
       cy.get('[data-cy=closeAndSaveChanges]').click();
     });
   }
@@ -21,5 +20,13 @@ export default class GroupPage {
   deleteGroup(name: string): void {
     cy.contains('td', name).parent().get('[data-cy=delete]').click();
     cy.get('[data-cy=deleteConfirm]').click();
+  }
+
+  testGroupName(name: string): void {
+    cy.get('[data-cy=createNewGroupBtn]').click();
+    cy.get('[data-cy=createGroupForm').within(() => {
+      cy.get('[data-cy=name]').clear();
+      cy.get('[data-cy=name]').type(name);
+    });
   }
 }
