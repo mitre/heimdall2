@@ -135,7 +135,7 @@ export class FromHDFToCAATMapper {
           ? `Message: ${result.message}\r\n\r\n`
           : '\r\n';
         return `${statusAndTest}${message}`;
-      }) ?? '';
+      }).join('') ?? '';
     return `${controlStatus}${description}`;
   }
 
