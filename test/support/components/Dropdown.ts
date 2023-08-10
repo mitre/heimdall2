@@ -13,27 +13,6 @@ export default class Dropdown {
 
   changeUserData(user: UpdateUserDto): void {
     cy.get('#firstName').clear();
-<<<<<<< HEAD
-    cy.get('#lastName').clear();
-    cy.get('#email_field').clear();
-    cy.get('#title').clear();
-    cy.get('#organization').clear();
-    cy.get('#password_field').clear();
-    cy.get('#toggleChangePassword').click();
-    cy.get('#new_password_field').clear();
-    cy.get('#repeat_password_field').clear();
-
-    cy.get('#firstName').type(user.firstName);
-    cy.get('#lastName').type(user.lastName);
-    cy.get('#email_field').type(user.email);
-    cy.get('#title').type(user.title);
-    cy.get('#organization').type(user.organization);
-    cy.get('#password_field').type(user.currentPassword);
-    cy.get('#toggleChangePassword').click();
-    cy.get('#new_password_field').type(user.password);
-    cy.get('#repeat_password_field').type(user.passwordConfirmation);
-
-=======
     cy.get('#firstName').type(user.firstName);
     cy.get('#lastName').clear();
     cy.get('#lastName').type(user.lastName);
@@ -50,7 +29,6 @@ export default class Dropdown {
     cy.get('#new_password_field').type(user.password);
     cy.get('#repeat_password_field').clear();
     cy.get('#repeat_password_field').type(user.passwordConfirmation);
->>>>>>> master
     cy.get('#closeAndSaveChanges').click();
   }
 

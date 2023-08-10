@@ -13,10 +13,6 @@ export default class GroupPage {
     cy.get('[data-cy=updateGroupForm').within(() => {
       cy.get('[data-cy=name]').clear();
       cy.get('[data-cy=name]').type(updatedName);
-<<<<<<< HEAD
-
-=======
->>>>>>> master
       cy.get('[data-cy=closeAndSaveChanges]').click();
     });
   }
