@@ -70,6 +70,7 @@ import {
   transcribe_error
 } from '@/utilities/aws_util';
 import {LocalStorageVal} from '@/utilities/helper_util';
+import {requireFieldRule} from '@/utilities/upload_util';
 import S3 from 'aws-sdk/clients/s3';
 import {AWSError} from 'aws-sdk/lib/error';
 import Vue from 'vue';
@@ -92,9 +93,8 @@ const localSessionInformation = new LocalStorageVal<Auth | null>(
   }
 })
 export default class S3Reader extends Vue {
-  /** Form required field rules. Maybe eventually expand to other stuff */
-  reqRule = (v: string | null | undefined) =>
-    (v || '').trim().length > 0 || 'Field is Required';
+  // Form required field rule
+  reqRule = requireFieldRule;
 
   /** Passed from step 1 to step 2 (MFA) if necessary */
   /** State of all globally relevant fields */
@@ -201,7 +201,7 @@ export default class S3Reader extends Vue {
   /** On mount, try to look up stored auth info */
   mounted() {
     // Load our session, if there is one
-    this.assumedRole = localSessionInformation.get_default(null);
+    this.assumedRole = localSessionInformation.getDefault(null);
     if (this.assumedRole) {
       this.step = 3;
     }

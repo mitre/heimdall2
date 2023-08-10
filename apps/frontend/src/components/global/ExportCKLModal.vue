@@ -295,7 +295,7 @@ export default class ExportCKLModal extends Vue {
 
   getDetails(control: ContextualizedControl, profileName: string): Control {
     return {
-      vid: control.data.id,
+      vid: control.data.tags.gid || control.data.id,
       rid: control.data.tags.rid || control.data.id,
       gid: control.data.tags.gid || control.data.id,
       ruleVersion: control.data.tags.stig_id || control.data.id,

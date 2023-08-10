@@ -24,7 +24,7 @@
                 v-model="groupInfo.name"
                 data-cy="name"
                 label="Group Name"
-                @keyup.enter="save"
+                @input="checkUniqueName"
               />
             </v-col>
             <v-col>
@@ -38,22 +38,33 @@
                     />
                   </span>
                 </template>
-                <span
-                  >This will make the group name visible to all logged in users.
-                  It will not expose any results or profiles added to the
-                  group.</span
-                >
+                <span>
+                  This will make the group name visible to all logged in users.
+                  It will not expose any results or profiles added to the group.
+                </span>
               </v-tooltip>
             </v-col>
           </v-row>
-          <Users v-model="groupInfo.users" />
+          <v-textarea
+            v-model="groupInfo.desc"
+            data-cy="desc"
+            label="Description"
+            rows="1"
+            auto-grow
+          />
+          <Users
+            v-model="groupInfo.users"
+            :editable="true"
+            :create="create"
+            :admin="admin"
+            @on-update-group-user-role="updateSaveState"
+            @delete-user-confirm="updateSaveState"
+          />
         </v-form>
       </v-card-text>
-
       <v-divider />
-
       <v-card-actions>
-        <GroupAPIKeysModal v-if="!create" :group="group">
+        <GroupAPIKeysModal v-if="!create && apiKeysEnabled" :group="group">
           <template #clickable="{on, attrs}">
             <v-btn
               data-cy="groupAPIKeys"
@@ -61,8 +72,9 @@
               text
               v-bind="attrs"
               v-on="on"
-              >Manage API Keys</v-btn
             >
+              Manage API Keys
+            </v-btn>
           </template>
         </GroupAPIKeysModal>
         <v-spacer />
@@ -70,12 +82,19 @@
           data-cy="closeAndDiscardChanges"
           color="primary"
           text
-          @click="dialog = false"
-          >Cancel</v-btn
+          @click="cancel"
         >
-        <v-btn data-cy="closeAndSaveChanges" color="primary" text @click="save"
-          >Save</v-btn
+          Cancel
+        </v-btn>
+        <v-btn
+          data-cy="closeAndSaveChanges"
+          color="primary"
+          text
+          :disabled="!saveable || duplicateName"
+          @click="save"
         >
+          Save
+        </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -86,13 +105,15 @@ import ActionDialog from '@/components/generic/ActionDialog.vue';
 import GroupAPIKeysModal from '@/components/global/groups/GroupAPIKeysModal.vue';
 import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
+import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
 import {
   IAddUserToGroup,
   ICreateGroup,
   IGroup,
   IRemoveUserFromGroup,
-  ISlimUser
+  ISlimUser,
+  IUpdateGroupUser
 } from '@heimdall/interfaces';
 import axios, {AxiosResponse} from 'axios';
 import _ from 'lodash';
@@ -104,9 +125,11 @@ function newGroup(): IGroup {
   return {
     id: '-1',
     name: '',
+    role: '',
     public: false,
     createdAt: new Date(),
     updatedAt: new Date(),
+    desc: '',
     users: []
   };
 }
@@ -130,16 +153,13 @@ export default class GroupModal extends Vue {
 
   @Prop({type: Boolean, default: false}) readonly admin!: boolean;
   @Prop({type: Boolean, default: false}) readonly create!: boolean;
-
   dialog = false;
   changePassword = false;
-
   groupInfo: IGroup = _.cloneDeep(this.group);
 
   currentPassword = '';
   newPassword = '';
   passwordConfirmation = '';
-
   get title(): string {
     if (this.create) {
       return 'Create a New Group';
@@ -148,26 +168,60 @@ export default class GroupModal extends Vue {
     }
   }
 
+  get apiKeysEnabled(): boolean {
+    return ServerModule.apiKeysEnabled;
+  }
+
+  // Upon user role update, the child component will emit whether the current state is acceptable
+  saveable = true;
+  updateSaveState(saveable: boolean) {
+    if (!this.create) {
+      if (!saveable) SnackbarModule.failure(`Must have at least 1 owner`);
+      this.saveable = saveable;
+    }
+  }
+
+  // Upon group name change, the component will detect whether the current state is acceptable
+  duplicateName = false;
+  checkUniqueName(name: string) {
+    this.duplicateName = GroupsModule.allGroups.some(
+      (group) => group.name === name && group.id !== this.groupInfo.id
+    );
+    if (this.duplicateName) {
+      SnackbarModule.failure(`Group names must be unique.`);
+    }
+  }
+
   async save(): Promise<void> {
     const groupInfo: ICreateGroup = {
       ...this.groupInfo
     };
 
-    const response = this.create
-      ? this.createGroup(groupInfo)
-      : this.updateExistingGroup(groupInfo);
-    response.then(({data}) => {
-      this.syncUsersWithGroup(data).then(() => {
-        GroupsModule.GetGroupById(data.id);
-        SnackbarModule.notify(`Group Successfully Saved`);
-        // This clears when creating a new Group.
-        // Calling clear on edit makes it impossible to edit the same group twice.
-        if (this.create) {
-          this.groupInfo = newGroup();
-        }
-        this.dialog = false;
-      });
-    });
+    try {
+      const response = await (this.create
+        ? this.createGroup(groupInfo)
+        : this.updateExistingGroup(groupInfo));
+      const group = response.data;
+      await GroupsModule.UpdateGroupById(group.id);
+      await this.syncUsersWithGroup(group);
+      // This clears when creating a new Group.
+      // Calling clear on edit makes it impossible to edit the same group twice.
+      if (this.create) {
+        this.groupInfo = newGroup();
+      }
+      this.dialog = false;
+      // This updates the store after the change propagates through the database
+      // Not calling this would result in reactivity delays on the frontend
+      await GroupsModule.FetchGroupData();
+      SnackbarModule.notify(`Group Successfully Saved`);
+    } catch (err) {
+      SnackbarModule.failure(`Failed to Save Group: ${err}`);
+    }
+  }
+
+  async cancel(): Promise<void> {
+    this.dialog = false;
+    this.groupInfo = _.cloneDeep(this.group); // Reset the working state of the edit operation
   }
 
   async createGroup(createGroup: ICreateGroup): Promise<AxiosResponse<IGroup>> {
@@ -189,22 +243,39 @@ export default class GroupModal extends Vue {
     const toRemove: ISlimUser[] = this.group.users.filter(
       (user) => !changedIds.includes(user.id)
     );
+    const toUpdate: ISlimUser[] = this.groupInfo.users.filter((newUser) =>
+      this.group.users.some(
+        (user) => user.id === newUser.id && user.groupRole !== newUser.groupRole
+      )
+    );
     const addedUserPromises = toAdd.map((user) => {
       const addUserDto: IAddUserToGroup = {
         userId: user.id,
-        groupRole: 'member'
+        groupRole: user.groupRole || 'member'
       };
       return axios.post(`/groups/${group.id}/user`, addUserDto);
     });
-
+    const updatedUserPromises = toUpdate.map((user) => {
+      const updateGroupUserRole: IUpdateGroupUser = {
+        userId: user.id,
+        groupRole: user.groupRole || 'member'
+      };
+      return axios.put(
+        `/groups/${group.id}/updateGroupUserRole`,
+        updateGroupUserRole
+      );
+    });
     const removedUserPromises = toRemove.map((user) => {
       const removeUserDto: IRemoveUserFromGroup = {
         userId: user.id
       };
       return axios.delete(`/groups/${group.id}/user`, {data: removeUserDto});
     });
-
-    return Promise.all(addedUserPromises.concat(removedUserPromises));
+    return Promise.all([...addedUserPromises, ...updatedUserPromises]).then(
+      () => {
+        return Promise.all(removedUserPromises);
+      }
+    );
   }
 }
 </script>

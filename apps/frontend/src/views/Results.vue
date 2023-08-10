@@ -20,7 +20,7 @@
             </v-btn>
           </template>
           <v-list class="py-0">
-            <v-list-item class="px-0">
+            <v-list-item v-if="is_result_view" class="px-0">
               <ExportCaat :filter="all_filter" />
             </v-list-item>
             <v-list-item v-if="is_result_view" class="px-0">
@@ -32,7 +32,7 @@
             <v-list-item v-if="is_result_view" class="px-0">
               <ExportCKLModal :filter="all_filter" />
             </v-list-item>
-            <v-list-item class="px-0">
+            <v-list-item v-if="is_result_view" class="px-0">
               <ExportCSVModal :filter="all_filter" />
             </v-list-item>
             <v-list-item v-if="is_result_view" class="px-0">
@@ -41,7 +41,7 @@
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
-            <v-list-item class="px-0">
+            <v-list-item v-if="is_result_view" class="px-0">
               <ExportXCCDFResults
                 :filter="all_filter"
                 :is-result-view="is_result_view"
@@ -318,15 +318,8 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     );
   }
 
-  get profiles(): SourcedContextualizedProfile[] {
-    return Array.from(FilteredDataModule.profiles(this.file_filter));
-  }
-
-  get activeFiles(): (
-    | SourcedContextualizedEvaluation
-    | SourcedContextualizedProfile
-  )[] {
-    return this.is_result_view ? this.evaluationFiles : this.profiles;
+  get activeFiles(): SourcedContextualizedEvaluation[] {
+    return this.evaluationFiles;
   }
 
   getFile(fileID: FileID) {
@@ -505,6 +498,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 .glow {
   box-shadow: 0px 0px 8px 6px #5a5;
 }
+
 .bottom-right {
   position: absolute;
   bottom: 0;

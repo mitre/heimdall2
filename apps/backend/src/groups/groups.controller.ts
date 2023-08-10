@@ -14,6 +14,7 @@ import {
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {EvaluationsService} from '../evaluations/evaluations.service';
+import {GroupUser} from '../group-users/group-user.model';
 import {JwtAuthGuard} from '../guards/jwt-auth.guard';
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
@@ -23,6 +24,7 @@ import {CreateGroupDto} from './dto/create-group.dto';
 import {EvaluationGroupDto} from './dto/evaluation-group.dto';
 import {GroupDto} from './dto/group.dto';
 import {RemoveUserFromGroupDto} from './dto/remove-user-from-group.dto';
+import {UpdateGroupUserRoleDto} from './dto/update-group-user.dto';
 import {GroupsService} from './groups.service';
 
 @Controller('groups')
@@ -49,7 +51,13 @@ export class GroupsController {
   @Get('/my')
   async findForUser(@Request() request: {user: User}): Promise<GroupDto[]> {
     const groups = await request.user.$get('groups', {include: [User]});
-    return groups.map((group) => new GroupDto(group));
+    const groupIds = groups.map((g) => g.id);
+    const publicGroups = (await this.groupsService.findAll()).filter(
+      (group) => group.public && !groupIds.includes(group.id)
+    );
+    return groups
+      .map((group) => new GroupDto(group))
+      .concat(publicGroups.map((group) => new GroupDto(group)));
   }
 
   @Post()
@@ -88,9 +96,11 @@ export class GroupsController {
     @Request() request: {user: User},
     @Body() removeUserFromGroupDto: RemoveUserFromGroupDto
   ): Promise<GroupDto> {
-    const abac = this.authz.abac.createForUser(request.user);
     const group = await this.groupsService.findByPkBang(id);
-    ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
+    if (request.user.role !== 'admin') {
+      const abac = this.authz.abac.createForUser(request.user);
+      ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
+    }
     const userToRemove = await this.usersService.findById(
       removeUserFromGroupDto.userId
     );
@@ -163,6 +173,19 @@ export class GroupsController {
     return new GroupDto(
       await this.groupsService.update(groupToUpdate, updateGroup)
     );
+  }
+
+  @Put(':id/updateGroupUserRole')
+  async updateGroupUserRole(
+    @Request() request: {user: User},
+    @Param('id') id: string,
+    @Body() updateGroupUser: UpdateGroupUserRoleDto
+  ): Promise<GroupUser | undefined> {
+    const abac = this.authz.abac.createForUser(request.user);
+    const group = await this.groupsService.findByPkBang(id);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, group);
+
+    return this.groupsService.updateGroupUserRole(group, updateGroupUser);
   }
 
   @Delete(':id')

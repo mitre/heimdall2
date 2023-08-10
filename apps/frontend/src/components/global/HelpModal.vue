@@ -8,7 +8,7 @@
 
     <v-card>
       <v-card-title class="headline grey" primary-title
-        >How to use Heimdall Lite {{ version }}</v-card-title
+        >How to use Heimdall {{ instanceMode }} {{ version }}</v-card-title
       >
 
       <v-card-text>
@@ -70,12 +70,18 @@
 
 <script lang="ts">
 import {AppInfoModule} from '@/store/app_info';
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import ServerMixin from '@/mixins/ServerMixin';
+import Component, {mixins} from 'vue-class-component';
 
 @Component
-export default class HelpModal extends Vue {
+export default class HelpModal extends mixins(ServerMixin) {
   dialog = false;
+
+  // serverMode is define in ServerMixin
+  get instanceMode(): string {
+    return this.serverMode ? 'Server' : 'Lite';
+  }
+
   get version(): string {
     return AppInfoModule.version;
   }

@@ -29,8 +29,10 @@ This repository contains the source code for Heimdall's [Backend](https://github
       - [Stopping the Container](#stopping-the-container)
       - [Helm Chart](#helm-chart)
       - [Running via Cloud.gov](#running-via-cloudgov)
-  - [External Data Sources](#external-data-sources)
+  - [External Data Sources (Interfaces)](#external-data-sources-interfaces)
     - [AWS S3](#aws-s3)
+    - [Splunk](#splunk)
+    - [Tenable.SC](#tenablesc)
   - [API Usage](#api-usage)
   - [For Developers](#for-developers)
     - [How to Install](#how-to-install)
@@ -45,9 +47,6 @@ This repository contains the source code for Heimdall's [Backend](https://github
   - [Contributing, Issues and Support](#contributing-issues-and-support)
     - [Contributing](#contributing)
     - [Issues and Support](#issues-and-support)
-    - [NOTICE](#notice)
-    - [NOTICE](#notice-1)
-    - [NOTICE](#notice-2)
 
 ## Demos
 
@@ -84,7 +83,7 @@ This repository contains the source code for Heimdall's [Backend](https://github
 
 ## Heimdall (Lite) vs Heimdall with Backend (Server)
 
-There are two ways to deploy MITRE Heimdall - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
+There are two ways to deploy the MITRE Heimdall application - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
 
 ### Heimdall-Lite
 
@@ -159,6 +158,8 @@ If you would prefer to run the bleeding edge version of Heimdall-Lite, replace `
 ### Heimdall Server - Docker
 
 Given that Heimdall requires at least a database service, we use Docker and Docker Compose to provide a simple deployment experience. This process will also deploy an NGINX webserver in front of Heimdall to handle TLS.
+
+Heimdall's frontend container image is distributed on [DockerHub](https://hub.docker.com/r/mitre/heimdall2), and on [Iron Bank](https://ironbank.dso.mil/repomap/details;registry1Path=mitre%252Fsaf%252Fheimdall2).
 
 #### Setup Docker Container (Clean Install)
 
@@ -241,32 +242,25 @@ $ cf push
 
 > Note: This is only for demonstration purposes, in order to run a production level federal/FISMA system. You will need to contact the [cloud.gov program](https://cloud.gov) and consult your organization's security team (for risk assessment and an Authority to Operate).
 
-## External Data Sources
+## External Data Sources (Interfaces)
 
-Heimdall currently supports AWS S3 for loading external HDF data. 
+Heimdall currently provides connectivity to the following services for importing and visualizing scans:
+  - AWS S3
+  - Splunk
+  - Tenable.SC
 
 ### AWS S3
 
-In order to allow Heimdall to Connect to your AWS S3 bucket, you need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficent, however you need to change the allowed origin to where you are deploying Heimdall.
+For detail information on how to setup and connect to an `AWS S3` bucket see the [Heimdall Interface Connection - AWS S3 Wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections#aws-s3)
 
-```json
-[
-    {
-        "AllowedHeaders": [
-            "*"
-        ],
-        "AllowedMethods": [
-            "GET",
-            "HEAD"
-        ],
-        "AllowedOrigins": [
-            "https://heimdall.your.site.here"
-        ],
-        "ExposeHeaders": [],
-        "MaxAgeSeconds": 3000
-    }
-]
-```
+### Splunk
+
+For detail information on how to setup and connect to an `Splunk` instances (logical or virtual) see the [Heimdall Interface Connection - Splunk Wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections#splunk)
+
+### Tenable.SC
+
+For detail information on how to setup and connect to an `Tenable.SC` instance see the [Heimdall Interface Connection - Tenable.SC Wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections#tenablesc)
+
 
 ## API Usage
 
@@ -288,7 +282,7 @@ curl -F "data=@<Path to first evaluation File>" -F "data=@<Path to second evalua
 
 If you would like to change Heimdall to your needs, you can use Heimdall's 'Development Mode' to ease the development process. The benefit to using this mode is that it will automatically rebuild itself and use those changes as soon as you make them. Please note that you should not run development mode when deploying Heimdall for general usage.
 
-1. Install system dependencies with your system's package manager.
+1. Install system dependencies with your system's package manager. NodeJS is required and can be installed via your system's package manager, or an alternative method if desired. Documented below is the installation via your system's package manager.
 
    Ubuntu:
 
@@ -298,14 +292,16 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
-     sudo apt install postgresql nodejs nano git
+     sudo apt install postgresql nodejs git
+     sudo apt install nano                        # recommended installation
      sudo npm install -g yarn
      ```
      
    OSX:
    
    - ```bash
-     brew install postgresql node@16 nano git
+     brew install postgresql node@16 git      
+     brew install nano                        # recommended installation
      sudo npm install -g yarn
      ```
 
@@ -337,8 +333,12 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    OSX:
 
     - ```sql
-      # Start the server
+      # Start the postgres server corresponding to your installation method
       pg_ctl -D /opt/homebrew/var/postgres start
+      # Alternatively, you may find postgres in another location like the following:
+      pg_ctl -D /usr/local/var/postgres start
+      # Brew method
+      brew services start postgresql@13
 
       # Start the Postgres terminal
       psql postgres
@@ -443,21 +443,3 @@ Please feel free to look through our issues, make a fork and submit _PRs_ and im
 ### Issues and Support
 
 Please feel free to contact us by **opening an issue** on the issue board, or, at [inspec@mitre.org](mailto:inspec@mitre.org) should you have any suggestions, questions or issues. If you have more general questions about the use of our software or other concerns, please contact us at [opensource@mitre.org](mailto:opensource@mitre.org).
-
-### NOTICE
-
-© 2019-2021 The MITRE Corporation.
-
-Approved for Public Release; Distribution Unlimited. Case Number 18-3678.
-
-### NOTICE
-
-MITRE hereby grants express written permission to use, reproduce, distribute, modify, and otherwise leverage this software to the extent permitted by the licensed terms provided in the LICENSE.md file included with this project.
-
-### NOTICE
-
-This software was produced for the U. S. Government under Contract Number HHSM-500-2012-00008I, and is subject to Federal Acquisition Regulation Clause 52.227-14, Rights in Data-General.
-
-No other use other than that granted to the U. S. Government, or to those acting on behalf of the U. S. Government under that Clause is authorized without the express written permission of The MITRE Corporation.
-
-For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA 22102-7539, (703) 983-6000.

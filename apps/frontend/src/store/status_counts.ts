@@ -78,9 +78,8 @@ export function calculateCompliance(filter: Filter) {
     StatusCountModule.countOf(filter, 'Not Reviewed');
   if (total === 0) {
     return 0;
-  } else {
-    return Math.round((100.0 * passed) / total);
   }
+  return (100 * passed) / total;
 }
 
 @Module({
@@ -93,7 +92,7 @@ export class StatusCount extends VuexModule {
   /** Generates a hash mapping each status -> a count of its members */
   get hash(): (filter: Filter) => StatusHash {
     // Establish our cache and dependency
-    const cache: LRUCache<string, StatusHash> = new LRUCache(30);
+    const cache: LRUCache<string, StatusHash> = new LRUCache({max: 30});
 
     return (filter: Filter) => {
       const id = filter_cache_key(filter);
