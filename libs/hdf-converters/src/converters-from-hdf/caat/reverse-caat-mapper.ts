@@ -8,7 +8,7 @@ import {
   isContextualizedEvaluation
 } from 'inspecjs';
 import _ from 'lodash';
-import XLSX from 'xlsx';
+import * as XLSX from 'xlsx';
 import {ensureContextualizedEvaluation} from '../../utils/global';
 
 export type InputData = {
