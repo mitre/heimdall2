@@ -27,6 +27,7 @@ Cypress.on('uncaught:exception', (err) => {
 });
 
 Cypress.config('defaultCommandTimeout', 30000);
+Cypress.config('retries', {runMode: 2});
 
 Cypress.Commands.add('login', ({email, password}) => {
   cy.get('input[name=email]').clear();
