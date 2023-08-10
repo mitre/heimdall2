@@ -1,5 +1,3 @@
-/*eslint-disable cypress/no-async-tests*/
-
 import {
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION,
@@ -21,15 +19,18 @@ context('Results', () => {
   const uploadModal = new UploadModal();
   const userModalVerifier = new UserModalVerifier();
 
+  // Run before each test
+  beforeEach(() => {
+    cy.register(CREATE_USER_DTO_TEST_OBJ);
+    cy.visit('/login');
+    cy.login(LOGIN_AUTHENTICATION);
+    toastVerifier.toastTextContains('You have successfully signed in.');
+    cy.get('#hide-snackbar').click();
+  });
+
   // The test
   describe('Results', () => {
-    it('displays correct data for the Acme Overlay Example sample', async () => {
-      cy.register(CREATE_USER_DTO_TEST_OBJ);
-      cy.visit('/login');
-      cy.login(LOGIN_AUTHENTICATION);
-      toastVerifier.toastTextContains('You have successfully signed in.');
-      cy.get('#hide-snackbar').click();
-
+    it('displays correct data for the Acme Overlay Example sample', () => {
       // Load first sample
       uploadModal.loadSample('Acme Overlay Example');
       // Open profile info
@@ -42,13 +43,7 @@ context('Results', () => {
   });
 
   describe('User Modal', () => {
-    it('successfully opens and displays the user modal and allows users to change their data', async () => {
-      cy.register(CREATE_USER_DTO_TEST_OBJ);
-      cy.visit('/login');
-      cy.login(LOGIN_AUTHENTICATION);
-      toastVerifier.toastTextContains('You have successfully signed in.');
-      cy.get('#hide-snackbar').click();
-
+    it('successfully opens and displays the user modal and allows users to change their data', () => {
       // Open the user modal
       dropdown.openUserModal();
       // Make sure all the fields exist

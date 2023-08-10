@@ -25,7 +25,7 @@ Cypress.on('uncaught:exception', (err) => {
   // Return false if the error messaage includes `getBoundingClientRect`
   return !err.message.includes('getBoundingClientRect');
 });
-Cypress.config('defaultCommandTimeout', 30000);
+
 Cypress.Commands.add('login', ({email, password}) => {
   cy.get('input[name=email]').clear();
   cy.get('input[name=email]').type(email);
