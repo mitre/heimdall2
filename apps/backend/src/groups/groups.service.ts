@@ -9,11 +9,13 @@ import {FindOptions} from 'sequelize/types';
 import winston from 'winston';
 import AppConfig from '../../config/app_config';
 import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {GroupUser} from '../group-users/group-user.model';
 import {User} from '../users/user.model';
 import {CreateGroupDto} from './dto/create-group.dto';
 import {UpdateGroupUserRoleDto} from './dto/update-group-user.dto';
 import {Group} from './group.model';
+
 @Injectable()
 export class GroupsService {
   public logger = winston.createLogger({
