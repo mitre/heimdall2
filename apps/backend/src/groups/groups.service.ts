@@ -6,7 +6,6 @@ import {
 import {InjectModel} from '@nestjs/sequelize';
 import {Op} from 'sequelize';
 import {FindOptions} from 'sequelize/types';
-import {GroupRelationsService} from 'src/group-relations/group-relations.service';
 import winston from 'winston';
 import AppConfig from '../../config/app_config';
 import {Evaluation} from '../evaluations/evaluation.model';
