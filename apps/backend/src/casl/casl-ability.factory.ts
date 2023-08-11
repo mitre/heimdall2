@@ -84,7 +84,7 @@ export class CaslAbilityFactory {
       }
     );
 
-    can<GroupQuery>([Action.Manage], Group, {
+    can<GroupQuery>([Action.Update], Group, {
       users: {
         $elemMatch: {id: user.id, 'GroupUser.role': 'owner'}
       }
