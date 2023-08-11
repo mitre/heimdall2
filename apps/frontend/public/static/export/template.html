@@ -47,7 +47,7 @@
           data-te-dropdown-toggle-ref
           href="#resultSetsList"
           role="button"
-          aria-results="resultSetsList"
+          aria-controls="resultSetsList"
           aria-expanded="false"
           aria-label="Toggle navigation dropdown"
         >
@@ -90,7 +90,7 @@
         data-te-collapse-init
         data-te-target=".multi-collapse-outer"
         aria-expanded="true"
-        aria-results="result-accordion-body"
+        aria-controls="result-accordion-body"
       >
         Toggle Result Sets Expansion
       </button>
@@ -101,7 +101,7 @@
         data-te-collapse-init
         data-te-target=".multi-collapse-inner"
         aria-expanded="true"
-        aria-results="result-accordion-body"
+        aria-controls="result-accordion-body"
       >
         Toggle Results Expansion
       </button>
@@ -238,7 +238,7 @@
             data-te-collapse-init
             data-te-target="#collapseable-{{fileID}}"
             aria-expanded="true"
-            aria-results="collapseable-{{fileID}}"
+            aria-controls="collapseable-{{fileID}}"
           >
             {{filename}}
             <span
@@ -314,7 +314,7 @@
                 data-te-collapse-init
                 data-te-target="#result-accordion-body-{{resultID}}"
                 aria-expanded="true"
-                aria-results="result-accordion-body-{{resultID}}"
+                aria-controls="result-accordion-body-{{resultID}}"
               >
                 <!-- Result status indicator wrapper -->
                 <!-- All headers eventually collapse under status column -->

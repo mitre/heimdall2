@@ -325,15 +325,17 @@ export default class ExportHTMLModal extends Vue {
   iconDataToSVG(
     iconData: string,
     fill: string,
-    description = 'None',
     widthPx = 24,
-    heightPx = 24
+    heightPx = 24,
+    description?: string
   ): string {
-    if (description === 'None') {
-      return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}" role="img" aria-hidden="true"><path fill="${fill}" d="${iconData}"/></svg>`;
+    let imgLabel;
+    if (description === null) {
+      imgLabel = `aria-hidden="true"`;
     } else {
-      return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}" role="img" title="${description}" aria-label="${description}"><path fill="${fill}" d="${iconData}"/></svg>`;
+      imgLabel = `title="${description}" aria-label="${description}"`;
     }
+    return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}" role="img" ${imgLabel}><path fill="${fill}" d="${iconData}"/></svg>`;
   }
 
   // Invoked when file(s) are loaded.
