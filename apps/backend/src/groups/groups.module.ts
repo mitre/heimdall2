@@ -1,5 +1,7 @@
 import {forwardRef, Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
+import {GroupRelation} from 'src/group-relations/group-relation.model';
+import {GroupRelationsService} from 'src/group-relations/group-relations.service';
 import {ApiKeyModule} from '../apikeys/apikeys.module';
 import {AuthzModule} from '../authz/authz.module';
 import {ConfigModule} from '../config/config.module';
@@ -12,7 +14,7 @@ import {GroupsService} from './groups.service';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([Group]),
+    SequelizeModule.forFeature([Group, GroupRelation]),
     ApiKeyModule,
     AuthzModule,
     ConfigModule,
@@ -20,7 +22,7 @@ import {GroupsService} from './groups.service';
     EvaluationsModule,
     EvaluationTagsModule
   ],
-  providers: [GroupsService],
+  providers: [GroupsService, GroupRelationsService],
   controllers: [GroupsController],
   exports: [GroupsService]
 })

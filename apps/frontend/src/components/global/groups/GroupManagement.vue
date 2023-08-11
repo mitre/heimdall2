@@ -52,29 +52,6 @@
               <v-card-title> No Group Selected. </v-card-title>
             </v-card>
             <v-card v-else :key="selectedGroup.id" flat>
-              <v-card-actions v-if="isOwner || adminPanel">
-                <GroupModal
-                  id="editGroupModal"
-                  :create="false"
-                  :admin="adminPanel"
-                  :group="selectedGroup"
-                  @group-saved="setSelectedGroupId"
-                >
-                  <template #clickable="{on}">
-                    <v-btn title="Edit" data-cy="edit" text v-on="on">
-                      Edit <v-icon small>mdi-pencil</v-icon>
-                    </v-btn>
-                  </template>
-                </GroupModal>
-                <v-btn
-                  title="Delete"
-                  data-cy="delete"
-                  text
-                  @click="deleteGroupDialog(selectedGroup)"
-                >
-                  Delete <v-icon small>mdi-delete</v-icon>
-                </v-btn>
-              </v-card-actions>
               <v-card-title>
                 {{ selectedGroup.name }}
               </v-card-title>
@@ -129,6 +106,30 @@
                 </div>
               </v-card-text>
               <v-card-text v-else>None</v-card-text>
+              <v-card-actions v-if="isOwner || adminPanel">
+                <GroupModal
+                  id="editGroupModal"
+                  :create="false"
+                  :admin="adminPanel"
+                  :group="selectedGroup"
+                  @group-saved="setSelectedGroupId"
+                >
+                  <template #clickable="{on}">
+                    <v-btn title="Edit" data-cy="edit" v-on="on">
+                      Edit <v-icon small>mdi-pencil</v-icon>
+                    </v-btn>
+                  </template>
+                </GroupModal>
+                <v-btn
+                  v-if="adminPanel"
+                  title="Delete"
+                  data-cy="delete"
+                  class="ml-2"
+                  @click="deleteGroupDialog(selectedGroup)"
+                >
+                  Delete <v-icon small>mdi-delete</v-icon>
+                </v-btn>
+              </v-card-actions>
             </v-card>
           </v-scroll-y-transition>
         </v-container>
@@ -166,7 +167,7 @@ import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
 import {GroupRelationsModule} from '@/store/group_relations';
 import {SnackbarModule} from '@/store/snackbar';
-import {IGroup, IGroupRelation, ISlimUser} from '@heimdall/interfaces';
+import {IGroup, ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -313,18 +314,6 @@ export default class GroupManagement extends Vue {
 
   deleteGroupConfirm(): void {
     if (this.editedGroup) {
-      // First delete the group relations
-      const associatedRelations: IGroupRelation[] =
-        GroupRelationsModule.allGroupRelations.filter(
-          (relation) =>
-            relation.childId === this.editedGroup?.id ||
-            relation.parentId === this.editedGroup?.id
-        );
-      associatedRelations.forEach(async (relation) => {
-        await GroupRelationsModule.DeleteGroupRelation(relation);
-      });
-
-      // Then delete the group itself
       GroupsModule.DeleteGroup(this.editedGroup)
         .then((data) => {
           SnackbarModule.notify(`Successfully deleted group ${data.name}`);

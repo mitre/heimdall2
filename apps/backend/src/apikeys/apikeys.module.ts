@@ -1,5 +1,7 @@
 import {Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
+import {GroupRelation} from 'src/group-relations/group-relation.model';
+import {GroupRelationsService} from 'src/group-relations/group-relations.service';
 import {AuthnService} from '../authn/authn.service';
 import {AuthzModule} from '../authz/authz.module';
 import {ConfigModule} from '../config/config.module';
@@ -15,7 +17,7 @@ import {ApiKeyService} from './apikey.service';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([ApiKey, User, Group]),
+    SequelizeModule.forFeature([ApiKey, User, Group, GroupRelation]),
     AuthzModule,
     ConfigModule,
     ApiKeyModule,
@@ -26,6 +28,7 @@ import {ApiKeyService} from './apikey.service';
     AuthnService,
     UsersService,
     GroupsService,
+    GroupRelationsService,
     ApiKeyService
   ],
   exports: [SequelizeModule, ApiKeyService],

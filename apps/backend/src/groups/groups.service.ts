@@ -6,6 +6,7 @@ import {
 import {InjectModel} from '@nestjs/sequelize';
 import {Op} from 'sequelize';
 import {FindOptions} from 'sequelize/types';
+import {GroupRelationsService} from 'src/group-relations/group-relations.service';
 import winston from 'winston';
 import AppConfig from '../../config/app_config';
 import {Evaluation} from '../evaluations/evaluation.model';
@@ -29,7 +30,8 @@ export class GroupsService {
     @InjectModel(Group)
     private readonly groupModel: typeof Group,
     @InjectModel(User)
-    private readonly userModel: typeof User
+    private readonly userModel: typeof User,
+    private readonly groupRelationsService: GroupRelationsService
   ) {}
 
   async findAll(): Promise<Group[]> {
@@ -184,6 +186,17 @@ export class GroupsService {
   }
 
   async remove(groupToDelete: Group): Promise<Group> {
+    // Get all the descendants of the group
+    const descendants = await this.findByIds(
+      await this.groupRelationsService.getAllDescendants(groupToDelete.id)
+    );
+    // Delete associated descendants
+    await Promise.all(
+      descendants.map(async (descendant) => {
+        await descendant.destroy();
+      })
+    );
+
     await groupToDelete.destroy();
 
     return groupToDelete;

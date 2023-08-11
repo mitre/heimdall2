@@ -4,6 +4,8 @@ import {ConfigModule} from '../config/config.module';
 import {DatabaseModule} from '../database/database.module';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupRelation} from '../group-relations/group-relation.model';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
@@ -20,12 +22,18 @@ import {EvaluationsService} from './evaluations.service';
       User,
       Group,
       GroupUser,
-      GroupEvaluation
+      GroupEvaluation,
+      GroupRelation
     ]),
     ConfigModule,
     DatabaseModule
   ],
-  providers: [EvaluationsService, UsersService, GroupsService],
+  providers: [
+    EvaluationsService,
+    UsersService,
+    GroupsService,
+    GroupRelationsService
+  ],
   controllers: [EvaluationsController],
   exports: [EvaluationsService]
 })
