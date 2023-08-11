@@ -330,10 +330,10 @@ export default class ExportHTMLModal extends Vue {
     description?: string
   ): string {
     let imgLabel;
-    if (description === null) {
-      imgLabel = `aria-hidden="true"`;
-    } else {
+    if (description) {
       imgLabel = `title="${description}" aria-label="${description}"`;
+    } else {
+      imgLabel = `aria-hidden="true"`;
     }
     return `<svg style="width:${widthPx}px; height:${heightPx}px" viewBox="0 0 ${widthPx} ${heightPx}" role="img" ${imgLabel}><path fill="${fill}" d="${iconData}"/></svg>`;
   }
