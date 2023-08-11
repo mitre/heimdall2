@@ -152,7 +152,7 @@
     <ActionDialog
       v-model="dialogDelete"
       type="group"
-      message="Deleting this group will move all children to the top level."
+      message="WARNING: Deleting this group will also delete its all children."
       @cancel="closeActionDialog"
       @confirm="deleteGroupConfirm"
     />
