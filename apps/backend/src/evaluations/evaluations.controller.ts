@@ -95,7 +95,22 @@ export class EvaluationsController {
 
     return evaluations.map(
       (evaluation) =>
-        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+        new EvaluationDto(
+          evaluation,
+          abac.can(Action.Update, evaluation) ||
+            evaluation.groups.some((group) =>
+              this.groupRelationsService
+                .getAllDescendants(group.id)
+                .then((descendants) =>
+                  descendants.some(async (descendant) =>
+                    abac.can(
+                      Action.Update,
+                      await this.groupsService.findByPkBang(descendant)
+                    )
+                  )
+                )
+            )
+        )
     );
   }
 
