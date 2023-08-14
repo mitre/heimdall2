@@ -1,7 +1,7 @@
 <template>
   <v-card>
     <v-card-title class="pb-0">
-      <GroupModal id="groupModal" :create="true">
+      <GroupModal id="groupModal" :create="true" :admin="adminPanel">
         <template #clickable="{on, attrs}">
           <v-btn
             color="primary"
@@ -171,6 +171,7 @@ import {IGroup, ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {getAllDescendants} from '@/utilities/group_relations_util';
 
 export type Tree = {
   id: string;
@@ -260,6 +261,7 @@ export default class GroupManagement extends Vue {
 
   get visibleGroups() {
     let groups: IGroup[] = GroupsModule.myGroups;
+    // TODO: We gotta make the parent groups of a child visible
     if (this.adminPanel) {
       groups = GroupsModule.myGroups.concat(
         GroupsModule.allGroups.filter(

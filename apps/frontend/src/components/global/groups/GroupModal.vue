@@ -203,7 +203,8 @@ export default class GroupModal extends Vue {
     const groups = GroupsModule.myGroups.filter(
       (group) =>
         group.id !== this.groupInfo.id &&
-        !descendants.some((descendant) => descendant === group.id)
+        !descendants.some((descendant) => descendant === group.id) &&
+        (this.admin || group.role === 'owner')
     );
     return groups.map((group) => {
       return {
