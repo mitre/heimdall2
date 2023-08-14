@@ -610,7 +610,10 @@ export default class ExportHTMLModal extends Vue {
 
     const template = responses[0].data;
     this.outputData.tailwindStyles = responses[1].data;
-    this.outputData.tailwindElements = responses[2].data;
+    this.outputData.tailwindElements = responses[2].data.replace(
+      '//# sourceMappingURL=tw-elements.umd.min.js.map',
+      ''
+    );
 
     for (const fileId of this.filter.fromFile) {
       const file = InspecDataModule.allFiles.find((f) => f.uniqueId === fileId);
