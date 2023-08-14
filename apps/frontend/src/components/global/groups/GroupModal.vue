@@ -115,6 +115,7 @@ import {GroupRelationsModule} from '@/store/group_relations';
 import {GroupsModule} from '@/store/groups';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
+import {getAllDescendants} from '@/utilities/group_relations_util';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import {
   IAddGroupRelation,
@@ -197,26 +198,8 @@ export default class GroupModal extends Vue {
     this.parentGroupIdInternal = updatedParentGroupId;
   }
 
-  getAllDescendants(parentId: string): string[] {
-    let descendants: string[] = [];
-    const adjacentRelations = this.getAdjacentRelations(parentId);
-    for (const relation of adjacentRelations) {
-      descendants.push(relation.childId);
-      descendants = descendants.concat(
-        this.getAllDescendants(relation.childId)
-      );
-    }
-    return descendants;
-  }
-
-  getAdjacentRelations(parentId: string): IGroupRelation[] {
-    return GroupRelationsModule.allGroupRelations.filter(
-      (relation) => relation.parentId === parentId
-    );
-  }
-
   get availableGroups(): IVuetifyItems[] {
-    const descendants = this.getAllDescendants(this.group.id);
+    const descendants = getAllDescendants(this.group.id);
     const groups = GroupsModule.myGroups.filter(
       (group) =>
         group.id !== this.groupInfo.id &&
