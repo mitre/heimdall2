@@ -1,4 +1,4 @@
-import { defineConfig } from 'cypress'
+import {defineConfig} from 'cypress';
 
 export default defineConfig({
   fixturesFolder: false,
@@ -9,8 +9,11 @@ export default defineConfig({
     setupNodeEvents(on, config) {},
     baseUrl: 'http://127.0.0.1:3000',
     supportFile: 'test/support/index.ts',
-    specPattern: 'test/integration/**/*.cy.{js,jsx,ts,tsx}',
+    specPattern: 'test/integration/**/*.cy.{js,jsx,ts,tsx}'
   },
-  defaultCommandTimeout: 10000,
-  requestTimeout: 10000
-})
+  // Extends timeout counter to 30000 ms
+  defaultCommandTimeout: 30000,
+  requestTimeout: 10000,
+  // Forces failed tests to retry up to 2 times
+  retries: {runMode: 2}
+});

@@ -26,11 +26,6 @@ Cypress.on('uncaught:exception', (err) => {
   return !err.message.includes('getBoundingClientRect');
 });
 
-// Extends timeout counter to 30000 ms
-Cypress.config('defaultCommandTimeout', 30000);
-// Forces failed tests to retry up to 2 times
-Cypress.config('retries', {runMode: 2});
-
 Cypress.Commands.add('login', ({email, password}) => {
   cy.get('input[name=email]').clear();
   cy.get('input[name=email]').type(email);
