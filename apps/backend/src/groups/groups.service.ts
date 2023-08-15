@@ -159,7 +159,16 @@ export class GroupsService {
   }
 
   async create(createGroupDto: CreateGroupDto): Promise<Group> {
-    const group = new Group({...createGroupDto});
+    if (
+      (await this.groupModel.findAll({where: {name: createGroupDto.name}}))
+        .length > 0
+    ) {
+      throw new ForbiddenException(
+        'Duplicate key detected. The names of groups must be unique.'
+      );
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const group = new Group(createGroupDto as any);
     return group.save();
   }
 
