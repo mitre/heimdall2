@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   Param,
   Post,
@@ -46,7 +47,6 @@ export class GroupRelationsController {
     @Request() request: {user: User},
     @Body() addGroupRelationDto: AddGroupRelationDto
   ) {
-    // Check that the user has access to update both child and parent groups
     const abac = this.authz.abac.createForUser(request.user);
     const parentGroup = await this.groupsService.findByPkBang(
       addGroupRelationDto.parentId
@@ -55,8 +55,14 @@ export class GroupRelationsController {
       addGroupRelationDto.childId
     );
 
+    // Check that the user has access to update both child and parent groups
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, parentGroup);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, childGroup);
+
+    // Check that neither of the groups is private
+    if (!parentGroup.public || !childGroup.public) {
+      throw new ForbiddenException('Private groups cannot be nested');
+    }
 
     const groupRelation = await this.groupRelationsService.create(
       addGroupRelationDto
@@ -70,7 +76,6 @@ export class GroupRelationsController {
     @Param('id') id: string,
     @Body() updateGroupRelation: AddGroupRelationDto
   ): Promise<GroupRelationDto> {
-    // Check that the user has access to update both child and parent groups
     const abac = this.authz.abac.createForUser(request.user);
     const parentGroup = await this.groupsService.findByPkBang(
       updateGroupRelation.parentId
@@ -79,8 +84,14 @@ export class GroupRelationsController {
       updateGroupRelation.childId
     );
 
+    // Check that the user has access to update both child and parent groups
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, parentGroup);
     ForbiddenError.from(abac).throwUnlessCan(Action.Update, childGroup);
+
+    // Check that neither of the groups is private
+    if (!parentGroup.public || !childGroup.public) {
+      throw new ForbiddenException('Private groups cannot be nested');
+    }
 
     const groupRelationToUpdate = await this.groupRelationsService.findByPkBang(
       id
