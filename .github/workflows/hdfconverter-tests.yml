@@ -2,7 +2,7 @@ name: Run HDF-Converters Tests
 
 on:
   push:
-    branches: [master, updateNodeVersionTo18]
+    branches: [master]
   pull_request:
     branches: [master]
 

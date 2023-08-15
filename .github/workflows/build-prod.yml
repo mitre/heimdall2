@@ -2,7 +2,7 @@ name: Build in production mode
 
 on:
   push:
-    branches: [master, updateNodeVersionTo18]
+    branches: [master]
   pull_request:
     branches: [master]
 
