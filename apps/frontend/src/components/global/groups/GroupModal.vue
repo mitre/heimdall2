@@ -251,7 +251,7 @@ export default class GroupModal extends Vue {
       await GroupsModule.UpdateGroupById(group.id);
       await this.syncUsersWithGroup(group);
 
-      if (!groupInfo.public) {
+      if (!group.public) {
         const adjacentRelations = GroupRelationsModule.allGroupRelations.filter(
           (relation) =>
             relation.childId === group.id || relation.parentId === group.id
@@ -310,7 +310,9 @@ export default class GroupModal extends Vue {
 
   async cancel(): Promise<void> {
     this.dialog = false;
-    this.groupInfo = _.cloneDeep(this.group); // Reset the working state of the edit operation
+    this.group
+      ? (this.groupInfo = _.cloneDeep(this.group))
+      : (this.groupInfo = newGroup()); // Reset the working state of the edit operation
   }
 
   async createGroup(createGroup: ICreateGroup): Promise<AxiosResponse<IGroup>> {

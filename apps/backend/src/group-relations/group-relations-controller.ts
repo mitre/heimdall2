@@ -1,3 +1,4 @@
+import {ForbiddenError} from '@casl/ability';
 import {
   Body,
   Controller,
@@ -6,16 +7,29 @@ import {
   Param,
   Post,
   Put,
-  Request
+  Request,
+  UseGuards,
+  UseInterceptors
 } from '@nestjs/common';
+import {AuthzService} from '../authz/authz.service';
+import {Action} from '../casl/casl-ability.factory';
+import {GroupsService} from '../groups/groups.service';
+import {JwtAuthGuard} from '../guards/jwt-auth.guard';
+import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {AddGroupRelationDto} from './dto/add-group-relation.dto';
 import {GroupRelationDto} from './dto/group-relation.dto';
 import {GroupRelationsService} from './group-relations.service';
 
 @Controller('group-relations')
+@UseGuards(JwtAuthGuard)
+@UseInterceptors(LoggingInterceptor)
 export class GroupRelationsController {
-  constructor(private readonly groupRelationsService: GroupRelationsService) {}
+  constructor(
+    private readonly groupsService: GroupsService,
+    private readonly groupRelationsService: GroupRelationsService,
+    private readonly authz: AuthzService
+  ) {}
 
   @Get()
   async findAll(
@@ -29,22 +43,45 @@ export class GroupRelationsController {
 
   @Post()
   async create(
-    @Request() _request: {user: User},
+    @Request() request: {user: User},
     @Body() addGroupRelationDto: AddGroupRelationDto
   ) {
+    // Check that the user has access to update both child and parent groups
+    const abac = this.authz.abac.createForUser(request.user);
+    const parentGroup = await this.groupsService.findByPkBang(
+      addGroupRelationDto.parentId
+    );
+    const childGroup = await this.groupsService.findByPkBang(
+      addGroupRelationDto.childId
+    );
+
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, parentGroup);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, childGroup);
+
     const groupRelation = await this.groupRelationsService.create(
       addGroupRelationDto
     );
     return new GroupRelationDto(groupRelation);
   }
 
-  // TODO: Figure out how the "ability factory" works
   @Put(':id')
   async update(
-    @Request() _request: {user: User},
+    @Request() request: {user: User},
     @Param('id') id: string,
     @Body() updateGroupRelation: AddGroupRelationDto
   ): Promise<GroupRelationDto> {
+    // Check that the user has access to update both child and parent groups
+    const abac = this.authz.abac.createForUser(request.user);
+    const parentGroup = await this.groupsService.findByPkBang(
+      updateGroupRelation.parentId
+    );
+    const childGroup = await this.groupsService.findByPkBang(
+      updateGroupRelation.childId
+    );
+
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, parentGroup);
+    ForbiddenError.from(abac).throwUnlessCan(Action.Update, childGroup);
+
     const groupRelationToUpdate = await this.groupRelationsService.findByPkBang(
       id
     );

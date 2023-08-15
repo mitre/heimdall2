@@ -171,7 +171,6 @@ import {IGroup, ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {getAllDescendants} from '@/utilities/group_relations_util';
 
 export type Tree = {
   id: string;
