@@ -15,7 +15,7 @@ import {
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 
-function filterSite<T extends unknown[]>(input: Array<T>, name?: string) {
+function filterSite<T>(input: Array<T>, name?: string) {
   // Choose passed site if provided
   if (name) {
     return input.find(
