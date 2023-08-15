@@ -17,6 +17,8 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {GroupEvaluationsModule} from '../group-evaluations/group-evaluations.module';
+import {GroupRelation} from '../group-relations/group-relation.model';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {GroupUser} from '../group-users/group-user.model';
 import {GroupUsersModule} from '../group-users/group-users.module';
 import {UserDto} from '../users/dto/user.dto';
@@ -38,6 +40,7 @@ describe('GroupsService', () => {
         SequelizeModule.forFeature([
           Group,
           GroupUser,
+          GroupRelation,
           Evaluation,
           EvaluationTag,
           User
@@ -47,6 +50,7 @@ describe('GroupsService', () => {
       ],
       providers: [
         GroupsService,
+        GroupRelationsService,
         DatabaseService,
         UsersService,
         EvaluationsService

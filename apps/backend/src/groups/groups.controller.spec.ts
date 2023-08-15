@@ -19,6 +19,8 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupRelation} from '../group-relations/group-relation.model';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {GroupUser} from '../group-users/group-user.model';
 import {SlimUserDto} from '../users/dto/slim-user.dto';
 import {User} from '../users/user.model';
@@ -47,6 +49,7 @@ describe('GroupsController', () => {
           Group,
           GroupUser,
           GroupEvaluation,
+          GroupRelation,
           Evaluation,
           EvaluationTag,
           User
@@ -56,6 +59,7 @@ describe('GroupsController', () => {
         AuthzService,
         DatabaseService,
         GroupsService,
+        GroupRelationsService,
         UsersService,
         EvaluationsService
       ]

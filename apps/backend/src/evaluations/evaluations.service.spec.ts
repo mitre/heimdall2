@@ -16,6 +16,7 @@ import {DatabaseService} from '../database/database.service';
 import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
 import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupRelation} from '../group-relations/group-relation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
@@ -42,6 +43,7 @@ describe('EvaluationsService', () => {
           Evaluation,
           GroupUser,
           Group,
+          GroupRelation,
           GroupEvaluation
         ]),
         EvaluationTagsModule,

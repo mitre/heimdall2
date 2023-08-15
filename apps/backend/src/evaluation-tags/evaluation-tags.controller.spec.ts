@@ -15,6 +15,8 @@ import {DatabaseService} from '../database/database.service';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupRelation} from '../group-relations/group-relation.model';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
@@ -46,7 +48,8 @@ describe('EvaluationTagsController', () => {
           User,
           GroupEvaluation,
           Group,
-          GroupUser
+          GroupUser,
+          GroupRelation
         ])
       ],
       providers: [
@@ -55,7 +58,8 @@ describe('EvaluationTagsController', () => {
         EvaluationTagsService,
         UsersService,
         EvaluationsService,
-        GroupsService
+        GroupsService,
+        GroupRelationsService
       ]
     }).compile();
 
