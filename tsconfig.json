@@ -11,8 +11,7 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false,
-    "skipLibCheck": true
+    "useUnknownInCatchVariables": false
   },
   "include": ["apps/frontend/src/*","types/**/*.d.ts"],
   "exclude": ["**/node_modules"]
