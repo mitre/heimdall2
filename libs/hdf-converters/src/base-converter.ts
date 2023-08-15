@@ -198,7 +198,9 @@ export class BaseConverter {
       >;
     }
 
-    const result = this.objectMap(fields as T[], (v) => this.evaluate(file, v as T & object & ILookupPath));
+    const result = this.objectMap(fields as T[], (v) =>
+      this.evaluate(file, v as T & object & ILookupPath)
+    );
     return result as MappedReform<T, ILookupPath>;
   }
 

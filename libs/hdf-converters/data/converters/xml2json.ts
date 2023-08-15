@@ -1,5 +1,5 @@
 import fs from 'fs';
-import _, {ValueIteratee} from 'lodash';
+import _ from 'lodash';
 import xml2js from 'xml2js';
 
 const parser = new xml2js.Parser();
@@ -41,9 +41,7 @@ if (!pathToInfile || !pathToOutfile) {
             // Get the latest reference
             const newestReference = _.maxBy(
               cciItem.references[0].reference,
-              '$.version' as
-                | ValueIteratee<{$: Record<string, string>}>
-                | undefined
+              (item) => _.get(item, '$.version')
             );
             if (newestReference) {
               result[cciItem.$.id] = newestReference.$.index;
