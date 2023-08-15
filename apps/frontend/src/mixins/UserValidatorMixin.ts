@@ -3,7 +3,7 @@ import {Component, Vue} from 'vue-property-decorator';
 import ValidationProperties from 'vue/types/vue';
 import {validationMixin} from 'vuelidate';
 
-@Component<UserValidatorMixin>({
+@Component({
   mixins: [validationMixin]
 })
 export default class UserValidatorMixin extends Vue {

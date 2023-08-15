@@ -54,7 +54,7 @@ export interface LDAPLoginHash {
   password: string;
 }
 
-@Component<LDAPLogin>({
+@Component({
   mixins: [UserValidatorMixin],
   validations: {
     username: {
