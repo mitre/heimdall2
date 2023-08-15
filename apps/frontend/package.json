@@ -154,7 +154,7 @@
     "webpack": "5.75.0"
   },
   "engines": {
-    "node": "^18.10.0"
+    "node": "^18.00.0"
   },
   "branch": "/blob/master/",
   "changelog": "/releases",
