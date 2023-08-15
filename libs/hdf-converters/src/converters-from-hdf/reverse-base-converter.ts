@@ -53,8 +53,7 @@ export class FromHdfBaseConverter {
     file: object,
     v: T | Array<T>
   ): T | Array<T> | MappedReform<T, ILookupPathFH> {
-    // eslint-disable-next-line @typescript-eslint/ban-types
-    const transformer = _.get(v, 'transformer') as Function;
+    const transformer = _.get(v, 'transformer') as any;
     if (Array.isArray(v)) {
       return this.handleArray(file, v);
     }
