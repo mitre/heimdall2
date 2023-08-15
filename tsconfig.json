@@ -13,6 +13,10 @@
     "resolveJsonModule": true,
     "useUnknownInCatchVariables": false
   },
-  "include": ["apps/frontend/src/*","types/**/*.d.ts"],
-  "exclude": ["**/node_modules"]
+  "include": [
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "**/node_modules"
+  ]
 }
