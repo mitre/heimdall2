@@ -7,7 +7,6 @@
     "test"
   ],
   "scripts": {
-    "postinstall": "yarn patch-package",
     "backend": "yarn workspace heimdall-server",
     "build": "lerna run build",
     "cypress-test": "yarn workspace @heimdall/cypress-tests",
@@ -30,8 +29,6 @@
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^4.0.0",
     "lerna": "^5.0.0",
-    "patch-package": "^6.5.1",
-    "postinstall-postinstall": "^2.1.0",
     "prettier": "^2.1.2",
     "prettier-plugin-organize-imports": "^3.0.0",
     "typescript": "^4.9.3"
