@@ -13,7 +13,6 @@
     "incremental": true,
     "strict": true,
     "alwaysStrict": false,
-    "noImplicitUseStrict": true,
     "lib": ["ES5", "es2020", "DOM"],
     "paths": {}
   },

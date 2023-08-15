@@ -20,8 +20,7 @@
       "v-clipboard": ["src/types/v-clipboard/index"]
     },
     "lib": ["ES2019", "dom", "dom.iterable", "scripthost"],
-    "alwaysStrict": false,
-    "noImplicitUseStrict": true
+    "alwaysStrict": false
   },
   "include": [
     "src/**/*.ts",
