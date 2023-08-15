@@ -138,7 +138,7 @@ function newGroup(): IGroup {
     id: '-1',
     name: '',
     role: '',
-    public: false,
+    public: true,
     createdAt: new Date(),
     updatedAt: new Date(),
     desc: '',
