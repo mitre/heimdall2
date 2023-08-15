@@ -28,6 +28,6 @@ tests/hdf_data/inspec_tools_info
 *.sln
 *.sw?
 
-# HTML Export Dependencies/Stylesheets
+# HTML Export Stylesheet/Dependency
 public/static/export/style.css
 public/static/export/tw-elements.min.js
