@@ -196,8 +196,8 @@ export class FromHDFToCAATMapper {
   }
 
   // returnWorkBook: true -> raw workbook class
-  // returnWorkBook: false | undefined -> binary string
-  toCAAT(returnWorkBook?: false) {
+  // returnWorkBook: false | undefined -> binary string by default otherwise whatever is specified in the options parameter
+  toCAAT(returnWorkBook?: false, options: XLSX.WritingOptions = {bookType: 'xlsx', type: 'binary'}) {
     // Sheet names must be unique across the workbook
     const takenSheetNames: string[] = [];
 
@@ -252,6 +252,6 @@ export class FromHDFToCAATMapper {
     if (returnWorkBook) {
       return wb;
     }
-    return XLSX.write(wb, {bookType: 'xlsx', type: 'binary'});
+    return XLSX.write(wb, options);
   }
 }
