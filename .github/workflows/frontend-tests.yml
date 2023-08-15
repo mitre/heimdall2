@@ -23,7 +23,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18.10.0'
+          node-version: '18.12.0'
           cache: 'yarn'
 
       - name: Remove backend code to ensure the proper dependencies are declared in the frontend package.json
