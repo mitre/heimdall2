@@ -41,6 +41,8 @@
                 <span>
                   This will make the group name visible to all logged in users.
                   It will not expose any results or profiles added to the group.
+                  Also note that private groups CANNOT have any associated
+                  parent or child groups.
                 </span>
               </v-tooltip>
             </v-col>
@@ -51,6 +53,7 @@
             label="Parent Group (optional)"
             chips
             deletable-chips
+            :disabled="!groupInfo.public"
           />
           <v-textarea
             v-model="groupInfo.desc"
@@ -204,7 +207,8 @@ export default class GroupModal extends Vue {
       (group) =>
         group.id !== this.groupInfo.id &&
         !descendants.some((descendant) => descendant === group.id) &&
-        (this.admin || group.role === 'owner')
+        (this.admin || group.role === 'owner') &&
+        group.public
     );
     return groups.map((group) => {
       return {
@@ -247,31 +251,43 @@ export default class GroupModal extends Vue {
       await GroupsModule.UpdateGroupById(group.id);
       await this.syncUsersWithGroup(group);
 
-      let groupRelation = GroupRelationsModule.allGroupRelations.find(
-        (groupRelation) => groupRelation.childId === group.id
-      );
-      // If there is an existing relation, either update or delete it. If not, add a new one.
-      if (groupRelation) {
-        if (this.parentGroupIdInternal) {
-          await this.updateExistingGroupRelation({
-            parentId: this.parentGroupIdInternal,
-            childId: group.id
-          });
-        } else {
-          await GroupRelationsModule.DeleteGroupRelation(groupRelation);
-        }
+      if (!groupInfo.public) {
+        const adjacentRelations = GroupRelationsModule.allGroupRelations.filter(
+          (relation) =>
+            relation.childId === group.id || relation.parentId === group.id
+        );
+        await Promise.all(
+          adjacentRelations.map((relation) =>
+            GroupRelationsModule.DeleteGroupRelation(relation)
+          )
+        );
       } else {
-        if (this.parentGroupIdInternal) {
-          groupRelation = (
-            await this.addGroupRelation({
+        let groupRelation = GroupRelationsModule.allGroupRelations.find(
+          (groupRelation) => groupRelation.childId === group.id
+        );
+        // If there is an existing relation, either update or delete it. If not, add a new one.
+        if (groupRelation) {
+          if (this.parentGroupIdInternal) {
+            await this.updateExistingGroupRelation({
               parentId: this.parentGroupIdInternal,
               childId: group.id
-            })
-          ).data;
+            });
+          } else {
+            await GroupRelationsModule.DeleteGroupRelation(groupRelation);
+          }
+        } else {
+          if (this.parentGroupIdInternal) {
+            groupRelation = (
+              await this.addGroupRelation({
+                parentId: this.parentGroupIdInternal,
+                childId: group.id
+              })
+            ).data;
+          }
         }
-      }
-      if (groupRelation) {
-        await GroupRelationsModule.UpdateGroupRelationById(groupRelation.id);
+        if (groupRelation) {
+          await GroupRelationsModule.UpdateGroupRelationById(groupRelation.id);
+        }
       }
 
       // This clears when creating a new Group.
