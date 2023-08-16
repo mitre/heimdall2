@@ -238,6 +238,8 @@ export class FromHDFToCAATMapper {
         rows.push(...this.getRow(root, d.filename));
       }
 
+      rows.sort((x, y) => x['Finding Title']?.localeCompare(y['Finding Title'] ?? '') ?? 1)
+
       // Add rows to sheet
       const ws = XLSX.utils.json_to_sheet(
         rows,
