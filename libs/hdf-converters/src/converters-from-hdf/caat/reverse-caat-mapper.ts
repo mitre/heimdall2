@@ -48,6 +48,7 @@ type CAATRow = Partial<
 
 export class FromHDFToCAATMapper {
   static readonly MaxCellSize = 32000;
+  static readonly MaxSheetNameLength = 31;
 
   static readonly NistCanonizationConfig: CanonizationConfig = {
     max_specifiers: 3,
@@ -208,14 +209,10 @@ export class FromHDFToCAATMapper {
     for (const d of this.data) {
       // Ensure sheet name uniqueness
       let renameCount = 2;
-      let sheetName: string = `${
-        d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON'
-      }`.substring(0, 31);
+      const fullName = `${d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON'}`;
+      let sheetName: string = fullName.substring(0, FromHDFToCAATMapper.MaxSheetNameLength);
       while (takenSheetNames.includes(sheetName)) {
-        sheetName =
-          `${
-            d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON'
-          } `.substring(0, 26) + ` (${renameCount})`;
+        sheetName = fullName.substring(0, FromHDFToCAATMapper.MaxSheetNameLength - 5) + ` (${renameCount})`; // space for up to a 2 digit number; there's no check to stop it going past other than the workbook failing to be created, but that should be fine since the likelihood of someone having that many dupes is very slim
         renameCount++;
       }
       takenSheetNames.push(sheetName);
