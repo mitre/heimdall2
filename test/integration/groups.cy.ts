@@ -4,14 +4,14 @@ import {
 } from '../../apps/backend/test/constants/users-test.constant';
 import Dropdown from '../support/components/Dropdown';
 import GroupPage from '../support/pages/GroupPage';
-import DataTableVerifier from '../support/verifiers/DataTableVerifier';
 import ToastVerifier from '../support/verifiers/ToastVerifier';
+import TreeviewVerifier from '../support/verifiers/TreeviewVerifier';
 
 context('Groups', () => {
   const groupPage = new GroupPage();
   const dropdown = new Dropdown();
   const toastVerifier = new ToastVerifier();
-  const dataTableVerifier = new DataTableVerifier();
+  const treeviewVerifier = new TreeviewVerifier();
   const groupName1 = 'Test Group 1';
   const groupName2 = 'Test Group 2';
   const groupName3 = 'Test Group 3';
@@ -28,7 +28,7 @@ context('Groups', () => {
     it('allows a user to create a group', () => {
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName1);
-      dataTableVerifier.verifyTextPresent(groupName1);
+      treeviewVerifier.verifyTextPresent(groupName1);
     });
 
     it('allows a user to update a group', () => {
@@ -36,7 +36,7 @@ context('Groups', () => {
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName2);
       groupPage.updateGroup(groupName2, updatedGroupName);
-      dataTableVerifier.verifyTextPresent(updatedGroupName);
+      treeviewVerifier.verifyTextPresent(updatedGroupName);
     });
 
     it('allows a user to delete a group', () => {
@@ -46,7 +46,7 @@ context('Groups', () => {
       toastVerifier.toastTextContains(
         `Successfully deleted group ${groupName3}`
       );
-      dataTableVerifier.verifyTextPresent('No groups match current selection.');
+      treeviewVerifier.verifyTextPresent('No groups match current selection.');
     });
 
     it('fails to create a group with a duplicate name', () => {
