@@ -180,6 +180,8 @@ export interface SignupHash {
   }
 })
 export default class RegistrationModal extends Vue {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [x: string]: any;
   firstName = '';
   lastName = '';
   email = '';
