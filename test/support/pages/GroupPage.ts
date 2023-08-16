@@ -9,7 +9,7 @@ export default class GroupPage {
   }
 
   updateGroup(currentName: string, updatedName: string): void {
-    cy.contains('span', currentName).click();
+    cy.contains('span', currentName).parent().click();
     cy.get('[data-cy=edit]').click();
     cy.get('[data-cy=updateGroupForm').within(() => {
       cy.get('[data-cy=name]').clear();
