@@ -76,7 +76,7 @@ function deduplicateId(input: unknown[]): ExecJSON.Control[] {
   const controlId = input.map((element) => {
     return _.get(element, 'id');
   });
-  const dupId = _(controlId)
+  const dupId = _.chain(controlId)
     .groupBy()
     .pickBy((value) => value.length > 1)
     .keys()
