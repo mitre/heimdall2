@@ -76,41 +76,13 @@ export class EvaluationsController {
     const abac = this.authz.abac.createForUser(request.user);
     let evaluations = await this.evaluationsService.findAll();
 
-    evaluations = evaluations.filter(
-      (evaluation) =>
-        abac.can(Action.Read, evaluation) ||
-        evaluation.groups.some((group) =>
-          this.groupRelationsService
-            .getAllDescendants(group.id)
-            .then((descendants) =>
-              descendants.some(async (descendant) =>
-                abac.can(
-                  Action.Read,
-                  await this.groupsService.findByPkBang(descendant)
-                )
-              )
-            )
-        )
+    evaluations = evaluations.filter((evaluation) =>
+      abac.can(Action.Read, evaluation)
     );
 
     return evaluations.map(
       (evaluation) =>
-        new EvaluationDto(
-          evaluation,
-          abac.can(Action.Update, evaluation) ||
-            evaluation.groups.some((group) =>
-              this.groupRelationsService
-                .getAllDescendants(group.id)
-                .then((descendants) =>
-                  descendants.some(async (descendant) =>
-                    abac.can(
-                      Action.Update,
-                      await this.groupsService.findByPkBang(descendant)
-                    )
-                  )
-                )
-            )
-        )
+        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
     );
   }
 
