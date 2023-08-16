@@ -8,7 +8,7 @@ HDF Converters supplies several methods to convert various types of security too
 1.  [**asff-mapper**] - AWS Security Finding Format JSON file, Prowler-derived AWS Security Finding Format results from concatenated JSON blobs, and Trivy-derived AWS Security Finding Format results from concatenated JSON blobs
 2.  [**aws-config-mapper**] - AWS Config
 3.  [**burpsuite-mapper**] - BurpSuite Pro XML file
-4.  [**caat-mapper**] - CMS Assessment and Audit Tracking (CAAT) file
+4.  [**caat-mapper**] - Compliance Assessment and Audit Tracking (CAAT) file
 5.  [**checklist-mapper**] - Checlist Mapper format
 6.  [**conveyor-mapper**] - Conveyor JSON file
 7.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format

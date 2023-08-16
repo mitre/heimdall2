@@ -99,13 +99,12 @@ export class FromHDFToCAATMapper {
       contextualizedEvaluation = ensureContextualizedEvaluation(
         contextualizedEvaluation
       );
-      // if provided a filename use that, otherwise the name of the first profile in the execjson (usually there's either only one or if there are multiple then the one at the top is the wrapper or overlay profile) otherwise if there are no profiles at all then a default of 'ExecJSON'
       return {
         data: contextualizedEvaluation,
         filename:
-          datum.filename ??
-          contextualizedEvaluation.data.profiles.at(0)?.name ??
-          'ExecJSON',
+          datum.filename ?? // if provided a filename use it
+          contextualizedEvaluation.data.profiles.at(0)?.name ?? // otherwise use the name of the first profile which is typically the only profile or the wrapper or overlay profile if there are multiple
+          'ExecJSON', // otherwise set the default
         controls: datum.controls
       };
     });
@@ -118,14 +117,14 @@ export class FromHDFToCAATMapper {
       .slice(0, FromHDFToCAATMapper.MaxCellSize);
   }
 
-  createCaveat(hdf: HDFControl): string {
+  newCaveat(hdf: HDFControl): string {
     const caveat = hdf.descriptions.caveat
       ? `(Caveat: ${this.fix(hdf.descriptions.caveat)})\r\n`
       : '';
     return `${caveat}${this.fix(hdf.wraps.desc)}`;
   }
 
-  createTestResultDescription(hdf: HDFControl): string {
+  newTestResultDescription(hdf: HDFControl): string {
     const controlStatus = `${hdf.status}:\r\n\r\n`;
     const description =
       hdf.segments?.map((result) => {
@@ -140,11 +139,11 @@ export class FromHDFToCAATMapper {
     return `${controlStatus}${description}`;
   }
 
-  createTestResult(hdf: HDFControl): string {
+  newTestResult(hdf: HDFControl): string {
     return hdf.status === 'Passed' ? 'Satisfied' : 'Other Than Satisfied';
   }
 
-  createImpact(hdf: HDFControl): string {
+  newImpact(hdf: HDFControl): string {
     const controlSeverity =
       hdf.severity === 'medium' ? 'moderate' : hdf.severity;
     return this.fix(hdf.wraps.impact === 0 ? 'none' : controlSeverity);
@@ -156,7 +155,7 @@ export class FromHDFToCAATMapper {
       hdf
         .canonized_nist(FromHDFToCAATMapper.NistCanonizationConfig)
         .map((formattedNistTag) => {
-          // I don't think the canonized_nist function would return something that wasn't a nist tag, but this check was there originally quite probably for a reason, but I've not been able to find a sample that triggers this case myself
+          // I have not found a sample that triggers this case because the canonized_nist function seems to only return a nist tag
           if (!formattedNistTag) {
             // early exiting forces us to use the compact function to get rid of empty values in the array
             return;
@@ -175,7 +174,7 @@ export class FromHDFToCAATMapper {
           }
           row['Finding ID'] = `${filename} - Test ${this.fix(hdf.wraps.id)}`;
           row['Finding Description'] = this.fix(hdf.wraps.title);
-          row['Weakness Description'] = this.createCaveat(hdf);
+          row['Weakness Description'] = this.newCaveat(hdf);
           row['Control Weakness Type'] = 'Security';
           row['Source'] = 'Self-Assessment';
           row['Test Method'] = 'Test';
@@ -183,13 +182,13 @@ export class FromHDFToCAATMapper {
             hdf.descriptions.check ?? hdf.wraps.tags.check
           );
           row['Test Result Description'] = this.fix(
-            this.createTestResultDescription(hdf)
+            this.newTestResultDescription(hdf)
           );
-          row['Test Result'] = this.createTestResult(hdf);
+          row['Test Result'] = this.newTestResult(hdf);
           row['Recommended Corrective Action(s)'] = this.fix(
             hdf.descriptions.fix ?? hdf.wraps.tags.fix
           );
-          row['Impact'] = this.createImpact(hdf);
+          row['Impact'] = this.newImpact(hdf);
           return row;
         })
     );
@@ -203,7 +202,7 @@ export class FromHDFToCAATMapper {
     const takenSheetNames: string[] = [];
 
     // Define our workbook
-    const wb = XLSX.utils.book_new();
+    const workBook = XLSX.utils.book_new();
 
     // For each contextualized evaluation
     for (const d of this.data) {
@@ -218,8 +217,8 @@ export class FromHDFToCAATMapper {
       takenSheetNames.push(sheetName);
 
       // Create a new Sheet
-      wb.SheetNames.push(sheetName);
-      wb.Props = FromHDFToCAATMapper.FileSettings;
+      workBook.SheetNames.push(sheetName);
+      workBook.Props = FromHDFToCAATMapper.FileSettings;
 
       // Get the controls for the current evaluation
       const processedControls = new Set();
@@ -241,16 +240,16 @@ export class FromHDFToCAATMapper {
       rows.sort((x, y) => x['Finding Title']?.localeCompare(y['Finding Title'] ?? '') ?? 1)
 
       // Add rows to sheet
-      const ws = XLSX.utils.json_to_sheet(
+      const workSheet = XLSX.utils.json_to_sheet(
         rows,
         FromHDFToCAATMapper.SheetOptions
       );
-      wb.Sheets[sheetName] = ws;
+      workBook.Sheets[sheetName] = workSheet;
     }
 
     if (returnWorkBook) {
-      return wb;
+      return workBook;
     }
-    return XLSX.write(wb, options);
+    return XLSX.write(workBook, options);
   }
 }
