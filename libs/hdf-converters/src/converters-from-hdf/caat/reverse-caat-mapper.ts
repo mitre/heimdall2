@@ -127,15 +127,17 @@ export class FromHDFToCAATMapper {
   newTestResultDescription(hdf: HDFControl): string {
     const controlStatus = `${hdf.status}:\r\n\r\n`;
     const description =
-      hdf.segments?.map((result) => {
-        const statusAndTest = `${result.status.toUpperCase()} -- Test: ${
-          result.code_desc
-        }\r\n`;
-        const message = result.message
-          ? `Message: ${result.message}\r\n\r\n`
-          : '\r\n';
-        return `${statusAndTest}${message}`;
-      }).join('') ?? '';
+      hdf.segments
+        ?.map((result) => {
+          const statusAndTest = `${result.status.toUpperCase()} -- Test: ${
+            result.code_desc
+          }\r\n`;
+          const message = result.message
+            ? `Message: ${result.message}\r\n\r\n`
+            : '\r\n';
+          return `${statusAndTest}${message}`;
+        })
+        .join('') ?? '';
     return `${controlStatus}${description}`;
   }
 
@@ -197,7 +199,10 @@ export class FromHDFToCAATMapper {
 
   // returnWorkBook: true -> raw workbook class
   // returnWorkBook: false | undefined -> binary string by default otherwise whatever is specified in the options parameter
-  toCAAT(returnWorkBook?: false, options: XLSX.WritingOptions = {bookType: 'xlsx', type: 'binary'}) {
+  toCAAT(
+    returnWorkBook?: false,
+    options: XLSX.WritingOptions = {bookType: 'xlsx', type: 'binary'}
+  ) {
     // Sheet names must be unique across the workbook
     const takenSheetNames: string[] = [];
 
@@ -208,10 +213,17 @@ export class FromHDFToCAATMapper {
     for (const d of this.data) {
       // Ensure sheet name uniqueness
       let renameCount = 2;
-      const fullName = `${d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON'}`;
-      let sheetName: string = fullName.substring(0, FromHDFToCAATMapper.MaxSheetNameLength);
+      const fullName = `${
+        d.filename ?? d.data.data.profiles.at(0)?.name ?? 'ExecJSON'
+      }`;
+      let sheetName: string = fullName.substring(
+        0,
+        FromHDFToCAATMapper.MaxSheetNameLength
+      );
       while (takenSheetNames.includes(sheetName)) {
-        sheetName = fullName.substring(0, FromHDFToCAATMapper.MaxSheetNameLength - 5) + ` (${renameCount})`; // space for up to a 2 digit number; there's no check to stop it going past other than the workbook failing to be created, but that should be fine since the likelihood of someone having that many dupes is very slim
+        sheetName =
+          fullName.substring(0, FromHDFToCAATMapper.MaxSheetNameLength - 5) +
+          ` (${renameCount})`; // space for up to a 2 digit number; there's no check to stop it going past other than the workbook failing to be created, but that should be fine since the likelihood of someone having that many dupes is very slim
         renameCount++;
       }
       takenSheetNames.push(sheetName);
@@ -237,7 +249,10 @@ export class FromHDFToCAATMapper {
         rows.push(...this.getRow(root, d.filename));
       }
 
-      rows.sort((x, y) => x['Finding Title']?.localeCompare(y['Finding Title'] ?? '') ?? 1)
+      rows.sort(
+        (x, y) =>
+          x['Finding Title']?.localeCompare(y['Finding Title'] ?? '') ?? 1
+      );
 
       // Add rows to sheet
       const workSheet = XLSX.utils.json_to_sheet(
