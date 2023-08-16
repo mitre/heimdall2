@@ -1,5 +1,5 @@
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';

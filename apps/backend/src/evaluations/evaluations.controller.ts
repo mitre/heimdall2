@@ -14,7 +14,7 @@ import {
   UseInterceptors
 } from '@nestjs/common';
 import {AnyFilesInterceptor} from '@nestjs/platform-express';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {ConfigService} from '../config/config.service';

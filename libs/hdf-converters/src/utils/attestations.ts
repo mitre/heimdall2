@@ -3,7 +3,7 @@ import {
   AttestationData,
   ControlResultStatus
 } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import moment from 'moment';
 import ms from 'ms';
 import XLSX from 'xlsx';

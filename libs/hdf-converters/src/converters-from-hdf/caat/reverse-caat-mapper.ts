@@ -7,7 +7,7 @@ import {
   HDFControl,
   isContextualizedEvaluation
 } from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import * as XLSX from 'xlsx';
 import {ensureContextualizedEvaluation} from '../../utils/global';
 

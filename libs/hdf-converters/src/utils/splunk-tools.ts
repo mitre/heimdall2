@@ -1,5 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {SplunkConfig} from '../../types/splunk-config-types';
 
 // Helper function to generate a parseable hostname for HTTP requests

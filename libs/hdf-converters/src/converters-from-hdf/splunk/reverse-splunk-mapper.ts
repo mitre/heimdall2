@@ -5,7 +5,7 @@ import {
   ContextualizedProfile,
   ExecJSON
 } from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Logger} from 'winston';
 import {SplunkConfig} from '../../../types/splunk-config-types';
 import {SplunkControl} from '../../../types/splunk-control-types';
