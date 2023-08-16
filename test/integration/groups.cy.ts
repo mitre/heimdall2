@@ -1,4 +1,6 @@
 import {
+  ADMIN_LOGIN_AUTHENTICATION,
+  CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   LOGIN_AUTHENTICATION
 } from '../../apps/backend/test/constants/users-test.constant';
@@ -20,6 +22,7 @@ context('Groups', () => {
   // Run before each test
   beforeEach(() => {
     cy.register(CREATE_USER_DTO_TEST_OBJ);
+    cy.register(CREATE_ADMIN_DTO);
     cy.visit('/login');
     cy.login(LOGIN_AUTHENTICATION);
   });
@@ -39,8 +42,11 @@ context('Groups', () => {
       treeviewVerifier.verifyTextPresent(updatedGroupName);
     });
 
-    it('allows a user to delete a group', () => {
-      dropdown.openGroupsPage();
+    it('allows an admin to delete a group', () => {
+      cy.visit('/login');
+      cy.login(ADMIN_LOGIN_AUTHENTICATION);
+      dropdown.openAdminPanel();
+      groupPage.selectAdminGroupTab();
       groupPage.createGroup(groupName3);
       groupPage.deleteGroup(groupName3);
       toastVerifier.toastTextContains(
