@@ -8,6 +8,7 @@ import {
   UPDATE_GROUP
 } from '../../test/constants/groups-test.constant';
 import {
+  CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2
 } from '../../test/constants/users-test.constant';
@@ -38,6 +39,7 @@ describe('GroupsController', () => {
   let module: TestingModule;
 
   let basicUser: User;
+  let adminUser: User;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -75,6 +77,7 @@ describe('GroupsController', () => {
   beforeEach(async () => {
     await databaseService.cleanAll();
     basicUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+    adminUser = await usersService.create(CREATE_ADMIN_DTO);
   });
 
   afterAll((done) => {
@@ -288,13 +291,12 @@ describe('GroupsController', () => {
       privateGroup = await groupsService.create(PRIVATE_GROUP);
     });
 
-    it('should allow owners of a group to delete a group', async () => {
+    it('should allow admins to delete a group', async () => {
       const owner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(privateGroup, owner, 'owner');
-      await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 
       const response = await groupsController.remove(
-        {user: owner},
+        {user: adminUser},
         privateGroup.id
       );
       expect(response.id).toEqual(privateGroup.id);
