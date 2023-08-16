@@ -9,12 +9,19 @@ export default class GroupPage {
   }
 
   updateGroup(currentName: string, updatedName: string): void {
-    cy.contains('td', currentName).parent().get('[data-cy=edit]').click();
+    cy.contains('span', currentName).click();
+    cy.get('[data-cy=edit]').click();
     cy.get('[data-cy=updateGroupForm').within(() => {
       cy.get('[data-cy=name]').clear();
       cy.get('[data-cy=name]').type(updatedName);
       cy.get('[data-cy=closeAndSaveChanges]').click();
     });
+    // cy.contains('td', currentName).parent().get('[data-cy=edit]').click();
+    // cy.get('[data-cy=updateGroupForm').within(() => {
+    //   cy.get('[data-cy=name]').clear();
+    //   cy.get('[data-cy=name]').type(updatedName);
+    //   cy.get('[data-cy=closeAndSaveChanges]').click();
+    // });
   }
 
   deleteGroup(name: string): void {

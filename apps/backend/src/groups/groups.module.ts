@@ -1,12 +1,12 @@
 import {forwardRef, Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
-import {GroupRelationsService} from 'src/group-relations/group-relations.service';
 import {ApiKeyModule} from '../apikeys/apikeys.module';
 import {AuthzModule} from '../authz/authz.module';
 import {ConfigModule} from '../config/config.module';
 import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from '../evaluations/evaluations.module';
 import {GroupRelation} from '../group-relations/group-relation.model';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {UsersModule} from '../users/users.module';
 import {Group} from './group.model';
 import {GroupsController} from './groups.controller';
