@@ -24,17 +24,18 @@ context('Groups', () => {
     cy.register(CREATE_USER_DTO_TEST_OBJ);
     cy.register(CREATE_ADMIN_DTO);
     cy.visit('/login');
-    cy.login(LOGIN_AUTHENTICATION);
   });
 
   describe('CRUD', () => {
     it('allows a user to create a group', () => {
+      cy.login(LOGIN_AUTHENTICATION);
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName1);
       treeviewVerifier.verifyTextPresent(groupName1);
     });
 
     it('allows a user to update a group', () => {
+      cy.login(LOGIN_AUTHENTICATION);
       const updatedGroupName = 'Updated Test Group';
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName2);
@@ -43,7 +44,6 @@ context('Groups', () => {
     });
 
     it('allows an admin to delete a group', () => {
-      cy.visit('/login');
       cy.login(ADMIN_LOGIN_AUTHENTICATION);
       dropdown.openAdminPanel();
       groupPage.selectAdminGroupTab();
@@ -56,6 +56,7 @@ context('Groups', () => {
     });
 
     it('fails to create a group with a duplicate name', () => {
+      cy.login(LOGIN_AUTHENTICATION);
       dropdown.openGroupsPage();
       groupPage.createGroup(groupName4);
       groupPage.testGroupName(groupName4);
