@@ -1,10 +1,6 @@
 {
   "extends": "../../tsconfig.json",
-  "ts-node": {
-    "transpileOnly": true
-  },
   "compilerOptions": {
-    "module": "commonjs",
     "resolveJsonModule": true,
     "strict": true,
     "jsx": "preserve",
@@ -19,8 +15,7 @@
       "@/*": ["src/*"],
       "v-clipboard": ["src/types/v-clipboard/index"]
     },
-    "lib": ["ES2019", "dom", "dom.iterable", "scripthost"],
-    "alwaysStrict": false
+    "lib": ["ES2019", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
     "src/**/*.ts",
@@ -29,5 +24,5 @@
     "tests/**/*.ts",
     "tests/**/*.tsx"
   ],
-  "exclude": ["node_modules", "public/static/export/"]
+  "exclude": ["node_modules"]
 }

@@ -1,9 +1,6 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "ES6",
-    "esModuleInterop": true,
-    "moduleResolution": "node",
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -12,10 +9,17 @@
     "baseUrl": "./",
     "incremental": true,
     "strict": true,
-    "alwaysStrict": false,
-    "lib": ["ES5", "es2020", "DOM"],
+    "lib": [
+      "es2020",
+      "DOM"
+    ],
     "paths": {}
   },
-  "exclude": ["node_modules"],
-  "include": ["src/**/*", "test/**/*"]
+  "exclude": [
+    "node_modules"
+  ],
+  "include": [
+    "src/**/*",
+    "test/**/*"
+  ]
 }
