@@ -272,7 +272,6 @@ export default class GroupManagement extends Vue {
 
   get visibleGroups() {
     let groups: IGroup[] = GroupsModule.myGroups;
-    // TODO: We gotta make the parent groups of a child visible
     if (this.adminPanel) {
       groups = GroupsModule.myGroups.concat(
         GroupsModule.allGroups.filter(

@@ -92,11 +92,6 @@ export class CaslAbilityFactory {
 
     // This really isn't the best method to do this since
     // it requires every evaluation to have a join on Groups and then another join on Users
-
-    // TODO: Figure out how to use CASL ability factory to consider the descendants of the groups, too...
-    // We could try to do this with the services, but even if we pass editable as true after some mutation,
-    // the backend will throw an error because the given user doesn't have the CASL permissions to update
-    // the evaluation.
     can([Action.Create], Evaluation);
 
     can([Action.Read], Evaluation, {public: true});
