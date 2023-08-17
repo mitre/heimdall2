@@ -1,6 +1,6 @@
 import axios, {AxiosInstance, AxiosResponse} from 'axios';
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Logger} from 'winston';
 import {SplunkConfig} from '../types/splunk-config-types';
 import {SplunkReport} from '../types/splunk-report-types';

@@ -233,7 +233,7 @@ import {
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/interfaces';
 import {ControlStatus} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Watch} from 'vue-property-decorator';

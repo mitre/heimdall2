@@ -1,5 +1,5 @@
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
 
 export function omitVersions(

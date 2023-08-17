@@ -7,7 +7,7 @@ import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcryptjs';
 import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import moment from 'moment';
 import ms from 'ms';
 import winston from 'winston';

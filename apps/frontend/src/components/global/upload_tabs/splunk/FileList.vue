@@ -57,7 +57,7 @@ import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {FileMetaData} from '@mitre/hdf-converters';
 import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';

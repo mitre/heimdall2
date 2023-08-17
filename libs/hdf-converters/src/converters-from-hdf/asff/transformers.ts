@@ -6,7 +6,7 @@ import {
   convertFile,
   ExecJSON
 } from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import moment from 'moment';
 import {version as HeimdallToolsVersion} from '../../../package.json';
 import {getDescription} from '../../utils/global';

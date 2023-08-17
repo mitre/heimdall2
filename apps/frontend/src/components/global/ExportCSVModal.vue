@@ -60,7 +60,7 @@ import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import {ContextualizedControl, ExecJSON, HDFControlSegment} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import ObjectsToCsv from 'objects-to-csv';
 import Vue from 'vue';
 import Component from 'vue-class-component';

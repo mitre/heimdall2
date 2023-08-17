@@ -49,7 +49,7 @@ import {
 import axios from 'axios';
 import {saveAs} from 'file-saver';
 import {ContextualizedControl, HDFControlSegment} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Mustache from 'mustache';
 import Vue from 'vue';
 import Component from 'vue-class-component';
