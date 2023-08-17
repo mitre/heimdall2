@@ -14,13 +14,12 @@
 import {ColorHackModule} from '@/store/color_hack';
 import {Filter} from '@/store/data_filters';
 import {calculateCompliance} from '@/store/status_counts';
+import {formatCompliance} from '@/utilities/compliance_util';
 import {ApexOptions} from 'apexcharts';
 import Vue from 'vue';
 import VueApexCharts from 'vue-apexcharts';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-
-export const MAX_DECIMAL_PRECISION = 2;
 
 @Component({
   components: {
@@ -48,11 +47,7 @@ export default class ComplianceChart extends Vue {
             value: {
               color: '#99a2ac',
               fontSize: '2rem',
-              formatter: (val: number) =>
-                `${(
-                  Math.trunc(Math.pow(10, MAX_DECIMAL_PRECISION) * val) /
-                  Math.pow(10, MAX_DECIMAL_PRECISION)
-                ).toFixed(MAX_DECIMAL_PRECISION)}%`
+              formatter: (val: number) => formatCompliance(val)
             }
           }
         }
