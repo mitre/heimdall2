@@ -67,6 +67,20 @@ export class GroupRelationsController {
     const groupRelation = await this.groupRelationsService.create(
       addGroupRelationDto
     );
+
+    // Add all child group users to the parent as childMember
+    await Promise.all(
+      childGroup.users.map(async (user) => {
+        if (!parentGroup.users.map((user) => user.id).includes(user.id)) {
+          await this.groupsService.addUserToGroup(
+            parentGroup,
+            user,
+            'childMember'
+          );
+        }
+      })
+    );
+
     return new GroupRelationDto(groupRelation);
   }
 
@@ -96,6 +110,35 @@ export class GroupRelationsController {
     const groupRelationToUpdate = await this.groupRelationsService.findByPkBang(
       id
     );
+    const originalParentGroup = await this.groupsService.findByPkBang(
+      groupRelationToUpdate.parentId
+    );
+
+    // Add all child group users to the parent as childMember, remove child members from
+    // original parent
+    await Promise.all(
+      childGroup.users.map(async (user) => {
+        if (!parentGroup.users.map((user) => user.id).includes(user.id)) {
+          await this.groupsService.addUserToGroup(
+            parentGroup,
+            user,
+            'childMember'
+          );
+        }
+        if (
+          originalParentGroup &&
+          originalParentGroup.users.find(
+            (parentUser) => parentUser.id === user.id
+          )?.GroupUser.role === 'childMember'
+        ) {
+          await this.groupsService.removeUserFromGroup(
+            originalParentGroup,
+            user
+          );
+        }
+      })
+    );
+
     return new GroupRelationDto(
       await this.groupRelationsService.update(
         groupRelationToUpdate,
@@ -112,6 +155,25 @@ export class GroupRelationsController {
     const groupRelationToDelete = await this.groupRelationsService.findByPkBang(
       id
     );
+    const parentGroup = await this.groupsService.findByPkBang(
+      groupRelationToDelete.parentId
+    );
+    const childGroup = await this.groupsService.findByPkBang(
+      groupRelationToDelete.childId
+    );
+
+    // Remove child users from parent
+    await Promise.all(
+      childGroup.users.map(async (user) => {
+        if (
+          parentGroup.users.find((parentUser) => parentUser.id === user.id)
+            ?.GroupUser.role === 'childMember'
+        ) {
+          await this.groupsService.removeUserFromGroup(parentGroup, user);
+        }
+      })
+    );
+
     return new GroupRelationDto(
       await this.groupRelationsService.remove(groupRelationToDelete)
     );

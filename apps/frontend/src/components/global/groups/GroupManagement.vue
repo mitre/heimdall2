@@ -139,6 +139,7 @@
         <v-tabs v-model="activeTab" fixed-tabs dark>
           <v-tab key="owners"> Owners </v-tab>
           <v-tab key="members"> Members </v-tab>
+          <v-tab key="childMembers">Child Members</v-tab>
         </v-tabs>
         <v-tabs-items v-model="activeTab">
           <v-tab-item key="owners">
@@ -146,6 +147,9 @@
           </v-tab-item>
           <v-tab-item key="members">
             <Users v-model="selectedGroup.members" :editable="false" />
+          </v-tab-item>
+          <v-tab-item key="childMembers">
+            <Users v-model="selectedGroup.childMembers" :editable="false" />
           </v-tab-item>
         </v-tabs-items>
       </v-col>
@@ -222,7 +226,11 @@ export default class GroupManagement extends Vue {
     {text: 'Actions', value: 'actions', sortable: false}
   ];
 
-  get selectedGroup(): IGroup & {members: ISlimUser[]; owners: ISlimUser[]} {
+  get selectedGroup(): IGroup & {
+    members: ISlimUser[];
+    owners: ISlimUser[];
+    childMembers: ISlimUser[];
+  } {
     const updatedGroup = this.visibleGroups.find(
       (group) => group.id === this.selectedGroupId
     );
@@ -232,7 +240,10 @@ export default class GroupManagement extends Vue {
         members: updatedGroup.users.filter(
           (user) => user.groupRole === 'member'
         ),
-        owners: updatedGroup.users.filter((user) => user.groupRole === 'owner')
+        owners: updatedGroup.users.filter((user) => user.groupRole === 'owner'),
+        childMembers: updatedGroup.users.filter(
+          (user) => user.groupRole === 'childMember'
+        )
       };
     } else {
       return {
@@ -245,7 +256,8 @@ export default class GroupManagement extends Vue {
         desc: '',
         users: [],
         members: [],
-        owners: []
+        owners: [],
+        childMembers: []
       };
     }
   }

@@ -23,7 +23,14 @@
       <v-col>
         <v-data-table
           :headers="displayedHeaders"
-          :items="currentUsers"
+          :items="
+            editable
+              ? currentUsers.filter(
+                  (user) =>
+                    user.groupRole === 'owner' || user.groupRole === 'member'
+                )
+              : currentUsers
+          "
           :items-per-page="5"
         >
           <template #[`item.full-name`]="{item}">

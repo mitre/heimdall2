@@ -80,6 +80,7 @@ export class GroupsService {
     });
   }
 
+  // TODO: recursive add to parents upwards
   async addUserToGroup(group: Group, user: User, role: string): Promise<void> {
     await group.$add('user', user, {
       through: {role: role, createdAt: new Date(), updatedAt: new Date()}
@@ -140,6 +141,7 @@ export class GroupsService {
     return groupUser?.update({role: updateGroupUser.groupRole});
   }
 
+  // TODO: Recursive remove to parents upwards
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {
     await this.ensureGroupHasOwner(group, user);
     return group.$remove('user', user);
