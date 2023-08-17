@@ -88,6 +88,12 @@ export class GroupRelationsService {
     );
   }
 
+  async getAdjacentParentRelations(childId: string): Promise<GroupRelation[]> {
+    return (await this.findAll()).filter(
+      (relation) => relation.childId === childId
+    );
+  }
+
   async getAdjacentDescendants(parentId: string): Promise<string[]> {
     return (await this.getAdjacentRelations(parentId)).map(
       (relation) => relation.childId
@@ -104,5 +110,17 @@ export class GroupRelationsService {
       );
     }
     return descendants;
+  }
+
+  async getAllParents(childId: string): Promise<string[]> {
+    let parents: string[] = [];
+    const adjacentParentRelations = await this.getAdjacentParentRelations(
+      childId
+    );
+    for (const relation of adjacentParentRelations) {
+      parents.push(relation.parentId);
+      parents = parents.concat(await this.getAllParents(relation.parentId));
+    }
+    return parents;
   }
 }
