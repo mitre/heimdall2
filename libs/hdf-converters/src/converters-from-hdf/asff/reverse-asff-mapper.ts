@@ -1,5 +1,5 @@
 import {contextualizeEvaluation, ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {MappedTransform} from '../../base-converter';
 import {FromHdfBaseConverter} from '../reverse-base-converter';
 import {IExecJSONASFF, IFindingASFF, IOptions} from './asff-types';

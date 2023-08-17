@@ -7,7 +7,7 @@ import {
 import AWS from 'aws-sdk';
 import https from 'https';
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {AwsConfigMapping} from './mappings/AwsConfigMapping';
 

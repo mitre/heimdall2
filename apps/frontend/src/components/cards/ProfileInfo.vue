@@ -73,7 +73,7 @@
 
 <script lang="ts">
 import {SourcedContextualizedProfile} from '@/store/report_intake';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
