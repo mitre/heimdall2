@@ -5,7 +5,7 @@ import {
   NestInterceptor
 } from '@nestjs/common';
 import {Request} from 'express';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Observable} from 'rxjs';
 import winston from 'winston';
 import {ConfigService} from '../config/config.service';

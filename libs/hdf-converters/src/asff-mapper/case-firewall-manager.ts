@@ -1,5 +1,5 @@
 import {encode} from 'html-entities';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 function findingId(finding: Record<string, unknown>): string {
   return encode(_.get(finding, 'Title') as string);

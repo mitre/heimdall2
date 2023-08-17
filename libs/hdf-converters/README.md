@@ -2,31 +2,32 @@
 
 "[Heimdall Data Format (HDF)](https://saf.mitre.org/#/normalize)" is our common data exchange format to preserve and transform security data.
 
-HDF Converters supplies several methods to convert various types of security tool data to and from this HDF standard. HDF Converters can be used in a variety of tools, and is currently well integrated with Heimdall itself, and the [SAF CLI](https://github.com/mitre/saf).
+HDF Converters supplies several methods to convert various types of security tool data to and from the HDF standard. HDF Converters can be used in a variety of tools, and is currently well integrated with Heimdall itself, and the [SAF CLI](https://github.com/mitre/saf).
 
 ## Supported Formats
 1.  [**asff-mapper**] - AWS Security Finding Format JSON file, Prowler-derived AWS Security Finding Format results from concatenated JSON blobs, and Trivy-derived AWS Security Finding Format results from concatenated JSON blobs
 2.  [**aws-config-mapper**] - AWS Config
 3.  [**burpsuite-mapper**] - BurpSuite Pro XML file
-4.  [**checklist-mapper**] - Checlist Mapper format
-5.  [**conveyor-mapper**] - Conveyor JSON file
-6.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
-7.  [**fortify-mapper**] - Fortify results FVDL file
-8.  [**ionchannel-mapper**] - SBOM data from Ion Channel
-9.  [**jfrog-xray-mapper**] - JFrog Xray results JSON file
-10. [**nessus-mapper**] - Nessus XML results file
-11. [**netsparker-mapper**] - Netsparker XML results file
-12. [**nikto-mapper**] - Nikto results JSON file
-13. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
-14. [**sarif-mapper**] - SARIF JSON file
-15. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
-16. [**snyk-mapper**] - Snyk results JSON file
-17. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
-18. [**splunk-mapper**] - Splunk instance
-19. [**twistlock-mapper**] - Twistlock CLI output file
-20. [**veracode-mapper**] - Veracode Scan Results XML file
-21. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
-22. [**zap-mapper**] - OWASP ZAP results JSON
+4.  [**caat-mapper**] - Compliance Assessment and Audit Tracking (CAAT) file
+5.  [**checklist-mapper**] - Checlist Mapper format
+6.  [**conveyor-mapper**] - Conveyor JSON file
+7.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
+8.  [**fortify-mapper**] - Fortify results FVDL file
+9.  [**ionchannel-mapper**] - SBOM data from Ion Channel
+10. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
+11. [**nessus-mapper**] - Nessus XML results file
+12. [**netsparker-mapper**] - Netsparker XML results file
+13. [**nikto-mapper**] - Nikto results JSON file
+14. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
+15. [**sarif-mapper**] - SARIF JSON file
+16. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
+17. [**snyk-mapper**] - Snyk results JSON file
+18. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
+19. [**splunk-mapper**] - Splunk instance
+20. [**twistlock-mapper**] - Twistlock CLI output file
+21. [**veracode-mapper**] - Veracode Scan Results XML file
+22. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+23. [**zap-mapper**] - OWASP ZAP results JSON
 
 ### NOTICE
 

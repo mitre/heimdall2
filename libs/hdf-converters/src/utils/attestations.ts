@@ -1,12 +1,12 @@
+import * as XLSX from '@e965/xlsx';
 import {ExecJSON} from 'inspecjs';
 import {
   AttestationData,
   ControlResultStatus
 } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import moment from 'moment';
 import ms from 'ms';
-import XLSX from 'xlsx';
 
 export type Attestation = {
   control_id: string;
@@ -151,7 +151,7 @@ export async function parseXLSXAttestations(
     const sheet = workbook.Sheets['attestations'];
     const data: Record<string, unknown>[] = XLSX.utils.sheet_to_json(sheet);
     const attestations: Attestation[] = data.map((attestation) => {
-      const lowerAttestation = _.mapKeys(attestation, (v, k) => {
+      const lowerAttestation = _.mapKeys(attestation, (_v, k) => {
         return k.toLowerCase().replace(/\s/g, '_');
       });
       return {

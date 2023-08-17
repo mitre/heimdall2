@@ -154,7 +154,7 @@ import {HeightsModule} from '@/store/heights';
 import {getControlRunTime} from '@/utilities/delta_util';
 import {control_unique_key} from '@/utilities/format_util';
 import {ContextualizedControl} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Ref} from 'vue-property-decorator';

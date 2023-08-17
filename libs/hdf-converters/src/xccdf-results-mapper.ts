@@ -1,5 +1,5 @@
 import {ExecJSON, is_control, parse_nist} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,

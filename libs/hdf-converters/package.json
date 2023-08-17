@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",
+    "@e965/xlsx": "^0.20.0",
     "@mitre/jsonix": "^3.0.6",
     "@types/csv2json": "^1.4.2",
     "@types/ms": "^0.7.31",
@@ -48,7 +49,6 @@
     "papaparse": "^5.3.1",
     "run-script-os": "^1.1.6",
     "winston": "^3.6.0",
-    "xlsx": "^0.18.5",
     "xml2js": "^0.6.0",
     "yaml": "^2.1.1"
   },

@@ -17,7 +17,7 @@ import {
   NistControl,
   Severity
 } from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import LRUCache from 'lru-cache';
 import {
   Action,
