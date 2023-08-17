@@ -1,3 +1,4 @@
+import * as XLSX from '@e965/xlsx';
 import {
   CanonizationConfig,
   ContextualizedControl,
@@ -8,7 +9,6 @@ import {
   isContextualizedEvaluation
 } from 'inspecjs';
 import * as _ from 'lodash';
-import * as XLSX from 'xlsx';
 import {ensureContextualizedEvaluation} from '../../utils/global';
 
 export type InputData = {

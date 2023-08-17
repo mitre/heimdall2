@@ -1,5 +1,5 @@
+import * as XLSX from '@e965/xlsx';
 import fs from 'fs';
-import * as XLSX from 'xlsx';
 import {FromHDFToCAATMapper} from '../../../index';
 
 describe('CAAT Results Reverse Mapper', () => {
