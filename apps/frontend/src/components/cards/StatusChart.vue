@@ -17,6 +17,8 @@ import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {SearchModule} from '../../store/search';
 
+export const MAX_DECIMAL_PRECISION = 2;
+
 /**
  * Categories property must be of type Category
  * Model is of type ControlStatus | null - reflects selected severity
@@ -64,7 +66,11 @@ export default class StatusChart extends Vue {
 
   get centerValue(): string {
     if (this.showCompliance) {
-      return `${calculateCompliance(this.filter)}%`;
+      return `${(
+        Math.trunc(
+          Math.pow(10, MAX_DECIMAL_PRECISION) * calculateCompliance(this.filter)
+        ) / Math.pow(10, MAX_DECIMAL_PRECISION)
+      ).toFixed(MAX_DECIMAL_PRECISION)}%`;
     } else {
       return '';
     }
