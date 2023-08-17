@@ -38,7 +38,7 @@ describe('CAAT Results Reverse Mapper', () => {
     // convert workbooks to json to compare just the content instead of random bits of xlsx structure
     expect(
       converted.SheetNames.map((name) =>
-        XLSX.utils.sheet_to_json(expected.Sheets[name])
+        XLSX.utils.sheet_to_json(converted.Sheets[name])
       )
     ).toEqual(
       expected.SheetNames.map((name) =>
