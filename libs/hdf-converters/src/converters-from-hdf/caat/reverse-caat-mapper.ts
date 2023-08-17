@@ -42,7 +42,7 @@ export const CAATHeaders = [
   'Impact'
 ] as const;
 
-type CAATRow = Partial<
+export type CAATRow = Partial<
   Record<(typeof CAATHeaders)[number], string | undefined>
 >;
 
@@ -78,6 +78,13 @@ export class FromHDFToCAATMapper {
       .join(delimiter);
   }
 
+  // ensure we're using Windows style newlines and fit within the maximum length
+  static fix(str?: string | null): string {
+    return (str ?? '')
+      .replace(/(\r\n|\n|\r)/gmu, '\r\n')
+      .slice(0, FromHDFToCAATMapper.MaxCellSize);
+  }
+
   data: Data[];
 
   // ensure input is turned into an array of contextualized evaluations with some additional metadata
@@ -110,18 +117,11 @@ export class FromHDFToCAATMapper {
     });
   }
 
-  // ensure we're using Windows style newlines and fit within the maximum length
-  fix(str: string | null | undefined): string {
-    return (str ?? '')
-      .replace(/(\r\n|\n|\r)/gmu, '\r\n')
-      .slice(0, FromHDFToCAATMapper.MaxCellSize);
-  }
-
   newCaveat(hdf: HDFControl): string {
     const caveat = hdf.descriptions.caveat
-      ? `(Caveat: ${this.fix(hdf.descriptions.caveat)})\r\n`
+      ? `(Caveat: ${FromHDFToCAATMapper.fix(hdf.descriptions.caveat)})\r\n`
       : '';
-    return `${caveat}${this.fix(hdf.wraps.desc)}`;
+    return `${caveat}${FromHDFToCAATMapper.fix(hdf.wraps.desc)}`;
   }
 
   newTestResultDescription(hdf: HDFControl): string {
@@ -148,7 +148,9 @@ export class FromHDFToCAATMapper {
   newImpact(hdf: HDFControl): string {
     const controlSeverity =
       hdf.severity === 'medium' ? 'moderate' : hdf.severity;
-    return this.fix(hdf.wraps.impact === 0 ? 'none' : controlSeverity);
+    return FromHDFToCAATMapper.fix(
+      hdf.wraps.impact === 0 ? 'none' : controlSeverity
+    );
   }
 
   getRow(control: ContextualizedControl, filename: string): CAATRow[] {
@@ -165,29 +167,31 @@ export class FromHDFToCAATMapper {
 
           const row: CAATRow = {};
           row['Control Number'] = formattedNistTag;
-          row['Finding Title'] = `Test ${this.fix(hdf.wraps.id)} - ${this.fix(
-            hdf.wraps.title
-          )}`;
+          row['Finding Title'] = `Test ${FromHDFToCAATMapper.fix(
+            hdf.wraps.id
+          )} - ${FromHDFToCAATMapper.fix(hdf.wraps.title)}`;
           if (hdf.start_time) {
             row['Date Identified'] = FromHDFToCAATMapper.formatDate(
               new Date(hdf.start_time),
               '/'
             );
           }
-          row['Finding ID'] = `${filename} - Test ${this.fix(hdf.wraps.id)}`;
-          row['Finding Description'] = this.fix(hdf.wraps.title);
+          row['Finding ID'] = `${filename} - Test ${FromHDFToCAATMapper.fix(
+            hdf.wraps.id
+          )}`;
+          row['Finding Description'] = FromHDFToCAATMapper.fix(hdf.wraps.title);
           row['Weakness Description'] = this.newCaveat(hdf);
           row['Control Weakness Type'] = 'Security';
           row['Source'] = 'Self-Assessment';
           row['Test Method'] = 'Test';
-          row['Test Objective'] = this.fix(
+          row['Test Objective'] = FromHDFToCAATMapper.fix(
             hdf.descriptions.check ?? hdf.wraps.tags.check
           );
-          row['Test Result Description'] = this.fix(
+          row['Test Result Description'] = FromHDFToCAATMapper.fix(
             this.newTestResultDescription(hdf)
           );
           row['Test Result'] = this.newTestResult(hdf);
-          row['Recommended Corrective Action(s)'] = this.fix(
+          row['Recommended Corrective Action(s)'] = FromHDFToCAATMapper.fix(
             hdf.descriptions.fix ?? hdf.wraps.tags.fix
           );
           row['Impact'] = this.newImpact(hdf);

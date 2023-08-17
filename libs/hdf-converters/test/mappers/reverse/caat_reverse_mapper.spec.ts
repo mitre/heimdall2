@@ -1,6 +1,7 @@
 import * as XLSX from '@e965/xlsx';
 import fs from 'fs';
-import {FromHDFToCAATMapper} from '../../../index';
+import * as _ from 'lodash';
+import {CAATRow, FromHDFToCAATMapper} from '../../../index';
 
 describe('CAAT Results Reverse Mapper', () => {
   it('Successfully converts two RHEL HDF and a RHEL triple overlay HDF into CAAT', () => {
@@ -35,14 +36,53 @@ describe('CAAT Results Reverse Mapper', () => {
       {type: 'file'}
     );
 
+    // fs.writeFileSync(
+    //   'sample_jsons/caat_reverse_mapper/converted.json',
+    //   JSON.stringify(
+    //     converted.SheetNames.map((name) =>
+    //       XLSX.utils
+    //         .sheet_to_json<CAATRow>(converted.Sheets[name])
+    //         .map((sheet) =>
+    //           Object.fromEntries(
+    //             Object.entries(sheet).map(([k, v]) => [
+    //               k,
+    //               _.isString(v) ? FromHDFToCAATMapper.fix(v) : v
+    //             ])
+    //           )
+    //         )
+    //     ),
+    //     null,
+    //     2
+    //   )
+    // );
+
     // convert workbooks to json to compare just the content instead of random bits of xlsx structure
+    // needs some processing to ensure all newlines are consistent otherwise it pitches a fit - if you open the sample up in excel, it might autoconvert the newlines so this is a safety measure
     expect(
       converted.SheetNames.map((name) =>
-        XLSX.utils.sheet_to_json(converted.Sheets[name])
+        XLSX.utils
+          .sheet_to_json<CAATRow>(converted.Sheets[name])
+          .map((sheet) =>
+            Object.fromEntries(
+              Object.entries(sheet).map(([k, v]) => [
+                k,
+                _.isString(v) ? FromHDFToCAATMapper.fix(v) : v
+              ])
+            )
+          )
       )
     ).toEqual(
       expected.SheetNames.map((name) =>
-        XLSX.utils.sheet_to_json(expected.Sheets[name])
+        XLSX.utils
+          .sheet_to_json<CAATRow>(expected.Sheets[name])
+          .map((sheet) =>
+            Object.fromEntries(
+              Object.entries(sheet).map(([k, v]) => [
+                k,
+                _.isString(v) ? FromHDFToCAATMapper.fix(v) : v
+              ])
+            )
+          )
       )
     );
     // however, we do care about one bit of xlsx structure: the sheet names
