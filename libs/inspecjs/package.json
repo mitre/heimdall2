@@ -1,7 +1,7 @@
 {
   "name": "inspecjs",
   "version": "2.6.58",
-  "description": "© 2018 The MITRE Corporation.",
+  "description": "Schema definitions, classes on top, and utilities to deal with HDF files",
   "files": [
     "lib"
   ],
