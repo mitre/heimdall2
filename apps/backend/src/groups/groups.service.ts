@@ -143,21 +143,6 @@ export class GroupsService {
 
   // TODO: Recursive remove to parents upwards
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {
-    const parents = await this.findByIds(
-      await this.groupRelationsService.getAllParents(group.id)
-    );
-    await Promise.all(
-      parents.map((parent) => {
-        if (
-          parent.users
-            .filter((user) => user.GroupUser.role === 'childMember')
-            .map((user) => user.id)
-            .includes(user.id)
-        ) {
-          return parent.$remove('user', user);
-        }
-      })
-    );
     await this.ensureGroupHasOwner(group, user);
     return group.$remove('user', user);
   }
