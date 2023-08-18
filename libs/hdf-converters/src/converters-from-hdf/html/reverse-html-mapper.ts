@@ -8,7 +8,26 @@ import {
   mdiMinusCircle
 } from '@mdi/js';
 import axios from 'axios';
-import {ContextualizedControl} from 'inspecjs';
+import {
+  ContextualizedControl,
+  ContextualizedEvaluation,
+  HDFControlSegment
+} from 'inspecjs';
+import * as _ from 'lodash';
+import Mustache from 'mustache';
+
+type InputData = {
+  data: ContextualizedEvaluation;
+  fileName: string;
+  fileID: string;
+};
+
+// All selectable export types for an HTML export
+enum FileExportTypes {
+  Executive = 'Executive',
+  Manager = 'Manager',
+  Administrator = 'Administrator'
+}
 
 // Illegal characters which are not accepted by HTML id attribute
 // Generally includes everything that is not alphanumeric or characters [-,_]
@@ -203,6 +222,330 @@ export class FromHDFToHTMLMapper {
     }
   };
 
+  MAX_DECIMAL_PRECISION = 2;
+
+  // Format all final compliance level results to hundredths place percentage of compliance level
+  // Returns string typed compliance level
+  formatCompliance(rawCompliance: number): string {
+    let truncatedCompliance =
+      Math.trunc(Math.pow(10, this.MAX_DECIMAL_PRECISION) * rawCompliance) /
+      Math.pow(10, this.MAX_DECIMAL_PRECISION);
+
+    // Check if calculated compliance is valid
+    if (truncatedCompliance < 0) {
+      truncatedCompliance = 0;
+    }
+
+    // Return as string representation of compliance level percentage
+    return `${truncatedCompliance.toFixed(this.MAX_DECIMAL_PRECISION)}%`;
+  }
+
+  // Takes formatted compliance level and determines human language equivalent of compliance
+  // >=90 is high compliance, >= 60 is medium compliance, <60 is low compliance
+  // Mainly for HTML export
+  translateCompliance(rawCompliance: string): string {
+    const compliance = parseFloat(rawCompliance.slice(0, -1));
+
+    if (compliance >= 90) {
+      return 'high';
+    } else if (compliance >= 60) {
+      return 'medium';
+    } else {
+      return 'low';
+    }
+  }
+
+  constructor(files: InputData[], exportType: FileExportTypes) {
+    // Set html element visibility based on export type
+    switch (exportType) {
+      case FileExportTypes.Executive:
+        this.outputData.showResultSets = false;
+        this.outputData.showCode = false;
+        break;
+      case FileExportTypes.Manager:
+        this.outputData.showResultSets = true;
+        this.outputData.showCode = false;
+        break;
+      case FileExportTypes.Administrator:
+        this.outputData.showResultSets = true;
+        this.outputData.showCode = true;
+    }
+
+    this.outputData.files = [];
+    this.outputData.resultSets = [];
+
+    // Fill out data template for html file using received hdf file(s)
+    files.map((file) => this.addFiledata(file, exportType));
+  }
+
+  // Pulls and sets high level attributes of outputData object from file data
+  addFiledata(file: InputData, exportType: FileExportTypes) {
+    this.outputData.files.push({
+      filename: file.fileName,
+      toolVersion: _.get(file.data, 'data.version') as unknown as string,
+      platform: _.get(file.data, 'data.platform.name') as unknown as string,
+      duration: _.get(
+        file.data,
+        'data.statistics.duration'
+      ) as unknown as string
+    });
+    this.outputData.exportType = exportType;
+
+    const allResultLevels: ContextualizedControl[] = [];
+    file.data.contains.map((profile) => {
+      profile.contains.map((result) => {
+        allResultLevels.push(result);
+      });
+    });
+    const results = allResultLevels.filter((result) => {
+      result.extendedBy.length === 0;
+    });
+
+    this.addProfileDetails(results);
+
+    // Convert them into rows
+    this.outputData.resultSets.push({
+      filename: file.fileName,
+      fileID: file.fileID,
+      results: results.map((result) =>
+        this.addResultDetails(
+          result,
+          allResultLevels.filter(
+            (searchingResult) => searchingResult.data.id === result.data.id
+          )
+        )
+      )
+    });
+  }
+
+  // Takes all available existing file data to use as default settings/data for outputData object
+  addProfileDetails(results: ContextualizedControl[]) {
+    let passed = 0;
+    let failed = 0;
+    let notApplicable = 0;
+    let notReviewed = 0;
+    let profileError = 0;
+    let none = 0;
+    let low = 0;
+    let medium = 0;
+    let high = 0;
+    let critical = 0;
+    for (const result of results) {
+      switch (result.root.hdf.status) {
+        case 'Passed':
+          passed++;
+          break;
+        case 'Failed':
+          failed++;
+          break;
+        case 'Not Applicable':
+          notApplicable++;
+          break;
+        case 'Not Reviewed':
+          notReviewed++;
+          break;
+        case 'Profile Error':
+          profileError++;
+      }
+      switch (result.root.hdf.severity) {
+        case 'none':
+          none++;
+          break;
+        case 'low':
+          low++;
+          break;
+        case 'medium':
+          medium++;
+          break;
+        case 'high':
+          high++;
+          break;
+        case 'critical':
+          critical++;
+      }
+    }
+
+    // Total result count
+    const resultCount = results.length;
+
+    // Calculate & set compliance level and color from result statuses
+    // Set default complaince level and color
+    this.outputData.compliance.level = '0.00%';
+    this.outputData.compliance.color = 'low';
+
+    // If results exist, calculate compliance level
+    if (resultCount > 0) {
+      // Formula: compliance = Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100
+      const complianceLevel = this.formatCompliance(
+        (passed / (resultCount - notApplicable)) * 100
+      );
+      // Set compliance level
+      this.outputData.compliance.level = complianceLevel;
+      // Determine color of compliance level
+      // High compliance is green, medium is yellow, low is red
+      this.outputData.compliance.color =
+        this.translateCompliance(complianceLevel);
+    }
+
+    // Set following attributes from existing file data
+    /*this.outputData.statistics = {
+      passed: passed,
+      failed: failed,
+      notApplicable: notApplicable,
+      notReviewed: notReviewed,
+      profileError: profileError,
+      totalResults: resultCount,
+      passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
+      passingTestsFailedResult: StatusCountModule.countOf(
+        this.filter,
+        'PassingTestsFailedControl'
+      ),
+      failedTests: StatusCountModule.countOf(this.filter, 'FailedTests'),
+      totalTests:
+        StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl') +
+        StatusCountModule.countOf(this.filter, 'FailedTests')
+    };*/
+    this.outputData.severity = {
+      none: none,
+      low: low,
+      medium: medium,
+      high: high,
+      critical: critical
+    };
+  }
+
+  // Sets attributes for each specific result
+  addResultDetails(
+    result: ContextualizedControl,
+    resultLevels: ContextualizedControl[]
+  ): ContextualizedControl & {details: Detail[]} & {resultID: string} & {
+    resultStatus: ResultStatus;
+  } & {resultSeverity: ResultSeverity} & {controlTags: string[]} {
+    // Check status of individual result to assign corresponding icon
+    let statusColor;
+    switch (result.root.hdf.status) {
+      case 'Passed':
+        statusColor = this.iconHTMLStore.circleCheck;
+        break;
+      case 'Failed':
+        statusColor = this.iconHTMLStore.circleCross;
+        break;
+      case 'Not Applicable':
+        statusColor = this.iconHTMLStore.circleMinus;
+        break;
+      case 'Not Reviewed':
+        statusColor = this.iconHTMLStore.circleAlert;
+        break;
+      case 'Profile Error':
+        statusColor = this.iconHTMLStore.triangleAlert;
+        break;
+      default:
+        statusColor = this.iconHTMLStore.circleWhite;
+    }
+
+    // Severity is recorded as all lowercase by default; for aesthetic purposes, uppercase the first letter
+    const severity = _.capitalize(result.root.hdf.severity);
+    // Check severity of individual result to assign corresponding icon
+    let severityColor;
+    switch (result.root.hdf.severity) {
+      case 'none':
+        severityColor = this.iconHTMLStore.circleNone;
+        break;
+      case 'low':
+        severityColor = this.iconHTMLStore.circleLow;
+        break;
+      case 'medium':
+        severityColor = this.iconHTMLStore.circleMedium;
+        break;
+      case 'high':
+        severityColor = this.iconHTMLStore.circleHigh;
+        break;
+      case 'critical':
+        severityColor = this.iconHTMLStore.circleCritical;
+        break;
+      default:
+        severityColor = this.iconHTMLStore.circleWhite;
+    }
+
+    // Grab NIST & CCI controls
+    const allControls = _.filter(
+      [result.hdf.rawNistTags, result.hdf.wraps.tags.cci],
+      Boolean
+    ).flat();
+    // Remove `Rev_4` item and replace `unmapped` with proper `UM-1` naming
+    const filteredControls = allControls
+      .map((control) => (control === 'unmapped' ? 'UM-1' : control))
+      .filter((control) => control !== 'Rev_4');
+
+    return {
+      ..._.set(
+        result,
+        'hdf.segments',
+        ([] as HDFControlSegment[]).concat.apply(
+          [],
+          resultLevels.map((resultLevel) => resultLevel.hdf.segments || [])
+        )
+      ),
+      full_code: result.full_code,
+      details: [
+        {
+          name: 'Control',
+          value: result.data.id
+        },
+        {
+          name: 'Title',
+          value: result.data.title
+        },
+        {
+          name: 'Caveat',
+          value: result.hdf.descriptions.caveat
+        },
+        {
+          name: 'Desc',
+          value: result.data.desc
+        },
+        {
+          name: 'Rationale',
+          value: result.hdf.descriptions.rationale
+        },
+        {
+          name: 'Justification',
+          value: result.hdf.descriptions.justification
+        },
+        {
+          name: 'Severity',
+          value: result.root.hdf.severity
+        },
+        {
+          name: 'Impact',
+          value: result.data.impact
+        },
+        {
+          name: 'Nist Controls',
+          value: result.hdf.rawNistTags.join(', ')
+        },
+        {
+          name: 'Check Text',
+          value: result.hdf.descriptions.check || result.data.tags.check
+        },
+        {
+          name: 'Fix Text',
+          value: result.hdf.descriptions.fix || result.data.tags.fix
+        }
+      ].filter((v) => v.value),
+      resultID: this.replaceIllegalCharacters(result.hdf.wraps.id),
+      resultStatus: {
+        status: result.root.hdf.status,
+        icon: statusColor
+      },
+      resultSeverity: {
+        severity: severity,
+        icon: severityColor
+      },
+      controlTags: filteredControls
+    };
+  }
+
   // Generate SVG HTML for icons for injection into export template
   iconDataToSVG(
     iconData: string,
@@ -231,17 +574,28 @@ export class FromHDFToHTMLMapper {
     return text;
   }
 
-  async toHTML() {
+  async toHTML(): Promise<string> {
+    // Pull export template + styles and create outputData object containing data to fill template with
     const templateRequest = axios.get<string>(`template.html`);
     const tailwindStylesRequest = axios.get<string>('style.css');
     const tailwindElementsRequest = axios.get<string>('tw-elements.min.js');
-
+    const req = axios.get<string>('./../reverse-base-converter.ts');
     const responses = await axios.all([
       templateRequest,
       tailwindStylesRequest,
-      tailwindElementsRequest
+      tailwindElementsRequest,
+      req
     ]);
 
     const template = responses[0].data;
+    this.outputData.tailwindStyles = responses[1].data;
+    // Remove source map reference in TW Elements library
+    this.outputData.tailwindElements = responses[2].data.replace(
+      '//# sourceMappingURL=tw-elements.umd.min.js.map',
+      ''
+    );
+
+    // Render template and return generated HTML file
+    return Mustache.render(template, this.outputData);
   }
 }
