@@ -1,5 +1,135 @@
 import {data} from './CciNistMappingData';
 import {CciNistMappingItem} from './CciNistMappingItem';
+import {XMLParser} from 'fast-xml-parser';
+import _ from 'lodash';
+import { CCI_List } from '../utils/CCI_List';
+
+type Reference = {
+  "@_creator": string;
+  "@_title": string;
+  "@_version": string;
+  "@_location": string;
+  "@_index": string;
+}
+
+type CciItem = {
+  status: string;
+  publishdate: string;
+  contributor: string;
+  definition: string;
+  type: string;
+  references: {
+    reference: Reference[];
+  };
+  "@_id": string;
+}
+type CciItems = {
+  cci_item: CciItem[];
+}
+
+type Metadata =  {
+  version: string;
+  publishdate: string;
+}
+
+type CciList = {
+  metadata: Metadata;
+  cci_items: CciItems;
+}
+
+type CciNistData = {
+  "?xml": {
+    "@_version": string;
+    "@_encoding": string;
+  };
+  "?xml-stylesheet": {
+    "@_type": string;
+    "@_href": string;
+  };
+  cci_list: CciList;
+}
+
+export class CciNistTwoWayMapper {
+  data: CciNistData;
+
+  constructor() {
+    const alwaysArray = [
+      'cci_item',
+      'reference'
+    ]
+    const options = {
+      ignoreAttributes: false,
+      isArray: (tagName: string) => {
+        if (alwaysArray.includes(tagName)) {return true;} else {return false}
+      }
+    };
+    const parser = new XMLParser(options);
+    this.data = parser.parse(CCI_List);
+  }
+
+  nistFilter(identifiers: string[], defaultNist: string[], collapse = true): string[] {
+    const DEFAULT_NIST_TAGS = defaultNist;
+    let matches: string[] = [];
+    for (const id of identifiers) {
+      const nistRef = this.findHighestVersionNistControlByCci(id);
+      if (nistRef) {
+        matches.push(nistRef)
+      }
+    }
+    if (collapse) {
+      matches = _.uniq(matches);
+    }
+    return matches ?? DEFAULT_NIST_TAGS;
+  }
+
+  cciFilter(identifiers: string[], defaultCci: string[]): string[] {
+    const matches: string[] = [];
+    for (const id of identifiers) {
+      matches.push(...this.findMatchingCciIdsByNistControl(id))
+    }
+    return matches ?? defaultCci;
+  }
+
+  private findHighestVersionNistControlByCci(
+    targetId: string
+  ): string | null {
+    let highestVersionControl: string | null = null;
+    let highestVersion: number = -1;
+  
+    const {cci_item} = this.data.cci_list.cci_items;
+    const targetItem = cci_item.find((item) => item['@_id'] === targetId);
+  
+    if (targetItem) {
+      for (const reference of targetItem.references.reference) {
+        const version = parseFloat(reference['@_version']);
+        if (version > highestVersion) {
+          highestVersion = version;
+          highestVersionControl = reference['@_index']
+        }
+      }
+    }
+    return highestVersionControl;
+  }
+
+  private findMatchingCciIdsByNistControl(pattern: string): string[] {
+    const matchingIds: string[] = [];
+  
+    const { cci_item } = this.data.cci_list.cci_items;
+  
+    for (const item of cci_item) {
+      for (const reference of item.references.reference) {
+        const regex = new RegExp(`^${pattern}`);
+        if (RegExp(regex).exec(reference["@_index"]) && item.type === 'technical') {
+          matchingIds.push(item["@_id"]);
+          break; // No need to check other references for this item
+        }
+      }
+    }
+  
+    return matchingIds;
+  }
+
+}
 
 export class CciNistMapping {
   data: CciNistMappingItem[];

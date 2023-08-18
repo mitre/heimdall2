@@ -8,12 +8,14 @@ import {
   ILookupPath,
   MappedTransform
 } from '../base-converter';
-import {CciNistMapping} from '../mappings/CciNistMapping';
+import {CciNistMapping, CciNistTwoWayMapper} from '../mappings/CciNistMapping';
 import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
 import {
   ChecklistJsonixConverter,
   ChecklistObject,
-  ChecklistVuln
+  ChecklistVuln,
+  EmptyChecklistObject,
+  updateChecklistWithMetadata
 } from './checklist-jsonix-converter';
 import * as checklistMapping from './jsonixMapping';
 
@@ -23,7 +25,8 @@ enum ImpactMapping {
   low = 0.3
 }
 
-const CCI_NIST_MAPPING = new CciNistMapping();
+//const CCI_NIST_MAPPING = new CciNistMapping();
+const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
 
 /**
  * Tranformer function that splits a string and return array
@@ -42,7 +45,7 @@ function cciRef(input: string): string[] {
  */
 function nistTag(input: string): string[] {
   const identifiers: string[] = cciRef(input);
-  return CCI_NIST_MAPPING.nistFilter(
+  return CCI_NIST_TWO_WAY_MAPPER.nistFilter(
     identifiers,
     DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
   );
@@ -102,6 +105,14 @@ function getStatus(input: string): ExecJSON.ControlResultStatus {
   }
 }
 
+function checkMessage(typeCheck: string, messageType: string, message: string): string | null {
+  if (typeCheck === messageType) {
+    return message;
+  } else {
+    return null;
+  }
+}
+
 /**
  * Transformer function that uses current heimdall checklist export syntax for
  * findingDetails attribute to separate a single string into multiple
@@ -112,9 +123,9 @@ function getStatus(input: string): ExecJSON.ControlResultStatus {
 function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   const findings = input as unknown as ExecJSON.ControlResult[];
   const results: ExecJSON.ControlResult[] = [];
-  const statusSet = ['passed', 'failed', 'skipped', 'error'];
 
   for (const finding of findings) {
+    // if the finding_details are empty
     if (!finding.code_desc) {
       results.push({
         status: finding.status,
@@ -124,40 +135,55 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
     } else {
       // split into multiple findings details using heimdall2 CKLExport functionality
       for (const details of finding.code_desc.split(
-        '--------------------------------\n'
+        '\n--------------------------------\n'
       )) {
-        let code_desc: string;
-        let status: ExecJSON.ControlResultStatus;
-        let message = '';
+        // regex of four groups (five if you count the full match) consisting of the four possible status
+        // followed by any number of characters after :: TEST which represents the code_desc
+        // followed by an optionally :: MESSAGE or SKIP_MESSAGE representing the message type
+        // followed by any number of characters representing the message
+        const regex = /^(failed|passed|skipped|error)\s*::\s*TEST\s*(.*?)\s*(?:::\s*(MESSAGE|SKIP_MESSAGE)\s*(.*?))?$/s;
         // split details for status
-        const [findingStatus, descAndMessage] = details.split(/\n(.*)/s, 2);
-        if (statusSet.includes(findingStatus)) {
-          // split desc and message
-          // This does not necessarily work when the code_desc has the word expected
-          // will need to update the export to add a key word that can be used to split code_desc
-          // and message values easier - maybe *results* or *details*
-          const indexOfExpected = descAndMessage.indexOf('\nexpected');
-          if (indexOfExpected > 0) {
-            code_desc = descAndMessage.slice(0, indexOfExpected - 1);
-            message = descAndMessage.slice(indexOfExpected);
-            status = getStatus(findingStatus);
-          } else {
-            code_desc = descAndMessage;
-            status = getStatus(findingStatus);
-          }
-        } else {
-          code_desc = details;
-          status = finding.status as ExecJSON.ControlResultStatus;
+        const match = regex.exec(details.trim());
+        if (match) {
+          const [, mStatus, mCode_dec, messageType, mMessage] = match;
+          results.push({
+            status: getStatus(mStatus),
+            code_desc: mCode_dec,
+            message: checkMessage("MESSAGE", messageType, mMessage),
+            start_time: '',
+            skip_message: checkMessage("SKIP_MESSAGE", messageType, mMessage),
+          })
         }
-        results.push({
-          code_desc,
-          status,
-          message: message ? message : null,
-          start_time: ''
-        });
       }
     }
   }
+  return results;
+}
+
+function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
+  console.log(input)
+  const descriptions = input as unknown as ExecJSON.ControlDescription[];
+  const results: ExecJSON.ControlDescription[] = [];
+
+  for (const description of descriptions) {
+    // if description_data is empty
+    if (!description.data) {
+      return results;
+    } else {
+      for (const section of description.data.split(/\n(?=[A-Z]+ ::)/)) {
+        console.log(section, '????')
+        const matches = RegExp(/([A-Z]+) :: (.+)/s).exec(section);
+        console.log('matches ... ', matches)
+        if (matches) {
+          const [, label, data] = matches;
+          if (data){
+              results.push({data, label: label.toLowerCase()});
+          }
+        }
+      }
+    }
+  }
+  console.log(results);
   return results;
 }
 
@@ -168,7 +194,10 @@ function containsChecklist(object: ExecJSON.Execution): boolean {
 export function getChecklistObjectFromHdf(
   hdf: ExecJSON.Execution
 ): ChecklistObject {
-  return _.get(hdf, 'passthrough.checklist') as unknown as ChecklistObject;
+  if (_.get(hdf, 'passthrough.metadata')) {
+    return updateChecklistWithMetadata(hdf);
+  }
+  return _.get(hdf, 'passthrough.checklist', EmptyChecklistObject);
 }
 
 /**
@@ -206,8 +235,12 @@ export class ChecklistResults extends ChecklistJsonixConverter {
     this.withRaw = withRaw;
   }
 
-  fromHdf(): string {
-    return super.fromJsonix(this.jsonixData);
+  getJsonix(): Checklist {
+    return this.jsonixData;
+  }
+
+  toCkl(): string {
+    return `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(this.jsonixData)}`;
   }
 
   toHdf(): ExecJSON.Execution {
@@ -277,7 +310,7 @@ export class ChecklistMapper extends BaseConverter {
               gtitle: {path: 'groupTitle'},
               rid: {path: 'ruleId'},
               gid: {path: 'vulnNum'},
-              stig_id: {path: 'ruleVersion'},
+              stig_id: {path: 'ruleVer'},
               cci: {
                 path: 'cciRef',
                 transformer: cciRef
@@ -328,8 +361,9 @@ export class ChecklistMapper extends BaseConverter {
                 label: 'fix'
               },
               {
+                arrayTransformer: parseComments,
                 data: {path: 'comments'},
-                label: 'comments'
+                label: ''
               }
             ],
             impact: {

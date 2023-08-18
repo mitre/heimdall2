@@ -1,6 +1,9 @@
 import {ExecJSON} from 'inspecjs';
 import {ControlResultStatus} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
+import {v4} from 'uuid';
+import {JsonixIntermediateConverter} from '../jsonix-intermediate-converter';
+import {getDescription} from '../utils/global';
 import {
   Asset,
   Assettype,
@@ -18,9 +21,8 @@ import {
   Techarea,
   Vuln,
   Vulnattribute
-} from '../../types/checklistJsonix';
-import {JsonixIntermediateConverter} from '../jsonix-intermediate-converter';
-import {getDescription} from '../utils/global';
+} from './checklistJsonix';
+import { CciNistTwoWayMapper } from '../mappings/CciNistMapping';
 
 export type ChecklistObject = {
   asset: ChecklistAsset;
@@ -59,7 +61,7 @@ export type ChecklistVuln = Omit<Vuln, 'stigdata' | 'status'> & {
   severity: Severity;
   groupTitle: string;
   ruleId: string;
-  ruleVersion: string;
+  ruleVer: string;
   ruleTitle: string;
   vulnDiscuss: string;
   iaControls: string;
@@ -67,7 +69,7 @@ export type ChecklistVuln = Omit<Vuln, 'stigdata' | 'status'> & {
   fixText: string;
   falsePositives: string;
   falseNegatives: string;
-  documentable: boolean;
+  documentable: string;
   mitigations: string;
   potentialImpact: string;
   thirdPartyTools: string;
@@ -89,13 +91,7 @@ enum StatusMapping {
   NotAFinding = 'Passed',
   Open = 'Failed',
   Not_Applicable = 'Not Applicable',
-  Not_Reviewed = 'Not Reviewed',
-  Passed = 'NotAFinding',
-  Failed = 'Open',
-  Error = 'Not_Reviewed',
-  SkippedImpactEqZero = 'Not_Applicable',
-  SkippedImpactGtZero = 'Not_Reviewed',
-  Default = 'Not_Reviewed'
+  Not_Reviewed = 'Not Reviewed'
 }
 
 export enum Severity {
@@ -103,6 +99,27 @@ export enum Severity {
   High = 'high',
   Low = 'low',
   Medium = 'medium'
+}
+
+export type ChecklistMetadata = {
+  hostname: string;
+  hostip: string;
+  hostmac: string;
+  hostfqdn: string,
+  role: Role,
+  assettype: Assettype,
+  techarea: Techarea,
+  webordatabase: boolean,
+  webdbsite: string,
+  webdbinstance: string,
+  profiles: StigMetadata[]
+}
+
+export type StigMetadata = {
+  name: string,
+  releasenumber: number,
+  version: number,
+  releasedate: string
 }
 
 export const EmptyChecklistObject: ChecklistObject = {
@@ -137,7 +154,7 @@ export const EmptyChecklistObject: ChecklistObject = {
           severity: Severity.Low,
           groupTitle: '',
           ruleId: '',
-          ruleVersion: '',
+          ruleVer: '',
           ruleTitle: '',
           vulnDiscuss: '',
           iaControls: '',
@@ -145,7 +162,7 @@ export const EmptyChecklistObject: ChecklistObject = {
           fixText: '',
           falsePositives: '',
           falseNegatives: '',
-          documentable: false,
+          documentable: 'false',
           mitigations: '',
           potentialImpact: '',
           thirdPartyTools: '',
@@ -169,6 +186,36 @@ export const EmptyChecklistObject: ChecklistObject = {
     }
   ]
 };
+
+export function updateChecklistWithMetadata(file: ExecJSON.Execution): ChecklistObject {
+  const metadata: ChecklistMetadata = _.get(file, 'passthrough.metadata') as unknown as ChecklistMetadata;
+  const checklist: ChecklistObject = _.get(file, 'passthrough.checklist') as unknown as ChecklistObject;
+  checklist.asset.assettype = metadata.assettype;
+  checklist.asset.hostfqdn = metadata.hostfqdn;
+  checklist.asset.hostip = metadata.hostip;
+  checklist.asset.hostname = metadata.hostname;
+  checklist.asset.hostmac = metadata.hostmac;
+  checklist.asset.role = metadata.role;
+  checklist.asset.techarea = metadata.techarea;
+  checklist.asset.webordatabase = metadata.webordatabase;
+  checklist.asset.webdbsite = metadata.webdbsite;
+  checklist.asset.webdbinstance = metadata.webdbinstance;
+
+  for (const stig of checklist.stigs) {
+    for (const profile of metadata.profiles) {
+      if (stig.header.title === profile.name) {
+        console.log('Matched metadata with profile', stig, profile)
+        stig.header.version = profile.version.toString();
+        stig.header.releaseinfo = `Release: ${profile.releasenumber} Benchmark Date: ${profile.releasedate}`;
+        for (const vuln of stig.vulns) {
+          vuln.stigRef = `${stig.header.title} :: Version ${stig.header.version}, ${stig.header.releaseinfo}`;
+        }
+      }
+    }
+  }
+
+  return checklist;
+}
 
 /**
  * Checklist jsonix converter
@@ -274,7 +321,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
             'Group_Title'
           ),
           ruleId: this.getValueFromAttributeName<Stigdata>(stigdata, 'Rule_ID'),
-          ruleVersion: this.getValueFromAttributeName<Stigdata>(
+          ruleVer: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Rule_Ver'
           ),
@@ -309,7 +356,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           documentable: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Documentable'
-          ) as unknown as boolean,
+          ) as unknown as string,
           mitigations: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Mitigations'
@@ -378,29 +425,59 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     return checklistObject;
   }
 
-  flattenHeader(header: StigHeader): Sidata[] {
+  expandHeader(header: StigHeader): Sidata[] {
     const sidata: Sidata[] = [];
     for (const [name, data] of Object.entries(header)) {
-      sidata.push({
-        sidname: name as Sidname,
-        siddata: data
-      });
+      if (data) {
+        sidata.push({
+          sidname: name as Sidname,
+          siddata: data
+        });
+      } else {
+        sidata.push({sidname: name as Sidname})
+      }
+      
     }
     return sidata;
   }
 
-  flattenVulns(checklistVulns: ChecklistVuln[]): Vuln[] {
+  expandVulns(checklistVuln: ChecklistVuln): StigdatumElement[] {
+    const separateElementNames: string[] = ['CciRef', 'IAControls', 'LegacyID'];
+    const stigdata: StigdatumElement[] = [];
+    for (const [attributeName, data] of Object.entries(checklistVuln)) {
+      const keyFoundInVulnattribute: string | undefined = Object.keys(
+        Vulnattribute
+      ).find((key) => key.toLowerCase() === attributeName.toLowerCase());
+      if (keyFoundInVulnattribute) {
+        if (separateElementNames.includes(keyFoundInVulnattribute)) {
+          const dataStrings = data?.toString().split(/[,|;]/) ?? [];
+          for (const dataString of dataStrings) {
+            stigdata.push({
+              vulnattribute:
+                Vulnattribute[
+                  keyFoundInVulnattribute as keyof typeof Vulnattribute
+                ],
+              attributedata: dataString
+            });
+          }
+          continue;
+        }
+        stigdata.push({
+          vulnattribute:
+            Vulnattribute[
+              keyFoundInVulnattribute as keyof typeof Vulnattribute
+            ],
+          attributedata: data as string
+        });
+      }
+    }
+    return stigdata;
+  }
+
+  createVulns(checklistVulns: ChecklistVuln[]): Vuln[] {
     const vulns: Vuln[] = [];
     for (const checklistVuln of checklistVulns) {
-      const stigdata: StigdatumElement[] = [];
-      for (const [attributeName, data] of Object.entries(checklistVuln)) {
-        if (attributeName in Vulnattribute) {
-          stigdata.push({
-            vulnattribute: attributeName as Vulnattribute,
-            attributedata: data as string
-          });
-        }
-      }
+      const stigdata: StigdatumElement[] = this.expandVulns(checklistVuln);
       const vuln: Vuln = {
         comments: checklistVuln.comments,
         findingdetails: checklistVuln.findingdetails,
@@ -424,14 +501,16 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     for (const stig of intermediateObj.stigs) {
       const istig: Istig = {
         stiginfo: {
-          sidata: this.flattenHeader(stig.header)
+          sidata: this.expandHeader(stig.header)
         },
-        vuln: this.flattenVulns(stig.vulns)
+        vuln: this.createVulns(stig.vulns)
       };
       istigs.push(istig);
     }
     const value: Stigdata = {
-      asset: {...intermediateObj.asset},
+      asset: {
+        ...intermediateObj.asset
+      },
       stigs: {
         istig: istigs
       }
@@ -440,7 +519,6 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       name: name,
       value: value
     };
-
     return checklist;
   }
 
@@ -448,24 +526,18 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     const statuses: ControlResultStatus[] = results.map((result) => {
       return result.status;
     }) as unknown as ControlResultStatus[];
-    const allPassed = (status: ControlResultStatus) =>
-      status === ControlResultStatus.Passed;
-
-    if (statuses.every(allPassed)) {
-      return StatusMapping.Passed;
+    if (impact === 0) {
+      return StatusMapping.Not_Applicable;
     } else if (statuses.includes(ControlResultStatus.Failed)) {
-      return StatusMapping.Failed;
-    } else if (statuses.includes(ControlResultStatus.Error)) {
-      return StatusMapping.Error;
-    } else if (statuses.includes(ControlResultStatus.Skipped)) {
-      if (impact === 0) {
-        return StatusMapping.SkippedImpactEqZero;
-      } else {
-        return StatusMapping.SkippedImpactGtZero;
-      }
+      return StatusMapping.Open;
+    } else if (statuses.includes(ControlResultStatus.Passed)) {
+      return StatusMapping.NotAFinding;
     } else {
-      return StatusMapping.Default;
+      return StatusMapping.Not_Reviewed;
     }
+    // } else if (statuses.includes(ControlResultStatus.Skipped)) {
+    //   return StatusMapping.Not_Reviewed;
+    // }
   }
 
   severityMap(impact: number): Severity {
@@ -482,115 +554,183 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     if (typeof results === 'undefined') {
       return '';
     } else {
-      return results.map((result) => {
-        if (result.message) {
-          return `${result.status}\n${result.code_desc}\n${result.message}`;
-        } else if (result.skip_message) {
-          return `${result.status}\n${result.code_desc}\n${result.skip_message}`;
-        } else {
-          return `${result.status}\n${result.code_desc}`;
-        }
-      }).join('\n--------------------------------\n');
+      return results
+        .map((result) => {
+          if (result.message) {
+            return `${result.status} :: TEST ${result.code_desc} :: MESSAGE ${result.message}`;
+          } else if (result.skip_message) {
+            return `${result.status} :: TEST ${result.code_desc} :: SKIP_MESSAGE ${result.skip_message}`;
+          } else {
+            return `${result.status} :: TEST ${result.code_desc}`;
+          }
+        })
+        .join('\n--------------------------------\n');
     }
   }
 
-/**
- * This function is assuming the hdf does not have 'passthrough.checklist' object
- * therefore would also not have checklist specific control.tags
- * @param hdf 
- * @returns 
- */
+  matchNistToCcis(nistRefs: string[]): string[] {
+    if (!nistRefs) {
+      return [''];
+    }
+    const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
+    return CCI_NIST_TWO_WAY_MAPPER.cciFilter(nistRefs, [''])
+  }
+
+  getComments(descriptions: ExecJSON.ControlDescription[]): string {
+    let results = '';
+    const caveat = getDescription(descriptions, 'caveat');
+    const justification = getDescription(descriptions, 'justification');
+    const rationale = getDescription(descriptions, 'rationale');
+    const comments = getDescription(descriptions, 'comments');
+    if (caveat) {
+      results += `CAVEAT :: ${caveat}\n`;
+    }
+    if (justification) {
+      results += `JUSTIFICATION :: ${justification}\n`;
+    }
+    if (rationale) {
+      results += `RATIONALE :: ${rationale}\n`;
+    }
+    if (comments) {
+      results += `COMMENTS :: ${comments}`;
+    }
+    return results;
+
+  }
+
+  addHdfControlSpecificData(control: ExecJSON.Control): string {
+    const hdfSpecificData: Record<string, unknown> = {};
+
+    return JSON.stringify(hdfSpecificData)
+  }
+
+  controlsToVulns(profile: ExecJSON.Profile, stigRef: string): ChecklistVuln[] {
+    const vulns: ChecklistVuln[] = [];
+    for (const control of profile.controls) {
+      const vuln: ChecklistVuln = {
+        status: this.getStatus(control.results, control.impact),
+        vulnNum: _.get(control, 'id', ''),
+        severity: this.severityMap(control.impact),
+        groupTitle: _.get(control.tags, 'gtitle', _.get(control, 'id', '')),
+        ruleId: _.get(control.tags, 'rid', _.get(control, 'id', '')),
+        ruleVer: _.get(control.tags, 'stig_id', _.get(control, 'id', '')),
+        ruleTitle: _.get(control, 'title') ?? '',
+        vulnDiscuss: _.get(control, 'desc') ?? '',
+        iaControls: _.get(control.tags, 'IA_Controls', ''),
+        checkContent: _.get(control.tags, 'check', getDescription(
+          control.descriptions as ExecJSON.ControlDescription[],
+          'check'
+        ) as string),
+        fixText: _.get(control.tags, 'fix', getDescription(
+          control.descriptions as ExecJSON.ControlDescription[],
+          'fix'
+        ) as string),
+        falsePositives: _.get(control.tags, 'False_Positives', ''),
+        falseNegatives: _.get(control.tags, 'False_Negatives', ''),
+        documentable: 'false',
+        mitigations: _.get(control.tags, 'Mitigations', ''),
+        potentialImpact: _.get(control.tags, 'Potential_Impact', ''),
+        // TODO: use this key as a 'passthrough' of sorts for data that is in hdf that we will need back in heimdall
+        // like severity/impact values
+        thirdPartyTools: this.addHdfControlSpecificData(control),
+        mitigationControl: _.get(control.tags, 'Mitigation_Control', ''),
+        responsibility: _.get(control.tags, 'Responsibility', ''),
+        securityOverrideGuidance: _.get(
+          control.tags,
+          'Security_Override_Guidance',
+          ''
+        ),
+        checkContentRef: 'M',
+        weight: _.get(control.tags, 'weight', '10.0'), // default found on checklists saved from stigviewer has always been 10.0
+        class: 'Unclass',
+        stigRef,
+        targetKey: '',
+        stigUuid: '',
+        legacyId: _.get(control.tags, 'Legacy_ID', ''),
+        cciRef: _.get(control.tags, 'cci', this.matchNistToCcis(_.get(control.tags, 'nist'))),
+        comments: this.getComments(control.descriptions as ExecJSON.ControlDescription[]),
+        findingdetails: this.getFindingDetails(control.results) ?? '',
+        severityjustification: '',
+        severityoverride: Severityoverride.Empty
+      };
+      vulns.push(vuln);
+    }
+    return vulns;
+  }
+
+  getReleaseInfo(releasenumber: string | undefined, releasedate: string | undefined): string | undefined {
+    if (releasenumber && releasedate) {
+      return `Release: ${releasenumber} Benchmark Datae ${releasedate}`;
+    } else if (releasenumber) {
+      return `Release: ${releasenumber}`;
+    } else if (releasedate) {
+      return `Benchmark Date: ${releasedate}`;
+    } else {
+      return undefined;
+    }
+  }
+
+  /**
+   * This function is assuming the hdf does not have 'passthrough.checklist' object
+   * therefore would also not have checklist specific control.tags
+   * @param hdf
+   * @returns
+   */
   hdfToIntermediateObject(hdf: ExecJSON.Execution): ChecklistObject {
     const stigs: ChecklistStig[] = [];
-    const vulns: ChecklistVuln[] = [];
     for (const profile of hdf.profiles) {
       // if profile is overlay or parent profile, skip
-      if (!profile.depends?.length) {
+      if (profile.depends?.length) {
         continue;
       }
       const header: StigHeader = {
-        version: profile.version as string,
+        version: _.get(hdf, 'passthrough.metadata.version', profile.version as string),
         classification: 'UNCLASSIFIED',
         customname: '',
         stigid: '',
         description: profile.description as string,
         filename: '',
-        releaseinfo: '',
+        releaseinfo: this.getReleaseInfo(_.get(hdf, 'passthrough.metadata.releasenumber'), _.get(hdf, 'passthrough.metadata.releasedate')),
         title: profile.title as string,
-        uuid: '',
+        uuid: v4(),
         notice: profile.license as string,
         source: 'STIG.DOD.MIL'
       };
-      for (const control of profile.controls) {
-        const vuln: ChecklistVuln = {
-          status: this.getStatus(control.results, control.impact),
-          vulnNum: control.id,
-          severity: this.severityMap(control.impact),
-          groupTitle: control.tags.gtitle ?? '',
-          ruleId: control.tags.rid ?? '',
-          ruleVersion: control.tags.stig_id ?? '',
-          ruleTitle: control.title ?? '',
-          vulnDiscuss: control.desc ?? '',
-          iaControls: control.tags.IA_Controls ?? '',
-          checkContent: getDescription(
-            control.descriptions as ExecJSON.ControlDescription[],
-            'check'
-          ) as string,
-          fixText: getDescription(
-            control.descriptions as ExecJSON.ControlDescription[],
-            'fix'
-          ) as string,
-          falsePositives: control.tags.False_Positives ?? '',
-          falseNegatives: control.tags.False_Negatives ?? '',
-          documentable: false,
-          mitigations: control.tags.Mitigations ?? '',
-          potentialImpact: control.tags.Potential_Impact ?? '',
-          thirdPartyTools: '',
-          mitigationControl: control.tags.Mitigation_Control ?? '',
-          responsibility: control.tags.Responsibility ?? '',
-          securityOverrideGuidance:
-            control.tags.Security_Override_Guidance ?? '',
-          checkContentRef: 'M',
-          weight: control.tags.weight ?? '10.0', // default found on checklists svaed from stigviewer has always been 10.0
-          class: 'Unclass',
-          stigRef: control.tags.STIGRef ?? '',
-          targetKey: '',
-          stigUuid: '',
-          legacyId: control.tags.Legacy_ID ?? '',
-          cciRef: control.tags.cci ?? '',
-          comments: getDescription(control.descriptions as ExecJSON.ControlDescription[], 'comments') ?? null,
-          findingdetails: this.getFindingDetails(control.results) ?? '',
-          severityjustification: null,
-          severityoverride: Severityoverride.Empty
-        };
-        vulns.push(vuln);
-      }
+      const stigRef = `${header.title} :: Version ${header.version}${header.releaseinfo ? ', ' + header.releaseinfo : '' }`;
+      const vulns: ChecklistVuln[] = this.controlsToVulns(profile, stigRef);
       stigs.push({header, vulns});
     }
     const checklistObject: ChecklistObject = {
       asset: {
-        assettype:
-          _.get(hdf, 'passthrough.checklist.asset.assettype') ||
-          Assettype.Computing,
-        hostfqdn: _.get(hdf, 'passthrough.checklist.asset.hostfqdn'),
-        hostguid: _.get(hdf, 'passthrough.checklist.asset.hostguid'),
-        hostip: _.get(hdf, 'passthrough.checklist.asset.hostip'),
-        hostmac: _.get(hdf, 'passthrough.checklist.asset.hostmac'),
-        hostname: _.get(hdf, 'passthrough.checklist.asset.hostname'),
-        marking: _.get(hdf, 'passthrough.checklist.asset.marking') || 'CUI',
-        role: _.get(hdf, 'passthrough.checklist.asset.role') || Role.None,
-        stigguid: null,
-        targetcomment: _.get(hdf, 'passthrough.checklist.asset.targetcomment'),
-        targetkey: null,
-        techarea:
-          _.get(hdf, 'passthrough.checklist.asset.techarea') || Techarea.Empty,
-        webdbinstance: _.get(hdf, 'passthrough.checklist.asset.webdbinstance'),
-        webdbsite: _.get(hdf, 'passthrough.checklist.asset.webdbsite'),
+        assettype: _.get(
+          hdf,
+          'passthrough.metadata.assettype',
+          Assettype.Computing
+        ),
+        hostfqdn: _.get(hdf, 'passthrough.metadata.hostfqdn', ''),
+        hostip: _.get(hdf, 'passthrough.metadata.hostip', ''),
+        hostmac: _.get(hdf, 'passthrough.metadata.hostmac', ''),
+        hostname: _.get(hdf, 'passthrough.metadata.hostname', ''),
+        marking: _.get(hdf, 'passthrough.metadata.marking', 'CUI'),
+        role: _.get(hdf, 'passthrough.metadata.role', Role.None),
+        targetcomment: _.get(hdf, 'passthrough.metadata.targetcomment'),
+        targetkey: '',
+        techarea: _.get(
+          hdf,
+          'passthrough.metadata.techarea',
+          Techarea.Empty
+        ),
+        webdbinstance: _.get(
+          hdf,
+          'passthrough.metadata.webdbinstance',
+          ''
+        ),
+        webdbsite: _.get(hdf, 'passthrough.metadata.webdbsite', ''),
         webordatabase:
           (_.get(
             hdf,
-            'passthrough.checklist.asset.webordatabase'
-          ) as unknown as boolean) || false
+            'passthrough.metadata.webordatabase'
+          ) as unknown as boolean) || null
       },
       stigs: stigs
     };
