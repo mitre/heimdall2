@@ -20500,9 +20500,9 @@ tunnel-agent@^0.6.0:
     safe-buffer "^5.0.1"
 
 tw-elements@^1.0.0-beta2:
-  version "1.0.0-beta2"
-  resolved "https://registry.yarnpkg.com/tw-elements/-/tw-elements-1.0.0-beta2.tgz#a405bd6bdc3320bac2f660c8b7d745e700d9b39b"
-  integrity sha512-0DAm5i7OSk1NCW9i/JotHZOWG0NIuCBr5S0t1h66rDgH1M2fxCQvvQw3AxK0fVaCJG0jk82UhAsI7PCEMoq6Xw==
+  version "1.0.0-beta3"
+  resolved "https://registry.yarnpkg.com/tw-elements/-/tw-elements-1.0.0-beta3.tgz#80d9e0874f7328a546f052b36861ca4253fc8702"
+  integrity sha512-fz4zIsetP4KGDjMXWWpcUs8avteMnSu8ilGvo8LGgixeIlcwl2ZEOpK93HfVFYmTCO4N0YdpZ5quNNom67xxFw==
   dependencies:
     "@popperjs/core" "^2.6.0"
     chart.js "^3.7.1"
