@@ -8,7 +8,7 @@ import {
   ILookupPath,
   MappedTransform
 } from '../base-converter';
-import {CciNistMapping, CciNistTwoWayMapper} from '../mappings/CciNistMapping';
+import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
 import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
 import {
   ChecklistJsonixConverter,
@@ -105,7 +105,11 @@ function getStatus(input: string): ExecJSON.ControlResultStatus {
   }
 }
 
-function checkMessage(typeCheck: string, messageType: string, message: string): string | null {
+function checkMessage(
+  typeCheck: string,
+  messageType: string,
+  message: string
+): string | null {
   if (typeCheck === messageType) {
     return message;
   } else {
@@ -141,7 +145,8 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
         // followed by any number of characters after :: TEST which represents the code_desc
         // followed by an optionally :: MESSAGE or SKIP_MESSAGE representing the message type
         // followed by any number of characters representing the message
-        const regex = /^(failed|passed|skipped|error)\s*::\s*TEST\s*(.*?)\s*(?:::\s*(MESSAGE|SKIP_MESSAGE)\s*(.*?))?$/s;
+        const regex =
+          /^(failed|passed|skipped|error)\s*::\s*TEST\s*(.*?)\s*(?:::\s*(MESSAGE|SKIP_MESSAGE)\s*(.*?))?$/s;
         // split details for status
         const match = regex.exec(details.trim());
         if (match) {
@@ -149,10 +154,10 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
           results.push({
             status: getStatus(mStatus),
             code_desc: mCode_dec,
-            message: checkMessage("MESSAGE", messageType, mMessage),
+            message: checkMessage('MESSAGE', messageType, mMessage),
             start_time: '',
-            skip_message: checkMessage("SKIP_MESSAGE", messageType, mMessage),
-          })
+            skip_message: checkMessage('SKIP_MESSAGE', messageType, mMessage)
+          });
         }
       }
     }
@@ -161,7 +166,6 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
 }
 
 function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
-  console.log(input)
   const descriptions = input as unknown as ExecJSON.ControlDescription[];
   const results: ExecJSON.ControlDescription[] = [];
 
@@ -171,19 +175,16 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
       return results;
     } else {
       for (const section of description.data.split(/\n(?=[A-Z]+ ::)/)) {
-        console.log(section, '????')
         const matches = RegExp(/([A-Z]+) :: (.+)/s).exec(section);
-        console.log('matches ... ', matches)
         if (matches) {
           const [, label, data] = matches;
-          if (data){
-              results.push({data, label: label.toLowerCase()});
+          if (data) {
+            results.push({data, label: label.toLowerCase()});
           }
         }
       }
     }
   }
-  console.log(results);
   return results;
 }
 
@@ -240,7 +241,9 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   }
 
   toCkl(): string {
-    return `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(this.jsonixData)}`;
+    return `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
+      this.jsonixData
+    )}`;
   }
 
   toHdf(): ExecJSON.Execution {

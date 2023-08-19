@@ -1,6 +1,6 @@
+import {XMLParser} from 'fast-xml-parser';
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
-import {XMLParser} from 'fast-xml-parser';
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
@@ -21,10 +21,11 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     const parser = new XMLParser();
 
     expect(parser.parse(mapper.toCkl())).toEqual(
-      parser.parse(fs
-        .readFileSync(
+      parser.parse(
+        fs.readFileSync(
           'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl'
-        ))
+        )
+      )
     );
   });
 });
@@ -48,11 +49,12 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     const parser = new XMLParser();
 
     expect(parser.parse(mapper.toCkl())).toEqual(
-      parser.parse(fs
-        .readFileSync(
+      parser.parse(
+        fs.readFileSync(
           'sample_jsons/checklist_mapper/sample_input_report/three_stig_checklist.ckl'
-        ))
-      );
+        )
+      )
+    );
   });
 });
 
@@ -74,8 +76,8 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
     );
 
     expect(parser.parse(mapper.toCkl())).toEqual(
-      parser.parse(fs
-        .readFileSync('sample_jsons/checklist_mapper/converted-nessus.ckl')
+      parser.parse(
+        fs.readFileSync('sample_jsons/checklist_mapper/converted-nessus.ckl')
       )
     );
   });
