@@ -69,7 +69,7 @@ export class FromHDFToCAATMapper {
   };
 
   static formatDate(date: Date, delimiter: string): string {
-    console.log('format date', date);
+    console.log('format date', date.toString());
     const a = [
       Intl.DateTimeFormat('en-US', {month: '2-digit'}),
       Intl.DateTimeFormat('en-US', {day: '2-digit'}),
