@@ -34,7 +34,7 @@ module.exports = {
                 [
                   require('@babel/plugin-transform-modules-commonjs'),
                   {
-                    strictMode: false
+                    strictMode: true
                   }
                 ]
               ]

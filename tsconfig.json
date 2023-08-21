@@ -11,9 +11,12 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false,
-    "allowSyntheticDefaultImports": true
+    "useUnknownInCatchVariables": false
   },
-  "include": ["types/**/*.d.ts"],
-  "exclude": ["**/node_modules"]
+  "include": [
+    "types/**/*.d.ts"
+  ],
+  "exclude": [
+    "**/node_modules"
+  ]
 }
