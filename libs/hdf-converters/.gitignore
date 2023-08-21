@@ -3,7 +3,3 @@ converted_jsons
 lib
 mitre-hdf-converters-v*.tgz
 sample_jsons/*/output_report/*.xml
-
-# Tailwind stylings/dependencies
-src/converters-from-hdf/html/style.css
-src/converters-from-hdf/html/tw-elements.min.js

@@ -271,15 +271,19 @@ export class FromHDFToHTMLMapper {
         this.outputData.showCode = true;
     }
 
+    // Set default attribute values in preparation for value assignment
     this.outputData.files = [];
     this.outputData.resultSets = [];
 
     // Fill out data template for html file using received hdf file(s)
-    files.map((file) => this.addFiledata(file, exportType));
+    files.map((file) => {
+      this.addFiledata(file, exportType);
+    });
   }
 
   // Pulls and sets high level attributes of outputData object from file data
   addFiledata(file: InputData, exportType: FileExportTypes) {
+    // Set file profile data
     this.outputData.files.push({
       filename: file.fileName,
       toolVersion: _.get(file.data, 'data.version') as unknown as string,
@@ -289,25 +293,28 @@ export class FromHDFToHTMLMapper {
         'data.statistics.duration'
       ) as unknown as string
     });
+
+    // Set export type
+    // Controls what components are shown in HTML
     this.outputData.exportType = exportType;
 
+    // Pull out results from file
     const allResultLevels: ContextualizedControl[] = [];
     file.data.contains.map((profile) => {
       profile.contains.map((result) => {
         allResultLevels.push(result);
       });
     });
-    const results = allResultLevels.filter((result) => {
-      result.extendedBy.length === 0;
-    });
 
-    this.addProfileDetails(results);
+    // Begin filling out outpuData object to pass into HTML template
+    // Set high level generalized profile details
+    this.addProfileDetails(allResultLevels);
 
-    // Convert them into rows
+    // Set specific result details
     this.outputData.resultSets.push({
       filename: file.fileName,
       fileID: file.fileID,
-      results: results.map((result) =>
+      results: allResultLevels.map((result) =>
         this.addResultDetails(
           result,
           allResultLevels.filter(
@@ -318,7 +325,7 @@ export class FromHDFToHTMLMapper {
     });
   }
 
-  // Takes all available existing file data to use as default settings/data for outputData object
+  // Set attributes for high level generalized profile details
   addProfileDetails(results: ContextualizedControl[]) {
     let passed = 0;
     let failed = 0;
@@ -330,13 +337,25 @@ export class FromHDFToHTMLMapper {
     let medium = 0;
     let high = 0;
     let critical = 0;
+    let passedTests = 0;
+    let failedTests = 0;
+    let passingTestsFailedResult = 0;
+    // Count out statuses and sub-statuses
     for (const result of results) {
       switch (result.root.hdf.status) {
         case 'Passed':
           passed++;
+          passedTests += (result.root.hdf.segments || []).length;
           break;
         case 'Failed':
           failed++;
+          passingTestsFailedResult ==
+            (result.root.hdf.segments || []).filter(
+              (subStatus) => subStatus.status === 'passed'
+            ).length;
+          failedTests += (result.root.hdf.segments || []).filter(
+            (subStatus) => subStatus.status === 'failed'
+          ).length;
           break;
         case 'Not Applicable':
           notApplicable++;
@@ -347,6 +366,7 @@ export class FromHDFToHTMLMapper {
         case 'Profile Error':
           profileError++;
       }
+      // Count out severities
       switch (result.root.hdf.severity) {
         case 'none':
           none++;
@@ -388,23 +408,18 @@ export class FromHDFToHTMLMapper {
     }
 
     // Set following attributes from existing file data
-    /*this.outputData.statistics = {
+    this.outputData.statistics = {
       passed: passed,
       failed: failed,
       notApplicable: notApplicable,
       notReviewed: notReviewed,
       profileError: profileError,
       totalResults: resultCount,
-      passedTests: StatusCountModule.countOf(this.filter, 'PassedTests'),
-      passingTestsFailedResult: StatusCountModule.countOf(
-        this.filter,
-        'PassingTestsFailedControl'
-      ),
-      failedTests: StatusCountModule.countOf(this.filter, 'FailedTests'),
-      totalTests:
-        StatusCountModule.countOf(this.filter, 'PassingTestsFailedControl') +
-        StatusCountModule.countOf(this.filter, 'FailedTests')
-    };*/
+      passedTests: passedTests,
+      passingTestsFailedResult: passingTestsFailedResult,
+      failedTests: failed,
+      totalTests: passingTestsFailedResult + failedTests
+    };
     this.outputData.severity = {
       none: none,
       low: low,
@@ -477,6 +492,7 @@ export class FromHDFToHTMLMapper {
       .map((control) => (control === 'unmapped' ? 'UM-1' : control))
       .filter((control) => control !== 'Rev_4');
 
+    // Assign attributes
     return {
       ..._.set(
         result,
@@ -555,8 +571,11 @@ export class FromHDFToHTMLMapper {
     description?: string
   ): string {
     let imgLabel;
+    // Check if description is included in function call
+    // If so, include description as title/aria-label
     if (description) {
       imgLabel = `title="${description}" aria-label="${description}"`;
+      // Else hide aria
     } else {
       imgLabel = `aria-hidden="true"`;
     }
@@ -574,17 +593,19 @@ export class FromHDFToHTMLMapper {
     return text;
   }
 
-  async toHTML(): Promise<string> {
+  // Prompt HTML generation from data pulled from file during constructor intialization
+  // Requires path to prompt location of needed files relative to function call location
+  async toHTML(path: string): Promise<string> {
     // Pull export template + styles and create outputData object containing data to fill template with
-    const templateRequest = axios.get<string>(`template.html`);
-    const tailwindStylesRequest = axios.get<string>('style.css');
-    const tailwindElementsRequest = axios.get<string>('tw-elements.min.js');
-    const req = axios.get<string>('./../reverse-base-converter.ts');
+    const templateRequest = axios.get<string>(`${path}template.html`);
+    const tailwindStylesRequest = axios.get<string>(`${path}style.css`);
+    const tailwindElementsRequest = axios.get<string>(
+      `${path}tw-elements.min.js`
+    );
     const responses = await axios.all([
       templateRequest,
       tailwindStylesRequest,
-      tailwindElementsRequest,
-      req
+      tailwindElementsRequest
     ]);
 
     const template = responses[0].data;

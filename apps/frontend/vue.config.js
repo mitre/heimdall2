@@ -12,6 +12,24 @@ const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
+// Grabs template and dependencies for HTML export
+const files = {
+  [require.resolve(
+    '@mitre/hdf-converters/src/converters-from-hdf/html/template.html'
+  )]: 'public/static/export/template.html',
+  [require.resolve('@mitre/hdf-converters/src/converters-from-hdf/html/style.css')]:
+    'public/static/export/style.css',
+  [require.resolve('tw-elements/dist/js/tw-elements.umd.min.js')]:
+    'public/static/export/tw-elements.min.js'
+};
+for (const file in files) {
+  fs.copyFile(file, files[file], (err) => {
+    if (err) {
+      throw err;
+    }
+  });
+}
+
 module.exports = {
   lintOnSave: 'warning',
   publicPath: '/',

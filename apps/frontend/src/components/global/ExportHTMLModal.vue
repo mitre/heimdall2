@@ -132,7 +132,9 @@ export default class ExportHTMLModal extends Vue {
     }
 
     // Generate and export HTML file
-    const body = await new FromHDFToHTMLMapper(files, this.exportType).toHTML();
+    const body = await new FromHDFToHTMLMapper(files, this.exportType).toHTML(
+      '/static/export/'
+    );
     saveAs(
       new Blob([s2ab(body)], {type: 'application/octet-stream'}),
       `${this.exportType}_Report_${new Date().toString()}.html`.replace(
