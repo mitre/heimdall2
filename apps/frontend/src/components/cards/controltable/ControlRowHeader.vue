@@ -139,7 +139,7 @@ import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {getControlRunTime} from '@/utilities/delta_util';
 import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
 import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 

@@ -70,7 +70,7 @@
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import {ContextualizedControl} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 //TODO: add line numbers
 import 'prismjs';
 import 'prismjs/components/prism-json';

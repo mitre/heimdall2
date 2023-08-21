@@ -1,5 +1,31 @@
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
+// Lookup constants
+const fs = require('fs');
+const packageJson = fs.readFileSync('./package.json');
+const parsed = JSON.parse(packageJson);
+const version = parsed.version || 0;
+const description = parsed.description || '';
+const repository = parsed.repository.url || '';
+const license = parsed.license || '';
+const changelog = parsed.changelog || '';
+const branch = parsed.branch || '';
+const issues = parsed.issues || '';
+
+// This grabs the js/css to allow for HTML export
+const files = {
+  [require.resolve('tw-elements/dist/js/tw-elements.umd.min.js')]:
+    'public/static/export/tw-elements.min.js'
+};
+
+for (const file in files) {
+  fs.copyFile(file, files[file], (err) => {
+    if (err) {
+      throw err;
+    }
+  });
+}
+
 module.exports = {
   lintOnSave: 'warning',
   publicPath: '/',

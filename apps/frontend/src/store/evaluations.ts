@@ -5,7 +5,7 @@ import {
   IEvaluationTag
 } from '@heimdall/interfaces';
 import axios from 'axios';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {
   Action,
   getModule,

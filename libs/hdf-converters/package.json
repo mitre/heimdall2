@@ -1,6 +1,6 @@
 {
   "name": "@mitre/hdf-converters",
-  "version": "2.7.0",
+  "version": "2.7.2",
   "license": "Apache-2.0",
   "description": "Converter util library used to transform various scan results into HDF format",
   "files": [
@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",
+    "@e965/xlsx": "^0.20.0",
     "@mitre/jsonix": "^3.0.6",
     "@types/csv2json": "^1.4.2",
     "@types/ms": "^0.7.31",
@@ -40,7 +41,7 @@
     "fast-xml-parser": "^4.2.0",
     "html-entities": "^2.3.2",
     "htmlparser2": "^6.1.0",
-    "inspecjs": "^2.6.58",
+    "inspecjs": "^2.7.2",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "ms": "^2.1.3",
@@ -48,7 +49,6 @@
     "papaparse": "^5.3.1",
     "run-script-os": "^1.1.6",
     "winston": "^3.6.0",
-    "xlsx": "^0.18.5",
     "xml2js": "^0.6.0",
     "yaml": "^2.1.1"
   },

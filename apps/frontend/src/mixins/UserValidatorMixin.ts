@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Component, Vue} from 'vue-property-decorator';
 import ValidationProperties from 'vue/types/vue';
 import {validationMixin} from 'vuelidate';
