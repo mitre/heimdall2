@@ -127,27 +127,23 @@ function checkMessage(
 function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   const findings = input as unknown as ExecJSON.ControlResult[];
   const results: ExecJSON.ControlResult[] = [];
+  const findingDetails = findings[0].code_desc;
+  const regex =
+  /^(failed|passed|skipped|error) :: TEST (.*?)(?: :: (MESSAGE|SKIP_MESSAGE) (.*?))?$/s;
 
-  for (const finding of findings) {
-    // if the finding_details are empty
-    if (!finding.code_desc) {
-      results.push({
-        status: finding.status,
-        code_desc: finding.code_desc,
-        start_time: finding.start_time
-      });
-    } else {
-      // split into multiple findings details using heimdall2 CKLExport functionality
-      for (const details of finding.code_desc.split(
+  // check if code_desc is empty or does not match the above regular expression
+  if(!RegExp(regex).exec(findingDetails)) {
+    return findings;
+  } else {
+    // split into multiple findings details using heimdall2 CKLExport functionality
+      for (const details of findingDetails.split(
         '\n--------------------------------\n'
       )) {
         // regex of four groups (five if you count the full match) consisting of the four possible status
         // followed by any number of characters after :: TEST which represents the code_desc
         // followed by an optionally :: MESSAGE or SKIP_MESSAGE representing the message type
         // followed by any number of characters representing the message
-        const regex =
-          /^(failed|passed|skipped|error)\s*::\s*TEST\s*(.*?)\s*(?:::\s*(MESSAGE|SKIP_MESSAGE)\s*(.*?))?$/s;
-        // split details for status
+       // split details for status
         const match = regex.exec(details.trim());
         if (match) {
           const [, mStatus, mCode_dec, messageType, mMessage] = match;
@@ -160,7 +156,6 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
           });
         }
       }
-    }
   }
   return results;
 }
@@ -168,19 +163,16 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
 function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
   const descriptions = input as unknown as ExecJSON.ControlDescription[];
   const results: ExecJSON.ControlDescription[] = [];
-
-  for (const description of descriptions) {
-    // if description_data is empty
-    if (!description.data) {
-      return results;
-    } else {
-      for (const section of description.data.split(/\n(?=[A-Z]+ ::)/)) {
-        const matches = RegExp(/([A-Z]+) :: (.+)/s).exec(section);
-        if (matches) {
-          const [, label, data] = matches;
-          if (data) {
-            results.push({data, label: label.toLowerCase()});
-          }
+  const commentString = descriptions[0].data;
+  if(!commentString?.includes('::')) {
+    return descriptions;
+  } else {
+    for (const section of commentString.split(/\n(?=[A-Z]+ ::)/)) {
+      const matches = RegExp(/([A-Z]+) :: (.+)/s).exec(section);
+      if (matches) {
+        const [, label, data] = matches;
+        if (data) {
+          results.push({data, label: label.toLowerCase()});
         }
       }
     }
@@ -366,7 +358,7 @@ export class ChecklistMapper extends BaseConverter {
               {
                 arrayTransformer: parseComments,
                 data: {path: 'comments'},
-                label: ''
+                label: 'comments'
               }
             ],
             impact: {

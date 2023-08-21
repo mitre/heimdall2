@@ -312,7 +312,7 @@ export default class ExportCKLModal extends Vue {
 
   splitReleaseInfo(info: string): string[] {
     const defaultReturn = ['', ''];
-    const pattern = /Release: (\d+).*Date: (\d{1,2} \w{3} \d{4})/;
+    const pattern = /Release: (\d+)[^\r\n]*Date: (\d{1,2} \w{3} \d{4})/;
     const matches = RegExp(pattern).exec(info);
     if (matches) {
       return [matches[1], matches[2]];
