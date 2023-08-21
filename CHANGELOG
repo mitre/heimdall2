@@ -8,6 +8,9 @@ v2.7.2
 
 ## Dependency Updates
 
+- Bump tw-elements from 1.0.0-beta2 to 1.0.0-beta3 @dependabot (#4839)
+- Bump dotenv-cli from 7.2.1 to 7.3.0 @dependabot (#4840)
+- Bump aws-sdk from 2.1438.0 to 2.1439.0 @dependabot (#4838)
 - Bump aws-sdk from 2.1437.0 to 2.1438.0 @dependabot (#4836)
 - Bump pg from 8.11.2 to 8.11.3 @dependabot (#4835)
 - Bump aws-sdk from 2.1436.0 to 2.1437.0 @dependabot (#4830)
