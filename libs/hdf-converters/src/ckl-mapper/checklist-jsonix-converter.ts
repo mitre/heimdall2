@@ -680,7 +680,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   }
 
   getReleaseInfo(
-    releasenumber: string | undefined,
+    releasenumber: number | undefined,
     releasedate: string | undefined
   ): string | undefined {
     if (releasenumber && releasedate) {
@@ -702,27 +702,29 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
    */
   hdfToIntermediateObject(hdf: ExecJSON.Execution): ChecklistObject {
     const stigs: ChecklistStig[] = [];
+    const metadata: ChecklistMetadata = _.get(hdf, 'passthrough.metadata') as unknown as ChecklistMetadata;
     for (const profile of hdf.profiles) {
       // if profile is overlay or parent profile, skip
       if (profile.depends?.length) {
         continue;
       }
+      const profileMetadata = metadata.profiles.find((p) => p.name === profile.name);
       const header: StigHeader = {
         version: _.get(
-          hdf,
-          'passthrough.metadata.version',
+          profileMetadata,
+          'version',
           profile.version as string
-        ),
+        ) as string,
         classification: 'UNCLASSIFIED',
         customname: '',
         stigid: '',
         description: profile.description as string,
         filename: '',
         releaseinfo: this.getReleaseInfo(
-          _.get(hdf, 'passthrough.metadata.releasenumber'),
-          _.get(hdf, 'passthrough.metadata.releasedate')
+          profileMetadata?.releasenumber,
+          profileMetadata?.releasedate
         ),
-        title: profile.title as string,
+        title: profile.title ?? profile.name,
         uuid: v4(),
         notice: profile.license as string,
         source: 'STIG.DOD.MIL'
