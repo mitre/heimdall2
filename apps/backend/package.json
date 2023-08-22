@@ -19,6 +19,7 @@
     "start": "node dist/src/main",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
+    "start:fips": "node --force-fips dist/src/main",
     "test": "jest --silent",
     "test:ci-cov": "jest --silent --coverage --runInBand",
     "test:cov": "jest --silent --coverage",
