@@ -1,3 +1,4 @@
+var webpack = require('webpack');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 // Lookup constants
@@ -54,16 +55,7 @@ module.exports = {
           use: {
             loader: 'babel-loader',
             options: {
-              presets: ['env'],
-              plugins: [
-                'transform-remove-strict-mode',
-                [
-                  require('@babel/plugin-transform-modules-commonjs'),
-                  {
-                    strictMode: true
-                  }
-                ]
-              ]
+              presets: ['@babel/preset-env']
             }
           }
         }
@@ -71,6 +63,17 @@ module.exports = {
     },
     devtool: 'source-map',
     plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          PACKAGE_VERSION: `"${version}"`,
+          DESCRIPTION: `"${description}"`,
+          REPOSITORY: `"${repository}"`,
+          LICENSE: `"${license}"`,
+          CHANGELOG: `"${changelog}"`,
+          BRANCH: `"${branch}"`,
+          ISSUES: `"${issues}"`
+        }
+      }),
       new NodePolyfillPlugin({
         includeAliases: [
           'crypto',
