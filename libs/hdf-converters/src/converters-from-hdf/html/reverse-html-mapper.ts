@@ -349,7 +349,7 @@ export class FromHDFToHTMLMapper {
           break;
         case 'Failed':
           failed++;
-          passingTestsFailedResult ==
+          passingTestsFailedResult +=
             (result.root.hdf.segments || []).filter(
               (subStatus) => subStatus.status === 'passed'
             ).length;
