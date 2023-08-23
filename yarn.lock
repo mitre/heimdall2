@@ -3111,9 +3111,9 @@
     xmlhttprequest "^1.8.0"
 
 "@nestjs/cli@^10.0.1":
-  version "10.1.12"
-  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-10.1.12.tgz#50f1af37f3d34f9a55f1fa118d9a760541d2d0a3"
-  integrity sha512-L+KZOGBvSQUJACC4/o83FRLn5h3MOD5TrGi+Y2NjiDiZr0WYG5b0FaSaCSCy9WQTk46lMaiQYbvi0d4keHJnrw==
+  version "10.1.13"
+  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-10.1.13.tgz#dec6e313127ebb751489145207baebf6f3115a6f"
+  integrity sha512-ZRJEIPWq7sLd//RIJc8a0mfAWgPrWtcn6OupavQ/PVkRqmEK3LCiitNPYiePeOlMjgarU62Zh9Q8BXWHZwMbMw==
   dependencies:
     "@angular-devkit/core" "16.2.0"
     "@angular-devkit/schematics" "16.2.0"
@@ -3168,9 +3168,9 @@
     jsonwebtoken "9.0.0"
 
 "@nestjs/passport@^10.0.0":
-  version "10.0.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-10.0.0.tgz#92d36d4b8796b373da3f4d1a055db03cb246b127"
-  integrity sha512-IlKKc6M7JOe+4dBbW6gZsXBSD05ZYgwfGf3GJhgCmUGYVqffpDdALQSS6JftnExrE+12rACoEmHkzYwKAGVK0Q==
+  version "10.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-10.0.1.tgz#4a745cb4acf01ef8fd56b9ec1349ac74165b098f"
+  integrity sha512-hS22LeNj0LByS9toBPkpKyZhyKAXoHACLS1EQrjbAJJEQjhocOskVGwcMwvMlz+ohN+VU804/nMF1Zlya4+TiQ==
 
 "@nestjs/platform-express@^9.4.0":
   version "9.4.3"
@@ -4766,9 +4766,9 @@
   integrity sha512-MUSpfpW0yZbTgjekDbH0shMYBUD+X/uJJJMm9LXN1d5yjl5lCY1vN/eWKD6D1tOtjA6206K0zcIPnUaFMurdNA==
 
 "@types/node@*", "@types/node@^20.1.0":
-  version "20.5.1"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.5.1.tgz#178d58ee7e4834152b0e8b4d30cbfab578b9bb30"
-  integrity sha512-4tT2UrL5LBqDwoed9wZ6N3umC4Yhz3W3FloMmiiG4JwmUJWpie0c7lcnUNd4gtMKuDEO4wRVS8B6Xa0uMRsMKg==
+  version "20.5.3"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.5.3.tgz#fa52c147f405d56b2f1dd8780d840aa87ddff629"
+  integrity sha512-ITI7rbWczR8a/S6qjAW7DMqxqFMjjTo61qZVWJ1ubPvbIQsL5D/TvwjYEalM8Kthpe3hTzOGrF2TGbAu2uyqeA==
 
 "@types/node@^10.1.0":
   version "10.17.60"
@@ -4798,9 +4798,9 @@
   integrity sha512-RGZdFlzuj/3ARNTgrf/yJCKREZ2HGYP///wq3pxYWhsw47ImY0FFIBjyNcgdN9Us6lvIMdW6RfubpCAiJb65mg==
 
 "@types/papaparse@^5.3.2":
-  version "5.3.7"
-  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.3.7.tgz#8d3bf9e62ac2897df596f49d9ca59a15451aa247"
-  integrity sha512-f2HKmlnPdCvS0WI33WtCs5GD7X1cxzzS/aduaxSu3I7TbhWlENjSPs6z5TaB9K0J+BH1jbmqTaM+ja5puis4wg==
+  version "5.3.8"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.3.8.tgz#6b4b5156183987b4d1816fec45bbc6aad40e337e"
+  integrity sha512-ArKIEOOWULbhi53wkAiRy1ze4wvrTfhpAj7Yfzva+EkmX2sV8PpFB+xqzJfzXNzK4me95FJH9QZt5NXFVGzOoQ==
   dependencies:
     "@types/node" "*"
 
@@ -6368,9 +6368,9 @@ available-typed-arrays@^1.0.5:
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
 aws-sdk@^2.1046.0, aws-sdk@^2.573.0:
-  version "2.1441.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1441.0.tgz#bce13790f0bc7364a33bafd83f7e77a08b682313"
-  integrity sha512-qMmFt7jyBoe9HsS0o9YoY/zGfURM/rD8DYR1VFzsJKKb8UMnjZrUfDX+fb+rQKK1WLp0+k9dBVFhU09EcSJTKQ==
+  version "2.1442.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1442.0.tgz#be6b3dc8a34105a3beabc30d437d59ca29cdd7e9"
+  integrity sha512-Rp6kP813tdlg3R3Zi6Olt5NSutlx1UjhhoogJpEeIUQFXul7t/mu5FpyUZmYRsBN6TPCj9QD0eJOtBaFN4LZtg==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -14428,9 +14428,9 @@ lunr@^2.3.9:
   integrity sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==
 
 luxon@^3.0.1:
-  version "3.4.0"
-  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.4.0.tgz#17cb754efecbf76994f05b2a3f1f91fad7ddfde7"
-  integrity sha512-7eDo4Pt7aGhoCheGFIuq4Xa2fJm4ZpmldpGhjTYBNUYNCN6TIEP6v7chwwwt3KRp7YR+rghbfvjyo3V5y9hgBw==
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.4.1.tgz#9147374b2c539e7893f906c420e9b080b59c5457"
+  integrity sha512-2USspxOCXWGIKHwuQ9XElxPPYrDOJHDQ5DQ870CoD+CxJbBnRDIBCfhioUJJjct7BKOy80Ia8cVstIcIMb/0+Q==
 
 macos-release@^2.5.0:
   version "2.5.1"
