@@ -3,7 +3,7 @@
 import {ContextualizedControl} from 'inspecjs';
 
 // Basic info for exported files; lvl 1
-export interface FileInfo {
+export interface IFileInfo {
   filename: string;
   toolVersion: string;
   platform: string;
@@ -11,7 +11,7 @@ export interface FileInfo {
 }
 
 // Info used for profile status reporting; lvl 1
-export interface Statistics {
+export interface IStatistics {
   passed: number;
   failed: number;
   notApplicable: number;
@@ -25,7 +25,7 @@ export interface Statistics {
 }
 
 // Info used for profile result severity reporting; lvl 1
-export interface Severity {
+export interface ISeverity {
   none: number;
   low: number;
   medium: number;
@@ -34,57 +34,57 @@ export interface Severity {
 }
 
 // Info used for profile compliance reporting; lvl 1
-export interface Compliance {
+export interface ICompliance {
   level: string;
   color: string;
 }
 
 // Container for specific info on each result; lvl 2
-export interface Detail {
+export interface IDetail {
   name: string;
   value: string;
   class?: string;
 }
 
 // Status of a specific result; lvl 2
-export interface ResultStatus {
+export interface IResultStatus {
   status: string;
   icon: string;
 }
 
 // Severity of a specific result; lvl 2
-export interface ResultSeverity {
+export interface IResultSeverity {
   severity: string;
   icon: string;
 }
 
 // Container for all results; lvl 1
-export interface ResultSet {
+export interface IResultSet {
   filename: string;
   fileID: string;
-  results: (ContextualizedControl & {details: Detail[]} & {
+  results: (ContextualizedControl & {details: IDetail[]} & {
     resultID: string;
-  } & {resultStatus: ResultStatus} & {resultSeverity: ResultSeverity} & {
+  } & {resultStatus: IResultStatus} & {resultSeverity: IResultSeverity} & {
     controlTags: string[];
   })[];
 }
 
 // All used icons; lvl 1
-export interface Icons {
+export interface IIcons {
   [key: string]: string;
 }
 
 // Top level interface; lvl 0
-export interface OutputData {
+export interface IOutputData {
   tailwindStyles: string;
   tailwindElements: string;
-  files: FileInfo[];
-  statistics: Statistics;
-  severity: Severity;
-  compliance: Compliance;
-  resultSets: ResultSet[];
+  files: IFileInfo[];
+  statistics: IStatistics;
+  severity: ISeverity;
+  compliance: ICompliance;
+  resultSets: IResultSet[];
   showResultSets: boolean;
   showCode: boolean;
   exportType: string;
-  icons: Icons;
+  icons: IIcons;
 }

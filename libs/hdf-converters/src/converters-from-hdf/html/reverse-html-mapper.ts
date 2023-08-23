@@ -16,7 +16,12 @@ import {
 import * as _ from 'lodash';
 import Mustache from 'mustache';
 import {formatCompliance, translateCompliance} from '../../utils/compliance';
-import {Detail, OutputData, ResultSeverity, ResultStatus} from './html-types';
+import {
+  IDetail,
+  IOutputData,
+  IResultSeverity,
+  IResultStatus
+} from './html-types';
 
 type InputData = {
   data: ContextualizedEvaluation;
@@ -68,7 +73,7 @@ export class FromHDFToHTMLMapper {
   };
 
   // Default attributes
-  outputData: OutputData = {
+  outputData: IOutputData = {
     tailwindStyles: '',
     tailwindElements: '',
     // Used for profile status reporting
@@ -258,8 +263,31 @@ export class FromHDFToHTMLMapper {
       }
     }
 
-    // Total result count
-    const resultCount = results.length;
+    // Set following attributes from existing file data
+    this.outputData.statistics = {
+      passed: this.outputData.statistics.passed + passed,
+      failed: this.outputData.statistics.failed + failed,
+      notApplicable: this.outputData.statistics.notApplicable + notApplicable,
+      notReviewed: this.outputData.statistics.notReviewed + notReviewed,
+      profileError: this.outputData.statistics.profileError + profileError,
+      totalResults: this.outputData.statistics.totalResults + results.length,
+      passedTests: this.outputData.statistics.passedTests + passedTests,
+      passingTestsFailedResult:
+        this.outputData.statistics.passingTestsFailedResult +
+        passingTestsFailedResult,
+      failedTests: this.outputData.statistics.failedTests + failedTests,
+      totalTests:
+        this.outputData.statistics.totalTests +
+        passingTestsFailedResult +
+        failedTests
+    };
+    this.outputData.severity = {
+      none: this.outputData.severity.none + none,
+      low: this.outputData.severity.low + low,
+      medium: this.outputData.severity.medium + medium,
+      high: this.outputData.severity.high + high,
+      critical: this.outputData.severity.critical + critical
+    };
 
     // Calculate & set compliance level and color from result statuses
     // Set default complaince level and color
@@ -267,10 +295,13 @@ export class FromHDFToHTMLMapper {
     this.outputData.compliance.color = 'low';
 
     // If results exist, calculate compliance level
-    if (resultCount > 0) {
+    if (this.outputData.statistics.totalResults > 0) {
       // Formula: compliance = Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100
       const complianceLevel = formatCompliance(
-        (passed / (resultCount - notApplicable)) * 100
+        (this.outputData.statistics.passed /
+          (this.outputData.statistics.totalResults -
+            this.outputData.statistics.notApplicable)) *
+          100
       );
       // Set compliance level
       this.outputData.compliance.level = complianceLevel;
@@ -278,36 +309,15 @@ export class FromHDFToHTMLMapper {
       // High compliance is green, medium is yellow, low is red
       this.outputData.compliance.color = translateCompliance(complianceLevel);
     }
-
-    // Set following attributes from existing file data
-    this.outputData.statistics = {
-      passed: passed,
-      failed: failed,
-      notApplicable: notApplicable,
-      notReviewed: notReviewed,
-      profileError: profileError,
-      totalResults: resultCount,
-      passedTests: passedTests,
-      passingTestsFailedResult: passingTestsFailedResult,
-      failedTests: failed,
-      totalTests: passingTestsFailedResult + failedTests
-    };
-    this.outputData.severity = {
-      none: none,
-      low: low,
-      medium: medium,
-      high: high,
-      critical: critical
-    };
   }
 
   // Sets attributes for each specific result
   addResultDetails(
     result: ContextualizedControl,
     resultLevels: ContextualizedControl[]
-  ): ContextualizedControl & {details: Detail[]} & {resultID: string} & {
-    resultStatus: ResultStatus;
-  } & {resultSeverity: ResultSeverity} & {controlTags: string[]} {
+  ): ContextualizedControl & {details: IDetail[]} & {resultID: string} & {
+    resultStatus: IResultStatus;
+  } & {resultSeverity: IResultSeverity} & {controlTags: string[]} {
     // Check status of individual result to assign corresponding icon
     let statusColor;
     switch (result.root.hdf.status) {
