@@ -57,20 +57,10 @@ import {Filter} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {SnackbarModule} from '../../store/snackbar';
 import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
-
-// All selectable export types for an HTML export
-enum FileExportTypes {
-  Executive = 'Executive',
-  Manager = 'Manager',
-  Administrator = 'Administrator'
-}
-
-// All corresponding descriptions for export types
-const enum FileExportDescriptions {
-  Executive = 'Profile Info\nStatuses\nCompliance Level',
-  Manager = 'Profile Info\nStatuses\nCompliance Level\nTest Results and Details',
-  Administrator = 'Profile Info\nStatuses\nCompliance Level\nTest Results and Details\nTest Code'
-}
+import {
+  FileExportDescriptions,
+  FileExportTypes
+} from '@mitre/hdf-converters/types/fileExportTypes';
 
 @Component({
   components: {

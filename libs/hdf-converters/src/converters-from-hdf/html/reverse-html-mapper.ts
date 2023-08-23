@@ -15,7 +15,9 @@ import {
 } from 'inspecjs';
 import * as _ from 'lodash';
 import Mustache from 'mustache';
+import {FileExportTypes} from '../../../types/fileExportTypes';
 import {formatCompliance, translateCompliance} from '../../utils/compliance';
+import {Detail, OutputData, ResultSeverity, ResultStatus} from './html-types';
 
 type InputData = {
   data: ContextualizedEvaluation;
@@ -23,112 +25,10 @@ type InputData = {
   fileID: string;
 };
 
-// All selectable export types for an HTML export
-enum FileExportTypes {
-  Executive = 'Executive',
-  Manager = 'Manager',
-  Administrator = 'Administrator'
-}
-
 // Illegal characters which are not accepted by HTML id attribute
 // Generally includes everything that is not alphanumeric or characters [-,_]
 // Expand as needed
 const ILLEGAL_CHARACTER_SET = [['\\.', '___PERIOD___']];
-
-// =====================================
-// TEMPLATE RENDER DATA INTERFACES START
-// =====================================
-
-// Basic info for exported files; lvl 1
-interface FileInfo {
-  filename: string;
-  toolVersion: string;
-  platform: string;
-  duration: string;
-}
-
-// Info used for profile status reporting; lvl 1
-interface Statistics {
-  passed: number;
-  failed: number;
-  notApplicable: number;
-  notReviewed: number;
-  profileError: number;
-  totalResults: number;
-  passedTests: number;
-  passingTestsFailedResult: number;
-  failedTests: number;
-  totalTests: number;
-}
-
-// Info used for profile result severity reporting; lvl 1
-interface Severity {
-  none: number;
-  low: number;
-  medium: number;
-  high: number;
-  critical: number;
-}
-
-// Info used for profile compliance reporting; lvl 1
-interface Compliance {
-  level: string;
-  color: string;
-}
-
-// Container for specific info on each result; lvl 2
-interface Detail {
-  name: string;
-  value: string;
-  class?: string;
-}
-
-// Status of a specific result; lvl 2
-interface ResultStatus {
-  status: string;
-  icon: string;
-}
-
-// Severity of a specific result; lvl 2
-interface ResultSeverity {
-  severity: string;
-  icon: string;
-}
-
-// Container for all results; lvl 1
-interface ResultSet {
-  filename: string;
-  fileID: string;
-  results: (ContextualizedControl & {details: Detail[]} & {
-    resultID: string;
-  } & {resultStatus: ResultStatus} & {resultSeverity: ResultSeverity} & {
-    controlTags: string[];
-  })[];
-}
-
-// All used icons; lvl 1
-interface Icons {
-  [key: string]: string;
-}
-
-// Top level interface; lvl 0
-interface OutputData {
-  tailwindStyles: string;
-  tailwindElements: string;
-  files: FileInfo[];
-  statistics: Statistics;
-  severity: Severity;
-  compliance: Compliance;
-  resultSets: ResultSet[];
-  showResultSets: boolean;
-  showCode: boolean;
-  exportType: string;
-  icons: Icons;
-}
-
-// ===================================
-// TEMPLATE RENDER DATA INTERFACES END
-// ===================================
 
 export class FromHDFToHTMLMapper {
   // Generated injectable HTML for icons
