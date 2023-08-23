@@ -29,5 +29,6 @@ tests/hdf_data/inspec_tools_info
 *.sw?
 
 # HTML Export Stylesheet/Dependency
+public/static/export/template.html
 public/static/export/style.css
 public/static/export/tw-elements.min.js
