@@ -11,7 +11,9 @@ import axios from 'axios';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
-  HDFControlSegment
+  convertFileContextual,
+  HDFControlSegment,
+  isContextualizedEvaluation
 } from 'inspecjs';
 import * as _ from 'lodash';
 import Mustache from 'mustache';
@@ -24,6 +26,12 @@ import {
 } from './html-types';
 
 type InputData = {
+  data: ContextualizedEvaluation | string;
+  fileName: string;
+  fileID: string;
+};
+
+type ProcessedData = {
   data: ContextualizedEvaluation;
   fileName: string;
   fileID: string;
@@ -156,12 +164,24 @@ export class FromHDFToHTMLMapper {
 
     // Fill out data template for html file using received hdf file(s)
     for (const file of files) {
-      this.addFiledata(file, exportType);
+      // Check if provided data is string typed
+      if (_.isString(file.data)) {
+        const contextualizedFile = convertFileContextual(file.data);
+        if (!isContextualizedEvaluation(contextualizedFile)) {
+          throw new Error('Input string was not an HDF ExecJSON');
+        }
+        file.data = contextualizedFile;
+      }
+
+      this.addFiledata(
+        {data: file.data, fileName: file.fileName, fileID: file.fileID},
+        exportType
+      );
     }
   }
 
   // Pulls and sets high level attributes of outputData object from file data
-  addFiledata(file: InputData, exportType: FileExportTypes) {
+  addFiledata(file: ProcessedData, exportType: FileExportTypes) {
     // Set file profile data
     this.outputData.files.push({
       filename: file.fileName,
