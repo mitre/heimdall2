@@ -2,7 +2,7 @@
 
 module.exports = {
   content: [
-    './src/converters-from-hdf/html/template.html',
+    './public/static/export/template.html',
     './node_modules/tw-elements/dist/js/**/*.js'
   ],
   theme: {

@@ -14,7 +14,8 @@
   ],
   "scripts": {
     "prebuild": "rimraf ../../dist/frontend",
-    "build": "vue-cli-service build",
+    "build:tailwind": "npx tailwindcss -i ./src/tailwind.css -o ./public/static/export/style.css --minify",
+    "build": "vue-cli-service build && yarn build:tailwind",
     "lint": "vue-cli-service lint",
     "lint:ci": "vue-cli-service lint --no-fix  --maxWarnings 0",
     "make:component": "vue-cli-service make:component",
@@ -24,7 +25,7 @@
     "make:view": "vue-cli-service make:view",
     "prepack": "vue-cli-service build --dest dist && cp ../../README.md README.md && cp package.json package.json.orig && cat package.json.orig | jq '.dependencies = (.dependencies | with_entries(select(.key | contains(\"express\"))))' > package.json",
     "postpack": "mv package.json.orig package.json && rm README.md",
-    "start:dev": "vue-cli-service serve",
+    "start:dev": "vue-cli-service serve & yarn build:tailwind --watch",
     "test": "jest"
   },
   "dependencies": {

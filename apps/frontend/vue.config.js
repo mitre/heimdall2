@@ -17,8 +17,6 @@ const files = {
   [require.resolve(
     '@mitre/hdf-converters/src/converters-from-hdf/html/template.html'
   )]: 'public/static/export/template.html',
-  [require.resolve('@mitre/hdf-converters/src/converters-from-hdf/html/style.css')]:
-    'public/static/export/style.css',
   [require.resolve('tw-elements/dist/js/tw-elements.umd.min.js')]:
     'public/static/export/tw-elements.min.js'
 };
