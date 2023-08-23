@@ -276,9 +276,9 @@ export class FromHDFToHTMLMapper {
     this.outputData.resultSets = [];
 
     // Fill out data template for html file using received hdf file(s)
-    files.map((file) => {
+    for (const file of files) {
       this.addFiledata(file, exportType);
-    });
+    }
   }
 
   // Pulls and sets high level attributes of outputData object from file data
@@ -349,10 +349,9 @@ export class FromHDFToHTMLMapper {
           break;
         case 'Failed':
           failed++;
-          passingTestsFailedResult +=
-            (result.root.hdf.segments || []).filter(
-              (subStatus) => subStatus.status === 'passed'
-            ).length;
+          passingTestsFailedResult += (result.root.hdf.segments || []).filter(
+            (subStatus) => subStatus.status === 'passed'
+          ).length;
           failedTests += (result.root.hdf.segments || []).filter(
             (subStatus) => subStatus.status === 'failed'
           ).length;
