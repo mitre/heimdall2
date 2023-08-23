@@ -605,8 +605,15 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   addHdfControlSpecificData(control: ExecJSON.Control): string {
     const hdfSpecificData: Record<string, unknown> = {};
+    const checklistImpactNumbers = [0.7, 0.5, 0.3]
+    if (!checklistImpactNumbers.includes(control.impact)) {
+      hdfSpecificData['impact'] = control.impact
+    }
+    // TODO: maybe create a standard array of tags to ignore, but add others
 
-    return JSON.stringify(hdfSpecificData);
+    const hdfDataExist = Object.keys(hdfSpecificData).length !== 0;
+
+    return hdfDataExist ? JSON.stringify({hdfSpecificData: hdfSpecificData}) : '';
   }
 
   controlsToVulns(profile: ExecJSON.Profile, stigRef: string): ChecklistVuln[] {
@@ -708,7 +715,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       if (profile.depends?.length) {
         continue;
       }
-      const profileMetadata = metadata.profiles.find((p) => p.name === profile.name);
+      const profileMetadata = metadata?.profiles.find((p) => p.name === profile.name);
       const header: StigHeader = {
         version: _.get(
           profileMetadata,
@@ -717,7 +724,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         ) as string,
         classification: 'UNCLASSIFIED',
         customname: '',
-        stigid: '',
+        stigid: profile.name,
         description: profile.description as string,
         filename: '',
         releaseinfo: this.getReleaseInfo(

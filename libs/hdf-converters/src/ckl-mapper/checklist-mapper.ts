@@ -25,7 +25,6 @@ enum ImpactMapping {
   low = 0.3
 }
 
-//const CCI_NIST_MAPPING = new CciNistMapping();
 const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
 
 /**
@@ -72,6 +71,12 @@ function findSeverity(vuln: ChecklistVuln): string {
  */
 function transformImpact(vuln: ChecklistVuln): number {
   if (vuln.status === 'Not Applicable') return 0.0;
+  if (vuln.thirdPartyTools) {
+    const hdfExistingData = JSON.parse(vuln.thirdPartyTools);
+    if (hdfExistingData.hdfSpecificData.impact) {
+      return hdfExistingData.hdfSpecificData.impact;
+    }
+  }
   const severity = findSeverity(vuln);
   const impact =
     ImpactMapping[severity.toLowerCase() as keyof typeof ImpactMapping];
@@ -133,7 +138,11 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
 
   // check if code_desc is empty or does not match the above regular expression
   if(!RegExp(regex).exec(findingDetails)) {
-    return findings;
+    return [{
+      status: findings[0].status,
+      code_desc: findings[0].code_desc,
+      start_time: ''
+    }];
   } else {
     // split into multiple findings details using heimdall2 CKLExport functionality
       for (const details of findingDetails.split(
@@ -164,8 +173,13 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
   const descriptions = input as unknown as ExecJSON.ControlDescription[];
   const results: ExecJSON.ControlDescription[] = [];
   const commentString = descriptions[0].data;
-  if(!commentString?.includes('::')) {
-    return descriptions;
+  if (!commentString) {
+    return results;
+  } else if(!commentString.includes(' :: ')) {
+    return [{
+      label: descriptions[0].label,
+      data: descriptions[0].data
+    }];
   } else {
     for (const section of commentString.split(/\n(?=[A-Z]+ ::)/)) {
       const matches = RegExp(/([A-Z]+) :: (.+)/s).exec(section);
@@ -288,7 +302,7 @@ export class ChecklistMapper extends BaseConverter {
     profiles: [
       {
         path: 'stigs',
-        name: {path: 'header.title'},
+        name: {path: 'header.stigid'},
         version: {path: 'header.version'},
         title: {path: 'header.title'},
         summary: {path: 'header.description'},
