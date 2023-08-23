@@ -32,6 +32,7 @@ export * from './src/sonarqube-mapper';
 export * from './src/splunk-mapper';
 export * from './src/twistlock-mapper';
 export * from './src/utils/attestations';
+export * from './src/utils/compliance';
 export * from './src/utils/fingerprinting';
 export * from './src/veracode-mapper';
 export * from './src/xccdf-results-mapper';
