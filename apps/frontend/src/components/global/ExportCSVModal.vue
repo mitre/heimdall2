@@ -61,7 +61,7 @@ import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import {ContextualizedControl, ExecJSON, HDFControlSegment} from 'inspecjs';
 import * as _ from 'lodash';
-import ObjectsToCsv from 'objects-to-csv';
+//import ObjectsToCsv from 'objects-to-csv';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -322,12 +322,12 @@ export default class ExportCSVModal extends Vue {
     let rows: ControlSetRows = [];
     rows = this.convertRows(file);
     // Convert our rows to CSV
-    const csvString = await new ObjectsToCsv(rows).toString();
+    /*const csvString = await new ObjectsToCsv(rows).toString();
     // If we only have one file we can save just one csv file
     this.files.push({
       filename: this.cleanUpFilename(`${file.filename}.csv`),
       data: csvString
-    });
+    });*/
   }
 
   exportCSV() {
