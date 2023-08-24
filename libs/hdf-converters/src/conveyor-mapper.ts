@@ -200,8 +200,9 @@ export class ConveyorMapper extends BaseConverter {
     profiles: [
       {
         name: {path: 'api_response.results[0].response.service_name'},
+        //name: {path: 'api_response.files[0].name'},
         version: {path: 'api_response.results[0].response.service_version'},
-        title: {path: 'api_response.params.description'},
+        title: {path: 'api_response.results[0].response.service_name'},
         supports: [],
         attributes: [],
         groups: [],
@@ -245,10 +246,12 @@ export class ConveyorResults {
       Object.entries(
         _.get(this.data, 'api_response.results') as Record<string, unknown>
       ) as [string, Record<string, unknown>][]
-    ).map(([scannerName, scannerData]) => [
-      scannerName,
-      new ConveyorMapper(scannerData, this.data, scannerName).toHdf()
-    ]);
+    ).map(([scannerName, scannerData]) => {
+      return [
+            scannerName,
+            new ConveyorMapper(scannerData, this.data, scannerName).toHdf()
+          ]
+      });
     return Object.fromEntries(scannerRecordInput);
   }
 }
