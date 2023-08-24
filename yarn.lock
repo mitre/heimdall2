@@ -2945,9 +2945,9 @@
   integrity sha512-paR9M9ZT7rKbh2boksNUynuSZMHhqRYnEZOm/KrZTjQ4/FzyhjLHuvw/8XYzP+E7fS4+/Ms/82EN1pl/OFsiIA==
 
 "@mitre/jsonix@^3.0.6":
-  version "3.0.6"
-  resolved "https://registry.yarnpkg.com/@mitre/jsonix/-/jsonix-3.0.6.tgz#4697012f995ca2e9f1088d882a401dca7ae9b106"
-  integrity sha512-L5GrvqVfTXbM+xXRd+pMqeobnrV0Ub2NVLFIaaIcCwk1romzUNy8+ucWpyKFXRhSLpuDy5jY4awLmnnE6RC2pA==
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/@mitre/jsonix/-/jsonix-3.0.7.tgz#f1e33599c1cddb9b865618a04a6a99c343c14764"
+  integrity sha512-8aDNL2v0b2BqaOi+3Hf9/EuNkUMVzFPYOusLx9MY/Ky9LLz2D5BxgGL8+h5mnYpTiHyFknGm4Wr/MFmz7oHLYw==
   dependencies:
     "@xmldom/xmldom" "^0.8.2"
     amdefine "^0.0.4"
