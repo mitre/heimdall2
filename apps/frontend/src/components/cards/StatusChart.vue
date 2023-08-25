@@ -16,7 +16,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {SearchModule} from '../../store/search';
-import {formatCompliance} from '@/utilities/compliance_util';
+import {formatCompliance} from '@mitre/hdf-converters';
 
 /**
  * Categories property must be of type Category
