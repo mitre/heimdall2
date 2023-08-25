@@ -68,6 +68,7 @@ import {Prop} from 'vue-property-decorator';
 import {InspecDataModule} from '../../store/data_store';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {getDescription} from '../../utilities/helper_util';
+import {stringify} from 'csv-stringify/sync';
 
 const fieldNames = [
   'Results Set',
@@ -322,12 +323,12 @@ export default class ExportCSVModal extends Vue {
     let rows: ControlSetRows = [];
     rows = this.convertRows(file);
     // Convert our rows to CSV
-    /*const csvString = await new ObjectsToCsv(rows).toString();
+    const csvString = stringify(rows);
     // If we only have one file we can save just one csv file
     this.files.push({
       filename: this.cleanUpFilename(`${file.filename}.csv`),
       data: csvString
-    });*/
+    });
   }
 
   exportCSV() {
