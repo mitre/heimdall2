@@ -4761,9 +4761,9 @@
   integrity sha512-MUSpfpW0yZbTgjekDbH0shMYBUD+X/uJJJMm9LXN1d5yjl5lCY1vN/eWKD6D1tOtjA6206K0zcIPnUaFMurdNA==
 
 "@types/node@*", "@types/node@^20.1.0":
-  version "20.5.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.5.4.tgz#4666fb40f9974d60c53c4ff554315860ba4feab8"
-  integrity sha512-Y9vbIAoM31djQZrPYjpTLo0XlaSwOIsrlfE3LpulZeRblttsLQRFRlBAppW0LOxyT3ALj2M5vU1ucQQayQH3jA==
+  version "20.5.6"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.5.6.tgz#5e9aaa86be03a09decafd61b128d6cec64a5fe40"
+  integrity sha512-Gi5wRGPbbyOTX+4Y2iULQ27oUPrefaB0PxGQJnfyWN3kvEDGM3mIB5M/gQLmitZf7A9FmLeaqxD3L1CXpm3VKQ==
 
 "@types/node@^10.1.0":
   version "10.17.60"
@@ -6351,9 +6351,9 @@ available-typed-arrays@^1.0.5:
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
 aws-sdk@^2.1046.0, aws-sdk@^2.573.0:
-  version "2.1443.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1443.0.tgz#aa63bceb8f0c711e1c15e40d043d1a6d6950a05b"
-  integrity sha512-QMHWzNuNc3OyYGStCgoB3e4ouuDVIn8FJC5hDrPGX5qUyi8WeUb5l3oI/93MH5jym/1qLIsq4cArJYwUF2blgg==
+  version "2.1444.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1444.0.tgz#eb3a6ab794e35c41b4ba0e68d2cc7ce0da1c9572"
+  integrity sha512-Bdr7MN9JF2O7W5hdzi3m6bTR538bVjdyRUk+Y/ZRsbpsiIyNv+q6m1mXODPG1roZXNLxqUC9IH+s3yqCR/u3VA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -7237,9 +7237,9 @@ chai-as-promised@^7.1.1:
     check-error "^1.0.2"
 
 chai@^4.1.2:
-  version "4.3.7"
-  resolved "https://registry.yarnpkg.com/chai/-/chai-4.3.7.tgz#ec63f6df01829088e8bf55fca839bcd464a8ec51"
-  integrity sha512-HLnAzZ2iupm25PlN0xFreAlBA5zaBSv3og0DdeGA4Ar6h6rJ3A0rolRUKJhSF2V10GZKDgWF/VmAEsNWjCRB+A==
+  version "4.3.8"
+  resolved "https://registry.yarnpkg.com/chai/-/chai-4.3.8.tgz#40c59718ad6928da6629c70496fe990b2bb5b17c"
+  integrity sha512-vX4YvVVtxlfSZ2VecZgFUTU5qPCYsobVI2O9FmwEXBhDigYGQA6jRXCycIs1yJnnWbZ6/+a2zNIF5DfVCcJBFQ==
   dependencies:
     assertion-error "^1.1.0"
     check-error "^1.0.2"
