@@ -321,12 +321,15 @@ export default class ExportCSVModal extends Vue {
     // Convert all controls from a file to ControlSetRows
     let rows: ControlSetRows = [];
     rows = this.convertRows(file);
-    // Convert our rows to CSV
-    const csvString = stringify(rows);
+    // Convert rows to CSV
+    const csvBody = stringify(rows);
+    // Generate and add headers to CSV
+    const csvHeader = stringify([Object.keys(rows[0])]);
+    const csv = [csvHeader, csvBody].join('');
     // If we only have one file we can save just one csv file
     this.files.push({
       filename: this.cleanUpFilename(`${file.filename}.csv`),
-      data: csvString
+      data: csv
     });
   }
 

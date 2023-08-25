@@ -300,7 +300,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    OSX:
    
    - ```bash
-     brew install postgresql node@16 git      
+     brew install postgresql node@18 git      
      brew install nano                        # recommended installation
      sudo npm install -g yarn
      ```
