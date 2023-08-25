@@ -323,8 +323,9 @@ export default class ExportCSVModal extends Vue {
     rows = this.convertRows(file);
     // Convert rows to CSV
     const csvBody = stringify(rows);
-    // Generate and add headers to CSV
+    // Generate headers for CSV
     const csvHeader = stringify([Object.keys(rows[0])]);
+    // Merge CSV headers and body
     const csv = [csvHeader, csvBody].join('');
     // If we only have one file we can save just one csv file
     this.files.push({
