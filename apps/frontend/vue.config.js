@@ -64,15 +64,13 @@ module.exports = {
     devtool: 'source-map',
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': {
-          PACKAGE_VERSION: `"${version}"`,
-          DESCRIPTION: `"${description}"`,
-          REPOSITORY: `"${repository}"`,
-          LICENSE: `"${license}"`,
-          CHANGELOG: `"${changelog}"`,
-          BRANCH: `"${branch}"`,
-          ISSUES: `"${issues}"`
-        }
+        'process.env.PACKAGE_VERSION': `"${version}"`,
+        'process.env.DESCRIPTION': `"${description}"`,
+        'process.env.REPOSITORY': `"${repository}"`,
+        'process.env.LICENSE': `"${license}"`,
+        'process.env.CHANGELOG': `"${changelog}"`,
+        'process.env.BRANCH': `"${branch}"`,
+        'process.env.ISSUES': `"${issues}"`
       }),
       new NodePolyfillPlugin({
         includeAliases: [
