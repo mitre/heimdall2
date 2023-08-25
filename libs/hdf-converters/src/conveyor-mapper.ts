@@ -147,34 +147,33 @@ function controlMappingConveyor(): MappedTransform<
   ILookupPath
 > {
   return {
-    id: {path: 'sha256'},
-    title: {path: 'filename'},
-    desc: '',
+    id: {path: 'heuristic.heur_id'},
+    title: {path: 'heuristic.name'},  // Needs to name of the heuristic
+    desc: {path: 'body'}, // Needs to be the long heuristic description 
     impact: {
-      path: 'result.score',
+      path: 'heuristic..score',
       transformer: (value) => {
         return value / CONVEYOR_MAX_SCORE;
       }
     },
     refs: [],
     tags: {
-      service_context: {path: 'response.service_context'},
-      service_debug_info: {path: 'response.service_debug_info'},
-      service_tool_version: {path: 'response.service_tool_version'},
-      supplementary: {path: 'response.supplementary'},
-      created: {path: 'created'},
-      archive_ts: {path: 'archive_ts'},
-      classification: {path: 'classification'},
-      expiry_ts: {path: 'expiry_ts'},
-      size: {path: 'size'},
-      type: {path: 'type'},
-      nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS.flat()
+//      service_context: {path: 'response.service_context'},
+//      service_debug_info: {path: 'response.service_debug_info'},
+//      service_tool_version: {path: 'response.service_tool_version'},
+//      supplementary: {path: 'response.supplementary'},
+//      created: {path: 'created'},
+//      archive_ts: {path: 'archive_ts'},
+//      classification: {path: 'classification'},
+//      expiry_ts: {path: 'expiry_ts'},
+//      size: {path: 'size'},
+//      type: {path: 'type'},
+//      nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+//      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS.flat()
     },
     source_location: {},
-    results: [
+    results: [ // Each results should be a heuristic instance 
       {
-        path: 'result.sections',
         status: {path: 'status'},
         code_desc: {path: 'code_desc'},
         start_time: {path: 'start_time'},
@@ -197,23 +196,23 @@ export class ConveyorMapper extends BaseConverter {
     },
     version: {path: 'api_server_version'},
     statistics: {},
-    profiles: [
+    profiles: [ // Each profile here should be a file/service combination 
       {
-        name: {path: 'api_response.results[0].response.service_name'},
-        //name: {path: 'api_response.files[0].name'},
-        version: {path: 'api_response.results[0].response.service_version'},
-        title: {path: 'api_response.results[0].response.service_name'},
+        path: 'api_response.results',
+        name: {path: 'response.service_name'},
+        sha256: {path: 'sha256'},
+        version: {path: 'response.service_version'},
+        title: {path: 'filename'},
         supports: [],
         attributes: [],
         groups: [],
         status: 'loaded',
-        controls: [
+        controls: [ // Each control should be result.sections
           {
-            path: 'api_response.results',
+            path: 'result.sections',
             ...controlMappingConveyor()
           }
         ],
-        sha256: ''
       }
     ]
   };
