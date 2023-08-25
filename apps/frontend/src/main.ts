@@ -50,6 +50,6 @@ new Vue({
 //@ts-ignore
 Prism.languages['rb'] = {
   'token-name': {
-    pattern: /("|')(\1|(?:(?![^\\]\1)[\s\S])*[^\\]\1)/g
+    pattern: /(["'])(\1|(?:(?![^\\]\1)[\s\S])*[^\\]\1)/g
   }
 };
