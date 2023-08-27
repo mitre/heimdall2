@@ -168,8 +168,8 @@ function controlMappingConveyor(): MappedTransform<
 //      expiry_ts: {path: 'expiry_ts'},
 //      size: {path: 'size'},
 //      type: {path: 'type'},
-//      nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-//      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS.flat()
+      nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS.flat()
     },
     source_location: {},
     results: [ // Each results should be a heuristic instance 
