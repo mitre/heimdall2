@@ -13,6 +13,9 @@ enum scannerType {
   CodeQuality = 'CodeQuality'
 }
 
+/*
+Uses score to determine pass or fail. Non-zero score is fail
+*/
 function determineStatus(score: number): ExecJSON.ControlResultStatus {
   if (score === 0) {
     return ExecJSON.ControlResultStatus.Passed;
@@ -20,6 +23,9 @@ function determineStatus(score: number): ExecJSON.ControlResultStatus {
   return ExecJSON.ControlResultStatus.Failed;
 }
 
+/*
+Groups findings by scanner (service) for final json
+*/
 function groupByScanner(
   processed: Record<string, unknown>[]
 ): Record<string, unknown> {
@@ -53,6 +59,9 @@ function collateShaAndFilenames(
   return shaFilePairs;
 }
 
+/*
+Uses file_tree from json to build map of hash values to filenames
+*/
 function mapSha2Filename(
   results: Record<string, unknown>
 ): Record<string, unknown> {
@@ -67,7 +76,9 @@ function mapSha2Filename(
   }
   return shaMappings;
 }
-
+/*
+Builds the code_desc field using values from data. Varies based on service
+*/
 function createDescription(
   data: Record<string, unknown>,
   score: number,
@@ -142,18 +153,21 @@ function preprocessObject(
   return newSections;
 }
 
+/*
+Builds everything under profiles.controls using results.sections data from Conveyor JSON.
+*/ 
 function controlMappingConveyor(): MappedTransform<
   ExecJSON.Control & ILookupPath,
   ILookupPath
 > {
   return {
-    id: {path: 'heuristic.heur_id'},
-    title: {path: 'heuristic.name'},  // Needs to name of the heuristic
-    desc: {path: 'body'}, // Needs to be the long heuristic description 
+    id: {path: 'heuristic.heur_id'},  // ID for heuristic from Conveyor
+    title: {path: 'heuristic.name'},  // Name of the heuristic from Conveyor
+    desc: {path: 'body'}, // Free text description of finding from Conveyor
     impact: {
-      path: 'heuristic..score',
+      path: 'heuristic.score', // Score from Conveyor
       transformer: (value) => {
-        return value / CONVEYOR_MAX_SCORE;
+        return value / CONVEYOR_MAX_SCORE; // normalize score from Conveyor
       }
     },
     refs: [],
@@ -183,6 +197,9 @@ function controlMappingConveyor(): MappedTransform<
   };
 }
 
+/*
+Builds profile portion of HDF results. Uses date at results level of Conveyor JSON
+*/
 export class ConveyorMapper extends BaseConverter {
   scannerName: string;
   mappings: MappedTransform<
