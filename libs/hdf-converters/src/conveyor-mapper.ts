@@ -10,7 +10,8 @@ const CONVEYOR_MAX_SCORE = 1000;
 enum scannerType {
   Moldy = 'Moldy',
   Stigma = 'Stigma',
-  CodeQuality = 'CodeQuality'
+  CodeQuality = 'CodeQuality',
+  Clamav = 'Clamav'
 }
 
 /*
@@ -89,7 +90,8 @@ function createDescription(
   const desc = () => {
     if (
       scannerName === scannerType.Moldy ||
-      scannerName === scannerType.Stigma
+      scannerName === scannerType.Stigma ||
+      scannerName === scannerType.Clamav
     ) {
       return `title_text:${_.get(data, 'title_text') as string}
       body:${_.get(data, 'body')}
@@ -161,33 +163,34 @@ function controlMappingConveyor(): MappedTransform<
   ILookupPath
 > {
   return {
-    id: {path: 'heuristic.heur_id'},  // ID for heuristic from Conveyor
-    title: {path: 'heuristic.name'},  // Name of the heuristic from Conveyor
-    desc: {path: 'body'}, // Free text description of finding from Conveyor
+    id: {path: 'sha256'},
+    title: {path: 'result.sections[0].heuristic.heur_id'},  // Name of the heuristic from Conveyor
+    desc: {path: 'result.sections[0].heuristic.name'}, // Free text description of finding from Conveyor
     impact: {
-      path: 'heuristic.score', // Score from Conveyor
+      path: 'result.score', // Score from Conveyor
       transformer: (value) => {
         return value / CONVEYOR_MAX_SCORE; // normalize score from Conveyor
       }
     },
     refs: [],
     tags: {
-//      service_context: {path: 'response.service_context'},
-//      service_debug_info: {path: 'response.service_debug_info'},
-//      service_tool_version: {path: 'response.service_tool_version'},
-//      supplementary: {path: 'response.supplementary'},
-//      created: {path: 'created'},
-//      archive_ts: {path: 'archive_ts'},
-//      classification: {path: 'classification'},
-//      expiry_ts: {path: 'expiry_ts'},
-//      size: {path: 'size'},
-//      type: {path: 'type'},
-//      nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-//      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS.flat()
+      service_context: {path: 'response.service_context'},
+      service_debug_info: {path: 'response.service_debug_info'},
+      service_tool_version: {path: 'response.service_tool_version'},
+      supplementary: {path: 'response.supplementary'},
+      created: {path: 'created'},
+      archive_ts: {path: 'archive_ts'},
+      classification: {path: 'classification'},
+      expiry_ts: {path: 'expiry_ts'},
+      size: {path: 'size'},
+      type: {path: 'type'},
+      nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS.flat()
     },
     source_location: {},
     results: [ // Each results should be a heuristic instance 
       {
+        path: 'result.sections',
         status: {path: 'status'},
         code_desc: {path: 'code_desc'},
         start_time: {path: 'start_time'},
@@ -215,18 +218,17 @@ export class ConveyorMapper extends BaseConverter {
     statistics: {},
     profiles: [ // Each profile here should be a file/service combination 
       {
-        path: 'api_response.results',
-        name: {path: 'response.service_name'},
-        sha256: {path: 'sha256'},
-        version: {path: 'response.service_version'},
-        title: {path: 'filename'},
+        name: {path: 'api_response.results[0].response.service_name'},
+        sha256: '',
+        version: {path: 'api_response.results[0].response.service_version'},
+        title: {path: 'api_response.params.description'},
         supports: [],
         attributes: [],
         groups: [],
         status: 'loaded',
         controls: [ // Each control should be result.sections
           {
-            path: 'result.sections',
+            path: 'api_response.results',
             ...controlMappingConveyor()
           }
         ],
