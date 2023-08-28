@@ -38,8 +38,7 @@
   },
   "resolutions": {
     "prismjs": "1.25.0",
-    "vue": "2.6.14",
-    "@yarnpkg/parsers": "3.0.0-rc.48.1"
+    "vue": "2.6.14"
   },
   "engines": {
     "node": "^18.12.0"
