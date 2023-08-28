@@ -164,8 +164,8 @@ function controlMappingConveyor(): MappedTransform<
 > {
   return {
     id: {path: 'sha256'},
-    title: {path: 'result.sections[0].heuristic.heur_id'},  // Name of the heuristic from Conveyor
-    desc: {path: 'result.sections[0].heuristic.name'}, // Free text description of finding from Conveyor
+    title: {path: 'filename'},  // Should be heur_id from conveyor
+    desc: '', // Should be heur name from Conveyor
     impact: {
       path: 'result.score', // Score from Conveyor
       transformer: (value) => {
