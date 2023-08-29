@@ -2,7 +2,7 @@ ARG BASE_CONTAINER=registry.access.redhat.com/ubi8/nodejs-18-minimal:1
 
 FROM $BASE_CONTAINER as builder
 
-ARG NODE_ENV=development
+ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
 ARG YARNREPO_MIRROR=https://registry.yarnpkg.com
@@ -33,7 +33,7 @@ FROM $BASE_CONTAINER as app
 
 EXPOSE 3000
 
-ARG NODE_ENV=development
+ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
 USER 0
