@@ -8,10 +8,10 @@ import {
 } from './utils/global';
 const CONVEYOR_MAX_SCORE = 1000;
 enum scannerType {
-  Moldy = 'Moldy',
-  Stigma = 'Stigma',
+  ClamAV = 'Clamav',
   CodeQuality = 'CodeQuality',
-  Clamav = 'Clamav'
+  Moldy = 'Moldy',
+  Stigma = 'Stigma'
 }
 
 /*
@@ -91,7 +91,7 @@ function createDescription(
     if (
       scannerName === scannerType.Moldy ||
       scannerName === scannerType.Stigma ||
-      scannerName === scannerType.Clamav
+      scannerName === scannerType.ClamAV
     ) {
       return `title_text:${_.get(data, 'title_text') as string}
       body:${_.get(data, 'body')}
@@ -164,7 +164,7 @@ function controlMappingConveyor(): MappedTransform<
 > {
   return {
     id: {path: 'sha256'},
-    title: {path: 'filename'},  // Should be heur_id from conveyor
+    title: {path: 'filename'},  // Name of file scanned per Conveyor. Will include conveyor-generated files (.clamav, .moldy, etc)
     desc: '', // Should be heur name from Conveyor
     impact: {
       path: 'result.score', // Score from Conveyor
@@ -264,12 +264,11 @@ export class ConveyorResults {
       Object.entries(
         _.get(this.data, 'api_response.results') as Record<string, unknown>
       ) as [string, Record<string, unknown>][]
-    ).map(([scannerName, scannerData]) => {
-      return [
+    ).map(([scannerName, scannerData]) => [
             scannerName,
             new ConveyorMapper(scannerData, this.data, scannerName).toHdf()
           ]
-      });
+      );
     return Object.fromEntries(scannerRecordInput);
   }
 }
