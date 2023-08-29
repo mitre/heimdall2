@@ -737,9 +737,9 @@
   "statistics": {},
   "profiles": [
     {
-      "name": "Stigma",
-      "sha256": "3f6a788d18e0f8d8487ac61e297a73c1985924068fb2efae6baa07b72827e0bc",
-      "version": "4.3.0.12",
+      "name": "Clamav",
+      "sha256": "b86153e55b185a443bd1e222c844e4a18f68cb3d31dd09b4049b5c181d38594b",
+      "version": "4.3.0.0",
       "title": "Inspection of file: submissions/rbb_test_dir.zip",
       "supports": [],
       "attributes": [],
@@ -757,10 +757,10 @@
             "service_debug_info": "",
             "service_tool_version": "",
             "supplementary": [],
-            "created": "2023-08-28T12:24:10.397872Z",
+            "created": "2023-08-28T12:23:54.184896Z",
             "archive_ts": "",
             "classification": "TLP:C",
-            "expiry_ts": "2023-08-31T12:24:10.397363Z",
+            "expiry_ts": "2023-08-31T12:23:54.184474Z",
             "size": 351,
             "type": "document/stigma",
             "nist": [
@@ -776,15 +776,153 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "title_text:Package Info\n      body:Package Name: Capa\nVersion: 1.2.0\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:undefined\n      heuristic_score:undefined\n      heuristic_name:undefined",
-              "start_time": "2023-08-28T12:24:04.715274Z",
-              "run_time": 5677
-            },
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:54.164548Z",
+              "run_time": 15
+            }
+          ]
+        },
+        {
+          "id": "03d3a4e7fd27f8cc617b226911a452ab725c42417da5880b928d35d1b1e0fbc6",
+          "title": "Capa.hipcheck",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:53.190596Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:53.190284Z",
+            "size": 362,
+            "type": "document/hipcheck",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
             {
               "status": "passed",
-              "code_desc": "title_text:No Vulnerability\n      body:No vulnerabilities were found\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:STIGMA.0\n      heuristic_score:0\n      heuristic_name:Pass",
-              "start_time": "2023-08-28T12:24:04.715274Z",
-              "run_time": 5677
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:53.163875Z",
+              "run_time": 22
+            }
+          ]
+        },
+        {
+          "id": "1cf4c4e746fb314ade933773ed1eac339635f556593524ed53761d0a99486ba6",
+          "title": "Geographical-Adventures.hipcheck",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:53.913129Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:53.912849Z",
+            "size": 401,
+            "type": "document/hipcheck",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:53.890412Z",
+              "run_time": 18
+            }
+          ]
+        },
+        {
+          "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+          "title": "rbb_test_dir/eicar-test-file",
+          "desc": "",
+          "impact": 1,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:52.024042Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:52.023246Z",
+            "size": 68,
+            "type": "text/plain",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "title_text:Results\n      body:['FOUND', 'Win.Test.EICAR_HDB-1']\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.1\n      heuristic_score:1000\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:51.976423Z",
+              "run_time": 41
+            }
+          ]
+        },
+        {
+          "id": "3e6ea99456f8c133453fc6b4c002d6a0415ef07e0f4f075fb5f8fe98fb28129b",
+          "title": "rbb_test_dir/PerformTransfer.java",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:52.635954Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:52.635665Z",
+            "size": 2433,
+            "type": "code/java",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:52.598517Z",
+              "run_time": 33
             }
           ]
         },
@@ -799,10 +937,10 @@
             "service_debug_info": "",
             "service_tool_version": "",
             "supplementary": [],
-            "created": "2023-08-28T12:23:57.555412Z",
+            "created": "2023-08-28T12:23:53.412374Z",
             "archive_ts": "",
             "classification": "TLP:C",
-            "expiry_ts": "2023-08-31T12:23:57.554181Z",
+            "expiry_ts": "2023-08-31T12:23:53.412003Z",
             "size": 395,
             "type": "document/stigma",
             "nist": [
@@ -818,15 +956,333 @@
           "results": [
             {
               "status": "passed",
-              "code_desc": "title_text:Package Info\n      body:Package Name: Geographical-Adventures\nVersion: NOASSERTION\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:undefined\n      heuristic_score:undefined\n      heuristic_name:undefined",
-              "start_time": "2023-08-28T12:23:53.215873Z",
-              "run_time": 2919
-            },
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:53.389027Z",
+              "run_time": 17
+            }
+          ]
+        },
+        {
+          "id": "60586f9814358e1850b7e0cbe7f891a29f24233f853d00788f6ef8108e19692c",
+          "title": "Capa.moldy",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:53.812370Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:53.811983Z",
+            "size": 369,
+            "type": "document/moldy",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
             {
               "status": "passed",
-              "code_desc": "title_text:No Vulnerability\n      body:No vulnerabilities were found\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:STIGMA.0\n      heuristic_score:0\n      heuristic_name:Pass",
-              "start_time": "2023-08-28T12:23:53.215873Z",
-              "run_time": 2919
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:53.788061Z",
+              "run_time": 18
+            }
+          ]
+        },
+        {
+          "id": "60e5941e7c34e77decf4d079ae18b531d35326ae8bd26d1dbca7ce23de548634",
+          "title": "Notepad++.moldy",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:53.511866Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:53.511584Z",
+            "size": 375,
+            "type": "document/moldy",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:53.491568Z",
+              "run_time": 15
+            }
+          ]
+        },
+        {
+          "id": "7b1bc90fafe2fb7405f69e22b9d748dbaf0162fc73e4d728d8d236387d13ce02",
+          "title": "Geographical-Adventures.moldy",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:54.094570Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:54.094281Z",
+            "size": 414,
+            "type": "document/moldy",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:54.073222Z",
+              "run_time": 16
+            }
+          ]
+        },
+        {
+          "id": "94361e37680f6297b0d7dea8d0dca7b05828f475484ff9219fec0eaf90c8763d",
+          "title": "Notepad++.hipcheck",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:53.313488Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:53.313209Z",
+            "size": 370,
+            "type": "document/hipcheck",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:53.294503Z",
+              "run_time": 15
+            }
+          ]
+        },
+        {
+          "id": "ac1dc5d77d017852c1bc258dd75eb37e803945f617774dc09805c6ef2069cec2",
+          "title": "Notepad++.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:54.273417Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:54.273063Z",
+            "size": 359,
+            "type": "document/stigma",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:54.251436Z",
+              "run_time": 17
+            }
+          ]
+        },
+        {
+          "id": "ba07e9734ed231b9161333e434126e0feb8fd2b99f73b4ee079e1c79a2417742",
+          "title": "rbb_test_dir/testbom.sbom",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:52.533768Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:52.533452Z",
+            "size": 2255,
+            "type": "text/plain",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:52.450970Z",
+              "run_time": 78
+            }
+          ]
+        },
+        {
+          "id": "cb574b9a90ec19d2bbc5d4f575c435d1d5dd7579ed61b9715b8ad99031056755",
+          "title": "Putty.hipcheck",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:53.602856Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:53.602562Z",
+            "size": 357,
+            "type": "document/hipcheck",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:53.582020Z",
+              "run_time": 15
+            }
+          ]
+        },
+        {
+          "id": "d97b7bcf488772501bc406a836f396a6d040831a625b962cc8f3d01d715cfc97",
+          "title": "Putty.moldy",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:53.705427Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:53.705097Z",
+            "size": 363,
+            "type": "document/moldy",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:53.676594Z",
+              "run_time": 21
+            }
+          ]
+        },
+        {
+          "id": "e3be5b8ed0d6f2df9b4656d2d3cde60cc456c955a7d5e3d49bb43f801da3b5ac",
+          "title": "Putty.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:54.000547Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:54.000244Z",
+            "size": 352,
+            "type": "document/stigma",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "title_text:Results\n      body:null\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      heuristic_heur_id:CLAMAV.0\n      heuristic_score:0\n      heuristic_name:Analysis",
+              "start_time": "2023-08-28T12:23:53.977758Z",
+              "run_time": 17
             }
           ]
         }

@@ -5,7 +5,7 @@ describe('conveyor_mapper', () => {
   it('Successfully converts Conveyor reports', () => {
     const mapper = new ConveyorResults(
       fs.readFileSync(
-        'sample_jsons/conveyor_mapper/sample_input_report/large-results.json',
+        'sample_jsons/conveyor_mapper/sample_input_report/sample-results.json',
         {encoding: 'utf-8'}
       )
     );
@@ -21,6 +21,10 @@ describe('conveyor_mapper', () => {
     //fs.writeFileSync(
     //  'sample_jsons/conveyor_mapper/conveyor-codequality-hdf.json',
     //  JSON.stringify(mapped['CodeQuality'], null, 2)
+    //);
+    //fs.writeFileSync(
+    //  'sample_jsons/conveyor_mapper/conveyor-clamav-hdf.json',
+    //  JSON.stringify(mapped['Clamav'], null, 2)
     //);
     //fs.writeFileSync(
     //  'sample_jsons/conveyor_mapper/conveyor-hdf.json',
@@ -43,6 +47,18 @@ describe('conveyor_mapper', () => {
         JSON.parse(
           fs.readFileSync(
             'sample_jsons/conveyor_mapper/conveyor-stigma-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+    expect(omitVersions(mapped['Clamav'])).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/conveyor_mapper/conveyor-clamav-hdf.json',
             {
               encoding: 'utf-8'
             }
