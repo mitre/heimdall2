@@ -157,15 +157,15 @@ function preprocessObject(
 
 /*
 Builds everything under profiles.controls using results.sections data from Conveyor JSON.
-*/ 
+*/
 function controlMappingConveyor(): MappedTransform<
   ExecJSON.Control & ILookupPath,
   ILookupPath
 > {
   return {
-    id: {path: 'sha256'},
-    title: {path: 'filename'},  // Name of file scanned per Conveyor. Will include conveyor-generated files (.clamav, .moldy, etc)
-    desc: '', // Should be heur name from Conveyor
+    id: {path: 'sha256'}, // sha256 of file analyzed
+    title: {path: 'filename'}, // Name of file scanned per Conveyor. Will include conveyor-generated files (.clamav, .moldy, etc)
+    desc: '', // Empty placeholder
     impact: {
       path: 'result.score', // Score from Conveyor
       transformer: (value) => {
@@ -188,7 +188,8 @@ function controlMappingConveyor(): MappedTransform<
       cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS.flat()
     },
     source_location: {},
-    results: [ // Each results should be a heuristic instance 
+    results: [
+      // Data from heuristics and scan supplemental data
       {
         path: 'result.sections',
         status: {path: 'status'},
@@ -216,7 +217,8 @@ export class ConveyorMapper extends BaseConverter {
     },
     version: {path: 'api_server_version'},
     statistics: {},
-    profiles: [ // Each profile here should be a file/service combination 
+    profiles: [
+      // Each profile is service's results
       {
         name: {path: 'api_response.results[0].response.service_name'},
         sha256: '',
@@ -226,12 +228,13 @@ export class ConveyorMapper extends BaseConverter {
         attributes: [],
         groups: [],
         status: 'loaded',
-        controls: [ // Each control should be result.sections
+        controls: [
+          // Each control is a service/file result pair
           {
             path: 'api_response.results',
             ...controlMappingConveyor()
           }
-        ],
+        ]
       }
     ]
   };
@@ -265,10 +268,9 @@ export class ConveyorResults {
         _.get(this.data, 'api_response.results') as Record<string, unknown>
       ) as [string, Record<string, unknown>][]
     ).map(([scannerName, scannerData]) => [
-            scannerName,
-            new ConveyorMapper(scannerData, this.data, scannerName).toHdf()
-          ]
-      );
+      scannerName,
+      new ConveyorMapper(scannerData, this.data, scannerName).toHdf()
+    ]);
     return Object.fromEntries(scannerRecordInput);
   }
 }
