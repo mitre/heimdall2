@@ -1,3 +1,44 @@
+v2.8.0
+
+- Node Version Update to 18 - requires minimum of node v18 now @HenryXiaoHX @charleshu-8 @Amndeep7 (#3850)
+- Conveyor mapper updates @rbogren-brock (#4892)
+- Move HTML export feature to HDF Converters @charleshu-8 (#4834)
+
+## Dependency Updates
+
+- Bump cypress from 12.17.4 to 13.0.0 @dependabot (#4896)
+- Bump aws-sdk from 2.1446.0 to 2.1447.0 @dependabot (#4895)
+- Bump @types/bcryptjs from 2.4.2 to 2.4.3 @dependabot (#4893)
+- Bump tw-elements from 1.0.0-beta3 to 1.0.0-rc.1 @dependabot (#4883)
+- Bump axios from 1.4.0 to 1.5.0 @dependabot (#4884)
+- Bump aws-sdk from 2.1445.0 to 2.1446.0 @dependabot (#4886)
+- Bump luxon from 3.4.1 to 3.4.2 @dependabot (#4889)
+- Bump diff2html from 3.4.40 to 3.4.41 @dependabot (#4890)
+- Bump yaml from 2.3.1 to 2.3.2 @dependabot (#4885)
+- Bump @types/node from 20.5.6 to 20.5.7 @dependabot (#4882)
+- Bump typedoc from 0.24.8 to 0.25.0 @dependabot (#4878)
+- Bump aws-sdk from 2.1444.0 to 2.1445.0 @dependabot (#4877)
+- Bump eslint from 8.47.0 to 8.48.0 @dependabot (#4876)
+- Bump apexcharts from 3.41.1 to 3.42.0 @dependabot (#4871)
+- Bump @nestjs/cli from 10.1.15 to 10.1.16 @dependabot (#4870)
+- Bump @nestjs/cli from 10.1.14 to 10.1.15 @dependabot (#4869)
+- Bump @types/node from 20.5.4 to 20.5.6 @dependabot (#4868)
+- Bump aws-sdk from 2.1443.0 to 2.1444.0 @dependabot (#4866)
+- Bump chai from 4.3.7 to 4.3.8 @dependabot (#4865)
+- Bump aws-sdk from 2.1442.0 to 2.1443.0 @dependabot (#4862)
+- Bump @mitre/jsonix from 3.0.6 to 3.0.7 @dependabot (#4863)
+- Bump @aws-sdk/client-config-service from 3.395.0 to 3.398.0 @dependabot (#4861)
+- Bump @nestjs/cli from 10.1.13 to 10.1.14 @dependabot (#4864)
+- Bump @types/node from 20.5.3 to 20.5.4 @dependabot (#4860)
+- Bump activesupport from 7.0.4.3 to 7.0.7.2 in /libs/inspecjs @dependabot (#4859)
+- Bump @nestjs/passport from 10.0.0 to 10.0.1 @dependabot (#4853)
+- Bump @types/papaparse from 5.3.7 to 5.3.8 @dependabot (#4855)
+- Bump @types/node from 20.5.1 to 20.5.3 @dependabot (#4854)
+- Bump luxon from 3.4.0 to 3.4.1 @dependabot (#4851)
+- Bump aws-sdk from 2.1441.0 to 2.1442.0 @dependabot (#4856)
+- Bump @nestjs/cli from 10.1.12 to 10.1.13 @dependabot (#4852)
+- Bump aws-sdk from 2.1440.0 to 2.1441.0 @dependabot (#4848)
+
 v2.7.2
 
 - CAAT converter @Amndeep7 (#4785)
