@@ -1,4 +1,5 @@
-var webpack = require('webpack');
+const webpack = require('webpack');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 // Lookup constants
 const fs = require('fs');
@@ -27,6 +28,11 @@ module.exports = {
   },
   outputDir: '../../dist/frontend',
   configureWebpack: {
+    resolve: {
+      fallback: {
+        fs: false
+      }
+    },
     module: {
       rules: [
         {
@@ -44,15 +50,26 @@ module.exports = {
     devtool: 'source-map',
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': {
-          PACKAGE_VERSION: `"${version}"`,
-          DESCRIPTION: `"${description}"`,
-          REPOSITORY: `"${repository}"`,
-          LICENSE: `"${license}"`,
-          CHANGELOG: `"${changelog}"`,
-          BRANCH: `"${branch}"`,
-          ISSUES: `"${issues}"`
-        }
+        'process.env.PACKAGE_VERSION': `"${version}"`,
+        'process.env.DESCRIPTION': `"${description}"`,
+        'process.env.REPOSITORY': `"${repository}"`,
+        'process.env.LICENSE': `"${license}"`,
+        'process.env.CHANGELOG': `"${changelog}"`,
+        'process.env.BRANCH': `"${branch}"`,
+        'process.env.ISSUES': `"${issues}"`
+      }),
+      new NodePolyfillPlugin({
+        includeAliases: [
+          'crypto',
+          'path',
+          'http',
+          'https',
+          'os',
+          'zlib',
+          'process',
+          'Buffer',
+          'stream'
+        ]
       })
     ]
   },

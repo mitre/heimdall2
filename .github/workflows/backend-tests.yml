@@ -2,13 +2,13 @@ name: Run Backend Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     services:
       postgres:
         image: postgres:latest
@@ -18,30 +18,30 @@ jobs:
           - 5432:5432
 
     steps:
-     - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-     - name: Setup Node.js
-       uses: actions/setup-node@v3
-       with:
-        node-version: '16.x'
-        cache: 'yarn'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
 
-     - name: Remove frontend code to ensure the proper dependencies are declared in the backend package.json
-       run: rm -rf apps/frontend
+      - name: Remove frontend code to ensure the proper dependencies are declared in the backend package.json
+        run: rm -rf apps/frontend
 
-     - name: Install project dependencies
-       run: yarn backend install --frozen-lockfile
+      - name: Install project dependencies
+        run: yarn backend install --frozen-lockfile
 
-     - name: Copy .env-ci to .env
-       run: cp apps/backend/test/.env-ci apps/backend/.env
+      - name: Copy .env-ci to .env
+        run: cp apps/backend/test/.env-ci apps/backend/.env
 
-     - name: Create/migrate db
-       run: |
-        yarn backend sequelize-cli db:create
-        yarn backend sequelize-cli db:migrate
+      - name: Create/migrate db
+        run: |
+          yarn backend sequelize-cli db:create
+          yarn backend sequelize-cli db:migrate
 
-     - name: Run unit tests
-       run: yarn backend test:ci-cov
+      - name: Run unit tests
+        run: yarn backend test:ci-cov
 
-     - name: Ensure the app builds cleanly without frontend dependencies
-       run: yarn backend build
+      - name: Ensure the app builds cleanly without frontend dependencies
+        run: yarn backend build

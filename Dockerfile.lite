@@ -1,9 +1,9 @@
-ARG BUILD_CONTAINER=registry.access.redhat.com/ubi8/nodejs-16-minimal:1
+ARG BUILD_CONTAINER=registry.access.redhat.com/ubi8/nodejs-18-minimal:1
 ARG BASE_CONTAINER=nginx:alpine
 
 FROM $BUILD_CONTAINER as builder
 
-ARG NODE_ENV=development
+ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
 ARG YARNREPO_MIRROR=https://registry.yarnpkg.com

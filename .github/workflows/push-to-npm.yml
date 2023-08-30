@@ -2,22 +2,23 @@ name: Push Heimdall-Lite to NPM and GitHub Packages and Push InspecJs to NPM
 on:
   release:
     types: [published]
-
+env:
+  NODE_ENV: production
 jobs:
   build-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
 
       - name: setup node
         uses: actions/setup-node@v3
         with:
-          node-version: "16.x"
+          node-version: 18
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
 
       - name: Install project dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --production
 
       - name: Pack all items that are published as packages
         run: yarn pack:all
@@ -44,7 +45,9 @@ jobs:
       - uses: actions/setup-node@v3
         if: always()
         with:
+          node-version: 18
           registry-url: 'https://npm.pkg.github.com'
+          cache: 'yarn'
 
       - name: Publish Heimdall Lite to GitHub Packages
         if: always()

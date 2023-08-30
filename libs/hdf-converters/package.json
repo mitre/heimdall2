@@ -28,7 +28,7 @@
     "@aws-sdk/client-config-service": "^3.95.0",
     "@mdi/js": "^7.0.96",
     "@e965/xlsx": "^0.20.0",
-    "@mitre/jsonix": "^3.0.6",
+    "@mitre/jsonix": "^3.0.7",
     "@types/csv2json": "^1.4.2",
     "@types/ms": "^0.7.31",
     "@types/mustache": "^4.1.2",

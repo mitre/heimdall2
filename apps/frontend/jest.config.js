@@ -16,6 +16,7 @@ module.exports = {
     '^d3$': '<rootDir>/tests/util/d3.js',
     '^@[/](.+)': '<rootDir>/src/$1',
     '^.+\\.(css)$': '<rootDir>/tests/util/cssTransform.js',
-    '^axios$': 'axios/dist/node/axios.cjs'
+    '^axios$': 'axios/dist/node/axios.cjs',
+    '^csv-stringify/sync$': 'csv-stringify/dist/cjs/sync.cjs'
   }
 };
