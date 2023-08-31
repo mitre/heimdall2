@@ -13,6 +13,15 @@ const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
+// tsconfig specification
+const path = require('path');
+const TSCONFIG_PATH = path.resolve(
+  __dirname,
+  process.env.NODE_ENV === 'production'
+    ? './tsconfig.build.json'
+    : './tsconfig.json'
+);
+
 module.exports = {
   lintOnSave: 'warning',
   publicPath: '/',
@@ -82,5 +91,16 @@ module.exports = {
       .use('vue-svg-inline-loader')
       .loader('vue-svg-inline-loader')
       .options();
+
+    // specify custom tsconfig.json file
+    // https://github.com/vuejs/vue-cli/issues/2421
+    config.module
+      .rule('ts')
+      .use('ts-loader')
+      .merge({options: {configFile: TSCONFIG_PATH}});
+    config.plugin('fork-ts-checker').tap((args) => {
+      args[0].typescript.configFile = TSCONFIG_PATH;
+      return args;
+    });
   }
 };
