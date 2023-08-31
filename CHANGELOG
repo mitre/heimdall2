@@ -1,4 +1,4 @@
-v2.8.0
+v2.8.1
 
 - Node Version Update to 18 - requires minimum of node v18 now @HenryXiaoHX @charleshu-8 @Amndeep7 (#3850)
 - Conveyor mapper updates @rbogren-brock (#4892)
@@ -6,6 +6,7 @@ v2.8.0
 
 ## Dependency Updates
 
+- Bump apollo-server-core from 3.12.0 to 3.12.1 @dependabot (#4898)
 - Bump cypress from 12.17.4 to 13.0.0 @dependabot (#4896)
 - Bump aws-sdk from 2.1446.0 to 2.1447.0 @dependabot (#4895)
 - Bump @types/bcryptjs from 2.4.2 to 2.4.3 @dependabot (#4893)
