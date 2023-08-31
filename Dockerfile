@@ -16,7 +16,7 @@ RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo 
 
 COPY package.json yarn.lock lerna.json tsconfig.json postcss.config.js ./
 COPY apps/backend/package.json apps/backend/tsconfig.* ./apps/backend/
-COPY apps/frontend/package.json apps/frontend/tsconfig.json ./apps/frontend/
+COPY apps/frontend/package.json apps/frontend/tsconfig.* ./apps/frontend/
 COPY libs/hdf-converters/package.json libs/hdf-converters/tsconfig.* ./libs/hdf-converters/
 COPY libs/inspecjs/package.json libs/inspecjs/tsconfig.* ./libs/inspecjs/
 COPY libs/interfaces/package.json libs/interfaces/tsconfig.json ./libs/interfaces/
