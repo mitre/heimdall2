@@ -197,10 +197,14 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   get fileFilterTypeName(): string {
     switch (this.active_path) {
-      case 0: return "Result Set";
-      case 1: return "Profile";
-      case 2: return "Checklist";
-      default: return "File";
+      case 0:
+        return 'Result Set';
+      case 1:
+        return 'Profile';
+      case 2:
+        return 'Checklist';
+      default:
+        return 'File';
     }
   }
 

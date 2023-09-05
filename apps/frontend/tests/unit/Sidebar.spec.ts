@@ -1,8 +1,11 @@
 import Sidebar from '@/components/global/Sidebar.vue';
-import {ExtendedControlStatus, FilteredDataModule} from '@/store/data_filters';
+import DropdownFilters from '@/components/global/sidebaritems/DropdownFilters.vue';
+import QuickFilters from '@/components/global/sidebaritems/QuickFilters.vue';
+import SelectedFilterTable from '@/components/global/sidebaritems/SelectedFilterTable.vue';
+import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {SearchModule} from '@/store/search';
-import {createLocalVue, mount, shallowMount, Wrapper} from '@vue/test-utils';
+import {createLocalVue, shallowMount, Wrapper} from '@vue/test-utils';
 import {LowercasedControlStatus, Severity} from 'inspecjs';
 import 'jest';
 import Vue from 'vue';
@@ -10,9 +13,6 @@ import VueRouter from 'vue-router';
 import Vuetify from 'vuetify';
 import {EvaluationFile, ProfileFile} from '../../src/store/report_intake';
 import {loadAll} from '../util/testingUtils';
-import QuickFilters from '@/components/global/sidebaritems/QuickFilters.vue'
-import DropdownFilters from '@/components/global/sidebaritems/DropdownFilters.vue'
-import SelectedFilterTable from '@/components/global/sidebaritems/SelectedFilterTable.vue'
 
 const vuetify = new Vuetify();
 const localVue = createLocalVue();
@@ -33,12 +33,15 @@ const quickFiltersWrapper: Wrapper<Vue> = shallowMount(QuickFilters, {
   propsData: {}
 });
 
-const selectedFilterTableWrapper: Wrapper<Vue> = shallowMount(SelectedFilterTable, {
-  localVue,
-  router,
-  vuetify,
-  propsData: {}
-});
+const selectedFilterTableWrapper: Wrapper<Vue> = shallowMount(
+  SelectedFilterTable,
+  {
+    localVue,
+    router,
+    vuetify,
+    propsData: {}
+  }
+);
 
 const dropdownFiltersWrapper: Wrapper<Vue> = shallowMount(DropdownFilters, {
   localVue,
@@ -60,7 +63,7 @@ const dropdownFiltersWrapper: Wrapper<Vue> = shallowMount(DropdownFilters, {
       'Group Name',
       'CCIs'
     ],
-    header: "Category Filters"
+    header: 'Category Filters'
   }
 });
 

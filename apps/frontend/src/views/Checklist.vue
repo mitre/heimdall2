@@ -32,6 +32,7 @@
     <template #main-content>
       <v-container fluid grid-list-md pt-0 mt-4 mx-1>
         <v-row>
+          <!-- Left Panel -->
           <v-col cols="12" md="6">
             <!-- Data Table -->
             <ChecklistRulesTable
@@ -43,8 +44,8 @@
               @toggle-short-id="shortIdEnabled = !shortIdEnabled"
             />
           </v-col>
-          <!-- Rule Data -->
-          <v-col id="right-panel" cols="12" md="6">
+          <!-- Right Panel (Rule Data) -->
+          <v-col id="right-panel" ref="rightPanel" cols="12" md="6">
             <!-- Rule Header Info -->
             <v-row dense>
               <ChecklistRuleInfoHeader
@@ -76,7 +77,7 @@
             <ChecklistSeverityOverride
               :selected-rule="selectedRule"
               :sheet="sheet"
-              :severity-override-selection="severityoverrideSelection"
+              :severityoverride-selection="severityoverrideSelection"
               @disable-sheet="sheet = false"
               @enable-sheet="sheet = true"
             />
@@ -180,7 +181,7 @@ export default class Checklist extends RouteMixin {
   newJustification = this.selectedRule.severityjustification;
 
   /** State variable to track severity override */
-  severityoverrideSelection = this.selectedRule.severityoverride;
+  severityoverrideSelection = this.selectedRule.severityoverride ?? '';
 
   setSeverityOverrideSelection(value: ChecklistSeverity) {
     this.severityoverrideSelection = value;

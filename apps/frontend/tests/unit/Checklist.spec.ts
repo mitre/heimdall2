@@ -7,12 +7,11 @@ import {SearchEntry, SearchModule} from '@/store/search';
 import Checklist from '@/views/Checklist.vue';
 import {ChecklistObject, ChecklistVuln} from '@mitre/hdf-converters';
 import {shallowMount, Wrapper} from '@vue/test-utils';
-import {readFileSync} from 'fs';
 import 'jest';
 import _ from 'lodash';
 import Vue from 'vue';
 import Vuetify from 'vuetify';
-import {expectedCount, loadChecklistFile, loadSample} from '../util/testingUtils';
+import {expectedCount, loadChecklistFile} from '../util/testingUtils';
 
 const $router = {
   currentRoute: {
@@ -35,7 +34,7 @@ describe('Datatable', () => {
   it('displays correct number of rules with loaded checklist', async () => {
     await loadChecklistFile('Clean RHEL 8 Checklist');
 
-    let total_count: number = 0;
+    const total_count: number = 0;
     // Get example checklist file and count
     // const countFilename = `tests/hdf_data/counts/Red_Hat_7_STIG_Baseline_Checklist.ckl.info.counts`;
     // const countFileContent = readFileSync(countFilename, 'utf-8');

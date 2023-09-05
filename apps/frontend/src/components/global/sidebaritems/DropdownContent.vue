@@ -17,9 +17,13 @@
             Filtered-out {{ headerText }}
           </v-list-item-content>
 
-          <v-list-item-action @click.stop="showFilteredOutFiles = !showFilteredOutFiles">
+          <v-list-item-action
+            @click.stop="showFilteredOutFiles = !showFilteredOutFiles"
+          >
             <v-btn icon small>
-              <v-icon>{{ showFilteredOutFiles ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+              <v-icon>{{
+                showFilteredOutFiles ? 'mdi-chevron-up' : 'mdi-chevron-down'
+              }}</v-icon>
             </v-btn>
           </v-list-item-action>
         </v-list-item>
@@ -84,10 +88,7 @@
 
 <script lang="ts">
 import FileList from '@/components/global/sidebaritems/SidebarFileList.vue';
-import {
-  FilesFilter,
-  fileMatchesFilter
-} from '@/store/data_filters';
+import {FilesFilter, fileMatchesFilter} from '@/store/data_filters';
 import {InspecFile} from '@/store/report_intake';
 import {SearchModule} from '@/store/search';
 import {Trinary} from '@/enums/Trinary';
@@ -124,7 +125,9 @@ export default class DropdownContent extends Vue {
   }
 
   get anyFileFilteredOut(): boolean {
-    return !this.inChecklistView && this.files.some(f => this.fileFilteredOut(f));
+    return (
+      !this.inChecklistView && this.files.some((f) => this.fileFilteredOut(f))
+    );
   }
 
   get allSelectedValue(): boolean {
@@ -145,9 +148,9 @@ export default class DropdownContent extends Vue {
 
   get filesFilter(): FilesFilter {
     return {
-        filenameSearchTerms: SearchModule.fileMetadataSearchTerms.filename,
-        userGroupSearchTerms: SearchModule.fileMetadataSearchTerms.group,
-        evalTagSearchTerms: SearchModule.fileMetadataSearchTerms.evalTag
+      filenameSearchTerms: SearchModule.fileMetadataSearchTerms.filename,
+      userGroupSearchTerms: SearchModule.fileMetadataSearchTerms.group,
+      evalTagSearchTerms: SearchModule.fileMetadataSearchTerms.evalTag
     } as FilesFilter;
   }
 
