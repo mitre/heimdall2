@@ -1,5 +1,5 @@
 <template>
-  <v-card height="94vh" overflow-auto>
+  <v-card overflow-auto>
     <v-card-title class="pt-2">
       <div class="card-title">
         <div>
@@ -55,7 +55,7 @@
         :headers="headers"
         hide-default-footer
         class="overflow-auto"
-        height="70vh"
+        height="60vh"
         @click:row="showRule"
       >
         <template #[`item.status`]="{item}">
