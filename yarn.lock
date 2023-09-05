@@ -4247,9 +4247,9 @@
   integrity sha512-vt+kDhq/M2ayberEtJcIN/hxXy1Pk+59g2FV/ZQceeaTyCtCucjL2Q7FXlFjtWn4n15KCr1NE2lNNFhp0lEThw==
 
 "@types/csv2json@^1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@types/csv2json/-/csv2json-1.4.2.tgz#85cecacd75ab5e9e8861bf5c134a9dfe526ed5e3"
-  integrity sha512-yLN7biRYCmhY/8HrlSkY2kCzYQkoWW4J6AxtuTWuyixM5h57zYhZpc7n0Fx98LTtOl9/mRM26fsVfqjZAzH27A==
+  version "1.4.3"
+  resolved "https://registry.yarnpkg.com/@types/csv2json/-/csv2json-1.4.3.tgz#4c3100ff22c286461c0d910f3a0bfae0dd0449ce"
+  integrity sha512-xYFavurXLEbAUohNJedO4pjjPpLpzoUeJ4YO3ieWB9QGcFH97Vzkm4GuuD7SXYr+TGnWlIfaU9Nlwp/tNostlw==
   dependencies:
     "@types/pumpify" "*"
 
