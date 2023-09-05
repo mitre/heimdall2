@@ -16,22 +16,16 @@ export default class RouteMixin extends Vue {
       case views.Checklist: {
         // Save checklist filter state and clear filters before navigation
         FilteredDataModule.setChecklistFilterState(SearchModule.searchTerm);
-        SearchModule.clear();
-        SearchModule.updateSearch('');
         break;
       }
       case views.Result: {
         // Save results filter state and clear filters before navigation
         FilteredDataModule.setResultsFilterState(SearchModule.searchTerm);
-        SearchModule.clear();
-        SearchModule.updateSearch('');
         break;
       }
       case views.Profile: {
         // Save profiles filter state and clear filters before navigation
         FilteredDataModule.setProfilesFilterState(SearchModule.searchTerm);
-        SearchModule.clear();
-        SearchModule.updateSearch('');
         break;
       }
     }
@@ -45,14 +39,17 @@ export default class RouteMixin extends Vue {
     switch (route.split('/')[1]) {
       case views.Checklist: {
         SearchModule.updateSearch(FilteredDataModule.checklistFilterState);
+        SearchModule.parseSearch();
         break;
       }
       case views.Result: {
         SearchModule.updateSearch(FilteredDataModule.resultsFilterState);
+        SearchModule.parseSearch();
         break;
       }
       case views.Profile: {
         SearchModule.updateSearch(FilteredDataModule.profilesFilterState);
+        SearchModule.parseSearch();
         break;
       }
     }

@@ -16,6 +16,7 @@ import {
   CodeSearchTerm,
   ControlIdSearchTerm,
   DescriptionSearchTerm,
+  EvaluationTagSearchTerm,
   FilenameSearchTerm,
   GroupNameSearchTerm,
   IaControlsSearchTerm,
@@ -25,6 +26,7 @@ import {
   SearchFilterSyncModule,
   StigIdSearchTerm,
   TitleSearchTerm,
+  UserGroupSearchTerm,
   VulIdSearchTerm
 } from './search_filter_sync';
 
@@ -90,8 +92,12 @@ class Search extends VuexModule {
 
   fileMetadataSearchTerms: {
     filename: SearchEntry<FilenameSearchTerm>[];
+    group: SearchEntry<UserGroupSearchTerm>[];
+    evalTag: SearchEntry<EvaluationTagSearchTerm>[];
   } = {
-    filename: []
+    filename: [],
+    group: [],
+    evalTag: []
   };
 
   /** Sets the current search */
@@ -125,7 +131,9 @@ class Search extends VuexModule {
     ['IA Control', 'iaControl'],
     ['Group Name', 'groupname'],
     ['CCIs', 'cci'],
-    ['File Name', 'filename']
+    ['File Name', 'filename'],
+    ['Group', 'group'],
+    ['Tag', 'tag']
   ]);
 
   /**
@@ -635,6 +643,42 @@ class Search extends VuexModule {
     this.fileMetadataSearchTerms.filename = [];
   }
 
+  /** Adds user group to filter */
+  @Action
+  addUserGroupFilter(group: SearchEntry<UserGroupSearchTerm>) {
+    this.context.commit('ADD_USER_GROUP', group);
+  }
+
+  @Mutation
+  ADD_USER_GROUP(group: SearchEntry<UserGroupSearchTerm>) {
+    this.fileMetadataSearchTerms.group =
+      this.fileMetadataSearchTerms.group.concat(group);
+  }
+
+  /** Clears all user group filters */
+  @Mutation
+  CLEAR_USER_GROUP() {
+    this.fileMetadataSearchTerms.group = [];
+  }
+
+  /** Adds evaluation tag to filter */
+  @Action
+  addEvalTagFilter(evalTag: SearchEntry<EvaluationTagSearchTerm>) {
+    this.context.commit('ADD_EVAL_TAG', evalTag);
+  }
+
+  @Mutation
+  ADD_EVAL_TAG(evalTag: SearchEntry<EvaluationTagSearchTerm>) {
+    this.fileMetadataSearchTerms.evalTag =
+      this.fileMetadataSearchTerms.evalTag.concat(evalTag);
+  }
+
+  /** Clears all evaluation tag filters */
+  @Mutation
+  CLEAR_EVAL_TAG() {
+    this.fileMetadataSearchTerms.evalTag = [];
+  }
+
   /** Clears all current filters */
   @Action
   clear() {
@@ -655,6 +699,8 @@ class Search extends VuexModule {
     this.context.commit('CLEAR_IA_CONTROLS');
     this.context.commit('CLEAR_FILENAME');
     this.context.commit('CLEAR_KEYWORDS');
+    this.context.commit('CLEAR_USER_GROUP');
+    this.context.commit('CLEAR_EVAL_TAG');
   }
 
   /** Set the parsed search result */
@@ -765,6 +811,18 @@ class Search extends VuexModule {
           break;
         case 'filename':
           this.addFilenameFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'group':
+          this.addUserGroupFilter({
+            value: include.value,
+            negated: include.negated
+          });
+          break;
+        case 'tag':
+          this.addEvalTagFilter({
             value: include.value,
             negated: include.negated
           });

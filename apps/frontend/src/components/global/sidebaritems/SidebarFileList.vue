@@ -211,3 +211,8 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   }
 }
 </script>
+<style>
+.strikethrough {
+  text-decoration: line-through;
+}
+</style>
