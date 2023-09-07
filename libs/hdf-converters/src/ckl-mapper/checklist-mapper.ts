@@ -80,14 +80,27 @@ function isJsonString(str: string): boolean {
  */
 function transformImpact(vuln: ChecklistVuln): number {
   if (vuln.status === 'Not Applicable') return 0.0;
-  let impact = ImpactMapping[findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping]
+  let impact =
+    ImpactMapping[
+      findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping
+    ];
   if (isJsonString(vuln.thirdPartyTools)) {
     const hdfExistingData = JSON.parse(vuln.thirdPartyTools);
-    impact = _.get(hdfExistingData, 'hdfSpecificData.impact', ImpactMapping[findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping]);
+    impact = _.get(
+      hdfExistingData,
+      'hdfSpecificData.impact',
+      ImpactMapping[
+        findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping
+      ]
+    );
   }
   if (!impact)
     throw new Error(
-      `Severity "${findSeverity(vuln)}" does not match low, medium, or high, please check severity for ${vuln.vulnNum}`
+      `Severity "${findSeverity(
+        vuln
+      )}" does not match low, medium, or high, please check severity for ${
+        vuln.vulnNum
+      }`
     );
   return impact;
 }
@@ -139,37 +152,39 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
   const results: ExecJSON.ControlResult[] = [];
   const findingDetails = findings[0].code_desc;
   const regex =
-  /^(failed|passed|skipped|error) :: TEST (.*?)(?: :: (MESSAGE|SKIP_MESSAGE) (.*?))?$/s;
+    /^(failed|passed|skipped|error) :: TEST (.*?)(?: :: (MESSAGE|SKIP_MESSAGE) (.*?))?$/s;
 
   // check if code_desc is empty or does not match the above regular expression
-  if(!RegExp(regex).exec(findingDetails)) {
-    return [{
-      status: findings[0].status,
-      code_desc: findings[0].code_desc,
-      start_time: ''
-    }];
+  if (!RegExp(regex).exec(findingDetails)) {
+    return [
+      {
+        status: findings[0].status,
+        code_desc: findings[0].code_desc,
+        start_time: ''
+      }
+    ];
   } else {
     // split into multiple findings details using heimdall2 CKLExport functionality
-      for (const details of findingDetails.split(
-        '\n--------------------------------\n'
-      )) {
-        // regex of four groups (five if you count the full match) consisting of the four possible status
-        // followed by any number of characters after :: TEST which represents the code_desc
-        // followed by an optionally :: MESSAGE or SKIP_MESSAGE representing the message type
-        // followed by any number of characters representing the message
-       // split details for status
-        const match = regex.exec(details.trim());
-        if (match) {
-          const [, mStatus, mCode_dec, messageType, mMessage] = match;
-          results.push({
-            status: getStatus(mStatus),
-            code_desc: mCode_dec,
-            message: checkMessage('MESSAGE', messageType, mMessage),
-            start_time: '',
-            skip_message: checkMessage('SKIP_MESSAGE', messageType, mMessage)
-          });
-        }
+    for (const details of findingDetails.split(
+      '\n--------------------------------\n'
+    )) {
+      // regex of four groups (five if you count the full match) consisting of the four possible status
+      // followed by any number of characters after :: TEST which represents the code_desc
+      // followed by an optionally :: MESSAGE or SKIP_MESSAGE representing the message type
+      // followed by any number of characters representing the message
+      // split details for status
+      const match = regex.exec(details.trim());
+      if (match) {
+        const [, mStatus, mCode_dec, messageType, mMessage] = match;
+        results.push({
+          status: getStatus(mStatus),
+          code_desc: mCode_dec,
+          message: checkMessage('MESSAGE', messageType, mMessage),
+          start_time: '',
+          skip_message: checkMessage('SKIP_MESSAGE', messageType, mMessage)
+        });
       }
+    }
   }
   return results;
 }
@@ -180,11 +195,13 @@ function parseComments(input: unknown[]): ExecJSON.ControlDescription[] {
   const commentString = descriptions[0].data;
   if (!commentString) {
     return results;
-  } else if(!commentString.includes(' :: ')) {
-    return [{
-      label: descriptions[0].label,
-      data: descriptions[0].data
-    }];
+  } else if (!commentString.includes(' :: ')) {
+    return [
+      {
+        label: descriptions[0].label,
+        data: descriptions[0].data
+      }
+    ];
   } else {
     for (const section of commentString.split(/\n(?=[A-Z]+ ::)/)) {
       const matches = RegExp(/([A-Z]+) :: (.+)/s).exec(section);
@@ -216,9 +233,9 @@ function getAttributes(input: unknown[]) {
   const passthrough = input as unknown as [{data: string}];
   const data = passthrough[0].data;
   if (!data) {
-    return []
+    return [];
   } else {
-    return JSON.parse(data).hdfSpecificData?.attributes
+    return JSON.parse(data).hdfSpecificData?.attributes;
   }
 }
 
@@ -234,7 +251,7 @@ function getCopyright(input: string): string {
   if (!input) {
     return '';
   } else {
-    return JSON.parse(input).hdfSpecificData?.copyright
+    return JSON.parse(input).hdfSpecificData?.copyright;
   }
 }
 
@@ -242,7 +259,7 @@ function getCopyrightEmail(input: string): string {
   if (!input) {
     return '';
   } else {
-    return JSON.parse(input).hdfSpecificData?.copyright_email
+    return JSON.parse(input).hdfSpecificData?.copyright_email;
   }
 }
 
@@ -346,12 +363,17 @@ export class ChecklistMapper extends BaseConverter {
         summary: {path: 'header.description'},
         license: {path: 'header.notice'},
         copyright: {path: 'header.customname', transformer: getCopyright},
-        copyright_email: {path: 'header.customname', transformer: getCopyrightEmail},
+        copyright_email: {
+          path: 'header.customname',
+          transformer: getCopyrightEmail
+        },
         supports: [],
-        attributes: [{
-          arrayTransformer: getAttributes,
-          data: {path: 'header.customname'}
-        }],
+        attributes: [
+          {
+            arrayTransformer: getAttributes,
+            data: {path: 'header.customname'}
+          }
+        ],
         groups: [],
         status: 'loaded',
         controls: [
@@ -425,10 +447,11 @@ export class ChecklistMapper extends BaseConverter {
             code: {
               transformer: (vulnerability: ChecklistVuln): string => {
                 if (isJsonString(vulnerability.thirdPartyTools)) {
-                  return JSON.parse(vulnerability.thirdPartyTools).hdfSpecificData?.code
+                  return JSON.parse(vulnerability.thirdPartyTools)
+                    .hdfSpecificData?.code;
                 }
-                return JSON.stringify(vulnerability, null, 2)
-                }
+                return JSON.stringify(vulnerability, null, 2);
+              }
             },
             results: [
               {

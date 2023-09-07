@@ -605,33 +605,34 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   addHdfControlSpecificData(control: ExecJSON.Control): string {
     const hdfSpecificData: Record<string, unknown> = {};
-    const checklistImpactNumbers = [0.7, 0.5, 0.3, 0.0]
+    const checklistImpactNumbers = [0.7, 0.5, 0.3, 0.0];
     if (!checklistImpactNumbers.includes(control.impact)) {
-      hdfSpecificData['impact'] = control.impact
+      hdfSpecificData['impact'] = control.impact;
     }
     if (control.code?.startsWith('control')) {
       hdfSpecificData['code'] = control.code;
     }
-    // TODO: maybe create a standard array of tags to ignore, but add others
 
     const hdfDataExist = Object.keys(hdfSpecificData).length !== 0;
 
-    return hdfDataExist ? JSON.stringify({hdfSpecificData: hdfSpecificData}) : '';
+    return hdfDataExist
+      ? JSON.stringify({hdfSpecificData: hdfSpecificData})
+      : '';
   }
 
   addHdfProfileSpecificData(profile: ExecJSON.Profile): string {
     const hdfSpecificData: Record<string, unknown> = {};
     if (profile.attributes) {
-      hdfSpecificData['attributes'] = profile.attributes
+      hdfSpecificData['attributes'] = profile.attributes;
     }
     if (profile.copyright) {
-      hdfSpecificData['copyright'] = profile.copyright
+      hdfSpecificData['copyright'] = profile.copyright;
     }
     if (profile.copyright_email) {
-      hdfSpecificData['copyright_email'] = profile.copyright_email
+      hdfSpecificData['copyright_email'] = profile.copyright_email;
     }
     if (profile.maintainer) {
-      hdfSpecificData['maintainer'] = profile.maintainer
+      hdfSpecificData['maintainer'] = profile.maintainer;
     }
 
     const hdfDataExist = Object.keys(hdfSpecificData).length !== 0;
@@ -674,8 +675,6 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         documentable: 'false',
         mitigations: _.get(control.tags, 'Mitigations', ''),
         potentialImpact: _.get(control.tags, 'Potential_Impact', ''),
-        // TODO: use this key as a 'passthrough' of sorts for data that is in hdf that we will need back in heimdall
-        // like severity/impact values
         thirdPartyTools: this.addHdfControlSpecificData(control),
         mitigationControl: _.get(control.tags, 'Mitigation_Control', ''),
         responsibility: _.get(control.tags, 'Responsibility', ''),
@@ -731,13 +730,18 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
    */
   hdfToIntermediateObject(hdf: ExecJSON.Execution): ChecklistObject {
     const stigs: ChecklistStig[] = [];
-    const metadata: ChecklistMetadata = _.get(hdf, 'passthrough.metadata') as unknown as ChecklistMetadata;
+    const metadata: ChecklistMetadata = _.get(
+      hdf,
+      'passthrough.metadata'
+    ) as unknown as ChecklistMetadata;
     for (const profile of hdf.profiles) {
       // if profile is overlay or parent profile, skip
       if (profile.depends?.length) {
         continue;
       }
-      const profileMetadata = metadata?.profiles.find((p) => p.name === profile.name);
+      const profileMetadata = metadata?.profiles.find(
+        (p) => p.name === profile.name
+      );
       const header: StigHeader = {
         version: _.get(
           profileMetadata,

@@ -1,8 +1,8 @@
 import {XMLParser} from 'fast-xml-parser';
 import _ from 'lodash';
-import {CciNistMappingItem} from './CciNistMappingItem';
 import {CCI_List} from '../utils/CCI_List';
 import {data} from './CciNistMappingData';
+import {CciNistMappingItem} from './CciNistMappingItem';
 
 type Reference = {
   '@_creator': string;
