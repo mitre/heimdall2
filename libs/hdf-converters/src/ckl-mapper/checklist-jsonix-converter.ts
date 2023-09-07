@@ -605,15 +605,37 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   addHdfControlSpecificData(control: ExecJSON.Control): string {
     const hdfSpecificData: Record<string, unknown> = {};
-    const checklistImpactNumbers = [0.7, 0.5, 0.3]
+    const checklistImpactNumbers = [0.7, 0.5, 0.3, 0.0]
     if (!checklistImpactNumbers.includes(control.impact)) {
       hdfSpecificData['impact'] = control.impact
+    }
+    if (control.code?.startsWith('control')) {
+      hdfSpecificData['code'] = control.code;
     }
     // TODO: maybe create a standard array of tags to ignore, but add others
 
     const hdfDataExist = Object.keys(hdfSpecificData).length !== 0;
 
     return hdfDataExist ? JSON.stringify({hdfSpecificData: hdfSpecificData}) : '';
+  }
+
+  addHdfProfileSpecificData(profile: ExecJSON.Profile): string {
+    const hdfSpecificData: Record<string, unknown> = {};
+    if (profile.attributes) {
+      hdfSpecificData['attributes'] = profile.attributes
+    }
+    if (profile.copyright) {
+      hdfSpecificData['copyright'] = profile.copyright
+    }
+    if (profile.copyright_email) {
+      hdfSpecificData['copyright_email'] = profile.copyright_email
+    }
+    if (profile.maintainer) {
+      hdfSpecificData['maintainer'] = profile.maintainer
+    }
+
+    const hdfDataExist = Object.keys(hdfSpecificData).length !== 0;
+    return hdfDataExist ? JSON.stringify({hdfSpecificData}) : '';
   }
 
   controlsToVulns(profile: ExecJSON.Profile, stigRef: string): ChecklistVuln[] {
@@ -723,7 +745,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           profile.version as string
         ) as string,
         classification: 'UNCLASSIFIED',
-        customname: '',
+        customname: this.addHdfProfileSpecificData(profile),
         stigid: profile.name,
         description: profile.description as string,
         filename: '',

@@ -63,6 +63,15 @@ function findSeverity(vuln: ChecklistVuln): string {
   return vuln.severity;
 }
 
+function isJsonString(str: string): boolean {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+}
+
 /**
  * Transformer function that checks if the status is 'Not Applicable' returning a 0.
  * Otherwise, maps severity to ImpactMapping
@@ -71,18 +80,14 @@ function findSeverity(vuln: ChecklistVuln): string {
  */
 function transformImpact(vuln: ChecklistVuln): number {
   if (vuln.status === 'Not Applicable') return 0.0;
-  if (vuln.thirdPartyTools) {
+  let impact = ImpactMapping[findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping]
+  if (isJsonString(vuln.thirdPartyTools)) {
     const hdfExistingData = JSON.parse(vuln.thirdPartyTools);
-    if (hdfExistingData.hdfSpecificData.impact) {
-      return hdfExistingData.hdfSpecificData.impact;
-    }
+    impact = _.get(hdfExistingData, 'hdfSpecificData.impact', ImpactMapping[findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping]);
   }
-  const severity = findSeverity(vuln);
-  const impact =
-    ImpactMapping[severity.toLowerCase() as keyof typeof ImpactMapping];
   if (!impact)
     throw new Error(
-      `Severity "${severity}" does not match low, medium, or high, please check severity for ${vuln.vulnNum}`
+      `Severity "${findSeverity(vuln)}" does not match low, medium, or high, please check severity for ${vuln.vulnNum}`
     );
   return impact;
 }
@@ -207,6 +212,40 @@ export function getChecklistObjectFromHdf(
   return _.get(hdf, 'passthrough.checklist', EmptyChecklistObject);
 }
 
+function getAttributes(input: unknown[]) {
+  const passthrough = input as unknown as [{data: string}];
+  const data = passthrough[0].data;
+  if (!data) {
+    return []
+  } else {
+    return JSON.parse(data).hdfSpecificData?.attributes
+  }
+}
+
+function getMaintainer(input: string): string {
+  if (!input) {
+    return '';
+  } else {
+    return JSON.parse(input).hdfSpecificData?.maintainer;
+  }
+}
+
+function getCopyright(input: string): string {
+  if (!input) {
+    return '';
+  } else {
+    return JSON.parse(input).hdfSpecificData?.copyright
+  }
+}
+
+function getCopyrightEmail(input: string): string {
+  if (!input) {
+    return '';
+  } else {
+    return JSON.parse(input).hdfSpecificData?.copyright_email
+  }
+}
+
 /**
  * ChecklistResults is a wrapper for ChecklistMapper using the intakeType
  *  default returns a single hdf object without any modifications
@@ -229,15 +268,13 @@ export class ChecklistResults extends ChecklistJsonixConverter {
     if (typeof data === 'string') {
       this.jsonixData = super.toJsonix(data);
       this.checklistObject = super.toIntermediateObject(this.jsonixData);
+    } else if (containsChecklist(data)) {
+      this.checklistObject = getChecklistObjectFromHdf(data);
+      this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     } else {
-      if (containsChecklist(data)) {
-        this.checklistObject = getChecklistObjectFromHdf(data);
-        this.jsonixData = super.fromIntermediateObject(this.checklistObject);
-      } else {
-        // CREATE Intermediate Object from HDF
-        this.checklistObject = super.hdfToIntermediateObject(data);
-        this.jsonixData = super.fromIntermediateObject(this.checklistObject);
-      }
+      // CREATE Intermediate Object from HDF
+      this.checklistObject = super.hdfToIntermediateObject(data);
+      this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     }
     this.withRaw = withRaw;
   }
@@ -305,10 +342,16 @@ export class ChecklistMapper extends BaseConverter {
         name: {path: 'header.stigid'},
         version: {path: 'header.version'},
         title: {path: 'header.title'},
+        maintainer: {path: 'header.customname', transformer: getMaintainer},
         summary: {path: 'header.description'},
         license: {path: 'header.notice'},
+        copyright: {path: 'header.customname', transformer: getCopyright},
+        copyright_email: {path: 'header.customname', transformer: getCopyrightEmail},
         supports: [],
-        attributes: [],
+        attributes: [{
+          arrayTransformer: getAttributes,
+          data: {path: 'header.customname'}
+        }],
         groups: [],
         status: 'loaded',
         controls: [
@@ -380,8 +423,12 @@ export class ChecklistMapper extends BaseConverter {
                 transformImpact(vulnerability)
             },
             code: {
-              transformer: (vulnerability: ChecklistVuln): string =>
-                JSON.stringify(vulnerability, null, 2)
+              transformer: (vulnerability: ChecklistVuln): string => {
+                if (isJsonString(vulnerability.thirdPartyTools)) {
+                  return JSON.parse(vulnerability.thirdPartyTools).hdfSpecificData?.code
+                }
+                return JSON.stringify(vulnerability, null, 2)
+                }
             },
             results: [
               {
