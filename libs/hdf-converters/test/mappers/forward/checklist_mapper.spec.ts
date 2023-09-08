@@ -11,10 +11,10 @@ describe('checklist_mapper_single_stig', () => {
       )
     );
 
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
+    fs.writeFileSync(
+      'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
+      JSON.stringify(mapper.toHdf(), null, 2)
+    );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -39,10 +39,10 @@ describe('checklist_mapper_single_stig_with_raw', () => {
       true
     );
 
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf-with-raw.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
+    fs.writeFileSync(
+      'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf-with-raw.json',
+      JSON.stringify(mapper.toHdf(), null, 2)
+    );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -68,10 +68,10 @@ describe('checklist_mapper_multi_stig_wrapper', () => {
 
     const results = mapper.toHdf();
 
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
+    fs.writeFileSync(
+      'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
+      JSON.stringify(mapper.toHdf(), null, 2)
+    );
 
     expect(omitVersions(results)).toEqual(
       omitVersions(
@@ -97,11 +97,11 @@ describe('checklist_jsonix', () => {
 
     const results = mapper.getJsonix();
 
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/checklist_jsonix_data.json',
-    //   JSON.stringify(mapper.getJsonix(), null, 2)
-    // );
-
+    fs.writeFileSync(
+      'sample_jsons/checklist_mapper/checklist_jsonix_data.json',
+      JSON.stringify(mapper.getJsonix(), null, 2)
+    );
+// 
     expect(results).toEqual(
       JSON.parse(
         fs.readFileSync(
@@ -126,10 +126,10 @@ describe('checklist_intermediate_object', () => {
 
     const results = mapper.toIntermediateObject(jsonixData);
 
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/checklist_intermediate_object.json',
-    //   JSON.stringify(mapper.toIntermediateObject(jsonixData), null, 2)
-    // );
+    fs.writeFileSync(
+      'sample_jsons/checklist_mapper/checklist_intermediate_object.json',
+      JSON.stringify(mapper.toIntermediateObject(jsonixData), null, 2)
+    );
 
     expect(results).toEqual(
       JSON.parse(

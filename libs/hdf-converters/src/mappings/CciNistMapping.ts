@@ -121,7 +121,7 @@ export class CciNistTwoWayMapper {
 
     for (const item of cci_item) {
       for (const reference of item.references.reference) {
-        const regex = new RegExp(`^${pattern}`);
+        const regex = new RegExp(`${/\w\w-\d\d?\d?/g.exec(pattern)}`);
         if (
           RegExp(regex).exec(reference['@_index']) &&
           item.type === 'technical'
