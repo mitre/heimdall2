@@ -81,7 +81,7 @@
     "luxon": "^3.0.1",
     "mustache": "^4.2.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
-    "prismjs": "^1.21.0",
+    "prismjs": "^1.29.0",
     "rimraf": "^5.0.0",
     "roboto-fontface": "*",
     "sanitize-html": "~2.7.3",
