@@ -10160,9 +10160,9 @@ express-history-api-fallback@^2.2.1:
   integrity sha512-swxwm3aP8vrOOvlzOdZvHlSZtJGwHKaY94J6AkrAgCTmcbko3IRwbkhLv2wKV1WeZhjxX58aLMpP3atDBnKuZg==
 
 express-rate-limit@*, express-rate-limit@^6.0.1:
-  version "6.11.1"
-  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-6.11.1.tgz#52e05c5d379cd5d06ae29665862436eb712e414a"
-  integrity sha512-8+UpWtQY25lJaa4+3WxDBGDcAu4atcTruSs3QSL5VPEplYy6kmk84wutG9rUkkK5LmMQQ7TFHWLZYITwVNbbEg==
+  version "6.11.2"
+  resolved "https://registry.yarnpkg.com/express-rate-limit/-/express-rate-limit-6.11.2.tgz#6c42035603d3b52e4e2fb59f6ebaa89e628ef980"
+  integrity sha512-a7uwwfNTh1U60ssiIkuLFWHt4hAC5yxlLGU2VP0X4YNlyEDZAqF4tK3GD3NSitVBrCQmQ0++0uOyFOgC2y4DDw==
 
 express-session@^1.17.1:
   version "1.17.3"
