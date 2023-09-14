@@ -1,5 +1,5 @@
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -139,9 +139,11 @@ function formatMessage(response: unknown): string {
   return text.join('\n');
 }
 export class NetsparkerMapper extends BaseConverter {
+  withRaw: boolean;
+
   defineMappings(
     toolname: string
-  ): MappedTransform<ExecJSON.Execution, ILookupPath> {
+  ): MappedTransform<ExecJSON.Execution & {passthrough: unknown}, ILookupPath> {
     const capitalizedToolname = toolname.replace(/^./, (firstLetter) =>
       firstLetter.toUpperCase()
     );
@@ -156,7 +158,6 @@ export class NetsparkerMapper extends BaseConverter {
       profiles: [
         {
           name: `${capitalizedToolname} Enterprise Scan`,
-          version: '',
           title: {
             path: `${toolname}-enterprise.target`,
             transformer: (input: unknown): string => {
@@ -177,13 +178,6 @@ export class NetsparkerMapper extends BaseConverter {
             {
               path: `${toolname}-enterprise.vulnerabilities.vulnerability`,
               key: 'id',
-              id: {path: 'LookupId'},
-              title: {path: 'name'},
-              desc: {transformer: formatControlDesc},
-              impact: {
-                path: 'severity',
-                transformer: impactMapping(IMPACT_MAPPING)
-              },
               tags: {
                 cci: {
                   path: 'classification',
@@ -192,6 +186,11 @@ export class NetsparkerMapper extends BaseConverter {
                 },
                 nist: {path: 'classification', transformer: nistTag}
               },
+              refs: [],
+              source_location: {},
+              title: {path: 'name'},
+              id: {path: 'LookupId'},
+              desc: {transformer: formatControlDesc},
               descriptions: [
                 {
                   data: {transformer: formatCheck},
@@ -202,9 +201,14 @@ export class NetsparkerMapper extends BaseConverter {
                   label: 'fix'
                 }
               ],
-              refs: [],
-              source_location: {},
-              code: '',
+              impact: {
+                path: 'severity',
+                transformer: impactMapping(IMPACT_MAPPING)
+              },
+              code: {
+                transformer: (vulnerability: Record<string, unknown>): string =>
+                  JSON.stringify(vulnerability, null, 2)
+              },
               results: [
                 {
                   status: ExecJSON.ControlResultStatus.Failed,
@@ -213,7 +217,6 @@ export class NetsparkerMapper extends BaseConverter {
                     transformer: formatCodeDesc
                   },
                   message: {path: 'http-response', transformer: formatMessage},
-                  run_time: 0,
                   start_time: {
                     path: `$.${toolname}-enterprise.target.initiated`
                   }
@@ -223,11 +226,39 @@ export class NetsparkerMapper extends BaseConverter {
           ],
           sha256: ''
         }
-      ]
+      ],
+      passthrough: {
+        transformer: (
+          data: Record<string, unknown>
+        ): Record<string, unknown> => {
+          const auxData = _.get(data, 'netsparker-enterprise');
+          const genData = _.get(auxData, 'generated');
+          const targetData = _.omit(_.get(auxData, 'target'), [
+            'scan-id',
+            'url',
+            'initiated'
+          ]);
+          return {
+            auxiliary_data: [
+              {
+                name: 'Netsparker',
+                data: {
+                  'netsparker-enterprise': {
+                    generated: genData,
+                    target: targetData
+                  }
+                }
+              }
+            ],
+            ...(this.withRaw && {raw: data})
+          };
+        }
+      }
     };
   }
-  constructor(netsparkerXml: string) {
+  constructor(netsparkerXml: string, withRaw = false) {
     super(parseXml(netsparkerXml));
+    this.withRaw = withRaw;
     this.setMappings(
       this.defineMappings(
         Object.keys(this.data).some((k) => k.includes('netsparker'))

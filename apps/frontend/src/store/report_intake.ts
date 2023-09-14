@@ -10,6 +10,7 @@ import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   ChecklistResults,
+  ConveyorResults as ConveyorResultsMapper,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -39,7 +40,7 @@ import {
   convertFile,
   ExecJSON
 } from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
@@ -231,6 +232,10 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.ASFF:
         return Object.values(
           new ASFFResultsMapper(convertOptions.data).toHdf()
+        );
+      case INPUT_TYPES.CONVEYOR:
+        return Object.values(
+          new ConveyorResultsMapper(convertOptions.data).toHdf()
         );
       case INPUT_TYPES.ZAP:
         return new ZapMapper(convertOptions.data).toHdf();

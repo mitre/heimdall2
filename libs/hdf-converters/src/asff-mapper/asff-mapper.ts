@@ -1,9 +1,10 @@
 // ASFF (AWS Security Finding Format) is intended as being another data exchange format to be used in displaying data within AWS SecurityHub - in this regard, it is analogous to HDF and Heimdall.
 // Like in every scenario where there is an open specification, people interpret the intent of each of the attributes in slightly different ways.  Consequently, while many products provide 'ASFF' output, providing a mapper back to HDF can be complicated.
 
+import {compare, validate} from 'compare-versions';
 import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from '../base-converter';
 import {
@@ -67,18 +68,12 @@ function whichSpecialCase(finding: Record<string, unknown>): SpecialCasing {
     _.some(
       _.get(finding, 'FindingProviderFields.Types') as string[],
       (type: string) => {
-        const delimitedType = type.split('/');
-        const version = delimitedType[delimitedType.length - 1].split('-')[0];
-        const [major, minor, patch] = version.split('.');
-        if (
-          parseInt(major) > 1 &&
-          parseInt(minor) > 5 &&
-          parseInt(patch) > 20
-        ) {
-          return _.startsWith(type, 'MITRE/SAF/');
-        } else {
+        // 'type' should look like "MITRE/SAF/2.6.29-hdf2asff"
+        if (!_.startsWith(type, 'MITRE/SAF/')) {
           return false;
         }
+        const version = type.split('/').pop()?.split('-')[0] ?? '';
+        return validate(version) && compare(version, '2.6.20', '>'); // older versions aren't supported by the 'PreviouslyHDF' specialcasing and instead use the default casing
       }
     )
   ) {

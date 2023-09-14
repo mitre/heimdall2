@@ -2,14 +2,14 @@ name: Run HDF-Converters Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
-  
+    runs-on: ubuntu-22.04
+
     services:
       splunk:
         image: splunk/splunk
@@ -26,43 +26,43 @@ jobs:
           SPLUNK_PASSWORD: Valid_password!
 
     steps:
-     - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-     - name: Setup Node.js
-       uses: actions/setup-node@v3
-       with:
-        node-version: '16.x'
-        cache: 'yarn'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
 
-     - name: Remove frontend and backend code to ensure the proper dependencies are declared in the hdf-converters package.json
-       run: |
-        rm -rf apps/frontend
-        rm -rf apps/backend
-    
-     - name: Install project dependencies
-       run: |
-        yarn hdf-converters install --frozen-lockfile
-        yarn workspace @heimdall/cypress-tests install
-       env:
-        CYPRESS_INSTALL_BINARY: 0
-    
-     - name: Start Mock Sonarqube Server
-       run: yarn run cypress-test mock-json &
+      - name: Remove frontend and backend code to ensure the proper dependencies are declared in the hdf-converters package.json
+        run: |
+          rm -rf apps/frontend
+          rm -rf apps/backend
 
-     - name: Run unit tests
-       run: yarn hdf-converters test
-       env:
-         SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
+      - name: Install project dependencies
+        run: |
+          yarn hdf-converters install --frozen-lockfile
+          yarn workspace @heimdall/cypress-tests install
+        env:
+          CYPRESS_INSTALL_BINARY: 0
 
-     - name: Check RHEL7 XCCDF Results has a valid schema
-       uses: mitre/xccdf-validate-action@v1
-       with:
-        input: libs/hdf-converters/sample_jsons/xccdf_reverse_mapper/output_report/rhel7-xccdf-results.xml
+      - name: Start Mock Sonarqube Server
+        run: yarn run cypress-test mock-json &
 
-     - name: Check Example 3 Layer XCCDF Results has a valid schema
-       uses: mitre/xccdf-validate-action@v1
-       with:
-        input: libs/hdf-converters/sample_jsons/xccdf_reverse_mapper/output_report/example-3-layer-overlay-xccdf-results.xml
+      - name: Run unit tests
+        run: yarn hdf-converters test
+        env:
+          SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
 
-     - name: Ensure the hdf-converters builds cleanly
-       run: yarn hdf-converters build
+      - name: Check RHEL7 XCCDF Results has a valid schema
+        uses: mitre/xccdf-validate-action@v1
+        with:
+          input: libs/hdf-converters/sample_jsons/xccdf_reverse_mapper/output_report/rhel7-xccdf-results.xml
+
+      - name: Check Example 3 Layer XCCDF Results has a valid schema
+        uses: mitre/xccdf-validate-action@v1
+        with:
+          input: libs/hdf-converters/sample_jsons/xccdf_reverse_mapper/output_report/example-3-layer-overlay-xccdf-results.xml
+
+      - name: Ensure the hdf-converters builds cleanly
+        run: yarn hdf-converters build

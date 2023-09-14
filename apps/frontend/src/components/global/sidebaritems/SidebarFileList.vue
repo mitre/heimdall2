@@ -9,11 +9,11 @@
     </v-list-item-action>
 
     <v-list-item-avatar>
-      <v-icon small v-text="icon" />
+      <v-icon small>{{ icon }}</v-icon>
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title v-text="file.filename" />
+      <v-list-item-title>{{ file.filename }}</v-list-item-title>
     </v-list-item-content>
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
@@ -40,7 +40,7 @@ import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
 import axios from 'axios';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 

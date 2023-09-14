@@ -1,5 +1,9 @@
-import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import {
+  ContextualizedEvaluation,
+  contextualizeEvaluation,
+  ExecJSON
+} from 'inspecjs';
+import * as _ from 'lodash';
 import {createLogger, format, transports} from 'winston';
 import {data as NistCciMappingData} from '../mappings/NistCciMappingData';
 
@@ -84,4 +88,14 @@ export function conditionallyProvideAttribute(
     return undefined;
   }
   return {[attributeName]: attribute};
+}
+
+export function ensureContextualizedEvaluation(
+  data: ExecJSON.Execution | ContextualizedEvaluation
+) {
+  if ('contains' in data) {
+    return data;
+  } else {
+    return contextualizeEvaluation(data);
+  }
 }

@@ -4,7 +4,7 @@ import {ControlStatusHash, StatusCountModule} from '@/store/status_counts';
 import chai from 'chai';
 import chai_as_promised from 'chai-as-promised';
 import {readFileSync} from 'fs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {AllRaw} from '../util/fs';
 chai.use(chai_as_promised);
 const expect = chai.expect;

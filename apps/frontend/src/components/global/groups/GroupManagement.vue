@@ -1,9 +1,9 @@
 <template>
   <v-card>
-    <v-card-title v-if="!allGroups" class="pb-0">
+    <v-card-title class="pb-0">
       <GroupModal id="groupModal" :create="true">
-        <template #clickable="{on, attrs}"
-          ><v-btn
+        <template #clickable="{on, attrs}">
+          <v-btn
             color="primary"
             data-cy="createNewGroupBtn"
             class="mb-2"
@@ -16,8 +16,8 @@
       </GroupModal>
     </v-card-title>
     <v-data-table
-      :headers="allGroups ? allGroupsHeaders : myGroupsHeaders"
-      :items="allGroups ? allGroupData : myGroupData"
+      :headers="groupsHeaders"
+      :items="groupData"
       class="elevation-0"
       dense
       :loading="loading"
@@ -35,33 +35,89 @@
           />
         </v-container>
       </template>
-      <template #[`item.users`]="{item}">
-        <span v-for="user in item.users.slice(0, 3)" :key="user.id">
+      <template #[`item.members`]="{item}">
+        <span v-for="user in item.members.slice(0, 3)" :key="user.id">
           <v-chip
             pill
             color="primary"
             class="ma-1"
-            @click="displayMembersDialog(item.users)"
+            @click="displayUsersDialog(item.members)"
           >
             {{ getMemberName(user) }}
           </v-chip>
         </span>
         <v-chip
-          v-if="item.users.length > 3"
+          v-if="item.members.length > 3"
           pill
           color="primary"
           outlined
           class="ma-1"
-          @click="displayMembersDialog(item.users)"
+          @click="displayUsersDialog(item.members)"
         >
-          {{ `+${item.users.length - 3} more` }}
+          {{ `+${item.members.length - 3} more` }}
+        </v-chip>
+      </template>
+      <template #[`item.owners`]="{item}">
+        <span v-for="user in item.owners.slice(0, 3)" :key="user.id">
+          <v-chip
+            pill
+            color="primary"
+            class="ma-1"
+            @click="displayUsersDialog(item.owners)"
+          >
+            {{ getMemberName(user) }}
+          </v-chip>
+        </span>
+        <v-chip
+          v-if="item.owners.length > 3"
+          pill
+          color="primary"
+          outlined
+          class="ma-1"
+          @click="displayUsersDialog(item.owners)"
+        >
+          {{ `+${item.owners.length - 3} more` }}
         </v-chip>
       </template>
       <template #[`item.actions`]="{item}">
-        <div v-if="item.role == 'owner'">
-          <GroupModal id="editGroupModal" :create="false" :group="item">
-            <template #clickable="{on}"
-              ><v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
+        <v-tooltip color="secondary" left>
+          <template #activator="{on}">
+            <v-icon small title="Info" data-cy="info" class="mr-2" v-on="on">
+              mdi-information
+            </v-icon>
+          </template>
+          <v-card color="transparent" flat max-width="600px" overflow-y-auto>
+            <span>
+              <v-card-title>{{ item.name }}</v-card-title>
+              <v-card-text>
+                <div>Visibility: {{ item.public ? 'Public' : 'Private' }}</div>
+                <div>Created At: {{ item.createdAt }}</div>
+                <div>Updated At: {{ item.updatedAt }}</div>
+              </v-card-text>
+              <v-card-subtitle>
+                <strong>Group Description</strong>
+              </v-card-subtitle>
+              <v-card-text v-if="item.desc !== ''">
+                <div
+                  v-for="(line, index) in item.desc.split('\n')"
+                  :key="index"
+                >
+                  {{ line }} <br />
+                </div>
+              </v-card-text>
+              <v-card-text v-else>None</v-card-text>
+            </span>
+          </v-card>
+        </v-tooltip>
+        <span v-if="item.role === 'owner' || adminPanel">
+          <GroupModal
+            id="editGroupModal"
+            :create="false"
+            :admin="adminPanel"
+            :group="item"
+          >
+            <template #clickable="{on}">
+              <v-icon small title="Edit" data-cy="edit" class="mr-2" v-on="on">
                 mdi-pencil
               </v-icon>
             </template>
@@ -74,7 +130,7 @@
           >
             mdi-delete
           </v-icon>
-        </div>
+        </span>
       </template>
       <template #no-data> No groups match current selection. </template>
     </v-data-table>
@@ -113,14 +169,25 @@ import {Prop} from 'vue-property-decorator';
   }
 })
 export default class GroupManagement extends Vue {
-  @Prop({type: Boolean, default: false}) readonly allGroups!: boolean;
+  @Prop({type: Boolean, default: false}) readonly adminPanel!: boolean;
 
   editedGroup: IGroup | null = null;
   selectedGroupUsers: ISlimUser[] | null = [];
   dialogDelete = false;
   dialogDisplayUsers = false;
   search = '';
-  allGroupsHeaders: Object[] = [
+
+  groupsHeaders: {
+    text: string;
+    value: string;
+    sortable?: boolean;
+    align?: string;
+  }[] = [
+    {
+      text: 'ID',
+      sortable: true,
+      value: 'id'
+    },
     {
       text: 'Group Name',
       align: 'start',
@@ -131,18 +198,10 @@ export default class GroupManagement extends Vue {
       text: 'Public',
       sortable: true,
       value: 'public'
-    }
-  ];
-
-  myGroupsHeaders: Object[] = [
-    {
-      text: 'ID',
-      sortable: true,
-      value: 'id'
     },
-    ...this.allGroupsHeaders,
     {text: 'Your Role', value: 'role', sortable: true},
-    {text: 'Members', value: 'users', sortable: true},
+    {text: 'Owners', value: 'owners', sortable: true},
+    {text: 'Members', value: 'members', sortable: true},
     {text: 'Actions', value: 'actions', sortable: false}
   ];
 
@@ -176,7 +235,7 @@ export default class GroupManagement extends Vue {
     }
   }
 
-  displayMembersDialog(members: ISlimUser[]) {
+  displayUsersDialog(members: ISlimUser[]) {
     this.selectedGroupUsers = members;
     this.dialogDisplayUsers = true;
   }
@@ -185,12 +244,27 @@ export default class GroupManagement extends Vue {
     return GroupsModule.loading;
   }
 
-  get allGroupData(): IGroup[] {
-    return GroupsModule.allGroups;
-  }
-
-  get myGroupData(): IGroup[] {
-    return GroupsModule.myGroups;
+  get groupData(): (IGroup & {members: ISlimUser[]; owners: ISlimUser[]})[] {
+    let groups: IGroup[];
+    if (this.adminPanel) {
+      groups = GroupsModule.myGroups.concat(
+        GroupsModule.allGroups.filter(
+          (group) =>
+            !GroupsModule.myGroups
+              .map((myGroup) => myGroup.id)
+              .includes(group.id)
+        )
+      );
+    } else {
+      groups = GroupsModule.myGroups;
+    }
+    return groups.map((group) => {
+      return {
+        ...group,
+        members: group.users.filter((user) => user.groupRole === 'member'),
+        owners: group.users.filter((user) => user.groupRole === 'owner')
+      };
+    });
   }
 }
 </script>

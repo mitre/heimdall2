@@ -97,7 +97,7 @@ export default class FileList extends Vue {
 
   /** Recalls the last entered bucket name.  */
   mounted() {
-    this.formBucketName = localBucketName.get_default('');
+    this.formBucketName = localBucketName.getDefault('');
   }
 
   /** Handles when load button clicked */

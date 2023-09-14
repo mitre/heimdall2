@@ -29,8 +29,9 @@ This repository contains the source code for Heimdall's [Backend](https://github
       - [Stopping the Container](#stopping-the-container)
       - [Helm Chart](#helm-chart)
       - [Running via Cloud.gov](#running-via-cloudgov)
-  - [External Data Sources](#external-data-sources)
+  - [External Data Sources (Interfaces)](#external-data-sources-interfaces)
     - [AWS S3](#aws-s3)
+    - [Splunk](#splunk)
     - [Tenable.SC](#tenablesc)
   - [API Usage](#api-usage)
   - [For Developers](#for-developers)
@@ -82,7 +83,7 @@ This repository contains the source code for Heimdall's [Backend](https://github
 
 ## Heimdall (Lite) vs Heimdall with Backend (Server)
 
-There are two ways to deploy MITRE Heimdall - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
+There are two ways to deploy the MITRE Heimdall application - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
 
 ### Heimdall-Lite
 
@@ -157,6 +158,8 @@ If you would prefer to run the bleeding edge version of Heimdall-Lite, replace `
 ### Heimdall Server - Docker
 
 Given that Heimdall requires at least a database service, we use Docker and Docker Compose to provide a simple deployment experience. This process will also deploy an NGINX webserver in front of Heimdall to handle TLS.
+
+Heimdall's frontend container image is distributed on [DockerHub](https://hub.docker.com/r/mitre/heimdall2), and on [Iron Bank](https://ironbank.dso.mil/repomap/details;registry1Path=mitre%252Fsaf%252Fheimdall2).
 
 #### Setup Docker Container (Clean Install)
 
@@ -239,45 +242,24 @@ $ cf push
 
 > Note: This is only for demonstration purposes, in order to run a production level federal/FISMA system. You will need to contact the [cloud.gov program](https://cloud.gov) and consult your organization's security team (for risk assessment and an Authority to Operate).
 
-## External Data Sources
+## External Data Sources (Interfaces)
 
-Heimdall currently supports AWS S3 for loading external HDF data. 
+Heimdall currently provides connectivity to the following services for importing and visualizing scans:
+  - AWS S3
+  - Splunk
+  - Tenable.SC
 
 ### AWS S3
 
-In order to allow Heimdall to connect to an AWS S3 bucket, we need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficient, however we need to change the allowed origin `AllowedOrigins` to the domain where Heimdall is deployed.
+For detail information on how to setup and connect to an `AWS S3` bucket see the [Heimdall Interface Connection - AWS S3 Wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections#aws-s3)
 
-```json
-[
-    {
-        "AllowedHeaders": [
-            "*"
-        ],
-        "AllowedMethods": [
-            "GET",
-            "HEAD"
-        ],
-        "AllowedOrigins": [
-            "https://heimdall.your.site.here"
-        ],
-        "ExposeHeaders": [],
-        "MaxAgeSeconds": 3000
-    }
-]
-```
+### Splunk
+
+For detail information on how to setup and connect to an `Splunk` instances (logical or virtual) see the [Heimdall Interface Connection - Splunk Wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections#splunk)
 
 ### Tenable.SC
 
-In order to allow Heimdall to connect to a Tenable.SC instance, the hosting services should be configured with an allowlist that includes the calling domain where Heimdall resides as a trusted domain to perform CORS requests.
-For information on how to enable [open access across domain boundaries](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing), please reference the [CORS Enabled W3C wiki](https://www.w3.org/wiki/CORS_Enabled).
-
-To temporarily disable CORS for local development, you can use a browser [extension](https://www.bannerbear.com/blog/what-is-a-cors-error-and-how-to-fix-it-3-ways/#solution-3-bypass-the-error-using-a-browser-extension) like CORS Unlock.
-
-It is also possible to start Google Chrome on Windows with CORS temporarily disabled by starting the browser with web security disabled.
-  - Create a short cut, in the "Type the location of the item:" text box enter the following command:
-```
-  "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --user-data-dir="C:/ChromeDev" --disable-web-security --disable-features=IsolateOrigins,site-per-process 
-```
+For detail information on how to setup and connect to an `Tenable.SC` instance see the [Heimdall Interface Connection - Tenable.SC Wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections#tenablesc)
 
 
 ## API Usage
@@ -306,7 +288,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    - ```bash
      # grab nodesource for recent version of nodejs
-     sudo curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh
+     sudo curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
      sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
@@ -318,7 +300,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    OSX:
    
    - ```bash
-     brew install postgresql node@16 git      
+     brew install postgresql node@18 git      
      brew install nano                        # recommended installation
      sudo npm install -g yarn
      ```

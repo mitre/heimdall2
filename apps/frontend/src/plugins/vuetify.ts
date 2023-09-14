@@ -44,6 +44,7 @@ const branding = {
 };
 
 const severities = {
+  severityNone: colors.lightBlue.base,
   severityLow: colors.yellow.base,
   severityMedium: colors.orange.base,
   severityHigh: colors.deepOrange.base,

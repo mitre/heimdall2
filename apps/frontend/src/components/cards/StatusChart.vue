@@ -16,6 +16,7 @@ import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {SearchModule} from '../../store/search';
+import {formatCompliance} from '@mitre/hdf-converters';
 
 /**
  * Categories property must be of type Category
@@ -64,7 +65,7 @@ export default class StatusChart extends Vue {
 
   get centerValue(): string {
     if (this.showCompliance) {
-      return `${calculateCompliance(this.filter)}%`;
+      return formatCompliance(calculateCompliance(this.filter));
     } else {
       return '';
     }

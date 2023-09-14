@@ -78,9 +78,8 @@ export function calculateCompliance(filter: Filter) {
     StatusCountModule.countOf(filter, 'Not Reviewed');
   if (total === 0) {
     return 0;
-  } else {
-    return Math.round((100.0 * passed) / total);
   }
+  return (100 * passed) / total;
 }
 
 @Module({

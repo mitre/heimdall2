@@ -12,8 +12,7 @@
     "baseUrl": "./",
     "types": ["jest", "chai", "vuetify", "node"],
     "paths": {
-      "@/*": ["src/*"],
-      "v-clipboard": ["src/types/v-clipboard/index"]
+      "@/*": ["src/*"]
     },
     "lib": ["ES2019", "dom", "dom.iterable", "scripthost"]
   },

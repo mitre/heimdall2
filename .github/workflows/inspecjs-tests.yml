@@ -2,42 +2,42 @@ name: Run InspecJS Tests
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     steps:
-     - uses: actions/checkout@v3
-     - uses: ruby/setup-ruby@v1
-       with:
-         ruby-version: '2.7'
+      - uses: actions/checkout@v3
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '2.7'
 
-     - name: Setup Node.js
-       uses: actions/setup-node@v3
-       with:
-        node-version: '16.x'
-        cache: 'yarn'
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
 
-     - name: Remove frontend and backend code to ensure the proper dependencies are declared in the inspecjs package.json
-       run: |
-        rm -rf apps/frontend
-        rm -rf apps/backend
+      - name: Remove frontend and backend code to ensure the proper dependencies are declared in the inspecjs package.json
+        run: |
+          rm -rf apps/frontend
+          rm -rf apps/backend
 
-     - name: Install project dependencies
-       run: yarn inspecjs install --frozen-lockfile
+      - name: Install project dependencies
+        run: yarn inspecjs install --frozen-lockfile
 
-     - name: Run unit tests
-       run: yarn inspecjs test
+      - name: Run unit tests
+        run: yarn inspecjs test
 
-     - name: Validate there are no changes between the inspec schemas and generated parsers
-       run: |
-        bundle install --gemfile libs/inspecjs/Gemfile
-        yarn inspecjs gen-types
-        yarn inspecjs validate-types
+      - name: Validate there are no changes between the inspec schemas and generated parsers
+        run: |
+          bundle install --gemfile libs/inspecjs/Gemfile
+          yarn inspecjs gen-types
+          yarn inspecjs validate-types
 
-     - name: Ensure InspecJS builds cleanly
-       run: yarn inspecjs build
+      - name: Ensure InspecJS builds cleanly
+        run: yarn inspecjs build
