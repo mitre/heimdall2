@@ -6308,9 +6308,9 @@ available-typed-arrays@^1.0.5:
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
 aws-sdk@^2.1046.0, aws-sdk@^2.573.0:
-  version "2.1456.0"
-  resolved "https://registry.npmjs.org/aws-sdk/-/aws-sdk-2.1456.0.tgz#0c89368eac5556f4959a8876386edd79f96808b8"
-  integrity sha512-0fzxx55Skc44i4q6iMuNjYSHEEaCZIbjvl4jaT3Jki6GNYQAdWb0/+BPaTalkb8UgrY9wSZ0h86DH2w+nf6e7g==
+  version "2.1457.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1457.0.tgz#bd0956949e31d8b90153f6db1b2e39eec7752f09"
+  integrity sha512-Gj6R/YISU9L8XzFWJgOW6dKDAZciiCvHs0CGb9GCHsxHO2vgQf2rVrvxV8kg/5ISypOCRtqT9J1xY7HK35fYOA==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -17037,7 +17037,7 @@ pretty@2.0.0, pretty@^2.0.0:
 
 prismjs@1.29.0, prismjs@^1.23.0, prismjs@^1.29.0:
   version "1.29.0"
-  resolved "https://registry.npmjs.org/prismjs/-/prismjs-1.29.0.tgz#f113555a8fa9b57c35e637bba27509dcf802dd12"
+  resolved "https://registry.yarnpkg.com/prismjs/-/prismjs-1.29.0.tgz#f113555a8fa9b57c35e637bba27509dcf802dd12"
   integrity sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q==
 
 private@~0.1.5:
@@ -20541,7 +20541,7 @@ vue-template-es2015-compiler@^1.6.0, vue-template-es2015-compiler@^1.9.0:
 
 vue@2.6.14, vue@^2.6.11, vue@^2.6.14, vue@~2.6.10:
   version "2.6.14"
-  resolved "https://registry.npmjs.org/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
   integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
 
 vuelidate@^0.7.5:
