@@ -4726,10 +4726,10 @@
   resolved "https://registry.npmjs.org/@types/node/-/node-10.17.60.tgz#35f3d6213daed95da7f0f73e75bcc6980e90597b"
   integrity sha512-F0KIgDJfy2nA3zMLmWGKxcH2ZVEtCZXHHdOQs2gSaQ27+lNeEfGxzkIw90aXswATX7AZ33tahPbzy6KAfUreVw==
 
-"@types/node@^16.18.39":
-  version "16.18.50"
-  resolved "https://registry.npmjs.org/@types/node/-/node-16.18.50.tgz#93003cf0251a2ecd26dad6dc757168d648519805"
-  integrity sha512-OiDU5xRgYTJ203v4cprTs0RwOCd5c5Zjv+K5P8KSqfiCsB1W3LcamTUMcnQarpq5kOYbhHfSOgIEJvdPyb5xyw==
+"@types/node@^18.17.5":
+  version "18.17.15"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.17.15.tgz#31301a273b9ca7d568fe6d1c35ae52e0fb3f8d6a"
+  integrity sha512-2yrWpBk32tvV/JAd3HNHWuZn/VDN1P+72hWirHnvsvTGSqbANi+kSeuQR9yAHnbvaBvHDsoTdXV0Fe+iRtHLKA==
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.1"
@@ -8345,14 +8345,14 @@ cypress-wait-until@^1.7.1:
   resolved "https://registry.npmjs.org/cypress-wait-until/-/cypress-wait-until-1.7.2.tgz#7f534dd5a11c89b65359e7a0210f20d3dfc22107"
   integrity sha512-uZ+M8/MqRcpf+FII/UZrU7g1qYZ4aVlHcgyVopnladyoBrpoaMJ4PKZDrdOJ05H5RHbr7s9Tid635X3E+ZLU/Q==
 
-cypress@13.1.0:
-  version "13.1.0"
-  resolved "https://registry.npmjs.org/cypress/-/cypress-13.1.0.tgz#18f268e66662cd91b1766db18bd1f63a66592205"
-  integrity sha512-LUKxCYlB973QBFls1Up4FAE9QIYobT+2I8NvvAwMfQS2YwsWbr6yx7y9hmsk97iqbHkKwZW3MRjoK1RToBFVdQ==
+cypress@13.2.0:
+  version "13.2.0"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-13.2.0.tgz#10f73d06a0764764ffbb903a31e96e2118dcfc1d"
+  integrity sha512-AvDQxBydE771GTq0TR4ZUBvv9m9ffXuB/ueEtpDF/6gOcvFR96amgwSJP16Yhqw6VhmwqspT5nAGzoxxB+D89g==
   dependencies:
     "@cypress/request" "^3.0.0"
     "@cypress/xvfb" "^1.2.4"
-    "@types/node" "^16.18.39"
+    "@types/node" "^18.17.5"
     "@types/sinonjs__fake-timers" "8.1.1"
     "@types/sizzle" "^2.3.2"
     arch "^2.2.0"
