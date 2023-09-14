@@ -79,7 +79,7 @@
     "connect-pg-simple": "^9.0.0",
     "dotenv": "^16.0.0",
     "eslint-plugin-import": "^2.20.1",
-    "express-rate-limit": "^6.0.1",
+    "express-rate-limit": "^7.0.0",
     "express-session": "^1.17.1",
     "helmet": "^4.1.1",
     "js-levenshtein": "^1.1.6",
