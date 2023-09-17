@@ -21,7 +21,6 @@
       label="Search"
       clearable
       :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'regular-bar mx-2'"
-      @input="isTyping = true"
       @click:clear="searchTerm = ''"
       @click:append="showSearchHelp = true"
       @blur="showSearchMobile = false"
@@ -85,7 +84,6 @@ export default class SearchBar extends Vue {
     });
   }
 
-  @Watch('isTyping')
   onDoneTyping() {
     SearchModule.parseSearch();
   }
