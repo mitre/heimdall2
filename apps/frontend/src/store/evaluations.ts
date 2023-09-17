@@ -40,6 +40,14 @@ export class Evaluation extends VuexModule {
     };
   }
 
+  get evaluationsForGroupName(): (groupName: string) => IEvaluation[] {
+    return (groupName: string) => {
+      return this.allEvaluations.filter((e) => {
+        return e.groups.map((g) => g.name).includes(groupName);
+      });
+    };
+  }
+
   @Action
   async getAllEvaluations(): Promise<void> {
     return axios
