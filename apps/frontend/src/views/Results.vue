@@ -10,6 +10,10 @@
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
+      <v-btn @click="copyQueryToClipboard">
+        <span class="d-none d-md-inline pr-2"> Query </span>
+        <v-icon>mdi-content-copy</v-icon>
+      </v-btn>
       <UploadButton />
       <div class="text-center">
         <v-menu>
@@ -240,6 +244,8 @@ import ServerMixin from '../mixins/ServerMixin';
 import {EvaluationModule} from '../store/evaluations';
 import {StatusCountModule} from '../store/status_counts';
 import {compare_times} from '../utilities/delta_util';
+import {Clipboard} from 'v-clipboard';
+import {SnackbarModule} from '@/store/snackbar';
 
 @Component({
   components: {
@@ -324,7 +330,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     Promise.all([groupProm, databaseProm]).then(() => {
       this.$router.push({
         query: {}
-      })
+      });
     });
   }
 
@@ -510,6 +516,28 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     this.treeFilters = [];
     if (clearSearchBar) {
       this.searchTerm = '';
+    }
+  }
+
+  /**
+   * Copy search query to clipboard
+   */
+  async copyQueryToClipboard() {
+    const query: {
+      search?: string;
+    } = {};
+
+    if (this.searchTerm) {
+      query.search = this.searchTerm;
+    }
+
+    // Generate the URL
+    const {href} = this.$router.resolve({query: query});
+    try {
+      await Clipboard.copy(window.location.origin + href);
+      SnackbarModule.notify('Search query copied to your clipboard');
+    } catch (e) {
+      SnackbarModule.failure('Failed to copy search query to your clipboard');
     }
   }
 
