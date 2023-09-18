@@ -218,21 +218,29 @@ export default class StatusCardRow extends Vue {
   getCardColor(card: CardProps): string {
     if (
       this.filter.status?.length === 0 ||
-      (!this.negatedStatuses.some(
+      this.filter.status?.some(
+        (statusFilter) =>
+          statusFilter.value.toLowerCase() == card.value &&
+          statusFilter.negated === false
+      )
+    ) {
+      return card.color;
+    } else if (
+      !this.negatedStatuses.some(
         (statusFilter) => statusFilter === card.value
       ) &&
-        this.filter.status?.some(
-          (statusFilter) =>
-            statusFilter.value.toLowerCase() !== card.value &&
-            statusFilter.negated === true
-        ))
+      this.filter.status?.some(
+        (statusFilter) =>
+          statusFilter.value.toLowerCase() !== card.value &&
+          statusFilter.negated === true
+      )
     ) {
       return card.color;
     }
     return '';
   }
 
-  toggleFilter(filter: LowercasedControlStatus) {
+  toggleFilter(filter: LowercasedControlStatus | 'waived') {
     if (
       this.filter.status?.find((obj) => {
         return obj.value.toLowerCase() === filter;
