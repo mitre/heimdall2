@@ -1,3 +1,26 @@
+v2.8.3
+## Dependency Updates
+
+- Bump diff2html from 3.4.42 to 3.4.43 @dependabot (#4970)
+- Bump aws-sdk from 2.1460.0 to 2.1461.0 @dependabot (#4969)
+- Bump aws-sdk from 2.1459.0 to 2.1460.0 @dependabot (#4967)
+- Bump @types/node from 20.6.1 to 20.6.2 @dependabot (#4968)
+- Bump eslint-plugin-cypress from 2.14.0 to 2.15.1 @dependabot (#4966)
+- Bump @types/diff from 5.0.3 to 5.0.4 @dependabot (#4964)
+- Bump express-rate-limit from 7.0.0 to 7.0.1 @dependabot (#4963)
+- Bump @types/bcryptjs from 2.4.3 to 2.4.4 @dependabot (#4959)
+- Bump @aws-sdk/client-config-service from 3.413.0 to 3.414.0 @dependabot (#4960)
+- Bump aws-sdk from 2.1458.0 to 2.1459.0 @dependabot (#4958)
+- Bump @types/node from 20.6.0 to 20.6.1 @dependabot (#4957)
+- Bump aws-sdk from 2.1457.0 to 2.1458.0 @dependabot (#4953)
+- Bump @aws-sdk/client-config-service from 3.410.0 to 3.413.0 @dependabot (#4954)
+- Bump @types/uuid from 9.0.3 to 9.0.4 @dependabot (#4951)
+- Bump @vue/eslint-config-typescript from 11.0.3 to 12.0.0 @dependabot (#4949)
+- Bump cypress from 13.1.0 to 13.2.0 @dependabot (#4946)
+- Bump express-rate-limit from 6.11.2 to 7.0.0 @dependabot (#4945)
+- Bump sinon from 15.2.0 to 16.0.0 @dependabot (#4950)
+- Bump aws-sdk from 2.1456.0 to 2.1457.0 @dependabot (#4948)
+
 v2.8.2
 ## Dependency Updates
 
