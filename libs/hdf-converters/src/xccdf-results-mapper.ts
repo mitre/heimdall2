@@ -250,7 +250,8 @@ export class XCCDFResultsMapper extends BaseConverter {
           path: 'Benchmark.reference.publisher'
         },
         summary: {
-          path: ['Benchmark.description.text', 'Benchmark.description']
+          path: ['Benchmark.description.text', 'Benchmark.description'],
+          transformer: parseHtml
         },
         description: {
           path: 'Benchmark',
@@ -293,7 +294,11 @@ export class XCCDFResultsMapper extends BaseConverter {
               for (const path of paths) {
                 const item = _.get(input, path);
                 if (item !== undefined) {
-                  fullDescription[path] = item;
+                  if (typeof item === 'string') {
+                    fullDescription[path] = parseHtml(item);
+                  } else {
+                    fullDescription[path] = item;
+                  }
                 }
               }
             }
@@ -327,22 +332,26 @@ export class XCCDFResultsMapper extends BaseConverter {
               description: {
                 path: ['description.text', 'description'],
                 transformer: (description: string): string =>
-                  _.get(
-                    parseXml(description),
-                    'VulnDiscussion',
-                    description
-                  ) as string
+                  parseHtml(
+                    _.get(
+                      parseXml(description),
+                      'VulnDiscussion',
+                      description
+                    ) as string
+                  )
               },
               group_id: {path: 'group.id'},
               group_title: {path: ['group.title.text', 'group.title']},
               group_description: {
                 path: ['group.description.text', 'group.description'],
                 transformer: (description: string): string =>
-                  _.get(
-                    parseXml(description),
-                    'GroupDescription',
-                    description
-                  ) as string
+                  parseHtml(
+                    _.get(
+                      parseXml(description),
+                      'GroupDescription',
+                      description
+                    ) as string
+                  )
               },
               rule_id: {path: 'id'},
               check: {
@@ -354,7 +363,7 @@ export class XCCDFResultsMapper extends BaseConverter {
               fix_id: {path: 'fix.id'},
               fixtext_fixref: {
                 path: ['fixtext.fixref.text', 'fixtext.fixref'],
-                transformer: (text: string) => text || undefined
+                transformer: (text: string) => parseHtml(text) || undefined
               },
               ident: {
                 path: 'ident',
@@ -375,11 +384,13 @@ export class XCCDFResultsMapper extends BaseConverter {
                   description: {
                     path: ['description.text', 'description'],
                     transformer: (description: string): string =>
-                      _.get(
-                        parseXml(description),
-                        'ProfileDescription',
-                        description
-                      ) as string
+                      parseHtml(
+                        _.get(
+                          parseXml(description),
+                          'ProfileDescription',
+                          description
+                        ) as string
+                      )
                   },
                   title: {path: ['title.text', 'title']}
                 }
@@ -393,12 +404,14 @@ export class XCCDFResultsMapper extends BaseConverter {
                   values: Record<string, unknown> | Record<string, unknown>[]
                 ) =>
                   asArray(values).map((value) => ({
-                    title: _.get(value, 'title'),
-                    description:
+                    title: _.get(value, 'title.text') || _.get(value, 'title'),
+                    description: parseHtml(
                       _.get(value, 'description.text') ||
-                      _.get(value, 'description'),
-                    warning:
-                      _.get(value, 'warning.text') || _.get(value, 'warning'),
+                        _.get(value, 'description')
+                    ),
+                    warning: parseHtml(
+                      _.get(value, 'warning.text') || _.get(value, 'warning')
+                    ),
                     value: _.get(value, 'value'),
                     Id: _.get(value, 'Id'),
                     id: _.get(value, 'id'),
@@ -466,11 +479,13 @@ export class XCCDFResultsMapper extends BaseConverter {
             desc: {
               path: ['description.text', 'description'],
               transformer: (description: string): string =>
-                _.get(
-                  parseXml(description),
-                  'ProfileDescription',
-                  description
-                ) as string
+                parseHtml(
+                  _.get(
+                    parseXml(description),
+                    'ProfileDescription',
+                    description
+                  ) as string
+                )
             },
             descriptions: [
               {
@@ -553,11 +568,13 @@ export class XCCDFResultsMapper extends BaseConverter {
                 code_desc: {
                   path: ['description.text', 'description'],
                   transformer: (description: string): string =>
-                    _.get(
-                      parseXml(description),
-                      'VulnDiscussion',
-                      description
-                    ) as string
+                    parseHtml(
+                      _.get(
+                        parseXml(description),
+                        'VulnDiscussion',
+                        description
+                      ) as string
+                    )
                 },
                 start_time: {
                   path: ['ruleResult.time']
@@ -603,7 +620,18 @@ export class XCCDFResultsMapper extends BaseConverter {
     }
   };
   constructor(scapXml: string, withRaw = false) {
-    super(parseXml(scapXml));
+    super(
+      parseXml(scapXml, {
+        stopNodes: [
+          '*.fixtext',
+          '*.fix',
+          '*.rationale',
+          '*.warning',
+          '*.title',
+          '*.description'
+        ]
+      })
+    );
     this.withRaw = withRaw;
   }
 }
