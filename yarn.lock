@@ -4122,9 +4122,9 @@
     "@types/node" "*"
 
 "@types/adm-zip@^0.5.0":
-  version "0.5.1"
-  resolved "https://registry.npmjs.org/@types/adm-zip/-/adm-zip-0.5.1.tgz#2d3ab14cd537b68dc53aebe73d91024ce1373e89"
-  integrity sha512-3+psmbh60N5JXM2LMkujFqnjMf3KB0LZoIQO73NJvkv57q+384nK/A7pP0v+ZkB/Zrfqn+5xtAyt5OsY+GiYLQ==
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@types/adm-zip/-/adm-zip-0.5.2.tgz#af75239a16b5dd2f2f53049295cc94734cf61274"
+  integrity sha512-33OTTnnW3onOE6HJuoqsi7T7Ojupz7zO/Vs5ddRNVCYQnu4lg05RqH/pr9eidHGvGyYfdO4uPO9cvegAMixBCQ==
   dependencies:
     "@types/node" "*"
 
