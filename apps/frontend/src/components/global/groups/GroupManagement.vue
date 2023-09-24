@@ -70,9 +70,19 @@
             small
             title="Delete"
             data-cy="delete"
+            class="mr-2"
             @click="deleteGroupDialog(item)"
           >
             mdi-delete
+          </v-icon>
+          <v-icon
+            small
+            title="Add To Query"
+            data-cy="addToQuery"
+            class="mr-2"
+            @click="flipQueryParam(item)"
+          >
+            {{ existsInQuery(item) ? 'mdi-minus' : 'mdi-plus' }}
           </v-icon>
         </div>
       </template>
@@ -103,6 +113,7 @@ import {IGroup, ISlimUser} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {UrlQueryModule} from '@/store/url_query';
 
 @Component({
   components: {
@@ -149,6 +160,18 @@ export default class GroupManagement extends Vue {
   deleteGroupDialog(group: IGroup): void {
     this.editedGroup = group;
     this.dialogDelete = true;
+  }
+
+  flipQueryParam(group: IGroup): void {
+    if (this.existsInQuery(group)) {
+      UrlQueryModule.removeGroupQueryParam(group.name);
+    } else {
+      UrlQueryModule.addGroupQueryParam(group.name);
+    }
+  }
+
+  existsInQuery(group: IGroup): boolean {
+    return UrlQueryModule.existsInGroup(group.name);
   }
 
   deleteGroupConfirm(): void {

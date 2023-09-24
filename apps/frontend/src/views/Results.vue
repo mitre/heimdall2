@@ -7,12 +7,16 @@
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
       <v-btn :disabled="!canClear" @click="clear">
-        <span class="d-none d-md-inline pr-2"> Clear </span>
+        <span class="d-none d-md-inline mr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
       <v-btn @click="copyQueryToClipboard">
-        <span class="d-none d-md-inline pr-2"> Query </span>
+        <span class="d-none d-md-inline mr-2"> Query </span>
         <v-icon>mdi-content-copy</v-icon>
+      </v-btn>
+      <v-btn :disabled="!canClearQueryParams" @click="clearQueryParams">
+        <span class="d-none d-md-inline mr-2"> Clear Query </span>
+        <v-icon>mdi-content-minus</v-icon>
       </v-btn>
       <UploadButton />
       <div class="text-center">
@@ -246,6 +250,7 @@ import {StatusCountModule} from '../store/status_counts';
 import {compare_times} from '../utilities/delta_util';
 import {Clipboard} from 'v-clipboard';
 import {SnackbarModule} from '@/store/snackbar';
+import {UrlQueryModule} from '@/store/url_query';
 
 @Component({
   components: {
@@ -525,10 +530,18 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   async copyQueryToClipboard() {
     const query: {
       search?: string;
+      group?: string[];
+      database?: string[];
     } = {};
 
     if (this.searchTerm) {
       query.search = this.searchTerm;
+    }
+    if (UrlQueryModule.group.length != 0) {
+      query.group = UrlQueryModule.group;
+    }
+    if (UrlQueryModule.database.length != 0) {
+      query.database = UrlQueryModule.database;
     }
 
     // Generate the URL
@@ -539,6 +552,19 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     } catch (e) {
       SnackbarModule.failure('Failed to copy search query to your clipboard');
     }
+  }
+
+  /**
+   * Clear url query parameters
+   */
+  clearQueryParams() {
+    UrlQueryModule.clearQueryParams();
+  }
+
+  get canClearQueryParams(): boolean {
+    return (
+      UrlQueryModule.group.length != 0 || UrlQueryModule.database.length != 0
+    );
   }
 
   /**
