@@ -348,10 +348,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   // this is copied from LoadFileList with some modifications. refactor for better reuse
   filterEvaluationGroups(file: IEvaluation, search: string): boolean {
-  return file.groups.some((group) => {
-    return group.name.toLowerCase().includes(search);
-  });
-}
+    return file.groups.some((group) => {
+      return group.name.toLowerCase().includes(search);
+    });
+  }
 
   // this is copied from LoadFileList with some modifications. refactor for better reuse
   filterEvaluations(evaluations: IEvaluation[], search: string) {
