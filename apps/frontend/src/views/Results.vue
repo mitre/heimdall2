@@ -340,37 +340,25 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   }
 
   // this is copied from LoadFileList with some modifications. refactor for better reuse
-  filterEvaluationTags(file: IEvaluation, search: string) {
-    let result = false;
-    if ('evaluationTags' in file) {
-      file.evaluationTags?.forEach((tag) => {
-        if (tag.value.toLowerCase().includes(search)) {
-          result = true;
-        }
-      });
-    }
-    return result;
+  filterEvaluationTags(file: IEvaluation, search: string): boolean {
+    return file.evaluationTags.some((tag) => {
+      return tag.value.toLowerCase().includes(search);
+    });
   }
 
   // this is copied from LoadFileList with some modifications. refactor for better reuse
-  filterEvaluationGroups(file: IEvaluation, search: string) {
-    let result = false;
-    if ('groups' in file) {
-      file.groups?.forEach((group) => {
-        if (group.name.toLowerCase().includes(search)) {
-          result = true;
-        }
-      });
-    }
-    return result;
-  }
+  filterEvaluationGroups(file: IEvaluation, search: string): boolean {
+  return file.groups.some((group) => {
+    return group.name.toLowerCase().includes(search);
+  });
+}
 
   // this is copied from LoadFileList with some modifications. refactor for better reuse
   filterEvaluations(evaluations: IEvaluation[], search: string) {
     const matches: IEvaluation[] = [];
     if (search !== '') {
       const searchToLower = search.toLowerCase();
-      evaluations.forEach(async (item: IEvaluation) => {
+      evaluations.forEach((item: IEvaluation) => {
         if (
           this.filterEvaluationTags(item, searchToLower) ||
           this.filterEvaluationGroups(item, searchToLower) ||
