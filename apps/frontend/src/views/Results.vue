@@ -7,8 +7,16 @@
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
       <v-btn :disabled="!canClear" @click="clear">
-        <span class="d-none d-md-inline pr-2"> Clear </span>
+        <span class="d-none d-md-inline mr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
+      </v-btn>
+      <v-btn @click="copyQueryToClipboard">
+        <span class="d-none d-md-inline mr-2"> Query </span>
+        <v-icon>mdi-content-copy</v-icon>
+      </v-btn>
+      <v-btn :disabled="!canClearQueryParams" @click="clearQueryParams">
+        <span class="d-none d-md-inline mr-2"> Clear Query </span>
+        <v-icon>mdi-content-minus</v-icon>
       </v-btn>
       <UploadButton />
       <div class="text-center">
@@ -234,12 +242,15 @@ import {ServerModule} from '@/store/server';
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/interfaces';
 import {Severity} from 'inspecjs';
-import {capitalize} from 'lodash';
+import {capitalize, uniq} from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '../mixins/ServerMixin';
 import {EvaluationModule} from '../store/evaluations';
 import {StatusCountModule} from '../store/status_counts';
 import {compare_times} from '../utilities/delta_util';
+import {Clipboard} from 'v-clipboard';
+import {SnackbarModule} from '@/store/snackbar';
+import {UrlQueryModule} from '@/store/url_query';
 
 @Component({
   components: {
@@ -265,6 +276,103 @@ import {compare_times} from '../utilities/delta_util';
   }
 })
 export default class Results extends mixins(RouteMixin, ServerMixin) {
+  mounted() {
+    if (EvaluationModule.loading) {
+      EvaluationModule.getAllEvaluations().then(() => {
+        this.handleQuery();
+      });
+    } else {
+      this.handleQuery();
+    }
+  }
+
+  handleQuery() {
+    if (!this.$route.query) {
+      return;
+    }
+
+    let {search, group, database} = this.$route.query;
+    let groupProm, databaseProm;
+
+    if (search) {
+      if (typeof search === 'string') {
+        this.searchTerm = search;
+      } else {
+        // if multiple search query values are provided, just "and" them together
+        this.searchTerm = Object.values(search).join(' ');
+      }
+    }
+
+    if (group) {
+      let groupArr = [group].flat().filter(Boolean) as string[];
+      groupProm = EvaluationModule.load_results(
+        uniq(
+          groupArr
+            .map((g) => EvaluationModule.evaluationsForGroupName(g))
+            .flat()
+            .map((e) => e.id)
+        )
+      );
+    }
+
+    if (database) {
+      let databaseArr = [database].flat().filter(Boolean) as string[];
+      databaseProm = EvaluationModule.load_results(
+        uniq(
+          databaseArr
+            .map((d) =>
+              this.filterEvaluations(EvaluationModule.allEvaluations, d)
+            )
+            .flat()
+            .map((e) => e.id)
+        )
+      );
+    }
+
+    // get rid of query parameters
+    // this relies on the Navigation Guard in router.ts to update the database ids
+    // the promise mechanism guarantees we will only re-route once
+    Promise.all([groupProm, databaseProm]).then(() => {
+      this.$router.push({
+        query: {}
+      });
+    });
+  }
+
+  // this is copied from LoadFileList with some modifications. refactor for better reuse
+  filterEvaluationTags(file: IEvaluation, search: string): boolean {
+    return file.evaluationTags.some((tag) => {
+      return tag.value.toLowerCase().includes(search);
+    });
+  }
+
+  // this is copied from LoadFileList with some modifications. refactor for better reuse
+  filterEvaluationGroups(file: IEvaluation, search: string): boolean {
+    return file.groups.some((group) => {
+      return group.name.toLowerCase().includes(search);
+    });
+  }
+
+  // this is copied from LoadFileList with some modifications. refactor for better reuse
+  filterEvaluations(evaluations: IEvaluation[], search: string) {
+    const matches: IEvaluation[] = [];
+    if (search !== '') {
+      const searchToLower = search.toLowerCase();
+      evaluations.forEach((item: IEvaluation) => {
+        if (
+          this.filterEvaluationTags(item, searchToLower) ||
+          this.filterEvaluationGroups(item, searchToLower) ||
+          item.filename.toLowerCase().includes(searchToLower)
+        ) {
+          matches.push(item);
+        }
+      });
+    } else {
+      return evaluations;
+    }
+    return matches;
+  }
+
   /**
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
@@ -402,6 +510,49 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     if (clearSearchBar) {
       this.searchTerm = '';
     }
+  }
+
+  /**
+   * Copy search query to clipboard
+   */
+  async copyQueryToClipboard() {
+    const query: {
+      search?: string;
+      group?: string[];
+      database?: string[];
+    } = {};
+
+    if (this.searchTerm) {
+      query.search = this.searchTerm;
+    }
+    if (UrlQueryModule.group.length != 0) {
+      query.group = UrlQueryModule.group;
+    }
+    if (UrlQueryModule.database.length != 0) {
+      query.database = UrlQueryModule.database;
+    }
+
+    // Generate the URL
+    const {href} = this.$router.resolve({query: query});
+    try {
+      await Clipboard.copy(window.location.origin + href);
+      SnackbarModule.notify('Search query copied to your clipboard');
+    } catch (e) {
+      SnackbarModule.failure('Failed to copy search query to your clipboard');
+    }
+  }
+
+  /**
+   * Clear url query parameters
+   */
+  clearQueryParams() {
+    UrlQueryModule.clearQueryParams();
+  }
+
+  get canClearQueryParams(): boolean {
+    return (
+      UrlQueryModule.group.length != 0 || UrlQueryModule.database.length != 0
+    );
   }
 
   /**
