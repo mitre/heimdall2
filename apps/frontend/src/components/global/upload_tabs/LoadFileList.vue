@@ -88,9 +88,9 @@
             Load Selected
             <v-icon class="pl-2">mdi-file-download</v-icon>
           </v-btn>
-          <v-btn block :disabled="loading" @click="addToQuery">
-            Add Search To Database Query
-            <v-icon class="pl-2">mdi-plus</v-icon>
+          <v-btn block :disabled="loading" @click="queryButtonClickHandler">
+            {{ queryButtonLabel }}
+            <v-icon class="pl-2">{{ queryButtonIcon }}</v-icon>
           </v-btn>
         </div>
       </div>
@@ -144,8 +144,34 @@ export default class LoadFileList extends Vue {
     this.$emit('load-selected', selection);
   }
 
+  get isSearchInQuery(): boolean {
+    return UrlQueryModule.existsInDatabaseQuery(this.search);
+  }
+
+  get queryButtonLabel(): string {
+    return this.isSearchInQuery
+      ? 'Remove Search From Database Query'
+      : 'Add Search To Database Query';
+  }
+
+  get queryButtonIcon(): string {
+    return this.isSearchInQuery ? 'mdi-minus' : 'mdi-plus';
+  }
+
+  queryButtonClickHandler(): void {
+    if (this.isSearchInQuery) {
+      this.removeFromQuery();
+    } else {
+      this.addToQuery();
+    }
+  }
+
   addToQuery(): void {
     UrlQueryModule.addDatabaseQueryParam(this.search);
+  }
+
+  removeFromQuery(): void {
+    UrlQueryModule.removeDatabaseQueryParam(this.search);
   }
 
   updateEvaluations() {

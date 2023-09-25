@@ -171,7 +171,7 @@ export default class GroupManagement extends Vue {
   }
 
   existsInQuery(group: IGroup): boolean {
-    return UrlQueryModule.existsInGroup(group.name);
+    return UrlQueryModule.existsInGroupQuery(group.name);
   }
 
   deleteGroupConfirm(): void {
