@@ -1,7 +1,6 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
-import { Checklist } from './checklistJsonix';
 import {
   BaseConverter,
   generateHash,
@@ -17,6 +16,7 @@ import {
   EmptyChecklistObject,
   updateChecklistWithMetadata
 } from './checklist-jsonix-converter';
+import {Checklist} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
 
 enum ImpactMapping {

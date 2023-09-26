@@ -255,18 +255,36 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   toIntermediateObject(jsonixData: Checklist): ChecklistObject {
     const asset: ChecklistAsset = {
       role: _.get(jsonixData, 'value.asset.role') as unknown as Role,
-      assettype: _.get(jsonixData, 'value.asset.assettype') as unknown as Assettype,
+      assettype: _.get(
+        jsonixData,
+        'value.asset.assettype'
+      ) as unknown as Assettype,
       hostname: _.get(jsonixData, 'value.asset.hostname') as unknown as string,
       hostip: _.get(jsonixData, 'value.asset.hostip') as unknown as string,
       hostmac: _.get(jsonixData, 'value.asset.hostmac') as unknown as string,
       hostfqdn: _.get(jsonixData, 'value.asset.hostfqdn') as unknown as string,
       marking: _.get(jsonixData, 'value.asset.marking'),
       targetcomment: _.get(jsonixData, 'value.asset.targetcomment'),
-      techarea: _.get(jsonixData, 'value.asset.techarea') as unknown as Techarea,
-      targetkey: _.get(jsonixData, 'value.asset.targetkey') as unknown as string,
-      webordatabase: _.get(jsonixData, 'value.asset.webordatabase') as unknown as boolean,
-      webdbsite: _.get(jsonixData, 'value.asset.webdbsite') as unknown as string,
-      webdbinstance: _.get(jsonixData, 'value.asset.webdbinstance') as unknown as string
+      techarea: _.get(
+        jsonixData,
+        'value.asset.techarea'
+      ) as unknown as Techarea,
+      targetkey: _.get(
+        jsonixData,
+        'value.asset.targetkey'
+      ) as unknown as string,
+      webordatabase: _.get(
+        jsonixData,
+        'value.asset.webordatabase'
+      ) as unknown as boolean,
+      webdbsite: _.get(
+        jsonixData,
+        'value.asset.webdbsite'
+      ) as unknown as string,
+      webdbinstance: _.get(
+        jsonixData,
+        'value.asset.webdbinstance'
+      ) as unknown as string
     };
 
     const rawStigs: Istig[] = _.get(
