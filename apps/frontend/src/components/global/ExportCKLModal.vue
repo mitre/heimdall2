@@ -439,7 +439,6 @@ export default class ExportCKLModal extends Vue {
     const fileData: FileData[] = [];
     for (const selected of this.selected) {
       this.addMetadataToPassthrough(selected);
-      // TODO: Need to adjust and add metadata to the passthrough information before sending to the ChecklistResults
       if ('evaluation' in selected) {
         const data = new ChecklistResults(selected.evaluation.data).toCkl();
         const filename = `${cleanUpFilename(selected.filename)}.ckl`;
