@@ -157,7 +157,7 @@ import {
   Assettype,
   Role,
   Techarea
-} from '@mitre/hdf-converters/types/checklistJsonix';
+} from '@mitre/hdf-converters/src/ckl-mapper/checklistJsonix';
 import {ExecJSON} from 'inspecjs';
 import {Dependency} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
