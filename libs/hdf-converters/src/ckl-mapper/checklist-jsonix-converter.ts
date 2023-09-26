@@ -124,14 +124,14 @@ export type StigMetadata = {
 
 export const EmptyChecklistObject: ChecklistObject = {
   asset: {
-    assettype: 'Computing',
+    assettype: Assettype.Computing,
     hostfqdn: null,
     hostip: null,
     hostmac: null,
     hostname: null,
-    role: 'None',
+    role: Role.None,
     targetkey: null,
-    techarea: '',
+    techarea: Techarea.Empty,
     webdbinstance: null,
     webdbsite: null,
     webordatabase: null
@@ -205,7 +205,7 @@ export function updateChecklistWithMetadata(
   checklist.asset.hostmac = metadata.hostmac;
   checklist.asset.role = metadata.role;
   checklist.asset.techarea = metadata.techarea;
-  checklist.asset.webordatabase = metadata.webordatabase;
+  checklist.asset.webordatabase = metadata.webordatabase as unknown as boolean;
   checklist.asset.webdbsite = metadata.webdbsite;
   checklist.asset.webdbinstance = metadata.webdbinstance;
 
@@ -254,19 +254,19 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
    */
   toIntermediateObject(jsonixData: Checklist): ChecklistObject {
     const asset: ChecklistAsset = {
-      role: _.get(jsonixData, 'value.asset.role'),
-      assettype: _.get(jsonixData, 'value.asset.assettype'),
-      hostname: _.get(jsonixData, 'value.asset.hostname'),
-      hostip: _.get(jsonixData, 'value.asset.hostip'),
-      hostmac: _.get(jsonixData, 'value.asset.hostmac'),
-      hostfqdn: _.get(jsonixData, 'value.asset.hostfqdn'),
+      role: _.get(jsonixData, 'value.asset.role') as unknown as Role,
+      assettype: _.get(jsonixData, 'value.asset.assettype') as unknown as Assettype,
+      hostname: _.get(jsonixData, 'value.asset.hostname') as unknown as string,
+      hostip: _.get(jsonixData, 'value.asset.hostip') as unknown as string,
+      hostmac: _.get(jsonixData, 'value.asset.hostmac') as unknown as string,
+      hostfqdn: _.get(jsonixData, 'value.asset.hostfqdn') as unknown as string,
       marking: _.get(jsonixData, 'value.asset.marking'),
       targetcomment: _.get(jsonixData, 'value.asset.targetcomment'),
-      techarea: _.get(jsonixData, 'value.asset.techarea'),
-      targetkey: _.get(jsonixData, 'value.asset.targetkey'),
-      webordatabase: _.get(jsonixData, 'value.asset.webordatabase'),
-      webdbsite: _.get(jsonixData, 'value.asset.webdbsite'),
-      webdbinstance: _.get(jsonixData, 'value.asset.webdbinstance')
+      techarea: _.get(jsonixData, 'value.asset.techarea') as unknown as Techarea,
+      targetkey: _.get(jsonixData, 'value.asset.targetkey') as unknown as string,
+      webordatabase: _.get(jsonixData, 'value.asset.webordatabase') as unknown as boolean,
+      webdbsite: _.get(jsonixData, 'value.asset.webdbsite') as unknown as string,
+      webdbinstance: _.get(jsonixData, 'value.asset.webdbinstance') as unknown as string
     };
 
     const rawStigs: Istig[] = _.get(

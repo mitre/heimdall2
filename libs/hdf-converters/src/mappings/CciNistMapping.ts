@@ -132,7 +132,9 @@ export class CciNistTwoWayMapper {
         }
         // if there were no matches using the original pattern, try using only 2 letters hyphen followed by one or two numbers
         if (matchingIds.length === 0) {
-          const regexEditedPattern = new RegExp(`${/\w\w-\d\d?\d?/g.exec(pattern)}`);
+          const regexEditedPattern = new RegExp(
+            `${/\w\w-\d\d?\d?/g.exec(pattern)}`
+          );
           if (
             RegExp(regexEditedPattern).exec(reference['@_index']) &&
             item.type === 'technical'

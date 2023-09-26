@@ -1,7 +1,7 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
-import {Checklist} from '../../types/checklistJsonix';
+import { Checklist } from './checklistJsonix';
 import {
   BaseConverter,
   generateHash,
