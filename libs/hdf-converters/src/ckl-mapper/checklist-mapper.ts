@@ -17,7 +17,7 @@ import {
   EmptyChecklistObject,
   updateChecklistWithMetadata
 } from './checklist-jsonix-converter';
-import * as checklistMapping from './jsonixMapping';
+import {jsonixMapping} from './jsonixMapping';
 
 enum ImpactMapping {
   high = 0.7,
@@ -280,7 +280,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
    * @param checklistXml - string of xml data
    */
   constructor(data: string | ExecJSON.Execution, withRaw = false) {
-    super(checklistMapping.jsonixMapping);
+    super(jsonixMapping);
     this.data = data;
     if (typeof data === 'string') {
       this.jsonixData = super.toJsonix(data);

@@ -121,13 +121,25 @@ export class CciNistTwoWayMapper {
 
     for (const item of cci_item) {
       for (const reference of item.references.reference) {
-        const regex = new RegExp(`${/\w\w-\d\d?\d?/g.exec(pattern)}`);
+        // first try the pattern as is
+        const regexPattern = new RegExp(`^${pattern}`);
         if (
-          RegExp(regex).exec(reference['@_index']) &&
+          RegExp(regexPattern).exec(reference['@_index']) &&
           item.type === 'technical'
         ) {
           matchingIds.push(item['@_id']);
-          break; // No need to check other references for this item
+          break;
+        }
+        // if there were no matches using the original pattern, try using only 2 letters hyphen followed by one or two numbers
+        if (matchingIds.length === 0) {
+          const regexEditedPattern = new RegExp(`${/\w\w-\d\d?\d?/g.exec(pattern)}`);
+          if (
+            RegExp(regexEditedPattern).exec(reference['@_index']) &&
+            item.type === 'technical'
+          ) {
+            matchingIds.push(item['@_id']);
+            break;
+          }
         }
       }
     }

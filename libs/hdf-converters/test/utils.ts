@@ -1,6 +1,7 @@
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
+import * as htmlparser2 from 'htmlparser2';
 
 export function omitVersions(
   input: ExecJSON.Execution
@@ -64,4 +65,48 @@ export function omitHDFTimes(
       };
     })
   };
+}
+
+export function omitCklUuid(input: string) {
+  let result = '';
+  let omitData = false;
+  // console.log(input)
+  const parser = new htmlparser2.Parser({
+    onopentag: (name) => {
+      result += `<${name}>`;
+    },
+    ontext: (text) => {
+      if (!omitData) {
+        result += text;
+      }
+      if (text === 'uuid') {
+        omitData = true;
+      }
+    },
+    onclosetag: (name) => {
+      result += `</${name}>`;
+      if (name === 'SID_DATA') {
+        omitData = false;
+      }
+    }
+  },
+  {
+    lowerCaseTags: false
+  });
+  parser.write(input);
+  parser.end();
+  // console.log('---------------------------------------------------------------------------------------------------------------------------------');
+  // console.log(result);
+//   const istigs = _.get(input.value, 'stigs.istig', []) as unknown as Istig[]
+//   return {
+//     ...input,
+//     value: {
+//       ...input.value,
+//       stigs: {
+//         istig: istigs.map((is) => {
+//           return 
+//         })
+//       }
+//     }
+//   }  
 }

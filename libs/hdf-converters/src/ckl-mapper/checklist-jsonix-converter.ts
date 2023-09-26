@@ -463,7 +463,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
                 Vulnattribute[
                   keyFoundInVulnattribute as keyof typeof Vulnattribute
                 ],
-              attributedata: dataString
+              attributedata: dataString.trim()
             });
           }
           continue;
@@ -689,7 +689,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         stigRef,
         targetKey: '',
         stigUuid: '',
-        legacyId: _.get(control.tags, 'Legacy_ID', ''),
+        legacyId: _.get(control.tags, 'Legacy_ID'),
         cciRef: _.get(
           control.tags,
           'cci',

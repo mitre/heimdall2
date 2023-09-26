@@ -1,6 +1,7 @@
-import {XMLParser} from 'fast-xml-parser';
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
+import { omitCklUuid } from '../../utils';
+
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
@@ -13,17 +14,17 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/checklist_mapper/converted-RHEL8V1R3.ckl',
-      mapper.toCkl()
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/converted-RHEL8V1R3.ckl',
+    //   mapper.toCkl()
+    // );
 
-    const parser = new XMLParser();
-
-    expect(parser.parse(mapper.toCkl())).toEqual(
-      parser.parse(
+    expect(omitCklUuid(mapper.toCkl())).toEqual(
+      omitCklUuid(
         fs.readFileSync(
-          'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl'
+          'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl', {
+            encoding: 'utf-8'
+          }
         )
       )
     );
@@ -41,17 +42,19 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/checklist_mapper/converted-three-stig-checklist.ckl',
-      mapper.toCkl()
-    );
+//     // fs.writeFileSync(
+//     //   'sample_jsons/checklist_mapper/converted-three-stig-checklist.ckl',
+//     //   mapper.toCkl()
+//     // );
 
-    const parser = new XMLParser();
+//     const parser = new XMLParser(options);
 
-    expect(parser.parse(mapper.toCkl())).toEqual(
-      parser.parse(
+    expect(omitCklUuid(mapper.toCkl())).toEqual(
+      omitCklUuid(
         fs.readFileSync(
-          'sample_jsons/checklist_mapper/sample_input_report/three_stig_checklist.ckl'
+          'sample_jsons/checklist_mapper/sample_input_report/three_stig_checklist.ckl', {
+            encoding: 'utf-8'
+          }
         )
       )
     );
@@ -68,16 +71,20 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
       )
     );
 
-    const parser = new XMLParser();
+//     const parser = new XMLParser(options);
 
-    fs.writeFileSync(
-      'sample_jsons/checklist_mapper/converted-nessus.ckl',
-      mapper.toCkl()
-    );
+//     const xmlParsed = parser.parse(mapper.toCkl())
 
-    expect(parser.parse(mapper.toCkl())).toEqual(
-      parser.parse(
-        fs.readFileSync('sample_jsons/checklist_mapper/converted-nessus.ckl')
+//     console.log(JSON.stringify(xmlParsed))
+
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/converted-nessus.ckl',
+    //   mapper.toCkl()
+    // );
+
+    expect(omitCklUuid(mapper.toCkl())).toEqual(
+      omitCklUuid(
+        fs.readFileSync('sample_jsons/checklist_mapper/converted-nessus.ckl', {encoding: 'utf-8'})
       )
     );
   });
