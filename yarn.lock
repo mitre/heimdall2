@@ -4730,9 +4730,9 @@
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
 
 "@types/mock-fs@^4.10.0":
-  version "4.13.1"
-  resolved "https://registry.npmjs.org/@types/mock-fs/-/mock-fs-4.13.1.tgz#9201554ceb23671badbfa8ac3f1fa9e0706305be"
-  integrity sha512-m6nFAJ3lBSnqbvDZioawRvpLXSaPyn52Srf7OfzjubYbYX8MTUdIgDxQl0wEapm4m/pNYSd9TXocpQ0TvZFlYA==
+  version "4.13.2"
+  resolved "https://registry.yarnpkg.com/@types/mock-fs/-/mock-fs-4.13.2.tgz#fb230358cef6c133cbdad697cffd66e66ee6c1bf"
+  integrity sha512-mSIMAOjrNTVUFmZgJEigSIm+GlS4hbrk8U5+M8EB45uMrykKdN9TidjjSaOY1yFph2+TD7bsIfB4r+IrMYVyPQ==
   dependencies:
     "@types/node" "*"
 
