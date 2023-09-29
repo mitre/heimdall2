@@ -100,15 +100,18 @@ function createDescription(
       depth:${_.get(data, 'depth') as string}
       heuristic_heur_id:${_.get(data, 'heuristic.heur_id') as string}
       heuristic_score:${_.get(data, 'heuristic.score') as string}
-      heuristic_name:${_.get(data, 'heuristic.name') as string}`;
+      heuristic_name:${_.get(data, 'heuristic.name') as string}`.replace(
+        '\\"',
+        ''
+      );
     } else if (scannerName === scannerType.CodeQuality) {
       return `body:${_.get(data, 'body')}
       body_format:${_.get(data, 'body_format') as string}
       classificaton:${_.get(data, 'classification') as string}
       depth:${_.get(data, 'depth') as string}
-      title_text:${_.get(data, 'title_text') as string}`;
+      title_text:${_.get(data, 'title_text') as string}`.replace('\\"', '');
     } else {
-      return JSON.stringify(data);
+      return JSON.stringify(data).replace('\\"', '');
     }
   };
   return {
