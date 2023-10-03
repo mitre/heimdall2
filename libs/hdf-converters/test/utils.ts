@@ -67,7 +67,7 @@ export function omitHDFTimes(
   };
 }
 
-export function omitCklUuid(input: string) {
+export function omitCklUuid(input: string): string {
   let result = '';
   let omitData = false;
   const parser = new htmlparser2.Parser(
@@ -96,4 +96,5 @@ export function omitCklUuid(input: string) {
   );
   parser.write(input);
   parser.end();
+  return result;
 }
