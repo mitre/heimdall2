@@ -634,7 +634,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     const hdfDataExist = Object.keys(hdfSpecificData).length !== 0;
 
     return hdfDataExist
-      ? JSON.stringify({hdfSpecificData: hdfSpecificData})
+      ? JSON.stringify({hdfSpecificData: hdfSpecificData}, null, 2)
       : '';
   }
 
@@ -730,7 +730,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     releasedate: string | undefined
   ): string | undefined {
     if (releasenumber && releasedate) {
-      return `Release: ${releasenumber} Benchmark Datae ${releasedate}`;
+      return `Release: ${releasenumber} Benchmark Date ${releasedate}`;
     } else if (releasenumber) {
       return `Release: ${releasenumber}`;
     } else if (releasedate) {
@@ -776,7 +776,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           profileMetadata?.releasedate
         ),
         title: profile.title ?? profile.name,
-        uuid: v4(),
+        uuid: '',
         notice: profile.license as string,
         source: 'STIG.DOD.MIL'
       };
