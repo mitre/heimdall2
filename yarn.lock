@@ -15478,10 +15478,10 @@ oauth-sign@~0.9.0:
   resolved "https://registry.npmjs.org/oauth-sign/-/oauth-sign-0.9.0.tgz#47a7b016baa68b5fa0ecf3dee08a85c679ac6455"
   integrity sha512-fexhUFFPTGV8ybAtSIGbV6gOkSv8UtRbDBnAyLQw4QPKkgNlsH2ByPGtMUqdWkos6YCRmAqViwgZrJc/mRDzZQ==
 
-oauth2-mock-server@^6.0.0:
-  version "6.0.1"
-  resolved "https://registry.npmjs.org/oauth2-mock-server/-/oauth2-mock-server-6.0.1.tgz#96b0a85f0c5542bc2a61cdad51b7eb0f42bde2e7"
-  integrity sha512-39UiVz1hNfsoALeMKreE5e8JuXhc5bnfeKL/JAvaE9mJYJbktYjhBztaxazZ3Y3bAhln9xtqpXPrF9zd2aAiwQ==
+oauth2-mock-server@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-7.0.0.tgz#4fc5df112e6093c7e49a3a7a56f32bbc5301e982"
+  integrity sha512-fC+6MoLy9X4b84rgai8LriIHrjJ+H9YkCyPe6L0iJ/HyHAmF11ri7zC5m0GssvPZCrnmaJjhn5OuYKhXn1ee7w==
   dependencies:
     basic-auth "^2.0.1"
     cors "^2.8.5"
