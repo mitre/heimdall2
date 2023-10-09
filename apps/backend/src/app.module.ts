@@ -10,6 +10,7 @@ import {AuthzModule} from './authz/authz.module';
 import {CaslExceptionFilter} from './casl/casl-exception.filter';
 import {ConfigModule} from './config/config.module';
 import {DatabaseModule} from './database/database.module';
+import {EchoModule} from './echo/echo.module';
 import {EvaluationTagsModule} from './evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from './evaluations/evaluations.module';
 import {GroupEvaluationsModule} from './group-evaluations/group-evaluations.module';
@@ -35,7 +36,8 @@ import {UsersModule} from './users/users.module';
     GroupEvaluationsModule,
     GroupsModule,
     GroupUsersModule,
-    StatisticsModule
+    StatisticsModule,
+    EchoModule
   ],
   providers: [
     AppService,
