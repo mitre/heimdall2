@@ -49,7 +49,6 @@ export class GrypeMapper extends BaseConverter {
   > = {
     passthrough: {path: '.'},
     platform: {
-      //should it really be heimdall tools? shouldn't it be the platform in grype results?
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion
     },
