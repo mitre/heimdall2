@@ -52,7 +52,7 @@ export class GrypeMapper extends BaseConverter {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion
     },
-    version: {path: 'descriptor.version'},
+    version: HeimdallToolsVersion,
     statistics: {},
     profiles: [
       {
