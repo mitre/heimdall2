@@ -4791,9 +4791,9 @@
     "@types/express" "*"
 
 "@types/mustache@^4.1.1", "@types/mustache@^4.1.2":
-  version "4.2.3"
-  resolved "https://registry.npmjs.org/@types/mustache/-/mustache-4.2.3.tgz#11ae9d7cd67c60746e3125baa8e5989db781d704"
-  integrity sha512-MG+oI3oelPKLN2gpkel08v6Tp6zU2zZQRq+eSpRsFtLNTd2kxZolOHQTmQQs0wqXTLOqs+ri3tRUaagH5u0quw==
+  version "4.2.4"
+  resolved "https://registry.yarnpkg.com/@types/mustache/-/mustache-4.2.4.tgz#74d37210e1467edd705a0959ba46dc5dc22c3815"
+  integrity sha512-5DK8oX+pyEJm8Arm57Ut2R4KCeDuNQhLAuU04IgaKB7nYsFYzhpWqSoFnp7kCtVG7wXKftnaEJIyUFTVvSkkzw==
 
 "@types/node@*", "@types/node@^20.1.0":
   version "20.8.6"
