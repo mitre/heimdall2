@@ -1,3 +1,46 @@
+v2.8.6
+
+## Dependency Updates
+
+- Bump @types/passport-github from 1.1.10 to 1.1.11 @dependabot (#5106)
+- Bump @types/passport-local from 1.0.36 to 1.0.37 @dependabot (#5105)
+- Bump @types/passport-jwt from 3.0.10 to 3.0.11 @dependabot (#5107)
+- Bump @types/papaparse from 5.3.9 to 5.3.10 @dependabot (#5104)
+- Bump @types/node from 20.8.6 to 20.8.7 @dependabot (#5103)
+- Bump @types/ms from 0.7.32 to 0.7.33 @dependabot (#5101)
+- Bump @types/mustache from 4.2.3 to 4.2.4 @dependabot (#5100)
+- Bump @types/multer from 1.4.8 to 1.4.9 @dependabot (#5102)
+- Bump @types/mock-fs from 4.13.2 to 4.13.3 @dependabot (#5099)
+- Bump aws-sdk from 2.1474.0 to 2.1475.0 @dependabot (#5082)
+- Bump @types/luxon from 3.3.2 to 3.3.3 @dependabot (#5097)
+- Bump @types/express-session from 1.17.8 to 1.17.9 @dependabot (#5092)
+- Bump @types/lodash from 4.14.199 to 4.14.200 @dependabot (#5096)
+- Bump @types/js-levenshtein from 1.1.1 to 1.1.2 @dependabot (#5095)
+- Bump @types/file-saver from 2.0.5 to 2.0.6 @dependabot (#5093)
+- Bump @types/d3 from 7.4.1 to 7.4.2 @dependabot (#5089)
+- Bump @types/chai-as-promised from 7.1.6 to 7.1.7 @dependabot (#5080)
+- Bump @types/bcryptjs from 2.4.4 to 2.4.5 @dependabot (#5078)
+- Bump @types/express from 4.17.19 to 4.17.20 @dependabot (#5091)
+- Bump @types/connect-pg-simple from 7.0.1 to 7.0.2 @dependabot (#5083)
+- Bump @types/diff from 5.0.6 to 5.0.7 @dependabot (#5090)
+- Bump @types/adm-zip from 0.5.2 to 0.5.3 @dependabot (#5084)
+- Bump @types/csv2json from 1.4.3 to 1.4.4 @dependabot (#5088)
+- Bump @types/chroma-js from 2.4.1 to 2.4.2 @dependabot (#5081)
+- Bump apexcharts from 3.43.0 to 3.44.0 @dependabot (#5079)
+- Bump @types/chai from 4.3.8 to 4.3.9 @dependabot (#5085)
+- Bump @types/concat-stream from 2.0.0 to 2.0.1 @dependabot (#5077)
+- Bump aws-sdk from 2.1473.0 to 2.1474.0 @dependabot (#5074)
+- Bump @babel/traverse from 7.23.0 to 7.23.2 @dependabot (#5076)
+- Bump yaml from 2.3.2 to 2.3.3 @dependabot (#5073)
+- Bump @types/node from 20.8.5 to 20.8.6 @dependabot (#5072)
+- Bump @types/validator from 13.11.2 to 13.11.3 @dependabot (#5071)
+- Bump @types/diff from 5.0.5 to 5.0.6 @dependabot (#5066)
+- Bump @types/node from 20.8.4 to 20.8.5 @dependabot (#5068)
+- Bump @types/chai from 4.3.7 to 4.3.8 @dependabot (#5070)
+- Bump aws-sdk from 2.1472.0 to 2.1473.0 @dependabot (#5069)
+- Bump @aws-sdk/client-config-service from 3.427.0 to 3.428.0 @dependabot (#5067)
+- Bump cypress from 13.3.0 to 13.3.1 @dependabot (#5065)
+
 v2.8.5
 
 ## Dependency Updates
