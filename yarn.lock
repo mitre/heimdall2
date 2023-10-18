@@ -4526,9 +4526,9 @@
     "@types/ms" "*"
 
 "@types/diff@^5.0.0":
-  version "5.0.6"
-  resolved "https://registry.yarnpkg.com/@types/diff/-/diff-5.0.6.tgz#0df3196c9f1c15c280484db408e15240128b5766"
-  integrity sha512-OxYeXtiT2eAkK5Js6V6wY+Jb9uKdeSQIXxEZcRBqrE/VBJPMnrmsArARjGjiIulpu13vnpvGf+LLTNyZaJNPuw==
+  version "5.0.7"
+  resolved "https://registry.yarnpkg.com/@types/diff/-/diff-5.0.7.tgz#471bad8be0d911ed04d115863402920f3a84079c"
+  integrity sha512-adBosR2GntaQQiuHnfRN9HtxYpoHHJBcdyz7VSXhjpSAmtvIfu/S1fjTqwuIx/Ypba6LCZdfWIqPYx2BR5TneQ==
 
 "@types/duplexify@*":
   version "3.6.2"
