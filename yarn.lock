@@ -4846,9 +4846,9 @@
     "@types/passport-oauth2" "*"
 
 "@types/passport-jwt@^3.0.3":
-  version "3.0.10"
-  resolved "https://registry.npmjs.org/@types/passport-jwt/-/passport-jwt-3.0.10.tgz#26ad3c62b51a3e61774c44070bfe0bb663ffa1d6"
-  integrity sha512-D2A911g2uiFsq/XXFBxQjcBcK4c6zPF2gAx9blEfz2AOXx5UUwsd8ZcMTcPe8z9dhW8LQBYLjv+vug2dvnRevA==
+  version "3.0.11"
+  resolved "https://registry.yarnpkg.com/@types/passport-jwt/-/passport-jwt-3.0.11.tgz#96d69fad0a7af28ba44e2ed202c33745a53f1ca2"
+  integrity sha512-HwQNi4cajueebj41EjH5rtnLAdxQfusICFU18JEnvV3uYCJzKoT1D3MCwQ+nn8HeGjy6QuTxnm/I2WxuraqeDw==
   dependencies:
     "@types/express" "*"
     "@types/jsonwebtoken" "*"
