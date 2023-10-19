@@ -4955,9 +4955,9 @@
     "@types/node" "*"
 
 "@types/sequelize@^4.28.9":
-  version "4.28.16"
-  resolved "https://registry.npmjs.org/@types/sequelize/-/sequelize-4.28.16.tgz#fb5b0859e3f4f62f7d4bbd8cdbed50692e9ad85a"
-  integrity sha512-LGJqCeLc+r8kEqlF1jC8SAtxx2YnFTLIjnYP3C5y5zOlxUYkAH7Oe84MWg+JPOmrYe30WB4455zONWXTCpQJRw==
+  version "4.28.17"
+  resolved "https://registry.yarnpkg.com/@types/sequelize/-/sequelize-4.28.17.tgz#65e2b0a8c9e830c724f36d58cfa3caf60fef8ac9"
+  integrity sha512-n3ZChokiKFIK85oThbQiSOeQOpRMle7BkUJqxBQLC6EJ0B6S4+LQN5XEqDFwwXsUkISftu6PaYOWXoL7tu+E5A==
   dependencies:
     "@types/bluebird" "*"
     "@types/continuation-local-storage" "*"
