@@ -1,7 +1,7 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import fs from 'fs';
 import path from 'path';
-import {searchOverallJsonMapping, SearchTerm} from './utils/complexSearch';
+import {searchOverallJsonMapping} from './utils/complexSearch';
 // import {ApiKey} from './apikey.model';
 // import {APIKeyDto} from './dto/apikey.dto';
 
@@ -48,22 +48,7 @@ export const generateOverallJsonMapping = () => {
 };
 
 export const mapping: {
-  [key: string]: SearchTerm[];
+  [key: string]: string;
 } = {
-  'T1548.003': [
-    {term: 'timestamp_timeout', type: 'OR'},
-    {term: 'tty_tickets', type: 'OR'},
-    {term: 'sudoers', type: 'AND'}
-  ],
-  T1134: [
-    {term: 'token', type: 'AND'},
-    {term: 'rights', type: 'AND'},
-    {term: 'create', type: 'AND'}
-  ],
-  'T1543.003': [
-    {term: 'drivers', type: 'AND'},
-    {term: 'windows', type: 'AND'},
-    {term: 'enforce', type: 'AND'}
-  ],
-  'T1547.009': [{term: 'Create symbolic link', type: 'OR'}]
+  'T1548.003': '(timestamp_timeout OR tty_tickets) AND sudoers'
 };
