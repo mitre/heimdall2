@@ -1,15 +1,17 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import fs from 'fs';
 import path from 'path';
+import {AnyProfile} from '../../../../libs/inspecjs/src/fileparse';
 import {searchOverallJsonMapping} from './utils/complexSearch';
+import {ttpToKeywordMapping} from './utils/ttpToKeywordsMapping';
 // import {ApiKey} from './apikey.model';
 // import {APIKeyDto} from './dto/apikey.dto';
 
 @Injectable()
 export class EchoService {
-  private readonly profileJsons: {[key: string]: unknown} =
+  private readonly profileJsons: {[key: string]: AnyProfile} =
     generateOverallJsonMapping();
-  private readonly ttpMapping = mapping;
+  private readonly ttpToKeywordMapping = ttpToKeywordMapping;
 
   findControlByAttackPatternName(attackPatternName: string): {
     [key: string]: {[key: string]: string};
@@ -22,7 +24,7 @@ export class EchoService {
       );
     } else {
       return searchOverallJsonMapping(
-        this.ttpMapping[attackPatternName],
+        this.ttpToKeywordMapping[attackPatternName],
         this.profileJsons
       );
     }
@@ -30,7 +32,7 @@ export class EchoService {
 }
 
 export const generateOverallJsonMapping = () => {
-  let allProfiles: {[key: string]: unknown} = {};
+  let allProfiles: {[key: string]: AnyProfile} = {};
   const jsonsInDir = fs
     .readdirSync('./data/baselineProfiles/')
     .filter((file) => path.extname(file) === '.json');
@@ -45,10 +47,4 @@ export const generateOverallJsonMapping = () => {
     allProfiles[json.name] = json;
   });
   return allProfiles;
-};
-
-export const mapping: {
-  [key: string]: string;
-} = {
-  'T1548.003': '(timestamp_timeout OR tty_tickets) AND sudoers'
 };
