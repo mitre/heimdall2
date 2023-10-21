@@ -5069,9 +5069,9 @@
   integrity sha512-xW4qsT4UIYILu+7ZrBnfQdBYniZrMLYYK3wN9M/NdeIHgBN5pZI2/8Q7UfdWIcr5RLJv/OGENsx91JIpUUoC7Q==
 
 "@types/vuelidate@^0.7.13":
-  version "0.7.19"
-  resolved "https://registry.npmjs.org/@types/vuelidate/-/vuelidate-0.7.19.tgz#67129be7f66d8e304655cfef1755a71e44b837a3"
-  integrity sha512-fXVthNVCuWurszolIxi5CML9jbwXDq1ZwYgt0aQR8zBZ0UjcFcn8oyQie4zykjBAiyzExlEoGktzYy0/xc5BlA==
+  version "0.7.20"
+  resolved "https://registry.yarnpkg.com/@types/vuelidate/-/vuelidate-0.7.20.tgz#53c8acff676b6dc631702146dcbebf65d6cb72f2"
+  integrity sha512-By9+sdLSTo3FAWFJPqjU5CkwWVg+MjDWSF1c7rUDWlmGEgcRGJ+WpdiYEfcrR6ufkp0bdO8/eL+ksUUvliH8qA==
   dependencies:
     vue "^2.6.11"
 
