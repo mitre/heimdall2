@@ -105,6 +105,25 @@
         </v-tooltip>
       </v-chip-group>
     </template>
+
+    <template #threats>
+      <v-chip-group column active-class="NONE">
+        <v-tooltip v-for="(tag, i) in threatTags" :key="'threat-chip' + i" bottom>
+          <template #activator="{on}">
+            <v-chip
+              :href="tag.url"
+              target="_blank"
+              active-class="NONE"
+              v-on="on"
+            >
+              {{ tag.label }}
+            </v-chip>
+          </template>
+          <span>{{ tag.description }}</span>
+        </v-tooltip>
+      </v-chip-group>
+    </template>
+
     <!-- Control Related Threat -->
     <template #runTime>
       <v-card-text class="pa-2 title font-weight-bold">{{
@@ -266,6 +285,18 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     }
     return cci_tags.map((cci) => {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
+    });
+  }
+
+  get threatTags(): Tag[] {
+    let threat_tags: string | string[] = this.control.data.tags.threat || '';
+    if (!threat_tags) {
+      return [];
+    } else if (typeof threat_tags == 'string') {
+      threat_tags = threat_tags.split(' ');
+    }
+    return threat_tags.map((cci) => {
+      return {label: threat, url: '', description: this.descriptionForTag(threat)};
     });
   }
 
