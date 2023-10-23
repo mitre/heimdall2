@@ -106,6 +106,7 @@
       </v-chip-group>
     </template>
 
+    <!-- Control Related Threat -->
     <template #threats>
       <v-chip-group column active-class="NONE">
         <v-tooltip v-for="(tag, i) in threatTags" :key="'threat-chip' + i" bottom>
@@ -124,12 +125,12 @@
       </v-chip-group>
     </template>
 
-    <!-- Control Related Threat -->
+    <!-- Runtime -->
     <template #runTime>
       <v-card-text class="pa-2 title font-weight-bold">{{
         runTime
-      }}</v-card-text></template
-    >
+      }}</v-card-text>
+    </template>
 
     <template #viewed>
       <v-container class="py-0 my-0 fill-height">
