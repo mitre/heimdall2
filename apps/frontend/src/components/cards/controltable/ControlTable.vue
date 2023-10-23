@@ -91,13 +91,6 @@
           <ColumnHeader text="Title" sort="disabled" />
         </template>
 
-<!-- 800-53 & CCI 
-
-        <template #tags>
-          <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
-        </template>
--->
-
         <template #threats>
           <ColumnHeader text="Related Threats" sort="enabled" />
         </template>
