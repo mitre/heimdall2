@@ -295,7 +295,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     } else if (typeof threat_tags == 'string') {
       threat_tags = threat_tags.split(' ');
     }
-    return threat_tags.map((cci) => {
+    return threat_tags.map((threat) => {
       return {label: threat, url: '', description: this.descriptionForTag(threat)};
     });
   }
