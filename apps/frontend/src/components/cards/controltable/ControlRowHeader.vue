@@ -105,12 +105,12 @@
         </v-tooltip>
       </v-chip-group>
     </template>
-#    <!-- Control Run Time -->
-#    <template #runTime>
-#      <v-card-text class="pa-2 title font-weight-bold">{{
-#        runTime
-#      }}</v-card-text></template
-#    >
+    <!-- Control Related Threat -->
+    <template #runTime>
+      <v-card-text class="pa-2 title font-weight-bold">{{
+        runTime
+      }}</v-card-text></template
+    >
 
     <template #viewed>
       <v-container class="py-0 my-0 fill-height">
