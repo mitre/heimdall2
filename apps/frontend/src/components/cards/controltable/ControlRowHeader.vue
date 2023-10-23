@@ -129,7 +129,8 @@
     <template #runTime>
       <v-card-text class="pa-2 title font-weight-bold">{{
         runTime
-      }}</v-card-text>
+      }}
+      </v-card-text>
     </template>
 
     <template #viewed>
