@@ -294,7 +294,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         url: `https://attack.mitre.org/techniques/${threat
           .split('.')
           .join('/')}`,
-        description: threat
+        description: `MITRE ATT&CK Technique ${threat}`
       };
     });
   }
