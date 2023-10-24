@@ -24,8 +24,8 @@
           <template #tags>
             <slot name="tags" />
           </template>
-          <template #runTime>
-            <slot name="runTime" />
+          <template #threats>
+            <slot name="threats" />
           </template>
           <template #viewed>
             <slot name="viewed" />
@@ -51,8 +51,8 @@
           <template #tags>
             <slot name="tags" />
           </template>
-          <template #runTime>
-            <slot name="runTime" />
+          <template #threats>
+            <slot name="threats" />
           </template>
           <template #viewed>
             <slot name="viewed" />
@@ -78,8 +78,8 @@
           <template #tags>
             <slot name="tags" />
           </template>
-          <template #runTime>
-            <slot name="runTime" />
+          <template #threats>
+            <slot name="threats" />
           </template>
           <template #viewed>
             <slot name="viewed" />

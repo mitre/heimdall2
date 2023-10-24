@@ -109,7 +109,11 @@
     <!-- Control Related Threat -->
     <template #threats>
       <v-chip-group column active-class="NONE">
-        <v-tooltip v-for="(tag, i) in threatTags" :key="'threat-chip' + i" bottom>
+        <v-tooltip
+          v-for="(tag, i) in threatTags"
+          :key="'threat-chip' + i"
+          bottom
+        >
           <template #activator="{on}">
             <v-chip
               :href="tag.url"
@@ -123,14 +127,6 @@
           <span>{{ tag.description }}</span>
         </v-tooltip>
       </v-chip-group>
-    </template>
-
-    <!-- Runtime -->
-    <template #runTime>
-      <v-card-text class="pa-2 title font-weight-bold">{{
-        runTime
-      }}
-      </v-card-text>
     </template>
 
     <template #viewed>
@@ -279,26 +275,27 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   get cciTags(): Tag[] {
-    let cci_tags: string | string[] = this.control.data.tags.cci || '';
-    if (!cci_tags) {
+    let cciTags: string | string[] = this.control.data.tags.cci || '';
+    if (!cciTags) {
       return [];
-    } else if (typeof cci_tags == 'string') {
-      cci_tags = cci_tags.split(' ');
+    } else if (typeof cciTags == 'string') {
+      cciTags = cciTags.split(' ');
     }
-    return cci_tags.map((cci) => {
+    return cciTags.map((cci) => {
       return {label: cci, url: '', description: this.descriptionForTag(cci)};
     });
   }
 
   get threatTags(): Tag[] {
-    let threat_tags: string | string[] = this.control.data.tags.threat || '';
-    if (!threat_tags) {
-      return [];
-    } else if (typeof threat_tags == 'string') {
-      threat_tags = threat_tags.split(' ');
-    }
-    return threat_tags.map((threat) => {
-      return {label: threat, url: '', description: this.descriptionForTag(threat)};
+    let threatTags: string[] = this.control.data.tags.threats ?? [];
+    return threatTags.map((threat) => {
+      return {
+        label: threat,
+        url: `https://attack.mitre.org/techniques/${threat
+          .split('.')
+          .join('/')}`,
+        description: threat
+      };
     });
   }
 

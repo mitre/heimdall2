@@ -91,16 +91,12 @@
           <ColumnHeader text="Title" sort="disabled" />
         </template>
 
-        <template #threats>
-          <ColumnHeader text="Related Threats" sort="enabled" />
+        <template #tags>
+          <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
         </template>
 
-        <template #runTime>
-          <ColumnHeader
-            text="Run Time"
-            :sort="sortRunTime"
-            @input="set_sort('runTime', $event)"
-          />
+        <template #threats>
+          <ColumnHeader text="Related Threats" sort="disabled" />
         </template>
 
         <template #viewed>
