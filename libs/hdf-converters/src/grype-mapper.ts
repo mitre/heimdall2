@@ -21,7 +21,7 @@ function convertToControlMapping(): MappedTransform<
     tags: {
       cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
       nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
-    }, // to do
+    }, 
     source_location: {
       ref: {path: 'artifact.locations[0].path'} //multiple locations can be provided by grype, but only one goes into hdf
     },
