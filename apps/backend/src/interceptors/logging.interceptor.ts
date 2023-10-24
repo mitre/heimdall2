@@ -74,7 +74,7 @@ export class LoggingInterceptor implements NestInterceptor {
     if (realIP) {
       return `${request.headers[realIP]} -> ${request.ip}`;
     } else {
-      return request.ip;
+      return request.ip ?? '';
     }
   }
 
