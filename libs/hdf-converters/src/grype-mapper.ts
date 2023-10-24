@@ -68,7 +68,8 @@ export class GrypeMapper extends BaseConverter {
           }
         ],
         attributes: [],
-        groups: []
+        groups: [],
+        status: 'loaded'
       }
     ]
   };
