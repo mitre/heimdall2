@@ -1,0 +1,384 @@
+{
+  "name": "rsa-archer-6-security-configuration-guide-baseline",
+  "title": "rsa-archer-6-security-configuration-guide-baseline",
+  "maintainer": "The Authors",
+  "copyright": "The Authors",
+  "copyright_email": "you@example.com",
+  "license": "Apache-2.0",
+  "summary": "Inspec Validation Profile for RSA Archer 6",
+  "version": "0.1.1",
+  "inspec_version": ">= 4.0",
+  "inputs": [],
+  "supports": [],
+  "controls": [
+    {
+      "title": "Special characters required",
+      "desc": "When passwords are changed or new passwords are established, the new\n  password must contain at least one special character.",
+      "descriptions": {
+        "default": "When passwords are changed or new passwords are established, the new\n  password must contain at least one special character.",
+        "check": "In security parameters, check if SpecialCharsRequired = 1.",
+        "fix": "In security parameters, set SpecialCharsRequired = 1."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "IA-5(1)",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.4' do\n  title 'Special characters required'\n  desc 'When passwords are changed or new passwords are established, the new\n  password must contain at least one special character.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if SpecialCharsRequired = 1.'\n  desc 'fix', 'In security parameters, set SpecialCharsRequired = 1.'\n  tag 'nist': ['IA-5(1)', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.SpecialCharsRequired') { should cmp >= attribute('minimum_special_characters') }\n    its('general_user_parameter.SpecialCharsRequired') { should cmp >= attribute('minimum_special_characters') }\n    its('archer_services_parameter.SpecialCharsRequired') { should cmp >= attribute('minimum_special_characters') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.4.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.4"
+    },
+    {
+      "title": "Account lockout period",
+      "desc": "Accounts locked due to unsuccessful logon attempts will stay locked\n  until unlocked by an administrator.",
+      "descriptions": {
+        "default": "Accounts locked due to unsuccessful logon attempts will stay locked\n  until unlocked by an administrator.",
+        "check": "In security parameters, check if LockoutPeriod = 999.",
+        "fix": "In security parameters, set LockoutPeriod = 999."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "AC-7",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.12' do\n  title 'Account lockout period'\n  desc 'Accounts locked due to unsuccessful logon attempts will stay locked\n  until unlocked by an administrator.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if LockoutPeriod = 999.'\n  desc 'fix', 'In security parameters, set LockoutPeriod = 999.'\n  tag 'nist': ['AC-7', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.LockoutPeriod') { should cmp >= attribute('lockout_period') }\n    its('general_user_parameter.LockoutPeriod') { should cmp >= attribute('lockout_period') }\n    its('archer_services_parameter.LockoutPeriod') { should cmp >= attribute('lockout_period') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.12.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.12"
+    },
+    {
+      "title": "Uppercase characters required",
+      "desc": "When passwords are changed or new passwords are established, the new\n  password must contain at least one uppercase character.",
+      "descriptions": {
+        "default": "When passwords are changed or new passwords are established, the new\n  password must contain at least one uppercase character.",
+        "check": "In security parameters, check if UppercaseCharsRequired = 1.",
+        "fix": "In security parameters, set UppercaseCharsRequired = 1."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "IA-5(1)",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.5' do\n  title 'Uppercase characters required'\n  desc 'When passwords are changed or new passwords are established, the new\n  password must contain at least one uppercase character.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if UppercaseCharsRequired = 1.'\n  desc 'fix', 'In security parameters, set UppercaseCharsRequired = 1.'\n  tag 'nist': ['IA-5(1)', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.UppercaseCharsRequired') { should cmp >= attribute('minimum_uppercase_characters') }\n    its('general_user_parameter.UppercaseCharsRequired') { should cmp >= attribute('minimum_uppercase_characters') }\n    its('archer_services_parameter.UppercaseCharsRequired') { should cmp >= attribute('minimum_uppercase_characters') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.5.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.5"
+    },
+    {
+      "title": "Password change interval",
+      "desc": "Existing passwords must be restricted to a 90-day maximum lifetime.",
+      "descriptions": {
+        "default": "Existing passwords must be restricted to a 90-day maximum lifetime.",
+        "check": "In security parameters, check if PasswordChangeInterval = 90.",
+        "fix": "In security parameters, set PasswordChangeInterval = 90."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "IA-5(1)",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.7' do\n  title 'Password change interval'\n  desc 'Existing passwords must be restricted to a 90-day maximum lifetime.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if PasswordChangeInterval = 90.'\n  desc 'fix', 'In security parameters, set PasswordChangeInterval = 90.'\n  tag 'nist': ['IA-5(1)', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.PasswordChangeInterval') { should cmp <= attribute('password_change_interval') }\n    its('general_user_parameter.PasswordChangeInterval') { should cmp <= attribute('password_change_interval') }\n    its('archer_services_parameter.PasswordChangeInterval') { should cmp <= attribute('password_change_interval') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.7.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.7"
+    },
+    {
+      "title": "Lowercase characters require",
+      "desc": "When passwords are changed or new passwords are assigned, the new\n  password must contain at least one lowercase character.",
+      "descriptions": {
+        "default": "When passwords are changed or new passwords are assigned, the new\n  password must contain at least one lowercase character.",
+        "check": "In security parameters, check if LowercaseCharsRequired = 1.",
+        "fix": "In security parameters, set LowercaseCharsRequired = 1."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "IA-5(1)",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.6' do\n  title 'Lowercase characters require'\n  desc 'When passwords are changed or new passwords are assigned, the new\n  password must contain at least one lowercase character.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if LowercaseCharsRequired = 1.'\n  desc 'fix', 'In security parameters, set LowercaseCharsRequired = 1.'\n  tag 'nist': ['IA-5(1)', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.LowercaseCharsRequired') { should cmp >= attribute('minimum_lowercase_characters') }\n    its('general_user_parameter.LowercaseCharsRequired') { should cmp >= attribute('minimum_lowercase_characters') }\n    its('archer_services_parameter.LowercaseCharsRequired') { should cmp >= attribute('minimum_lowercase_characters') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.6.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.6"
+    },
+    {
+      "title": "Previous passwords disallowed",
+      "desc": "Passwords must be prohibited from reuse for a minimum of 20 generations.",
+      "descriptions": {
+        "default": "Passwords must be prohibited from reuse for a minimum of 20 generations.",
+        "check": "In security parameters, check if PreviousPasswordsDisallowed = 20.",
+        "fix": "In security parameters, set PreviousPasswordsDisallowed = 20."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "IA-5(1)",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.8' do\n  title 'Previous passwords disallowed'\n  desc 'Passwords must be prohibited from reuse for a minimum of 20 generations.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if PreviousPasswordsDisallowed = 20.'\n  desc 'fix', 'In security parameters, set PreviousPasswordsDisallowed = 20.'\n  tag 'nist': ['IA-5(1)', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.PreviousPasswordsDisallowed') { should cmp >= attribute('previous_passwords_disallowed') }\n    its('general_user_parameter.PreviousPasswordsDisallowed') { should cmp >= attribute('previous_passwords_disallowed') }\n    its('archer_services_parameter.PreviousPasswordsDisallowed') { should cmp >= attribute('previous_passwords_disallowed') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.8.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.8"
+    },
+    {
+      "title": "Minimum Password Length",
+      "desc": "Passwords must be a minimum of 9 characters in length.",
+      "descriptions": {
+        "default": "Passwords must be a minimum of 9 characters in length.",
+        "check": "In security parameters, check if MinPasswordLength = 9.",
+        "fix": "In security parameters, set MinPasswordLength = 9."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "IA-5(1)",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.1' do\n  title 'Minimum Password Length'\n  desc 'Passwords must be a minimum of 9 characters in length.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if MinPasswordLength = 9.'\n  desc 'fix', 'In security parameters, set MinPasswordLength = 9.'\n  tag 'nist': ['IA-5(1)', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.MinPasswordLength') { should cmp >= attribute('minimum_password_length') }\n    its('general_user_parameter.MinPasswordLength') { should cmp >= attribute('minimum_password_length') }\n    its('archer_services_parameter.MinPasswordLength') { should cmp >= attribute('minimum_password_length') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.1.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.1"
+    },
+    {
+      "title": "Alpha characters required",
+      "desc": "When passwords are changed or new passwords are established, the new\n  password must contain at least two alpha characters.",
+      "descriptions": {
+        "default": "When passwords are changed or new passwords are established, the new\n  password must contain at least two alpha characters.",
+        "check": "In security parameters, check if AlphaCharsRequired = 2.",
+        "fix": "In security parameters, set AlphaCharsRequired = 2."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "IA-5(1)",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.2' do\n  title 'Alpha characters required'\n  desc 'When passwords are changed or new passwords are established, the new\n  password must contain at least two alpha characters.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if AlphaCharsRequired = 2.'\n  desc 'fix', 'In security parameters, set AlphaCharsRequired = 2.'\n  tag 'nist': ['IA-5(1)', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.AlphaCharsRequired') { should cmp >= attribute('minimum_alpha_characters') }\n    its('general_user_parameter.AlphaCharsRequired') { should cmp >= attribute('minimum_alpha_characters') }\n    its('archer_services_parameter.AlphaCharsRequired') { should cmp >= attribute('minimum_alpha_characters') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.2.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.2"
+    },
+    {
+      "title": "Session time-out",
+      "desc": "The operating system must initiate a session time-out after a 10 minute\n  period of inactivity",
+      "descriptions": {
+        "default": "The operating system must initiate a session time-out after a 10 minute\n  period of inactivity",
+        "check": "In security parameters, check if SessionTimeout = 10.",
+        "fix": "In security parameters, set SessionTimeout = 10."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "AC-11",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.11' do\n  title 'Session time-out'\n  desc 'The operating system must initiate a session time-out after a 10 minute\n  period of inactivity '\n  impact 'medium'\n  desc 'check', 'In security parameters, check if SessionTimeout = 10.'\n  desc 'fix', 'In security parameters, set SessionTimeout = 10.'\n  tag 'nist': ['AC-11', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.SessionTimeout') { should cmp <= attribute('session_timeout') }\n    its('general_user_parameter.SessionTimeout') { should cmp <= attribute('session_timeout') }\n    its('archer_services_parameter.SessionTimeout') { should cmp <= attribute('session_timeout') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.11.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.11"
+    },
+    {
+      "title": "Maximum failed logon attempts",
+      "desc": "Accounts subject to 3 unsuccessful logon attempts must be locked.",
+      "descriptions": {
+        "default": "Accounts subject to 3 unsuccessful logon attempts must be locked.",
+        "check": "In security parameters, check if MaximumFailedLoginAttempts = 3.",
+        "fix": "In security parameters, set MaximumFailedLoginAttempts = 3."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "AC-7",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.10' do\n  title 'Maximum failed logon attempts'\n  desc 'Accounts subject to 3 unsuccessful logon attempts must be locked.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if MaximumFailedLoginAttempts = 3.'\n  desc 'fix', 'In security parameters, set MaximumFailedLoginAttempts = 3.'\n  tag 'nist': ['AC-7', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.MaximumFailedLoginAttempts') { should cmp attribute('unsuccessful_login_attempts') }\n    its('general_user_parameter.MaximumFailedLoginAttempts') { should cmp attribute('unsuccessful_login_attempts') }\n    its('archer_services_parameter.MaximumFailedLoginAttempts') { should cmp attribute('unsuccessful_login_attempts') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.10.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.10"
+    },
+    {
+      "title": "Grace logons",
+      "desc": "After password expiration, zero grace logons are permitted using the\n  expired password.",
+      "descriptions": {
+        "default": "After password expiration, zero grace logons are permitted using the\n  expired password.",
+        "check": "In security parameters, check if GraceLogins = 0.",
+        "fix": "In security parameters, set GraceLogins = 0."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "IA-5(1)",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.9' do\n  title 'Grace logons'\n  desc 'After password expiration, zero grace logons are permitted using the\n  expired password.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if GraceLogins = 0.'\n  desc 'fix', 'In security parameters, set GraceLogins = 0.'\n  tag 'nist': ['IA-5(1)', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.GraceLogins') { should cmp attribute('grace_logins') }\n    its('general_user_parameter.GraceLogins') { should cmp attribute('grace_logins') }\n    its('archer_services_parameter.GraceLogins') { should cmp attribute('grace_logins') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.9.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.9"
+    },
+    {
+      "title": "Numeric characters required",
+      "desc": "When passwords are changed or new passwords are established, the new\n  password must contain at least one numeric character.",
+      "descriptions": {
+        "default": "When passwords are changed or new passwords are established, the new\n  password must contain at least one numeric character.",
+        "check": "In security parameters, check if NumericCharsRequired = 1.",
+        "fix": "In security parameters, set NumericCharsRequired = 1."
+      },
+      "impact": 0.4,
+      "refs": [],
+      "tags": {
+        "nist": [
+          "IA-5(1)",
+          "Rev_4"
+        ]
+      },
+      "code": "control 'rsa-archer-1.3' do\n  title 'Numeric characters required'\n  desc 'When passwords are changed or new passwords are established, the new\n  password must contain at least one numeric character.'\n  impact 'medium'\n  desc 'check', 'In security parameters, check if NumericCharsRequired = 1.'\n  desc 'fix', 'In security parameters, set NumericCharsRequired = 1.'\n  tag 'nist': ['IA-5(1)', 'Rev_4']\n\n  archer_api_helper = archer(url: attribute('url'),\n                             instancename: attribute('instancename'),\n                             user_domain: attribute('user_domain'),\n                             username: attribute('username'),\n                             password: attribute('password'),\n                             ssl_verify: attribute('ssl_verify'))\n\n  describe archer_api_helper do\n    its('default_administrative_user.NumericCharsRequired') { should cmp >= attribute('minimum_numeric_characters') }\n    its('general_user_parameter.NumericCharsRequired') { should cmp >= attribute('minimum_numeric_characters') }\n    its('archer_services_parameter.NumericCharsRequired') { should cmp >= attribute('minimum_numeric_characters') }\n  end\nend\n",
+      "source_location": {
+        "ref": "./RSA Archer 6 SCG/controls/rsa-archer-1.3.rb",
+        "line": 1
+      },
+      "id": "rsa-archer-1.3"
+    }
+  ],
+  "groups": [
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.4"
+      ],
+      "id": "controls/rsa-archer-1.4.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.12"
+      ],
+      "id": "controls/rsa-archer-1.12.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.5"
+      ],
+      "id": "controls/rsa-archer-1.5.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.7"
+      ],
+      "id": "controls/rsa-archer-1.7.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.6"
+      ],
+      "id": "controls/rsa-archer-1.6.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.8"
+      ],
+      "id": "controls/rsa-archer-1.8.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.1"
+      ],
+      "id": "controls/rsa-archer-1.1.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.2"
+      ],
+      "id": "controls/rsa-archer-1.2.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.11"
+      ],
+      "id": "controls/rsa-archer-1.11.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.10"
+      ],
+      "id": "controls/rsa-archer-1.10.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.9"
+      ],
+      "id": "controls/rsa-archer-1.9.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "rsa-archer-1.3"
+      ],
+      "id": "controls/rsa-archer-1.3.rb"
+    }
+  ],
+  "sha256": "dc4ae9213005f211c3d381118e0c00441c00b98dc658c3cd0574d30586974dc3",
+  "status_message": "",
+  "status": "loaded",
+  "generator": {
+    "name": "inspec",
+    "version": "4.33.1"
+  }
+}

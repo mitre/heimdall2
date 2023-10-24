@@ -82,6 +82,7 @@
     "express-rate-limit": "^7.0.0",
     "express-session": "^1.17.1",
     "helmet": "^4.1.1",
+    "inspecjs": "^2.8.1",
     "js-levenshtein": "^1.1.6",
     "jsonwebtoken": "^9.0.0",
     "moment": "^2.29.1",

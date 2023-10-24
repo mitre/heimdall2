@@ -1,0 +1,1130 @@
+{
+  "name": "apache_site_baseline",
+  "title": "APACHE SITE 2.2 for Unix Baseline",
+  "maintainer": "MITRE InSpec Team",
+  "copyright": "MITRE InSpec Team",
+  "copyright_email": "inspec@mitre.org",
+  "license": "Apache-2.0",
+  "summary": "InSpec Profile testing compliance with DISA STIG for Apache site 2.2",
+  "description": "InSpec profile verifying secure implementation of Apache 2.2 site per DISA STIG https://iasecontent.disa.mil/stigs/zip/U_Apache_2-2_UNIX_V1R10_STIG.zip\n",
+  "version": "0.1.0",
+  "inspec_version": ">= 4.0",
+  "supports": [],
+  "controls": [
+    {
+      "title": "Each readable web document directory must contain either a default,\nhome, index, or equivalent file.",
+      "desc": "The goal is to completely control the web users experience in\nnavigating any portion of the web document root directories. Ensuring all web\ncontent directories have at least the equivalent of an index.html file is a\nsignificant factor to accomplish this end. Also, enumeration techniques, such\nas URL parameter manipulation, rely upon being able to obtain information about\nthe web server’s directory structure by locating directories with default\npages. This practice helps ensure that the anonymous web user will not obtain\ndirectory browsing information or an error message that reveals the server type\nand version.",
+      "descriptions": {
+        "default": "The goal is to completely control the web users experience in\nnavigating any portion of the web document root directories. Ensuring all web\ncontent directories have at least the equivalent of an index.html file is a\nsignificant factor to accomplish this end. Also, enumeration techniques, such\nas URL parameter manipulation, rely upon being able to obtain information about\nthe web server’s directory structure by locating directories with default\npages. This practice helps ensure that the anonymous web user will not obtain\ndirectory browsing information or an error message that reveals the server type\nand version."
+      },
+      "impact": 0.3,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG170",
+        "gid": "V-2245",
+        "rid": "SV-33020r1_rule",
+        "stig_id": "WG170 A22",
+        "fix_id": "F-29336r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECAN-1, ECSC-1",
+        "check": "To view the DocumentRoot value enter the following command:\nawk '{print $1,$2,$3}' /usr/local/apache2/conf/httpd.conf|grep -i\nDocumentRoot|grep -v '^#'\nNote each location following the DocumentRoot string, this is the configured\npath(s) to the document root directory(s).\nTo view a list of the directories and sub-directories and the file index.html,\nfrom each stated DocumentRoot location enter the following commands:\nfind . -type d\nfind . -type f -name index.html\nReview the results for each document root directory and it's subdirectories. If\na directory does not contain an index.html or equivalent default document, this\nis a finding.\n",
+        "fix": "Add a default document to the applicable directories."
+      },
+      "code": "control \"V-2245\" do\n  title \"Each readable web document directory must contain either a default,\nhome, index, or equivalent file.\"\n  desc  \"The goal is to completely control the web users experience in\nnavigating any portion of the web document root directories. Ensuring all web\ncontent directories have at least the equivalent of an index.html file is a\nsignificant factor to accomplish this end. Also, enumeration techniques, such\nas URL parameter manipulation, rely upon being able to obtain information about\nthe web server’s directory structure by locating directories with default\npages. This practice helps ensure that the anonymous web user will not obtain\ndirectory browsing information or an error message that reveals the server type\nand version.\"\n  impact 0.3\n  tag \"gtitle\": \"WG170\"\n  tag \"gid\": \"V-2245\"\n  tag \"rid\": \"SV-33020r1_rule\"\n  tag \"stig_id\": \"WG170 A22\"\n  tag \"fix_id\": \"F-29336r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECAN-1, ECSC-1\"\n  tag \"check\": \"To view the DocumentRoot value enter the following command:\nawk '{print $1,$2,$3}' /usr/local/apache2/conf/httpd.conf|grep -i\nDocumentRoot|grep -v '^#'\nNote each location following the DocumentRoot string, this is the configured\npath(s) to the document root directory(s).\nTo view a list of the directories and sub-directories and the file index.html,\nfrom each stated DocumentRoot location enter the following commands:\nfind . -type d\nfind . -type f -name index.html\nReview the results for each document root directory and it's subdirectories. If\na directory does not contain an index.html or equivalent default document, this\nis a finding.\n\"\n  tag \"fix\": \"Add a default document to the applicable directories.\"\n\n  begin\n    doc_root = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").DocumentRoot.map{ |element| element.gsub(/\"/, '') }[0]\n    root_index = command(\"find #{doc_root} -name index.html\")\n\n    describe root_index do\n      its('stdout') { should include 'index.html'}\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2245.rb",
+        "line": 13
+      },
+      "id": "V-2245"
+    },
+    {
+      "title": "Web client access to the content directories must be restricted to\nread and execute.",
+      "desc": "Excessive permissions for the anonymous web user account are one of\nthe most common faults contributing to the compromise of a web server. If this\nuser is able to upload and execute files on the web server, the organization or\nowner of the server will no longer have control of the asset.",
+      "descriptions": {
+        "default": "Excessive permissions for the anonymous web user account are one of\nthe most common faults contributing to the compromise of a web server. If this\nuser is able to upload and execute files on the web server, the organization or\nowner of the server will no longer have control of the asset."
+      },
+      "impact": 0.7,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG290",
+        "gid": "V-2258",
+        "rid": "SV-33027r1_rule",
+        "stig_id": "WG290 A22",
+        "fix_id": "F-29342r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECLP-1",
+        "check": "To view the value of Alias enter the following command:\n\ngrep \"Alias\" /usr/local/apache2/conf/httpd.conf\n\nAlias\nScriptAlias\nScriptAliasMatch\n\nReview the results to determine the location of the files listed above.\n\nEnter the following command to determine the permissions of the above file:\n\nls -Ll /file-path\n\nThe only accounts listed should be the web administrator, developers, and the\naccount assigned to run the apache server service.\nIf accounts that don’t need access to these directories are listed, this is a\nfinding.\nIf the permissions assigned to the account for the Apache web server service is\ngreater than Read & Execute (R_E), this is a finding.",
+        "fix": "Assign the appropriate permissions to the applicable directories\nand files using the chmod command."
+      },
+      "code": "control \"V-2258\" do\n  title \"Web client access to the content directories must be restricted to\nread and execute.\"\n  desc  \"Excessive permissions for the anonymous web user account are one of\nthe most common faults contributing to the compromise of a web server. If this\nuser is able to upload and execute files on the web server, the organization or\nowner of the server will no longer have control of the asset.\"\n  impact 0.7\n  tag \"gtitle\": \"WG290\"\n  tag \"gid\": \"V-2258\"\n  tag \"rid\": \"SV-33027r1_rule\"\n  tag \"stig_id\": \"WG290 A22\"\n  tag \"fix_id\": \"F-29342r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECLP-1\"\n  tag \"check\": \"To view the value of Alias enter the following command:\n\ngrep \\\"Alias\\\" /usr/local/apache2/conf/httpd.conf\n\nAlias\nScriptAlias\nScriptAliasMatch\n\nReview the results to determine the location of the files listed above.\n\nEnter the following command to determine the permissions of the above file:\n\nls -Ll /file-path\n\nThe only accounts listed should be the web administrator, developers, and the\naccount assigned to run the apache server service.\nIf accounts that don’t need access to these directories are listed, this is a\nfinding.\nIf the permissions assigned to the account for the Apache web server service is\ngreater than Read & Execute (R_E), this is a finding.\"\n  tag \"fix\": \"Assign the appropriate permissions to the applicable directories\nand files using the chmod command.\"\n\n  script_alias = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").ScriptAlias.map{ |element| element.gsub(/\"/, '') }[0].split(\" \")[1]\n\n  describe directory(script_alias) do\n    its('owner') { should cmp 'apache' }\n  end\n\n  describe directory(script_alias) do\n    its('mode') { should cmp '0500' }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2258.rb",
+        "line": 19
+      },
+      "id": "V-2258"
+    },
+    {
+      "title": "System logging must be enabled.",
+      "desc": "The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation. Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts.   Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems. The CustomLog directive specifies the log file, syslog facility, or\npiped logging utility.",
+      "descriptions": {
+        "default": "The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation. Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts.   Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems. The CustomLog directive specifies the log file, syslog facility, or\npiped logging utility."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WA00615",
+        "gid": "V-26281",
+        "rid": "SV-33206r1_rule",
+        "stig_id": "WA00615 A22",
+        "fix_id": "F-29381r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECAR-1",
+        "check": "Enter the following command:\n\ngrep \"CustomLog\" /usr/local/apache2/conf/httpd.conf\n\nThe command should return the following value:.\n\nCustomLog \"Logs/access_log\" common\n\nIf the above value is not returned, this is a finding.\n",
+        "fix": "Edit the httpd.conf file and enter the name, path and level for\nthe CustomLog."
+      },
+      "code": "control \"V-26281\" do\n  title \"System logging must be enabled.\"\n  desc  \"The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation. Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts.   Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems. The CustomLog directive specifies the log file, syslog facility, or\npiped logging utility.\"\n  impact 0.5\n  tag \"gtitle\": \"WA00615\"\n  tag \"gid\": \"V-26281\"\n  tag \"rid\": \"SV-33206r1_rule\"\n  tag \"stig_id\": \"WA00615 A22\"\n  tag \"fix_id\": \"F-29381r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECAR-1\"\n  tag \"check\": \"Enter the following command:\n\ngrep \\\"CustomLog\\\" /usr/local/apache2/conf/httpd.conf\n\nThe command should return the following value:.\n\nCustomLog \\\"Logs/access_log\\\" common\n\nIf the above value is not returned, this is a finding.\n\"\n  tag \"fix\": \"Edit the httpd.conf file and enter the name, path and level for\nthe CustomLog.\"\n\n  describe apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").CustomLog.map{ |element| element.gsub(/\"/, '') }[0] do\n    it { should cmp 'Logs/access_log'}\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-26281.rb",
+        "line": 19
+      },
+      "id": "V-26281"
+    },
+    {
+      "title": "A web site must not contain a robots.txt file.",
+      "desc": "Search engines are constantly at work on the Internet.  Search engines\nare augmented by agents, often referred to as spiders or bots, which endeavor\nto capture and catalog web-site content.  In turn, these search engines make\nthe content they obtain and catalog available to any public web user.\n\n    To request that a well behaved search engine not crawl and catalog a site,\nthe web site may contain a file called robots.txt.  This file contains\ndirectories and files that the web server SA desires not be crawled or\ncataloged, but this file can also be used, by an attacker or poorly coded\nsearch engine, as a directory and file index to a site.  This information may\nbe used to reduce an attacker’s time searching and traversing the web site to\nfind files that might be relevant.  If information on the web site needs to be\nprotected from search engines and public view, other methods must be used.",
+      "descriptions": {
+        "default": "Search engines are constantly at work on the Internet.  Search engines\nare augmented by agents, often referred to as spiders or bots, which endeavor\nto capture and catalog web-site content.  In turn, these search engines make\nthe content they obtain and catalog available to any public web user.\n\n    To request that a well behaved search engine not crawl and catalog a site,\nthe web site may contain a file called robots.txt.  This file contains\ndirectories and files that the web server SA desires not be crawled or\ncataloged, but this file can also be used, by an attacker or poorly coded\nsearch engine, as a directory and file index to a site.  This information may\nbe used to reduce an attacker’s time searching and traversing the web site to\nfind files that might be relevant.  If information on the web site needs to be\nprotected from search engines and public view, other methods must be used."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG310",
+        "gid": "V-2260",
+        "rid": "SV-33028r2_rule",
+        "stig_id": "WG310 A22",
+        "fix_id": "F-29343r2_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECLP-1",
+        "check": "Locate the Apache httpd.conf file.\n\nIf unable to locate the file, perform a search of the system to find the\nlocation of the file.\n\nOpen the httpd.conf file with an editor and search for the following\nuncommented directives: DocumentRoot & Alias\n\nNavigate to the location(s) specified in the Include statement(s), and review\neach file for the following uncommented directives: DocumentRoot & Alias\n\nAt the top level of the directories identified after the enabled DocumentRoot &\nAlias directives, verify that a “robots.txt” file does not exist.  If the file\ndoes exist, this is a finding.",
+        "fix": "Remove the robots.txt file from the web site.  If there is\ninformation on the web site that needs protection from search engines and\npublic view, then other methods must be used to safeguard the data."
+      },
+      "code": "control \"V-2260\" do\n  title \"A web site must not contain a robots.txt file.\"\n  desc  \"Search engines are constantly at work on the Internet.  Search engines\nare augmented by agents, often referred to as spiders or bots, which endeavor\nto capture and catalog web-site content.  In turn, these search engines make\nthe content they obtain and catalog available to any public web user.\n\n    To request that a well behaved search engine not crawl and catalog a site,\nthe web site may contain a file called robots.txt.  This file contains\ndirectories and files that the web server SA desires not be crawled or\ncataloged, but this file can also be used, by an attacker or poorly coded\nsearch engine, as a directory and file index to a site.  This information may\nbe used to reduce an attacker’s time searching and traversing the web site to\nfind files that might be relevant.  If information on the web site needs to be\nprotected from search engines and public view, other methods must be used.\n\n  \"\n  impact 0.5\n  tag \"gtitle\": \"WG310\"\n  tag \"gid\": \"V-2260\"\n  tag \"rid\": \"SV-33028r2_rule\"\n  tag \"stig_id\": \"WG310 A22\"\n  tag \"fix_id\": \"F-29343r2_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECLP-1\"\n  tag \"check\": \"Locate the Apache httpd.conf file.\n\nIf unable to locate the file, perform a search of the system to find the\nlocation of the file.\n\nOpen the httpd.conf file with an editor and search for the following\nuncommented directives: DocumentRoot & Alias\n\nNavigate to the location(s) specified in the Include statement(s), and review\neach file for the following uncommented directives: DocumentRoot & Alias\n\nAt the top level of the directories identified after the enabled DocumentRoot &\nAlias directives, verify that a “robots.txt” file does not exist.  If the file\ndoes exist, this is a finding.\"\n  tag \"fix\": \"Remove the robots.txt file from the web site.  If there is\ninformation on the web site that needs protection from search engines and\npublic view, then other methods must be used to safeguard the data.\"\n\n  describe command(\"find / -name robots.txt\") do\n    its('stdout') { should cmp \"\" }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2260.rb",
+        "line": 19
+      },
+      "id": "V-2260"
+    },
+    {
+      "title": "Anonymous FTP user access to interactive scripts is prohibited.",
+      "desc": "The directories containing the CGI scripts, such as PERL, must not be\naccessible to anonymous users via FTP. This applies to all directories that\ncontain scripts that can dynamically produce web pages in an interactive manner\n(i.e., scripts based upon user-provided input). Such scripts contain\ninformation that could be used to compromise a web service, access system\nresources, or deface a web site.",
+      "descriptions": {
+        "default": "The directories containing the CGI scripts, such as PERL, must not be\naccessible to anonymous users via FTP. This applies to all directories that\ncontain scripts that can dynamically produce web pages in an interactive manner\n(i.e., scripts based upon user-provided input). Such scripts contain\ninformation that could be used to compromise a web service, access system\nresources, or deface a web site."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG430",
+        "gid": "V-2270",
+        "rid": "SV-36641r1_rule",
+        "stig_id": "WG430 A22",
+        "fix_id": "F-26838r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "System Administrator",
+        "ia_controls": "ECCD-1, ECCD-2",
+        "check": "Locate the directories containing the CGI scripts. These\ndirectories should be language-specific (e.g., PERL, ASP, JS, JSP, etc.).\n\nUsing ls –al, examine the file permissions on the CGI, the cgi-bin, and the\ncgi-shl directories.\n\nAnonymous FTP users must not have access to these directories.\n\nIf the CGI, the cgi-bin, or the cgi-shl directories can be accessed by any\ngroup that does not require access, this is a finding.\n",
+        "fix": "If the CGI, the cgi-bin, or the cgi-shl directories can be\naccessed via FTP by any group or user that does not require access, remove\npermissions to such directories for all but the web administrators and the SAs.\nEnsure that any such access employs an encrypted connection. "
+      },
+      "code": "control \"V-2270\" do\n  title \"Anonymous FTP user access to interactive scripts is prohibited.\"\n  desc  \"The directories containing the CGI scripts, such as PERL, must not be\naccessible to anonymous users via FTP. This applies to all directories that\ncontain scripts that can dynamically produce web pages in an interactive manner\n(i.e., scripts based upon user-provided input). Such scripts contain\ninformation that could be used to compromise a web service, access system\nresources, or deface a web site.\"\n  impact 0.5\n  tag \"gtitle\": \"WG430\"\n  tag \"gid\": \"V-2270\"\n  tag \"rid\": \"SV-36641r1_rule\"\n  tag \"stig_id\": \"WG430 A22\"\n  tag \"fix_id\": \"F-26838r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"System Administrator\"\n  tag \"ia_controls\": \"ECCD-1, ECCD-2\"\n  tag \"check\": \"Locate the directories containing the CGI scripts. These\ndirectories should be language-specific (e.g., PERL, ASP, JS, JSP, etc.).\n\nUsing ls –al, examine the file permissions on the CGI, the cgi-bin, and the\ncgi-shl directories.\n\nAnonymous FTP users must not have access to these directories.\n\nIf the CGI, the cgi-bin, or the cgi-shl directories can be accessed by any\ngroup that does not require access, this is a finding.\n\"\n  tag \"fix\": \"If the CGI, the cgi-bin, or the cgi-shl directories can be\naccessed via FTP by any group or user that does not require access, remove\npermissions to such directories for all but the web administrators and the SAs.\nEnsure that any such access employs an encrypted connection. \"\n\n  describe directory(\"/var/www/cgi-bin/\") do\n    its('owner') { should cmp 'apache' }\n    its('group') { should cmp 'apache' }\n  end\n\n  if directory(\"/var/www/cgi-shl\").exist?\n    its('owner') { should cmp 'apache' }\n    its('group') { should cmp 'apache' }\n  end\n\n  if directory(\"/var/www/cgi\").exist?\n    its('owner') { should cmp 'apache' }\n    its('group') { should cmp 'apache' }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2270.rb",
+        "line": 19
+      },
+      "id": "V-2270"
+    },
+    {
+      "title": "Java software on production web servers must be limited to class files\nand the JAVA virtual machine.",
+      "desc": "From the source code in a .java or a .jpp file, the Java compiler\nproduces a binary file with an extension of .class. The .java or .jpp file\nwould, therefore, reveal sensitive information regarding an application’s logic\nand permissions to resources on the server. By contrast, the .class file,\nbecause it is intended to be machine independent, is referred to as bytecode.\nBytecodes are run by the Java Virtual Machine (JVM), or the Java Runtime\nEnvironment (JRE), via a browser configured to permit Java code.",
+      "descriptions": {
+        "default": "From the source code in a .java or a .jpp file, the Java compiler\nproduces a binary file with an extension of .class. The .java or .jpp file\nwould, therefore, reveal sensitive information regarding an application’s logic\nand permissions to resources on the server. By contrast, the .class file,\nbecause it is intended to be machine independent, is referred to as bytecode.\nBytecodes are run by the Java Virtual Machine (JVM), or the Java Runtime\nEnvironment (JRE), via a browser configured to permit Java code."
+      },
+      "impact": 0.3,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG490",
+        "gid": "V-2265",
+        "rid": "SV-33032r1_rule",
+        "stig_id": "WG490 A22",
+        "fix_id": "F-29347r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECSC-1",
+        "check": "Enter the commands:\n\nfind / -name *.java\n\nfind / -name *.jpp\n\nIf either file type is found, this is a finding.",
+        "fix": "Remove the unnecessary files from the web server."
+      },
+      "code": "control \"V-2265\" do\n  title \"Java software on production web servers must be limited to class files\nand the JAVA virtual machine.\"\n  desc  \"From the source code in a .java or a .jpp file, the Java compiler\nproduces a binary file with an extension of .class. The .java or .jpp file\nwould, therefore, reveal sensitive information regarding an application’s logic\nand permissions to resources on the server. By contrast, the .class file,\nbecause it is intended to be machine independent, is referred to as bytecode.\nBytecodes are run by the Java Virtual Machine (JVM), or the Java Runtime\nEnvironment (JRE), via a browser configured to permit Java code.\"\n  impact 0.3\n  tag \"gtitle\": \"WG490\"\n  tag \"gid\": \"V-2265\"\n  tag \"rid\": \"SV-33032r1_rule\"\n  tag \"stig_id\": \"WG490 A22\"\n  tag \"fix_id\": \"F-29347r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECSC-1\"\n  tag \"check\": \"Enter the commands:\n\nfind / -name *.java\n\nfind / -name *.jpp\n\nIf either file type is found, this is a finding.\"\n  tag \"fix\": \"Remove the unnecessary files from the web server.\"\n\n  describe command(\"find / -name *.java -type f\") do\n    its('stdout') { should cmp \"\" }\n  end\n\n  describe command(\"find / -name *.jpp\") do\n    its('stdout') { should cmp \"\" }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2265.rb",
+        "line": 1
+      },
+      "id": "V-2265"
+    },
+    {
+      "title": "All interactive programs (CGI) must be placed in a designated\ndirectory with appropriate permissions.",
+      "desc": "CGI scripts represents one of the most common and exploitable means of\ncompromising a web server. By definition, CGI are executable by the operating\nsystem of the host server. While access control is provided via the web\nservice, the execution of CGI programs is not otherwise limited unless the SA\nor Web Manager takes specific measures. CGI programs can access and alter data\nfiles, launch other programs and use the network. CGI programs can be written\nin any available programming language. C, PERL, PHP, Javascript, VBScript and\nshell (sh, ksh, bash) are popular choices.",
+      "descriptions": {
+        "default": "CGI scripts represents one of the most common and exploitable means of\ncompromising a web server. By definition, CGI are executable by the operating\nsystem of the host server. While access control is provided via the web\nservice, the execution of CGI programs is not otherwise limited unless the SA\nor Web Manager takes specific measures. CGI programs can access and alter data\nfiles, launch other programs and use the network. CGI programs can be written\nin any available programming language. C, PERL, PHP, Javascript, VBScript and\nshell (sh, ksh, bash) are popular choices."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG400",
+        "gid": "V-2228",
+        "rid": "SV-6928r1_rule",
+        "stig_id": "WG400 A22",
+        "fix_id": "F-2277r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "System Administrator",
+        "ia_controls": "DCPA-1",
+        "check": "To preclude access to the servers root directory, ensure the\nfollowing directive is in the httpd.conf file. This entry will also stop users\nfrom setting up .htaccess files which can override security features configured\nin httpd.conf.\n\n<DIRECTORY /[website root dir]>\nAllowOverride None\n</DIRECTORY>\n\nIf the AllowOverride None is not set, this is a finding.\n",
+        "fix": "Ensure the CGI (or equivalent i.e. scripts) directory has access\ncontrols IAW the WEB Services STIG."
+      },
+      "code": "control \"V-2228\" do\n  title \"All interactive programs (CGI) must be placed in a designated\ndirectory with appropriate permissions.\"\n  desc  \"CGI scripts represents one of the most common and exploitable means of\ncompromising a web server. By definition, CGI are executable by the operating\nsystem of the host server. While access control is provided via the web\nservice, the execution of CGI programs is not otherwise limited unless the SA\nor Web Manager takes specific measures. CGI programs can access and alter data\nfiles, launch other programs and use the network. CGI programs can be written\nin any available programming language. C, PERL, PHP, Javascript, VBScript and\nshell (sh, ksh, bash) are popular choices.\"\n  impact 0.5\n  tag \"gtitle\": \"WG400\"\n  tag \"gid\": \"V-2228\"\n  tag \"rid\": \"SV-6928r1_rule\"\n  tag \"stig_id\": \"WG400 A22\"\n  tag \"fix_id\": \"F-2277r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"System Administrator\"\n  tag \"ia_controls\": \"DCPA-1\"\n  tag \"check\": \"To preclude access to the servers root directory, ensure the\nfollowing directive is in the httpd.conf file. This entry will also stop users\nfrom setting up .htaccess files which can override security features configured\nin httpd.conf.\n\n<DIRECTORY /[website root dir]>\nAllowOverride None\n</DIRECTORY>\n\nIf the AllowOverride None is not set, this is a finding.\n\"\n  tag \"fix\": \"Ensure the CGI (or equivalent i.e. scripts) directory has access\ncontrols IAW the WEB Services STIG.\"\n\n# begin\n#   doc_root = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").DocumentRoot.map{ |element| element.gsub(/\"/, '') }[0] + '>'\n#   web_root_idx = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").params['<Directory'].map{ |element| element.gsub(/\"/, '') }.index(\"#{doc_root}\")\n#   allow_override = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").params['AllowOverride'][web_root_idx]\n#\n#   describe allow_override do\n#     it { should cmp 'None' }\n#   end\n# end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2228.rb",
+        "line": 13
+      },
+      "id": "V-2228"
+    },
+    {
+      "title": "A private web server will have a valid DoD server certificate.",
+      "desc": "This check verifies that DoD is a hosted web site's CA. The\ncertificate is actually a DoD-issued server certificate used by the\norganization being reviewed. This is used to verify the authenticity of the web\nsite to the user. If the certificate is not for the server (Certificate belongs\nto), if the certificate is not issued by DoD (Certificate was issued by), or if\nthe current date is not included in the valid date (Certificate is valid from),\nthen there is no assurance that the use of the certificate is valid. The entire\npurpose of using a certificate is, therefore, compromised.",
+      "descriptions": {
+        "default": "This check verifies that DoD is a hosted web site's CA. The\ncertificate is actually a DoD-issued server certificate used by the\norganization being reviewed. This is used to verify the authenticity of the web\nsite to the user. If the certificate is not for the server (Certificate belongs\nto), if the certificate is not issued by DoD (Certificate was issued by), or if\nthe current date is not included in the valid date (Certificate is valid from),\nthen there is no assurance that the use of the certificate is valid. The entire\npurpose of using a certificate is, therefore, compromised."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG350",
+        "gid": "V-2263",
+        "rid": "SV-33031r1_rule",
+        "stig_id": "WG350 A22",
+        "fix_id": "F-29346r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "IATS-1, IATS-2",
+        "check": "Open browser window and browse to the appropriate site. Before\nentry to the site, you should be presented with the server's DoD PKI\ncredentials. Review these credentials for authenticity.\n\nFind an entry which cites:\n\nIssuer:\nCN = DOD CLASS 3 CA-3\nOU = PKI\nOU = DoD\nO = U.S. Government\nC = US\n\nIf the server is running as a public web server, this finding should be Not\nApplicable.\n\nNOTE: In some cases, the web servers are configured in an environment to\nsupport load balancing. This configuration most likely utilizes a content\nswitch to control traffic to the various web servers. In this situation, the\nSSL certificate for the web sites may be installed on the content switch vs.\nthe individual web sites. This solution is acceptable as long as the web\nservers are isolated from the general population LAN. Users should not have the\nability to bypass the content switch to access the web sites.\n",
+        "fix": "Configure the private web site to use a valid DoD certificate."
+      },
+      "code": "control \"V-2263\" do\n  title \"A private web server will have a valid DoD server certificate.\"\n  desc  \"This check verifies that DoD is a hosted web site's CA. The\ncertificate is actually a DoD-issued server certificate used by the\norganization being reviewed. This is used to verify the authenticity of the web\nsite to the user. If the certificate is not for the server (Certificate belongs\nto), if the certificate is not issued by DoD (Certificate was issued by), or if\nthe current date is not included in the valid date (Certificate is valid from),\nthen there is no assurance that the use of the certificate is valid. The entire\npurpose of using a certificate is, therefore, compromised.\"\n  impact 0.5\n  tag \"gtitle\": \"WG350\"\n  tag \"gid\": \"V-2263\"\n  tag \"rid\": \"SV-33031r1_rule\"\n  tag \"stig_id\": \"WG350 A22\"\n  tag \"fix_id\": \"F-29346r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"IATS-1, IATS-2\"\n  tag \"check\": \"Open browser window and browse to the appropriate site. Before\nentry to the site, you should be presented with the server's DoD PKI\ncredentials. Review these credentials for authenticity.\n\nFind an entry which cites:\n\nIssuer:\nCN = DOD CLASS 3 CA-3\nOU = PKI\nOU = DoD\nO = U.S. Government\nC = US\n\nIf the server is running as a public web server, this finding should be Not\nApplicable.\n\nNOTE: In some cases, the web servers are configured in an environment to\nsupport load balancing. This configuration most likely utilizes a content\nswitch to control traffic to the various web servers. In this situation, the\nSSL certificate for the web sites may be installed on the content switch vs.\nthe individual web sites. This solution is acceptable as long as the web\nservers are isolated from the general population LAN. Users should not have the\nability to bypass the content switch to access the web sites.\n\"\n  tag \"fix\": \"Configure the private web site to use a valid DoD certificate.\"\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2263.rb",
+        "line": 1
+      },
+      "id": "V-2263"
+    },
+    {
+      "title": "Error logging must be enabled.",
+      "desc": "The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation.  . Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts.   Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems.",
+      "descriptions": {
+        "default": "The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation.  . Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts.   Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WA00605",
+        "gid": "V-26279",
+        "rid": "SV-33192r1_rule",
+        "stig_id": "WA00605 A22",
+        "fix_id": "F-29376r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECAR-1",
+        "check": "Enter the following command:\n\ngrep \"ErrorLog\" /usr/local/apache2/conf/httpd.conf\n\nThis directive lists the name and location of the error log.\n\nIf the command result lists no data, this is a finding.\n",
+        "fix": "Edit the httpd.conf file and enter the name and path to the\nErrorLog."
+      },
+      "code": "control \"V-26279\" do\n  title \"Error logging must be enabled.\"\n  desc  \"The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation.  . Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts.   Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems. \"\n  impact 0.5\n  tag \"gtitle\": \"WA00605\"\n  tag \"gid\": \"V-26279\"\n  tag \"rid\": \"SV-33192r1_rule\"\n  tag \"stig_id\": \"WA00605 A22\"\n  tag \"fix_id\": \"F-29376r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECAR-1\"\n  tag \"check\": \"Enter the following command:\n\ngrep \\\"ErrorLog\\\" /usr/local/apache2/conf/httpd.conf\n\nThis directive lists the name and location of the error log.\n\nIf the command result lists no data, this is a finding.\n\"\n  tag \"fix\": \"Edit the httpd.conf file and enter the name and path to the\nErrorLog.\"\n\n  describe apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\") do\n    its('ErrorLog') { should_not be_nil }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-26279.rb",
+        "line": 19
+      },
+      "id": "V-26279"
+    },
+    {
+      "title": "The required DoD banner page must be displayed to authenticated users\naccessing a DoD private website.",
+      "desc": "A consent banner will be in place to make prospective entrants aware\nthat the website they are about to enter is a DoD web site and their activity\nis subject to monitoring. The document, DoDI 8500.01, establishes the policy on\nthe use of DoD information systems. It requires the use of a standard Notice\nand Consent Banner and standard text to be included in user agreements. The\nrequirement for the banner is for websites with security and access controls.\nThese are restricted and not publicly accessible. If the website does not\nrequire authentication/authorization for use, then the banner does not need to\nbe present. A manual check of the document root directory for a banner page\nfile (such as banner.html) or navigation to the website via a browser can be\nused to confirm the information provided from interviewing the web staff.",
+      "descriptions": {
+        "default": "A consent banner will be in place to make prospective entrants aware\nthat the website they are about to enter is a DoD web site and their activity\nis subject to monitoring. The document, DoDI 8500.01, establishes the policy on\nthe use of DoD information systems. It requires the use of a standard Notice\nand Consent Banner and standard text to be included in user agreements. The\nrequirement for the banner is for websites with security and access controls.\nThese are restricted and not publicly accessible. If the website does not\nrequire authentication/authorization for use, then the banner does not need to\nbe present. A manual check of the document root directory for a banner page\nfile (such as banner.html) or navigation to the website via a browser can be\nused to confirm the information provided from interviewing the web staff."
+      },
+      "impact": 0.3,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG265",
+        "gid": "V-6373",
+        "rid": "SV-33026r2_rule",
+        "stig_id": "WG265 A22",
+        "fix_id": "F-29341r2_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECWM-1",
+        "check": "The document, DoDI 8500.01, establishes the policy on the use\nof DoD information systems. It requires the use of a standard Notice and\nConsent Banner and standard text to be included in user agreements.\n\nThe requirement for the banner is for websites with security and access\ncontrols. These are restricted and not publicly accessible. If the website does\nnot require authentication/authorization for use, then the banner does not need\nto be present.\n\nIf a banner is required, the following banner page must be in place:\n\n“You are accessing a U.S. Government (USG) Information System (IS) that is\nprovided for USG-authorized use only.\n\nBy using this IS (which includes any device attached to this IS), you consent\nto the following conditions:\n\n-The USG routinely intercepts and monitors communications on this IS for\npurposes including, but not limited to, penetration testing, COMSEC monitoring,\nnetwork operations and defense, personnel misconduct (PM), law enforcement\n(LE), and counterintelligence (CI) investigations.\n\n- At any time, the USG may inspect and seize data stored on this IS.\n\n- Communications using, or data stored on, this IS are not private, are subject\nto routine monitoring, interception, and search, and may be disclosed or used\nfor any USG-authorized purpose.\n\n- This IS includes security measures (e.g., authentication and access controls)\nto protect USG interests—not for your personal benefit or privacy.\n\n- Notwithstanding the above, using this IS does not constitute consent to PM,\nLE or CI investigative searching or monitoring of the content of privileged\ncommunications, or work product, related to personal representation or services\nby attorneys, psychotherapists, or clergy, and their assistants. Such\ncommunications and work product are private and confidential. See User\nAgreement for details.”\n\nOR\n\nIf your system cannot meet the character limits to store this amount of text in\nthe banner, the following is another option for the warning banner:\n\n\"I've read & consent to terms in IS user agreem't.\"\n\nNOTE: While DoDI 8500.01 does not contain a copy of the banner to be used, it\ndoes point to the RMF Knowledge Service for a copy of the required text.  It is\nalso noted that the banner is to be displayed only once when the individual\nenters the site and not for each page.\n\nIf the access-controlled website does not display this banner page before\nentry, this is a finding.",
+        "fix": "Configure a DoD private website to display the required DoD\nbanner page when authentication is required for user access."
+      },
+      "code": "control \"V-6373\" do\n  title \"The required DoD banner page must be displayed to authenticated users\naccessing a DoD private website.\"\n  desc  \"A consent banner will be in place to make prospective entrants aware\nthat the website they are about to enter is a DoD web site and their activity\nis subject to monitoring. The document, DoDI 8500.01, establishes the policy on\nthe use of DoD information systems. It requires the use of a standard Notice\nand Consent Banner and standard text to be included in user agreements. The\nrequirement for the banner is for websites with security and access controls.\nThese are restricted and not publicly accessible. If the website does not\nrequire authentication/authorization for use, then the banner does not need to\nbe present. A manual check of the document root directory for a banner page\nfile (such as banner.html) or navigation to the website via a browser can be\nused to confirm the information provided from interviewing the web staff.\"\n  impact 0.3\n  tag \"gtitle\": \"WG265\"\n  tag \"gid\": \"V-6373\"\n  tag \"rid\": \"SV-33026r2_rule\"\n  tag \"stig_id\": \"WG265 A22\"\n  tag \"fix_id\": \"F-29341r2_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECWM-1\"\n  tag \"check\": \"The document, DoDI 8500.01, establishes the policy on the use\nof DoD information systems. It requires the use of a standard Notice and\nConsent Banner and standard text to be included in user agreements.\n\nThe requirement for the banner is for websites with security and access\ncontrols. These are restricted and not publicly accessible. If the website does\nnot require authentication/authorization for use, then the banner does not need\nto be present.\n\nIf a banner is required, the following banner page must be in place:\n\n“You are accessing a U.S. Government (USG) Information System (IS) that is\nprovided for USG-authorized use only.\n\nBy using this IS (which includes any device attached to this IS), you consent\nto the following conditions:\n\n-The USG routinely intercepts and monitors communications on this IS for\npurposes including, but not limited to, penetration testing, COMSEC monitoring,\nnetwork operations and defense, personnel misconduct (PM), law enforcement\n(LE), and counterintelligence (CI) investigations.\n\n- At any time, the USG may inspect and seize data stored on this IS.\n\n- Communications using, or data stored on, this IS are not private, are subject\nto routine monitoring, interception, and search, and may be disclosed or used\nfor any USG-authorized purpose.\n\n- This IS includes security measures (e.g., authentication and access controls)\nto protect USG interests—not for your personal benefit or privacy.\n\n- Notwithstanding the above, using this IS does not constitute consent to PM,\nLE or CI investigative searching or monitoring of the content of privileged\ncommunications, or work product, related to personal representation or services\nby attorneys, psychotherapists, or clergy, and their assistants. Such\ncommunications and work product are private and confidential. See User\nAgreement for details.”\n\nOR\n\nIf your system cannot meet the character limits to store this amount of text in\nthe banner, the following is another option for the warning banner:\n\n\\\"I've read & consent to terms in IS user agreem't.\\\"\n\nNOTE: While DoDI 8500.01 does not contain a copy of the banner to be used, it\ndoes point to the RMF Knowledge Service for a copy of the required text.  It is\nalso noted that the banner is to be displayed only once when the individual\nenters the site and not for each page.\n\nIf the access-controlled website does not display this banner page before\nentry, this is a finding.\"\n  tag \"fix\": \"Configure a DoD private website to display the required DoD\nbanner page when authentication is required for user access.\"\n\n  describe \"This test currently has no automated tests, you must check manually\" do\n    skip \"This check must be preformed manually\"\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-6373.rb",
+        "line": 19
+      },
+      "id": "V-6373"
+    },
+    {
+      "title": "Access to the web server log files must be restricted to\nadministrators, web administrators, and auditors.",
+      "desc": "A major tool in exploring the web site use, attempted use, unusual\nconditions, and problems are the access and error logs. In the event of a\nsecurity incident, these logs can provide the SA and the web administrator with\nvaluable information. Because of the information that is captured in the logs,\nit is critical that only authorized individuals have access to the logs.",
+      "descriptions": {
+        "default": "A major tool in exploring the web site use, attempted use, unusual\nconditions, and problems are the access and error logs. In the event of a\nsecurity incident, these logs can provide the SA and the web administrator with\nvaluable information. Because of the information that is captured in the logs,\nit is critical that only authorized individuals have access to the logs."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG255",
+        "gid": "V-13689",
+        "rid": "SV-36643r1_rule",
+        "stig_id": "WG255 A22",
+        "fix_id": "F-26859r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "System Administrator",
+        "ia_controls": "ECTP-1",
+        "check": "Look for the presence of log files at:\n\n/usr/local/apache/logs/access_log\n\nTo ensure the correct location of the log files, examine the \"ServerRoot\"\ndirective in the htttpd.conf file and then navigate to that directory where you\nwill find a subdirectory for the logs.\n\nDetermine permissions for log files, from the command line: cd to the directory\nwhere the log files are located and enter the command:\n\nls –al *log and note the owner and group permissions on these files. Only the\nAuditors, Web Managers, Administrators, and the account that runs the web\nserver should have permissions to the files.\n\nIf any users other than those authorized have read access to the log files,\nthis is a finding.\n",
+        "fix": "To ensure the integrity of the data that is being captured in the\nlog files, ensure that only the members of the Auditors group, Administrators,\nand the user assigned to run the web server software is granted permissions to\nread the log files."
+      },
+      "code": "control \"V-13689\" do\n  title \"Access to the web server log files must be restricted to\nadministrators, web administrators, and auditors.\"\n  desc  \"A major tool in exploring the web site use, attempted use, unusual\nconditions, and problems are the access and error logs. In the event of a\nsecurity incident, these logs can provide the SA and the web administrator with\nvaluable information. Because of the information that is captured in the logs,\nit is critical that only authorized individuals have access to the logs.\"\n  impact 0.5\n  tag \"gtitle\": \"WG255\"\n  tag \"gid\": \"V-13689\"\n  tag \"rid\": \"SV-36643r1_rule\"\n  tag \"stig_id\": \"WG255 A22\"\n  tag \"fix_id\": \"F-26859r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"System Administrator\"\n  tag \"ia_controls\": \"ECTP-1\"\n  tag \"check\": \"Look for the presence of log files at:\n\n/usr/local/apache/logs/access_log\n\nTo ensure the correct location of the log files, examine the \\\"ServerRoot\\\"\ndirective in the htttpd.conf file and then navigate to that directory where you\nwill find a subdirectory for the logs.\n\nDetermine permissions for log files, from the command line: cd to the directory\nwhere the log files are located and enter the command:\n\nls –al *log and note the owner and group permissions on these files. Only the\nAuditors, Web Managers, Administrators, and the account that runs the web\nserver should have permissions to the files.\n\nIf any users other than those authorized have read access to the log files,\nthis is a finding.\n\"\n  tag \"fix\": \"To ensure the integrity of the data that is being captured in the\nlog files, ensure that only the members of the Auditors group, Administrators,\nand the user assigned to run the web server software is granted permissions to\nread the log files.\"\n\n\ncommand(\"ls #{APACHE_LOG_DIR}/*\").stdout.split.each do |log|\n  describe file(log) do\n    its('mode') { should cmp '0640'}\n    its('owner') { should cmp 'apache' }\n    its('group') { should cmp 'apache' }\n  end\nend\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-13689.rb",
+        "line": 19
+      },
+      "id": "V-13689"
+    },
+    {
+      "title": "Only web sites that have been fully reviewed and tested must exist on\na production web server.",
+      "desc": "In the case of a production web server, areas for content development\nand testing will not exist, as this type of content is only permissible on a\ndevelopment web site. The process of developing on a functional production web\nsite entails a degree of trial and error and repeated testing. This process is\noften accomplished in an environment where debugging, sequencing, and\nformatting of content are the main goals. The opportunity for a malicious user\nto obtain files that reveal business logic and login schemes is high in this\nsituation. The existence of such immature content on a web server represents a\nsignificant security risk that is totally avoidable.",
+      "descriptions": {
+        "default": "In the case of a production web server, areas for content development\nand testing will not exist, as this type of content is only permissible on a\ndevelopment web site. The process of developing on a functional production web\nsite entails a degree of trial and error and repeated testing. This process is\noften accomplished in an environment where debugging, sequencing, and\nformatting of content are the main goals. The opportunity for a malicious user\nto obtain files that reveal business logic and login schemes is high in this\nsituation. The existence of such immature content on a web server represents a\nsignificant security risk that is totally avoidable."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG260",
+        "gid": "V-2254",
+        "rid": "SV-32830r2_rule",
+        "stig_id": "WG260 A22",
+        "fix_id": "F-29340r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECSC-1",
+        "check": "Query the ISSO, the SA, and the web administrator to find out\nif development web sites are being housed on production web servers.\n\nProposed Questions:\nDo you have development sites on your production web server?\nWhat is your process to get development web sites / content posted to the\nproduction server?\nDo you use under construction notices on production web pages?\n\nThe reviewer can also do a manual check or perform a navigation of the web site\nvia a browser could be used to confirm the information provided from\ninterviewing the web staff. Graphics or texts which proclaim Under Construction\nor Under Development are frequently used to mark folders or directories in that\nstatus.\n\nIf Under Construction or Under Development web content is discovered on the\nproduction web server, this is a finding.",
+        "fix": "The presences of portions of the web site that proclaim Under\nConstruction or Under Development are clear indications that a production web\nserver is being used for development. The web administrator will ensure that\nall pages that are in development are not installed on a production web server."
+      },
+      "code": "control \"V-2254\" do\n  title \"Only web sites that have been fully reviewed and tested must exist on\na production web server.\"\n  desc  \"In the case of a production web server, areas for content development\nand testing will not exist, as this type of content is only permissible on a\ndevelopment web site. The process of developing on a functional production web\nsite entails a degree of trial and error and repeated testing. This process is\noften accomplished in an environment where debugging, sequencing, and\nformatting of content are the main goals. The opportunity for a malicious user\nto obtain files that reveal business logic and login schemes is high in this\nsituation. The existence of such immature content on a web server represents a\nsignificant security risk that is totally avoidable.\"\n  impact 0.5\n  tag \"gtitle\": \"WG260\"\n  tag \"gid\": \"V-2254\"\n  tag \"rid\": \"SV-32830r2_rule\"\n  tag \"stig_id\": \"WG260 A22\"\n  tag \"fix_id\": \"F-29340r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECSC-1\"\n  tag \"check\": \"Query the ISSO, the SA, and the web administrator to find out\nif development web sites are being housed on production web servers.\n\nProposed Questions:\nDo you have development sites on your production web server?\nWhat is your process to get development web sites / content posted to the\nproduction server?\nDo you use under construction notices on production web pages?\n\nThe reviewer can also do a manual check or perform a navigation of the web site\nvia a browser could be used to confirm the information provided from\ninterviewing the web staff. Graphics or texts which proclaim Under Construction\nor Under Development are frequently used to mark folders or directories in that\nstatus.\n\nIf Under Construction or Under Development web content is discovered on the\nproduction web server, this is a finding.\"\n  tag \"fix\": \"The presences of portions of the web site that proclaim Under\nConstruction or Under Development are clear indications that a production web\nserver is being used for development. The web administrator will ensure that\nall pages that are in development are not installed on a production web server.\"\n\n  describe \"This test currently has no automated tests, you must check manually\" do\n    skip \"This check must be preformed manually\"\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2254.rb",
+        "line": 19
+      },
+      "id": "V-2254"
+    },
+    {
+      "title": "The LogLevel directive must be enabled.",
+      "desc": "The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation. Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts. Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems. While the ErrorLog directive configures the error log file name, the\nLogLevel directive is used to configure the severity level for the error logs.\nThe log level values are the standard syslog levels: emerg, alert, crit, error,\nwarn, notice, info and debug.",
+      "descriptions": {
+        "default": "The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation. Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts. Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems. While the ErrorLog directive configures the error log file name, the\nLogLevel directive is used to configure the severity level for the error logs.\nThe log level values are the standard syslog levels: emerg, alert, crit, error,\nwarn, notice, info and debug."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WA00620",
+        "gid": "V-26282",
+        "rid": "SV-33207r1_rule",
+        "stig_id": "WA00620 A22",
+        "fix_id": "F-29385r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECAR-1",
+        "check": "Enter the following command:\n\ngrep \"LogLevel\" /usr/local/apache2/conf/httpd.conf\n\nThe command should return the following value:\n\nLogLevel warn\n\nIf the above value is not returned, this is a finding.\nNote:  If LogLevel is set to error, crit, alert, or emerg which are higher\nthresholds this is not a finding.\n",
+        "fix": "Edit the httpd.conf file and add the value LogLevel warn."
+      },
+      "code": "control \"V-26282\" do\n  title \"The LogLevel directive must be enabled.\"\n  desc  \"The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation. Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts. Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems. While the ErrorLog directive configures the error log file name, the\nLogLevel directive is used to configure the severity level for the error logs.\nThe log level values are the standard syslog levels: emerg, alert, crit, error,\nwarn, notice, info and debug.\"\n  impact 0.5\n  tag \"gtitle\": \"WA00620\"\n  tag \"gid\": \"V-26282\"\n  tag \"rid\": \"SV-33207r1_rule\"\n  tag \"stig_id\": \"WA00620 A22\"\n  tag \"fix_id\": \"F-29385r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECAR-1\"\n  tag \"check\": \"Enter the following command:\n\ngrep \\\"LogLevel\\\" /usr/local/apache2/conf/httpd.conf\n\nThe command should return the following value:\n\nLogLevel warn\n\nIf the above value is not returned, this is a finding.\nNote:  If LogLevel is set to error, crit, alert, or emerg which are higher\nthresholds this is not a finding.\n\"\n  tag \"fix\": \"Edit the httpd.conf file and add the value LogLevel warn.\"\n\n  describe apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\") do\n    its('LogLevel') { should cmp 'warn' }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-26282.rb",
+        "line": 19
+      },
+      "id": "V-26282"
+    },
+    {
+      "title": "The web document (home) directory must be in a separate partition from\nthe web server’s system files.",
+      "desc": "Application partitioning enables an additional security measure by\nsecuring user traffic under one security context, while managing system and\napplication files under another.  Web content is can be to an anonymous web\nuser. For such an account to have access to system files of any type is a major\nsecurity risk that is avoidable and desirable. Failure to partition the system\nfiles from the web site documents increases risk of attack via directory\ntraversal, or impede web site availability due to drive space exhaustion.",
+      "descriptions": {
+        "default": "Application partitioning enables an additional security measure by\nsecuring user traffic under one security context, while managing system and\napplication files under another.  Web content is can be to an anonymous web\nuser. For such an account to have access to system files of any type is a major\nsecurity risk that is avoidable and desirable. Failure to partition the system\nfiles from the web site documents increases risk of attack via directory\ntraversal, or impede web site availability due to drive space exhaustion."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG205",
+        "gid": "V-3333",
+        "rid": "SV-33021r1_rule",
+        "stig_id": "WG205 A22",
+        "fix_id": "F-29337r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "DCPA-1",
+        "check": "grep \"DocumentRoot\" /usr/local/apache2/conf/httpd.conf\n\nNote each location following the DocumentRoot string, this is the configured\npath to the document root directory(s).\n\nUse the command df -k to view each document root's partition setup.\n\nCompare that against the results for the Operating System file systems, and\nagainst the partition for the web server system files, which is the result of\nthe command:\n\ndf -k /usr/local/apache2/bin\n\nIf the document root path is on the same partition as the web server system\nfiles or the OS file systems, this is a finding.\n",
+        "fix": "Move the web document (normally \"htdocs\") directory to a\nseparate partition, other than the OS root partition and the web server’s\nsystem files.\n"
+      },
+      "code": "control \"V-3333\" do\n  title \"The web document (home) directory must be in a separate partition from\nthe web server’s system files.\"\n  desc  \"Application partitioning enables an additional security measure by\nsecuring user traffic under one security context, while managing system and\napplication files under another.  Web content is can be to an anonymous web\nuser. For such an account to have access to system files of any type is a major\nsecurity risk that is avoidable and desirable. Failure to partition the system\nfiles from the web site documents increases risk of attack via directory\ntraversal, or impede web site availability due to drive space exhaustion. \"\n  impact 0.5\n  tag \"gtitle\": \"WG205\"\n  tag \"gid\": \"V-3333\"\n  tag \"rid\": \"SV-33021r1_rule\"\n  tag \"stig_id\": \"WG205 A22\"\n  tag \"fix_id\": \"F-29337r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"DCPA-1\"\n  tag \"check\": \"grep \\\"DocumentRoot\\\" /usr/local/apache2/conf/httpd.conf\n\nNote each location following the DocumentRoot string, this is the configured\npath to the document root directory(s).\n\nUse the command df -k to view each document root's partition setup.\n\nCompare that against the results for the Operating System file systems, and\nagainst the partition for the web server system files, which is the result of\nthe command:\n\ndf -k /usr/local/apache2/bin\n\nIf the document root path is on the same partition as the web server system\nfiles or the OS file systems, this is a finding.\n\"\n  tag \"fix\": \"Move the web document (normally \\\"htdocs\\\") directory to a\nseparate partition, other than the OS root partition and the web server’s\nsystem files.\n\"\n\n  doc_root = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").DocumentRoot.map{ |element| element.gsub(/\"/, '') }[0]\n  linux_system = command(\"df /lib/\").stdout.split[7]\n  apache_web_dir = command(\"df #{doc_root}\").stdout.split[7]\n\n  describe apache_web_dir do\n    it { should_not cmp linux_system }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-3333.rb",
+        "line": 19
+      },
+      "id": "V-3333"
+    },
+    {
+      "title": "Private web servers must require certificates issued from a\nDoD-authorized Certificate Authority.",
+      "desc": "Web sites requiring authentication within the DoD must utilize PKI as\nan authentication mechanism for web users. Information systems residing behind\nweb servers requiring authorization based on individual identity must use the\nidentity provided by certificate-based authentication to support access control\ndecisions.",
+      "descriptions": {
+        "default": "Web sites requiring authentication within the DoD must utilize PKI as\nan authentication mechanism for web users. Information systems residing behind\nweb servers requiring authorization based on individual identity must use the\nidentity provided by certificate-based authentication to support access control\ndecisions."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG140",
+        "gid": "V-6531",
+        "rid": "SV-33019r1_rule",
+        "stig_id": "WG140 A22",
+        "fix_id": "F-29335r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "IATS-1, IATS-2",
+        "check": "To view the SSLVerifyClient value enter the following command:\n\ngrep \"SSLVerifyClient\" /usr/local/apache2/conf/httpd.conf.\n\nIf the value of SSLVerifyClient is not set to “require”, this is a finding.",
+        "fix": "Edit the ssl.conf file and set the value of SSLVerifyClient to\n\"require\"."
+      },
+      "code": "control \"V-6531\" do\n  title \"Private web servers must require certificates issued from a\nDoD-authorized Certificate Authority.\"\n  desc  \"Web sites requiring authentication within the DoD must utilize PKI as\nan authentication mechanism for web users. Information systems residing behind\nweb servers requiring authorization based on individual identity must use the\nidentity provided by certificate-based authentication to support access control\ndecisions.\"\n  impact 0.5\n  tag \"gtitle\": \"WG140\"\n  tag \"gid\": \"V-6531\"\n  tag \"rid\": \"SV-33019r1_rule\"\n  tag \"stig_id\": \"WG140 A22\"\n  tag \"fix_id\": \"F-29335r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"IATS-1, IATS-2\"\n  tag \"check\": \"To view the SSLVerifyClient value enter the following command:\n\ngrep \\\"SSLVerifyClient\\\" /usr/local/apache2/conf/httpd.conf.\n\nIf the value of SSLVerifyClient is not set to “require”, this is a finding.\"\n  tag \"fix\": \"Edit the ssl.conf file and set the value of SSLVerifyClient to\n\\\"require\\\".\"\n\n  describe apache_conf(\"#{APACHE_SSL_CONF_DIR}/ssl.conf\") do\n    its('SSLVerifyClient') { should cmp 'require' }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-6531.rb",
+        "line": 25
+      },
+      "id": "V-6531"
+    },
+    {
+      "title": "Remote authors or content providers must have all files scanned for\nviruses and malicious code before uploading files to the Document Root\ndirectory.",
+      "desc": "Remote web authors should not be able to upload files to the Document\nRoot directory structure without virus checking and checking for malicious or\nmobile code. A remote web user, whose agency has a Memorandum of Agreement\n(MOA) with the hosting agency and has submitted a DoD form 2875 (System\nAuthorization Access Request (SAAR)) or an equivalent document, will be allowed\nto post files to a temporary location on the server. All posted files to this\ntemporary location will be scanned for viruses and content checked for\nmalicious or mobile code. Only files free of viruses and malicious or mobile\ncode will be posted to the appropriate DocumentRoot directory.",
+      "descriptions": {
+        "default": "Remote web authors should not be able to upload files to the Document\nRoot directory structure without virus checking and checking for malicious or\nmobile code. A remote web user, whose agency has a Memorandum of Agreement\n(MOA) with the hosting agency and has submitted a DoD form 2875 (System\nAuthorization Access Request (SAAR)) or an equivalent document, will be allowed\nto post files to a temporary location on the server. All posted files to this\ntemporary location will be scanned for viruses and content checked for\nmalicious or mobile code. Only files free of viruses and malicious or mobile\ncode will be posted to the appropriate DocumentRoot directory."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG237",
+        "gid": "V-13687",
+        "rid": "SV-36699r1_rule",
+        "stig_id": "WG237 A22",
+        "fix_id": "F-26858r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "System Administrator",
+        "ia_controls": "ECVP-1",
+        "check": "Remote web authors should not be able to upload files to the\nDocument Root directory structure without virus checking and checking for\nmalicious or mobile code.\n\nQuery the SA to determine if there is anti-virus software active on the server\nwith auto-protect enabled, or if there is another process in place for the\nscanning of files being posted by remote authors.\n\nIf there is no virus software on the system with auto-protect enabled, or if\nthere is not a process in place to ensure all files being posted are being\nvirus scanned before being saved to the document root, this is a finding.\n",
+        "fix": "Install anti-virus software on the system and set it to\nautomatically scan new files that are introduced to the web server."
+      },
+      "code": "control \"V-13687\" do\n  title \"Remote authors or content providers must have all files scanned for\nviruses and malicious code before uploading files to the Document Root\ndirectory.\"\n  desc  \"Remote web authors should not be able to upload files to the Document\nRoot directory structure without virus checking and checking for malicious or\nmobile code. A remote web user, whose agency has a Memorandum of Agreement\n(MOA) with the hosting agency and has submitted a DoD form 2875 (System\nAuthorization Access Request (SAAR)) or an equivalent document, will be allowed\nto post files to a temporary location on the server. All posted files to this\ntemporary location will be scanned for viruses and content checked for\nmalicious or mobile code. Only files free of viruses and malicious or mobile\ncode will be posted to the appropriate DocumentRoot directory.\"\n  impact 0.5\n  tag \"gtitle\": \"WG237\"\n  tag \"gid\": \"V-13687\"\n  tag \"rid\": \"SV-36699r1_rule\"\n  tag \"stig_id\": \"WG237 A22\"\n  tag \"fix_id\": \"F-26858r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"System Administrator\"\n  tag \"ia_controls\": \"ECVP-1\"\n  tag \"check\": \"Remote web authors should not be able to upload files to the\nDocument Root directory structure without virus checking and checking for\nmalicious or mobile code.\n\nQuery the SA to determine if there is anti-virus software active on the server\nwith auto-protect enabled, or if there is another process in place for the\nscanning of files being posted by remote authors.\n\nIf there is no virus software on the system with auto-protect enabled, or if\nthere is not a process in place to ensure all files being posted are being\nvirus scanned before being saved to the document root, this is a finding.\n\"\n  tag \"fix\": \"Install anti-virus software on the system and set it to\nautomatically scan new files that are introduced to the web server.\"\n\n  describe \"This test currently has no automated tests, you must check manually\" do\n    skip \"This check must be preformed manually\"\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-13687.rb",
+        "line": 1
+      },
+      "id": "V-13687"
+    },
+    {
+      "title": "The number of allowed simultaneous requests must be set.",
+      "desc": "Resource exhaustion can occur when an unlimited number of concurrent\nrequests are allowed on a web site, facilitating a denial of service attack.\nMitigating this kind of attack will include limiting the number of concurrent\nHTTP/HTTPS requests per IP address and may include, where feasible, limiting\nparameter values associated with keepalive, (i.e., a parameter used to limit\nthe amount of time a connection may be inactive).",
+      "descriptions": {
+        "default": "Resource exhaustion can occur when an unlimited number of concurrent\nrequests are allowed on a web site, facilitating a denial of service attack.\nMitigating this kind of attack will include limiting the number of concurrent\nHTTP/HTTPS requests per IP address and may include, where feasible, limiting\nparameter values associated with keepalive, (i.e., a parameter used to limit\nthe amount of time a connection may be inactive)."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG110",
+        "gid": "V-2240",
+        "rid": "SV-33018r1_rule",
+        "stig_id": "WG110 A22",
+        "fix_id": "F-29334r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECSC-1",
+        "check": "To view the MaxKeepAliveRequests value, enter the following\ncommand:\n\ngrep \"MaxKeepAliveRequests\" /usr/local/apache2/conf/httpd.conf\n\nIf the returned value of MaxKeepAliveRequests is not set to 100 or greater,\nthis is a finding.\n",
+        "fix": "Edit the httpd.conf file and set the MaxKeepAliveRequests\ndirective to 100 or greater."
+      },
+      "code": "control \"V-2240\" do\n  title \"The number of allowed simultaneous requests must be set.\"\n  desc  \"Resource exhaustion can occur when an unlimited number of concurrent\nrequests are allowed on a web site, facilitating a denial of service attack.\nMitigating this kind of attack will include limiting the number of concurrent\nHTTP/HTTPS requests per IP address and may include, where feasible, limiting\nparameter values associated with keepalive, (i.e., a parameter used to limit\nthe amount of time a connection may be inactive).\"\n  impact 0.5\n  tag \"gtitle\": \"WG110\"\n  tag \"gid\": \"V-2240\"\n  tag \"rid\": \"SV-33018r1_rule\"\n  tag \"stig_id\": \"WG110 A22\"\n  tag \"fix_id\": \"F-29334r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECSC-1\"\n  tag \"check\": \"To view the MaxKeepAliveRequests value, enter the following\ncommand:\n\ngrep \\\"MaxKeepAliveRequests\\\" /usr/local/apache2/conf/httpd.conf\n\nIf the returned value of MaxKeepAliveRequests is not set to 100 or greater,\nthis is a finding.\n\"\n  tag \"fix\": \"Edit the httpd.conf file and set the MaxKeepAliveRequests\ndirective to 100 or greater.\"\n\n  begin\n    keep_alive = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\")\n\n    describe keep_alive do\n      its('MaxKeepAliveRequests') { should_not be_nil }\n      its('MaxKeepAliveRequests') { should cmp >= 100 }\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2240.rb",
+        "line": 13
+      },
+      "id": "V-2240"
+    },
+    {
+      "title": "Web content directories must not be anonymously shared.",
+      "desc": "Sharing web content is a security risk when a web server is involved.\nUsers accessing the share anonymously could experience privileged access to the\ncontent of such directories. Network sharable directories expose those\ndirectories and their contents to unnecessary access. Any unnecessary exposure\nincreases the risk that someone could exploit that access and either\ncompromises the web content or cause web server performance problems.",
+      "descriptions": {
+        "default": "Sharing web content is a security risk when a web server is involved.\nUsers accessing the share anonymously could experience privileged access to the\ncontent of such directories. Network sharable directories expose those\ndirectories and their contents to unnecessary access. Any unnecessary exposure\nincreases the risk that someone could exploit that access and either\ncompromises the web content or cause web server performance problems."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG210",
+        "gid": "V-2226",
+        "rid": "SV-33022r1_rule",
+        "stig_id": "WG210 A22",
+        "fix_id": "F-2275r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECCD-1, ECCD-2",
+        "check": "To view the DocumentRoot enter the following command:\n\ngrep \"DocumentRoot\" /usr/local/apache2/conf/httpd.conf\n\nTo view the ServerRoot enter the following command:\n\ngrep \"serverRoot\" /usr/local/apache2/conf/httpd.conf\n\nNote the location following the DocumentRoot and ServerRoot directives.\n\nEnter the following commands to determine if file sharing is running:\n\nps -ef | grep nfs, ps -ef | grep smb\n\nIf results are returned, determine the shares and confirm they are not in the\nsame directory as listed above, If they are, this is a finding. ",
+        "fix": "Remove the shares from the applicable directories."
+      },
+      "code": "control \"V-2226\" do\n  title \"Web content directories must not be anonymously shared.\"\n  desc  \"Sharing web content is a security risk when a web server is involved.\nUsers accessing the share anonymously could experience privileged access to the\ncontent of such directories. Network sharable directories expose those\ndirectories and their contents to unnecessary access. Any unnecessary exposure\nincreases the risk that someone could exploit that access and either\ncompromises the web content or cause web server performance problems.\"\n  impact 0.5\n  tag \"gtitle\": \"WG210\"\n  tag \"gid\": \"V-2226\"\n  tag \"rid\": \"SV-33022r1_rule\"\n  tag \"stig_id\": \"WG210 A22\"\n  tag \"fix_id\": \"F-2275r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECCD-1, ECCD-2\"\n  tag \"check\": \"To view the DocumentRoot enter the following command:\n\ngrep \\\"DocumentRoot\\\" /usr/local/apache2/conf/httpd.conf\n\nTo view the ServerRoot enter the following command:\n\ngrep \\\"serverRoot\\\" /usr/local/apache2/conf/httpd.conf\n\nNote the location following the DocumentRoot and ServerRoot directives.\n\nEnter the following commands to determine if file sharing is running:\n\nps -ef | grep nfs, ps -ef | grep smb\n\nIf results are returned, determine the shares and confirm they are not in the\nsame directory as listed above, If they are, this is a finding. \"\n  tag \"fix\": \"Remove the shares from the applicable directories.\"\n\n  begin\n    # had to do some regex'ing to remove extra back slashes\n    doc_root = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").DocumentRoot.map{ |element| element.gsub(/\"/, '') }[0]\n    srv_root = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").ServerRoot.map{ |element| element.gsub(/\"/, '') }[0]\n    nfs_doc_root = command(\"showmount -e | grep #{doc_root[0]}\")\n    nfs_srv_root = command(\"showmount -e | grep #{srv_root[0]}\")\n\n    describe nfs_doc_root do\n      its('stdout') { should_not include doc_root }\n    end\n\n    describe nfs_srv_root do\n      its('stdout') { should_not include srv_root }\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2226.rb",
+        "line": 18
+      },
+      "id": "V-2226"
+    },
+    {
+      "title": "Log file access must be restricted to System Administrators, Web\nAdministrators or Auditors.",
+      "desc": "A major tool in exploring the web site use, attempted use, unusual\nconditions, and problems are the access and error logs. In the event of a\nsecurity incident, these logs can provide the SA and the web manager with\nvaluable information. To ensure the integrity of the log files and protect the\nSA and the web manager from a conflict of interest related to the maintenance\nof these files, only the members of the Auditors group will be granted\npermissions to move, copy, and delete these files in the course of their duties\nrelated to the archiving of these files.",
+      "descriptions": {
+        "default": "A major tool in exploring the web site use, attempted use, unusual\nconditions, and problems are the access and error logs. In the event of a\nsecurity incident, these logs can provide the SA and the web manager with\nvaluable information. To ensure the integrity of the log files and protect the\nSA and the web manager from a conflict of interest related to the maintenance\nof these files, only the members of the Auditors group will be granted\npermissions to move, copy, and delete these files in the course of their duties\nrelated to the archiving of these files."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG250",
+        "gid": "V-2252",
+        "rid": "SV-33033r1_rule",
+        "stig_id": "WG250 A22",
+        "fix_id": "F-29348r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECTP-1",
+        "check": "Enter the following command to determine the directory the log\nfiles are located in:\n\ngrep \"ErrorLog\" /usr/local/apache2/conf/httpd.conf\n\ngrep \"CustomLog\" /usr/local/apache2/conf/httpd.conf\n\nVerify the permission of the ErrorLog & CustomLog files by entering the\nfollowing command:\n\nls -al /usr/local/apache2/logs/*.log\n\nUnix file permissions should be 640 or less for all web log files if not, this\nis a finding.\n",
+        "fix": "Use the chmod command to set the appropriate file permissions on\nthe log files."
+      },
+      "code": "control \"V-2252\" do\n  title \"Log file access must be restricted to System Administrators, Web\nAdministrators or Auditors.\"\n  desc  \"A major tool in exploring the web site use, attempted use, unusual\nconditions, and problems are the access and error logs. In the event of a\nsecurity incident, these logs can provide the SA and the web manager with\nvaluable information. To ensure the integrity of the log files and protect the\nSA and the web manager from a conflict of interest related to the maintenance\nof these files, only the members of the Auditors group will be granted\npermissions to move, copy, and delete these files in the course of their duties\nrelated to the archiving of these files.\"\n  impact 0.5\n  tag \"gtitle\": \"WG250\"\n  tag \"gid\": \"V-2252\"\n  tag \"rid\": \"SV-33033r1_rule\"\n  tag \"stig_id\": \"WG250 A22\"\n  tag \"fix_id\": \"F-29348r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECTP-1\"\n  tag \"check\": \"Enter the following command to determine the directory the log\nfiles are located in:\n\ngrep \\\"ErrorLog\\\" /usr/local/apache2/conf/httpd.conf\n\ngrep \\\"CustomLog\\\" /usr/local/apache2/conf/httpd.conf\n\nVerify the permission of the ErrorLog & CustomLog files by entering the\nfollowing command:\n\nls -al /usr/local/apache2/logs/*.log\n\nUnix file permissions should be 640 or less for all web log files if not, this\nis a finding.\n\"\n  tag \"fix\": \"Use the chmod command to set the appropriate file permissions on\nthe log files.\"\n\n  begin\n    command(\"ls #{APACHE_LOG_DIR}/*\").stdout.split.each do |log|\n      describe file(log) do\n        its('mode') { should cmp '0640'}\n      end\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2252.rb",
+        "line": 19
+      },
+      "id": "V-2252"
+    },
+    {
+      "title": "Log file data must contain required data elements.",
+      "desc": "The use of log files is a critical component of the operation of the\nInformation Systems (IS) used within the DoD, and they can provide invaluable\nassistance with regard to damage assessment, causation, and the recovery of\nboth affected components and data. They may be used to monitor accidental or\nintentional misuse of the (IS) and may be used by law enforcement for criminal\nprosecutions. The use of log files is a requirement within the DoD.",
+      "descriptions": {
+        "default": "The use of log files is a critical component of the operation of the\nInformation Systems (IS) used within the DoD, and they can provide invaluable\nassistance with regard to damage assessment, causation, and the recovery of\nboth affected components and data. They may be used to monitor accidental or\nintentional misuse of the (IS) and may be used by law enforcement for criminal\nprosecutions. The use of log files is a requirement within the DoD."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG242",
+        "gid": "V-13688",
+        "rid": "SV-36642r1_rule",
+        "stig_id": "WG242 A22",
+        "fix_id": "F-13116r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "System Administrator",
+        "ia_controls": "ECAR-1, ECAR-2, ECAR-3",
+        "check": "To verify the log settings:\n\nDefault UNIX location: /usr/local/apache/logs/access_log\n\nIf this directory does not exist, you can search the web server for the\nhttpd.conf file to determine the location of the logs.\n\nItems to be logged are as shown in this sample line in the httpd.conf file:\n\nLogFormat \"%a %A %h %H %l %m %s %t %u %U \\\"%{Referer}i\\\" \" combined\n\nIf the web server is not configured to capture the required audit events for\nall sites and virtual directories, this is a finding.",
+        "fix": "Configure the web server to ensure the log file data includes the\nrequired data elements."
+      },
+      "code": "control \"V-13688\" do\n  title \"Log file data must contain required data elements.\"\n  desc  \"The use of log files is a critical component of the operation of the\nInformation Systems (IS) used within the DoD, and they can provide invaluable\nassistance with regard to damage assessment, causation, and the recovery of\nboth affected components and data. They may be used to monitor accidental or\nintentional misuse of the (IS) and may be used by law enforcement for criminal\nprosecutions. The use of log files is a requirement within the DoD.\"\n  impact 0.5\n  tag \"gtitle\": \"WG242\"\n  tag \"gid\": \"V-13688\"\n  tag \"rid\": \"SV-36642r1_rule\"\n  tag \"stig_id\": \"WG242 A22\"\n  tag \"fix_id\": \"F-13116r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"System Administrator\"\n  tag \"ia_controls\": \"ECAR-1, ECAR-2, ECAR-3\"\n  tag \"check\": \"To verify the log settings:\n\nDefault UNIX location: /usr/local/apache/logs/access_log\n\nIf this directory does not exist, you can search the web server for the\nhttpd.conf file to determine the location of the logs.\n\nItems to be logged are as shown in this sample line in the httpd.conf file:\n\nLogFormat \\\"%a %A %h %H %l %m %s %t %u %U \\\\\\\"%{Referer}i\\\\\\\" \\\" combined\n\nIf the web server is not configured to capture the required audit events for\nall sites and virtual directories, this is a finding.\"\n  tag \"fix\": \"Configure the web server to ensure the log file data includes the\nrequired data elements.\"\n\n\n  format1 = \"%a %A %h %H %l %m %s %t %u %U \\\\\\\\\\\\%{Referer}i\\\\\\\\\\\\ combined\"\n  describe apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").LogFormat.map{ |element| element.gsub(/\"/, '') } do\n    it { should include format1 }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-13688.rb",
+        "line": 19
+      },
+      "id": "V-13688"
+    },
+    {
+      "title": "Web sites must utilize ports, protocols, and services according to\nPPSM guidelines.",
+      "desc": "Failure to comply with DoD ports, protocols, and services (PPS)\nrequirements can result\n    in compromise of enclave boundary protections and/or functionality of the\nAIS.\n\n    The IAM will ensure web servers are configured to use only authorized PPS\nin accordance with the Network Infrastructure STIG, DoD Instruction 8551.1,\nPorts, Protocols, and Services Management (PPSM), and the associated Ports,\nProtocols, and Services (PPS) Assurance Category Assignments List.",
+      "descriptions": {
+        "default": "Failure to comply with DoD ports, protocols, and services (PPS)\nrequirements can result\n    in compromise of enclave boundary protections and/or functionality of the\nAIS.\n\n    The IAM will ensure web servers are configured to use only authorized PPS\nin accordance with the Network Infrastructure STIG, DoD Instruction 8551.1,\nPorts, Protocols, and Services Management (PPSM), and the associated Ports,\nProtocols, and Services (PPS) Assurance Category Assignments List."
+      },
+      "impact": 0.3,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG610",
+        "gid": "V-15334",
+        "rid": "SV-34015r1_rule",
+        "stig_id": "WG610 A22",
+        "fix_id": "F-26863r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Information Assurance Officer",
+        "ia_controls": "DCPP-1",
+        "check": "Review the web site to determine if HTTP and HTTPs are used in\naccordance with well known ports (e.g., 80 and 443) or those ports and services\nas registered and approved for use by the DoD PPSM. Any variation in PPS will\nbe documented, registered, and approved by the PPSM. If not, this is a finding.",
+        "fix": "Ensure the web site enforces the use of IANA well-known ports for\nHTTP and HTTPS."
+      },
+      "code": "control \"V-15334\" do\n  title \"Web sites must utilize ports, protocols, and services according to\nPPSM guidelines.\"\n  desc  \"Failure to comply with DoD ports, protocols, and services (PPS)\nrequirements can result\n    in compromise of enclave boundary protections and/or functionality of the\nAIS.\n\n    The IAM will ensure web servers are configured to use only authorized PPS\nin accordance with the Network Infrastructure STIG, DoD Instruction 8551.1,\nPorts, Protocols, and Services Management (PPSM), and the associated Ports,\nProtocols, and Services (PPS) Assurance Category Assignments List.\n\n  \"\n  impact 0.3\n  tag \"gtitle\": \"WG610\"\n  tag \"gid\": \"V-15334\"\n  tag \"rid\": \"SV-34015r1_rule\"\n  tag \"stig_id\": \"WG610 A22\"\n  tag \"fix_id\": \"F-26863r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Information Assurance Officer\"\n  tag \"ia_controls\": \"DCPP-1\"\n  tag \"check\": \"Review the web site to determine if HTTP and HTTPs are used in\naccordance with well known ports (e.g., 80 and 443) or those ports and services\nas registered and approved for use by the DoD PPSM. Any variation in PPS will\nbe documented, registered, and approved by the PPSM. If not, this is a finding.\"\n  tag \"fix\": \"Ensure the web site enforces the use of IANA well-known ports for\nHTTP and HTTPS.\"\n\n  describe port(80) do\n    it { should be_listening }\n    its('processes') { should include 'httpd' }\n  end\n\n  describe port(443) do\n    it { should be_listening }\n    its('processes') { should include 'httpd' }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-15334.rb",
+        "line": 19
+      },
+      "id": "V-15334"
+    },
+    {
+      "title": "Public web servers must use TLS if authentication is required.",
+      "desc": "Transport Layer Security (TLS) is optional for a public web server.\nHowever, if authentication is being performed, then the use of the TLS protocol\nis required.\n\n    Without the use of TLS, the authentication data would be transmitted\nunencrypted and would become vulnerable to disclosure.  Using TLS along with\nDoD PKI certificates for encryption of the authentication data protects the\ninformation from being accessed by all parties on the network.  To further\nprotect the authentication data, the web server must use a FIPS 140-2 approved\nTLS version and all non-FIPS-approved SSL versions must be disabled.\n\n    FIPS 140-2 approved TLS versions include TLS V1.0 or greater.  NIST SP\n800-52 specifies the preferred configurations for government systems.",
+      "descriptions": {
+        "default": "Transport Layer Security (TLS) is optional for a public web server.\nHowever, if authentication is being performed, then the use of the TLS protocol\nis required.\n\n    Without the use of TLS, the authentication data would be transmitted\nunencrypted and would become vulnerable to disclosure.  Using TLS along with\nDoD PKI certificates for encryption of the authentication data protects the\ninformation from being accessed by all parties on the network.  To further\nprotect the authentication data, the web server must use a FIPS 140-2 approved\nTLS version and all non-FIPS-approved SSL versions must be disabled.\n\n    FIPS 140-2 approved TLS versions include TLS V1.0 or greater.  NIST SP\n800-52 specifies the preferred configurations for government systems."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG342",
+        "gid": "V-13694",
+        "rid": "SV-33030r2_rule",
+        "stig_id": "WG342 A22",
+        "fix_id": "F-29345r2_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECCT-1, ECCT-2",
+        "check": "Enter the following command:\n\n/usr/local/apache2/bin/httpd –M\n\nThis will provide a list of all the loaded modules. Verify that the\n“ssl_module” is loaded. If this module is not found, this is a finding.\n\nAfter determining that the ssl module is active, enter the following command:\n\ngrep \"SSL\" /usr/local/apache2/conf/httpd.conf\n\nReview the SSL sections of the httpd.conf file, all enabled SSLProtocol\ndirectives for Apache 2.2.22 and older must be set to “TLSv1”.  Releases newer\nthan Apache 2.2.22 must be set to \"ALL -SSLv2 -SSLv3\". If SSLProtocol is not\nset to the proper value, this is a finding.\n\nAll enabled SSLEngine directives must be set to “on”, If they are not, this a\nfinding.\n\nNOTE: In some cases web servers are configured in an environment to support\nload balancing. This configuration most likely utilizes a content switch to\ncontrol traffic to the various web servers. In this situation, the TLS\ncertificate for the web sites may be installed on the content switch vs. the\nindividual web sites. This solution is acceptable as long as the web servers\nare isolated from the general population LAN. Users should not have the ability\nto bypass the content switch to access the web sites.\n",
+        "fix": "Edit the httpd.conf file and set the SSLProtocol to \"TLSv1\" for\nApache 2.2.22 and older or to \"ALL -SSLv2 -SSLv3\" for Apache versions newer\nthan 2.2.22.  The SSLEngine parameter must also be set to On."
+      },
+      "code": "control \"V-13694\" do\n  title \"Public web servers must use TLS if authentication is required.\"\n  desc  \"Transport Layer Security (TLS) is optional for a public web server.\nHowever, if authentication is being performed, then the use of the TLS protocol\nis required.\n\n    Without the use of TLS, the authentication data would be transmitted\nunencrypted and would become vulnerable to disclosure.  Using TLS along with\nDoD PKI certificates for encryption of the authentication data protects the\ninformation from being accessed by all parties on the network.  To further\nprotect the authentication data, the web server must use a FIPS 140-2 approved\nTLS version and all non-FIPS-approved SSL versions must be disabled.\n\n    FIPS 140-2 approved TLS versions include TLS V1.0 or greater.  NIST SP\n800-52 specifies the preferred configurations for government systems.\n\n  \"\n  impact 0.5\n  tag \"gtitle\": \"WG342\"\n  tag \"gid\": \"V-13694\"\n  tag \"rid\": \"SV-33030r2_rule\"\n  tag \"stig_id\": \"WG342 A22\"\n  tag \"fix_id\": \"F-29345r2_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECCT-1, ECCT-2\"\n  tag \"check\": \"Enter the following command:\n\n/usr/local/apache2/bin/httpd –M\n\nThis will provide a list of all the loaded modules. Verify that the\n“ssl_module” is loaded. If this module is not found, this is a finding.\n\nAfter determining that the ssl module is active, enter the following command:\n\ngrep \\\"SSL\\\" /usr/local/apache2/conf/httpd.conf\n\nReview the SSL sections of the httpd.conf file, all enabled SSLProtocol\ndirectives for Apache 2.2.22 and older must be set to “TLSv1”.  Releases newer\nthan Apache 2.2.22 must be set to \\\"ALL -SSLv2 -SSLv3\\\". If SSLProtocol is not\nset to the proper value, this is a finding.\n\nAll enabled SSLEngine directives must be set to “on”, If they are not, this a\nfinding.\n\nNOTE: In some cases web servers are configured in an environment to support\nload balancing. This configuration most likely utilizes a content switch to\ncontrol traffic to the various web servers. In this situation, the TLS\ncertificate for the web sites may be installed on the content switch vs. the\nindividual web sites. This solution is acceptable as long as the web servers\nare isolated from the general population LAN. Users should not have the ability\nto bypass the content switch to access the web sites.\n\"\n  tag \"fix\": \"Edit the httpd.conf file and set the SSLProtocol to \\\"TLSv1\\\" for\nApache 2.2.22 and older or to \\\"ALL -SSLv2 -SSLv3\\\" for Apache versions newer\nthan 2.2.22.  The SSLEngine parameter must also be set to On.\"\n\n  describe apache_conf(\"#{APACHE_SSL_CONF_DIR}/ssl.conf\") do\n    its('SSLEngine') { should cmp 'on' }\n    its('SSLProtocol') { should cmp 'all -SSLv2 -SSLv3' }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-13694.rb",
+        "line": 25
+      },
+      "id": "V-13694"
+    },
+    {
+      "title": "Web Administrators must only use encrypted connections for Document\nRoot directory uploads.",
+      "desc": "Logging in to a web server via an unencrypted protocol or service, to\nupload documents to the web site, is a risk if proper encryption is not\nutilized to protect the data being transmitted.  An encrypted protocol or\nservice must be used for remote access to web administration tasks.",
+      "descriptions": {
+        "default": "Logging in to a web server via an unencrypted protocol or service, to\nupload documents to the web site, is a risk if proper encryption is not\nutilized to protect the data being transmitted.  An encrypted protocol or\nservice must be used for remote access to web administration tasks."
+      },
+      "impact": 0.7,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG235",
+        "gid": "V-13686",
+        "rid": "SV-33024r1_rule",
+        "stig_id": "WG235 A22",
+        "fix_id": "F-29338r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "EBRP-1, EBRU-1",
+        "check": "Determine if there is a process for the uploading of files to\nthe web site. This process should include the requirement for the use of a\nsecure encrypted logon and secure encrypted connection. If the remote users are\nuploading files without utilizing approved encryption methods, this is a\nfinding.",
+        "fix": "Use only secure encrypted logons and connections for uploading\nfiles to the web site."
+      },
+      "code": "control \"V-13686\" do\n  title \"Web Administrators must only use encrypted connections for Document\nRoot directory uploads.\"\n  desc  \"Logging in to a web server via an unencrypted protocol or service, to\nupload documents to the web site, is a risk if proper encryption is not\nutilized to protect the data being transmitted.  An encrypted protocol or\nservice must be used for remote access to web administration tasks.\"\n  impact 0.7\n  tag \"gtitle\": \"WG235\"\n  tag \"gid\": \"V-13686\"\n  tag \"rid\": \"SV-33024r1_rule\"\n  tag \"stig_id\": \"WG235 A22\"\n  tag \"fix_id\": \"F-29338r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"EBRP-1, EBRU-1\"\n  tag \"check\": \"Determine if there is a process for the uploading of files to\nthe web site. This process should include the requirement for the use of a\nsecure encrypted logon and secure encrypted connection. If the remote users are\nuploading files without utilizing approved encryption methods, this is a\nfinding.\"\n  tag \"fix\": \"Use only secure encrypted logons and connections for uploading\nfiles to the web site.\"\n\n  describe apache_conf(\"#{APACHE_SSL_CONF_DIR}/ssl.conf\") do\n    its('SSLVerifyClient') { should cmp 'require' }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-13686.rb",
+        "line": 24
+      },
+      "id": "V-13686"
+    },
+    {
+      "title": "Symbolic links must not be used in the web content directory tree.",
+      "desc": "A symbolic link allows a file or a directory to be referenced using a\nsymbolic name raising a potential hazard if symbolic linkage is made to a\nsensitive area.\n\n    When web scripts are executed and symbolic links are allowed, the web user\ncould be allowed to access locations on the web server that are outside the\nscope of the web document root or home directory.",
+      "descriptions": {
+        "default": "A symbolic link allows a file or a directory to be referenced using a\nsymbolic name raising a potential hazard if symbolic linkage is made to a\nsensitive area.\n\n    When web scripts are executed and symbolic links are allowed, the web user\ncould be allowed to access locations on the web server that are outside the\nscope of the web document root or home directory."
+      },
+      "impact": 0.7,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG360",
+        "gid": "V-2227",
+        "rid": "SV-30576r1_rule",
+        "stig_id": "WG360 A22",
+        "fix_id": "F-26783r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "severity_override_guidance": "If symbolic links are found in the web\ncontent directory tree, the target file or directory is outside of the web\ncontent directory tree, and file permissions allow the web user write\nauthority, then the severity level will remain at CAT 1.\n\nIf symbolic links are found in the web content directory tree, the target file\nor directory is outside of the web content directory tree, and file permissions\nallow the web user any authority less than write, then the severity level will\nbe downgraded to CAT 2.\n\nIf symbolic links are found in the web content directory tree, the target file\nor directory is not outside of the web content directory tree, and file\npermissions allow the web user write authority, then the severity level will\nremain at CAT 1.\n\nIf symbolic links are found in the web content directory tree, the target file\nor directory is not outside of the web content directory tree, and file\npermissions allow the web user any authority less than write, then the severity\nlevel will be downgraded to CAT 3.\n",
+        "responsibility": "System Administrator",
+        "ia_controls": "DCPA-1, ECSC-1",
+        "check": "Locate the directories containing the web content, (i.e.,\n/usr/local/apache/htdocs).\n\nUse ls –al.\n\nAn entry, such as the following, would indicate the presence and use of\nsymbolic links:\n\nlr-xr—r--  4000 wwwusr  wwwgrp\t2345\tApr 15\t  data  ->\n/usr/local/apache/htdocs\n\nSuch a result found in a web document directory is a finding. Additional Apache\nconfiguration check in the httpd.conf file:\n\n<Directory /[website root dir]>\n    Options FollowSymLinks\n    AllowOverride None\n</Directory>\n\nThe above configuration is incorrect and is a finding. The correct\nconfiguration is:\n\n<Directory /[website root dir]>\n    Options SymLinksIfOwnerMatch\n    AllowOverride None\n</Directory>\n\nFinally, the target file or directory must be owned by the same owner as the\nlink, which should be a privileged account with access to the web content.\n",
+        "fix": "Disable symbolic links."
+      },
+      "code": "control \"V-2227\" do\n  title \"Symbolic links must not be used in the web content directory tree.\"\n  desc  \"A symbolic link allows a file or a directory to be referenced using a\nsymbolic name raising a potential hazard if symbolic linkage is made to a\nsensitive area.\n\n    When web scripts are executed and symbolic links are allowed, the web user\ncould be allowed to access locations on the web server that are outside the\nscope of the web document root or home directory.\n\n  \"\n  impact 0.7\n  tag \"gtitle\": \"WG360\"\n  tag \"gid\": \"V-2227\"\n  tag \"rid\": \"SV-30576r1_rule\"\n  tag \"stig_id\": \"WG360 A22\"\n  tag \"fix_id\": \"F-26783r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"severity_override_guidance\": \"If symbolic links are found in the web\ncontent directory tree, the target file or directory is outside of the web\ncontent directory tree, and file permissions allow the web user write\nauthority, then the severity level will remain at CAT 1.\n\nIf symbolic links are found in the web content directory tree, the target file\nor directory is outside of the web content directory tree, and file permissions\nallow the web user any authority less than write, then the severity level will\nbe downgraded to CAT 2.\n\nIf symbolic links are found in the web content directory tree, the target file\nor directory is not outside of the web content directory tree, and file\npermissions allow the web user write authority, then the severity level will\nremain at CAT 1.\n\nIf symbolic links are found in the web content directory tree, the target file\nor directory is not outside of the web content directory tree, and file\npermissions allow the web user any authority less than write, then the severity\nlevel will be downgraded to CAT 3.\n\"\n  tag \"responsibility\": \"System Administrator\"\n  tag \"ia_controls\": \"DCPA-1, ECSC-1\"\n  tag \"check\": \"Locate the directories containing the web content, (i.e.,\n/usr/local/apache/htdocs).\n\nUse ls –al.\n\nAn entry, such as the following, would indicate the presence and use of\nsymbolic links:\n\nlr-xr—r--  4000 wwwusr  wwwgrp\\t2345\\tApr 15\\t  data  ->\n/usr/local/apache/htdocs\n\nSuch a result found in a web document directory is a finding. Additional Apache\nconfiguration check in the httpd.conf file:\n\n<Directory /[website root dir]>\n    Options FollowSymLinks\n    AllowOverride None\n</Directory>\n\nThe above configuration is incorrect and is a finding. The correct\nconfiguration is:\n\n<Directory /[website root dir]>\n    Options SymLinksIfOwnerMatch\n    AllowOverride None\n</Directory>\n\nFinally, the target file or directory must be owned by the same owner as the\nlink, which should be a privileged account with access to the web content.\n\"\n  tag \"fix\": \"Disable symbolic links.\"\n\n    begin\n      doc_root = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").DocumentRoot.map{ |element| element.gsub(/\"/, '') }[0]\n\n      describe directory(\"#{doc_root}\") do\n        it { should_not be_symlink }\n      end\n\n      describe command(\"cat #{APACHE_CONF_DIR}/httpd.conf | grep '^\\s*Options Indexes FollowSymLinks$'\") do\n        its('stdout') { should_not include 'FollowSymLinks' }\n      end\n\n      describe command(\"cat #{APACHE_CONF_DIR}/httpd.conf | grep '^\\s*Options FollowSymLinks$'\") do\n        its('stdout') { should_not include 'FollowSymLinks' }\n      end\n    end\n  end\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2227.rb",
+        "line": 13
+      },
+      "id": "V-2227"
+    },
+    {
+      "title": "A private web server must utilize an approved TLS version.",
+      "desc": "Transport Layer Security (TLS) encryption is a required security\nsetting for a private web server.  Encryption of private information is\nessential to ensuring data confidentiality.  If private information is not\nencrypted, it can be intercepted and easily read by an unauthorized party.  A\nprivate web server must use a FIPS 140-2 approved TLS version, and all\nnon-FIPS-approved SSL versions must be disabled.\n\n    FIPS 140-2 approved TLS versions include TLS V1.0 or greater.  NIST SP\n800-52 specifies the preferred configurations for government systems.",
+      "descriptions": {
+        "default": "Transport Layer Security (TLS) encryption is a required security\nsetting for a private web server.  Encryption of private information is\nessential to ensuring data confidentiality.  If private information is not\nencrypted, it can be intercepted and easily read by an unauthorized party.  A\nprivate web server must use a FIPS 140-2 approved TLS version, and all\nnon-FIPS-approved SSL versions must be disabled.\n\n    FIPS 140-2 approved TLS versions include TLS V1.0 or greater.  NIST SP\n800-52 specifies the preferred configurations for government systems."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG340",
+        "gid": "V-2262",
+        "rid": "SV-33029r2_rule",
+        "stig_id": "WG340 A22",
+        "fix_id": "F-29344r2_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECSC-1",
+        "check": "Enter the following command:\n\n/usr/local/apache2/bin/httpd –M |grep -i ssl\n\nThis will provide a list of all the loaded modules. Verify that the\n“ssl_module” is loaded. If this module is not found, determine if it is loaded\nas a dynamic module. Enter the following command:\n\ngrep ^LoadModule /usr/local/apache2/conf/httpd.conf\n\nIf the SSL module is not enabled this is a finding.\n\nAfter determining that the ssl module is active, enter the following command to\nreview the SSL directives.\n\ngrep -i ssl /usr/local/apache2/conf/httpd.conf\n\nReview the SSL section(s) of the httpd.conf file, all enabled SSLProtocol\ndirectives must be set to “ALL -SSLv2 -SSLv3” or this is a finding.\n\nNOTE: For Apache 2.2.22 and older, all enabled SSLProtocol directives must be\nset to \"TLSv1\" or this is a finding.\n\nAll enabled SSLEngine directive must be set to “on”, if not this is a finding.\n\nNOTE: In some cases web servers are configured in an environment to support\nload balancing. This configuration most likely utilizes a content switch to\ncontrol traffic to the various web servers. In this situation, the TLS\ncertificate for the web sites may be installed on the content switch vs the\nindividual web sites. This solution is acceptable as long as the web servers\nare isolated from the general population LAN. Users should not have the ability\nto bypass the content switch to access the web sites.\n",
+        "fix": "Edit the httpd.conf file and set the SSLProtocol to \"ALL -SSLv2\n-SSLv3\" and the SSLEngine to On.  For Apache 2.2.22 and older, set SSLProtocol\nto \"TLSv1\"."
+      },
+      "code": "control \"V-2262\" do\n  title \"A private web server must utilize an approved TLS version.\"\n  desc  \"Transport Layer Security (TLS) encryption is a required security\nsetting for a private web server.  Encryption of private information is\nessential to ensuring data confidentiality.  If private information is not\nencrypted, it can be intercepted and easily read by an unauthorized party.  A\nprivate web server must use a FIPS 140-2 approved TLS version, and all\nnon-FIPS-approved SSL versions must be disabled.\n\n    FIPS 140-2 approved TLS versions include TLS V1.0 or greater.  NIST SP\n800-52 specifies the preferred configurations for government systems.\n\n  \"\n  impact 0.5\n  tag \"gtitle\": \"WG340\"\n  tag \"gid\": \"V-2262\"\n  tag \"rid\": \"SV-33029r2_rule\"\n  tag \"stig_id\": \"WG340 A22\"\n  tag \"fix_id\": \"F-29344r2_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECSC-1\"\n  tag \"check\": \"Enter the following command:\n\n/usr/local/apache2/bin/httpd –M |grep -i ssl\n\nThis will provide a list of all the loaded modules. Verify that the\n“ssl_module” is loaded. If this module is not found, determine if it is loaded\nas a dynamic module. Enter the following command:\n\ngrep ^LoadModule /usr/local/apache2/conf/httpd.conf\n\nIf the SSL module is not enabled this is a finding.\n\nAfter determining that the ssl module is active, enter the following command to\nreview the SSL directives.\n\ngrep -i ssl /usr/local/apache2/conf/httpd.conf\n\nReview the SSL section(s) of the httpd.conf file, all enabled SSLProtocol\ndirectives must be set to “ALL -SSLv2 -SSLv3” or this is a finding.\n\nNOTE: For Apache 2.2.22 and older, all enabled SSLProtocol directives must be\nset to \\\"TLSv1\\\" or this is a finding.\n\nAll enabled SSLEngine directive must be set to “on”, if not this is a finding.\n\nNOTE: In some cases web servers are configured in an environment to support\nload balancing. This configuration most likely utilizes a content switch to\ncontrol traffic to the various web servers. In this situation, the TLS\ncertificate for the web sites may be installed on the content switch vs the\nindividual web sites. This solution is acceptable as long as the web servers\nare isolated from the general population LAN. Users should not have the ability\nto bypass the content switch to access the web sites.\n\"\n  tag \"fix\": \"Edit the httpd.conf file and set the SSLProtocol to \\\"ALL -SSLv2\n-SSLv3\\\" and the SSLEngine to On.  For Apache 2.2.22 and older, set SSLProtocol\nto \\\"TLSv1\\\".\"\n\n  describe apache_conf(\"#{APACHE_SSL_CONF_DIR}/ssl.conf\") do\n    its('SSLEngine') { should cmp 'on' }\n    its('SSLProtocol') { should cmp 'all -SSLv2 -SSLv3' }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2262.rb",
+        "line": 26
+      },
+      "id": "V-2262"
+    },
+    {
+      "title": "Web server administration must be performed over a secure path or at\nthe local console.",
+      "desc": "Logging into a web server remotely using an unencrypted protocol or\nservice when performing updates and maintenance is a major risk.  Data, such as\nuser account, is transmitted in plaintext and can easily be compromised.  When\nperforming remote administrative tasks, a protocol or service that encrypts the\ncommunication channel must be used.\n\n    An alternative to remote administration of the web server is to perform web\nserver administration locally at the console.  Local administration at the\nconsole implies physical access to the server.",
+      "descriptions": {
+        "default": "Logging into a web server remotely using an unencrypted protocol or\nservice when performing updates and maintenance is a major risk.  Data, such as\nuser account, is transmitted in plaintext and can easily be compromised.  When\nperforming remote administrative tasks, a protocol or service that encrypts the\ncommunication channel must be used.\n\n    An alternative to remote administration of the web server is to perform web\nserver administration locally at the console.  Local administration at the\nconsole implies physical access to the server."
+      },
+      "impact": 0.7,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG230",
+        "gid": "V-2249",
+        "rid": "SV-33023r3_rule",
+        "stig_id": "WG230 A22",
+        "fix_id": "F-2298r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "EBRU-1",
+        "check": "If web administration is performed remotely the following\nchecks will apply:\n\nIf administration of the server is performed remotely, it will only be\nperformed securely by system administrators.\n\nIf web site administration or web application administration has been\ndelegated, those users will be documented and approved by the ISSO.\n\nRemote administration must be in compliance with any requirements contained\nwithin the Unix Server STIGs, and any applicable network STIGs.\n\nRemote administration of any kind will be restricted to documented and\nauthorized personnel.\n\nAll users performing remote administration must be authenticated.\n\nAll remote sessions will be encrypted and they will utilize FIPS 140-2 approved\nprotocols.\n\nFIPS 140-2 approved TLS versions include TLS V1.0 or greater. ",
+        "fix": "Ensure the web server's administration is only performed over a\nsecure path."
+      },
+      "code": "control \"V-2249\" do\n  title \"Web server administration must be performed over a secure path or at\nthe local console.\"\n  desc  \"Logging into a web server remotely using an unencrypted protocol or\nservice when performing updates and maintenance is a major risk.  Data, such as\nuser account, is transmitted in plaintext and can easily be compromised.  When\nperforming remote administrative tasks, a protocol or service that encrypts the\ncommunication channel must be used.\n\n    An alternative to remote administration of the web server is to perform web\nserver administration locally at the console.  Local administration at the\nconsole implies physical access to the server.\n\n  \"\n  impact 0.7\n  tag \"gtitle\": \"WG230\"\n  tag \"gid\": \"V-2249\"\n  tag \"rid\": \"SV-33023r3_rule\"\n  tag \"stig_id\": \"WG230 A22\"\n  tag \"fix_id\": \"F-2298r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"EBRU-1\"\n  tag \"check\": \"If web administration is performed remotely the following\nchecks will apply:\n\nIf administration of the server is performed remotely, it will only be\nperformed securely by system administrators.\n\nIf web site administration or web application administration has been\ndelegated, those users will be documented and approved by the ISSO.\n\nRemote administration must be in compliance with any requirements contained\nwithin the Unix Server STIGs, and any applicable network STIGs.\n\nRemote administration of any kind will be restricted to documented and\nauthorized personnel.\n\nAll users performing remote administration must be authenticated.\n\nAll remote sessions will be encrypted and they will utilize FIPS 140-2 approved\nprotocols.\n\nFIPS 140-2 approved TLS versions include TLS V1.0 or greater. \"\n  tag \"fix\": \"Ensure the web server's administration is only performed over a\nsecure path.\"\n\n  begin\n    httpd_conf = apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\")\n\n    describe httpd_conf do\n      its('SSLFIPS') { should cmp \"on\" }\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2249.rb",
+        "line": 13
+      },
+      "id": "V-2249"
+    },
+    {
+      "title": "The sites error logs must log the correct format.",
+      "desc": "The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation. Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts. Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems. The LogFormat directive defines the format and information to be\nincluded in the access log entries.",
+      "descriptions": {
+        "default": "The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation. Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts. Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems. The LogFormat directive defines the format and information to be\nincluded in the access log entries."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WA00612",
+        "gid": "V-26280",
+        "rid": "SV-33203r1_rule",
+        "stig_id": "WA00612 A22",
+        "fix_id": "F-29379r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECAR-1, ECAR-2",
+        "check": "Enter the following command:\n\ngrep \"LogFormat\" /usr/local/apache2/conf/httpd.conf.\n\nThe command should return the following value:\n\nLogFormat \"%a %A %h %H %l %m %s %t %u %U \\\"%{Referer}i\\\" \" combined.\n\nIf the above value is not returned, this is a finding. ",
+        "fix": "Edit the httpd.conf file and add LogFormat \"%a %A %h %H %l %m %s\n%t %u %U \\\"%{Referer}i\\\" \" combined"
+      },
+      "code": "control \"V-26280\" do\n  title \"The sites error logs must log the correct format.\"\n  desc  \"The server error logs are invaluable because they can also be used to\nidentify potential problems and enable proactive remediation. Log data can\nreveal anomalous behavior such as “not found” or “unauthorized” errors that may\nbe an evidence of attack attempts. Failure to enable error logging can\nsignificantly reduce the ability of Web Administrators to detect or remediate\nproblems. The LogFormat directive defines the format and information to be\nincluded in the access log entries.\"\n  impact 0.5\n  tag \"gtitle\": \"WA00612\"\n  tag \"gid\": \"V-26280\"\n  tag \"rid\": \"SV-33203r1_rule\"\n  tag \"stig_id\": \"WA00612 A22\"\n  tag \"fix_id\": \"F-29379r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECAR-1, ECAR-2\"\n  tag \"check\": \"Enter the following command:\n\ngrep \\\"LogFormat\\\" /usr/local/apache2/conf/httpd.conf.\n\nThe command should return the following value:\n\nLogFormat \\\"%a %A %h %H %l %m %s %t %u %U \\\\\\\"%{Referer}i\\\\\\\" \\\" combined.\n\nIf the above value is not returned, this is a finding. \"\n  tag \"fix\": \"Edit the httpd.conf file and add LogFormat \\\"%a %A %h %H %l %m %s\n%t %u %U \\\\\\\"%{Referer}i\\\\\\\" \\\" combined\"\n\n  format1 = \"%a %A %h %H %l %m %s %t %u %U \\\\\\\\\\\\%{Referer}i\\\\\\\\\\\\ combined\"\n  describe apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").LogFormat.map{ |element| element.gsub(/\"/, '') } do\n    it { should include format1 }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-26280.rb",
+        "line": 19
+      },
+      "id": "V-26280"
+    },
+    {
+      "title": "PERL scripts must use the TAINT option.",
+      "desc": "PERL (Practical Extraction and Report Language) is an interpreted\nlanguage optimized for scanning arbitrary text files, extracting information\nfrom those text files, and printing reports based on that information. The\nlanguage is often used in shell scripting and is intended to be practical, easy\nto use, and efficient means of generating interactive web pages for the user.\nUnfortunately, many widely available freeware PERL programs (scripts) are\nextremely insecure. This is most readily accomplished by a malicious user\nsubstituting input to a PERL script during a POST or a GET operation.\n\n    Consequently, the founders of PERL have developed a mechanism named TAINT\nthat protects the system from malicious input sent from outside the program.\nWhen the data is tainted, it cannot be used in programs or functions such as\neval(), system(), exec(), pipes, or popen(). The script will exit with a\nwarning message. It is vital that if PERL is being used, the following line\nappear in the first line of PERL scripts:\n\n    #!/usr/local/bin/perl –T",
+      "descriptions": {
+        "default": "PERL (Practical Extraction and Report Language) is an interpreted\nlanguage optimized for scanning arbitrary text files, extracting information\nfrom those text files, and printing reports based on that information. The\nlanguage is often used in shell scripting and is intended to be practical, easy\nto use, and efficient means of generating interactive web pages for the user.\nUnfortunately, many widely available freeware PERL programs (scripts) are\nextremely insecure. This is most readily accomplished by a malicious user\nsubstituting input to a PERL script during a POST or a GET operation.\n\n    Consequently, the founders of PERL have developed a mechanism named TAINT\nthat protects the system from malicious input sent from outside the program.\nWhen the data is tainted, it cannot be used in programs or functions such as\neval(), system(), exec(), pipes, or popen(). The script will exit with a\nwarning message. It is vital that if PERL is being used, the following line\nappear in the first line of PERL scripts:\n\n    #!/usr/local/bin/perl –T"
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG460",
+        "gid": "V-2272",
+        "rid": "SV-6932r1_rule",
+        "stig_id": "WG460 A22",
+        "fix_id": "F-2321r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "mitigations": "",
+        "mitigation_controls": "If the TAINT option cannot be used for any\nreason, this finding can be mitigated by the use of a third-party input\nvalidation mechanism or input validation will be included as part of the script\nin use. This must be documented.",
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECSC-1",
+        "check": "When a PERL script is invoked for execution on a UNIX server,\nthe method which invokes the script must utilize the TAINT option.\n\nThe server’s interpreter examines the first line of the script. Typically, the\nfirst line of the script contains a reference to the script’s language and\nprocessing options.\n\nThe first line of a PERL script will be as follows:\n\n#!/usr/local/bin/perl –T\n\nThe –T at the end of the line referenced above, tells the UNIX server to\nexecute a PERL script using the TAINT option.\n\nPerform the following steps:\n1) grep perl httpd.conf |grep -v '#'\n\nYou should also check /apache/sysconfig.d/loadmodule.conf for PERL.\n\nNOTE: The name of the loadmodule.conf may vary by installation.\n\nIf Apache doesn't have the mod_perl module loaded and it doesn't use PERL, this\ncheck is Not Applicable.\n\n2) grep -i 'PerlTaintCheck' httpd.conf\n\nIf 'PerlTaintCheck on' is set, this is not a finding, and the check can stop\nhere.\n\nNOTE: If the PerlTaintCheck is a part of an included config file, this meets\nthe requirement.\n\n3) Check each individual PERL script.\n\nFrom the ServerRoot directory: find . -name '*.pl'\nFrom the DocumentRoot directory: find . -name '*.pl'\n\nExamine the beginning of every PERL script for the -T option. If the -T option\nis not specified in any PERL script, this is a finding.\n\nNOTE: This only applies to PERL scripts that are used by the web server.\n\nNOTE: If the mod_perl module is installed and the directive “PerlTaintCheck on”\nin the httpd.conf is used, this satisfies the requirement.\n",
+        "fix": "Add the TAINT call to the PERL script.\n\n#!/usr/local/bin/perl –T "
+      },
+      "code": "control \"V-2272\" do\n  title \"PERL scripts must use the TAINT option.\"\n  desc  \"PERL (Practical Extraction and Report Language) is an interpreted\nlanguage optimized for scanning arbitrary text files, extracting information\nfrom those text files, and printing reports based on that information. The\nlanguage is often used in shell scripting and is intended to be practical, easy\nto use, and efficient means of generating interactive web pages for the user.\nUnfortunately, many widely available freeware PERL programs (scripts) are\nextremely insecure. This is most readily accomplished by a malicious user\nsubstituting input to a PERL script during a POST or a GET operation.\n\n    Consequently, the founders of PERL have developed a mechanism named TAINT\nthat protects the system from malicious input sent from outside the program.\nWhen the data is tainted, it cannot be used in programs or functions such as\neval(), system(), exec(), pipes, or popen(). The script will exit with a\nwarning message. It is vital that if PERL is being used, the following line\nappear in the first line of PERL scripts:\n\n    #!/usr/local/bin/perl –T\n\n  \"\n  impact 0.5\n  tag \"gtitle\": \"WG460\"\n  tag \"gid\": \"V-2272\"\n  tag \"rid\": \"SV-6932r1_rule\"\n  tag \"stig_id\": \"WG460 A22\"\n  tag \"fix_id\": \"F-2321r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"mitigations\": \"\"\n  tag \"mitigation_controls\": \"If the TAINT option cannot be used for any\nreason, this finding can be mitigated by the use of a third-party input\nvalidation mechanism or input validation will be included as part of the script\nin use. This must be documented.\"\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECSC-1\"\n  tag \"check\": \"When a PERL script is invoked for execution on a UNIX server,\nthe method which invokes the script must utilize the TAINT option.\n\nThe server’s interpreter examines the first line of the script. Typically, the\nfirst line of the script contains a reference to the script’s language and\nprocessing options.\n\nThe first line of a PERL script will be as follows:\n\n#!/usr/local/bin/perl –T\n\nThe –T at the end of the line referenced above, tells the UNIX server to\nexecute a PERL script using the TAINT option.\n\nPerform the following steps:\n1) grep perl httpd.conf |grep -v '#'\n\nYou should also check /apache/sysconfig.d/loadmodule.conf for PERL.\n\nNOTE: The name of the loadmodule.conf may vary by installation.\n\nIf Apache doesn't have the mod_perl module loaded and it doesn't use PERL, this\ncheck is Not Applicable.\n\n2) grep -i 'PerlTaintCheck' httpd.conf\n\nIf 'PerlTaintCheck on' is set, this is not a finding, and the check can stop\nhere.\n\nNOTE: If the PerlTaintCheck is a part of an included config file, this meets\nthe requirement.\n\n3) Check each individual PERL script.\n\nFrom the ServerRoot directory: find . -name '*.pl'\nFrom the DocumentRoot directory: find . -name '*.pl'\n\nExamine the beginning of every PERL script for the -T option. If the -T option\nis not specified in any PERL script, this is a finding.\n\nNOTE: This only applies to PERL scripts that are used by the web server.\n\nNOTE: If the mod_perl module is installed and the directive “PerlTaintCheck on”\nin the httpd.conf is used, this satisfies the requirement.\n\"\n  tag \"fix\": \"Add the TAINT call to the PERL script.\n\n#!/usr/local/bin/perl –T \"\n\n\n  only_if do\n    apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\").PerlTaintCheck\n  end\n\n  describe apache_conf(\"#{APACHE_CONF_DIR}/httpd.conf\") do\n    its('PerlTaintCheck') { should cmp \"on\" }\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2272.rb",
+        "line": 19
+      },
+      "id": "V-2272"
+    },
+    {
+      "title": "Logs of web server access and errors must be established and\nmaintained",
+      "desc": "A major tool in exploring the web site use, attempted use, unusual\nconditions, and problems are reported in the access and error logs. In the\nevent of a security incident, these logs can provide the SA and the web manager\nwith valuable information. Without these log files, SAs and web managers are\nseriously hindered in their efforts to respond appropriately to suspicious or\ncriminal actions targeted at the web site.",
+      "descriptions": {
+        "default": "A major tool in exploring the web site use, attempted use, unusual\nconditions, and problems are reported in the access and error logs. In the\nevent of a security incident, these logs can provide the SA and the web manager\nwith valuable information. Without these log files, SAs and web managers are\nseriously hindered in their efforts to respond appropriately to suspicious or\ncriminal actions targeted at the web site."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "gtitle": "WG240",
+        "gid": "V-2250",
+        "rid": "SV-33025r1_rule",
+        "stig_id": "WG240 A22",
+        "fix_id": "F-29339r1_fix",
+        "cci": [],
+        "nist": [
+          "Rev_4"
+        ],
+        "documentable": false,
+        "responsibility": "Web Administrator",
+        "ia_controls": "ECAT-1, ECAT-2",
+        "check": "To view a list of loaded modules enter the following command:\n\n/usr/local/apache2/bin/httpd -M\n\nIf the following module is not found, this is a finding: \"log_config_module\"",
+        "fix": "Edit the httpd.conf file and add the following module to\nconfigure logging.\n\n\"log_config_module\""
+      },
+      "code": "control \"V-2250\" do\n  title \"Logs of web server access and errors must be established and\nmaintained\"\n  desc  \"A major tool in exploring the web site use, attempted use, unusual\nconditions, and problems are reported in the access and error logs. In the\nevent of a security incident, these logs can provide the SA and the web manager\nwith valuable information. Without these log files, SAs and web managers are\nseriously hindered in their efforts to respond appropriately to suspicious or\ncriminal actions targeted at the web site.\"\n  impact 0.5\n  tag \"gtitle\": \"WG240\"\n  tag \"gid\": \"V-2250\"\n  tag \"rid\": \"SV-33025r1_rule\"\n  tag \"stig_id\": \"WG240 A22\"\n  tag \"fix_id\": \"F-29339r1_fix\"\n  tag \"cci\": []\n  tag \"nist\": [\"Rev_4\"]\n  tag \"documentable\": false\n  tag \"responsibility\": \"Web Administrator\"\n  tag \"ia_controls\": \"ECAT-1, ECAT-2\"\n  tag \"check\": \"To view a list of loaded modules enter the following command:\n\n/usr/local/apache2/bin/httpd -M\n\nIf the following module is not found, this is a finding: \\\"log_config_module\\\"\"\n  tag \"fix\": \"Edit the httpd.conf file and add the following module to\nconfigure logging.\n\n\\\"log_config_module\\\"\"\n\n  begin\n    describe command(\"/usr/sbin/httpd -M | grep '^\\s*log_config_module'\") do\n      its('stdout') { should include \"log_config_module\" }\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./Apache Site STIG/controls/V-2250.rb",
+        "line": 1
+      },
+      "id": "V-2250"
+    }
+  ],
+  "groups": [
+    {
+      "title": null,
+      "controls": [
+        "V-2245"
+      ],
+      "id": "controls/V-2245.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2258"
+      ],
+      "id": "controls/V-2258.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-26281"
+      ],
+      "id": "controls/V-26281.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2260"
+      ],
+      "id": "controls/V-2260.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2270"
+      ],
+      "id": "controls/V-2270.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2265"
+      ],
+      "id": "controls/V-2265.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2228"
+      ],
+      "id": "controls/V-2228.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2263"
+      ],
+      "id": "controls/V-2263.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-26279"
+      ],
+      "id": "controls/V-26279.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-6373"
+      ],
+      "id": "controls/V-6373.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-13689"
+      ],
+      "id": "controls/V-13689.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2254"
+      ],
+      "id": "controls/V-2254.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-26282"
+      ],
+      "id": "controls/V-26282.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-3333"
+      ],
+      "id": "controls/V-3333.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-6531"
+      ],
+      "id": "controls/V-6531.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-13687"
+      ],
+      "id": "controls/V-13687.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2240"
+      ],
+      "id": "controls/V-2240.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2226"
+      ],
+      "id": "controls/V-2226.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2252"
+      ],
+      "id": "controls/V-2252.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-13688"
+      ],
+      "id": "controls/V-13688.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-15334"
+      ],
+      "id": "controls/V-15334.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-13694"
+      ],
+      "id": "controls/V-13694.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-13686"
+      ],
+      "id": "controls/V-13686.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2227"
+      ],
+      "id": "controls/V-2227.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2262"
+      ],
+      "id": "controls/V-2262.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2249"
+      ],
+      "id": "controls/V-2249.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-26280"
+      ],
+      "id": "controls/V-26280.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2272"
+      ],
+      "id": "controls/V-2272.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-2250"
+      ],
+      "id": "controls/V-2250.rb"
+    }
+  ],
+  "inputs": [],
+  "sha256": "272c78934b5238fc62a8212a59e7be58e97de2a2ab1399276d012ceadf840845",
+  "status_message": "",
+  "status": "loaded",
+  "generator": {
+    "name": "inspec",
+    "version": "4.23.15"
+  }
+}

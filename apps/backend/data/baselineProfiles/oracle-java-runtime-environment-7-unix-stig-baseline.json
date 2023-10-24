@@ -1,0 +1,424 @@
+{
+  "name": "oracle-java-runtime-environment-7-unix-stig-baseline",
+  "title": "oracle-java-runtime-environment-7-unix-stig-baseline",
+  "maintainer": "MITRE InSpec Team",
+  "copyright": "The MITRE Corporation, 2018",
+  "copyright_email": "opensource@mitre.org",
+  "summary": "Inspec Validation Profile for JRE 7 STIG",
+  "license": "Apache-2.0",
+  "version": "0.1.2",
+  "inspec_version": ">= 4.0",
+  "supports": [
+    {
+      "platform": "os"
+    }
+  ],
+  "inputs": [],
+  "controls": [
+    {
+      "title": "The setting enabling users to configure the check publisher certificates for revocation must be locked.",
+      "desc": "Certificates may be revoked due to improper issuance, compromise of the certificate, and failure to adhere to policy. Therefore, any certificate found revoked on a CRL or via Online Certificate Status Protocol (OCSP) should not be trusted. Permitting execution of an applet published with a revoked certificate may result in spoofing, malware, system modification, invasion of privacy, and denial of service. Ensuring users cannot change these settings assures a more consistent security profile. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.",
+      "descriptions": {
+        "default": "Certificates may be revoked due to improper issuance, compromise of the certificate, and failure to adhere to policy. Therefore, any certificate found revoked on a CRL or via Online Certificate Status Protocol (OCSP) should not be trusted. Permitting execution of an applet published with a revoked certificate may result in spoofing, malware, system modification, invasion of privacy, and denial of service. Ensuring users cannot change these settings assures a more consistent security profile. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "severity": "medium",
+        "gtitle": "JRE0030 Lock the option to check certificates for revocation",
+        "gid": "V-32831",
+        "rid": "SV-43617r3_rule",
+        "stig_id": "JRE0030-UX",
+        "cci": "CCI-000185",
+        "nist": [
+          "IA-5 (2)(a)",
+          "Rev_4"
+        ],
+        "check": "If the system is on the SIPRNET, this requirement is NA. Navigate to the system 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties. If the 'deployment.security.validation.crl.locked' key is not present within the deployment.properties file, this is a finding. If the 'deployment.security.validation.ocsp.locked' key is not present within the deployment.properties file, this is a finding.",
+        "fix": "Navigate to the system 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties. Add the 'deployment.security.validation.crl.locked' key to the deployment.properties file. Add the 'deployment.security.validation.ocsp.locked' key to the deployment.properties file."
+      },
+      "code": "control 'V-32831' do\n  title 'The setting enabling users to configure the check publisher certificates for revocation must be locked.'\n  desc  \"Certificates may be revoked due to improper issuance, compromise of the certificate, and failure to adhere to policy. Therefore, any certificate found revoked on a CRL or via Online Certificate Status Protocol (OCSP) should not be trusted. Permitting execution of an applet published with a revoked certificate may result in spoofing, malware, system modification, invasion of privacy, and denial of service. Ensuring users cannot change these settings assures a more consistent security profile. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.\"\n  impact 0.5\n  tag \"severity\": 'medium'\n  tag \"gtitle\": 'JRE0030 Lock the option to check certificates for revocation'\n  tag \"gid\": 'V-32831'\n  tag \"rid\": 'SV-43617r3_rule'\n  tag \"stig_id\": 'JRE0030-UX'\n  tag \"cci\": 'CCI-001991'\n  tag \"nist\": ['IA-5 (2) (d)', 'Rev_4']\n  tag \"cci\": 'CCI-000185'\n  tag \"nist\": ['IA-5 (2)(a)', 'Rev_4']\n  tag \"check\": \"If the system is on the SIPRNET, this requirement is NA. Navigate to the system 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties. If the 'deployment.security.validation.crl.locked' key is not present within the deployment.properties file, this is a finding. If the 'deployment.security.validation.ocsp.locked' key is not present within the deployment.properties file, this is a finding.\"\n  tag \"fix\": \"Navigate to the system 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties. Add the 'deployment.security.validation.crl.locked' key to the deployment.properties file. Add the 'deployment.security.validation.ocsp.locked' key to the deployment.properties file.\"\n\n  if is_on_siprnet\n    impact 0.0\n    desc 'If the system is on the SIPRNET, therefore this requirement is NA'\n    describe 'If the system is on the SIPRNET, therefore this requirement is NA' do\n      skip 'If the system is on the SIPRNET, therefore this requirement is NA'\n    end\n  else\n    describe file('/usr/java/jre/lib/deployment.properties') do\n      its('content') { should match(/deployment.security.validation.crl.locked/) }\n    end\n    describe file('/usr/java/jre/lib/deployment.properties') do\n      its('content') { should match(/deployment.security.validation.ocsp.locked/) }\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-32831.rb",
+        "line": 2
+      },
+      "id": "V-32831"
+    },
+    {
+      "title": "The configuration file must contain proper keys and values to deploy settings correctly.",
+      "desc": "This configuration file must hold values of the location of the deployment.properties file as well as the enforcement of these properties. Without a proper path for the properties file, deployment would not be possible. If the path specified does not lead to a properties file the value of the 'deployment.system.config. mandatory' key determines how to handle the situation. If the value of this key is true, JRE will not run if the path to the properties file is invalid. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.",
+      "descriptions": {
+        "default": "This configuration file must hold values of the location of the deployment.properties file as well as the enforcement of these properties. Without a proper path for the properties file, deployment would not be possible. If the path specified does not lead to a properties file the value of the 'deployment.system.config. mandatory' key determines how to handle the situation. If the value of this key is true, JRE will not run if the path to the properties file is invalid. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "severity": "medium",
+        "gtitle": "JRE0060 The deployment.config file must be properly configured",
+        "gid": "V-32842",
+        "rid": "SV-43649r1_rule",
+        "stig_id": "JRE0060-UX",
+        "cci": "CCI-000366",
+        "nist": [
+          "CM-6 b",
+          "Rev_4"
+        ],
+        "check": "Navigate to the deployment.config file. /usr/java/jre/lib/deployment.config If the configuration file does not contain 'deployment.system.config=file:/usr/java/jre/lib/deployment.properties', this is a finding. If the configuration file does not contain 'deployment.system.config.mandatory=false', this is a finding.",
+        "fix": "Specify the path to the deployment.properties file and set the mandatory configuration values. Navigate to the deployment.config file. /usr/java/jre/lib/deployment.properties Include the following keys in the configuration file: 'deployment.system.config=file:/usr/java/jre/lib/deployment.properties' 'deployment.system.config.mandatory=false'."
+      },
+      "code": "control 'V-32842' do\n  title 'The configuration file must contain proper keys and values to deploy settings correctly.'\n  desc  \"This configuration file must hold values of the location of the deployment.properties file as well as the enforcement of these properties. Without a proper path for the properties file, deployment would not be possible. If the path specified does not lead to a properties file the value of the 'deployment.system.config. mandatory' key determines how to handle the situation. If the value of this key is true, JRE will not run if the path to the properties file is invalid. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.\"\n  impact 0.5\n  tag \"severity\": 'medium'\n  tag \"gtitle\": 'JRE0060 The deployment.config file must be properly configured'\n  tag \"gid\": 'V-32842'\n  tag \"rid\": 'SV-43649r1_rule'\n  tag \"stig_id\": 'JRE0060-UX'\n  tag \"cci\": 'CCI-000366'\n  tag \"nist\": ['CM-6 b', 'Rev_4']\n  tag \"check\": \"Navigate to the deployment.config file. /usr/java/jre/lib/deployment.config If the configuration file does not contain 'deployment.system.config=file:/usr/java/jre/lib/deployment.properties', this is a finding. If the configuration file does not contain 'deployment.system.config.mandatory=false', this is a finding.\"\n  tag \"fix\": \"Specify the path to the deployment.properties file and set the mandatory configuration values. Navigate to the deployment.config file. /usr/java/jre/lib/deployment.properties Include the following keys in the configuration file: 'deployment.system.config=file:/usr/java/jre/lib/deployment.properties' 'deployment.system.config.mandatory=false'.\"\n\n  describe file('/usr/java/jre/lib/deployment.config') do\n    its('content') { should match(%r{deployment.system.config=file:/usr/java/jre/lib/deployment.properties}) }\n  end\n  describe file('/usr/java/jre/lib/deployment.config') do\n    its('content') { should match(/deployment.system.config.mandatory=false/) }\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-32842.rb",
+        "line": 1
+      },
+      "id": "V-32842"
+    },
+    {
+      "title": "A configuration file must be present to deploy properties for JRE.",
+      "desc": "The deployment.config file is used for specifying the location and execution of system-level properties for the Java Runtime Environment. By default no deployment.config file exists; thus, no system-wide deployment.properties file exists. Without the deployment.config file, setting particular options for the Java control panel is impossible. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.",
+      "descriptions": {
+        "default": "The deployment.config file is used for specifying the location and execution of system-level properties for the Java Runtime Environment. By default no deployment.config file exists; thus, no system-wide deployment.properties file exists. Without the deployment.config file, setting particular options for the Java control panel is impossible. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "severity": "medium",
+        "gtitle": "JRE0070 Configuration file must be present",
+        "gid": "V-32901",
+        "rid": "SV-43621r1_rule",
+        "stig_id": "JRE0070-UX",
+        "cci": "CCI-000366",
+        "nist": [
+          "CM-6 b",
+          "Rev_4"
+        ],
+        "check": "Navigate to the lib directory: /usr/java/jre/lib/ If there is no configuration file entitled 'deployment.config', this is a finding. ",
+        "fix": "Create a JRE deployment configuration file. Navigate to the lib directory: /usr/java/jre/lib/ Create a configuration file entitled 'deployment.config'. "
+      },
+      "code": "control 'V-32901' do\n  title 'A configuration file must be present to deploy properties for JRE.'\n  desc  \"The deployment.config file is used for specifying the location and execution of system-level properties for the Java Runtime Environment. By default no deployment.config file exists; thus, no system-wide deployment.properties file exists. Without the deployment.config file, setting particular options for the Java control panel is impossible. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.\"\n  impact 0.5\n  tag \"severity\": 'medium'\n  tag \"gtitle\": 'JRE0070 Configuration file must be present'\n  tag \"gid\": 'V-32901'\n  tag \"rid\": 'SV-43621r1_rule'\n  tag \"stig_id\": 'JRE0070-UX'\n  tag \"cci\": 'CCI-000366'\n  tag \"nist\": ['CM-6 b', 'Rev_4']\n  tag \"check\": \"Navigate to the lib directory: /usr/java/jre/lib/ If there is no configuration file entitled 'deployment.config', this is a finding. \"\n  tag \"fix\": \"Create a JRE deployment configuration file. Navigate to the lib directory: /usr/java/jre/lib/ Create a configuration file entitled 'deployment.config'. \"\n\n  describe file('/usr/java/jre/lib/deployment.config') do\n    it { should exist }\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-32901.rb",
+        "line": 1
+      },
+      "id": "V-32901"
+    },
+    {
+      "title": "The dialog enabling users to grant permissions to execute signed content from an un-trusted authority must be locked.",
+      "desc": "Java applets exist both signed and unsigned. Even for signed applets, there can be many sources, some of which may be purveyors of malware. Applet sources considered trusted can have their information populated into the browser, enabling Java to validate applets against trusted sources. Permitting execution of signed Java applets from un-trusted sources may result in malware running on the system, and risks system modification, invasion of privacy, or denial of service. Ensuring users cannot change the permission settings which control the execution of signed Java applets contributes to a more consistent security profile. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.",
+      "descriptions": {
+        "default": "Java applets exist both signed and unsigned. Even for signed applets, there can be many sources, some of which may be purveyors of malware. Applet sources considered trusted can have their information populated into the browser, enabling Java to validate applets against trusted sources. Permitting execution of signed Java applets from un-trusted sources may result in malware running on the system, and risks system modification, invasion of privacy, or denial of service. Ensuring users cannot change the permission settings which control the execution of signed Java applets contributes to a more consistent security profile. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "severity": "medium",
+        "gtitle": "JRE0010 Lock out option to grant permission to untrusted",
+        "gid": "V-32829",
+        "rid": "SV-43601r2_rule",
+        "stig_id": "JRE0010-UX",
+        "cci": "CCI-001695",
+        "nist": [
+          "SC-18 (3)",
+          "Rev_4"
+        ],
+        "check": "If the system is on the SIPRNET this requirement is NA. Navigate to the 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties Review the file. If the 'deployment.security.askgrantdialog.notinca.locked' key is not present this is a finding.",
+        "fix": "Lock the 'Allow user to grant permissions to content from an un-trusted authority' feature. Navigate to the 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties Edit the file and add the 'deployment.security.askgrantdialog.notinca.locked' key."
+      },
+      "code": "control 'V-32829' do\n  title 'The dialog enabling users to grant permissions to execute signed content from an un-trusted authority must be locked.'\n  desc  \"Java applets exist both signed and unsigned. Even for signed applets, there can be many sources, some of which may be purveyors of malware. Applet sources considered trusted can have their information populated into the browser, enabling Java to validate applets against trusted sources. Permitting execution of signed Java applets from un-trusted sources may result in malware running on the system, and risks system modification, invasion of privacy, or denial of service. Ensuring users cannot change the permission settings which control the execution of signed Java applets contributes to a more consistent security profile. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.  \"\n  impact 0.5\n  tag \"severity\": 'medium'\n  tag \"gtitle\": 'JRE0010 Lock out option to grant permission to untrusted'\n  tag \"gid\": 'V-32829'\n  tag \"rid\": 'SV-43601r2_rule'\n  tag \"stig_id\": 'JRE0010-UX'\n  tag \"cci\": 'CCI-001695'\n  tag \"nist\": ['SC-18 (3)', 'Rev_4']\n  tag \"check\": \"If the system is on the SIPRNET this requirement is NA. Navigate to the 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties Review the file. If the 'deployment.security.askgrantdialog.notinca.locked' key is not present this is a finding.\"\n\n  tag \"fix\": \"Lock the 'Allow user to grant permissions to content from an un-trusted authority' feature. Navigate to the 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties Edit the file and add the 'deployment.security.askgrantdialog.notinca.locked' key.\"\n\n  if is_on_siprnet\n    impact 0.0\n    desc 'If the system is on the SIPRNET, therefore this requirement is NA'\n    describe 'If the system is on the SIPRNET, therefore this requirement is NA' do\n      skip 'If the system is on the SIPRNET, therefore this requirement is NA'\n    end\n  else\n    describe file('/usr/java/jre/lib/deployment.properties') do\n      its('content') { should match(/deployment.security.askgrantdialog.notinca.locked/) }\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-32829.rb",
+        "line": 2
+      },
+      "id": "V-32829"
+    },
+    {
+      "title": "Java Runtime Environment (JRE) versions that are no longer supported by the vendor for security updates must not be installed on a system.",
+      "desc": "Java Runtime Environment (JRE) versions that are no longer supported by Oracle for security updates are not evaluated or updated for vulnerabilities leaving them open to potential attack. Organizations must transition to a supported Java Runtime Environment (JRE) version to ensure continued support.",
+      "descriptions": {
+        "default": "Java Runtime Environment (JRE) versions that are no longer supported by Oracle for security updates are not evaluated or updated for vulnerabilities leaving them open to potential attack. Organizations must transition to a supported Java Runtime Environment (JRE) version to ensure continued support."
+      },
+      "impact": 0.7,
+      "refs": [],
+      "tags": {
+        "severity": "high",
+        "gtitle": "Unsupported Java Runtime Environment (JRE) applications",
+        "gid": "V-61037",
+        "rid": "SV-75505r2_rule",
+        "stig_id": "JRE9999-UX",
+        "cci": "CCI-002605",
+        "nist": [
+          "SI-2 c",
+          "Rev_4"
+        ],
+        "check": "Oracle support for Java Runtime Environment (JRE) 7 for Unix ended 2015 April. If JRE 7 for Unix is installed on a system, this is a finding. If an extended support agreement providing security patches for the unsupported product is procured from the vendor, this finding may be downgraded to a CAT III.",
+        "fix": "Upgrade Java Runtime Environment (JRE) 7 for Unix software to a supported version."
+      },
+      "code": "control 'V-61037' do\n  title 'Java Runtime Environment (JRE) versions that are no longer supported by the vendor for security updates must not be installed on a system.'\n  desc  'Java Runtime Environment (JRE) versions that are no longer supported by Oracle for security updates are not evaluated or updated for vulnerabilities leaving them open to potential attack. Organizations must transition to a supported Java Runtime Environment (JRE) version to ensure continued support.'\n  impact 0.7\n  tag \"severity\": 'high'\n  tag \"gtitle\": 'Unsupported Java Runtime Environment (JRE) applications'\n  tag \"gid\": 'V-61037'\n  tag \"rid\": 'SV-75505r2_rule'\n  tag \"stig_id\": 'JRE9999-UX'\n  tag \"cci\": 'CCI-002605'\n  tag \"nist\": ['SI-2 c', 'Rev_4']\n  tag \"check\": 'Oracle support for Java Runtime Environment (JRE) 7 for Unix ended 2015 April. If JRE 7 for Unix is installed on a system, this is a finding. If an extended support agreement providing security patches for the unsupported product is procured from the vendor, this finding may be downgraded to a CAT III.'\n\n  tag \"fix\": 'Upgrade Java Runtime Environment (JRE) 7 for Unix software to a supported version.'\n\n\n\n  java_cmd = command('java -version').stderr&.lines&.first&.strip&.split&.last\n  describe 'The java version installed' do\n    it \"should be attribute('java_version\" do\n      expect(java_cmd).to(match attribute('java_version'))\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-61037.rb",
+        "line": 1
+      },
+      "id": "V-61037"
+    },
+    {
+      "title": "The version of the JRE running on the system must be the most current available.",
+      "desc": "The JRE is being continually updated by the vendor in order to address identified security vulnerabilities. Running an older version of the JRE can introduce security vulnerabilities to the system.",
+      "descriptions": {
+        "default": "The JRE is being continually updated by the vendor in order to address identified security vulnerabilities. Running an older version of the JRE can introduce security vulnerabilities to the system."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "severity": "medium",
+        "gtitle": "JRE must be the most recent version available.",
+        "gid": "V-39239",
+        "rid": "SV-51133r1_rule",
+        "stig_id": "JRE0090-UX",
+        "cci": "CCI-002605",
+        "nist": [
+          "SI-2 c",
+          "Rev_4"
+        ],
+        "check": "Open a terminal window and type the command; java -version sans quotes. The return value should contain Java build information; Java (TM) SE Runtime Environment (build x.x.x.x) Cross reference the build information on the system with the Oracle Java site to identify the most recent build available. http://www.oracle.com/technetwork/java/javase/downloads/index.html",
+        "fix": "Test applications to ensure operational compatibility with new version of Java. Install latest version of Java JRE."
+      },
+      "code": "control 'V-39239' do\n  title 'The version of the JRE running on the system must be the most current available.'\n  desc  'The JRE is being continually updated by the vendor in order to address identified security vulnerabilities. Running an older version of the JRE can introduce security vulnerabilities to the system.'\n  impact 0.5\n  tag \"severity\": 'medium'\n  tag \"gtitle\": 'JRE must be the most recent version available.'\n  tag \"gid\": 'V-39239'\n  tag \"rid\": 'SV-51133r1_rule'\n  tag \"stig_id\": 'JRE0090-UX'\n  tag \"cci\": 'CCI-002605'\n  tag \"nist\": ['SI-2 c', 'Rev_4']\n  tag \"check\": 'Open a terminal window and type the command; java -version sans quotes. The return value should contain Java build information; Java (TM) SE Runtime Environment (build x.x.x.x) Cross reference the build information on the system with the Oracle Java site to identify the most recent build available. http://www.oracle.com/technetwork/java/javase/downloads/index.html'\n\n  tag \"fix\": 'Test applications to ensure operational compatibility with new version of Java. Install latest version of Java JRE.'\n  \n  java_cmd = command('java -version').stderr&.lines&.first&.strip&.split&.last\n  describe 'The java version installed' do\n    it \"should be attribute('java_version\" do\n      expect(java_cmd).to(match attribute('java_version'))\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-39239.rb",
+        "line": 1
+      },
+      "id": "V-39239"
+    },
+    {
+      "title": "The setting for users to check publisher certificates for revocation must be enabled.",
+      "desc": "A certificate revocation list is a directory which contains a list of certificates that have been revoked for various reasons. Certificates may be revoked due to improper issuance, compromise of the certificate, and failure to adhere to policy. Therefore, any certificate found on a CRL should not be trusted. Permitting execution of an applet published with a revoked certificate may result in spoofing, malware, system modification, invasion of privacy, and denial of service.\n\n  NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.",
+      "descriptions": {
+        "default": "A certificate revocation list is a directory which contains a list of certificates that have been revoked for various reasons. Certificates may be revoked due to improper issuance, compromise of the certificate, and failure to adhere to policy. Therefore, any certificate found on a CRL should not be trusted. Permitting execution of an applet published with a revoked certificate may result in spoofing, malware, system modification, invasion of privacy, and denial of service.\n\n  NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "severity": "medium",
+        "gtitle": "JRE0020 Enable revocation check on publisher certificates",
+        "gid": "V-32830",
+        "rid": "SV-43604r2_rule",
+        "stig_id": "JRE0020-UX",
+        "cci": "CCI-001991",
+        "nist": [
+          "IA-5 (2) (d)",
+          "Rev_4"
+        ],
+        "check": "If the system is on the SIPRNET, this requirement is NA. Navigate to the 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties. If the 'deployment.security.validation.crl' key is not present, this is a finding. If the 'deployment.security.validation.crl' key is present and set to 'false', this is a finding.",
+        "fix": "Enable the 'Check certificates for revocation using Certificate Revocation Lists (CRL)' option. Navigate to the 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties Add or update the 'deployment.security.validation.crl' key. Set the value to 'true'. "
+      },
+      "code": "control 'V-32830' do\n  title 'The setting for users to check publisher certificates for revocation must be enabled.'\n  desc  \"A certificate revocation list is a directory which contains a list of certificates that have been revoked for various reasons. Certificates may be revoked due to improper issuance, compromise of the certificate, and failure to adhere to policy. Therefore, any certificate found on a CRL should not be trusted. Permitting execution of an applet published with a revoked certificate may result in spoofing, malware, system modification, invasion of privacy, and denial of service.\n\n  NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.\"\n  impact 0.5\n  tag \"severity\": 'medium'\n  tag \"gtitle\": 'JRE0020 Enable revocation check on publisher certificates'\n  tag \"gid\": 'V-32830'\n  tag \"rid\": 'SV-43604r2_rule'\n  tag \"stig_id\": 'JRE0020-UX'\n  tag \"cci\": 'CCI-001991'\n  tag \"nist\": ['IA-5 (2) (d)', 'Rev_4']\n  tag \"check\": \"If the system is on the SIPRNET, this requirement is NA. Navigate to the 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties. If the 'deployment.security.validation.crl' key is not present, this is a finding. If the 'deployment.security.validation.crl' key is present and set to 'false', this is a finding.\"\n  tag \"fix\": \"Enable the 'Check certificates for revocation using Certificate Revocation Lists (CRL)' option. Navigate to the 'deployment.properties' file for Java, the default location is /usr/java/jre/lib/deployment.properties Add or update the 'deployment.security.validation.crl' key. Set the value to 'true'. \"\n\n  if is_on_siprnet\n    impact 0.0\n    desc 'If the system is on the SIPRNET, therefore this requirement is NA'\n    describe 'If the system is on the SIPRNET, therefore this requirement is NA' do\n      skip 'If the system is on the SIPRNET, therefore this requirement is NA'\n    end\n  else\n    describe file('/usr/java/jre/lib/deployment.properties') do\n      its('content') { should match(/deployment.security.validation.crl=true/) }\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-32830.rb",
+        "line": 2
+      },
+      "id": "V-32830"
+    },
+    {
+      "title": "The option to enable online certificate validation must be enabled.",
+      "desc": "Online certificate validation provides a real-time option to validate a certificate. When enabled, if a certificate is presented, the status of the certificate is requested. The status is sent back as 'current', 'expired', or 'unknown'. Online certificate validation provides a greater degree of validation of certificates when running a signed Java applet. Permitting execution of an applet with an invalid certificate may result in malware execution , system modification, invasion of privacy, and denial of service. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.",
+      "descriptions": {
+        "default": "Online certificate validation provides a real-time option to validate a certificate. When enabled, if a certificate is presented, the status of the certificate is requested. The status is sent back as 'current', 'expired', or 'unknown'. Online certificate validation provides a greater degree of validation of certificates when running a signed Java applet. Permitting execution of an applet with an invalid certificate may result in malware execution , system modification, invasion of privacy, and denial of service. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "severity": "medium",
+        "gtitle": "JRE0040 Enable online certificate validation",
+        "gid": "V-32832",
+        "rid": "SV-43618r2_rule",
+        "stig_id": "JRE0040-UX",
+        "cci": "CCI-000185",
+        "nist": [
+          "IA-5 (2)(a)",
+          "Rev_4"
+        ],
+        "check": "If the system is on the SIPRNET, this requirement is NA. Navigate to the 'deployment.properties' file for Java. /usr/java/jre/lib/deployment.properties Examine the deployment.properties file for the 'deployment.security.validation.ocsp' key. If the 'deployment.security.validation.ocsp' key is not present, this is a finding. If the key 'deployment.security.validation.ocsp' is set to 'false', this is a finding. ",
+        "fix": "If the system is on the SIPRNET, this requirement is NA. Enable the 'Enable online certificate validation' option. Navigate to the 'deployment.properties' file for Java. /usr/java/jre/lib/deployment.properties Add or update the key 'deployment.security.validation.ocsp' to be 'true'. "
+      },
+      "code": "control 'V-32832' do\n  title 'The option to enable online certificate validation must be enabled.'\n  desc  \"Online certificate validation provides a real-time option to validate a certificate. When enabled, if a certificate is presented, the status of the certificate is requested. The status is sent back as 'current', 'expired', or 'unknown'. Online certificate validation provides a greater degree of validation of certificates when running a signed Java applet. Permitting execution of an applet with an invalid certificate may result in malware execution , system modification, invasion of privacy, and denial of service. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.\"\n  impact 0.5\n  tag \"severity\": 'medium'\n  tag \"gtitle\": 'JRE0040 Enable online certificate validation'\n  tag \"gid\": 'V-32832'\n  tag \"rid\": 'SV-43618r2_rule'\n  tag \"stig_id\": 'JRE0040-UX'\n  tag \"cci\": 'CCI-000185'\n  tag \"nist\": ['IA-5 (2)(a)', 'Rev_4']\n  tag \"check\": \"If the system is on the SIPRNET, this requirement is NA. Navigate to the 'deployment.properties' file for Java. /usr/java/jre/lib/deployment.properties Examine the deployment.properties file for the 'deployment.security.validation.ocsp' key. If the 'deployment.security.validation.ocsp' key is not present, this is a finding. If the key 'deployment.security.validation.ocsp' is set to 'false', this is a finding. \"\n  tag \"fix\": \"If the system is on the SIPRNET, this requirement is NA. Enable the 'Enable online certificate validation' option. Navigate to the 'deployment.properties' file for Java. /usr/java/jre/lib/deployment.properties Add or update the key 'deployment.security.validation.ocsp' to be 'true'. \"\n\n  if is_on_siprnet\n    impact 0.0\n    desc 'If the system is on the SIPRNET, therefore this requirement is NA'\n    describe 'If the system is on the SIPRNET, therefore this requirement is NA' do\n      skip 'If the system is on the SIPRNET, therefore this requirement is NA'\n    end\n  else\n    describe file('/usr/java/jre/lib/deployment.properties') do\n      its('content') { should match(/deployment.security.validation.ocsp=true/) }\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-32832.rb",
+        "line": 2
+      },
+      "id": "V-32832"
+    },
+    {
+      "title": "The dialog to enable users to grant permissions to execute signed content from an un-trusted authority must be disabled",
+      "desc": "Java applets exist both signed and unsigned. Even for signed applets, there can be many sources, some of which may be purveyors of malware. Applet sources considered trusted can have their information populated into the browser, enabling Java to validate applets against trusted sources. Permitting execution of signed Java applets from un-trusted sources may result in acquiring malware, and risks system modification, invasion of privacy, or denial of service. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.",
+      "descriptions": {
+        "default": "Java applets exist both signed and unsigned. Even for signed applets, there can be many sources, some of which may be purveyors of malware. Applet sources considered trusted can have their information populated into the browser, enabling Java to validate applets against trusted sources. Permitting execution of signed Java applets from un-trusted sources may result in acquiring malware, and risks system modification, invasion of privacy, or denial of service. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "severity": "medium",
+        "gtitle": "JRE0001 Disable ability to grant permission to untrusted authority",
+        "gid": "V-32828",
+        "rid": "SV-43596r2_rule",
+        "stig_id": "JRE0001-UX",
+        "cci": "CCI-001695",
+        "nist": [
+          "SC-18 (3)",
+          "Rev_4"
+        ],
+        "check": "If the system is on the SIPRNET, this requirement is NA.\n\n  Examine the system 'deployment.properties' file for Java which is located by default at\n  /usr/java/jre/lib/deployment.properties.\n\n  If the 'deployment.security.askgrantdialog.notinca=false' key is not present, this is a finding.\n\n  If the key 'deployment.security.askgrantdialog.notinca' exists and is set to true, this is a finding. ",
+        "fix": "Disable the 'Allow user to grant permissions to content from an un-trusted authority' feature.\n\n  Navigate to the 'deployment.properties' file for Java, the default location is\n  /usr/java/jre/lib/deployment.properties\n\n  If the key does not exist, create the 'deployment.security.askgrantdialog.notinca' key and set the value to 'false'.\n\n  If the key does exist. update the 'deployment.security.askgrantdialog.notinca' key to be a value of 'false'."
+      },
+      "code": "control 'V-32828' do\n  title 'The dialog to enable users to grant permissions to execute signed content from an un-trusted authority must be disabled'\n  desc  \"\n    Java applets exist both signed and unsigned. Even for signed applets, there can be many sources, some of which may be purveyors of malware. Applet sources considered trusted can have their information populated into the browser, enabling Java to validate applets against trusted sources. Permitting execution of signed Java applets from un-trusted sources may result in acquiring malware, and risks system modification, invasion of privacy, or denial of service. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.\n  \"\n  impact 0.5\n  tag \"severity\": 'medium'\n  tag \"gtitle\": 'JRE0001 Disable ability to grant permission to untrusted authority'\n  tag \"gid\": 'V-32828'\n  tag \"rid\": 'SV-43596r2_rule'\n  tag \"stig_id\": 'JRE0001-UX'\n  tag \"cci\": 'CCI-001695'\n  tag \"nist\": ['SC-18 (3)', 'Rev_4']\n  tag \"check\": \"If the system is on the SIPRNET, this requirement is NA.\n\n  Examine the system 'deployment.properties' file for Java which is located by default at\n  /usr/java/jre/lib/deployment.properties.\n\n  If the 'deployment.security.askgrantdialog.notinca=false' key is not present, this is a finding.\n\n  If the key 'deployment.security.askgrantdialog.notinca' exists and is set to true, this is a finding. \"\n\n  tag \"fix\": \"Disable the 'Allow user to grant permissions to content from an un-trusted authority' feature.\n\n  Navigate to the 'deployment.properties' file for Java, the default location is\n  /usr/java/jre/lib/deployment.properties\n\n  If the key does not exist, create the 'deployment.security.askgrantdialog.notinca' key and set the value to 'false'.\n\n  If the key does exist. update the 'deployment.security.askgrantdialog.notinca' key to be a value of 'false'.\"\n\n  if is_on_siprnet\n    impact 0.0\n    desc 'If the system is on the SIPRNET, therefore this requirement is NA'\n    describe 'If the system is on the SIPRNET, therefore this requirement is NA' do\n      skip 'If the system is on the SIPRNET, therefore this requirement is NA'\n    end\n  else\n    describe file('/usr/java/jre/lib/deployment.properties') do\n      its('content') { should match(/deployment.security.askgrantdialog.notinca=false/) }\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-32828.rb",
+        "line": 2
+      },
+      "id": "V-32828"
+    },
+    {
+      "title": "A properties file must be present to hold all the keys that establish properties within the Java control panel.",
+      "desc": "The deployment.properties file is used for specifying keys for the Java Runtime Environment. Each option in the Java control panel is represented by property keys. These keys adjust the options in the Java control panel based on the value assigned to that key. By default no deployment.properties file exists; thus, no system-wide deployment exists. Without the deployment.properties file, setting particular options for the Java control panel is impossible. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.",
+      "descriptions": {
+        "default": "The deployment.properties file is used for specifying keys for the Java Runtime Environment. Each option in the Java control panel is represented by property keys. These keys adjust the options in the Java control panel based on the value assigned to that key. By default no deployment.properties file exists; thus, no system-wide deployment exists. Without the deployment.properties file, setting particular options for the Java control panel is impossible. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "severity": "medium",
+        "gtitle": "JRE0080 Properties file must exist",
+        "gid": "V-32902",
+        "rid": "SV-43620r2_rule",
+        "stig_id": "JRE0080-UX",
+        "cci": "CCI-000366",
+        "nist": [
+          "CM-6 b",
+          "Rev_4"
+        ],
+        "check": "Navigate to the lib directory: /usr/java/jre/lib/ If there is no properties file entitled 'deployment.properties', this is a finding.",
+        "fix": "Create the Java deployment properties file. Navigate to the lib directory: /usr/java/jre/lib/ Create a properties file entitled 'deployment.properties'."
+      },
+      "code": "control 'V-32902' do\n  title 'A properties file must be present to hold all the keys that establish properties within the Java control panel.'\n  desc  \"The deployment.properties file is used for specifying keys for the Java Runtime Environment. Each option in the Java control panel is represented by property keys. These keys adjust the options in the Java control panel based on the value assigned to that key. By default no deployment.properties file exists; thus, no system-wide deployment exists. Without the deployment.properties file, setting particular options for the Java control panel is impossible. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.\"\n  impact 0.5\n  tag \"severity\": 'medium'\n  tag \"gtitle\": 'JRE0080 Properties file must exist'\n  tag \"gid\": 'V-32902'\n  tag \"rid\": 'SV-43620r2_rule'\n  tag \"stig_id\": 'JRE0080-UX'\n  tag \"cci\": 'CCI-000366'\n  tag \"nist\": ['CM-6 b', 'Rev_4']\n  tag \"check\": \"Navigate to the lib directory: /usr/java/jre/lib/ If there is no properties file entitled 'deployment.properties', this is a finding.\"\n  tag \"fix\": \"Create the Java deployment properties file. Navigate to the lib directory: /usr/java/jre/lib/ Create a properties file entitled 'deployment.properties'.\"\n\n  describe file('/usr/java/jre/lib/deployment.properties') do\n    it { should exist }\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-32902.rb",
+        "line": 1
+      },
+      "id": "V-32902"
+    },
+    {
+      "title": "The option to enable online certificate validation must be locked.",
+      "desc": "Online certificate validation provides a real-time option to validate a certificate. When enabled, if a certificate is presented, the status of the certificate is requested. The status is sent back as 'current', 'expired', or 'unknown'. Online certificate validation provides a greater degree of validation of certificates when running a signed Java applet. Permitting execution of an applet with an invalid certificate may result in malware, system modification, invasion of privacy, and denial of service. Ensuring users cannot change settings contributes to a more consistent security profile. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.",
+      "descriptions": {
+        "default": "Online certificate validation provides a real-time option to validate a certificate. When enabled, if a certificate is presented, the status of the certificate is requested. The status is sent back as 'current', 'expired', or 'unknown'. Online certificate validation provides a greater degree of validation of certificates when running a signed Java applet. Permitting execution of an applet with an invalid certificate may result in malware, system modification, invasion of privacy, and denial of service. Ensuring users cannot change settings contributes to a more consistent security profile. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed."
+      },
+      "impact": 0.5,
+      "refs": [],
+      "tags": {
+        "severity": "medium",
+        "gtitle": "JRE0050 Lock online certificate validation",
+        "gid": "V-32833",
+        "rid": "SV-43619r2_rule",
+        "stig_id": "JRE0050-UX",
+        "cci": "CCI-000185",
+        "nist": [
+          "IA-5 (2)(a)",
+          "Rev_4"
+        ],
+        "check": "If the system is on the SIPRNET, this requirement is NA. Navigate to the 'deployment.properties' file for Java. /usr/java/jre/lib/deployment.properties If the key 'deployment.security.validation.ocsp.locked' is not present, this is a finding. ",
+        "fix": "If the system is on the SIPRNET, this requirement is NA. Lock the 'Enable online certificate validation' option. Navigate to the 'deployment.properties' file for Java. /usr/java/jre/lib/deployment.properties Add the key 'deployment.security.validation.ocsp.locked'. "
+      },
+      "code": "control 'V-32833' do\n  title 'The option to enable online certificate validation must be locked.'\n  desc  \"Online certificate validation provides a real-time option to validate a certificate. When enabled, if a certificate is presented, the status of the certificate is requested. The status is sent back as 'current', 'expired', or 'unknown'. Online certificate validation provides a greater degree of validation of certificates when running a signed Java applet. Permitting execution of an applet with an invalid certificate may result in malware, system modification, invasion of privacy, and denial of service. Ensuring users cannot change settings contributes to a more consistent security profile. NOTE: The 'JRE' directory in the file path may reflect the specific JRE release installed.\"\n  impact 0.5\n  tag \"severity\": 'medium'\n  tag \"gtitle\": 'JRE0050 Lock online certificate validation'\n  tag \"gid\": 'V-32833'\n  tag \"rid\": 'SV-43619r2_rule'\n  tag \"stig_id\": 'JRE0050-UX'\n  tag \"cci\": 'CCI-000185'\n  tag \"nist\": ['IA-5 (2)(a)', 'Rev_4']\n  tag \"check\": \"If the system is on the SIPRNET, this requirement is NA. Navigate to the 'deployment.properties' file for Java. /usr/java/jre/lib/deployment.properties If the key 'deployment.security.validation.ocsp.locked' is not present, this is a finding. \"\n  tag \"fix\": \"If the system is on the SIPRNET, this requirement is NA. Lock the 'Enable online certificate validation' option. Navigate to the 'deployment.properties' file for Java. /usr/java/jre/lib/deployment.properties Add the key 'deployment.security.validation.ocsp.locked'. \"\n\n  if is_on_siprnet\n    impact 0.0\n    desc 'If the system is on the SIPRNET, therefore this requirement is NA'\n    describe 'If the system is on the SIPRNET, therefore this requirement is NA' do\n      skip 'If the system is on the SIPRNET, therefore this requirement is NA'\n    end\n  else\n    describe file('/usr/java/jre/lib/deployment.properties') do\n      its('content') { should match(/deployment.security.validation.ocsp.locked/) }\n    end\n  end\nend\n",
+      "source_location": {
+        "ref": "./JRE 7 STIG/controls/V-32833.rb",
+        "line": 2
+      },
+      "id": "V-32833"
+    }
+  ],
+  "groups": [
+    {
+      "title": null,
+      "controls": [
+        "V-32831"
+      ],
+      "id": "controls/V-32831.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-32842"
+      ],
+      "id": "controls/V-32842.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-32901"
+      ],
+      "id": "controls/V-32901.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-32829"
+      ],
+      "id": "controls/V-32829.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-61037"
+      ],
+      "id": "controls/V-61037.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-39239"
+      ],
+      "id": "controls/V-39239.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-32830"
+      ],
+      "id": "controls/V-32830.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-32832"
+      ],
+      "id": "controls/V-32832.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-32828"
+      ],
+      "id": "controls/V-32828.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-32902"
+      ],
+      "id": "controls/V-32902.rb"
+    },
+    {
+      "title": null,
+      "controls": [
+        "V-32833"
+      ],
+      "id": "controls/V-32833.rb"
+    }
+  ],
+  "sha256": "a17fdf711edee8805130b987daf425b8083cba839b0321f7d828bdf367245512",
+  "status_message": "",
+  "status": "loaded",
+  "generator": {
+    "name": "inspec",
+    "version": "4.33.1"
+  }
+}
