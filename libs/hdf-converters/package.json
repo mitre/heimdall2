@@ -25,7 +25,7 @@
     "xml2json": "ts-node data/converters/xml2json.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-config-service": "^3.95.0",
+    "@aws-sdk/client-config-service": "^3.435.0",
     "@e965/xlsx": "^0.20.0",
     "@mdi/js": "^7.0.96",
     "@mitre/jsonix": "^3.0.7",
