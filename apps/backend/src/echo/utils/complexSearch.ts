@@ -1,3 +1,5 @@
+import {githubMapping} from './githubBranchMapping';
+
 export const searchOverallJsonMapping = (
   searchTerm: string,
   profileJsons: {[key: string]: any}
@@ -9,12 +11,20 @@ export const searchOverallJsonMapping = (
       if (searchObject(control, searchPattern).length > 0) {
         if (returnObj[obj.name]) {
           Object.assign(returnObj[obj.name], {
-            [control.id]: `${obj.github_url}/blob/master/controls/${control.id}.rb`
+            [control.id]: `${obj.github_url}/blob/${
+              githubMapping[
+                obj.github_url.replace('https://github.com/mitre/', '')
+              ]
+            }/controls/${control.id}.rb`
           });
         } else {
           returnObj[obj.name] = {};
           Object.assign(returnObj[obj.name], {
-            [control.id]: `${obj.github_url}/blob/master/controls/${control.id}.rb`
+            [control.id]: `${obj.github_url}/blob/${
+              githubMapping[
+                obj.github_url.replace('https://github.com/mitre/', '')
+              ]
+            }/controls/${control.id}.rb`
           });
         }
       }

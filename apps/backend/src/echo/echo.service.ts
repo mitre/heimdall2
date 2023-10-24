@@ -11,7 +11,8 @@ import {ttpToKeywordMapping} from './utils/ttpToKeywordsMapping';
 export class EchoService {
   private readonly profileJsons: {[key: string]: AnyProfile} =
     generateOverallJsonMapping();
-  private readonly ttpToKeywordMapping = ttpToKeywordMapping;
+  // private readonly ttpToKeywordMapping = ttpToKeywordMapping;
+  // private readonly githubMapping = githubMapping;
 
   findControlByAttackPatternName(attackPatternName: string): {
     [key: string]: {[key: string]: string};
@@ -24,7 +25,7 @@ export class EchoService {
       );
     } else {
       return searchOverallJsonMapping(
-        this.ttpToKeywordMapping[attackPatternName],
+        ttpToKeywordMapping[attackPatternName],
         this.profileJsons
       );
     }
