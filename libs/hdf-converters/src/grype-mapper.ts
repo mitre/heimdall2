@@ -1,14 +1,12 @@
 import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
-import {CweNistMapping} from './mappings/CweNistMapping';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  getCCIsForNISTTags
+  DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS
 } from './utils/global';
 
 const PROFILE_NAME = 'GRYPE';
-const CWE_NIST_MAPPING = new CweNistMapping();
 
 function convertToControlMapping(): MappedTransform<
   ExecJSON.Control,
@@ -21,8 +19,8 @@ function convertToControlMapping(): MappedTransform<
     impact: {path: 'relatedVulnerabilities[0].cvss.metrics.impactScore'}, //to do
     refs: [], //to do, available in postgres.json as relatedVunerabilites.urls and vulnerability.dataSource
     tags: {
-      cci: getCCIsForNISTTags(nistTag()),
-      nist: nistTag()
+      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
+      nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
     }, // to do
     source_location: {
       ref: {path: 'artifact.locations[0].path'} //multiple locations can be provided by grype, but only one goes into hdf
@@ -35,12 +33,6 @@ function convertToControlMapping(): MappedTransform<
       }
     ]
   };
-}
-function nistTag(): string[] {
-  return CWE_NIST_MAPPING.nistFilter(
-    [],
-    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
-  );
 }
 export class GrypeMapper extends BaseConverter {
   mappings: MappedTransform<
