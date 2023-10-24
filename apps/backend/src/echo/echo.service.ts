@@ -1,7 +1,7 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import fs from 'fs';
+import {AnyProfile} from 'inspecjs';
 import path from 'path';
-import {AnyProfile} from '../../../../libs/inspecjs/src/fileparse';
 import {searchOverallJsonMapping} from './utils/complexSearch';
 import {ttpToKeywordMapping} from './utils/ttpToKeywordsMapping';
 // import {ApiKey} from './apikey.model';
