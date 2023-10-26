@@ -61,13 +61,13 @@ import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import {ContextualizedControl, ExecJSON, HDFControlSegment} from 'inspecjs';
 import * as _ from 'lodash';
-import ObjectsToCsv from 'objects-to-csv';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {InspecDataModule} from '../../store/data_store';
 import {EvaluationFile, ProfileFile} from '../../store/report_intake';
 import {getDescription} from '../../utilities/helper_util';
+import {stringify} from 'csv-stringify/sync';
 
 const fieldNames = [
   'Results Set',
@@ -321,12 +321,16 @@ export default class ExportCSVModal extends Vue {
     // Convert all controls from a file to ControlSetRows
     let rows: ControlSetRows = [];
     rows = this.convertRows(file);
-    // Convert our rows to CSV
-    const csvString = await new ObjectsToCsv(rows).toString();
+    // Convert rows to CSV
+    const csvBody = stringify(rows);
+    // Generate headers for CSV
+    const csvHeader = stringify([Object.keys(rows[0])]);
+    // Merge CSV headers and body
+    const csv = [csvHeader, csvBody].join('');
     // If we only have one file we can save just one csv file
     this.files.push({
       filename: this.cleanUpFilename(`${file.filename}.csv`),
-      data: csvString
+      data: csv
     });
   }
 

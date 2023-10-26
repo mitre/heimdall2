@@ -1,8 +1,8 @@
-ARG BASE_CONTAINER=registry.access.redhat.com/ubi8/nodejs-16-minimal:1
+ARG BASE_CONTAINER=registry.access.redhat.com/ubi8/nodejs-18-minimal:1
 
 FROM $BASE_CONTAINER as builder
 
-ARG NODE_ENV=development
+ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
 ARG YARNREPO_MIRROR=https://registry.yarnpkg.com
@@ -16,7 +16,7 @@ RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo 
 
 COPY package.json yarn.lock lerna.json tsconfig.json postcss.config.js ./
 COPY apps/backend/package.json apps/backend/tsconfig.* ./apps/backend/
-COPY apps/frontend/package.json apps/frontend/tsconfig.json ./apps/frontend/
+COPY apps/frontend/package.json apps/frontend/tsconfig.* ./apps/frontend/
 COPY libs/hdf-converters/package.json libs/hdf-converters/tsconfig.* ./libs/hdf-converters/
 COPY libs/inspecjs/package.json libs/inspecjs/tsconfig.* ./libs/inspecjs/
 COPY libs/interfaces/package.json libs/interfaces/tsconfig.json ./libs/interfaces/
@@ -33,7 +33,7 @@ FROM $BASE_CONTAINER as app
 
 EXPOSE 3000
 
-ARG NODE_ENV=development
+ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
 USER 0

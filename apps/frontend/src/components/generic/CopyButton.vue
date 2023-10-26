@@ -6,7 +6,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {Clipboard} from 'v-clipboard';
 import {SnackbarModule} from '@/store/snackbar';
 
 @Component({})
@@ -17,10 +16,10 @@ export default class CopyButton extends Vue {
 
   async copy() {
     try {
-      await Clipboard.copy(this.text);
+      navigator.clipboard.writeText(this.text);
       SnackbarModule.notify('Text copied to your clipboard');
     } catch (e) {
-      SnackbarModule.failure('Failed to copy to your clipboard');
+      SnackbarModule.failure(`Failed to copy to your clipboard: ${e}`);
     }
   }
 }

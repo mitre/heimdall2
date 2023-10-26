@@ -288,7 +288,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    - ```bash
      # grab nodesource for recent version of nodejs
-     sudo curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh
+     sudo curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
      sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
@@ -300,7 +300,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
    OSX:
    
    - ```bash
-     brew install postgresql node@16 git      
+     brew install postgresql node@18 git      
      brew install nano                        # recommended installation
      sudo npm install -g yarn
      ```

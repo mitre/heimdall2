@@ -17,7 +17,7 @@
     "lint:ci": "lerna run lint:ci",
     "pack:all": "lerna exec yarn pack --scope inspecjs --scope @mitre/heimdall-lite --scope @mitre/hdf-converters --parallel",
     "start": "yarn backend start",
-    "start:dev": "dotenv -e .env -- lerna exec yarn run start:dev --ignore @heimdall/interfaces --ignore @mitre/hdf-converters  --ignore @heimdall/password-complexity --ignore @heimdall/cypress-tests --ignore inspecjs",
+    "start:dev": "./node_modules/.bin/dotenv -e .env -- lerna exec yarn run start:dev --ignore @heimdall/interfaces --ignore @mitre/hdf-converters  --ignore @heimdall/password-complexity --ignore @heimdall/cypress-tests --ignore inspecjs",
     "test:ui": "cypress run",
     "test:ui:open": "cypress open"
   },
@@ -31,17 +31,17 @@
     "lerna": "^5.0.0",
     "prettier": "^2.1.2",
     "prettier-plugin-organize-imports": "^3.0.0",
-    "typescript": "~4.6.4"
+    "typescript": "^4.9.3"
   },
   "devDependencies": {
     "dotenv-cli": "^7.0.0"
   },
   "resolutions": {
-    "prismjs": "1.25.0",
-    "vue": "2.6.14",
-    "@yarnpkg/parsers": "3.0.0-rc.48.1"
+    "prismjs": "1.29.0",
+    "vue": "2.6.14"
   },
   "engines": {
-    "node": "<17.0.0"
-  }
+    "node": "^18.12.0"
+  },
+  "version": "0.0.0"
 }

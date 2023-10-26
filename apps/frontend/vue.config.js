@@ -1,4 +1,5 @@
-var webpack = require('webpack');
+const webpack = require('webpack');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 // Lookup constants
 const fs = require('fs');
@@ -12,19 +13,14 @@ const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
-// This grabs the js/css to allow for HTML export
-const files = {
-  [require.resolve('tw-elements/dist/js/tw-elements.umd.min.js')]:
-    'public/static/export/tw-elements.min.js'
-};
-
-for (const file in files) {
-  fs.copyFile(file, files[file], (err) => {
-    if (err) {
-      throw err;
-    }
-  });
-}
+// tsconfig specification
+const path = require('path');
+const TSCONFIG_PATH = path.resolve(
+  __dirname,
+  process.env.NODE_ENV === 'production'
+    ? './tsconfig.build.json'
+    : './tsconfig.json'
+);
 
 module.exports = {
   lintOnSave: 'warning',
@@ -41,6 +37,11 @@ module.exports = {
   },
   outputDir: '../../dist/frontend',
   configureWebpack: {
+    resolve: {
+      fallback: {
+        fs: false
+      }
+    },
     module: {
       rules: [
         {
@@ -58,15 +59,26 @@ module.exports = {
     devtool: 'source-map',
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': {
-          PACKAGE_VERSION: `"${version}"`,
-          DESCRIPTION: `"${description}"`,
-          REPOSITORY: `"${repository}"`,
-          LICENSE: `"${license}"`,
-          CHANGELOG: `"${changelog}"`,
-          BRANCH: `"${branch}"`,
-          ISSUES: `"${issues}"`
-        }
+        'process.env.PACKAGE_VERSION': `"${version}"`,
+        'process.env.DESCRIPTION': `"${description}"`,
+        'process.env.REPOSITORY': `"${repository}"`,
+        'process.env.LICENSE': `"${license}"`,
+        'process.env.CHANGELOG': `"${changelog}"`,
+        'process.env.BRANCH': `"${branch}"`,
+        'process.env.ISSUES': `"${issues}"`
+      }),
+      new NodePolyfillPlugin({
+        includeAliases: [
+          'crypto',
+          'path',
+          'http',
+          'https',
+          'os',
+          'zlib',
+          'process',
+          'Buffer',
+          'stream'
+        ]
       })
     ]
   },
@@ -79,5 +91,16 @@ module.exports = {
       .use('vue-svg-inline-loader')
       .loader('vue-svg-inline-loader')
       .options();
+
+    // specify custom tsconfig.json file
+    // https://github.com/vuejs/vue-cli/issues/2421
+    config.module
+      .rule('ts')
+      .use('ts-loader')
+      .merge({options: {configFile: TSCONFIG_PATH}});
+    config.plugin('fork-ts-checker').tap((args) => {
+      args[0].typescript.configFile = TSCONFIG_PATH;
+      return args;
+    });
   }
 };

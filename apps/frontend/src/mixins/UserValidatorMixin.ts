@@ -1,13 +1,13 @@
 import * as _ from 'lodash';
 import {Component, Vue} from 'vue-property-decorator';
-import {ValidationProperties} from 'vue/types/vue';
+import ValidationProperties from 'vue/types/vue';
 import {validationMixin} from 'vuelidate';
 
 @Component({
   mixins: [validationMixin]
 })
 export default class UserValidatorMixin extends Vue {
-  emailErrors(field: ValidationProperties<unknown>) {
+  emailErrors(field: typeof ValidationProperties) {
     const errors: string[] = [];
     const dirty = _.get(field, '$dirty');
     const required = _.get(field, 'required');
@@ -20,7 +20,7 @@ export default class UserValidatorMixin extends Vue {
     return errors;
   }
 
-  requiredFieldError(field: ValidationProperties<unknown>, name: string) {
+  requiredFieldError(field: typeof ValidationProperties, name: string) {
     const errors: string[] = [];
     const dirty = _.get(field, '$dirty');
     const required = _.get(field, 'required');

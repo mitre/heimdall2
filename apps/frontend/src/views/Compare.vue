@@ -376,7 +376,7 @@ export default class Compare extends Vue {
     this.files.forEach((file) => {
       if ('passthrough' in file.evaluation.data) {
         const passthroughData = _.get(file.evaluation.data, 'passthrough');
-        if (typeof passthroughData === 'object') {
+        if (_.isObject(passthroughData)) {
           this.compareItems = this.compareItems.concat(
             Object.keys(passthroughData)
               .filter(
@@ -417,7 +417,7 @@ export default class Compare extends Vue {
           bPassthroughField as string
         );
       } else if (typeof aPassthroughField === 'number') {
-        return aPassthroughField - bPassthroughField;
+        return aPassthroughField - Number(bPassthroughField);
       } else if (typeof aPassthroughField === 'boolean') {
         return Number(aPassthroughField) - Number(bPassthroughField);
       }

@@ -2,11 +2,11 @@ name: Push Heimdall Lite to Docker Hub on every merge to master and tag as lates
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   docker:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -24,5 +24,5 @@ jobs:
           context: .
           file: Dockerfile.lite
           push: true
-          platforms: "linux/amd64"
+          platforms: 'linux/amd64'
           tags: mitre/heimdall-lite:latest
