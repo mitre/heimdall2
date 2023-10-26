@@ -17,53 +17,21 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
       return false;
     }
 
-    let sslKey, sslCert, sslCA;
-
-    if (typeof configService.get('LDAP_SSL_KEY') === 'string') {
-      if (configService.get('LDAP_SSL_KEY')?.indexOf('-BEGIN') !== -1) {
-        sslKey = configService.get('LDAP_SSL_KEY');
-      } else {
-        // Verify file exists
-        if (fs.statSync(configService.get('LDAP_SSL_KEY')!).isFile()) {
-          sslKey = fs.readFileSync(configService.get('LDAP_SSL_KEY')!);
-        } else {
-          throw new Error('SSL Key file does not exist');
-        }
-      }
-    }
-
-    if (typeof configService.get('LDAP_SSL_CERT') === 'string') {
-      if (configService.get('LDAP_SSL_CERT')?.indexOf('-BEGIN') !== -1) {
-        sslCert = configService.get('LDAP_SSL_CERT');
-      } else {
-        // Verify file exists
-        if (fs.statSync(configService.get('LDAP_SSL_CERT')!).isFile()) {
-          sslCert = fs.readFileSync(configService.get('LDAP_SSL_CERT')!);
-        } else {
-          throw new Error('SSL Cert file does not exist');
-        }
-      }
-    }
-
-    if (typeof configService.get('LDAP_SSL_CA') === 'string') {
-      if (configService.get('LDAP_SSL_CA')?.indexOf('-BEGIN') !== -1) {
-        sslCA = configService.get('LDAP_SSL_CA');
-      } else {
-        // Verify file exists
-        if (fs.statSync(configService.get('LDAP_SSL_CA')!).isFile()) {
-          sslCA = fs.readFileSync(configService.get('LDAP_SSL_CA')!);
-        } else {
-          throw new Error('SSL CA file does not exist');
-        }
-      }
+    let sslCA: string | Buffer | undefined = configService.get('LDAP_SSL_CA');
+    if (
+      sslCA &&
+      sslCA.indexOf('-BEGIN') === -1 &&
+      fs.statSync(sslCA).isFile()
+    ) {
+      sslCA = fs.readFileSync(sslCA);
+    } else {
+      throw new Error('SSL CA file does not exist');
     }
 
     return {
       rejectUnauthorized:
         configService.get('LDAP_SSL_INSECURE') &&
         configService.get('LDAP_SSL_INSECURE')?.toLowerCase() !== 'true',
-      key: sslKey,
-      cert: sslCert,
       ca: sslCA
     };
   }
@@ -90,9 +58,7 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
           ...(sslConfig && {
             tlsOptions: {
               rejectUnauthorized: sslConfig.rejectUnauthorized,
-              ca: sslConfig.ca,
-              cert: sslConfig.cert,
-              key: sslConfig.key
+              ca: sslConfig.ca
             }
           })
         }
