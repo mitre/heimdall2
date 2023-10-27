@@ -18,14 +18,20 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
     }
 
     let sslCA: string | Buffer | undefined = configService.get('LDAP_SSL_CA');
-    if (
-      sslCA &&
-      sslCA.indexOf('-BEGIN') === -1 &&
-      fs.statSync(sslCA).isFile()
-    ) {
-      sslCA = fs.readFileSync(sslCA);
-    } else {
-      throw new Error('SSL CA file does not exist');
+    if (!sslCA) {
+      throw new Error('SSL CA file or path to file not provided');
+    }
+    if (sslCA.indexOf('-BEGIN') === -1) {
+      if (fs.statSync(sslCA).isFile()) {
+        sslCA = fs.readFileSync(sslCA);
+        if (sslCA.indexOf('-BEGIN') === -1) {
+          throw new Error('SSL CA file at given path was not a certificate');
+        }
+      } else {
+        throw new Error(
+          'SSL CA file is neither a certificate nor is it a path to one'
+        );
+      }
     }
 
     return {
