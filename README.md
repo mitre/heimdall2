@@ -360,11 +360,15 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      yarn install
      ```
 
-5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
+5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh or setup-dev-env.bat` script.
+   - Make sure that the script is executed in the Heimdall `heimdall2` root directory. Use one of the following commands:
+     - `./setup-dev-env.sh` # bash OS
+     - `setup-dev-env.bat`  # Windows
+   - Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
 
 You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
-6. Create the database:
+1. Create the database:
 
    - ```bash
      yarn backend sequelize-cli db:create
@@ -372,7 +376,7 @@ You can also open the apps/backend/.env file in a text editor and set additional
      yarn backend sequelize-cli db:seed:all
      ```
 
-6. Start Heimdall:
+2. Start Heimdall:
 
    - ```bash
      yarn start:dev

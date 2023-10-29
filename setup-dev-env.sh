@@ -1,49 +1,49 @@
 #!/bin/bash
 
-if [ -f .env ]; then
+if [ -f apps/backend/.env ]; then
 	echo ".env already exists, so all unset environment variables will now be filled by default values. If you would like to completely regenerate your secrets, please delete this file and then re-run the script."
 else
 	echo ".env does not exist, creating..."
-	(umask 066; touch .env)
+	(umask 066; touch apps/backend/.env)
 fi
 
-if ! grep -qF "NODE_ENV" .env; then
-	echo "NODE_ENV=development" >> .env
+if ! grep -qF "NODE_ENV" apps/backend/.env; then
+	echo "NODE_ENV=development" >> apps/backend/.env
 fi
 
-if ! grep -qF "DATABASE_USERNAME" .env; then
+if ! grep -qF "DATABASE_USERNAME" apps/backend/.env; then
 	read -p "Enter DATABASE_USERNAME (leave blank to use default 'postgres'): " usr
-	echo "DATABASE_USERNAME=$usr" >> .env
+	echo "DATABASE_USERNAME=$usr" >> apps/backend/.env
 fi
 
-if ! grep -qF "DATABASE_PASSWORD" .env; then
+if ! grep -qF "DATABASE_PASSWORD" apps/backend/.env; then
 	read -s -p 'Enter DATABASE_PASSWORD (leave blank to not set a password): ' psswd
 	echo ""
-	echo "DATABASE_PASSWORD=$psswd" >> .env
+	echo "DATABASE_PASSWORD=$psswd" >> apps/backend/.env
 fi
 
-if ! grep -qF "JWT_EXPIRE_TIME" .env; then
+if ! grep -qF "JWT_EXPIRE_TIME" apps/backend/.env; then
 	read -p 'Enter JWT_EXPIRE_TIME ex. 1d or 25m: ' expire
-	echo "JWT_EXPIRE_TIME=$expire" >> .env
+	echo "JWT_EXPIRE_TIME=$expire" >> apps/backend/.env
 fi
 
-if ! grep -qF "JWT_SECRET" .env; then
-	echo "JWT_SECRET=$(openssl rand -hex 64)" >> .env
+if ! grep -qF "JWT_SECRET" apps/backend/.env; then
+	echo "JWT_SECRET=$(openssl rand -hex 64)" >> apps/backend/.env
 fi
 
-if ! grep -qF "API_KEY_SECRET" .env; then
-	read -p ".env does not contain API_KEY_SECRET, would you like to enable API Keys? [Y/n]" -n 1 -r
+if ! grep -qF "API_KEY_SECRET" apps/backend/.env; then
+	read -p "apps/backend/.env does not contain API_KEY_SECRET, would you like to enable API Keys? [Y/n]" -n 1 -r
 	echo ""
 	if [[ $REPLY =~ ^[Yy]$ ]]
 	then
-		echo "API_KEY_SECRET=$(openssl rand -hex 33)" >> .env
+		echo "API_KEY_SECRET=$(openssl rand -hex 33)" >> apps/backend/.env
 	fi
 fi
 
-if ! grep -qF "NGINX_HOST" .env; then
-	echo ".env does not contain NGINX_HOST..."
+if ! grep -qF "NGINX_HOST" apps/backend/.env; then
+	echo "apps/backend/.env does not contain NGINX_HOST..."
 	read -p 'Enter your FQDN/Hostname/IP Address: ' fqdn
-	echo "NGINX_HOST=$fqdn" >> .env
+	echo "NGINX_HOST=$fqdn" >> apps/backend/.env
 fi
 
 if [ -f ./nginx/certs/ssl_certificate.crt ]; then
