@@ -11,6 +11,7 @@ import {
 export interface ISnackbarState {
   message: string;
   error: boolean;
+  warn: boolean;
   show: boolean;
 }
 
@@ -23,12 +24,23 @@ export interface ISnackbarState {
 export class Snackbar extends VuexModule {
   message = '';
   error = false;
+  warn = false;
   show = false;
 
   @Action
   notify(message: string) {
     this.context.commit('SET_VISIBILITY', false);
     this.context.commit('SET_ERROR', false);
+    this.context.commit('SET_WARN', false);
+    this.context.commit('SET_MESSAGE', message);
+    this.context.commit('SET_VISIBILITY', true);
+  }
+
+  @Action
+  warning(message: string) {
+    this.context.commit('SET_VISIBILITY', false);
+    this.context.commit('SET_ERROR', false);
+    this.context.commit('SET_WARN', true);
     this.context.commit('SET_MESSAGE', message);
     this.context.commit('SET_VISIBILITY', true);
   }
@@ -37,6 +49,7 @@ export class Snackbar extends VuexModule {
   failure(message: string) {
     this.context.commit('SET_VISIBILITY', false);
     this.context.commit('SET_ERROR', true);
+    this.context.commit('SET_WARN', false);
     this.context.commit('SET_MESSAGE', message);
     this.context.commit('SET_VISIBILITY', true);
   }
@@ -72,6 +85,11 @@ export class Snackbar extends VuexModule {
   @Mutation
   SET_ERROR(error: boolean) {
     this.error = error;
+  }
+
+  @Mutation
+  SET_WARN(warn: boolean) {
+    this.warn = warn;
   }
 
   @Mutation

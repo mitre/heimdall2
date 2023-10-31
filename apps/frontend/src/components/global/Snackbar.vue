@@ -3,7 +3,7 @@
     v-if="show"
     id="info-snackbar"
     v-model="show"
-    :color="error ? 'error' : 'success'"
+    :color="error ? 'error' : warning ? 'success' : 'warning'"
     elevation="24"
     timeout="10000"
     top
@@ -39,13 +39,17 @@ export default class Snackbar extends Vue {
     return SnackbarModule.error;
   }
 
+  get warning(): boolean {
+    return SnackbarModule.warn;
+  }
+
   get message(): string {
     this.messageContent = SnackbarModule.message;
     if (this.error) {
       if (this.messageContent) {
         return this.messageContent;
       } else {
-        return 'ERROR: An unidentified error has occured, if functionality has degraded please try refreshing the page. If that does not fix the issue you are experiencing, then please report the issue.';
+        return 'ERROR: An unidentified error has occurred, if functionality has degraded please try refreshing the page. If that does not fix the issue you are experiencing, then please report the issue.';
       }
     } else {
       if (this.messageContent) {

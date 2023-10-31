@@ -187,6 +187,7 @@ export default class LocalLogin extends Vue {
       .then(() => {
         this.$router.push('/');
         SnackbarModule.notify('You have successfully signed in.');
+        SnackbarModule.warning('You must change your password before the next Heimdall\nversion update or you will not be able to authenticate.');
       })
       .finally(() => {
         this.buttonLoading = false;
