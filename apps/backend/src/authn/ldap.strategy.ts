@@ -53,7 +53,7 @@ export class LDAPStrategy extends PassportStrategy(Strategy, 'ldap') {
         server: {
           url: `${sslConfig ? 'ldaps' : 'ldap'}://${configService.get(
             'LDAP_HOST'
-          )}:${configService.get('LDAP_PORT') || 389}`,
+          )}:${configService.get('LDAP_PORT') || '389'}`,
           bindDN: configService.get('LDAP_BINDDN'),
           bindCredentials: configService.get('LDAP_PASSWORD'),
           searchBase: configService.get('LDAP_SEARCHBASE') || 'disabled',
