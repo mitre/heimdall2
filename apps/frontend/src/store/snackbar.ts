@@ -9,6 +9,8 @@ import {
 } from 'vuex-module-decorators';
 
 export interface ISnackbarState {
+  linkUrl: string;
+  linkText: string;
   message: string;
   error: boolean;
   warn: boolean;
@@ -22,6 +24,8 @@ export interface ISnackbarState {
   name: 'SnackbarModule'
 })
 export class Snackbar extends VuexModule {
+  linkUrl = '';
+  linkText = '';
   message = '';
   error = false;
   warn = false;
@@ -42,6 +46,8 @@ export class Snackbar extends VuexModule {
     this.context.commit('SET_ERROR', false);
     this.context.commit('SET_WARN', true);
     this.context.commit('SET_MESSAGE', message);
+    //this.context.commit('SET_LINK_URL', linkUrl);
+    //this.context.commit('SET_LINK_TEXT', linkText);
     this.context.commit('SET_VISIBILITY', true);
   }
 
@@ -95,6 +101,16 @@ export class Snackbar extends VuexModule {
   @Mutation
   SET_MESSAGE(message: string) {
     this.message = message;
+  }
+
+  @Mutation
+  SET_LINK_URL(linkUrl: string) {
+    this.linkUrl = linkUrl;
+  }
+
+  @Mutation
+  SET_LINK_TEXT(linkText: string) {
+    this.linkText = linkText;
   }
 
   @Mutation

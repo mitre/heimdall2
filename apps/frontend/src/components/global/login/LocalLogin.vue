@@ -187,7 +187,10 @@ export default class LocalLogin extends Vue {
       .then(() => {
         this.$router.push('/');
         SnackbarModule.notify('You have successfully signed in.');
-        SnackbarModule.warning('You must change your password before the next Heimdall\nversion update or you will not be able to authenticate.');
+        // 31-Nov-2023: Remove the warning below after the predefined number of releases, or established date to deprecate bcrypt
+        SnackbarModule.SET_LINK_URL('https://github.com/mitre/heimdall2/wiki/Heimdall-Authentication-Methods#local-authentication');
+        SnackbarModule.SET_LINK_TEXT('NOTE: Please see Federal Information Processing Standard (FIPS) enable authentication');
+        SnackbarModule.warning('You must change your password before the next Heimdall version update or you will not be able to authenticate.')
       })
       .finally(() => {
         this.buttonLoading = false;
@@ -204,7 +207,7 @@ export default class LocalLogin extends Vue {
 
   openExternalAuthModeDocumentation() {
     window.open(
-      'https://github.com/mitre/heimdall2/wiki/External-Authentication-Only'
+      'https://github.com/mitre/heimdall2/wiki/Heimdall-Authentication-Methods#external-authentication-only'
     );
   }
 
