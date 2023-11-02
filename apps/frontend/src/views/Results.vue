@@ -56,9 +56,7 @@
           </v-list>
         </v-menu>
       </div>
-      <<<<<<< HEAD
       <PrintButton />
-      ======= >>>>>>> Fixed typing and linting
     </template>
 
     <!-- The main content: cards, etc -->

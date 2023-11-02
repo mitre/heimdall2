@@ -41,7 +41,7 @@ import {
   FilteredDataModule,
   TreeMapState
 } from '@/store/data_filters';
-import {compare_arrays} from '@/utilities/helper_util';
+import {compareArrays} from '@/utilities/helper_util';
 import {
   build_nist_tree_map,
   is_leaf,

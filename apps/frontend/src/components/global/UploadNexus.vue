@@ -107,7 +107,7 @@ const localTab = new LocalStorageVal<string>('nexus_curr_tab');
 export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: true}) readonly visible!: boolean;
   @Prop({default: false}) readonly persistent!: boolean;
-  activeTab: string = localTab.get_default('uploadtab-local');
+  activeTab: string = localTab.getDefault('uploadtab-local');
 
   get fullscreen() {
     return (

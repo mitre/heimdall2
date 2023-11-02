@@ -11,7 +11,6 @@ import {
   BurpSuiteMapper,
   ChecklistResults,
   ConveyorResults as ConveyorResultsMapper,
-  ChecklistIntermediaryConverter,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -144,11 +143,6 @@ export class InspecIntake extends VuexModule {
     }
     if (await this.isHDF(read)) {
       return this.loadText({
-        text: read,
-        filename: filename
-      });
-    } else if (await this.isChecklist(read)) {
-      return this.loadChecklist({
         text: read,
         filename: filename
       });
@@ -406,21 +400,5 @@ export class InspecIntake extends VuexModule {
 
     return fileID;
   }
-
-  @Action
-  async loadChecklist(options: ChecklistLoadOptions) {
-    const fileID: FileID = uuid();
-
-    const newChecklist = ChecklistIntermediaryConverter.toIntermediary({
-      text: options.text,
-      filename: options.filename
-    });
-
-    InspecDataModule.addChecklist({uniqueId: fileID, ...newChecklist});
-    FilteredDataModule.select_exclusive_checklist(fileID);
-
-    return fileID;
-  }
 }
-
 export const InspecIntakeModule = getModule(InspecIntake);
