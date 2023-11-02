@@ -4873,7 +4873,7 @@
   dependencies:
     "@types/express" "*"
 
-"@types/pg@*", "@types/pg@^8.10.2":
+"@types/pg@*":
   version "8.10.3"
   resolved "https://registry.npmjs.org/@types/pg/-/pg-8.10.3.tgz#39b3acba4f313a65c8fbb4b241fcb21cc1ba4126"
   integrity sha512-BACzsw64lCZesclRpZGu55tnqgFAYcrCBP92xLh1KLypZLCOsvJTSTgaoFVTy3lCys/aZTQzfeDxtjwrvdzL2g==
@@ -7936,11 +7936,10 @@ connect-pause@^0.1.1:
   integrity sha512-a1gSWQBQD73krFXdUEYJom2RTFrWUL3YvXDCRkyv//GVXc79cdW9MngtRuN9ih4FDKBtfJAJId+BbDuX+1rh2w==
 
 connect-pg-simple@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.npmjs.org/connect-pg-simple/-/connect-pg-simple-9.0.0.tgz#b09389c905deca5a7ef6220ab8cd4820cc08b6fb"
-  integrity sha512-tPHR01VQU/qnOl8bMsORD1WyrNkbVkyNmnXfXqaH4NZfxWb3zQkCTPbVHjkhjFpKCQpHA+Ry9Y7medndwyvq6A==
+  version "9.0.1"
+  resolved "https://registry.yarnpkg.com/connect-pg-simple/-/connect-pg-simple-9.0.1.tgz#98637ff17a5bfeaeef638093fcf484bc96fcbbf6"
+  integrity sha512-BuwWJH3K3aLpONkO9s12WhZ9ceMjIBxIJAh0JD9x4z1Y9nShmWqZvge5PG/+4j2cIOcguUoa2PSQ4HO/oTsrVg==
   dependencies:
-    "@types/pg" "^8.10.2"
     pg "^8.8.0"
 
 connect@^3.7.0:
