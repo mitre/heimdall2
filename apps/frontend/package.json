@@ -30,11 +30,9 @@
   },
   "dependencies": {
     "@e965/xlsx": "^0.20.0",
-    "@heimdall/interfaces": "^2.6.14",
+    "@heimdall/interfaces": "^2.6.59",
     "@mdi/font": "^7.0.96",
     "@mdi/js": "^7.0.96",
-    "@mitre/splunk-sdk-no-env": "^1.10.0",
-    "@types/bootstrap": "^5.0.15",
     "@types/chroma-js": "^2.1.0",
     "@types/concat-stream": "^2.0.0",
     "@types/d3": "^7.0.0",
@@ -78,7 +76,6 @@
     "highlight.js": "^11.0.0",
     "html-loader": "^4.1.0",
     "inspecjs": "^2.8.1",
-    "jquery": "^3.6.0",
     "lodash": "4.17.21",
     "lru-cache": "^7.17.0",
     "luxon": "^3.0.1",
@@ -111,7 +108,6 @@
     "vuex": "^3.1.2",
     "vuex-module-decorators": "^1.0.1",
     "winston": "^3.6.0",
-    "xlsx": "^0.17.0",
     "xml-js": "^1.6.11"
   },
   "devDependencies": {
