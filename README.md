@@ -296,7 +296,13 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      sudo apt install nano                        # recommended installation
      sudo npm install -g yarn
      ```
-     
+
+   **NOTES** 
+
+     - The installation scripts setup_XX.x are no longer supported and are not needed anymore, as the installation process is straightforward for any RPM and DEB distro.
+    
+     - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) nodesource for nodejs supported version and additional installation information
+  
    OSX:
    
    - ```bash
@@ -304,6 +310,25 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      brew install nano                        # recommended installation
      sudo npm install -g yarn
      ```
+
+   WINDOWS:
+    - Install Node.js via MSI Installer
+      - Download the node release 18.xx installer (msi) from the [nodejs site](https://nodejs.org/en/blog/release)
+      - Open and run (double-click) the .msi file, the installation process begins, follow the installation instructions
+      - Node.js offers you options to install tools for native modules, we recommend checking the Automatically install the necessary tools check box.
+      - Verify the Node and npm version
+      ```shell
+      node --version 
+      npm --version
+      ```
+
+    - Install Yarn via MSI Installer
+      - Download the Yarn installation file from [GitHub](https://github.com/yarnpkg/yarn/releases/)
+      - Open and run the installation file, follow the installation instructions
+      - Run the following command in the PowerShell to verify the installation:
+      ```shell
+      yarn --version
+      ```
 
 2. Clone this repository:
 
@@ -351,7 +376,31 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
       # Switch back to your original OS user
       exit
       ```   
-
+   WINDOWS:
+   - Start the postgres server base on the installation method
+     - Starting Postgres Server Using `net start`
+       ```sql
+       net start postgresql-[x32 or x64]-[version]
+       ```
+     - Starting Postgres Server Using `pg_ctl`
+       ```sql 
+       pg_ctl -D "C:\[path-to-postgres-installation\PostgreSQL\15\data" start
+       ```
+     - Starting Postgres Server Using Services Manager
+       - Press the `win key + R` to launch the `Run` window.
+       - Type the `services.msc` and hit the `OK` button to open the Services Manager:
+       - Search for `Postgresql-[x32 or x64]-[version]`, select the service, and hit the `Start/play` button to start
+   - Create the database user 
+     - Recommend using pgAdmin and follow instruction listed here 
+     - Open a postgres shell terminal (path to postgres executable directory must be set)
+       ```sql
+       # Start the terminal
+       psql -U postgres  
+       # Create the database user
+       CREATE USER <username> with encrypted password '<password>';
+       ALTER USER <username> CREATEDB;
+       \q
+       ```
    
 4. Install project dependencies:
 
@@ -360,13 +409,19 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      yarn install
      ```
 
-5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
+5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
 
 You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
 6. Create the database:
 
    - ```bash
+     # Windows
+     yarn backend sequelize-cli-windows db:create
+     yarn backend sequelize-cli-windows db:migrate
+     yarn backend sequelize-cli-windows db:seed:all
+
+     # All other OSs
      yarn backend sequelize-cli db:create
      yarn backend sequelize-cli db:migrate
      yarn backend sequelize-cli db:seed:all
