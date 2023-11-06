@@ -1,5 +1,5 @@
 <template>
-  <v-card width="100%" class="mt-3 pt-4">
+  <v-card width="100%" height="480" class="mt-3 pt-4">
     <v-card-text>
       <v-row dense>
         <v-col>

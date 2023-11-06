@@ -1,5 +1,5 @@
 <template>
-  <v-card width="100%" class="overflow-y-auto">
+  <v-card width="100%" height="120px" class="overflow-y-auto">
     <v-card-text v-if="selectedRule.stigref !== ''" class="text-center">
       <h3 class="d-inline-block mx-2 mw-100">
         {{ selectedRule.stigref }}

@@ -35,14 +35,16 @@
           <!-- Left Panel -->
           <v-col cols="12" md="6">
             <!-- Data Table -->
-            <ChecklistRulesTable
-              :all-filter="allFilter"
-              :file-filter="fileFilter"
-              :short-id-enabled="shortIdEnabled"
-              :rules="filteredRules"
-              :num-total-rules="allRules.length"
-              @toggle-short-id="shortIdEnabled = !shortIdEnabled"
-            />
+            <v-row dense>
+              <ChecklistRulesTable
+                :all-filter="allFilter"
+                :file-filter="fileFilter"
+                :short-id-enabled="shortIdEnabled"
+                :rules="filteredRules"
+                :num-total-rules="allRules.length"
+                @toggle-short-id="shortIdEnabled = !shortIdEnabled"
+              />
+            </v-row>
           </v-col>
           <!-- Right Panel (Rule Data) -->
           <v-col id="right-panel" ref="rightPanel" cols="12" md="6">

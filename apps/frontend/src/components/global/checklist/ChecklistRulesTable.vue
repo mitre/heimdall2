@@ -31,7 +31,7 @@
         multiple
         outlined
         return-object
-        height="8.5vh"
+        height="50px"
       >
         <template #selection="{item, index}">
           <v-chip v-if="index < 3" small>
@@ -55,7 +55,7 @@
         :headers="headers"
         hide-default-footer
         class="overflow-auto"
-        height="60vh"
+        height="1200px"
         @click:row="showRule"
       >
         <template #[`item.status`]="{item}">

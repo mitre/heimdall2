@@ -1,5 +1,5 @@
 <template>
-  <v-card class="overflow-auto mt-3 pt-2" width="100%">
+  <v-card class="overflow-auto mt-3 pt-2" width="100%" height="730px">
     <v-card-text v-if="selectedRule.ruleid !== ''">
       <!-- Rule Title -->
       <div class="my-3 d-flex flex-column">
