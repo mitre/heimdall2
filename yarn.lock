@@ -4255,9 +4255,9 @@
     "@types/node" "*"
 
 "@types/connect-pg-simple@^7.0.0":
-  version "7.0.2"
-  resolved "https://registry.yarnpkg.com/@types/connect-pg-simple/-/connect-pg-simple-7.0.2.tgz#f4e595134abe1337a3790141ce24b5b9500e9979"
-  integrity sha512-Chx/aOpx3wdxx+wQ6t7QYxYDBV/2k68+Ae50QFsY9AiVkKGxtZqohNS4l+Sm63HeWqz7Gw9HI5UEg5UZakiC9A==
+  version "7.0.3"
+  resolved "https://registry.yarnpkg.com/@types/connect-pg-simple/-/connect-pg-simple-7.0.3.tgz#05b4bdbccbba333787b01730bacd202f15afa480"
+  integrity sha512-NGCy9WBlW2bw+J/QlLnFZ9WjoGs6tMo3LAut6mY4kK+XHzue//lpNVpAvYRpIwM969vBRAM2Re0izUvV6kt+NA==
   dependencies:
     "@types/express" "*"
     "@types/express-session" "*"
