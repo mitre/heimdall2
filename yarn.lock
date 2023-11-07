@@ -4240,9 +4240,9 @@
   integrity sha512-gbiHvCuBS9aXkE3OEDfS69bscNLTYtbbx2TQf6WyOu+4eCH1AH1gPSiDGF2UzwkRFAbqKNsC5F0mY0xcaEHCbg==
 
 "@types/concat-stream@^2.0.0":
-  version "2.0.1"
-  resolved "https://registry.yarnpkg.com/@types/concat-stream/-/concat-stream-2.0.1.tgz#f5cc2b46fff9f13defe4d963d4c3ed698cd14678"
-  integrity sha512-v5HP9ZsRbzFq5XRo2liUZPKzwbGK5SuGVMWZjE6iJOm/JNdESk3/rkfcPe0lcal0C32PTLVlYUYqGpMGNdDsDg==
+  version "2.0.2"
+  resolved "https://registry.yarnpkg.com/@types/concat-stream/-/concat-stream-2.0.2.tgz#08030649e565cf105a160c09b8b50a4d5a08f721"
+  integrity sha512-hgEx+hdJnfCHa62l6SNHNoe/cRge2HoUZe9KEDwOs2TvyocLTlTuw0rUMiii99kG2avc+BubhNpZ+cu05Gl8oQ==
   dependencies:
     "@types/node" "*"
 
