@@ -40,7 +40,7 @@ export class EvaluationsController {
     private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {}
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(APIKeyOrJwtAuthGuard)
   @Get(':id')
   async findById(
     @Param('id') id: string,
@@ -68,7 +68,7 @@ export class EvaluationsController {
     return evaluationGroups.map((group) => new GroupDto(group));
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(APIKeyOrJwtAuthGuard)
   @Get()
   async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
