@@ -121,7 +121,14 @@ export class ControlSummaryMapper {
                 _.countBy(_.flatMapDeep(cur)),
                 (objValue, srcValue) => objValue + srcValue
               ),
-            {Passed: 0, Failed: 0, 'Profile Error': 0, 'Not Reviewed': 0}
+            {
+              Passed: 0,
+              Failed: 0,
+              'Profile Error': 0,
+              'Not Reviewed': 0,
+              'Not Applicable': 0,
+              'From Profile': 0
+            }
           )
         }
       })
