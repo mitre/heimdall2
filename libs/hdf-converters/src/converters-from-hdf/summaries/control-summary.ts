@@ -95,9 +95,13 @@ export class ControlSummaryMapper {
             p.extendedBy.length !== 0
               ? []
               : p.contains.map((c) => ({
-                  ...(d.controls?.map(con => con.data.id).includes(c.data.id) && {[c.data.id]: {
-                    statuses: {[d.filename]: {[p.data.name]: c.hdf.status}}
-                  }})
+                  ...(d.controls
+                    ?.map((con) => con.data.id)
+                    .includes(c.data.id) && {
+                    [c.data.id]: {
+                      statuses: {[d.filename]: {[p.data.name]: c.hdf.status}}
+                    }
+                  })
                 }))
           )
         ) as Record<string, unknown>[][][]
@@ -161,8 +165,6 @@ export class ControlSummaryMapper {
         }
       })
     );
-
-    console.log(JSON.stringify(withScore, null, 2));
 
     return withScore;
   }
