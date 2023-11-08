@@ -9,7 +9,7 @@
         v-on="on"
       />
     </template>
-    <span>Control Summary</span>
+    <span>Summary by Test ID</span>
   </v-tooltip>
 </template>
 
@@ -53,7 +53,7 @@ export default class ExportControlSummary extends Vue {
       [
         {
           data: JSON.stringify(controlSummary, null, 2),
-          filename: 'ControlSummary.json'
+          filename: 'heimdall_summary_by_test_id.json'
         }
       ],
       'json'
