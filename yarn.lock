@@ -4770,9 +4770,9 @@
   integrity sha512-nG96G3Wp6acyAgJqGasjODb+acrI7KltPiRxzHPXnP3NgI28bpQDRv53olbqGXbfcgF5aiiHmO3xpwEpS5Ld9g==
 
 "@types/multer@^1.4.5":
-  version "1.4.9"
-  resolved "https://registry.yarnpkg.com/@types/multer/-/multer-1.4.9.tgz#74e803d3a9b62f41d191ce48012c2151f62c2ed7"
-  integrity sha512-9NSvPJ2E8bNTc8XtJq1Cimx2Wrn2Ah48F15B2Du/hM8a8CHLhVbJMlF3ZCqhvMdht7Sa+YdP0aKP7N4fxDcrrg==
+  version "1.4.10"
+  resolved "https://registry.yarnpkg.com/@types/multer/-/multer-1.4.10.tgz#6bca159aaaf40ec130e99831a08e3d0ed54be611"
+  integrity sha512-6l9mYMhUe8wbnz/67YIjc7ZJyQNZoKq7fRXVf7nMdgWgalD0KyzJ2ywI7hoATUSXSbTu9q2HBiEwzy0tNN1v2w==
   dependencies:
     "@types/express" "*"
 
