@@ -16,11 +16,34 @@ export default class CopyButton extends Vue {
 
   async copy() {
     try {
-      navigator.clipboard.writeText(this.text);
+      if (navigator.clipboard) {
+        // If https, use the new API secure copy
+        navigator.clipboard.writeText(this.text);
+      } else {
+        // Otherwise fallback to the old API
+        this.unsecuredCopyToClipboard(this.text);
+      }
       SnackbarModule.notify('Text copied to your clipboard');
     } catch (e) {
       SnackbarModule.failure(`Failed to copy to your clipboard: ${e}`);
     }
+  }
+
+  unsecuredCopyToClipboard(text: string) {
+    const tempTextArea = document.createElement('textarea');
+    tempTextArea.value = text;
+
+    // Set the style of the textarea to make it invisible
+    tempTextArea.style.opacity = '0';
+    tempTextArea.style.pointerEvents = 'none';
+    tempTextArea.style.position = 'absolute';
+    tempTextArea.style.left = '-9999px';
+
+    document.body.appendChild(tempTextArea);
+    tempTextArea.focus();
+    tempTextArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempTextArea);
   }
 }
 </script>
