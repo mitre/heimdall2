@@ -25,13 +25,18 @@
           ref="password"
           v-model="password"
           :error-messages="requiredFieldError($v.password, 'Password')"
-          type="password"
+          :type="showPassword ? 'text' : 'password'"
           name="password"
           label="Password"
           prepend-icon="mdi-lock"
           tabindex="2"
           @blur="$v.password.$touch()"
-        />
+          ><template #append>
+            <v-icon @click="showPassword = !showPassword">{{
+              showPassword ? 'mdi-eye' : 'mdi-eye-off'
+            }}</v-icon>
+          </template></v-text-field
+        >
         <v-container fluid class="mb-0">
           <v-btn
             id="login_button"
@@ -176,6 +181,7 @@ export default class LocalLogin extends Vue {
   email = '';
   password = '';
   buttonLoading = false;
+  showPassword = false;
 
   login() {
     this.buttonLoading = true;
