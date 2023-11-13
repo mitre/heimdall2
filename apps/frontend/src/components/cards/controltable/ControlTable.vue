@@ -108,7 +108,11 @@
             text="Controls Viewed"
             sort="disabled"
             :viewed-header="true"
-            :number-of-viewed-controls="viewedControlIds.length"
+            :number-of-viewed-controls="
+              raw_items.filter((elem) =>
+                viewedControlIds.has(elem.control.data.id)
+              ).length
+            "
             :number-of-all-controls="raw_items.length"
           />
         </template>
@@ -129,7 +133,7 @@
           :control="item.control"
           :expanded="expanded.includes(item.key)"
           :show-impact="showImpact"
-          :viewed-controls="viewedControlIds"
+          :viewed-controls="[...viewedControlIds]"
           @toggle="toggle(item.key)"
           @control-viewed="toggleControlViewed"
         />
@@ -204,18 +208,17 @@ export default class ControlTable extends Vue {
   sortRunTime: Sort = 'none';
 
   // Used for viewed/unviewed controls.
-  viewedControlIds: string[] = [];
+  viewedControlIds: Set<string> = new Set();
   displayUnviewedControls = true;
 
   toggleControlViewed(control: ContextualizedControl) {
-    const alreadyViewed = this.viewedControlIds.indexOf(control.data.id);
     // If the control hasn't been marked as viewed yet, mark it as viewed.
-    if (alreadyViewed === -1) {
-      this.viewedControlIds.push(control.data.id);
+    if (this.viewedControlIds.has(control.data.id)) {
+      this.viewedControlIds.add(control.data.id);
     }
     // Else, remove it from the view controls array.
     else {
-      this.viewedControlIds.splice(alreadyViewed, 1);
+      this.viewedControlIds.delete(control.data.id);
     }
   }
 
@@ -420,7 +423,7 @@ export default class ControlTable extends Vue {
     // Displays only unviewed controls.
     if (this.displayUnviewedControls) {
       items = items.filter(
-        (val) => !this.viewedControlIds.includes(val.control.data.id)
+        (val) => !this.viewedControlIds.has(val.control.data.id)
       );
     }
 
