@@ -31,7 +31,8 @@
           prepend-icon="mdi-lock"
           tabindex="2"
           @blur="$v.password.$touch()"
-          ><template #append>
+        >
+          <template #append>
             <v-icon @click="showPassword = !showPassword">{{
               showPassword ? 'mdi-eye' : 'mdi-eye-off'
             }}</v-icon>
