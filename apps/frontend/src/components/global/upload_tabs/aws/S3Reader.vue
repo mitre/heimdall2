@@ -20,7 +20,7 @@
     <AuthStepMFA
       :mfa-token.sync="mfaToken"
       :mfa-serial.sync="mfaSerial"
-      @auth-mfa="handle_proceed_mfa"
+      @auth-mfa="handleProceedMFA"
       @exit-mfa="handle_cancel_mfa"
     />
 
@@ -29,9 +29,9 @@
     <FileList
       :auth="assumedRole"
       :files="files"
-      @exit-list="handle_cancel_mfa"
-      @got-files="got_files"
-      @load-bucket="load_bucket"
+      @exit-list="handle_exit_list"
+      @got-files="gotFiles"
+      @load-bucket="loadBucket"
     />
     <v-overlay :opacity="50" absolute="absolute" :value="showHelp">
       <div class="text-center">
@@ -65,14 +65,13 @@ import {SnackbarModule} from '@/store/snackbar';
 import {
   Auth,
   AUTH_DURATION,
-  get_session_token,
+  getSessionToken,
   MFAInfo,
-  transcribe_error
+  transcribeError
 } from '@/utilities/aws_util';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {requireFieldRule} from '@/utilities/upload_util';
 import S3 from 'aws-sdk/clients/s3';
-import {AWSError} from 'aws-sdk/lib/error';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
@@ -120,7 +119,7 @@ export default class S3Reader extends Vue {
    */
   handle_basic() {
     // Attempt to assume role based on if we've determined 2fa necessary
-    get_session_token(
+    getSessionToken(
       this.accessToken,
       this.secretToken,
       this.region,
@@ -134,7 +133,7 @@ export default class S3Reader extends Vue {
 
       // Failure of initial get session token: want to set error normally
       (failure) => {
-        this.handle_error(failure);
+        this.handleError(failure);
       }
     );
   }
@@ -143,7 +142,7 @@ export default class S3Reader extends Vue {
   handle_goto_mfa() {
     // Attempt to assume role based on if we've determined 2fa necessary
     // Don't need the duration to be very long
-    get_session_token(this.accessToken, this.secretToken, this.region, 10).then(
+    getSessionToken(this.accessToken, this.secretToken, this.region, 10).then(
       // Success of get session token - now need to determine if MFA necessary
       () => {
         this.step = 2;
@@ -151,7 +150,7 @@ export default class S3Reader extends Vue {
 
       // Failure of initial get session token: want to set error normally
       (failure) => {
-        this.handle_error(failure);
+        this.handleError(failure);
       }
     );
   }
@@ -172,7 +171,7 @@ export default class S3Reader extends Vue {
   /** Handle an MFA login.
    * Determine whether further action is necessary
    */
-  handle_proceed_mfa() {
+  handleProceedMFA() {
     // Build our mfa params
     const mfa: MFAInfo = {
       SerialNumber: this.mfaSerial || null,
@@ -180,7 +179,7 @@ export default class S3Reader extends Vue {
     };
 
     // Attempt to assume role based on if we've determined 2fa necessary
-    get_session_token(
+    getSessionToken(
       this.accessToken,
       this.secretToken,
       this.region,
@@ -193,7 +192,7 @@ export default class S3Reader extends Vue {
         this.step = 3;
       },
       (failure) => {
-        this.handle_error(failure);
+        this.handleError(failure);
       }
     );
   }
@@ -210,7 +209,7 @@ export default class S3Reader extends Vue {
   /** Attempt to load.
    * Basically just wraps fetch_files with error handling
    */
-  async load_bucket(name: string) {
+  async loadBucket(name: string) {
     const s3 = new S3({
       ...this.assumedRole!.creds,
       region: this.assumedRole!.region || 'us-east-1'
@@ -224,25 +223,26 @@ export default class S3Reader extends Vue {
       .then((success) => {
         this.files = success.Contents || [];
       })
-      .catch((failure) => this.handle_error(failure));
+      .catch((failure) => this.handleError(failure));
   }
 
   /** Save the current credentials to local storage */
-  save_creds() {
+  // CURRENTLY UNUSED CODE - no logout button yet to reset it
+  saveCreds() {
     localSessionInformation.set(this.assumedRole);
   }
 
   /** Callback to handle an AWS error.
    * Sets shown error.
    */
-  handle_error(error: AWSError): void {
-    const formattedError = transcribe_error(error);
+  handleError(error: {name: string; message: string}): void {
+    const formattedError = transcribeError(error);
     // Toast whatever error we got
     SnackbarModule.failure(formattedError);
   }
 
   /** Callback on got files */
-  got_files(files: Array<FileID>) {
+  gotFiles(files: Array<FileID>) {
     this.$emit('got-files', files);
   }
 }

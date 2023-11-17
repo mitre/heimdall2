@@ -47,7 +47,7 @@
 
 <script lang="ts">
 import {InspecIntakeModule} from '@/store/report_intake';
-import {Auth, fetch_s3_file} from '@/utilities/aws_util';
+import {Auth, fetchS3File} from '@/utilities/aws_util';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import S3 from 'aws-sdk/clients/s3';
 import Vue from 'vue';
@@ -77,7 +77,7 @@ export default class FileList extends Vue {
     const file = this.files[index];
 
     // Fetch it from s3, and promise to submit it to be loaded afterwards
-    await fetch_s3_file(this.auth.creds, file.Key!, this.formBucketName).then(
+    await fetchS3File(this.auth.creds, file.Key!, this.formBucketName).then(
       (content) => {
         try {
           JSON.parse(content);
