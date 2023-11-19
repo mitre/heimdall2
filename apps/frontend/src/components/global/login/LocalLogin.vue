@@ -33,11 +33,11 @@
           @blur="$v.password.$touch()"
         >
           <template #append>
-            <v-icon @click="showPassword = !showPassword">{{
-              showPassword ? 'mdi-eye' : 'mdi-eye-off'
-            }}</v-icon>
-          </template></v-text-field
-        >
+            <v-icon @click="showPassword = !showPassword">
+            {{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}
+            </v-icon>
+          </template>
+        </v-text-field>
         <v-container fluid class="mb-0">
           <v-btn
             id="login_button"
