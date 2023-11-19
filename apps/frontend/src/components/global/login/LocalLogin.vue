@@ -34,7 +34,7 @@
         >
           <template #append>
             <v-icon @click="showPassword = !showPassword">
-            {{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}
+              {{ showPassword ? 'mdi-eye' : 'mdi-eye-off' }}
             </v-icon>
           </template>
         </v-text-field>
