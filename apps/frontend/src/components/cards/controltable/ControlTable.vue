@@ -129,7 +129,7 @@
           :control="item.control"
           :expanded="expanded.includes(item.key)"
           :show-impact="showImpact"
-          :viewed-controls="[...viewedControlIds]"
+          :viewed-controls="viewedControlIds"
           @toggle="toggle(item.key)"
           @control-viewed="toggleControlViewed"
         />
