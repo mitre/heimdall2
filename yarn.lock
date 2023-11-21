@@ -4150,9 +4150,9 @@
     "@types/node" "*"
 
 "@types/adm-zip@^0.5.0":
-  version "0.5.4"
-  resolved "https://registry.yarnpkg.com/@types/adm-zip/-/adm-zip-0.5.4.tgz#cb7b24548612c947dd4c4744a1e22d21c806482f"
-  integrity sha512-/pYie/76O0TTqU4L/z1XqQ5mA5QvScaP/EO3lpH7iQ6/AjioYyuvi2IAmQeimuTTnytl03e9g8YFYkGV2Bxojw==
+  version "0.5.5"
+  resolved "https://registry.yarnpkg.com/@types/adm-zip/-/adm-zip-0.5.5.tgz#4588042726aa5f351d7ea88232e4a952f60e7c1a"
+  integrity sha512-YCGstVMjc4LTY5uK9/obvxBya93axZOVOyf2GSUulADzmLhYE45u2nAssCs/fWBs1Ifq5Vat75JTPwd5XZoPJw==
   dependencies:
     "@types/node" "*"
 
