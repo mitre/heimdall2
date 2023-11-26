@@ -384,11 +384,11 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
        ```
      - Starting Postgres Server Using `pg_ctl`
        ```sql 
-       pg_ctl -D "C:\[path-to-postgres-installation\PostgreSQL\15\data" start
+       pg_ctl -D "C:\[path-to-postgres-installation]\PostgreSQL\[version]\data" start
        ```
      - Starting Postgres Server Using Services Manager
        - Press the `win key + R` to launch the `Run` window.
-       - Type the `services.msc` and hit the `OK` button to open the Services Manager:
+       - Type `services.msc` and hit the `OK` button to open the Services Manager:
        - Search for `Postgresql-[x32 or x64]-[version]`, select the service, and hit the `Start/play` button to start
    - Create the database user 
      - Recommend using pgAdmin and follow instruction listed here 

@@ -5,13 +5,19 @@ import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 import {DatabaseService} from './database.service';
 
+const line = '________________________________________________\n'
 const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
   format: winston.format.combine(
+    winston.format.colorize({
+      all: true
+    }),
     winston.format.timestamp({
       format: 'MMM-DD-YYYY HH:mm:ss Z'
     }),
-    winston.format.printf((info) => `[${[info.timestamp]}] ${info.message}`)
+    winston.format.errors({ stack: true }),
+    winston.format.align(),
+    winston.format.printf((info) => `${line}[${info.timestamp}] Query(${info.queryType}): ${info.message}`)
   )
 });
 
@@ -49,7 +55,8 @@ function logQuery(
   logger.info({
     message: `${sql} [${sanitize(connection.fields, connection.bind).join(
       ', '
-    )}]`
+    )}]`,
+    queryType: connection.type
   });
 }
 

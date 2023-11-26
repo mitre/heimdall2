@@ -14,3 +14,18 @@ export interface IEvaluation {
   readonly updatedAt: Date;
   readonly editable: boolean;
 }
+
+// export interface IEvalPagination {
+//   page: number;
+//   itemsPerPage: number;
+//   searchField: string;
+//   sortBy: string;
+//   sortType: string;
+// }
+
+export interface IEvalPaginationParams {
+  offset: number;
+  limit: number;
+  order: Array<string>;
+}
+

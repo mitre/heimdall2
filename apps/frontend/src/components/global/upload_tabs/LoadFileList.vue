@@ -14,20 +14,33 @@
         @cancel="deleteItemDialog = false"
         @confirm="deleteItemConfirm"
       />
-      <div class="d-flex flex-column">
+      <div class="d-flex flex-column" v-resize="onResize">
         <v-data-table
           v-model="selectedFiles"
           data-cy="loadFileList"
           class="pb-8"
           dense
+          fixed-header
+          show-select
+          mobile-breakpoint="0"          
+          :height="tableHight"              
           :headers="headers"
-          :items="filteredFiles"
+          :items="files"
           :loading="loading"
           :sort-by.sync="sortBy"
           :sort-desc="sortDesc"
           :item-key="fileKey"
-          show-select
-          mobile-breakpoint="0"
+          :items-per-page="itemsPerPage"
+          :page-count="totalPages"
+          :footer-props="{
+            showFirstLastPage: true,
+            firstIcon: 'mdi-arrow-collapse-left',
+            lastIcon: 'mdi-arrow-collapse-right',
+            prevIcon: 'mdi-arrow-left',
+            nextIcon: 'mdi-arrow-right',
+            'items-per-page-text':'Rows per page:',
+          }"
+          @update:options="loadItems"
         >
           <template #[`item.filename`]="{item}">
             <span class="cursor-pointer" @click="emit_selected([item])">{{
@@ -56,12 +69,13 @@
               <CopyButton
                 :text="createShareLink(item)"
                 icon="mdi-share-variant"
+                tooltip="Copy evaluation link (URL) to the clipboard"
               />
               <div v-if="item.editable">
                 <v-icon
                   data-cy="edit"
                   small
-                  title="Edit"
+                  title="Edit groups association"
                   class="mr-2"
                   @click="editItem(item)"
                 >
@@ -71,6 +85,7 @@
                   data-cy="delete"
                   class="mr-2"
                   small
+                  title="Delete record from the database"
                   @click="deleteItem(item)"
                   >mdi-delete</v-icon
                 >
@@ -101,7 +116,7 @@ import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationM
 import {EvaluationModule} from '@/store/evaluations';
 import {SnackbarModule} from '@/store/snackbar';
 import {Sample} from '@/utilities/sample_util';
-import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
+import {IEvalPaginationParams, IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -122,6 +137,7 @@ export default class LoadFileList extends Vue {
   @Prop({type: String, default: 'createdAt'}) readonly sortBy!: string;
   @Prop({type: Boolean, default: true}) readonly sortDesc!: boolean;
   @Prop({required: true}) readonly files!: IEvaluation[] | Sample[];
+  @Prop({required: true}) readonly itemsPerPage!: number;
 
   selectedFiles: IEvaluation[] | Sample[] = [];
   activeItem!: IEvaluation;
@@ -131,14 +147,66 @@ export default class LoadFileList extends Vue {
   deleteItemDialog = false;
   deleteTagDialog = false;
   search = '';
+  
+  //itemsPerPage = 10;
+  //           :items="filteredFiles"
+  totalPages = 0;
 
+  tableHight = '400px';
+  tableHightValue = 400;
+
+  onPaginationData(page: any) {
+    console.log(`page is: ${page} `)
+  }
+
+  loadItems (page:any, itemsPerPage: any, sortBy: any) {
+    console.log(`page is: ${JSON.stringify(page,null,2)} `)
+
+    console.log(`itemsPerPage is: ${page.itemsPerPage} `)
+    console.log(`sortBy is: ${page.sortBy} `)
+    
+    // @vuetable:pagination-data="onPaginationData"
+    // @update:options="loadItems"
+    if (page.sortBy == 'filename') {
+      this.filteredFiles;
+    }
+  }
+
+  mounted() {
+    this.onResize()
+  }
+
+  onResize() {
+    // try will fail when processing the Load Samples (LoadFileList.vue)
+    // Only one header in the Load Samples panel
+    try {
+      const firstHeader = Object.values(this.headers[1])[0];
+      this.tableHightValue = (window.innerHeight < 400) ? 400 : window.innerHeight - 250
+      // this.tableHightValue = 400;
+    } catch (err) {
+      this.tableHightValue = 400;
+    }
+    this.tableHight = this.tableHightValue + 'px'
+  }
+
+  // Loads selected evaluations into visualization panel
   emit_selected(selection: IEvaluation[] | Sample[]) {
     this.selectedFiles = [];
     this.$emit('load-selected', selection);
   }
 
+  getPagination = (page: number, size: string | number) => {
+    const limit = size ? +size : this.itemsPerPage;
+    const offset = page ? page * limit : 0;
+  
+    return { limit, offset };
+  };
+
   updateEvaluations() {
-    EvaluationModule.getAllEvaluations();
+    console.log("LoadFileList(updateEvaluations) -> CALLING EvaluationModule.getAllEvaluations")
+    //EvaluationModule.getAllEvaluations();
+    const params: IEvalPaginationParams = {offset: 1, limit: this.itemsPerPage, order: ["createdAt", "DESC"]};
+    EvaluationModule.getAllEvaluations(params);
   }
 
   editItem(item: IEvaluation) {
@@ -222,4 +290,3 @@ export default class LoadFileList extends Vue {
   position: absolute;
   bottom: 0;
 }
-</style>

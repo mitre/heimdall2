@@ -1,6 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions} from 'sequelize/types';
+import {FindOptions, OrderItem} from 'sequelize/types';
 import {DatabaseService} from '../database/database.service';
 import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -8,6 +8,8 @@ import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {Evaluation} from './evaluation.model';
+import {IEvalPaginationParams} from '@heimdall/interfaces';
+
 
 @Injectable()
 export class EvaluationsService {
@@ -17,12 +19,76 @@ export class EvaluationsService {
     private readonly databaseService: DatabaseService
   ) {}
 
-  async findAll(): Promise<Evaluation[]> {
+  // async findAll(): Promise<Evaluation[]> {
+  //   console.log("IN evaluation.services.ts findAll()")
+  //   return this.evaluationModel.findAll<Evaluation>({
+  //     attributes: {exclude: ['data']},
+  //     include: [EvaluationTag, User, {model: Group, include: [User]}]
+  //   });
+  // }
+
+  async findAll(params: IEvalPaginationParams): Promise<Evaluation[]> {
+    console.log("IN evaluation.services.ts findAll()")
+    console.log(`evaluations.services.ts -> params are ${params.limit}`)
+    console.log(`evaluations.services.ts -> params are ${params.offset}`)
+    console.log(`evaluations.services.ts -> params are \'${params.order[0].toString()}\'`)
+    console.log(`evaluations.services.ts -> params are [[\'${params.order[0]}\',\'${params.order[1]}\']]`)
+    console.log(`[[\'${params.order[0]}\',\'${params.order[1]}\']]`)
+
     return this.evaluationModel.findAll<Evaluation>({
       attributes: {exclude: ['data']},
-      include: [EvaluationTag, User, {model: Group, include: [User]}]
+      include: [EvaluationTag, User, {model: Group, include: [User]}],
+      offset: params.offset,
+      limit: params.limit,
+      order: [[params.order[0],params.order[1]]]
     });
   }
+
+  getPagination = (page: number, size: string | number) => {
+    const limit = size ? +size : 10;
+    const offset = page ? page * limit : 0;
+  
+    return { limit, offset };
+  };
+
+  async getPagingData(data: {rows: Evaluation;count: number;}, page: string | number, limit: number) {
+    const { count: totalItems, rows: evaluations } = data;
+    const currentPage = page ? +page : 0;
+    const totalPages = Math.ceil(totalItems / limit);
+  
+    return { totalItems, evaluations, totalPages, currentPage };
+  };
+
+
+  // async findAndCountAll(params: IEvalPagination): Promise<Evaluation[]> {
+  //   console.log("IN evaluation.services.ts findAndCountAll()")
+  //   //const { page, size, title } = req.query;
+  //   const { limit, offset } = this.getPagination(params.page, params.itemsPerPage);
+
+  //   return this.evaluationModel.findAndCountAll({
+  //     attributes: {exclude: ['data']},
+  //     include: [EvaluationTag, User, {model: Group, include: [User]}],
+  //     where: {
+  //       [Op.or]: [
+  //         {
+  //           title: {
+  //             [Op.like]: 'Boat%'
+  //           }
+  //         },
+  //         {
+  //           description: {
+  //             [Op.like]: '%boat%'
+  //           }
+  //         }
+  //       ]
+  //     },
+  //     offset: offset,
+  //     limit: limit
+  //   }).then(data => {
+  //     const response = this.getPagingData(data, params.page, limit);
+  //     return response;
+  //   });
+  // }
 
   async count(): Promise<number> {
     return this.evaluationModel.count();

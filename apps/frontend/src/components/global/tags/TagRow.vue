@@ -71,6 +71,8 @@ export default class TagRow extends Vue {
     updatedAt: new Date()
   };
 
+  params = {offset: 1, limit: 10, order: ["createdAt", "DESC"]}
+  
   mounted() {
     this.syncEvaluationTags();
   }
@@ -95,7 +97,7 @@ export default class TagRow extends Vue {
 
     Promise.all(addedTagPromises.concat(removedTagPromises))
       .then(() => SnackbarModule.notify('Successfully updated tags.'))
-      .finally(() => EvaluationModule.getAllEvaluations());
+      .finally(() => EvaluationModule.getAllEvaluations(this.params));
   }
 
   syncEvaluationTags() {
@@ -114,7 +116,7 @@ export default class TagRow extends Vue {
   deleteTagConfirm() {
     EvaluationModule.deleteTag(this.activeTag).then(() => {
       SnackbarModule.notify('Deleted tag successfully.');
-      EvaluationModule.getAllEvaluations().then(() => {
+      EvaluationModule.getAllEvaluations(this.params).then(() => {
         this.syncEvaluationTags();
       });
     });

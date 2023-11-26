@@ -8,6 +8,8 @@ import {
   Param,
   Post,
   Put,
+  Query,
+  Req,
   Request,
   UploadedFiles,
   UseGuards,
@@ -30,6 +32,8 @@ import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {EvaluationsService} from './evaluations.service';
+import {IEvalPaginationParams} from '@heimdall/interfaces';
+import {Evaluation} from './evaluation.model';
 
 @Controller('evaluations')
 @UseInterceptors(LoggingInterceptor)
@@ -39,7 +43,7 @@ export class EvaluationsController {
     private readonly groupsService: GroupsService,
     private readonly configService: ConfigService,
     private readonly authz: AuthzService
-  ) {}
+  ) {console.log('IN evaluations.controllers constructor')}
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findById(
@@ -68,21 +72,78 @@ export class EvaluationsController {
     return evaluationGroups.map((group) => new GroupDto(group));
   }
 
+  // @UseGuards(JwtAuthGuard)
+  // @Get()
+  // async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
+  //   console.log('HERE @GET evaluation.controller.ts - findALL')
+  //   console.log(`HERE @GET findALL user is: ${request.user.toJSON()}`)
+  //   //const { page, size, title } = request.query;
+
+  //   const abac = this.authz.abac.createForUser(request.user);
+  //   let evaluations = await this.evaluationsService.findAll();
+  //   console.log(`EVALUATIONS ARE (1): ${evaluations.values}`)
+  //   evaluations.forEach(function(value) {
+  //     console.log(`    EVALUATIONS IS: ${value.filename}`);
+  //   })
+
+  //   evaluations = evaluations.filter((evaluation) =>
+  //     abac.can(Action.Read, evaluation)
+  //   );
+
+  //   console.log(`EVALUATIONS ARE (2): ${evaluations.length}`)
+  //   return evaluations.map(
+  //     (evaluation) =>
+  //       new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+  //   );
+  // }
+  //@Param('params') params: IEvalPaginationParams, 
+
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
+  async findAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<EvaluationDto[]> {
+    console.log('HERE @GET evaluation.controller.ts - findALL')
+    console.log(`HERE @GET findALL user is: ${JSON.stringify(request.user,null,2)}`)
+    console.log(`evaluation.controllers.ts -> params are ${JSON.stringify(params,null,2)}`)
+
     const abac = this.authz.abac.createForUser(request.user);
-    let evaluations = await this.evaluationsService.findAll();
+    let evaluations = await this.evaluationsService.findAll(params);
+    console.log(`EVALUATIONS ARE (1): ${evaluations.values}`)
+    evaluations.forEach(function(value) {
+      console.log(`    EVALUATIONS IS: ${JSON.stringify(value.filename,null,2)}`);
+    })
 
     evaluations = evaluations.filter((evaluation) =>
       abac.can(Action.Read, evaluation)
     );
 
+    console.log(`EVALUATIONS ARE (2): ${evaluations.length}`)
     return evaluations.map(
       (evaluation) =>
         new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
     );
   }
+
+  // @UseGuards(JwtAuthGuard)
+  // @Get()
+  // async findAndCountAll(@Param() params: IEvalPagination, @Request() request: {user: User}): Promise<EvaluationDto[]> {
+  //   console.log('HERE @GET evaluation.controller.ts - findALL')
+  //   console.log(`HERE @GET findALL user is: ${request.user.toJSON()}`)
+  //   //const { page, size, title } = request.query;
+
+  //   const abac = this.authz.abac.createForUser(request.user);
+  //   let evaluations = await this.evaluationsService.findAndCountAll(params);
+  //   console.log(`EVALUATIONS ARE (1): ${evaluations}`)
+
+  //   evaluations = evaluations.filter((evaluation) =>
+  //     abac.can(Action.Read, evaluation)
+  //   );
+
+  //   console.log(`EVALUATIONS ARE (2): ${evaluations}`)
+  //   return evaluations.map(
+  //     (evaluation) =>
+  //       new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+  //   );
+  // }
 
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Post()

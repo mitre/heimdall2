@@ -1,5 +1,11 @@
 <template>
-  <v-icon small class="mr-2" type="button" @click="copy">{{ icon }}</v-icon>
+  <v-icon 
+    small class="mr-2" 
+    type="button" 
+    b-tooltip.hover
+    :title="getTooltipTitle()"
+    @click="copy"
+  >{{ icon }}</v-icon>
 </template>
 
 <script lang="ts">
@@ -14,7 +20,16 @@ export default class CopyButton extends Vue {
   @Prop({required: false, default: 'mdi-clipboard-outline'})
   readonly icon!: string;
 
+  @Prop({required: false, type: String, default: 'Copy content to clipboard'})
+  readonly tooltip!: string;
+
+  getTooltipTitle() {
+    console.log(`tooltip is ${this.tooltip}`);  
+    return this.tooltip;
+  }
+
   async copy() {
+   //console.log(`tooltip is ${this.tooltip}`);   
     try {
       navigator.clipboard.writeText(this.text);
       SnackbarModule.notify('Text copied to your clipboard');

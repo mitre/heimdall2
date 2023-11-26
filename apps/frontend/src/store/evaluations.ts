@@ -2,7 +2,8 @@ import Store from '@/store/store';
 import {
   ICreateEvaluationTag,
   IEvaluation,
-  IEvaluationTag
+  IEvaluationTag,
+  IEvalPaginationParams
 } from '@heimdall/interfaces';
 import axios from 'axios';
 import * as _ from 'lodash';
@@ -35,23 +36,53 @@ export class Evaluation extends VuexModule {
 
   get evaluationForFile(): Function {
     return (file: EvaluationFile | ProfileFile) => {
-      return this.allEvaluations.find((e) => {
-        return e.id === file.database_id?.toString();
-      });
+      try {
+        return this.allEvaluations.find((e) => {
+          return e.id === file.database_id?.toString();
+        });
+      } catch(err) {
+        return false;
+      }
     };
   }
 
+  // @Action
+  // async getAllEvaluations(): Promise<void> {
+  //   return axios
+  //     .get<IEvaluation[]>('/evaluations')
+  //     .then(({data}) => {
+  //       this.context.commit('SET_ALL_EVALUATION', data);
+  //     })
+  //     .finally(() => {
+  //       this.context.commit('SET_LOADING', false);
+  //     });
+  // }
+
   @Action
-  async getAllEvaluations(): Promise<void> {
+  async getAllEvaluations(params: IEvalPaginationParams): Promise<void> {
+    console.log(`evaluations.ts -> params are: ${JSON.stringify(params,null,2)}`)    
     return axios
-      .get<IEvaluation[]>('/evaluations')
+      .get<IEvaluation[]>('/evaluations', {params})
       .then(({data}) => {
+        console.log(`evaluations.ts -> SET_ALL_EVALUATION -> data is: ${JSON.stringify(data,null,2)}`)
         this.context.commit('SET_ALL_EVALUATION', data);
       })
       .finally(() => {
         this.context.commit('SET_LOADING', false);
       });
   }
+
+  // @Action
+  // async getAllEvalsPagination(params: IEvalPaginationParams): Promise<void> {
+  //   return axios
+  //     .get<IEvaluation[]>('/evaluations', { params })
+  //     .then(({data}) => {
+  //       this.context.commit('SET_ALL_EVALUATION', data);
+  //     })
+  //     .finally(() => {
+  //       this.context.commit('SET_LOADING', false);
+  //     });
+  // }
 
   @Action
   async load_results(evaluationIds: string[]): Promise<(FileID | void)[]> {
@@ -65,6 +96,7 @@ export class Evaluation extends VuexModule {
         this.loadEvaluation(id)
           .then(async (evaluation) => {
             if (await InspecIntakeModule.isHDF(evaluation.data)) {
+              console.log(`ID isHDF: ${id} `),
               InspecIntakeModule.loadText({
                 text: JSON.stringify(evaluation.data),
                 filename: evaluation.filename,
@@ -78,6 +110,7 @@ export class Evaluation extends VuexModule {
                   SnackbarModule.failure(err);
                 });
             } else if (evaluation.data) {
+              console.log(`ID IS NOT isHDF: ${id} `)
               const inputFile: FileLoadOptions = {
                 filename: evaluation.filename
               };
