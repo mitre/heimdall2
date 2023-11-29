@@ -76,7 +76,6 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
   }
 
   get resultMessage(): string | undefined {
-    console.log('What is this result: ', this.result);
     return this.result.message || this.result.skip_message;
   }
 }
