@@ -4804,9 +4804,9 @@
     "@types/node" "*"
 
 "@types/papaparse@^5.3.2":
-  version "5.3.13"
-  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.3.13.tgz#302e13dcb3d0ee4d3c6c8c23ef3e37b21f56ad77"
-  integrity sha512-tYSlZI3tIdBHXea8fZHcmwbsd1mSUikdMUyqpqj0Zzfu2GTGUSHEKmcnBg699WJ8UnxG31rXD4b1mLGPOAxS2w==
+  version "5.3.14"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.3.14.tgz#345cc2a675a90106ff1dc33b95500dfb30748031"
+  integrity sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==
   dependencies:
     "@types/node" "*"
 
