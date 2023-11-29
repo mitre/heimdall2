@@ -25,7 +25,7 @@
                     elevation="2"
                     depressed
                   >
-                    <v-icon small class="mr-2">mdi-alert</v-icon>Error
+                    Error
                   </v-btn>
                   <span>
                     {{ errorMessage }}
