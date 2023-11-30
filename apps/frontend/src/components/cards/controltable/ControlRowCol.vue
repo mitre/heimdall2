@@ -40,7 +40,7 @@
       />
       <!-- eslint-enable vue/no-v-html -->
     </v-col>
-    <v-col v-if="'backtrace' in result" cols="12" class="pa-2">
+    <v-col v-if="result['backtrace'] !== undefined" cols="12" class="pa-2">
       <v-expansion-panels>
         <v-expansion-panel>
           <v-expansion-panel-header>Backtrace</v-expansion-panel-header>
