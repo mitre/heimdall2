@@ -80,13 +80,13 @@ export const searchObject = (
 const parseSearchString = (searchString: string): RegExp => {
   // Create a helper function to handle OR expressions
   const processOr = (expr: string): string => {
-    const orParts = expr.split(/\s*OR\s*/);
+    const orParts = expr.split(/\s*\|\|\s*/);
     return orParts.map((part) => part.trim()).join('|');
   };
 
   // Create a helper function to handle AND expressions
   const processAnd = (expr: string): string => {
-    const andParts = expr.split(/\s*AND\s*/);
+    const andParts = expr.split(/\s*&&\s*/);
     return andParts.map((part) => `(?=.*(${processOr(part)}))`).join('');
   };
 
