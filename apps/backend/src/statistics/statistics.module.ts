@@ -9,6 +9,8 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
+import {GroupRelation} from '../group-relations/group-relation.model';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
 import {User} from '../users/user.model';
@@ -23,7 +25,8 @@ import {StatisticsService} from './statistics.service';
       Evaluation,
       EvaluationTag,
       User,
-      Group
+      Group,
+      GroupRelation
     ]),
     ConfigModule
   ],
@@ -35,7 +38,8 @@ import {StatisticsService} from './statistics.service';
     EvaluationsService,
     EvaluationTagsService,
     UsersService,
-    GroupsService
+    GroupsService,
+    GroupRelationsService
   ],
   controllers: [StatisticsController]
 })

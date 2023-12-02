@@ -8,6 +8,7 @@ import {
   UPDATE_GROUP
 } from '../../test/constants/groups-test.constant';
 import {
+  CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2
 } from '../../test/constants/users-test.constant';
@@ -19,6 +20,8 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupRelation} from '../group-relations/group-relation.model';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {GroupUser} from '../group-users/group-user.model';
 import {SlimUserDto} from '../users/dto/slim-user.dto';
 import {User} from '../users/user.model';
@@ -36,6 +39,7 @@ describe('GroupsController', () => {
   let module: TestingModule;
 
   let basicUser: User;
+  let adminUser: User;
 
   beforeAll(async () => {
     module = await Test.createTestingModule({
@@ -47,6 +51,7 @@ describe('GroupsController', () => {
           Group,
           GroupUser,
           GroupEvaluation,
+          GroupRelation,
           Evaluation,
           EvaluationTag,
           User
@@ -56,6 +61,7 @@ describe('GroupsController', () => {
         AuthzService,
         DatabaseService,
         GroupsService,
+        GroupRelationsService,
         UsersService,
         EvaluationsService
       ]
@@ -71,6 +77,7 @@ describe('GroupsController', () => {
   beforeEach(async () => {
     await databaseService.cleanAll();
     basicUser = await usersService.create(CREATE_USER_DTO_TEST_OBJ);
+    adminUser = await usersService.create(CREATE_ADMIN_DTO);
   });
 
   afterAll((done) => {
@@ -284,13 +291,12 @@ describe('GroupsController', () => {
       privateGroup = await groupsService.create(PRIVATE_GROUP);
     });
 
-    it('should allow owners of a group to delete a group', async () => {
+    it('should allow admins to delete a group', async () => {
       const owner = await usersService.create(CREATE_USER_DTO_TEST_OBJ_2);
       await groupsService.addUserToGroup(privateGroup, owner, 'owner');
-      await groupsService.addUserToGroup(privateGroup, basicUser, 'user');
 
       const response = await groupsController.remove(
-        {user: owner},
+        {user: adminUser},
         privateGroup.id
       );
       expect(response.id).toEqual(privateGroup.id);

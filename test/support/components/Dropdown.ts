@@ -6,6 +6,11 @@ export default class Dropdown {
     cy.get('#dropdownList').get('#groups-link').click();
   }
 
+  openAdminPanel(): void {
+    cy.get('#dropdown').click();
+    cy.get('#dropdownList').get('#admin-link').click();
+  }
+
   openUserModal(): void {
     cy.get('#dropdown').click();
     cy.get('#dropdownList').get('#user-link').click();

@@ -1,3 +1,5 @@
+import {GroupsModule} from '@/store/groups';
+import {getAllDescendants} from '@/utilities/group_relations_util';
 import {IGroup} from '@heimdall/interfaces';
 import {Component, Vue} from 'vue-property-decorator';
 import {IVuetifyItems} from '../utilities/helper_util';
@@ -8,11 +10,23 @@ export default class EvaluationMixin extends Vue {
     if (!groups) {
       return [];
     }
-    return groups.map((group) => {
-      return {
-        text: group.name,
-        value: group.id
-      };
-    });
+    const descendants = groups
+      .map((group) => getAllDescendants(group.id))
+      .flat()
+      .filter(
+        (descendantId) => !groups.some((group) => group.id === descendantId)
+      );
+    return groups
+      .concat(
+        GroupsModule.allGroups.filter((group) =>
+          descendants.some((descendantId) => descendantId === group.id)
+        )
+      )
+      .map((group) => {
+        return {
+          text: group.name,
+          value: group.id
+        };
+      });
   }
 }

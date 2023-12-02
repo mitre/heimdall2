@@ -9,11 +9,13 @@ import {FindOptions} from 'sequelize/types';
 import winston from 'winston';
 import AppConfig from '../../config/app_config';
 import {Evaluation} from '../evaluations/evaluation.model';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {GroupUser} from '../group-users/group-user.model';
 import {User} from '../users/user.model';
 import {CreateGroupDto} from './dto/create-group.dto';
 import {UpdateGroupUserRoleDto} from './dto/update-group-user.dto';
 import {Group} from './group.model';
+
 @Injectable()
 export class GroupsService {
   public logger = winston.createLogger({
@@ -29,7 +31,8 @@ export class GroupsService {
     @InjectModel(Group)
     private readonly groupModel: typeof Group,
     @InjectModel(User)
-    private readonly userModel: typeof User
+    private readonly userModel: typeof User,
+    private readonly groupRelationsService: GroupRelationsService
   ) {}
 
   async findAll(): Promise<Group[]> {
@@ -77,6 +80,7 @@ export class GroupsService {
     });
   }
 
+  // TODO: recursive add to parents upwards
   async addUserToGroup(group: Group, user: User, role: string): Promise<void> {
     await group.$add('user', user, {
       through: {role: role, createdAt: new Date(), updatedAt: new Date()}
@@ -137,6 +141,7 @@ export class GroupsService {
     return groupUser?.update({role: updateGroupUser.groupRole});
   }
 
+  // TODO: Recursive remove to parents upwards
   async removeUserFromGroup(group: Group, user: User): Promise<Group> {
     await this.ensureGroupHasOwner(group, user);
     return group.$remove('user', user);
@@ -184,6 +189,17 @@ export class GroupsService {
   }
 
   async remove(groupToDelete: Group): Promise<Group> {
+    // Get all the descendants of the group
+    const descendants = await this.findByIds(
+      await this.groupRelationsService.getAllDescendants(groupToDelete.id)
+    );
+    // Delete associated descendants
+    await Promise.all(
+      descendants.map(async (descendant) => {
+        await descendant.destroy();
+      })
+    );
+
     await groupToDelete.destroy();
 
     return groupToDelete;

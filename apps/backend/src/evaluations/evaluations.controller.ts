@@ -18,6 +18,7 @@ import * as _ from 'lodash';
 import {AuthzService} from '../authz/authz.service';
 import {Action} from '../casl/casl-ability.factory';
 import {ConfigService} from '../config/config.service';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {GroupDto} from '../groups/dto/group.dto';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
@@ -37,6 +38,7 @@ export class EvaluationsController {
   constructor(
     private readonly evaluationsService: EvaluationsService,
     private readonly groupsService: GroupsService,
+    private readonly groupRelationsService: GroupRelationsService,
     private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {}

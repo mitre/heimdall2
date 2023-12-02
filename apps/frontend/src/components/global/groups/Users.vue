@@ -23,7 +23,14 @@
       <v-col>
         <v-data-table
           :headers="displayedHeaders"
-          :items="currentUsers"
+          :items="
+            editable
+              ? currentUsers.filter(
+                  (user) =>
+                    user.groupRole === 'owner' || user.groupRole === 'member'
+                )
+              : currentUsers
+          "
           :items-per-page="5"
         >
           <template #[`item.full-name`]="{item}">
@@ -44,9 +51,7 @@
               mdi-delete
             </v-icon>
           </template>
-          <template #no-data>
-            No users currently added to this group.
-          </template>
+          <template #no-data> No users currently selected. </template>
         </v-data-table>
       </v-col>
     </v-row>

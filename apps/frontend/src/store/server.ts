@@ -16,6 +16,7 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import {GroupsModule} from './groups';
+import {GroupRelationsModule} from './group_relations';
 
 const localToken = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
@@ -254,6 +255,7 @@ class Server extends VuexModule implements IServerState {
         this.Logout();
       }
       await this.FetchAllUsers();
+      await GroupRelationsModule.FetchGroupRelationData();
       await GroupsModule.FetchGroupData();
     }
   }

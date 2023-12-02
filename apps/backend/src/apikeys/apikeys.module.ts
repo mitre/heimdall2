@@ -4,6 +4,8 @@ import {AuthnService} from '../authn/authn.service';
 import {AuthzModule} from '../authz/authz.module';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
+import {GroupRelation} from '../group-relations/group-relation.model';
+import {GroupRelationsService} from '../group-relations/group-relations.service';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
 import {TokenModule} from '../token/token.module';
@@ -15,7 +17,7 @@ import {ApiKeyService} from './apikey.service';
 
 @Module({
   imports: [
-    SequelizeModule.forFeature([ApiKey, User, Group]),
+    SequelizeModule.forFeature([ApiKey, User, Group, GroupRelation]),
     AuthzModule,
     ConfigModule,
     ApiKeyModule,
@@ -26,6 +28,7 @@ import {ApiKeyService} from './apikey.service';
     AuthnService,
     UsersService,
     GroupsService,
+    GroupRelationsService,
     ApiKeyService
   ],
   exports: [SequelizeModule, ApiKeyService],

@@ -25,6 +25,7 @@
         <div v-if="serverMode">
           <div v-if="isAdmin">
             <IconLinkItem
+              id="admin-link"
               key="admin"
               text="Admin Panel"
               icon="mdi-shield-account"
