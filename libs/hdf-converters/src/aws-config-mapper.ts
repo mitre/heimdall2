@@ -10,8 +10,8 @@ import {
 } from '@aws-sdk/client-config-service';
 import {NodeHttpHandler} from '@smithy/node-http-handler';
 import https from 'https';
-import * as _ from 'lodash';
 import {ExecJSON} from 'inspecjs';
+import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {AwsConfigMapping} from './mappings/AwsConfigMapping';
 
@@ -35,14 +35,14 @@ export class AwsConfigMapper {
     const clientOptions: ConfigServiceClientConfig = {
       ...options,
       requestHandler: new NodeHttpHandler({
-          httpsAgent: new https.Agent({
-            // Disable HTTPS verification if requested
-            rejectUnauthorized: verifySSLCertificates,
-            // Pass an SSL certificate to trust
-            ca: certificate
-          }),
-      }),
-    }
+        httpsAgent: new https.Agent({
+          // Disable HTTPS verification if requested
+          rejectUnauthorized: verifySSLCertificates,
+          // Pass an SSL certificate to trust
+          ca: certificate
+        })
+      })
+    };
     this.configService = new ConfigService(clientOptions);
     this.results = [];
     this.issues = this.getAllConfigRules();
@@ -99,15 +99,17 @@ export class AwsConfigMapper {
         Limit: 100
       };
       await this.delay(150);
-      let response = await this.configService
-        .getComplianceDetailsByConfigRule(params);
+      let response = await this.configService.getComplianceDetailsByConfigRule(
+        params
+      );
       let ruleResults = response.EvaluationResults || [];
       allRulesResolved.push(...ruleResults);
       while (response.NextToken !== undefined) {
         params = _.set(params, 'NextToken', response.NextToken);
         await this.delay(150);
-        response = await this.configService
-          .getComplianceDetailsByConfigRule(params);
+        response = await this.configService.getComplianceDetailsByConfigRule(
+          params
+        );
         ruleResults = ruleResults?.concat(response.EvaluationResults || []);
         allRulesResolved.push(...ruleResults);
       }
@@ -202,10 +204,13 @@ export class AwsConfigMapper {
     const resolvedResourcesMap: Record<string, string> = {};
     // Extract resource Ids
     evaluationResults.forEach((result) => {
-      const resourceType: ResourceType = ResourceType[_.get(
-        result,
-        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceType'
-      ) as keyof typeof ResourceType];
+      const resourceType: ResourceType =
+        ResourceType[
+          _.get(
+            result,
+            'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceType'
+          ) as keyof typeof ResourceType
+        ];
       const resourceId: string = _.get(
         result,
         'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId'
@@ -227,11 +232,10 @@ export class AwsConfigMapper {
       const resourceIDSlices = _.chunk(resourceMap[resourceType], 20);
       for (const slice of resourceIDSlices) {
         await this.delay(150);
-        const resources = await this.configService
-          .listDiscoveredResources({
-            resourceType: resourceType,
-            resourceIds: slice
-          })
+        const resources = await this.configService.listDiscoveredResources({
+          resourceType: resourceType,
+          resourceIds: slice
+        });
         resources.resourceIdentifiers?.forEach((resource) => {
           if (resource.resourceId && resource.resourceName) {
             resolvedResourcesMap[resource.resourceId] = resource.resourceName;
@@ -304,10 +308,9 @@ export class AwsConfigMapper {
     const configRuleSlices = _.chunk(configRules, 25);
     for (const slice of configRuleSlices) {
       await this.delay(150);
-      const response = await this.configService
-        .describeComplianceByConfigRule({
-          ConfigRuleNames: slice.map((rule) => rule.ConfigRuleName || '')
-        })
+      const response = await this.configService.describeComplianceByConfigRule({
+        ConfigRuleNames: slice.map((rule) => rule.ConfigRuleName || '')
+      });
       if (response.ComplianceByConfigRules === undefined) {
         throw new Error('No compliance data was returned');
       } else {

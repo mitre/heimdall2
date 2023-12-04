@@ -36,12 +36,12 @@ export interface Auth {
  * Yields the AWS error on failure
  */
 export async function fetchS3File(
-  creds: AuthCreds,
+  auth: Auth,
   fileKey: string,
   bucketName: string
 ): Promise<string> {
   // Fetch it from s3, and promise to submit it to be loaded afterwards
-  const client = new S3Client({...creds});
+  const client = new S3Client({credentials: auth.creds, region: auth.region});
   const response = await client.send(
     new GetObjectCommand({
       Key: fileKey,
@@ -176,6 +176,6 @@ export function transcribeError(error: {
     case 'InvalidClientTokenId':
       return 'The provided access token is invalid. Please ensure that it is correct.';
     default:
-      return `Unkown error ${name}. Message: ${message}`;
+      return `Unknown error ${name}. Message: ${message}`;
   }
 }

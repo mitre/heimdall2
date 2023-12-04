@@ -8,8 +8,8 @@
       :access-token.sync="accessToken"
       :secret-token.sync="secretToken"
       :region.sync="region"
-      @auth-basic="handle_basic"
-      @goto-mfa="handle_goto_mfa"
+      @auth-basic="handleBasic"
+      @goto-mfa="handleGotoMfa"
       @show-help="showHelp = true"
     />
 
@@ -21,7 +21,7 @@
       :mfa-token.sync="mfaToken"
       :mfa-serial.sync="mfaSerial"
       @auth-mfa="handleProceedMFA"
-      @exit-mfa="handle_cancel_mfa"
+      @exit-mfa="handleCancelMfa"
     />
 
     <v-stepper-step step="3"> Browse Bucket </v-stepper-step>
@@ -29,7 +29,7 @@
     <FileList
       :auth="assumedRole"
       :files="files"
-      @exit-list="handle_exit_list"
+      @exit-list="handleExitList"
       @got-files="gotFiles"
       @load-bucket="loadBucket"
     />
@@ -57,6 +57,9 @@
 </template>
 
 <script lang="ts">
+import {_Object, ListObjectsV2Command, S3Client} from '@aws-sdk/client-s3';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import AuthStepBasic from '@/components/global/upload_tabs/aws/AuthStepBasic.vue';
 import AuthStepMFA from '@/components/global/upload_tabs/aws/AuthStepMFA.vue';
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
@@ -71,9 +74,6 @@ import {
 } from '@/utilities/aws_util';
 import {LocalStorageVal} from '@/utilities/helper_util';
 import {requireFieldRule} from '@/utilities/upload_util';
-import S3 from 'aws-sdk/clients/s3';
-import Vue from 'vue';
-import Component from 'vue-class-component';
 
 /** The cached session info */
 const localSessionInformation = new LocalStorageVal<Auth | null>(
@@ -111,18 +111,18 @@ export default class S3Reader extends Vue {
   step = 1;
 
   /** Currently loaded file list from bucket */
-  files: S3.Object[] = [];
+  files: _Object[] = [];
 
   /**
    * Handle a basic login.
    * Gets a session token
    */
-  handle_basic() {
+  handleBasic() {
     // Attempt to assume role based on if we've determined 2fa necessary
     getSessionToken(
       this.accessToken,
       this.secretToken,
-      this.region,
+      this.region || 'us-east-1',
       AUTH_DURATION
     ).then(
       // Success of get session token - now need to determine if MFA necessary
@@ -139,10 +139,15 @@ export default class S3Reader extends Vue {
   }
 
   /** If the user tries to login by going to MFA, first check that the account is valid */
-  handle_goto_mfa() {
+  handleGotoMfa() {
     // Attempt to assume role based on if we've determined 2fa necessary
     // Don't need the duration to be very long
-    getSessionToken(this.accessToken, this.secretToken, this.region, 10).then(
+    getSessionToken(
+      this.accessToken,
+      this.secretToken,
+      this.region || 'us-east-1',
+      10
+    ).then(
       // Success of get session token - now need to determine if MFA necessary
       () => {
         this.step = 2;
@@ -155,13 +160,13 @@ export default class S3Reader extends Vue {
     );
   }
 
-  handle_cancel_mfa() {
+  handleCancelMfa() {
     this.step = 1;
     this.mfaToken = '';
     this.assumedRole = null; // Just in case
   }
 
-  handle_exit_list() {
+  handleExitList() {
     this.step = 1;
     this.mfaToken = '';
     this.assumedRole = null;
@@ -182,7 +187,7 @@ export default class S3Reader extends Vue {
     getSessionToken(
       this.accessToken,
       this.secretToken,
-      this.region,
+      this.region || 'us-east-1',
       AUTH_DURATION,
       mfa
     ).then(
@@ -210,20 +215,21 @@ export default class S3Reader extends Vue {
    * Basically just wraps fetch_files with error handling
    */
   async loadBucket(name: string) {
-    const s3 = new S3({
-      ...this.assumedRole!.creds,
-      region: this.assumedRole!.region || 'us-east-1'
+    const s3 = new S3Client({
+      credentials: this.assumedRole?.creds,
+      region: this.assumedRole?.region || 'us-east-1'
     });
-    await s3
-      .listObjectsV2({
-        Bucket: name,
-        MaxKeys: 100
-      })
-      .promise()
-      .then((success) => {
-        this.files = success.Contents || [];
-      })
-      .catch((failure) => this.handleError(failure));
+    try {
+      const response = await s3.send(
+        new ListObjectsV2Command({
+          Bucket: name,
+          MaxKeys: 100
+        })
+      );
+      this.files = response.Contents || [];
+    } catch (failure) {
+      this.handleError(failure);
+    }
   }
 
   /** Save the current credentials to local storage */

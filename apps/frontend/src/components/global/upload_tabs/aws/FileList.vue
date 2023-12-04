@@ -32,7 +32,7 @@
           </v-list-item-content>
           <!-- Action: Click to add -->
           <v-list-item-action>
-            <v-btn title="Load into Heimdall" icon @click="load_file(index)">
+            <v-btn title="Load into Heimdall" icon @click="loadFile(index)">
               <v-icon>mdi-plus-circle</v-icon>
             </v-btn>
           </v-list-item-action>
@@ -46,14 +46,14 @@
 </template>
 
 <script lang="ts">
-import {InspecIntakeModule} from '@/store/report_intake';
-import {Auth, fetchS3File} from '@/utilities/aws_util';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import S3 from 'aws-sdk/clients/s3';
+import {_Object} from '@aws-sdk/client-s3';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {SnackbarModule} from '../../../../store/snackbar';
+import {InspecIntakeModule} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
+import {Auth, fetchS3File} from '@/utilities/aws_util';
+import {LocalStorageVal} from '@/utilities/helper_util';
 
 // Caches the bucket name
 const localBucketName = new LocalStorageVal<string>('aws_bucket_name');
@@ -63,7 +63,7 @@ const localBucketName = new LocalStorageVal<string>('aws_bucket_name');
 })
 export default class FileList extends Vue {
   @Prop({type: Object}) readonly auth!: Auth;
-  @Prop({type: Array}) readonly files!: S3.Object[];
+  @Prop({type: Array}) readonly files!: _Object[];
 
   /** The name written in the form */
   formBucketName = '';
@@ -72,12 +72,12 @@ export default class FileList extends Vue {
   /** Callback for when user selects a file.
    * Loads it into our system.
    */
-  async load_file(index: number): Promise<void> {
+  async loadFile(index: number): Promise<void> {
     // Get it out of the list
     const file = this.files[index];
 
     // Fetch it from s3, and promise to submit it to be loaded afterwards
-    await fetchS3File(this.auth.creds, file.Key!, this.formBucketName).then(
+    await fetchS3File(this.auth, file.Key!, this.formBucketName).then(
       (content) => {
         try {
           JSON.parse(content);
