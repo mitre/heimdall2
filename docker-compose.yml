@@ -3,10 +3,11 @@ services:
     image: postgres:13
     restart: unless-stopped
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 5s
-      timeout: 5s
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 60s
       retries: 5
+      start_period: 80s  
     volumes:
       - ./data:/var/lib/postgresql/data
     environment:
