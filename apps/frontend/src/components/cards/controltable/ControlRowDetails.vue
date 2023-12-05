@@ -16,10 +16,10 @@
                   justification ||
                   rationale ||
                   comments ||
-                  errorMessage !== ''
+                  errorMessage
                 "
               >
-                <div v-if="errorMessage !== ''" class="mb-2">
+                <div v-if="errorMessage" class="mb-2">
                   <v-btn
                     class="unclickable-button mr-3"
                     elevation="2"
