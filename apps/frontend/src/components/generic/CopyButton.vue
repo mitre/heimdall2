@@ -42,7 +42,12 @@ export default class CopyButton extends Vue {
     document.body.appendChild(tempTextArea);
     tempTextArea.focus();
     tempTextArea.select();
-    document.execCommand('copy');
+    const successfulReturn = document.execCommand('copy');
+    if (!successfulReturn) {
+      throw new Error(
+        'The execCommand returned false, meaning the command is unsupported or disabled'
+      );
+    }
     document.body.removeChild(tempTextArea);
   }
 }
