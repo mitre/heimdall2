@@ -7,9 +7,9 @@
       multiple
       chips
     >
-      <v-chip v-for="(group, i) in groups" :key="'chip' + i" small>{{
-        group.text
-      }}</v-chip>
+      <template v-for="(group, i) in groups">
+        <v-chip :key="'chip' + i" small>{{ group.text }}</v-chip>
+      </template>
     </v-chip-group>
   </div>
 </template>
