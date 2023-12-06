@@ -23,7 +23,7 @@ applications:
   env:
     NODE_ENV: production
     ADMIN_PASSWORD: ChangeMe@123
-    # See /apps/backend/.env-example for use of the following
+    # See /apps/backend/.env-example or https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration for the full list and use of the following
     #GITHUB_CLIENTID:
     #GITHUB_CLIENTSECRET:
     #GITLAB_CLIENTID:
@@ -49,4 +49,3 @@ applications:
     #LDAP_SEARCHFILTER:
     #LDAP_NAMEFIELD:
     #LDAP_MAILFIELD:
-
