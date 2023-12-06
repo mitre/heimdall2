@@ -1705,9 +1705,9 @@
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
 "@e965/xlsx@^0.20.0":
-  version "0.20.0"
-  resolved "https://registry.npmjs.org/@e965/xlsx/-/xlsx-0.20.0.tgz#049711e99636e76caf8c83cc5094a0b343908b51"
-  integrity sha512-rOBiPtww7CtlRP2Ggtz+ugagrmlpQHrqKZNLMAxLtpMRPK1AFzj2JurmDT55x+pKAVY80nTFJzmtLZDQhCk2qw==
+  version "0.20.1"
+  resolved "https://registry.yarnpkg.com/@e965/xlsx/-/xlsx-0.20.1.tgz#7336393702d18a9f6f5a37c3384612daf4927b8f"
+  integrity sha512-zRv8NLB1H6aqQyZt3/gLjd0xkZsH+/WIRi4YHAw1koESNTPPmzXJbPqO2HMN7DZB1vnF1USKxQ9ZvS0S9Lqmbg==
 
 "@eslint-community/eslint-utils@^4.2.0", "@eslint-community/eslint-utils@^4.4.0":
   version "4.4.0"
