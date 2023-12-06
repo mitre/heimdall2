@@ -1,7 +1,9 @@
-import S3 from 'aws-sdk/clients/s3';
-import STS from 'aws-sdk/clients/sts';
-import {AWSError} from 'aws-sdk/lib/error';
-import {PromiseResult} from 'aws-sdk/lib/request';
+import {GetObjectCommand, S3Client} from '@aws-sdk/client-s3';
+import {
+  GetCallerIdentityCommand,
+  GetSessionTokenCommand,
+  STSClient
+} from '@aws-sdk/client-sts';
 
 export const AUTH_DURATION = 8 * 60 * 60; // 8 hours
 
@@ -33,37 +35,23 @@ export interface Auth {
  * Yields the string contents on success
  * Yields the AWS error on failure
  */
-export async function fetch_s3_file(
-  creds: AuthCreds,
+export async function fetchS3File(
+  auth: Auth,
   fileKey: string,
   bucketName: string
 ): Promise<string> {
   // Fetch it from s3, and promise to submit it to be loaded afterwards
-  return new S3({...creds})
-    .getObject({
+  const client = new S3Client({credentials: auth.creds, region: auth.region});
+  const response = await client.send(
+    new GetObjectCommand({
       Key: fileKey,
       Bucket: bucketName
     })
-    .promise()
-    .then((success) => {
-      return new TextDecoder('utf-8').decode(success.Body as Uint8Array);
-    });
-}
-
-export async function list_buckets(creds: AuthCreds) {
-  return new S3({...creds})
-    .listBuckets()
-    .promise()
-    .then(
-      () => {
-        throw Error('Not implemented');
-      },
-      () => {
-        throw Error('Not implemented');
-      }
-    );
-
-  // */
+  );
+  if (!response.Body) {
+    throw new Error('Fetching S3 file failed');
+  }
+  return response.Body.transformToString();
 }
 
 /** Represents the bundle of parameters required for creating a session key using MFA */
@@ -73,19 +61,15 @@ export interface MFAInfo {
 }
 
 /** Attempts to deduce the virtual mfa device serial code from the provided */
-export function derive_mfa_serial(userAccessToken: string): string | null {
-  if (userAccessToken) {
-    return userAccessToken.replace(':user', ':mfa');
-  } else {
-    return null;
-  }
+export function deriveMFASerial(userAccessToken: string): string | null {
+  return userAccessToken ? userAccessToken.replace(':user', ':mfa') : null;
 }
 
 /** Attempts to retrieve an aws temporary session using the given information.
  * Yields the session info on success.
  * Yields the AWS error on failure.
  */
-export async function get_session_token(
+export async function getSessionToken(
   accessToken: string,
   secretKey: string,
   region: string,
@@ -93,78 +77,79 @@ export async function get_session_token(
   mfaInfo?: MFAInfo
 ): Promise<Auth | null> {
   // Instanciate STS with our base and secret token
-  const sts = new STS({
-    accessKeyId: accessToken,
-    secretAccessKey: secretKey,
+  const client = new STSClient({
+    credentials: {
+      accessKeyId: accessToken,
+      secretAccessKey: secretKey
+    },
     region: region
   });
 
   // Get the user info
   const wipInfo: Partial<AuthInfo> = {};
-  await sts
-    .getCallerIdentity({})
-    .promise()
-    .then((success) => {
-      wipInfo.user_account = success.Account;
-      wipInfo.user_arn = success.Arn || 'Unknown Resource Name';
-      wipInfo.user_id = success.UserId;
-      // Guess at mfa
-      wipInfo.probable_user_mfa_device = derive_mfa_serial(wipInfo.user_arn);
-    });
+  const responseCallerId = await client.send(new GetCallerIdentityCommand({}));
+  wipInfo.user_account = responseCallerId.Account;
+  wipInfo.user_arn = responseCallerId.Arn || 'Unknown Resource Name';
+  wipInfo.user_id = responseCallerId.UserId;
+  // Guess at mfa
+  wipInfo.probable_user_mfa_device = deriveMFASerial(wipInfo.user_arn);
 
   // It's built - mark as such
   const info = wipInfo as AuthInfo;
 
   // Make our request to be the role
-  let result: Promise<PromiseResult<STS.GetSessionTokenResponse, AWSError>>;
+  let responseSessionToken;
   if (mfaInfo) {
-    mfaInfo.SerialNumber =
-      mfaInfo.SerialNumber || info.probable_user_mfa_device; // We cannot get to this stage if
+    mfaInfo.SerialNumber ??= info.probable_user_mfa_device;
     if (mfaInfo.SerialNumber) {
-      result = sts
-        .getSessionToken({
+      responseSessionToken = await client.send(
+        new GetSessionTokenCommand({
           DurationSeconds: duration,
           SerialNumber: mfaInfo.SerialNumber,
           TokenCode: mfaInfo.TokenCode
         })
-        .promise();
-    } else {
-      result = sts.getSessionToken().promise();
+      );
     }
   } else {
-    // Not strictly necessary but why not!
-    result = sts.getSessionToken().promise();
+    responseSessionToken = await client.send(new GetSessionTokenCommand({}));
   }
 
   // Handle the response. On Success, save the creds. On error, throw that stuff back!
-  return result.then((success) => {
-    if (success.Credentials) {
-      const creds: AuthCreds = {
-        accessKeyId: success.Credentials.AccessKeyId,
-        secretAccessKey: success.Credentials.SecretAccessKey,
-        sessionToken: success.Credentials.SessionToken
-      };
-      return {
-        creds,
-        info,
-        from_mfa: !!mfaInfo,
-        region: region
-      };
-    } else {
-      return null;
-    }
-  });
+  if (!responseSessionToken?.Credentials) {
+    throw new Error('AWS assume role attempt failed');
+  }
+  if (!responseSessionToken?.Credentials?.AccessKeyId) {
+    throw new Error('AWS assume role attempt failed - no AccessKeyId');
+  }
+  if (!responseSessionToken?.Credentials?.SecretAccessKey) {
+    throw new Error('AWS assume role attempt failed - no SecretAccessKey');
+  }
+  if (!responseSessionToken?.Credentials?.SessionToken) {
+    throw new Error('AWS assume role attempt failed - no SessionToken');
+  }
+  const creds: AuthCreds = {
+    accessKeyId: responseSessionToken.Credentials.AccessKeyId,
+    secretAccessKey: responseSessionToken.Credentials.SecretAccessKey,
+    sessionToken: responseSessionToken.Credentials.SessionToken
+  };
+  return {
+    creds,
+    info,
+    from_mfa: !!mfaInfo,
+    region: region
+  };
 }
 
 /** Generates human readable versions of common AWS error codes.
- * If the code is not recognized, coughs it back up as an error
+ * The error class is untyped since they've distributed their error/exception classes all over.
+ * If the code is not recognized, coughs it back up as an erroname
  */
-export function transcribe_error(error: AWSError): string {
-  // Unpack
-  const {code, message} = error;
-
-  // Get what we're supposed to do with it
-  switch (code) {
+export function transcribeError(error: {
+  name: string;
+  message: string;
+}): string {
+  const {name, message} = error;
+  switch (name) {
     case 'TokenRefreshRequired':
     case 'ExpiredToken':
       return 'Authorization expired. Please log back in.';
@@ -191,6 +176,6 @@ export function transcribe_error(error: AWSError): string {
     case 'InvalidClientTokenId':
       return 'The provided access token is invalid. Please ensure that it is correct.';
     default:
-      return `Unkown error ${code}. Message: ${message}`;
+      return `Unknown error ${name}. Message: ${message}`;
   }
 }

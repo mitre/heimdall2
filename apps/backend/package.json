@@ -15,7 +15,7 @@
     "build": "nest build",
     "lint": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --fix",
     "lint:ci": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --max-warnings 0",
-    "sequelize-cli": "node --experimental-loader ts-node/esm node_modules/.bin/sequelize",
+    "sequelize-cli": "tsx node_modules/.bin/sequelize",
     "start": "node dist/src/main",
     "start:debug": "nest start --debug --watch",
     "start:dev": "nest start --watch",
@@ -23,7 +23,7 @@
     "test": "jest --silent",
     "test:ci-cov": "jest --silent --coverage --runInBand",
     "test:cov": "jest --silent --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+    "test:debug": "tsx --inspect-brk node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --runInBand --silent --config test/jest-e2e.json",
     "test:log": "jest",
     "test:watch": "jest --watch"
@@ -106,8 +106,7 @@
     "sequelize-cli": "^6.2.0",
     "sequelize-typescript": "^2.0.0",
     "ts-loader": "^9.1.0",
-    "ts-node": "^10.0.0",
-    "tsconfig-paths": "^4.0.0",
+    "tsx": "^4.6.2",
     "uuid": "^9.0.0",
     "winston": "^3.3.3"
   },
