@@ -18,7 +18,7 @@ export default class CopyButton extends Vue {
     try {
       if (navigator.clipboard) {
         // If https, use the new API secure copy
-        navigator.clipboard.writeText(this.text);
+        await navigator.clipboard.writeText(this.text);
       } else {
         // Otherwise fallback to the old API
         this.unsecuredCopyToClipboard(this.text);
