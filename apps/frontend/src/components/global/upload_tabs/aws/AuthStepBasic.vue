@@ -49,12 +49,12 @@
 </template>
 
 <script lang="ts">
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {LocalStorageVal} from '@/utilities/helper_util';
-import {requireFieldRule} from '@/utilities/upload_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import {requireFieldRule} from '@/utilities/upload_util';
 
 /** Localstorage keys */
 const localAccessToken = new LocalStorageVal<string>('aws_s3_access_token');

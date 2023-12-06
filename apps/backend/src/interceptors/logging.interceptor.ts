@@ -65,7 +65,7 @@ export class LoggingInterceptor implements NestInterceptor {
     return `User<Unknown>`;
   }
 
-  getRealIP(request: Request): string {
+  getRealIP(request: Request): string | unknown {
     const realIP = Object.keys(request.headers).find(
       (header) =>
         header.toLowerCase() === 'x-forwarded-for' ||
