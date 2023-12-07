@@ -1,4 +1,4 @@
-import {ForbiddenError} from '@casl/ability';
+import {ForbiddenError, Subject} from '@casl/ability';
 import {
   BadRequestException,
   Body,
@@ -9,7 +9,6 @@ import {
   Post,
   Put,
   Query,
-  Req,
   Request,
   UploadedFiles,
   UseGuards,
@@ -29,21 +28,25 @@ import {CreateEvaluationInterceptor} from '../interceptors/create-evaluation-int
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
-import {EvaluationDto} from './dto/evaluation.dto';
+import {EvaluationDto, IEvaluationResponse} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {EvaluationsService} from './evaluations.service';
 import {IEvalPaginationParams} from '@heimdall/interfaces';
 import {Evaluation} from './evaluation.model';
 
+
 @Controller('evaluations')
 @UseInterceptors(LoggingInterceptor)
 export class EvaluationsController {
+
   constructor(
     private readonly evaluationsService: EvaluationsService,
     private readonly groupsService: GroupsService,
     private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {console.log('IN evaluations.controllers constructor')}
+
+
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findById(
@@ -98,29 +101,58 @@ export class EvaluationsController {
   // }
   //@Param('params') params: IEvalPaginationParams, 
 
+
+
   @UseGuards(JwtAuthGuard)
   @Get()
-  async findAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<EvaluationDto[]> {
+  //async findAndCountAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<{evaluations: EvaluationDto[], totalCount: number}> {
+  async findAndCountAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<IEvaluationResponse> {
     console.log('HERE @GET evaluation.controller.ts - findALL')
     console.log(`HERE @GET findALL user is: ${JSON.stringify(request.user,null,2)}`)
     console.log(`evaluation.controllers.ts -> params are ${JSON.stringify(params,null,2)}`)
 
     const abac = this.authz.abac.createForUser(request.user);
-    let evaluations = await this.evaluationsService.findAll(params);
-    console.log(`EVALUATIONS ARE (1): ${evaluations.values}`)
-    evaluations.forEach(function(value) {
+    let evaluations: Evaluation[] = [];
+    let totalItems: number = 0;
+
+    if (params.useClause) {
+      let response = await this.evaluationsService.getEvaluationsWithClause(params);
+      evaluations = response.evaluations;
+      totalItems = response.totalItems;
+    } else {
+      let response = await this.evaluationsService.getAllEvaluations(params);
+      evaluations = response.evaluations;
+      totalItems = response.totalItems;
+    }
+    ///debug
+    console.log(`TOTALITEMS  is: ${totalItems}`)
+    console.log(`EVALUATIONS ARE (1): ${evaluations.length}`)
+    evaluations.forEach(function(value: {filename: any;}) {
       console.log(`    EVALUATIONS IS: ${JSON.stringify(value.filename,null,2)}`);
     })
 
-    evaluations = evaluations.filter((evaluation) =>
+    evaluations = evaluations.filter((evaluation: Subject) =>
       abac.can(Action.Read, evaluation)
     );
 
-    console.log(`EVALUATIONS ARE (2): ${evaluations.length}`)
-    return evaluations.map(
-      (evaluation) =>
+// debug
+console.log(`EVALUATIONS ARE (2): ${evaluations.length}`)
+evaluations.forEach(function(value: {filename: any;}) {
+  console.log(`    EVALUATIONS IS: ${JSON.stringify(value.filename,null,2)}`);
+})
+
+let test = {evaluations: evaluations.map(
+  (evaluation: Evaluation) =>
+    new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+), totalCount: totalItems};
+console.log(`test on map (evaluations) is: ${JSON.stringify(test.evaluations)}`)
+console.log(`test on map (totalCount) is: ${JSON.stringify(test.totalCount)}`)
+// end debug
+
+    return { evaluations: evaluations.map(
+      (evaluation: Evaluation) =>
         new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
-    );
+    ), totalCount: totalItems};
   }
 
   // @UseGuards(JwtAuthGuard)

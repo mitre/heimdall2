@@ -1,24 +1,26 @@
 <template>
-  <!-- <v-container class="mx-0 px-0" fluid style="height: 80vh"> -->
-  <v-card class="elevation-0">
-    <v-card-subtitle>
-      View files maintained (stored) in the Heimdall Server backend database.
-    </v-card-subtitle>
-    <v-container class="mx-0 px-0">
-      <LoadFileList
-        :headers="headers"
-        :files="files"
-        :loading="loading"
-        @load-selected="load_results($event)"
-      />      
-    </v-container>
-  </v-card>
-  <!-- </v-container> -->
+  <v-container class="mx-0 px-0" fluid style="height: 80vh">
+    <v-card class="elevation-0">
+      <v-card-subtitle>
+        View files maintained (stored) in the Heimdall Server backend database.
+      </v-card-subtitle>
+      <v-container class="mx-0 px-0">
+        <LoadFileList3
+          :headers="headers"
+          :files="files"
+          :loading="loading"
+          :totalItemsPerPage="itemsPerPage"
+          @load-selected="load_results($event)"
+        />      
+      </v-container>
+    </v-card>
+  </v-container>
 </template>
 
 <script lang="ts">
 import RefreshButton from '@/components/generic/RefreshButton.vue';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
+import LoadFileList3 from '@/components/global/upload_tabs/LoadFileList3.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
 import {EvaluationModule} from '@/store/evaluations';
@@ -34,6 +36,7 @@ import {Prop, Watch} from 'vue-property-decorator';
 @Component({
   components: {
     LoadFileList,
+    LoadFileList3,
     RefreshButton
   }
 })
@@ -65,7 +68,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     }
   ];
 
-  itemsPerPage = 10;
+  itemsPerPage = 5;
 
   @Watch('refresh')
   onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {

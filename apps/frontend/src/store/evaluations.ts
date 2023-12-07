@@ -3,7 +3,8 @@ import {
   ICreateEvaluationTag,
   IEvaluation,
   IEvaluationTag,
-  IEvalPaginationParams
+  IEvalPaginationParams,
+  IEvaluationResponse
 } from '@heimdall/interfaces';
 import axios from 'axios';
 import * as _ from 'lodash';
@@ -32,6 +33,7 @@ import {SnackbarModule} from './snackbar';
 })
 export class Evaluation extends VuexModule {
   allEvaluations: IEvaluation[] = [];
+  evaluationsCount: number = 0;
   loading = true;
 
   get evaluationForFile(): Function {
@@ -46,6 +48,9 @@ export class Evaluation extends VuexModule {
     };
   }
 
+  get totalEvaluation(): Function {
+    return () => {this.evaluationsCount}
+  }
   // @Action
   // async getAllEvaluations(): Promise<void> {
   //   return axios
@@ -62,10 +67,21 @@ export class Evaluation extends VuexModule {
   async getAllEvaluations(params: IEvalPaginationParams): Promise<void> {
     console.log(`evaluations.ts -> params are: ${JSON.stringify(params,null,2)}`)    
     return axios
-      .get<IEvaluation[]>('/evaluations', {params})
+      //.get<IEvaluation[]>('/evaluations', {params})
+      .get<IEvaluationResponse>('/evaluations', {params})
       .then(({data}) => {
-        console.log(`evaluations.ts -> SET_ALL_EVALUATION -> data is: ${JSON.stringify(data,null,2)}`)
-        this.context.commit('SET_ALL_EVALUATION', data);
+        const { totalCount, evaluations } = data;
+
+        console.log(`evaluations.ts -> SET_ALL_EVALUATION -> data is: ${JSON.stringify(data.evaluations,null,2)}`)
+        console.log(`evaluations.ts -> SET_ALL_EVALUATION_COUNT 1-> data is: ${JSON.stringify(data.totalCount,null,2)}`)
+        console.log(`evaluations.ts -> SET_ALL_EVALUATION_COUNT 2-> data is: ${JSON.stringify(totalCount,null,2)}`)
+
+        console.log(`evaluations.ts -> this.evaluationsCount 1-> data is: ${this.evaluationsCount}`)
+
+        this.context.commit('SET_ALL_EVALUATION', evaluations);
+        this.context.commit('SET_ALL_EVALUATION_COUNT', totalCount);
+
+        console.log(`evaluations.ts -> this.evaluationsCount 2-> data is: ${this.evaluationsCount}`)
       })
       .finally(() => {
         this.context.commit('SET_LOADING', false);
@@ -96,7 +112,7 @@ export class Evaluation extends VuexModule {
         this.loadEvaluation(id)
           .then(async (evaluation) => {
             if (await InspecIntakeModule.isHDF(evaluation.data)) {
-              console.log(`ID isHDF: ${id} `),
+console.log(`evaluations.ts load_results() -> ID isHDF: ${id} `),
               InspecIntakeModule.loadText({
                 text: JSON.stringify(evaluation.data),
                 filename: evaluation.filename,
@@ -110,7 +126,7 @@ export class Evaluation extends VuexModule {
                   SnackbarModule.failure(err);
                 });
             } else if (evaluation.data) {
-              console.log(`ID IS NOT isHDF: ${id} `)
+console.log(`ID IS NOT isHDF: ${id} `)
               const inputFile: FileLoadOptions = {
                 filename: evaluation.filename
               };
@@ -180,6 +196,11 @@ export class Evaluation extends VuexModule {
   @Mutation
   SET_ALL_EVALUATION(evaluations: IEvaluation[]) {
     this.allEvaluations = evaluations;
+  }
+
+  @Mutation
+  SET_ALL_EVALUATION_COUNT(evaluationsCount: number) {
+    this.evaluationsCount = evaluationsCount;
   }
 
   // Save an evaluation or update it if is already saved.

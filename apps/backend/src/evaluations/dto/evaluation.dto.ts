@@ -17,11 +17,13 @@ export class EvaluationDto implements IEvaluation {
   readonly updatedAt: Date;
   readonly editable: boolean;
   readonly shareURL?: string;
+  //readonly totalItems: number;
 
   constructor(
     evaluation: Evaluation,
     editable = false,
-    shareURL: string | undefined = undefined
+    shareURL: string | undefined = undefined,
+    //totalItems = 0,       
   ) {
     this.id = evaluation.id;
     this.filename = evaluation.filename;
@@ -50,5 +52,10 @@ export class EvaluationDto implements IEvaluation {
     this.updatedAt = evaluation.updatedAt;
     this.editable = editable;
     this.shareURL = shareURL;
+    //this.totalItems = totalItems;
   }
+}
+
+export interface IEvaluationResponse {
+  evaluations: EvaluationDto[], totalCount: number
 }

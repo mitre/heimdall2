@@ -8,7 +8,7 @@
             class="px-3 pb-1"   
             prepend-inner-icon="mdi-magnify"
             hint="Filter on file name"
-            placeholder="filename"
+            placeholder="filenames"
             clearable
             hide-details="auto"
           />         
@@ -67,7 +67,7 @@
           mobile-breakpoint="0"
           fixed-header
           :headers="headers"
-          :items="files"          
+          :items="evaluationsLoaded"          
           :server-items-length="totalItems"
           :items-per-page="itemsPerPage"                   
           :loading="loading"
@@ -188,7 +188,7 @@ import {Prop, Watch} from 'vue-property-decorator';
   }
 })
 
-export default class LoadFileList extends Vue {
+export default class LoadFileList2 extends Vue {
 
   @Prop({required: true}) readonly headers!: Object[];
   @Prop({type: Boolean, default: false}) readonly loading!: boolean;
@@ -198,8 +198,8 @@ export default class LoadFileList extends Vue {
   @Prop({required: true}) readonly files!: IEvaluation[] | Sample[];
   //@Prop({required: true}) readonly itemsPerPage!: number;
 
-  evaluationsLoaded: IEvaluation[] | Sample[] = [];
-  selectedFiles: IEvaluation[] | Sample[] = [];
+  evaluationsLoaded: IEvaluation[] = [];
+  selectedFiles: IEvaluation[] = [];
   activeItem!: IEvaluation;
   activeTag!: IEvaluationTag;
 
@@ -220,7 +220,7 @@ export default class LoadFileList extends Vue {
   itemsPerPage = 5;
 
   tableHight = '550px';
-  //sortField = 'filename';
+  sortField = 'filename';
   sortDesc = true;
   logicOperator = 'or';
   sortOrder = ["createdAt", "DESC"];
@@ -238,31 +238,32 @@ export default class LoadFileList extends Vue {
 
     this.getEvaluations(params);
 
-    // database
-    //this.totalItems = EvaluationModule.evaluationsCount;
-    //this.evaluationsLoaded = EvaluationModule.allEvaluations;
-
-    // testing
-    this.totalItems = this.files.length;
-    //this.totalItems = 500      
+    this.totalItems = EvaluationModule.evaluationsCount;
+    this.evaluationsLoaded = EvaluationModule.allEvaluations;
     console.log(`total items is: ${this.totalItems}`)
   }
 
   async getEvaluations(params: IEvalPaginationParams): Promise<void> {
-   
-    //Database
-    // const params: IEvalPaginationParams = {offset: 1, limit: this.itemsPerPage, order: this.sortOrder};
-    // console.log(`params are: ${JSON.stringify(params,null,2)}`)    
-    // EvaluationModule.getAllEvaluations(params);
+    console.log(`params are: ${JSON.stringify(params,null,2)}`)    
+    EvaluationModule.getAllEvaluations(params);
+  }
 
-    // Testing
-    //const {offset, limit} = this.getOffSetLimit();
-    console.log(`offset: ${params.offset} limit: ${params.limit}`)
-    this.evaluationsLoaded = this.files.slice(params.offset,params.limit);
+  // get loading() {
+  //   return EvaluationModule.loading;
+  // }
+
+  getOffSetLimit() {
+    const page = this.options.page;
+
+    // Database call
+    //   offset: is the value where to start the returning values
+    //   limit:  the number of records to return
+    const limit = this.itemsPerPage;
+    const offset = ((page*limit) - limit) + 1;
+    return {offset, limit};
   }
 
   executeSearch() {
-    // https://medium.com/@jayantamgr/dynamic-multi-filter-data-table-using-vuejs-and-vuetify-308c3ae92b8c
     console.log(`search items is ${this.searchItems}`)
     console.log(`search groups is ${this.searchGroups}`)
     console.log(`search tags is ${this.searchTags}`)
@@ -280,8 +281,7 @@ export default class LoadFileList extends Vue {
       const {offset, limit} = this.getOffSetLimit();
       const params: IEvalPaginationParams = {offset: offset, limit: limit, order: this.sortOrder};
       this.getEvaluations(params);
-      // database
-      //this.evaluationsLoaded = EvaluationModule.allEvaluations;
+      this.evaluationsLoaded = EvaluationModule.allEvaluations;
 
     } else if (this.searchItems.trim().length === 0 && 
                this.searchGroups.trim().length === 0 &&
@@ -307,38 +307,27 @@ export default class LoadFileList extends Vue {
 
       console.log(`params are ${JSON.stringify(params)}`)    
       // Database
-      //this.getEvaluations(params);
-      //this.evaluationsLoaded = EvaluationModule.allEvaluations;
-
-      // testing
-      this.search = (this.searchItems === null) ? '' : this.searchItems; 
-      console.log(`this.search is ${this.search}`)
-      this.evaluationsLoaded = <Sample[]> this.filteredFiles;
+      this.getEvaluations(params);
+      this.evaluationsLoaded = EvaluationModule.allEvaluations;
     }
   }
 
   updateSortBy(sortField: any) {
-    // https://github.com/vuetifyjs/vuetify/issues/11727
     console.log(`sortField is ${sortField}`)
     console.log(`options are (updateSortBy): ${JSON.stringify(this.options,null,2)}`)
-    const {offset, limit} = this.getOffSetLimit();
     if (sortField === undefined) {
       console.log("UNDEFINED")
-      this.sortOrder = [`"${this.sortByField}"`, "DESC"]
-      this.sortEvaluations({offset: offset, limit: limit, order: this.sortOrder})
+      this.sortOrder = [`"${this.sortField}"`, "DESC"]
     } else {
       // Sort In Ascending Order - Set sortField
       console.log("GOT FIELD")
-      this.sortByField = sortField;
-      this.sortOrder = [`"${this.sortByField}"`, "ASC"]
+      this.sortField = sortField;
+      this.sortOrder = [`"${this.sortField}"`, "ASC"]
     }
-    // database
-    //this.getEvaluations(params);
-    //this.evaluationsLoaded = EvaluationModule.allEvaluations;
-      
-    // testing
-    this.sortEvaluations({offset: offset, limit: limit, order: this.sortOrder})
-
+    const {offset, limit} = this.getOffSetLimit();
+    const params: IEvalPaginationParams = {offset: offset, limit: limit, order: this.sortOrder};
+    this.getEvaluations(params);
+    this.evaluationsLoaded = EvaluationModule.allEvaluations;
   }
 
   updateDisplayPage(page: number) {
@@ -347,8 +336,7 @@ export default class LoadFileList extends Vue {
 
     const {offset, limit} = this.getOffSetLimit();
     this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
-    // database
-    //this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    this.evaluationsLoaded = EvaluationModule.allEvaluations;
   }
 
   updateItemsPerPage(itemsCount: number) {
@@ -358,61 +346,17 @@ export default class LoadFileList extends Vue {
     // The Items Per Page slot uses -1 to represent All items
     if (itemsCount == -1) {
       this.page = 1;
-      // Database
-      // this.itemsPerPage = EvaluationModule.evaluationsCount;
-      
-      // testing
-      this.itemsPerPage = this.files.length;
+
+      this.itemsPerPage = EvaluationModule.evaluationsCount;
     } else {
       this.itemsPerPage = itemsCount;
     }
     const {offset, limit} = this.getOffSetLimit();
     this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
-    // database
-    //this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    this.evaluationsLoaded = EvaluationModule.allEvaluations;
   }
-
-  getOffSetLimit() {
-    const page = this.options.page;
-
-    // Database call
-    //   offset: is the value where to start the returning values
-    //   limit:  the number of records to return
-    //const limit = this.itemsPerPage;
-    //const offset = ((page*limit) - limit) + 1;
-
-    // For testing
-    //  offset: start
-    //  limit:  end
-    const offset =(page==1)? 0: ((page*this.itemsPerPage) - this.itemsPerPage) ;
-    const limit = (offset+this.itemsPerPage);
-
-    return {offset, limit};
-  }
-
-  // Testing Only
-  sortEvaluations(params: IEvalPaginationParams) {
-    console.log(`params are: ${JSON.stringify(params,null,2)}`)
-    const sortDesc = params.order[1] == 'DESC';
-    console.log(`sortDes is: ${sortDesc}`)
-    let sortFiles = this.files.sort((sortA,sortB) => {
-      if (sortDesc) {
-        if (sortA.filename < sortB.filename) return 1
-        if (sortA.filename > sortB.filename) return -1
-        return 0
-      } else {  
-        if (sortA.filename < sortB.filename) return -1
-        if (sortA.filename > sortB.filename) return 1
-        return 0
-      }
-    });
-
-    console.log(`files: ${JSON.stringify(this.files)}`)
-    this.evaluationsLoaded = sortFiles.slice(params.offset,params.limit);
-  }
-
   
-  emit_selected(selection: IEvaluation[] | Sample[]) {
+  emit_selected(selection: IEvaluation[]) {
     this.selectedFiles = [];
     this.$emit('load-selected', selection);
   }
@@ -439,29 +383,6 @@ export default class LoadFileList extends Vue {
     this.deleteTagDialog = true;
   }
 
-  filterEvaluationTags(file: IEvaluation | Sample, search: string) {
-    let result = false;
-    if ('evaluationTags' in file) {
-      file.evaluationTags?.forEach((tag) => {
-        if (tag.value.toLowerCase().includes(search)) {
-          result = true;
-        }
-      });
-    }
-    return result;
-  }
-
-  filterEvaluationGroups(file: IEvaluation | Sample, search: string) {
-    let result = false;
-    if ('groups' in file) {
-      file.groups?.forEach((group) => {
-        if (group.name.toLowerCase().includes(search)) {
-          result = true;
-        }
-      });
-    }
-    return result;
-  }
 
   async deleteItemConfirm(): Promise<void> {
     EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
@@ -474,27 +395,6 @@ export default class LoadFileList extends Vue {
     return `${window.location.origin}/results/${item.id}`;
   }
 
-  get filteredFiles() {
-    console.log("WHAT")
-    const matches: Array<IEvaluation | Sample> = [];
-    if (this.search !== '') {
-      const searchToLower = this.search.toLowerCase();
-      (this.files as Array<IEvaluation | Sample>).forEach(
-        async (item: IEvaluation | Sample) => {
-          if (
-            this.filterEvaluationTags(item, searchToLower) ||
-            this.filterEvaluationGroups(item, searchToLower) ||
-            item.filename.toLowerCase().includes(searchToLower)
-          ) {
-            matches.push(item);
-          }
-        }
-      );
-    } else {
-      return this.files;
-    }
-    return matches;
-  }
 }
 
 </script>

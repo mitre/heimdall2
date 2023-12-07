@@ -174,3 +174,10 @@ export default class FileList extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.card-outter {
+  position: absolute;
+  bottom: 0;
+}
+</style>

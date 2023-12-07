@@ -15,17 +15,17 @@ export interface IEvaluation {
   readonly editable: boolean;
 }
 
-// export interface IEvalPagination {
-//   page: number;
-//   itemsPerPage: number;
-//   searchField: string;
-//   sortBy: string;
-//   sortType: string;
-// }
+export interface IEvaluationResponse {
+  totalCount: number;
+  evaluations: IEvaluation[];
+}
 
 export interface IEvalPaginationParams {
   offset: number;
   limit: number;
   order: Array<string>;
+  useClause?: boolean;
+  operator?: string;
+  fields?: Array<string>;
 }
 
