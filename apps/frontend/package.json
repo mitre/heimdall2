@@ -85,7 +85,7 @@
     "prismjs": "^1.29.0",
     "rimraf": "^5.0.0",
     "roboto-fontface": "*",
-    "sanitize-html": "~2.7.3",
+    "sanitize-html": "~2.11.0",
     "sass": "~1.32.6",
     "sass-loader": "^10.0.3",
     "search-query-parser": "^1.5.5",
