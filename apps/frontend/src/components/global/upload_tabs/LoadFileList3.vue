@@ -8,7 +8,7 @@
             class="px-3 pb-1"   
             prepend-inner-icon="mdi-magnify"
             hint="Filter on file name"
-            placeholder="filename"
+            placeholder="file name"
             clearable
             hide-details="auto"
           />         
@@ -64,23 +64,19 @@
           class="pb-8 table"
           dense
           show-select
-          mobile-breakpoint="0"
           fixed-header
+          mobile-breakpoint="0"
+          :page.sync="page"              
           :headers="headers"
-          :items="files"          
-          :server-items-length="totalItems"
-          :items-per-page="itemsPerPage"                   
+          :items="evaluationsLoaded"
+          :options.sync="options" 
           :loading="loading"
-          :sort-by.sync="sortByField"
+          :sort-by.sync="sortBy"
           :sort-desc="sortDesc"
           :item-key="fileKey"
-          :height="tableHight" 
-          :options.sync="options"
-          @update:sort-by="updateSortBy"
-          @update:page="updateDisplayPage"
-          @update:items-per-page="updateItemsPerPage"
+          :items-per-page="itemsPerPage"
+          :height="tableHight"
           :footer-props="{
-            showCurrentPage: true,
             showFirstLastPage: true,
             firstIcon: 'mdi-page-first',
             lastIcon: 'mdi-page-last',
@@ -89,8 +85,18 @@
             itemsPerPageOptions: [5,10,25,50,100,-1],
             itemsPerPageText: 'Rows per page:',
           }"
+          @update:sort-by="updateSortBy"
+          @update:page="updateDisplayPage"
+          @update:items-per-page="updateItemsPerPage"
 
         >
+          <template v-slot:footer="{ props }">
+            <div class="pr-10 text-right">
+               Page {{ props.pagination.page }} of {{ props.pagination.pageCount }}
+            </div>
+          </template>          
+
+          <!-- Format how to render the fields - provide action events -->
           <template #[`item.filename`]="{item}">
             <span class="cursor-pointer" @click="emit_selected([item])">
               {{ item.filename }}
@@ -156,8 +162,8 @@
               <v-icon class="pl-2"> mdi-file-download</v-icon>
             </v-btn>
           </template>
-            <span>Load selected evaluations</span>
-        </v-tooltip>            
+          <span>Load selected evaluation(s)</span>
+        </v-tooltip>
       </div>
     </div>
   </div>
@@ -188,14 +194,14 @@ import {Prop, Watch} from 'vue-property-decorator';
 export default class LoadFileList3 extends Vue {
 
   @Prop({required: true}) readonly headers!: Object[];
-  @Prop({type: Boolean, default: false}) readonly loading!: boolean;
+  @Prop({type: Boolean, default: false}) readonly queryingRecords!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
-  //@Prop({type: String, default: 'createdAt'}) readonly sortBy!: string;
+  @Prop({type: String, default: 'createdAt'}) readonly sortBy!: string;
   //@Prop({type: Boolean, default: true}) readonly sortDesc!: boolean;
   @Prop({required: true}) readonly files!: IEvaluation[];
   @Prop({required: true}) readonly totalItemsPerPage!: number;
 
-  evaluationsLoaded: IEvaluation[] = this.files;
+  evaluationsLoaded: IEvaluation[] = [];
   selectedFiles: IEvaluation[] = [];
   activeItem!: IEvaluation;
   activeTag!: IEvaluationTag;
@@ -212,17 +218,18 @@ export default class LoadFileList3 extends Vue {
   sortByField: string = 'createdAt'
   options: any = {};
 
-  page = 1;        // The starting page for the pagination component
-  totalItems = 0   // Total records to display
+  page = 1;         // The starting page for the pagination component
+  totalItems = 0    // Total records to display
+  //numberOfPages = 0 // Total pages
   //totalPages = 0;  // The length of the pagination component
   itemsPerPage = this.totalItemsPerPage;
 
-  tableHight = '550px';
+  tableHight = '440px';
   //sortField = 'filename';
   sortDesc = true;
   logicOperator = 'or';
   sortOrder = ["createdAt", "DESC"];
-
+  loading = this.queryingRecords;
 
   @Watch('refresh')
   onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
@@ -234,7 +241,19 @@ export default class LoadFileList3 extends Vue {
     }
   }
 
+  mounted() {
+    console.log('---------------- MOUNTED -----------------')
+    this.evaluationsLoaded = this.files
+    this.totalItems = this.evaluationsLoaded.length;
+    this.loading = false;
 
+    console.log(`page number is: ${this.page}`)
+    console.log(`totalItems are: ${this.totalItems}`)
+    console.log(`pageCount is ${Math.ceil(this.totalItems/this.itemsPerPage)}`)
+    //console.log(`evaluationsLoaded (3) are: ${JSON.stringify(this.evaluationsLoaded,null,2)}`)
+    console.log(`options are: ${JSON.stringify(this.options,null,2)}`)
+
+  }
   // async mounted() {
   //   console.log('---------------- START -----------------')
   //   const {offset, limit} = this.getOffSetLimit();
@@ -266,8 +285,20 @@ export default class LoadFileList3 extends Vue {
   }
 
   get evaluations() {
-    console.log("GETTING ALL EVALUATIONS")
-    return EvaluationModule.allEvaluations;
+    console.log("LOADFILE- GETTING ALL EVALUATIONS")
+    //return EvaluationModule.allEvaluations;
+    console.log(`evaluationsLoaded (1) are: ${JSON.stringify(this.evaluationsLoaded,null,2)}`)
+    this.evaluationsLoaded = [];
+    console.log(`evaluationsLoaded (2) are: ${JSON.stringify(this.evaluationsLoaded,null,2)}`)
+    this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    this.totalItems = EvaluationModule.evaluationsCount;  
+    console.log(`page number is: ${this.page}`)
+    console.log(`totalItems are: ${this.totalItems}`)
+    console.log(`pageCount is ${Math.ceil(this.totalItems/this.itemsPerPage)}`)
+    console.log(`evaluationsLoaded (3) are: ${JSON.stringify(this.evaluationsLoaded,null,2)}`)
+    console.log(`options are: ${JSON.stringify(this.options,null,2)}`)
+    return this.evaluationsLoaded;
+
   }
 
   // get loading() {
@@ -283,6 +314,14 @@ export default class LoadFileList3 extends Vue {
     const limit = this.itemsPerPage;
     const offset = ((page*limit) - limit) + 1;
     return {offset, limit};
+  }
+
+  updateTable(thisValues: Object) {
+    // emitted by the data-table when changing page, rows per page, or the sorted column/direction 
+    // - will be also immediately emitted after the component was created
+    console.log("------UPDATE TABLE-------")
+    console.log(`values are: ${JSON.stringify(thisValues,null,2)}`)
+    console.log(`while options are : ${JSON.stringify(this.options,null,2)}`)
   }
 
   async executeSearch() {

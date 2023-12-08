@@ -24,12 +24,10 @@ export default class CopyButton extends Vue {
   readonly tooltip!: string;
 
   getTooltipTitle() {
-    console.log(`tooltip is ${this.tooltip}`);  
     return this.tooltip;
   }
 
   async copy() {
-   //console.log(`tooltip is ${this.tooltip}`);   
     try {
       navigator.clipboard.writeText(this.text);
       SnackbarModule.notify('Text copied to your clipboard');

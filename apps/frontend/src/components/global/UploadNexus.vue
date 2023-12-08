@@ -40,18 +40,18 @@
         <v-tab id="select-tab-sample" href="#uploadtab-sample">Samples</v-tab>
 
         <!-- Include those components -->
-        <v-tab-item value="uploadtab-local">
-          <FileReader @got-files="got_files" />
-        </v-tab-item>
-
         <!-- <v-tab-item value="uploadtab-local">
-          <SampleList @got-files="got_files" />
+          <FileReader @got-files="got_files" />
         </v-tab-item> -->
+
+        <v-tab-item value="uploadtab-local">
+          <DatabaseReader :refresh="visible" @got-files="got_files" />
+        </v-tab-item>
 
         <v-tab-item v-if="serverMode" value="uploadtab-database">
           <DatabaseReader :refresh="visible" @got-files="got_files" />
         </v-tab-item>
-
+       
         <v-tab-item value="uploadtab-sample">
           <SampleList @got-files="got_files" />
         </v-tab-item>

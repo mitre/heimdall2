@@ -23,6 +23,7 @@
               class="pb-8 table"
               dense
               show-select
+              fixed-header
               mobile-breakpoint="0"              
               :headers="headers"
               :items="samples"
@@ -34,7 +35,6 @@
               :items-per-page="itemsPerPage"
               :height="tableHight"
               :footer-props="{
-                showCurrentPage: true,
                 showFirstLastPage: true,
                 firstIcon: 'mdi-page-first',
                 lastIcon: 'mdi-page-last',
@@ -43,13 +43,17 @@
                 itemsPerPageText: 'Rows per page:',
               }"
             >
+              <template v-slot:footer="{ props }">
+                <div class="pr-10 text-right">
+                  Page {{ props.pagination.page }} of {{ props.pagination.pageCount }}
+                </div>
+              </template>  
               <template #[`item.filename`]="{item}">
                 <span class="cursor-pointer" @click="load_samples([item])">{{
                   item.filename
                 }}</span>
               </template>
             </v-data-table>
-
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -84,6 +88,7 @@ import {Watch} from 'vue-property-decorator';
 @Component({
   components: {}
 })
+
 export default class SampleList extends Vue {
   samples: Sample[] = samples; // Get the samples from utilities
   selectedFiles: Sample[] = [];
@@ -137,7 +142,7 @@ export default class SampleList extends Vue {
           this.selectedFiles = [];
         });
     } else {
-      SnackbarModule.notify("Please select a sample file to load into the visualization panel!")
+      SnackbarModule.notify("Please select a sample for viewing in the visualization panel")
     }
   }
 }
