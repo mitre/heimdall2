@@ -20,7 +20,7 @@ import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
 import {EvaluationModule} from '@/store/evaluations';
 import {FileID} from '@/store/report_intake';
-import {IEvalPaginationParams, IEvaluation} from '@heimdall/interfaces';
+import {IEvalPaginationParams, IEvaluation, IEvaluationTag, IGroup} from '@heimdall/interfaces';
 import Component, {mixins} from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
 import {SnackbarModule} from '@/store/snackbar';
@@ -41,9 +41,10 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   headers: Object[] = [
     {
       text: 'Filename',
+      value: 'filename',
       align: 'start',
-      sortable: true,
-      value: 'filename'
+      sortable: true
+
     },
     {
       text: 'Groups',
@@ -59,7 +60,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     {
       text: 'Actions',
       value: 'actions',
-      align: 'right',
+      align: 'end',
       sortable: false,
     }
   ];
@@ -119,6 +120,68 @@ console.log(`params are: ${JSON.stringify(params,null,2)}`)
     }
   }
 
+  activeTag1: IEvaluationTag = {
+    id: '1',
+    value: 'Tag-1',
+    evaluationId: '',
+    createdAt: new Date("2023-11-07T03:20:59.683Z"),
+    updatedAt: new Date("2023-11-07T03:20:59.683Z")
+  }
+  activeTag2: IEvaluationTag = {
+    id: '2',
+    value: 'Tag-2',
+    evaluationId: '',
+    createdAt: new Date("2023-11-07T03:20:59.683Z"),
+    updatedAt: new Date("2023-11-07T03:20:59.683Z")
+  }
+  activeTag3: IEvaluationTag = {
+    id: '3',
+    value: 'Tag-3',
+    evaluationId: '',
+    createdAt: new Date("2023-11-07T03:20:59.683Z"),
+    updatedAt: new Date("2023-11-07T03:20:59.683Z")
+  }
+  activeTag4: IEvaluationTag = {
+    id: '4',
+    value: 'Tag-4',
+    evaluationId: '',
+    createdAt: new Date("2023-11-07T03:20:59.683Z"),
+    updatedAt: new Date("2023-11-07T03:20:59.683Z")
+  }
+  activeTag5: IEvaluationTag = {
+    id: '5',
+    value: 'Tag-5',
+    evaluationId: '',
+    createdAt: new Date("2023-11-07T03:20:59.683Z"),
+    updatedAt: new Date("2023-11-07T03:20:59.683Z")
+  }
+  group1: IGroup = {
+    id: '1',
+    name: 'Group-1',
+    public: false,
+    users: [],
+    desc: '',
+    createdAt: new Date("2023-11-07T03:20:59.683Z"),
+    updatedAt: new Date("2023-11-07T03:20:59.683Z")
+  }
+  group2: IGroup = {
+    id: '2',
+    name: 'Group-2',
+    public: false,
+    users: [],
+    desc: '',
+    createdAt: new Date("2023-11-07T03:20:59.683Z"),
+    updatedAt: new Date("2023-11-07T03:20:59.683Z")
+  }
+  group3: IGroup = {
+    id: '3',
+    name: 'Group-3',
+    public: false,
+    users: [],
+    desc: '',
+    createdAt: new Date("2023-11-07T03:20:59.683Z"),
+    updatedAt: new Date("2023-11-07T03:20:59.683Z")
+  }
   tempFiles: IEvaluation[] = [
   {
     "id": "20",
@@ -233,6 +296,18 @@ console.log(`params are: ${JSON.stringify(params,null,2)}`)
     "filename": "snyk-legacy-10.hdf",
     "evaluationTags": [],
     "groups": [],
+    "userId": "2",
+    "groupId": "",
+    "public": false,
+    "createdAt": new Date("2023-11-07T02:03:47.986Z"),
+    "updatedAt": new Date("2023-11-07T02:03:47.986Z"),
+    "editable": true
+  },
+  {
+    "id": "10",
+    "filename": "this-in-one-loge-file-name-snyk-legacy-10.hdf",
+    "evaluationTags": [this.activeTag1,this.activeTag2,this.activeTag3,this.activeTag4,this.activeTag5],
+    "groups": [this.group1, this.group3,this.group3],
     "userId": "2",
     "groupId": "",
     "public": false,

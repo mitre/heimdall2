@@ -63,16 +63,15 @@
           data-cy="loadFileList"
           class="pb-8 table"
           dense
-          show-select
           fixed-header
           mobile-breakpoint="0"
-          :page.sync="page"              
+          show-select
+          hide-default-header
           :headers="headers"
+          :page.sync="page"              
           :items="evaluationsLoaded"
-          :options.sync="options" 
+          :options.sync="pagination" 
           :loading="loading"
-          :sort-by.sync="sortBy"
-          :sort-desc="sortDesc"
           :item-key="fileKey"
           :items-per-page="itemsPerPage"
           :height="tableHight"
@@ -85,17 +84,97 @@
             itemsPerPageOptions: [5,10,25,50,100,-1],
             itemsPerPageText: 'Rows per page:',
           }"
-          @update:sort-by="updateSortBy"
           @update:page="updateDisplayPage"
           @update:items-per-page="updateItemsPerPage"
 
         >
           <template v-slot:footer="{ props }">
-            <div class="pr-10 text-right">
-               Page {{ props.pagination.page }} of {{ props.pagination.pageCount }}
+            <div class="pr-10 text-right page-of-pages-div">
+               <b>Page {{ props.pagination.page }} of {{ props.pagination.pageCount }}</b>
             </div>
-          </template>          
+          </template>    
 
+<!-- custom headers slots https://colemike.com/2018/07/20/icons-in-header-slot-in-vuetify-data-table/-->
+          <!-- <template #header="{ props: { headers } }"> -->
+            <!-- <template v-slot:header="props" > -->
+            <!-- <template v-slot:header="{ props: { headers } }"> -->
+            <template slot="header" slot-scope="props">
+              <thead class="v-data-table-header">
+                <tr> 
+                  <th>
+                    <v-checkbox
+                      primary
+                      hide-details
+                      @click.native="toggleAll"
+                    ></v-checkbox>
+                  </th>                
+                  <th
+                    v-for="header in headers"
+                    :key="header.value"
+                    :class="['column',   pagination.sortDesc ? 'desc' : 'asc', header.value === pagination.sortBy[0] ? 'active' : '']"  
+                    @click="header.sortable ? changeSort(header.value) : ''"
+                  >
+                    {{ header.text }}
+                    <v-icon v-if="header.sortable" class="v-data-table-header__icon" style="color:deepskyblue" medium>mdi-sort</v-icon>
+                  </th>
+                </tr>
+              </thead>              
+          </template>
+
+          <!-- <template slot="item" slot-scope="props">
+                    v-bind:class="[header.sortable ? 'sortable' : '', pagination.sortBy === header.value ? 'active': '', pagination.sortDesc ? 'desc':'asc']"          
+            <tr :active="props.selected" @click="props.selected = !props.selected">
+              <td>
+                <v-checkbox
+                  :input-value="props.selected"
+                  primary
+                  hide-details
+                ></v-checkbox>
+              </td>
+              <td>{{ props.item.filename }}</td>
+            </tr>
+
+          </template> -->
+          <!-- <template slot="header"  slot-scope="props">
+            <tr>
+              <th>
+                <v-checkbox
+                  :input-value="props.all"
+                  :indeterminate="props.indeterminate"
+                  primary
+                  hide-details
+                  @click.native="toggleAll"
+                ></v-checkbox>
+              </th>
+              <th
+                v-for="header in headers"
+                :key="header.value"
+                :class="['column sortable', pagination.sortDesc ? 'desc' : 'desc', header.value === pagination.sortBy[0] ? 'active' : '']"
+                @click="changeSort(header.value)"
+              >
+              <v-icon>{{ pagination.sortDesc ?  'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
+                {{ header.text }} {{ header.value === pagination.sortBy[0] }}
+              </th>
+            </tr>
+          </template> -->
+
+          <!-- <template slot="item" slot-scope="props">
+            <tr :active="props.selected" @click="props.selected = !props.selected">
+              <td>
+                <v-checkbox
+                  :input-value="props.selected"
+                  primary
+                  hide-details
+                ></v-checkbox>
+              </td>
+              <td>{{ props.item.filename }}</td>
+              <td class="text-xs-left">{{ props.item.groups }}</td>
+              <td class="text-xs-right">{{ props.item.evaluationTags }}</td>
+              <td class="text-xs-left">{{ props.item.createdAt }}</td>
+              <td class="text-xs-right">{{ props.item.actions }}</td>
+            </tr>
+          </template> -->
+          
           <!-- Format how to render the fields - provide action events -->
           <template #[`item.filename`]="{item}">
             <span class="cursor-pointer" @click="emit_selected([item])">
@@ -147,6 +226,7 @@
               </div>
             </v-row>
           </template>
+
         </v-data-table>
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
@@ -192,11 +272,14 @@ import {Prop, Watch} from 'vue-property-decorator';
   }
 })
 export default class LoadFileList3 extends Vue {
+[x: string]: any;
+
+
 
   @Prop({required: true}) readonly headers!: Object[];
   @Prop({type: Boolean, default: false}) readonly queryingRecords!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
-  @Prop({type: String, default: 'createdAt'}) readonly sortBy!: string;
+  //@Prop({type: String, default: 'createdAt'}) readonly sortBy!: string;
   //@Prop({type: Boolean, default: true}) readonly sortDesc!: boolean;
   @Prop({required: true}) readonly files!: IEvaluation[];
   @Prop({required: true}) readonly totalItemsPerPage!: number;
@@ -210,26 +293,47 @@ export default class LoadFileList3 extends Vue {
   deleteItemDialog = false;
   deleteTagDialog = false;
 
-  //fileKey = 'id';
-  //search: string = '';
-  searchItems: string = '';
-  searchGroups: string = '';
-  searchTags: string = '';
-  sortByField: string = 'createdAt'
-  options: any = {};
-
+ 
+  loading = this.queryingRecords;  
   page = 1;         // The starting page for the pagination component
   totalItems = 0    // Total records to display
   //numberOfPages = 0 // Total pages
   //totalPages = 0;  // The length of the pagination component
-  itemsPerPage = this.totalItemsPerPage;
+  itemsPerPage = this.totalItemsPerPage; 
+  
+  //fileKey = 'id';
+  //search: string = '';
+  searchItems = '';
+  searchGroups = '';
+  searchTags = '';
+  logicOperator = 'or';  
 
+  // Sort variables decleration
+  sortDesc = true;                   // Set default sort order
+  sortByField = 'createdAt'          // Default sort field
+  sortOrder = ["createdAt", "DESC"]; // db sort order  
+  sortingField = 'createdAt';        // Field we are currently sorting on
+  // pagination = {
+  //   sortBy: 'createdAt'
+  // }
+ pagination = {
+  page: this.page,
+  itemsPerPage: this.itemsPerPage,
+  sortBy: [] = ['createdAt'],
+  sortDesc: false,
+  groupBy: [] = [],
+  groupDesc: [] = [],
+  mustSort: false,
+  multiSort: false
+}
+  //pagination: any = {}
+  //pagination.sortBy = 'createdAt'
+
+  options: any = {};
   tableHight = '440px';
-  //sortField = 'filename';
-  sortDesc = true;
-  logicOperator = 'or';
-  sortOrder = ["createdAt", "DESC"];
-  loading = this.queryingRecords;
+
+
+
 
   @Watch('refresh')
   onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
@@ -373,22 +477,50 @@ export default class LoadFileList3 extends Vue {
     }
   }
 
+  toggleAll () {
+      if (this.selectedFiles.length) this.selectedFiles = []
+      else this.selectedFiles = this.evaluationsLoaded.slice()
+    }
+
+  changeSort (column: string) {
+    console.log(`In changeSort column is ${column}`)
+    console.log(`In changeSort pagination.sortBy is ${this.pagination.sortBy[0]}`)
+    console.log(`In changeSort pagination is ${JSON.stringify(this.pagination,null,2)}`)
+    if (this.pagination.sortBy[0] === column) {
+      this.pagination.sortDesc = !this.pagination.sortDesc;
+    } else {
+      this.pagination.sortBy[0] = column
+      this.pagination.sortDesc = false
+    }
+    this.sortOrder = [`"${column}"`, `"${!this.pagination.sortDesc ? "DESC":"ASC"}"`]
+    console.log(`Sorting on this field [${this.sortOrder}]`)
+  } 
+// :sort-by.sync="sortByField"
+// :sort-desc="sortDesc"
+//           @update:sort-by="updateSortBy"
   async updateSortBy(sortField: any) {
     console.log(`sortField is ${sortField}`)
+    console.log(`this sortByField is ${this.sortByField}`)
     console.log(`options are (updateSortBy): ${JSON.stringify(this.options,null,2)}`)
     if (sortField === undefined) {
       console.log("UNDEFINED")
-      this.sortOrder = [`"${this.sortByField}"`, "DESC"]
+      //this.sortByField = this.sortingField;
+      //this.sortDesc = true;
+      this.options.sortDesc = true;
+      this.options.sortByField = this.sortingField;
+      console.log(`options are (updateSortBy): ${JSON.stringify(this.options,null,2)}`)
+      this.sortOrder = [`"${this.sortingField}"`, "DESC"]
     } else {
       // Sort In Ascending Order - Set sortField
       console.log("GOT FIELD")
-      this.sortByField = sortField;
+      this.sortingField = sortField;
       this.sortOrder = [`"${this.sortByField}"`, "ASC"]
     }
+    
     const {offset, limit} = this.getOffSetLimit();
     const params: IEvalPaginationParams = {offset: offset, limit: limit, order: this.sortOrder};
-    await this.getEvaluations(params);
-    this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    //await this.getEvaluations(params);
+    //this.evaluationsLoaded = EvaluationModule.allEvaluations;
   }
 
   async updateDisplayPage(page: number) {
@@ -396,8 +528,8 @@ export default class LoadFileList3 extends Vue {
     console.log(`options are (updateDisplayPage): ${JSON.stringify(this.options,null,2)}`)
 
     const {offset, limit} = this.getOffSetLimit();
-    await this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
-    this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    //await this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
+    //this.evaluationsLoaded = EvaluationModule.allEvaluations;
   }
 
   async updateItemsPerPage(itemsCount: number) {
@@ -413,14 +545,11 @@ export default class LoadFileList3 extends Vue {
       this.itemsPerPage = itemsCount;
     }
     const {offset, limit} = this.getOffSetLimit();
-    await this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
+    //await this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
     //this.evaluationsLoaded = EvaluationModule.allEvaluations;
   }
 
-  // emit_selected(selection: IEvaluation[] | Sample[]) {
-  //   this.selectedFiles = [];
-  //   this.$emit('load-selected', selection);
-  // }
+
   emit_selected(selection: IEvaluation[] ) {
     this.selectedFiles = [];
     this.$emit('load-selected', selection);
@@ -469,7 +598,9 @@ export default class LoadFileList3 extends Vue {
   position: absolute;
   bottom: 0;
 }
-
+.page-of-pages-div {
+  color: deepskyblue !important;
+}
 .table >>> th {
   font-size:0.95rem !important;
 }
@@ -477,6 +608,12 @@ export default class LoadFileList3 extends Vue {
 .table >>> .v-select__selection,
 .table >>> .v-data-footer__pagination {
   font-size:0.90rem
+}
+/* .v-datatable thead th.column.sortable.active.desc .no-rotate {
+    transform: none !important;
+} */
+.v-data-table-header th {
+  text-transform: uppercase;
 }
 
 </style>

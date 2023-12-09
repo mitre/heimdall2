@@ -9,6 +9,7 @@
     "FISMA",
     "fontface",
     "headerapikey",
+    "headerprops",
     "ldapauth",
     "nestjs",
     "nodesource",

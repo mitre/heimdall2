@@ -8,7 +8,7 @@
       <div>
         <div class="ma-0 pa-0">
           <v-text-field
-            v-model="searchItems"
+            v-model="searchItem"
             class="px-3 pb-1"
             prepend-inner-icon="mdi-magnify"
             hint="Filter on file name"
@@ -16,24 +16,24 @@
             clearable
             hide-details="auto"
           />
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column" >
             <v-data-table 
               v-model="selectedFiles"
               data-cy="loadFileList"
-              class="pb-8 table"
+              class="pb-8 table"  
               dense
               show-select
               fixed-header
-              mobile-breakpoint="0"              
+              mobile-breakpoint="0" 
               :headers="headers"
               :items="samples"
               :search="search" 
-              :loading="loading"
               :sort-by.sync="sortBy"
               :sort-desc="sortDesc"
+              :loading="loading"
               :item-key="fileKey"
-              :items-per-page="itemsPerPage"
               :height="tableHight"
+              :headerProps="headerprops"
               :footer-props="{
                 showFirstLastPage: true,
                 firstIcon: 'mdi-page-first',
@@ -43,17 +43,28 @@
                 itemsPerPageText: 'Rows per page:',
               }"
             >
+              <!-- Customize the sort icon-->
+              <template v-slot:header.filename="{ header }">
+                {{ header.text.toUpperCase() }}
+                <v-icon v-if="header.sortable" class="v-data-table-header__icon page-of-pages-div" medium>mdi-sort</v-icon>
+              </template>
+
+              <!-- Customize pagination -->
               <template v-slot:footer="{ props }">
-                <div class="pr-10 text-right">
-                  Page {{ props.pagination.page }} of {{ props.pagination.pageCount }}
+                <div class="pr-10 text-right page-of-pages-div">
+                  <b>Page {{ props.pagination.page }} of {{ props.pagination.pageCount }}</b>
                 </div>
-              </template>  
+              </template>
+            
+              <!-- Customize the display text -->
               <template #[`item.filename`]="{item}">
-                <span class="cursor-pointer" @click="load_samples([item])">{{
-                  item.filename
-                }}</span>
+                <span  class="cursor-pointer" @click="load_samples([item])">
+                  {{ item.filename }}
+                </span>
               </template>
             </v-data-table>
+            
+            <!-- Load selected scan -->
             <v-tooltip top>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn
@@ -90,33 +101,41 @@ import {Watch} from 'vue-property-decorator';
 })
 
 export default class SampleList extends Vue {
+
   samples: Sample[] = samples; // Get the samples from utilities
   selectedFiles: Sample[] = [];
 
   headers: Object[] = [
     {
       text: 'Filename',
-      align: 'start',
+      align: 'left',
+      class: 'sticky-header',
       sortable: true,
       value: 'filename'
     }
   ];
+
   sortBy = "filename";
   fileKey = 'filename';
-  sortDesc = false;
+  sortDesc = true;
   loading = false;
   tableHight = '400px';
-  itemsPerPage = 5;
   search = '';
-  searchItems = '';
+  searchItem = '';
 
-  @Watch('searchItems')
+  headerprops = {
+    "sort-icon": 'mdi-dot',    // Hack to hide the default sort icon
+    "sort-by-text": "filename" // used when rendering the mobile view
+  }
+
+  @Watch('searchItem')
   onChildChanged() {
-    this.search = this.searchItems;
+    this.search = this.searchItem;
   }
 
   // Fires when user selects entries and loads them into the visualization panel
   load_samples(selectedSamples: Sample[]) {
+
     if (selectedSamples.length != 0) {
       const promises: Promise<FileID | FileID[]>[] = [];
       this.loading = true;
@@ -132,6 +151,7 @@ export default class SampleList extends Vue {
 
       Promise.all(promises)
         .then((fileIds: (FileID | FileID[])[]) => {
+          console.log(`file id is ${fileIds}`)
           this.$emit('got-files', fileIds.flat(2));
         })
         .catch((error) => {
@@ -157,6 +177,9 @@ export default class SampleList extends Vue {
   bottom: 0;
 }
 
+.page-of-pages-div {
+  color: deepskyblue !important;
+}
 .table >>> th {
   font-size:0.95rem !important;
 }
@@ -165,4 +188,5 @@ export default class SampleList extends Vue {
 .table >>> .v-data-footer__pagination {
   font-size:0.90rem
 }
+
 </style>
