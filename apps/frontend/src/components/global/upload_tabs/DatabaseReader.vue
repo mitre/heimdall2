@@ -1,5 +1,5 @@
 <template>
-  <v-container class="mx-0 px-0" fluid style="height: 80vh">
+  <v-container class="mx-0 px-0" fluid >
     <v-card-subtitle>
       View files maintained (stored) in the Heimdall Server backend database.
     </v-card-subtitle>
@@ -14,13 +14,14 @@
 </template>
 
 <script lang="ts">
-import RefreshButton from '@/components/generic/RefreshButton.vue';
-import LoadFileList3 from '@/components/global/upload_tabs/LoadFileList3.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
 import {EvaluationModule} from '@/store/evaluations';
+import RefreshButton from '@/components/generic/RefreshButton.vue';
+import LoadFileList3 from '@/components/global/upload_tabs/LoadFileList3.vue';
 import {FileID} from '@/store/report_intake';
-import {IEvalPaginationParams, IEvaluation, IEvaluationTag, IGroup} from '@heimdall/interfaces';
+import {IEvalPaginationParams, IEvaluation, 
+  IEvaluationTag, IGroup} from '@heimdall/interfaces';
 import Component, {mixins} from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
 import {SnackbarModule} from '@/store/snackbar';
@@ -42,9 +43,8 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     {
       text: 'Filename',
       value: 'filename',
-      align: 'start',
+      align: 'left',
       sortable: true
-
     },
     {
       text: 'Groups',

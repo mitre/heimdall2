@@ -8,7 +8,7 @@
       <div>
         <div class="ma-0 pa-0">
           <v-text-field
-            v-model="searchItem"
+            v-model="search"
             class="px-3 pb-1"
             prepend-inner-icon="mdi-magnify"
             hint="Filter on file name"
@@ -46,7 +46,7 @@
               <!-- Customize the sort icon-->
               <template v-slot:header.filename="{ header }">
                 {{ header.text.toUpperCase() }}
-                <v-icon v-if="header.sortable" class="v-data-table-header__icon page-of-pages-div" medium>mdi-sort</v-icon>
+                <v-icon v-if="header.sortable" class="v-data-table-header__icon page-of-pages-div" medium>mdi-sort</v-icon>                
               </template>
 
               <!-- Customize pagination -->
@@ -89,12 +89,11 @@
 </template>
 
 <script lang="ts">
-import {FileID, InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
+import {FileID, InspecIntakeModule} from '@/store/report_intake';
 import {Sample, samples, fetchSample} from '@/utilities/sample_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Watch} from 'vue-property-decorator';
 
 @Component({
   components: {}
@@ -117,7 +116,7 @@ export default class SampleList extends Vue {
 
   sortBy = "filename";
   fileKey = 'filename';
-  sortDesc = true;
+  sortDesc = false;
   loading = false;
   tableHight = '400px';
   search = '';
@@ -126,11 +125,6 @@ export default class SampleList extends Vue {
   headerprops = {
     "sort-icon": 'mdi-dot',    // Hack to hide the default sort icon
     "sort-by-text": "filename" // used when rendering the mobile view
-  }
-
-  @Watch('searchItem')
-  onChildChanged() {
-    this.search = this.searchItem;
   }
 
   // Fires when user selects entries and loads them into the visualization panel
@@ -177,6 +171,14 @@ export default class SampleList extends Vue {
   bottom: 0;
 }
 
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
 .page-of-pages-div {
   color: deepskyblue !important;
 }
@@ -188,5 +190,4 @@ export default class SampleList extends Vue {
 .table >>> .v-data-footer__pagination {
   font-size:0.90rem
 }
-
 </style>

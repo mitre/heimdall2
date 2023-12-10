@@ -117,9 +117,13 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
   activeTab: string = localTab.getDefault('uploadtab-local');
 
   get fullscreen() {
+    // return (
+    //   this.activeTab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile
+    // );
     return (
-      this.activeTab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile
+      this.activeTab === 'uploadtab-local' || this.$vuetify.breakpoint.mobile
     );
+    
   }
 
   // Handles change in tab

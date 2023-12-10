@@ -1,48 +1,56 @@
 <template>
   <div>
     <div class="ma-0 pa-0">
-      <v-row align="center">
-        <v-col cols="12" sm="6" md="3">
+      <v-row class="mb-6" no-gutters justify="start">
+        <v-col cols="3" sm="2" md="3">
           <v-text-field
             v-model="searchItems"
             class="px-3 pb-1"   
             prepend-inner-icon="mdi-magnify"
-            hint="Filter on file name"
+            hint="Filter on file name (can be partial name)"
             placeholder="file name"
             clearable
             hide-details="auto"
           />         
         </v-col>
-        <v-col cols="12" sm="6" md="3">
+        <v-col cols="3" sm="2" md="3">
           <v-text-field
             v-model="searchGroups"
             class="px-3 pb-1"
             prepend-inner-icon="mdi-magnify"
-            hint="Filter on group name"
+            hint="Filter on group name (can be partial name)"
             placeholder="group name"
             clearable
             hide-details="auto"
           />          
         </v-col>
-        <v-col cols="12" sm="6" md="3">
+        <v-col cols="2" sm="2" md="3">
           <v-text-field
             v-model="searchTags"
             class="px-3 pb-1"
             prepend-inner-icon="mdi-magnify"
-            hint="Filter on tag name"
+            hint="Filter on tag name (can be partial name)"
             placeholder="tag name"
             clearable
             hide-details="auto"
           />
         </v-col>
-        <v-col cols="12" sm="2" md="1">
-          <v-radio-group v-model="logicOperator" inline>
-            <v-radio label="AND" value="and"></v-radio>
-            <v-radio label="OR" value="or"></v-radio>
+        <v-col cols="2" sm="1" md="2">
+          <v-radio-group v-model="logicOperator" row>
+            <v-radio value="AND">
+              <template v-slot:label>
+                <div><strong class="page-of-pages-div">AND</strong></div>
+              </template>
+            </v-radio>
+            <v-radio value="OR">
+              <template v-slot:label>
+                <div><strong class="page-of-pages-div">OR</strong></div>
+              </template>
+            </v-radio>
           </v-radio-group>         
         </v-col>
-        <v-col cols="12" sm="3" md="2">
-          <v-btn
+        <v-col cols="1" sm="1" md="1" class="ml-n3 pt-4">
+          <v-btn 
             depressed
             color="primary"
             @click="executeSearch()"
@@ -57,7 +65,7 @@
         @cancel="deleteItemDialog = false"
         @confirm="deleteItemConfirm"
       />
-      <div class="d-flex flex-column" >
+      <div class="d-flex flex-column">
         <v-data-table
           v-model="selectedFiles"
           data-cy="loadFileList"
@@ -66,7 +74,6 @@
           fixed-header
           mobile-breakpoint="0"
           show-select
-          hide-default-header
           :headers="headers"
           :page.sync="page"              
           :items="evaluationsLoaded"
@@ -75,6 +82,7 @@
           :item-key="fileKey"
           :items-per-page="itemsPerPage"
           :height="tableHight"
+          :headerProps="headerprops"
           :footer-props="{
             showFirstLastPage: true,
             firstIcon: 'mdi-page-first',
@@ -84,96 +92,43 @@
             itemsPerPageOptions: [5,10,25,50,100,-1],
             itemsPerPageText: 'Rows per page:',
           }"
+          @update:sort-by="updateSortBy"
           @update:page="updateDisplayPage"
           @update:items-per-page="updateItemsPerPage"
 
         >
+<!--
+          hide-default-header
+
+-->
+          <!-- Customize the sort icon-->
+          <template v-slot:header.filename="{ header }">
+            {{ header.text.toUpperCase() }}
+            <v-icon v-if="header.sortable" class="v-data-table-header__icon page-of-pages-div" medium>mdi-sort</v-icon>                
+          </template>
+          <template v-slot:header.groups="{ header }">
+            {{ header.text.toUpperCase() }}
+            <v-icon v-if="header.sortable" class="v-data-table-header__icon page-of-pages-div" medium>mdi-sort</v-icon>                
+          </template>
+          <template v-slot:header.evaluationTags="{ header }">
+            {{ header.text.toUpperCase() }}
+            <v-icon v-if="header.sortable" class="v-data-table-header__icon page-of-pages-div" medium>mdi-sort</v-icon>                
+          </template>
+          <template v-slot:header.createdAt="{ header }">
+            {{ header.text.toUpperCase() }}
+            <v-icon v-if="header.sortable" class="v-data-table-header__icon page-of-pages-div" medium>mdi-sort</v-icon>                
+          </template>
+          <template v-slot:header.actions="{ header }">
+            {{ header.text.toUpperCase() }}
+            <v-icon v-if="header.sortable" class="v-data-table-header__icon page-of-pages-div" medium>mdi-sort</v-icon>                
+          </template>   
+
+          <!-- Customize pagination -->
           <template v-slot:footer="{ props }">
             <div class="pr-10 text-right page-of-pages-div">
                <b>Page {{ props.pagination.page }} of {{ props.pagination.pageCount }}</b>
             </div>
           </template>    
-
-<!-- custom headers slots https://colemike.com/2018/07/20/icons-in-header-slot-in-vuetify-data-table/-->
-          <!-- <template #header="{ props: { headers } }"> -->
-            <!-- <template v-slot:header="props" > -->
-            <!-- <template v-slot:header="{ props: { headers } }"> -->
-            <template slot="header" slot-scope="props">
-              <thead class="v-data-table-header">
-                <tr> 
-                  <th>
-                    <v-checkbox
-                      primary
-                      hide-details
-                      @click.native="toggleAll"
-                    ></v-checkbox>
-                  </th>                
-                  <th
-                    v-for="header in headers"
-                    :key="header.value"
-                    :class="['column',   pagination.sortDesc ? 'desc' : 'asc', header.value === pagination.sortBy[0] ? 'active' : '']"  
-                    @click="header.sortable ? changeSort(header.value) : ''"
-                  >
-                    {{ header.text }}
-                    <v-icon v-if="header.sortable" class="v-data-table-header__icon" style="color:deepskyblue" medium>mdi-sort</v-icon>
-                  </th>
-                </tr>
-              </thead>              
-          </template>
-
-          <!-- <template slot="item" slot-scope="props">
-                    v-bind:class="[header.sortable ? 'sortable' : '', pagination.sortBy === header.value ? 'active': '', pagination.sortDesc ? 'desc':'asc']"          
-            <tr :active="props.selected" @click="props.selected = !props.selected">
-              <td>
-                <v-checkbox
-                  :input-value="props.selected"
-                  primary
-                  hide-details
-                ></v-checkbox>
-              </td>
-              <td>{{ props.item.filename }}</td>
-            </tr>
-
-          </template> -->
-          <!-- <template slot="header"  slot-scope="props">
-            <tr>
-              <th>
-                <v-checkbox
-                  :input-value="props.all"
-                  :indeterminate="props.indeterminate"
-                  primary
-                  hide-details
-                  @click.native="toggleAll"
-                ></v-checkbox>
-              </th>
-              <th
-                v-for="header in headers"
-                :key="header.value"
-                :class="['column sortable', pagination.sortDesc ? 'desc' : 'desc', header.value === pagination.sortBy[0] ? 'active' : '']"
-                @click="changeSort(header.value)"
-              >
-              <v-icon>{{ pagination.sortDesc ?  'mdi-sort-descending' : 'mdi-sort-ascending' }}</v-icon>
-                {{ header.text }} {{ header.value === pagination.sortBy[0] }}
-              </th>
-            </tr>
-          </template> -->
-
-          <!-- <template slot="item" slot-scope="props">
-            <tr :active="props.selected" @click="props.selected = !props.selected">
-              <td>
-                <v-checkbox
-                  :input-value="props.selected"
-                  primary
-                  hide-details
-                ></v-checkbox>
-              </td>
-              <td>{{ props.item.filename }}</td>
-              <td class="text-xs-left">{{ props.item.groups }}</td>
-              <td class="text-xs-right">{{ props.item.evaluationTags }}</td>
-              <td class="text-xs-left">{{ props.item.createdAt }}</td>
-              <td class="text-xs-right">{{ props.item.actions }}</td>
-            </tr>
-          </template> -->
           
           <!-- Format how to render the fields - provide action events -->
           <template #[`item.filename`]="{item}">
@@ -226,8 +181,9 @@
               </div>
             </v-row>
           </template>
-
         </v-data-table>
+
+        <!-- Load selected scan -->
         <v-tooltip top>
           <template v-slot:activator="{ on, attrs }">
             <v-btn
@@ -272,10 +228,6 @@ import {Prop, Watch} from 'vue-property-decorator';
   }
 })
 export default class LoadFileList3 extends Vue {
-[x: string]: any;
-
-
-
   @Prop({required: true}) readonly headers!: Object[];
   @Prop({type: Boolean, default: false}) readonly queryingRecords!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
@@ -293,6 +245,10 @@ export default class LoadFileList3 extends Vue {
   deleteItemDialog = false;
   deleteTagDialog = false;
 
+  headerprops = {
+    "sort-icon": 'mdi-dot',    // Hack to hide the default sort icon
+    "sort-by-text": "filename" // used when rendering the mobile view
+  }
  
   loading = this.queryingRecords;  
   page = 1;         // The starting page for the pagination component
@@ -306,7 +262,7 @@ export default class LoadFileList3 extends Vue {
   searchItems = '';
   searchGroups = '';
   searchTags = '';
-  logicOperator = 'or';  
+  logicOperator = 'OR';  
 
   // Sort variables decleration
   sortDesc = true;                   // Set default sort order
@@ -608,12 +564,6 @@ export default class LoadFileList3 extends Vue {
 .table >>> .v-select__selection,
 .table >>> .v-data-footer__pagination {
   font-size:0.90rem
-}
-/* .v-datatable thead th.column.sortable.active.desc .no-rotate {
-    transform: none !important;
-} */
-.v-data-table-header th {
-  text-transform: uppercase;
 }
 
 </style>
