@@ -18,7 +18,7 @@ import {
   Severity
 } from 'inspecjs';
 import * as _ from 'lodash';
-import LRUCache from 'lru-cache';
+import {LRUCache} from 'lru-cache';
 import {
   Action,
   getModule,
