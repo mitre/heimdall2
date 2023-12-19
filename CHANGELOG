@@ -1,4 +1,4 @@
-v2.9.0
+v2.9.2
 
 - Upgrade to aws sdk v3 @Amndeep7 (#5310)
 - Possible Copy Workaround For HTTP @ChrisHinchey (#5235)
@@ -11,6 +11,21 @@ v2.9.0
 
 ## Dependency Updates
 
+- Bump @aws-sdk/client-config-service from 3.470.0 to 3.473.0 @dependabot (#5341)
+- Bump @aws-sdk/client-s3 from 3.472.0 to 3.473.0 @dependabot (#5340)
+- Bump @aws-sdk/client-sts from 3.470.0 to 3.473.0 @dependabot (#5339)
+- Bump @aws-sdk/client-s3 from 3.470.0 to 3.472.0 @dependabot (#5338)
+- Bump @aws-sdk/client-config-service from 3.468.0 to 3.470.0 @dependabot (#5334)
+- Bump sequelize from 6.35.1 to 6.35.2 @dependabot (#5337)
+- Bump csv-stringify from 6.4.4 to 6.4.5 @dependabot (#5335)
+- Bump @aws-sdk/client-s3 from 3.468.0 to 3.470.0 @dependabot (#5332)
+- Bump @aws-sdk/client-s3 from 3.465.0 to 3.468.0 @dependabot (#5328)
+- Bump @types/node from 20.10.3 to 20.10.4 @dependabot (#5331)
+- Bump reflect-metadata from 0.1.13 to 0.1.14 @dependabot (#5330)
+- Bump sanitize-html from 2.7.3 to 2.11.0 @dependabot (#4638)
+- Bump @aws-sdk/client-config-service from 3.465.0 to 3.468.0 @dependabot (#5327)
+- Bump cypress from 13.6.0 to 13.6.1 @dependabot (#5322)
+- Bump passport from 0.6.0 to 0.7.0 @dependabot (#5323)
 - Bump @e965/xlsx from 0.20.0 to 0.20.1 @dependabot (#5320)
 - Bump apexcharts from 3.44.1 to 3.44.2 @dependabot (#5321)
 - Bump aws-sdk from 2.1510.0 to 2.1511.0 @dependabot (#5314)
