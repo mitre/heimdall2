@@ -68,7 +68,7 @@
     "core-js": "^3.4.1",
     "csv-stringify": "^6.4.1",
     "d3": "^7.2.0",
-    "date-fns": "^2.6.0",
+    "date-fns": "^3.0.0",
     "diff": "^5.0.0",
     "diff2html": "^3.1.7",
     "eslint-plugin-vue": "^9.15.0",
