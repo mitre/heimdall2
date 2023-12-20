@@ -108,7 +108,7 @@ export class EvaluationsController {
   //async findAndCountAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<{evaluations: EvaluationDto[], totalCount: number}> {
   async findAndCountAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<IEvaluationResponse> {
     console.log('HERE @GET evaluation.controller.ts - findALL')
-    console.log(`HERE @GET findALL user is: ${JSON.stringify(request.user,null,2)}`)
+    //console.log(`HERE @GET findALL user is: ${JSON.stringify(request.user,null,2)}`)
     console.log(`evaluation.controllers.ts -> params are ${JSON.stringify(params,null,2)}`)
 
     const abac = this.authz.abac.createForUser(request.user);
@@ -123,37 +123,46 @@ export class EvaluationsController {
       let response = await this.evaluationsService.getAllEvaluations(params);
       evaluations = response.evaluations;
       totalItems = response.totalItems;
+      // evaluations = await this.evaluationsService.getAllEvaluations(params);
+      // totalItems = 0;
     }
-    ///debug
-    console.log(`TOTALITEMS  is: ${totalItems}`)
-    console.log(`EVALUATIONS ARE (1): ${evaluations.length}`)
-    evaluations.forEach(function(value: {filename: any;}) {
-      console.log(`    EVALUATIONS IS: ${JSON.stringify(value.filename,null,2)}`);
-    })
+    console.log(`totalItems (3) is: ${totalItems}`)
+///debug
+// console.log(`TOTALITEMS  is: ${totalItems}`)
+// console.log(`EVALUATIONS ARE (1): ${evaluations.length}`)
+// evaluations.forEach(function(value: {filename: any;}) {
+//   console.log(`    EVALUATIONS IS: ${JSON.stringify(value.filename,null,2)}`);
+// })
+//end debug
 
+    // Only show evaluations that the user can read
     evaluations = evaluations.filter((evaluation: Subject) =>
-      abac.can(Action.Read, evaluation)
+          abac.can(Action.Read, evaluation)
     );
 
 // debug
-console.log(`EVALUATIONS ARE (2): ${evaluations.length}`)
-evaluations.forEach(function(value: {filename: any;}) {
-  console.log(`    EVALUATIONS IS: ${JSON.stringify(value.filename,null,2)}`);
-})
+// console.log(`EVALUATIONS ARE (2): ${evaluations.length}`)
+// evaluations.forEach(function(value: {filename: any;}) {
+//   console.log(`    EVALUATIONS IS: ${JSON.stringify(value.filename,null,2)}`);
+// })
 
-let test = {evaluations: evaluations.map(
-  (evaluation: Evaluation) =>
-    new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
-), totalCount: totalItems};
-console.log(`test on map (evaluations) is: ${JSON.stringify(test.evaluations)}`)
-console.log(`test on map (totalCount) is: ${JSON.stringify(test.totalCount)}`)
+// let test = {evaluations: evaluations.map(
+//   (evaluation: Evaluation) =>
+//     new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+// ), totalCount: totalItems};
+// console.log(`test on map (evaluations) is: ${JSON.stringify(test.evaluations,null,2)}`)
+// console.log(`test on map (totalCount) is: ${JSON.stringify(test.evaluations.length)}`)
 // end debug
 
+    // If filtering (search) use the filtered evaluations variable for the the total count.
+    totalItems = (params.useClause) ? evaluations.length : totalItems
+    console.log(`totalItems (4) is: ${totalItems}`)
     return { evaluations: evaluations.map(
       (evaluation: Evaluation) =>
         new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
     ), totalCount: totalItems};
   }
+
 
   // @UseGuards(JwtAuthGuard)
   // @Get()

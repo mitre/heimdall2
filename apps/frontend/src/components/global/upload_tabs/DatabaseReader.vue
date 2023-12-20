@@ -1,30 +1,34 @@
 <template>
-  <v-container class="mx-0 px-0" fluid >
-    <v-card-subtitle>
-      View files maintained (stored) in the Heimdall Server backend database.
-    </v-card-subtitle>
-      <LoadFileList3
-        :headers="headers"
-        :files="files"
-        :queryingRecords="loading"
-        :totalItemsPerPage="itemsPerPage"
-        @load-selected="load_results($event)"
-      />
-  </v-container>
+  <!-- style="height: 80vh"-->
+
+    <v-container class="mx-0 px-0" fluid >
+      <v-card-subtitle>
+        View files maintained (stored) in the Heimdall Server backend database.
+      </v-card-subtitle>
+        <LoadFileList
+          :headers="headers"
+          :evaluationsLoaded="allEvaluations"
+          :queryingRecords="loading"
+          :totalItemsPerPage="itemsPerPage"
+          :evaluationsCount="evaluationsCount"
+          @load-selected="load_results($event)"
+        />
+    </v-container>
+
 </template>
 
 <script lang="ts">
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
-import {EvaluationModule} from '@/store/evaluations';
 import RefreshButton from '@/components/generic/RefreshButton.vue';
-import LoadFileList3 from '@/components/global/upload_tabs/LoadFileList3.vue';
+import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import {FileID} from '@/store/report_intake';
+import {SnackbarModule} from '@/store/snackbar';
+import {EvaluationModule} from '@/store/evaluations';
 import {IEvalPaginationParams, IEvaluation, 
   IEvaluationTag, IGroup} from '@heimdall/interfaces';
-import Component, {mixins} from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
-import {SnackbarModule} from '@/store/snackbar';
+import Component, {mixins} from 'vue-class-component';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -32,7 +36,7 @@ import {SnackbarModule} from '@/store/snackbar';
  */
 @Component({
   components: {
-    LoadFileList3,
+    LoadFileList,
     RefreshButton
   }
 })
@@ -65,7 +69,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     }
   ];
 
-  itemsPerPage = 50;
+  itemsPerPage = 10;
 
   @Watch('refresh')
   onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
@@ -76,16 +80,18 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   }
 
   mounted() {
-    //this.get_all_results();
+     console.log('---------------- START -----------------')
+     // comment when testing
+     this.get_all_results();
   }
 
   
   async get_all_results(): Promise<void> {
-    console.log('---------------- START -----------------')
+   
     console.log('DATABASEREADER.VUE: Calling EvaluationModule.getAllEvaluations()')
     
     //EvaluationModule.getAllEvaluations();
-    const params: IEvalPaginationParams = {offset: 1, limit: this.itemsPerPage, order: ["createdAt", "DESC"]};
+    const params: IEvalPaginationParams = {offset: 0, limit: this.itemsPerPage, order: ["createdAt", "DESC"]};
 console.log(`params are: ${JSON.stringify(params,null,2)}`)    
     // Stores results in the Evaluation class field allEvaluations 
     EvaluationModule.getAllEvaluations(params);
@@ -94,15 +100,31 @@ console.log(`params are: ${JSON.stringify(params,null,2)}`)
   // Loading is initially set to true in Evaluation class.
   // When EvaluationModule.getAllEvaluations(params) finished it sets it to false.
   get loading() {
-    return true;
-    //return EvaluationModule.loading;
+    console.log("GETTING LOADING")
+    //return true;
+    
+    // uncomment after testing
+    console.log(`loading is : ${EvaluationModule.loading}`)
+    return EvaluationModule.loading;
   }
 
-  get files() {
+  get allEvaluations() {
     console.log("GETTING ALL EVALUATIONS")
-    console.log(`totalItems are: ${this.tempFiles.length}`)
-    //return EvaluationModule.allEvaluations;
-    return this.tempFiles;
+
+    // uncomment after testing
+    console.log(`total Evaluations are: ${EvaluationModule.evaluationsCount}`)
+    return EvaluationModule.allEvaluations;
+    
+    //return this.tempFiles;
+  }
+
+  get evaluationsCount() {
+    console.log("GETTING EVALUATIONS COUNT")
+
+    //return this.tempFiles.length;
+    // uncomment after testing
+    console.log(`total Evaluations are: ${EvaluationModule.evaluationsCount}`)    
+    return EvaluationModule.evaluationsCount;
   }
 
   // Fires when user selects entries and loads them into the visualization panel
@@ -314,7 +336,81 @@ console.log(`params are: ${JSON.stringify(params,null,2)}`)
     "createdAt": new Date("2023-11-07T02:03:47.986Z"),
     "updatedAt": new Date("2023-11-07T02:03:47.986Z"),
     "editable": true
-  }
-]
+  },
+
+
+  {
+    "id": "9",
+    "filename": "snyk-legacy.hdf",
+    "evaluationTags": [],
+    "groups": [],
+    "userId": "2",
+    "groupId": "",
+    "public": false,
+    "createdAt": new Date("2023-11-07T03:20:57.811Z"),
+    "updatedAt": new Date("2023-11-07T03:20:57.811Z"),
+    "editable": true
+  },
+  {
+    "id": "8",
+    "filename": "snyk-legacy.hdf",
+    "evaluationTags": [],
+    "groups": [],
+    "userId": "2",
+    "groupId": "",
+    "public": false,
+    "createdAt": new Date("2023-11-07T03:20:57.295Z"),
+    "updatedAt": new Date("2023-11-07T03:20:57.295Z"),
+    "editable": true
+  },
+  {
+    "id": "7",
+    "filename": "snyk-legacy.hdf",
+    "evaluationTags": [],
+    "groups": [],
+    "userId": "2",
+    "groupId": "",
+    "public": false,
+    "createdAt": new Date("2023-11-07T03:20:56.451Z"),
+    "updatedAt": new Date("2023-11-07T03:20:56.451Z"),
+    "editable": true
+  },
+  {
+    "id": "6",
+    "filename": "snyk-legacy.hdf",
+    "evaluationTags": [],
+    "groups": [],
+    "userId": "2",
+    "groupId": "",
+    "public": false,
+    "createdAt": new Date("2023-11-07T03:20:54.718Z"),
+    "updatedAt": new Date("2023-11-07T03:20:54.718Z"),
+    "editable": true
+  },
+  {
+    "id": "5",
+    "filename": "snyk-legacy-10.hdf",
+    "evaluationTags": [],
+    "groups": [],
+    "userId": "2",
+    "groupId": "",
+    "public": false,
+    "createdAt": new Date("2023-11-07T02:03:47.986Z"),
+    "updatedAt": new Date("2023-11-07T02:03:47.986Z"),
+    "editable": true
+  },
+  {
+    "id": "4",
+    "filename": "this-in-one-loge-file-name-snyk-legacy-10.hdf",
+    "evaluationTags": [this.activeTag1,this.activeTag2,this.activeTag3,this.activeTag4,this.activeTag5],
+    "groups": [this.group1, this.group3,this.group3],
+    "userId": "2",
+    "groupId": "",
+    "public": false,
+    "createdAt": new Date("2023-11-07T02:03:47.986Z"),
+    "updatedAt": new Date("2023-11-07T02:03:47.986Z"),
+    "editable": true
+  }  
+  ]
 }
 </script>

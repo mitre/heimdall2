@@ -55,8 +55,8 @@
                 </v-radio>
               </v-radio-group>    
             </template>
-            <span>The logic 'AND' evaluates on both Groups and Tags, filename can be blank</span>
-          </v-tooltip>                   
+          <span>The logic 'AND' evaluates on both Groups and Tags, filename can be blank</span>
+        </v-tooltip>                   
         </v-col>
         <v-col cols="1" sm="1" md="1" class="ml-n3 pt-4">
           <v-btn 
@@ -135,7 +135,7 @@
           <!-- Customize pagination (footer slot)-->
           <template v-slot:footer="{ props }">
             <div class="pr-10 text-right page-of-pages-div">
-               <b>Page {{ props.pagination.page }} of {{ props.pagination.pageCount==0?1:props.pagination.pageCount }}</b>
+               <b>Page {{ props.pagination.page }} of {{ props.pagination.pageCount }}</b>
             </div>
           </template>    
           
@@ -247,7 +247,7 @@ export default class LoadFileList3 extends Vue {
   // @Prop({type: Boolean, default: true}) readonly sortDesc!: boolean;
   @Prop({required: true}) evaluationsLoaded!: IEvaluation[];
   @Prop({required: true}) totalItemsPerPage!: number;
-  @Prop({required: true}) evaluationsCount!: number;
+  @Prop({required: true}) readonly evaluationsCount!: number;
   
   //evaluationsLoaded: IEvaluation[] = [];
   selectedFiles: IEvaluation[] = [];
@@ -302,14 +302,12 @@ export default class LoadFileList3 extends Vue {
     return {offset, limit};
   }
 
-
   async executeSearch() {
     console.log("------EXECUTE SEARCH IN-------------")
     console.log(`search items is ${this.searchItems}`)
     console.log(`search groups is ${this.searchGroups}`)
     console.log(`search tags is ${this.searchTags}`)
     console.log(`Operations is ${this.logicOperator}`)
-
 
     // Clearing the fields using the clearable icon sets the model to null
     this.searchItems = this.searchItems == null ? '' : this.searchItems;
@@ -319,20 +317,20 @@ export default class LoadFileList3 extends Vue {
     // if (this.searchItems == null || this.searchGroups == null || 
     //     this.searchTags == null) {
 
-    //   console.log('FOUND A NULL')
-    //   // Lets update the search fields (reset the null to empty string)
-    //   this.searchItems = this.searchItems == null ? '' : this.searchItems;
-    //   this.searchGroups = this.searchGroups == null ? '' : this.searchGroups;
-    //   this.searchTags = this.searchTags == null ? '' : this.searchTags;
+      //console.log('FOUND A NULL')
+      // Lets update the search fields (reset the null to empty string)
+      //const nullCnt = this.getNulLSearchCount();
 
-    //   // const {offset, limit} = this.getOffSetLimit();
-    //   // const params: IEvalPaginationParams = {offset: offset, limit: limit, order: this.sortOrder};
-    //   // await this.getEvaluations(params);
-    //   // this.evaluationsLoaded = EvaluationModule.allEvaluations;
-    //   SnackbarModule.notify("No search criteria provided (provide a file, group, or tag name)!")
+
+      // const {offset, limit} = this.getOffSetLimit();
+      // const params: IEvalPaginationParams = {offset: offset, limit: limit, order: this.sortOrder};
+      // await this.getEvaluations(params);
+      // this.evaluationsLoaded = EvaluationModule.allEvaluations;
+     // SnackbarModule.notify("No search criteria provided (provide a file, group, or tag name)!")
     if (this.searchItems.trim().length == 0 && 
         this.searchGroups.trim().length == 0 &&
         this.searchTags.trim().length == 0 ) {
+      
       console.log('FOUND A EMPTY STRINGs')
       SnackbarModule.notify("No search criteria provided (provide a file, group, or tag name)!")
     } else {
@@ -356,30 +354,34 @@ export default class LoadFileList3 extends Vue {
       // Database
       await this.getEvaluations(params);
       this.evaluationsLoaded = EvaluationModule.allEvaluations;
-      this.evaluationsCount = EvaluationModule.evaluationsCount;
-
-      console.log(`total evaluationsLoaded are: ${this.evaluationsLoaded.length}`)
-      console.log(`total evaluationsCount are: ${this.evaluationsCount}`)
     }
     console.log("------EXECUTE SEARCH OUT-------------")
   }
 
-  formatSearchParam(searchValue: string): string {
-    // let searchParam = '';
-    // if (searchValue.indexOf(',') > 0) {
-    //   searchParam = searchValue.replace(/,/g,'|')
-    // } else {
-    //   searchParam = searchValue.replace(/ /g,'|')
-    // }
-    const delimiterChr = (searchValue.indexOf(',') > 0) ? ',': ' ';
-    console.log(`delimiterChr is "${delimiterChr}"`)
-    const searchParam = searchValue.split(delimiterChr).join('|');
+  // getNulLSearchCount(): number {
+  //   let cntNull = 0;
+  //   if (this.searchItems == null) {cntNull++};
+  //   if (this.searchGroups == null) {cntNull++};
+  //   if (this.searchTags == null) {cntNull++};
+  //   return cntNull;
+  // }
 
-    //const searchParam = _.replace(searchValue, delimiterChr, '|')
-    //const searchParam  = searchValue.replaceAll(delimiterChr,"|");
+  formatSearchParam(searchValue: string): string {
+    const delimiterChr = (searchValue.indexOf(',') > 0) ? ',': ' ';
+    console.log(`delimiterChr is ${delimiterChr}`)
+    const searchParam = _.replace(searchValue, delimiterChr, '|')
     console.log(`searchParam is ${searchParam}`)
     return `(${searchParam})`; 
   }
+
+  // customSort(items: any, index: any, isDesc: any) {
+  //   console.log("------CUSTOM SORT IN-------------")
+  //   console.log(`items is ${JSON.stringify(items,null,2)}`)
+  //   console.log(`index is ${JSON.stringify(index,null,2)}`)
+  //   console.log(`isDesc is ${JSON.stringify(isDesc,null,2)}`)
+
+  //   console.log("------CUSTOM SORT OUT-------------")
+  // }
 
   // Called when any of the sorted fields are invoked (@update:sort-by)
   async updateSortBy(sortField: any) {
@@ -407,7 +409,6 @@ export default class LoadFileList3 extends Vue {
     console.log(`params are (updateSortBy): ${JSON.stringify(params,null,2)}`)
     await this.getEvaluations(params);
     this.evaluationsLoaded = EvaluationModule.allEvaluations;
-    this.evaluationsCount = EvaluationModule.evaluationsCount;
     
     console.log("------UPDATE SORT BY OUT-------------")
   }
@@ -443,7 +444,6 @@ export default class LoadFileList3 extends Vue {
     console.log(`params are (updateDisplayPage): ${JSON.stringify(params,null,2)}`)
     await this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
     this.evaluationsLoaded = EvaluationModule.allEvaluations;
-    this.evaluationsCount = EvaluationModule.evaluationsCount;
     console.log("------UPDATE DISPLAY PAGE OUT-------------")
   }
 
@@ -471,7 +471,6 @@ export default class LoadFileList3 extends Vue {
           console.log(`Querying PARTIAL with these params (updateItemsPerPage): ${JSON.stringify(params,null,2)}`)
           await this.getEvaluations(params)
           this.evaluationsLoaded = EvaluationModule.allEvaluations;
-          this.evaluationsCount = EvaluationModule.evaluationsCount;
         }
       // We are showing all items - need to slice
       } else {
@@ -487,7 +486,6 @@ export default class LoadFileList3 extends Vue {
       console.log(`Querying ALL with these params (updateItemsPerPage): ${JSON.stringify(params,null,2)}`)
       await this.getEvaluations(params)
       this.evaluationsLoaded = EvaluationModule.allEvaluations;
-      this.evaluationsCount = EvaluationModule.evaluationsCount;
     }
 
     // Update the number of records showing
@@ -503,12 +501,10 @@ export default class LoadFileList3 extends Vue {
     this.$emit('load-selected', selection);
   }
 
-  async updateEvaluations() {
+  updateEvaluations() {
     console.log("LoadFileList(updateEvaluations) -> CALLING EvaluationModule.getAllEvaluations")
     const {offset, limit} = this.getOffSetLimit();
-    await this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
-    this.evaluationsLoaded = EvaluationModule.allEvaluations;
-    this.totalItemsPerPage = EvaluationModule.evaluationsCount;
+    this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
   }
 
   editItem(item: IEvaluation) {
@@ -562,3 +558,70 @@ export default class LoadFileList3 extends Vue {
 
 </style>
 
+function f() {
+  throw new Error('Function not implemented.');
+}
+
+function f() {
+  throw new Error('Function not implemented.');
+}
+
+function delay(arg0: number) {
+  throw new Error('Function not implemented.');
+}
+
+function getEvaluations(params: any, IEvalPaginationParams: any) {
+  throw new Error('Function not implemented.');
+}
+
+function evaluations() {
+  throw new Error('Function not implemented.');
+}
+
+function getOffSetLimit() {
+  throw new Error('Function not implemented.');
+}
+
+function executeSearch() {
+  throw new Error('Function not implemented.');
+}
+
+function updateSortBy(sortField: any, any: any) {
+  throw new Error('Function not implemented.');
+}
+
+function updateDisplayPage(page: any, number: any) {
+  throw new Error('Function not implemented.');
+}
+
+function updateItemsPerPage(itemsCount: any, number: any) {
+  throw new Error('Function not implemented.');
+}
+
+function emit_selected(selection: any, arg1: any) {
+  throw new Error('Function not implemented.');
+}
+
+function updateEvaluations() {
+  throw new Error('Function not implemented.');
+}
+
+function editItem(item: any, IEvaluation: any) {
+  throw new Error('Function not implemented.');
+}
+
+function deleteItem(item: any, IEvaluation: any) {
+  throw new Error('Function not implemented.');
+}
+
+function deleteTag(tag: any, IEvaluationTag: any) {
+  throw new Error('Function not implemented.');
+}
+
+function deleteItemConfirm() {
+  throw new Error('Function not implemented.');
+}
+
+function createShareLink(item: any, IEvaluation: any) {
+  throw new Error('Function not implemented.');
+}

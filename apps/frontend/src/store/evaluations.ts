@@ -72,15 +72,16 @@ export class Evaluation extends VuexModule {
       .then(({data}) => {
         const { totalCount, evaluations } = data;
 
-        console.log(`evaluations.ts -> SET_ALL_EVALUATION -> data is: ${JSON.stringify(data.evaluations,null,2)}`)
-        console.log(`evaluations.ts -> SET_ALL_EVALUATION_COUNT 1-> data is: ${JSON.stringify(data.totalCount,null,2)}`)
-        console.log(`evaluations.ts -> SET_ALL_EVALUATION_COUNT 2-> data is: ${JSON.stringify(totalCount,null,2)}`)
+//        console.log(`evaluations.ts -> SET_ALL_EVALUATION -> data is: ${JSON.stringify(data.evaluations,null,2)}`)
+        //console.log(`evaluations.ts -> SET_ALL_EVALUATION_COUNT 1-> data is: ${JSON.stringify(data.totalCount,null,2)}`)
+        //console.log(`evaluations.ts -> SET_ALL_EVALUATION_COUNT 2-> data is: ${JSON.stringify(totalCount,null,2)}`)
 
-        console.log(`evaluations.ts -> this.evaluationsCount 1-> data is: ${this.evaluationsCount}`)
+//        console.log(`evaluations.ts -> this.evaluationsCount 1-> data is: ${this.evaluationsCount}`)
 
         this.context.commit('SET_ALL_EVALUATION', evaluations);
         this.context.commit('SET_ALL_EVALUATION_COUNT', totalCount);
 
+       
         console.log(`evaluations.ts -> this.evaluationsCount 2-> data is: ${this.evaluationsCount}`)
       })
       .finally(() => {
@@ -160,6 +161,17 @@ console.log(`ID IS NOT isHDF: ${id} `)
       return data;
     });
   }
+
+  // @Action
+  // async getEvaluationsCount() {
+  //   return axios
+  //     .get<Number>('/evaluations/count')
+  //     .then(({data}) => {
+  //       this.context.commit('SET_ALL_EVALUATION_COUNT', data);
+  //       console.log(`evaluations.ts ->getEvaluationsCount -> data is: ${data}`)
+  //       return data;
+  //     });
+  // }
 
   @Action
   async updateEvaluation(evaluation: IEvaluation) {
