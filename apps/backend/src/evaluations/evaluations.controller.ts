@@ -47,7 +47,7 @@ export class EvaluationsController {
   ) {console.log('IN evaluations.controllers constructor')}
 
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(APIKeyOrJwtAuthGuard)
   @Get(':id')
   async findById(
     @Param('id') id: string,
@@ -103,7 +103,7 @@ export class EvaluationsController {
 
 
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(APIKeyOrJwtAuthGuard)
   @Get()
   //async findAndCountAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<{evaluations: EvaluationDto[], totalCount: number}> {
   async findAndCountAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<IEvaluationResponse> {

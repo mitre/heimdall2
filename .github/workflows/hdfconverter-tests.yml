@@ -31,7 +31,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: "18.18"
+          check-latest: true
           cache: 'yarn'
 
       - name: Remove frontend and backend code to ensure the proper dependencies are declared in the hdf-converters package.json

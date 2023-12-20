@@ -10,11 +10,33 @@
 
           <v-tab-item value="tab-test">
             <div class="pa-4">
-              <div v-if="caveat || justification || rationale || comments">
+              <div
+                v-if="
+                  caveat ||
+                  justification ||
+                  rationale ||
+                  comments ||
+                  errorMessage
+                "
+              >
+                <div v-if="errorMessage" class="mb-2">
+                  <v-btn
+                    class="unclickable-button mr-3"
+                    elevation="2"
+                    depressed
+                  >
+                    Error
+                  </v-btn>
+                  <span>
+                    {{ errorMessage }}
+                    <br />
+                  </span>
+                </div>
                 <span v-if="caveat">Caveat: {{ caveat }}<br /></span>
                 <span v-if="justification"
                   >Justification: {{ justification }}<br
                 /></span>
+
                 <span v-if="rationale">Rationale: {{ rationale }}<br /></span>
                 <span v-if="comments">Comments: {{ comments }}<br /></span>
                 <v-divider />
@@ -166,6 +188,12 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     return this.control.hdf.descriptions.comments;
   }
 
+  get errorMessage(): string {
+    return this.control.hdf.segments?.length == 0
+      ? "The control didn't return any results.  Check with the author of the profile to ensure the code is correct."
+      : '';
+  }
+
   get details(): Detail[] {
     const detailsMap = new Map();
 
@@ -233,6 +261,10 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
 
 .clickable {
   cursor: pointer;
+}
+
+button.unclickable-button {
+  pointer-events: none;
 }
 
 .v-application {
