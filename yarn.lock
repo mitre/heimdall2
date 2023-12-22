@@ -9057,9 +9057,9 @@ data-urls@^2.0.0:
     whatwg-url "^8.0.0"
 
 date-fns@^3.0.0:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-3.0.3.tgz#590d03c49d991f1f9e3d2e18dc76aa062b5d5bf1"
-  integrity sha512-orRh4Qc+Y5fE8RO2fG0FkggCTxgfRR71kypohBPvIlEHi+GZCy0RuaPm5i2oNVhnT96nNMj/0R+LWAjBA/3prA==
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-3.0.5.tgz#ca4fca44aff67e01c337dc9c5f2ea5ac7350ad8f"
+  integrity sha512-Q4Tq5c5s/Zl/zbgdWf6pejn9ru7UwdIlLfvEEg1hVsQNQ7LKt76qIduagIT9OPK7+JCv1mAKherdU6bOqGYDnw==
 
 dateformat@^3.0.0:
   version "3.0.3"
