@@ -9,6 +9,7 @@
   "scripts": {
     "backend": "yarn workspace heimdall-server",
     "build": "lerna run build",
+    "common": "yarn workspace @heimdall/common",
     "cypress-test": "yarn workspace @heimdall/cypress-tests",
     "frontend": "yarn workspace @mitre/heimdall-lite",
     "hdf-converters": "yarn workspace @mitre/hdf-converters",
@@ -17,7 +18,7 @@
     "lint:ci": "lerna run lint:ci",
     "pack:all": "lerna exec yarn pack --scope inspecjs --scope @mitre/heimdall-lite --scope @mitre/hdf-converters --parallel",
     "start": "yarn backend start",
-    "start:dev": "./node_modules/.bin/dotenv -e ./apps/backend/.env -- lerna exec yarn run start:dev --ignore @heimdall/interfaces --ignore @mitre/hdf-converters  --ignore @heimdall/password-complexity --ignore @heimdall/cypress-tests --ignore inspecjs",
+    "start:dev": "./node_modules/.bin/dotenv -e ./apps/backend/.env -- lerna exec yarn run start:dev --ignore @heimdall/common --ignore @mitre/hdf-converters  --ignore @heimdall/password-complexity --ignore @heimdall/cypress-tests --ignore inspecjs",
     "test:ui": "cypress run",
     "test:ui:open": "cypress open"
   },

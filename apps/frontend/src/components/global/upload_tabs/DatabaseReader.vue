@@ -19,7 +19,7 @@ import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
 import {EvaluationModule} from '@/store/evaluations';
 import {FileID} from '@/store/report_intake';
-import {IEvaluation} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/common/interfaces';
 import Component, {mixins} from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
 

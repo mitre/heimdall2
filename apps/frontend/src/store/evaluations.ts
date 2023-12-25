@@ -3,7 +3,7 @@ import {
   ICreateEvaluationTag,
   IEvaluation,
   IEvaluationTag
-} from '@heimdall/interfaces';
+} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import * as _ from 'lodash';
 import {

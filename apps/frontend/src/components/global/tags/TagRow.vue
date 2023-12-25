@@ -47,7 +47,7 @@
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import {EvaluationModule} from '@/store/evaluations';
 import {SnackbarModule} from '@/store/snackbar';
-import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
+import {IEvaluation, IEvaluationTag} from '@heimdall/common/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';

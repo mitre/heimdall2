@@ -18,6 +18,10 @@
       "path": "libs/inspecjs"
     },
     {
+      "name": "Common",
+      "path": "libs/common"
+    },
+    {
       "name": "Heimdall",
       "path": "."
     }

@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@casl/ability": "^6.0.0",
-    "@heimdall/interfaces": "^2.6.59",
+    "@heimdall/common": "^2.6.59",
     "@heimdall/password-complexity": "^2.6.6",
     "@nestjs/cli": "^10.1.14",
     "@nestjs/common": "^10.2.1",

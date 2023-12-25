@@ -101,7 +101,7 @@ import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationM
 import {EvaluationModule} from '@/store/evaluations';
 import {SnackbarModule} from '@/store/snackbar';
 import {Sample} from '@/utilities/sample_util';
-import {IEvaluation, IEvaluationTag} from '@heimdall/interfaces';
+import {IEvaluation, IEvaluationTag} from '@heimdall/common/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
