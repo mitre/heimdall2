@@ -34,7 +34,6 @@ import {EvaluationsService} from './evaluations.service';
 import {IEvalPaginationParams} from '@heimdall/interfaces';
 import {Evaluation} from './evaluation.model';
 
-
 @Controller('evaluations')
 @UseInterceptors(LoggingInterceptor)
 export class EvaluationsController {
@@ -44,8 +43,7 @@ export class EvaluationsController {
     private readonly groupsService: GroupsService,
     private readonly configService: ConfigService,
     private readonly authz: AuthzService
-  ) {console.log('IN evaluations.controllers constructor')}
-
+  ) {}
 
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Get(':id')
@@ -75,58 +73,27 @@ export class EvaluationsController {
     return evaluationGroups.map((group) => new GroupDto(group));
   }
 
-  // @UseGuards(JwtAuthGuard)
-  // @Get()
-  // async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
-  //   console.log('HERE @GET evaluation.controller.ts - findALL')
-  //   console.log(`HERE @GET findALL user is: ${request.user.toJSON()}`)
-  //   //const { page, size, title } = request.query;
-
-  //   const abac = this.authz.abac.createForUser(request.user);
-  //   let evaluations = await this.evaluationsService.findAll();
-  //   console.log(`EVALUATIONS ARE (1): ${evaluations.values}`)
-  //   evaluations.forEach(function(value) {
-  //     console.log(`    EVALUATIONS IS: ${value.filename}`);
-  //   })
-
-  //   evaluations = evaluations.filter((evaluation) =>
-  //     abac.can(Action.Read, evaluation)
-  //   );
-
-  //   console.log(`EVALUATIONS ARE (2): ${evaluations.length}`)
-  //   return evaluations.map(
-  //     (evaluation) =>
-  //       new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
-  //   );
-  // }
-  //@Param('params') params: IEvalPaginationParams, 
-
-
-
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Get()
-  //async findAndCountAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<{evaluations: EvaluationDto[], totalCount: number}> {
   async findAndCountAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<IEvaluationResponse> {
-    console.log('HERE @GET evaluation.controller.ts - findALL')
-    //console.log(`HERE @GET findALL user is: ${JSON.stringify(request.user,null,2)}`)
-    console.log(`evaluation.controllers.ts -> params are ${JSON.stringify(params,null,2)}`)
+    console.log('HERE @GET evaluation.controller.ts - findAndCountAll')
+    // console.log(`HERE @GET findALL user email is: ${JSON.stringify(request.user.email,null,2)}`)
+    // console.log(`evaluation.controllers.ts -> params are ${JSON.stringify(params,null,2)}`)
 
     const abac = this.authz.abac.createForUser(request.user);
     let evaluations: Evaluation[] = [];
     let totalItems: number = 0;
 
     if (params.useClause) {
-      let response = await this.evaluationsService.getEvaluationsWithClause(params);
+      let response = await this.evaluationsService.getEvaluationsWithClause(params, request.user.email);
       evaluations = response.evaluations;
       totalItems = response.totalItems;
     } else {
-      let response = await this.evaluationsService.getAllEvaluations(params);
+      let response = await this.evaluationsService.getAllEvaluations(params, request.user.email, request.user.role);
       evaluations = response.evaluations;
       totalItems = response.totalItems;
-      // evaluations = await this.evaluationsService.getAllEvaluations(params);
-      // totalItems = 0;
     }
-    console.log(`totalItems (3) is: ${totalItems}`)
+    console.log(`total records (returned from service) is: ${evaluations.length}`)
 ///debug
 // console.log(`TOTALITEMS  is: ${totalItems}`)
 // console.log(`EVALUATIONS ARE (1): ${evaluations.length}`)
@@ -135,56 +102,33 @@ export class EvaluationsController {
 // })
 //end debug
 
-    // Only show evaluations that the user can read
+    // Show public evaluations or those created by logged in user 
     evaluations = evaluations.filter((evaluation: Subject) =>
           abac.can(Action.Read, evaluation)
     );
 
+    console.log(`total records (after filtering) is: ${evaluations.length}`)
 // debug
 // console.log(`EVALUATIONS ARE (2): ${evaluations.length}`)
 // evaluations.forEach(function(value: {filename: any;}) {
 //   console.log(`    EVALUATIONS IS: ${JSON.stringify(value.filename,null,2)}`);
 // })
 
-// let test = {evaluations: evaluations.map(
-//   (evaluation: Evaluation) =>
-//     new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
-// ), totalCount: totalItems};
-// console.log(`test on map (evaluations) is: ${JSON.stringify(test.evaluations,null,2)}`)
+let test_1 = {evaluations: evaluations.map(
+  (evaluation: Evaluation) =>
+    new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+), totalCount: totalItems};
+console.log(`test on map (totalItems) are: ${test_1.evaluations.length}`)
+//console.log(`test on map (evaluations) is: ${JSON.stringify(test_1.evaluations,null,2)}`)
 // console.log(`test on map (totalCount) is: ${JSON.stringify(test.evaluations.length)}`)
 // end debug
 
-    // If filtering (search) use the filtered evaluations variable for the the total count.
-    totalItems = (params.useClause) ? evaluations.length : totalItems
-    console.log(`totalItems (4) is: ${totalItems}`)
     return { evaluations: evaluations.map(
       (evaluation: Evaluation) =>
         new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
     ), totalCount: totalItems};
   }
 
-
-  // @UseGuards(JwtAuthGuard)
-  // @Get()
-  // async findAndCountAll(@Param() params: IEvalPagination, @Request() request: {user: User}): Promise<EvaluationDto[]> {
-  //   console.log('HERE @GET evaluation.controller.ts - findALL')
-  //   console.log(`HERE @GET findALL user is: ${request.user.toJSON()}`)
-  //   //const { page, size, title } = request.query;
-
-  //   const abac = this.authz.abac.createForUser(request.user);
-  //   let evaluations = await this.evaluationsService.findAndCountAll(params);
-  //   console.log(`EVALUATIONS ARE (1): ${evaluations}`)
-
-  //   evaluations = evaluations.filter((evaluation) =>
-  //     abac.can(Action.Read, evaluation)
-  //   );
-
-  //   console.log(`EVALUATIONS ARE (2): ${evaluations}`)
-  //   return evaluations.map(
-  //     (evaluation) =>
-  //       new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
-  //   );
-  // }
 
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Post()

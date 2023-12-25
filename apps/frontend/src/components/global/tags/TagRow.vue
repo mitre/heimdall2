@@ -2,11 +2,12 @@
   <div v-if="evaluation">
     <v-edit-dialog large @save="save" @cancel="syncEvaluationTags">
       <template v-for="tag in evaluation.evaluationTags">
-        <v-chip :key="tag.id + '_'" small close @click:close="deleteTag(tag)">{{
+        <v-chip v-if="evaluation.editable" :key="tag.id + '_'" small close @click:close="deleteTag(tag)">{{
           tag.value
         }}</v-chip>
+        <v-chip v-else :key="tag.id + '_'" small>{{ tag.value }}</v-chip>
       </template>
-      <v-icon small class="ma-2"> mdi-tag-plus </v-icon>
+      <v-icon v-if="evaluation.editable" small class="ma-2" title="Edit/Add Tag(s)"> mdi-tag-plus </v-icon>
       <template #input>
         <v-combobox
           v-model="tags"
@@ -71,7 +72,7 @@ export default class TagRow extends Vue {
     updatedAt: new Date()
   };
 
-  params = {offset: 1, limit: 10, order: ["createdAt", "DESC"]}
+  params = {offset: 0, limit: 10, order: ["createdAt", "DESC"]}
   
   mounted() {
     this.syncEvaluationTags();

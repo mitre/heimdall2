@@ -77,7 +77,6 @@
 import Modal from '@/components/global/Modal.vue';
 import S3Reader from '@/components/global/upload_tabs/aws/S3Reader.vue';
 import DatabaseReader from '@/components/global/upload_tabs/DatabaseReader.vue';
-import DatabaseReader2 from '@/components/global/upload_tabs/DatabaseReader2.vue';
 import FileReader from '@/components/global/upload_tabs/FileReader.vue';
 import HelpFooter from '@/components/global/upload_tabs/HelpFooter.vue';
 import SampleList from '@/components/global/upload_tabs/SampleList.vue';
@@ -102,7 +101,6 @@ const localTab = new LocalStorageVal<string>('nexus_curr_tab');
   components: {
     Modal,
     DatabaseReader,
-    DatabaseReader2,
     FileReader,
     HelpFooter,
     S3Reader,

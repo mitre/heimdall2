@@ -9,7 +9,6 @@ import {User} from '../users/user.model';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {Evaluation} from './evaluation.model';
 import {IEvalPaginationParams} from '@heimdall/interfaces';
-import sequelize from 'sequelize';
 
 interface EvaluationsResponse {
   totalItems: number;
@@ -23,167 +22,180 @@ export class EvaluationsService {
     private readonly databaseService: DatabaseService
   ) {}
 
-  // async findAll(): Promise<Evaluation[]> {
-  //   console.log("IN evaluation.services.ts findAll()")
-  //   return this.evaluationModel.findAll<Evaluation>({
-  //     attributes: {exclude: ['data']},
-  //     include: [EvaluationTag, User, {model: Group, include: [User]}]
-  //   });
-  // }
 
-  async getAllEvaluations(params: IEvalPaginationParams): Promise<EvaluationsResponse> {
+  /*
+    NOTES: These notes are about the getAllEvaluations() and the 
+           getEvaluationsWithClause() methods
+
+    1: The sequelize model is using eager loading, at the SQL level, this is a
+       query with one or more joins. This is done by using the include option
+       on a model finder query (findAll). Given that we are using multiple JOIN
+       operations, particularly one on the Groups, if a record has multiple
+       groups the query will return multiple rows one per group. This offsets
+       the LIMIT because the return data is in JSON format where the groups are
+       objects within the scan id, but are individual SQL records.
+
+       For this reason there will be times where the number of records returned
+       are less than the asked by the LIMIT. 
+
+    2: TypeScript is not able to infer OrderItem[].
+
+       The 'order' option in sequelize is defined as type OrderItem like: 
+         string | fn | col | literal | [string | col | fn | literal, string] |
+         [Model<any, any> | { model: Model<any, any>, as: string }, string, string] |
+         [Model<any, any>, Model<any, any>, string, string]
+
+       When using TypeScript the order variable is of type string[], which is not
+       supported by OrderItem. The only way to avoid it is to add string[] to the
+       list of accepted types in OrderItem.
+
+       Hence the reason the order option is being initialized with array indices.
+    
+    3: Not using sequelize findAndCountAll method because the count returned is
+       for all records found which includes multiple entries (due to JOIN) for
+       each record if evaluations have multiple Groups that belong to different
+       users.
+      
+       Using the findAll and calling specific queries to determine the total records.
+
+    4: Using ORDER BY on top-level and nested columns, for that reason we need 
+       to reference nested columns by utilizing the '$nested.column$' syntax.
+       For that reason the params.order array can have 2 or 3 indices as
+       listed belows.
+
+       params.order values are as follows () represent index):
+       length       (0)           (1)               (2)
+         2      field name  order (asc/desc)
+         3      table name  field name         order (asc/desc)    
+
+  */
+  async getAllEvaluations(params: IEvalPaginationParams, email: string, role: string): Promise<EvaluationsResponse> {
     console.log("-----IN evaluation.services.ts getAllEvaluations()")
-    // console.log(`evaluations.services.ts -> params are ${params.limit}`)
-    // console.log(`evaluations.services.ts -> params are ${params.offset}`)
-    // console.log(`evaluations.services.ts -> params are \'${params.order[0].toString()}\'`)
-    // console.log(`evaluations.services.ts -> params are [[\'${params.order[0]}\',\'${params.order[1]}\']]`)
-    // console.log(`${params.order[0]} ${params.order[1]} ${params.order[2]}`)
-    // console.log(`evaluations.services.ts -> params are ${params.order}`)
 
-    /*
-      TypeScript is not able to infer OrderItem[].
-
-      The 'order' option in sequelize is defined as type OrderItem like: 
-        string | fn | col | literal | [string | col | fn | literal, string] |
-        [Model<any, any> | { model: Model<any, any>, as: string }, string, string] |
-        [Model<any, any>, Model<any, any>, string, string]
-
-      When using TypeScript the order variable is of type string[], which is not
-      supported by OrderItem. The only way to avoid it is to add string[] to the
-      list of accepted types in OrderItem.
-
-      Hence the reason the order option is being initialized with array indices.
-    */
     const responseEvals: EvaluationsResponse = {
       totalItems: 0,
       evaluations: []
     };
-    /*
-      Not using sequelize findAndCountAll method because the count returned 
-      is for all records found which includes multiple entries for each 
-      record if evaluations have multiple Groups that belong to different users.
-      
-      Using the findAll and calling the Evaluations for the total records.
+    const whereClause = this.getWhereClauseAll(role, email);
 
-      params.order values are as follows:
-      length       (0)           (1)               (3)
-        2      field name  order (asc/desc)
-        3      table name  field name         order (asc/desc) 
-    */
-
-    //const response = this.evaluationModel.findAndCountAll<Evaluation>(
     await this.evaluationModel.findAll<Evaluation>(
       {
         attributes: {exclude: ['data']},
-        include: [EvaluationTag, User, {model: Group, include: [User]}],
+        //include: [EvaluationTag, User, {model: Group, include: [User]}],
+        include: [EvaluationTag, User, Group],
         offset: params.offset,
         limit: params.limit,
         order: (params.order.length == 2) ? 
            [[params.order[0], params.order[1]]] :
-           [[params.order[0], params.order[1], params.order[2]]]
+           [[params.order[0], params.order[1], params.order[2]]],
+        subQuery: false,
+        where: whereClause
+       // group: ['Evaluation.id', 'evaluationTags.id', 'groups->users.id', 'groups.users.email', 'user.id', 'groups.id', 'groups->GroupEvaluation.id', 'groups->users->GroupUser.id']
       }
     ).then(async data => {
-      //let { count: totalItems, rows: evaluations } = data;
-      //console.log(`totalItems (1) is: ${totalItems}`)
-      /*
-        The count being returned is for the total queried items.
-        We need the total evaluations count, hence this.count().
-      */
-      let totalItems = await this.count();
-      console.log(`totalItems (2) is: ${totalItems}`)
+      let totalItems = await this.evaluationCount(email, role);
+      // console.log(`totalRecords from DATA is: ${data.length}`)
+      // console.log(`totalItems from COUNT is: ${totalItems}`)
       responseEvals.evaluations = data;
       responseEvals.totalItems = totalItems;
-      //return  { totalItems, evaluations };
-      //return responseEvals;
     });
     console.log("-----OUT evaluation.services.ts getAllEvaluations()")
     return responseEvals;
   }
 
-  async getEvaluationsWithClause(params: IEvalPaginationParams): Promise<EvaluationsResponse> {
+  async getEvaluationsWithClause(params: IEvalPaginationParams, email: string): Promise<EvaluationsResponse> {
     console.log("---IN evaluation.services.ts getEvaluationsWithClause()")
-    console.log(`evaluations.services.ts -> params limit: ${params.limit}`)
-    console.log(`evaluations.services.ts -> params offset: ${params.offset}`)
-    // console.log(`evaluations.services.ts -> params are \'${params.order[0].toString()}\'`)
-    // console.log(`evaluations.services.ts -> params are [[\'${params.order[0]}\',\'${params.order[1]}\']]`)
-    console.log(`evaluations.services.ts -> params order: ${params.order}`)
-    console.log(`evaluations.services.ts -> params operator: ${params.operator}`)
-    console.log(`evaluations.services.ts -> params fields: ${params.fields}`)
-    console.log(`[[\'${params.order[0]}\',\'${params.order[1]}\']]`)
-    console.log(`[[\'${params.fields![0]}\',\'${params.fields![1]}\',\'${params.fields![2]}\']]`)
 
-  let response: Promise<EvaluationsResponse>;
+    const responseEvals: EvaluationsResponse = {
+      totalItems: 0,
+      evaluations: []
+    };
+    const whereClause = this.getWhereClauseSearch(params.searchFields!, params.operator!, email);
 
-  //params.fields![0] = "(web)|(xray)";
-  if (params.operator == 'OR') {
-    const tagClause = (params.fields![2] == '') ? 
-                        (`$evaluationTags.value$ isnull`) :
-                        (`{[Op.iRegexp]: ${params.fields![2]}}`);
-    response = this.evaluationModel.findAndCountAll<Evaluation>(
-      {
+    await this.evaluationModel.findAll<Evaluation>(
+     {
         attributes: {exclude: ['data']},
-        include: [EvaluationTag,  User, 
-          {model: Group, 
-            where:{
-              [Op.or]: [ {'name': { [Op.iRegexp]: `${params.fields![1]}` } } ]
-            },  
-            include: [User]}],
-        offset: params.offset,
-        limit: params.limit,
-        order: (params.order.length == 2) ? 
-           [[params.order[0], params.order[1]]] :
-           [[params.order[0], params.order[1], params.order[2]]]
-      }
-    ).then(data => {
-      const { count: totalItems, rows: evaluations } = data;
-      console.log(`totalItems is: ${totalItems}`)
-      return  { totalItems, evaluations };
-    });
-  } else {
-    // [Op.is]: sequelize.literal('IS NOT NULL')
-    // let filenameOp = sequelize.literal(`[Op.iRegexp]: ${params.fields![0]}`);
-    // if (params.fields![0] == '') {
-    //   filenameOp = sequelize.literal(`[Op.is]: sequelize.literal('NOT NULL')`)
-    // }
-    //const filenameOp = { (params.fields![0] == '') ? `{sequelize.literal([Op.is]: NOT NULL)}` : `{[Op.iRegexp]: ${params.fields![0]}}` };
-    response = this.evaluationModel.findAndCountAll<Evaluation>(
-      {
-        subQuery: false, //use JOIN/LEFT JOIN tables themselves instead of join subqueries
-        attributes: {exclude: ['data']},
-        include: [EvaluationTag, User, {model: Group, include: [User]}],
+        //include: [EvaluationTag, User, {model: Group, include: [User]}],
+        include: [EvaluationTag, User, Group],
         offset: params.offset,
         limit: params.limit,
         order: (params.order.length == 2) ? 
           [[params.order[0], params.order[1]]] :
           [[params.order[0], params.order[1], params.order[2]]],
-        where: {
-          [Op.and]: [
-            // {
-            //   [Op.or]: [
-            //     { 'filename': { [Op.iRegexp]: `${params.fields![0]}` } },
-            //     { 'filename': { [Op.is]: sequelize.literal('NOT NULL') } }
-            //   ]
-            // },
-            // {
-            //   [Op.or]: [
-            //     { '$groups.name$': { [Op.iRegexp]: `${params.fields![1]}` } },
-            //     { '$groups.name$': { [Op.is]: sequelize.literal('NULL') } }
-            //   ]
-            // },
-            { 'filename': { [Op.iRegexp]: `${params.fields![0]}` } },
-            { '$groups.name$': { [Op.iRegexp]: `${params.fields![1]}` } },
-            { '$evaluationTags.value$': { [Op.iRegexp]: `${params.fields![2]}` } }
-          ]
-        }          
+        subQuery: false,          
+        where: whereClause
       }
-    ).then(data => {
-      const { count: totalItems, rows: evaluations } = data;
-      console.log(`totalItems is: ${totalItems}`)
-      return  { totalItems, evaluations };
+    ).then(async data => {
+      let totalItems = await this.searchItemsCount(whereClause);
+      // console.log(`totalItems (SEARCH) is: ${totalItems}`)
+      responseEvals.evaluations = data;
+      responseEvals.totalItems = totalItems;
     });
+    return responseEvals;
   }
-  return response;
-}
+
+  getWhereClauseAll(role: string, email: string): {} {
+    let whereClause = [];
+    whereClause.push({ 'public': {[Op.eq]: 'true'} });
+    if (role == 'admin') {
+      whereClause.push({ 'public': {[Op.eq]: 'false'} });
+    } else {
+      whereClause.push({ '$user.email$': {[Op.like]: `${email}`} });
+    //   whereClause.push({ '$groups.users.email$': {[Op.like]: `${email}`} });
+    }
+    return {[Op.or]: whereClause}  
+  }
+
+  getWhereClauseSearch(fields: string[], operation: string, email: string): {} {
+    let searchFields = []
+    if (fields[0] != '()') {
+        searchFields.push({ 'filename': { [Op.iRegexp]: `${fields![0]}` } })
+    }
+    if (fields[1] != '()') {
+      searchFields.push({ '$groups.name$': { [Op.iRegexp]: `${fields![1]}` } })
+    }
+    if (fields[2] != '()') {
+      searchFields.push({ '$evaluationTags.value$': { [Op.iRegexp]: `${fields![2]}` } })
+    }
+
+    if (operation == 'AND') {
+      return {[Op.and]: searchFields}
+    } else {
+      return {[Op.or]: searchFields}  
+    }
+  }
+
+  async evaluationCount(userEmail: string, role: string): Promise<number> {
+    if (role == 'admin') {
+      return this.evaluationModel.count();
+    } else {
+      return this.evaluationModel.count(
+        {
+          include: User,
+          where: {
+            [Op.or]: [
+              { 'public': {[Op.eq]: 'true'} },
+              { '$user.email$': {[Op.like]: `${userEmail}`} }
+            ]
+          },
+          //where: { '$user.email$': {[Op.like]: `${userEmail}`} },
+          distinct: true,
+          col: 'id'
+        }
+      );      
+    }
+  }
+
+  async searchItemsCount(whereClause: {}): Promise<number> {
+    return this.evaluationModel.count(
+      {
+        include: [EvaluationTag, User, {model: Group, include: [User]}],
+        where: whereClause,
+        distinct: true,
+        col: 'id'
+      }
+    );
+  }
 
   async count(): Promise<number> {
     return this.evaluationModel.count();

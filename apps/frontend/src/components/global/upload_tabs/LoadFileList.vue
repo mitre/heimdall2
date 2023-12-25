@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="ma-0 pa-0">
-      <v-row class="mb-6" no-gutters justify="start">
+      <v-row class="mb-6" nocd ../-gutters justify="start">
         <v-col cols="3" sm="2" md="3">
           <v-text-field
             v-model="searchItems"
@@ -11,6 +11,7 @@
             placeholder="file name"
             clearable
             hide-details="auto"
+            @click:clear="clearSearchItemsClicked(searchItems)"
           />         
         </v-col>
         <v-col cols="3" sm="2" md="3">
@@ -22,6 +23,7 @@
             placeholder="group name"
             clearable
             hide-details="auto"
+            @click:clear="clearSearchGroupsClicked(searchGroups)"
           />          
         </v-col>
         <v-col cols="2" sm="2" md="3">
@@ -33,6 +35,7 @@
             placeholder="tag name"
             clearable
             hide-details="auto"
+            @click:clear="clearSearchTagsClicked(searchTags)"
           />
         </v-col>
         <v-col cols="2" sm="1" md="2">
@@ -102,15 +105,14 @@
             lastIcon: 'mdi-page-last',
             prevIcon: 'mdi-chevron-left-circle-outline',
             nextIcon: 'mdi-chevron-right-circle-outline',
-            itemsPerPageOptions: [5,10,25,50,100,-1],
+            itemsPerPageOptions: [5,10,15,25,50,100,-1],
             itemsPerPageText: 'Rows per page:',
           }"
           @update:sort-by="updateSortBy"
           @update:page="updateDisplayPage"
-          @update:items-per-page="updateItemsPerPage"
-
+          @update:items-per-page="updateItemsPerPage"          
         >
-          <!-- Customize the sort icon (header slot)-->
+          <!-- Customize the sort icon (header slot) -->
           <template v-slot:header.filename="{ header }">
             {{ header.text.toUpperCase() }}
             <v-icon v-if="header.sortable" class="v-data-table-header__icon page-of-pages-div" medium>mdi-sort</v-icon>                
@@ -135,11 +137,18 @@
           <!-- Customize pagination (footer slot)-->
           <template v-slot:footer="{ props }">
             <div class="pr-10 text-right page-of-pages-div">
-               <b>Page {{ props.pagination.page }} of {{ props.pagination.pageCount==0?1:props.pagination.pageCount }}</b>
+               <b>Page {{ page }} of {{ props.pagination.pageCount==0?1:props.pagination.pageCount }}</b>
             </div>
           </template>    
           
-          <!-- Format how to render the fields - provide action events -->
+          <!-- Format the No Data Message -->
+          <template slot="no-data">
+            <div class="title font-weight-light page-of-pages-div">
+              <b>No data found - try changing the search filter(s)</b>
+            </div>
+          </template>
+
+          <!-- Format how to render the fields - render action events -->
           <template #[`item.filename`]="{item}">
             <span class="cursor-pointer" @click="emit_selected([item])">
               {{ item.filename }}
@@ -227,8 +236,6 @@ import {IEvalPaginationParams, IEvaluation,
 import Vue from 'vue';
 import {Prop} from 'vue-property-decorator';
 import Component from 'vue-class-component';
-import * as _ from 'lodash';
-
 
 @Component({
   components: {
@@ -243,13 +250,10 @@ export default class LoadFileList3 extends Vue {
   @Prop({required: true}) readonly headers!: Object[];
   @Prop({type: Boolean, default: false}) loading!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
-  // @Prop({type: String, default: 'createdAt'}) readonly sortBy!: string;
-  // @Prop({type: Boolean, default: true}) readonly sortDesc!: boolean;
   @Prop({required: true}) evaluationsLoaded!: IEvaluation[];
   @Prop({required: true}) totalItemsPerPage!: number;
   @Prop({required: true}) evaluationsCount!: number;
   
-  //evaluationsLoaded: IEvaluation[] = [];
   selectedFiles: IEvaluation[] = [];
   activeItem!: IEvaluation;
   activeTag!: IEvaluationTag;
@@ -257,6 +261,9 @@ export default class LoadFileList3 extends Vue {
   editEvaluationDialog = false;
   deleteItemDialog = false;
   deleteTagDialog = false;
+  searching = false;
+  setPageOnSearch = false;
+  updatingPage = false;
 
   // Table supporting variables
   headerprops = {
@@ -265,7 +272,7 @@ export default class LoadFileList3 extends Vue {
   }
   tableHight = '440px';
   page = 1;
-  totalItemsShowing = 0;
+  totalItemsShowing = this.totalItemsPerPage;
   pagination = { 
     page: this.page,
     itemsPerPage: this.totalItemsPerPage,
@@ -285,24 +292,63 @@ export default class LoadFileList3 extends Vue {
 
   // Sort variables declaration
   sortByField = 'createdAt'          // Default sort field
-  sortOrder = ["createdAt", "DESC"];  // db sort order  
+  sortOrder = ["createdAt", "DESC"]; // db sort order  
 
   async getEvaluations(params: IEvalPaginationParams): Promise<void> {
     EvaluationModule.getAllEvaluations(params);
   }
 
+  clearSearchItemsClicked(value: string) {
+    console.log(`IN clearSearchItemsClicked value is ${value}`);
+    if (this.isEmpty(this.searchGroups) && this.isEmpty(this.searchTags)) {
+      this.endSearchLoadPage();
+    }
+    console.log(`Searching is ${this.searching}`);
+  }
+
+  clearSearchGroupsClicked(value: string) {
+    console.log(`IN clearSearchGroupsClicked value is ${value}`);
+    if (this.isEmpty(this.searchItems) && this.isEmpty(this.searchTags)) {
+      this.endSearchLoadPage();
+    }
+    console.log(`Searching is ${this.searching}`);
+  }
+
+  clearSearchTagsClicked(value: string) {
+    console.log(`IN clearSearchTagsClicked value is ${value}`);
+    if (this.isEmpty(this.searchItems) && this.isEmpty(this.searchGroups)) {
+      this.endSearchLoadPage();
+    }
+    console.log(`Searching is ${this.searching}`);
+  }
+
+  endSearchLoadPage() {
+    console.log(`endSearchLoadPage-> this page is: ${this.page}`);
+    this.searching = false;
+    if (this.page == 1) {
+      console.log("Update the display")
+      this.updateDisplayPage(this.page);
+    } else {
+      console.log("Setting page to 1")
+      this.page = 1; // Reload the page
+    }
+  }
+
+  isEmpty(value: any): boolean {
+    return (value == null || (typeof value === "string" && value.trim().length === 0));
+  }
+
   getOffSetLimit() {
     const page = this.pagination.page;
-
-    // Database call
-    //   offset: is the value where to start the returning values
-    //   limit:  the number of records to return
+    // offset: where to start returning values
+    // limit:  the number of records to return
     const limit = (this.totalItemsPerPage == -1 ? this.evaluationsCount : this.totalItemsPerPage);
     const offset = (page == 1) ? 0 : ((page*limit) - limit);
     return {offset, limit};
   }
 
-
+  //--------------------------------------------------------------------
+  // Called when the Search button is invoked (@click="executeSearch()")
   async executeSearch() {
     console.log("------EXECUTE SEARCH IN-------------")
     console.log(`search items is ${this.searchItems}`)
@@ -310,77 +356,76 @@ export default class LoadFileList3 extends Vue {
     console.log(`search tags is ${this.searchTags}`)
     console.log(`Operations is ${this.logicOperator}`)
 
-
+    
     // Clearing the fields using the clearable icon sets the model to null
     this.searchItems = this.searchItems == null ? '' : this.searchItems;
     this.searchGroups = this.searchGroups == null ? '' : this.searchGroups;
     this.searchTags = this.searchTags == null ? '' : this.searchTags;
 
-    // if (this.searchItems == null || this.searchGroups == null || 
-    //     this.searchTags == null) {
-
-    //   console.log('FOUND A NULL')
-    //   // Lets update the search fields (reset the null to empty string)
-    //   this.searchItems = this.searchItems == null ? '' : this.searchItems;
-    //   this.searchGroups = this.searchGroups == null ? '' : this.searchGroups;
-    //   this.searchTags = this.searchTags == null ? '' : this.searchTags;
-
-    //   // const {offset, limit} = this.getOffSetLimit();
-    //   // const params: IEvalPaginationParams = {offset: offset, limit: limit, order: this.sortOrder};
-    //   // await this.getEvaluations(params);
-    //   // this.evaluationsLoaded = EvaluationModule.allEvaluations;
-    //   SnackbarModule.notify("No search criteria provided (provide a file, group, or tag name)!")
     if (this.searchItems.trim().length == 0 && 
         this.searchGroups.trim().length == 0 &&
         this.searchTags.trim().length == 0 ) {
       console.log('FOUND A EMPTY STRINGs')
       SnackbarModule.notify("No search criteria provided (provide a file, group, or tag name)!")
     } else {
-      const filename = this.searchItems == null ? '' : this.formatSearchParam(this.searchItems.trim());
-      const groups = this.searchGroups == null ? '' : this.formatSearchParam(this.searchGroups.trim());
-      const tags = this.searchTags == null ? '' : this.formatSearchParam(this.searchTags.trim());
-      const fields = [filename,groups,tags]
-      console.log(`fields are ${JSON.stringify(fields)}`)
+      console.log(`this.totalItemsPerPage is ${this.totalItemsPerPage}`)
+      console.log(`pagination is (executeSearch): ${JSON.stringify(this.pagination,null,2)}`)
 
-      const {offset, limit} = this.getOffSetLimit();
-      let params: IEvalPaginationParams = {
-        offset: offset,
-        limit: limit,
-        order: this.sortOrder
-      };
-      params.useClause = true;
-      params.operator = this.logicOperator; 
-      params.fields = fields;
+      if(this.pagination.page != 1) {
+        this.setPageOnSearch = !this.setPageOnSearch;
+        this.pagination.page = 1;
+        this.page = 1; // Set the page number        
+      }
 
-      console.log(`params are ${JSON.stringify(params)}`)    
-      // Database
-      await this.getEvaluations(params);
-      this.evaluationsLoaded = EvaluationModule.allEvaluations;
-      this.evaluationsCount = EvaluationModule.evaluationsCount;
-
-      console.log(`total evaluationsLoaded are: ${this.evaluationsLoaded.length}`)
-      console.log(`total evaluationsCount are: ${this.evaluationsCount}`)
+      this.searching = true;
+      this.getSearchEvaluation();
     }
     console.log("------EXECUTE SEARCH OUT-------------")
   }
 
   formatSearchParam(searchValue: string): string {
-    // let searchParam = '';
-    // if (searchValue.indexOf(',') > 0) {
-    //   searchParam = searchValue.replace(/,/g,'|')
-    // } else {
-    //   searchParam = searchValue.replace(/ /g,'|')
-    // }
     const delimiterChr = (searchValue.indexOf(',') > 0) ? ',': ' ';
     console.log(`delimiterChr is "${delimiterChr}"`)
+    if (delimiterChr == ',') {
+      // Remove any blank spaces
+      searchValue = searchValue.replace(/\s/g, "");
+    }
     const searchParam = searchValue.split(delimiterChr).join('|');
-
-    //const searchParam = _.replace(searchValue, delimiterChr, '|')
-    //const searchParam  = searchValue.replaceAll(delimiterChr,"|");
     console.log(`searchParam is ${searchParam}`)
     return `(${searchParam})`; 
   }
 
+  async getSearchEvaluation() {
+    console.log(`pagination is (getSearchEvaluation): ${JSON.stringify(this.pagination,null,2)}`)
+    this.totalItemsShowing = this.totalItemsPerPage;
+
+    const filename = this.searchItems == null ? '' : this.formatSearchParam(this.searchItems.trim());
+    const groups = this.searchGroups == null ? '' : this.formatSearchParam(this.searchGroups.trim());
+    const tags = this.searchTags == null ? '' : this.formatSearchParam(this.searchTags.trim());
+    const searchFields = [filename,groups,tags]
+    console.log(`searchFields are ${JSON.stringify(searchFields)}`)
+
+    const {offset, limit} = this.getOffSetLimit();
+    let params: IEvalPaginationParams = {
+      offset: offset,
+      limit: limit,
+      order: this.sortOrder
+    };
+    params.useClause = true;
+    params.operator = this.logicOperator; 
+    params.searchFields = searchFields;
+
+    console.log(`params are ${JSON.stringify(params)}`)    
+    // Database
+    await this.getEvaluations(params);
+    this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    this.evaluationsCount = EvaluationModule.evaluationsCount;
+
+    console.log(`total evaluationsLoaded are: ${this.evaluationsLoaded.length}`)
+    console.log(`total evaluationsCount are: ${this.evaluationsCount}`)
+  }
+
+  //-------------------------------------------------------------------
   // Called when any of the sorted fields are invoked (@update:sort-by)
   async updateSortBy(sortField: any) {
     console.log("------UPDATE SORT BY IN-------------")
@@ -412,13 +457,10 @@ export default class LoadFileList3 extends Vue {
     console.log("------UPDATE SORT BY OUT-------------")
   }
 
-  /* Map sorted fields to database names.
-     Needed because the query for getting the evaluations is a (only groups and tags have different )
-  */
   getSortClause(field: string, order: string): string[] {
     console.log(` geSortClause field is ${field} and order is ${order}`)
     console.log(`IS FIELD === to filename: ${field == 'filename'}`)
-
+    //  Map sorted fields to database names.
     if (field == 'filename' || field == 'createdAt') {
       return new Array(`${field}`, `${order}`);
     } else if (field == 'groups') {
@@ -430,32 +472,64 @@ export default class LoadFileList3 extends Vue {
     }
   }
 
-  // Called when page navigation arrows are invoked (@update:items-per-page)  
+  //------------------------------------------------------------------------
+  // Called when page navigation arrows are invoked (@update:items-per-page)
+  // or when the Rows per page is invoked (@update:page) and not in Page 1 
+  // or when the page variable is programmatically set.
   async updateDisplayPage(page: number) {
     console.log("------UPDATE DISPLAY PAGE IN-------------")
     console.log(`page is ${JSON.stringify(page,null,2)}`)
     console.log(`pagination are (updateDisplayPage): ${JSON.stringify(this.pagination,null,2)}`)
     
+    if (this.setPageOnSearch) {
+      this.setPageOnSearch = !this.setPageOnSearch;
+      console.log(`setPageOnSearch is ${this.setPageOnSearch}`);
+      return;
+    }
+
+    this.updatingPage = true;
     this.totalItemsPerPage = this.pagination.itemsPerPage;
 
-    const {offset, limit} = this.getOffSetLimit();
-    const params: IEvalPaginationParams = {offset: offset, limit: limit, order: this.sortOrder};
-    console.log(`params are (updateDisplayPage): ${JSON.stringify(params,null,2)}`)
-    await this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
-    this.evaluationsLoaded = EvaluationModule.allEvaluations;
-    this.evaluationsCount = EvaluationModule.evaluationsCount;
+    if (this.searching) {
+      console.log("SEARCHING")
+      this.getSearchEvaluation(); 
+    } else {
+      console.log("NOT SEARCHING")
+      
+      //this.totalItemsPerPage = this.pagination.itemsPerPage;
+
+      const {offset, limit} = this.getOffSetLimit();
+      const params: IEvalPaginationParams = {offset: offset, limit: limit, order: this.sortOrder};
+      console.log(`params are (updateDisplayPage): ${JSON.stringify(params,null,2)}`)
+      await this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
+      this.evaluationsLoaded = EvaluationModule.allEvaluations;
+      this.evaluationsCount = EvaluationModule.evaluationsCount;
+
+      console.log(`total evaluationsLoaded are: ${this.evaluationsLoaded.length}`)
+      console.log(`total evaluationsCount are: ${this.evaluationsCount}`)
+    }
+    
+    this.updatingPage = false; 
+
     console.log("------UPDATE DISPLAY PAGE OUT-------------")
   }
 
+  //----------------------------------------------------
   // Called when Rows per page is invoked (@update:page)
   async updateItemsPerPage(itemsCount: number) {
-    console.log("------UPDATE PAGE IN-------------")
+    console.log("------UPDATE ITEMS PER PAGE IN-------------")
     console.log(`itemsCount is ${JSON.stringify(itemsCount,null,2)}`)
     console.log(`this.totalItemsPerPage is (1) ${JSON.stringify(this.totalItemsPerPage,null,2)}`)
     console.log(`pagination is (updateItemsPerPage): ${JSON.stringify(this.pagination,null,2)}`)
    
     // Updating the page reset to Page 1
-    this.page = 1; 
+    //this.page = 1; 
+    if (this.updatingPage) { 
+      console.log("no can do, updating page")
+      console.log("------UPDATE ITEMS PER PAGE OUT-------------")
+      return; 
+    }
+
     if (itemsCount != -1) {
       this.totalItemsPerPage = itemsCount      
       // we are not showing all items - do we need to query or slice showing records
@@ -493,8 +567,8 @@ export default class LoadFileList3 extends Vue {
     // Update the number of records showing
     this.totalItemsShowing = this.totalItemsPerPage; //(itemsCount == -1 ? this.evaluationsCount : itemsCount);
     console.log(`total items showing is ${this.totalItemsShowing}`)
-    console.log(`this.totalItemsPerPage is (2) ${JSON.stringify(this.totalItemsPerPage,null,2)}`)
-    console.log("------UPDATE PAGE OUT-------------")
+    console.log(`this.totalItemsPerPage is (2) ${this.totalItemsPerPage}`)
+    console.log("------UPDATE PAGE ITEMS PER OUT-------------")
   }
 
 
@@ -554,6 +628,7 @@ export default class LoadFileList3 extends Vue {
 .table >>> th {
   font-size:0.95rem !important;
 }
+
 .table >>> .v-data-footer__select,
 .table >>> .v-select__selection,
 .table >>> .v-data-footer__pagination {

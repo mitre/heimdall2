@@ -26,6 +26,6 @@ export interface IEvalPaginationParams {
   order: Array<string>;
   useClause?: boolean;
   operator?: string;
-  fields?: Array<string>;
+  searchFields?: Array<string>;
 }
 

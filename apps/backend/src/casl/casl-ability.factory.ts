@@ -1,9 +1,9 @@
 import {
-  Ability,
   AbilityBuilder,
-  AbilityClass,
   ExtractSubjectType,
-  InferSubjects
+  InferSubjects,
+  MongoAbility,
+  createMongoAbility
 } from '@casl/ability';
 import {Injectable} from '@nestjs/common';
 import {Evaluation} from '../evaluations/evaluation.model';
@@ -13,7 +13,8 @@ import {User} from '../users/user.model';
 
 type AllTypes = typeof User | typeof Evaluation | typeof Group;
 
-type Subjects = InferSubjects<AllTypes> | 'all';
+type Subjects = InferSubjects<AllTypes, true> | 'all';
+type PossibleAbilities = [Action, Subjects];
 
 export enum Action {
   Manage = 'manage', // manage is a special keyword in CASL which represents "any" action.
@@ -49,16 +50,15 @@ interface EvaluationQuery extends Evaluation {
   'groups.users.id': User['id'];
 }
 
-export type AppAbility = Ability<[Action, Subjects]>;
+export type AppAbility = MongoAbility<PossibleAbilities>;
 
 @Injectable()
 export class CaslAbilityFactory {
-  createForUser(user: User): Ability {
-    const {can, cannot, build} = new AbilityBuilder<
-      Ability<[Action, Subjects]>
-    >(Ability as AbilityClass<AppAbility>);
-
+  createForUser(user: User): MongoAbility  {
+    const {can, cannot, build} = new AbilityBuilder(createMongoAbility);
     if (user.role === 'admin') {
+      console.log("WE ARE AN ADMIN")
+      // all is a special keyword in CASL that represents "any subject".
       // read-write access to everything
       can(Action.Manage, 'all');
       // Read statistics about this heimdall deployment
@@ -94,14 +94,14 @@ export class CaslAbilityFactory {
     // it requires every evaluation to have a join on Groups and then another join on Users
     can([Action.Create], Evaluation);
 
-    can([Action.Read], Evaluation, {public: true});
+    can(Action.Read, Evaluation, {public: true});
 
     can([Action.Manage], Evaluation, {
       userId: user.id
     });
 
     can<EvaluationQuery>([Action.Read], Evaluation, {
-      'groups.users.id': user.id
+     'groups.users.id': user.id
     });
 
     can<EvaluationQuery>([Action.Manage], Evaluation, {
@@ -119,10 +119,8 @@ export class CaslAbilityFactory {
   // This provides the ability to use the same codepath for validating
   // user abilities and non-registered user abilities. Useful for the
   // few anonymous endpoints we have.
-  createForAnonymous(): Ability {
-    const {cannot, build} = new AbilityBuilder<Ability<[Action, Subjects]>>(
-      Ability
-    );
+  createForAnonymous(): MongoAbility {    
+    const {cannot, build} = new AbilityBuilder(createMongoAbility);
 
     cannot(Action.Manage, 'all');
 

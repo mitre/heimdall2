@@ -51,55 +51,24 @@ export class Evaluation extends VuexModule {
   get totalEvaluation(): Function {
     return () => {this.evaluationsCount}
   }
-  // @Action
-  // async getAllEvaluations(): Promise<void> {
-  //   return axios
-  //     .get<IEvaluation[]>('/evaluations')
-  //     .then(({data}) => {
-  //       this.context.commit('SET_ALL_EVALUATION', data);
-  //     })
-  //     .finally(() => {
-  //       this.context.commit('SET_LOADING', false);
-  //     });
-  // }
 
   @Action
   async getAllEvaluations(params: IEvalPaginationParams): Promise<void> {
     console.log(`evaluations.ts -> params are: ${JSON.stringify(params,null,2)}`)    
     return axios
-      //.get<IEvaluation[]>('/evaluations', {params})
       .get<IEvaluationResponse>('/evaluations', {params})
       .then(({data}) => {
         const { totalCount, evaluations } = data;
 
-//        console.log(`evaluations.ts -> SET_ALL_EVALUATION -> data is: ${JSON.stringify(data.evaluations,null,2)}`)
-        //console.log(`evaluations.ts -> SET_ALL_EVALUATION_COUNT 1-> data is: ${JSON.stringify(data.totalCount,null,2)}`)
-        //console.log(`evaluations.ts -> SET_ALL_EVALUATION_COUNT 2-> data is: ${JSON.stringify(totalCount,null,2)}`)
-
-//        console.log(`evaluations.ts -> this.evaluationsCount 1-> data is: ${this.evaluationsCount}`)
-
         this.context.commit('SET_ALL_EVALUATION', evaluations);
         this.context.commit('SET_ALL_EVALUATION_COUNT', totalCount);
 
-       
         console.log(`evaluations.ts -> this.evaluationsCount 2-> data is: ${this.evaluationsCount}`)
       })
       .finally(() => {
         this.context.commit('SET_LOADING', false);
       });
   }
-
-  // @Action
-  // async getAllEvalsPagination(params: IEvalPaginationParams): Promise<void> {
-  //   return axios
-  //     .get<IEvaluation[]>('/evaluations', { params })
-  //     .then(({data}) => {
-  //       this.context.commit('SET_ALL_EVALUATION', data);
-  //     })
-  //     .finally(() => {
-  //       this.context.commit('SET_LOADING', false);
-  //     });
-  // }
 
   @Action
   async load_results(evaluationIds: string[]): Promise<(FileID | void)[]> {
@@ -161,17 +130,6 @@ console.log(`ID IS NOT isHDF: ${id} `)
       return data;
     });
   }
-
-  // @Action
-  // async getEvaluationsCount() {
-  //   return axios
-  //     .get<Number>('/evaluations/count')
-  //     .then(({data}) => {
-  //       this.context.commit('SET_ALL_EVALUATION_COUNT', data);
-  //       console.log(`evaluations.ts ->getEvaluationsCount -> data is: ${data}`)
-  //       return data;
-  //     });
-  // }
 
   @Action
   async updateEvaluation(evaluation: IEvaluation) {
