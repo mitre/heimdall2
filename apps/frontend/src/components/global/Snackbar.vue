@@ -11,9 +11,9 @@
     {{ message }}
 
     <div>
-        <a :href="'' + href"> {{ hrefText }} </a>
+      <a :href="'' + href"> {{ hrefText }} </a>
     </div>
-  
+
     <template #action="{attrs}">
       <v-btn id="hide-snackbar" text v-bind="attrs" @click="show = false">
         Close
@@ -29,11 +29,7 @@ import Component from 'vue-class-component';
 
 @Component
 export default class Snackbar extends Vue {
-
   messageContent = '';
-  // href = SnackbarModule.linkUrl;
-  // hrefText = SnackbarModule.linkText;  
-
 
   get show(): boolean {
     return SnackbarModule.show;
@@ -69,12 +65,10 @@ export default class Snackbar extends Vue {
   }
 
   get href(): string {
-    console.log(`SnackbarModule.linkUrl is: ${SnackbarModule.linkUrl}`)
     return SnackbarModule.linkUrl;
   }
 
   get hrefText(): string {
-    console.log(`SnackbarModule.linkText is: ${SnackbarModule.linkText}`)
     return SnackbarModule.linkText;
   }
 }
