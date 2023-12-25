@@ -114,7 +114,7 @@ import {
   IRemoveUserFromGroup,
   ISlimUser,
   IUpdateGroupUser
-} from '@heimdall/interfaces';
+} from '@heimdall/common/interfaces';
 import axios, {AxiosResponse} from 'axios';
 import * as _ from 'lodash';
 import Vue from 'vue';

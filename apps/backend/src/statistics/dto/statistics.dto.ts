@@ -1,4 +1,4 @@
-import {IStatistics} from '@heimdall/interfaces';
+import {IStatistics} from '@heimdall/common/interfaces';
 
 export class StatisticsDTO implements IStatistics {
   readonly apiKeyCount: number;
