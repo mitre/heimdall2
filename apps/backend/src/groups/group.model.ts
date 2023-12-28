@@ -23,7 +23,7 @@ export class Group extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: string;
+  declare id: string;
 
   @Unique
   @AllowNull(false)
@@ -43,12 +43,12 @@ export class Group extends Model {
   @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  updatedAt!: Date;
+  declare updatedAt: Date;
 
   @BelongsToMany(() => User, () => GroupUser)
   users!: Array<User & {GroupUser: GroupUser}>;

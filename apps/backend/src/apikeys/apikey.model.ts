@@ -20,7 +20,7 @@ export class ApiKey extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: string;
+  declare id: string;
 
   @ForeignKey(() => User)
   @Column(DataType.BIGINT)
@@ -52,10 +52,10 @@ export class ApiKey extends Model {
   @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  updatedAt!: Date;
+  declare updatedAt: Date;
 }

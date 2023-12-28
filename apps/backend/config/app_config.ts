@@ -1,9 +1,8 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
-import { Dialect } from 'sequelize/types';
 
 export default class AppConfig {
-  private envConfig: { [key: string]: string | undefined };
+  private envConfig: {[key: string]: string | undefined};
 
   constructor() {
     console.log('Attempting to read configuration file `.env`!');
@@ -106,11 +105,11 @@ export default class AppConfig {
       key: sslKey,
       cert: sslCert,
       ca: sslCA
-    }
+    };
   }
 
   getDefaultAdmin() {
-    return this.get('ADMIN_EMAIL') || 'admin@heimdall.local'
+    return this.get('ADMIN_EMAIL') || 'admin@heimdall.local';
   }
 
   getDbConfig() {
@@ -122,7 +121,7 @@ export default class AppConfig {
       database: this.getDatabaseName(),
       host: this.get('DATABASE_HOST') || '127.0.0.1',
       port: Number(this.get('DATABASE_PORT')) || 5432,
-      dialect: 'postgres' as Dialect,
+      dialect: 'postgres' as const,
       dialectOptions: {
         ssl: this.getSSLConfig()
       },

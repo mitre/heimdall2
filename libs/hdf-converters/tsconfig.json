@@ -9,7 +9,6 @@
   "compilerOptions": {
     "outDir": "./lib",
     "strict": true,
-    "esModuleInterop": true,
     "resolveJsonModule": true
   }
 }

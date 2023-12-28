@@ -4,8 +4,7 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {Op} from 'sequelize';
-import {FindOptions} from 'sequelize/types';
+import {FindOptions, Op} from 'sequelize';
 import winston from 'winston';
 import AppConfig from '../../config/app_config';
 import {Evaluation} from '../evaluations/evaluation.model';

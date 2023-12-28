@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {compare, hash} from 'bcryptjs';
-import {FindOptions} from 'sequelize/types';
+import {FindOptions} from 'sequelize';
 import {v4} from 'uuid';
 import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
