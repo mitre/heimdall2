@@ -15,8 +15,6 @@
 </template>
 
 <script lang="ts">
-import RouteMixin from '@/mixins/RouteMixin';
-import ServerMixin from '@/mixins/ServerMixin';
 import RefreshButton from '@/components/generic/RefreshButton.vue';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import {FileID} from '@/store/report_intake';
@@ -24,7 +22,8 @@ import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
 import {IEvalPaginationParams, IEvaluation} from '@heimdall/interfaces';
 import {Prop, Watch} from 'vue-property-decorator';
-import Component, {mixins} from 'vue-class-component';
+import Component from 'vue-class-component';
+import Vue from 'vue';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -36,7 +35,7 @@ import Component, {mixins} from 'vue-class-component';
     RefreshButton
   }
 })
-export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
+export default class DatabaseReader extends Vue {
   @Prop({default: false}) readonly refresh!: boolean;
 
   headers: Object[] = [

@@ -1,3 +1,4 @@
+import {IEvalPaginationParams} from '@heimdall/interfaces';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {FindOptions, Op, WhereOptions} from 'sequelize';
@@ -8,7 +9,6 @@ import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {Evaluation} from './evaluation.model';
-import {IEvalPaginationParams} from '@heimdall/interfaces';
 
 interface EvaluationsResponse {
   totalItems: number;
@@ -21,7 +21,6 @@ export class EvaluationsService {
     private readonly evaluationModel: typeof Evaluation,
     private readonly databaseService: DatabaseService
   ) {}
-
 
   /*
     NOTES: These notes are about the getAllEvaluations() and the 
@@ -69,69 +68,75 @@ export class EvaluationsService {
          3      table name  field name         order (asc/desc)    
 
   */
-  async getAllEvaluations(params: IEvalPaginationParams, email: string, role: string): Promise<EvaluationsResponse> {
-    console.log("-----IN evaluation.services.ts getAllEvaluations()")
-
-    const responseEvals: EvaluationsResponse = {
+  async getAllEvaluations(
+    params: IEvalPaginationParams,
+    email: string,
+    role: string
+  ): Promise<EvaluationsResponse> {
+    const queryResponse: EvaluationsResponse = {
       totalItems: 0,
       evaluations: []
     };
     const whereClause = this.getWhereClauseAll(role, email);
 
-    await this.evaluationModel.findAll<Evaluation>(
-      {
+    await this.evaluationModel
+      .findAll<Evaluation>({
         attributes: {exclude: ['data']},
-        //include: [EvaluationTag, User, {model: Group, include: [User]}],
         include: [EvaluationTag, User, Group],
         offset: params.offset,
         limit: params.limit,
-        order: (params.order.length == 2) ? 
-           [[params.order[0], params.order[1]]] :
-           [[params.order[0], params.order[1], params.order[2]]],
+        order:
+          params.order.length == 2
+            ? [[params.order[0], params.order[1]]]
+            : [[params.order[0], params.order[1], params.order[2]]],
         subQuery: false,
         where: whereClause
-       // group: ['Evaluation.id', 'evaluationTags.id', 'groups->users.id', 'groups.users.email', 'user.id', 'groups.id', 'groups->GroupEvaluation.id', 'groups->users->GroupUser.id']
-      }
-    ).then(async data => {
-      let totalItems = await this.evaluationCount(email, role);
-      // console.log(`totalRecords from DATA is: ${data.length}`)
-      // console.log(`totalItems from COUNT is: ${totalItems}`)
-      responseEvals.evaluations = data;
-      responseEvals.totalItems = totalItems;
-    });
-    console.log("-----OUT evaluation.services.ts getAllEvaluations()")
-    return responseEvals;
+      })
+      .then(async (data) => {
+        const totalItems = await this.evaluationCount(email, role);
+        queryResponse.evaluations = data;
+        queryResponse.totalItems = totalItems;
+      });
+
+    return queryResponse;
   }
 
-  async getEvaluationsWithClause(params: IEvalPaginationParams, email: string, role: string): Promise<EvaluationsResponse> {
-    console.log("---IN evaluation.services.ts getEvaluationsWithClause()")
-
-    const responseEvals: EvaluationsResponse = {
+  async getEvaluationsWithClause(
+    params: IEvalPaginationParams,
+    email: string,
+    role: string
+  ): Promise<EvaluationsResponse> {
+    const queryResponse: EvaluationsResponse = {
       totalItems: 0,
       evaluations: []
     };
-    const whereClause = this.getWhereClauseSearch(params.searchFields!, params.operator!, email, role);
+    const whereClause = this.getWhereClauseSearch(
+      params.searchFields == undefined ? [''] : params.searchFields,
+      params.operator == undefined ? 'OR' : params.operator,
+      email,
+      role
+    );
 
-    await this.evaluationModel.findAll<Evaluation>(
-     {
+    await this.evaluationModel
+      .findAll<Evaluation>({
         attributes: {exclude: ['data']},
-        //include: [EvaluationTag, User, {model: Group, include: [User]}],
         include: [EvaluationTag, User, Group],
         offset: params.offset,
         limit: params.limit,
-        order: (params.order.length == 2) ? 
-          [[params.order[0], params.order[1]]] :
-          [[params.order[0], params.order[1], params.order[2]]],
-        subQuery: false,          
+        order:
+          params.order.length == 2
+            ? [[params.order[0], params.order[1]]]
+            : [[params.order[0], params.order[1], params.order[2]]],
+        subQuery: false,
         where: whereClause
-      }
-    ).then(async data => {
-      const totalItems = await this.searchItemsCount(whereClause);
-      // console.log(`totalItems (SEARCH) is: ${totalItems}`)
-      responseEvals.evaluations = data;
-      responseEvals.totalItems = totalItems;
-    });
-    return responseEvals;
+      })
+      .then(async (data) => {
+        const totalItems = await this.searchItemsCount(whereClause);
+        queryResponse.evaluations = data;
+        queryResponse.totalItems = totalItems;
+      });
+
+    return queryResponse;
   }
 
   getWhereClauseAll(role: string, email: string): WhereOptions {
@@ -140,36 +145,45 @@ export class EvaluationsService {
   }
 
   getWhereClauseBaseCriteria(role: string, email: string): WhereOptions {
-    let baseCriteria = [];
-    baseCriteria.push({'public': {[Op.eq]: 'true'}});
+    const baseCriteria = [];
+    baseCriteria.push({public: {[Op.eq]: 'true'}});
     if (role == 'admin') {
-      baseCriteria.push({'public': {[Op.eq]: 'false'}});
+      baseCriteria.push({public: {[Op.eq]: 'false'}});
     } else {
       baseCriteria.push({'$user.email$': {[Op.like]: `${email}`}});
-    //   whereClause.push({ '$groups.users.email$': {[Op.like]: `${email}`} });
     }
-    return baseCriteria;   
+    return baseCriteria;
   }
-  getWhereClauseSearch(fields: string[], operation: string, email: string, role: string): WhereOptions {
-    let searchFields = [];
-    let baseCriteria = this.getWhereClauseBaseCriteria(role, email);
+
+  getWhereClauseSearch(
+    fields: string[],
+    operation: string,
+    email: string,
+    role: string
+  ): WhereOptions {
+    const searchFields = [];
+    const baseCriteria = this.getWhereClauseBaseCriteria(role, email);
 
     if (fields[0] != '()') {
-      searchFields.push({'filename': {[Op.iRegexp]: `${fields[0]}`}});
+      searchFields.push({filename: {[Op.iRegexp]: `${fields[0]}`}});
     }
     if (fields[1] != '()') {
       searchFields.push({'$groups.name$': {[Op.iRegexp]: `${fields[1]}`}});
     }
     if (fields[2] != '()') {
-      searchFields.push({'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}});
+      searchFields.push({
+        '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}
+      });
     }
-  
+
     if (operation == 'AND') {
       // Expected outcome: an OR baseCriteria AND an AND searchFields
       return {[Op.or]: baseCriteria, [Op.and]: searchFields};
     } else {
       // Expected outcome: an OR baseCriteria AND an OR searchFields
-      return {[Op.and]: [{[Op.or]: baseCriteria}, {[Op.and]: {[Op.or]: searchFields}}]};
+      return {
+        [Op.and]: [{[Op.or]: baseCriteria}, {[Op.and]: {[Op.or]: searchFields}}]
+      };
     }
   }
 
@@ -181,11 +195,10 @@ export class EvaluationsService {
         include: User,
         where: {
           [Op.or]: [
-            {'public': {[Op.eq]: 'true'}},
+            {public: {[Op.eq]: 'true'}},
             {'$user.email$': {[Op.like]: `${userEmail}`}}
           ]
         },
-        //where: { '$user.email$': {[Op.like]: `${userEmail}`} },
         distinct: true,
         col: 'id'
       });
@@ -194,7 +207,7 @@ export class EvaluationsService {
 
   async searchItemsCount(whereClause: WhereOptions): Promise<number> {
     return this.evaluationModel.count({
-      include: [EvaluationTag, User, {model: Group, include: [User]}],
+      include: [EvaluationTag, User, Group],
       where: whereClause,
       distinct: true,
       col: 'id'

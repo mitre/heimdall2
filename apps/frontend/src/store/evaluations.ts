@@ -1,10 +1,10 @@
 import Store from '@/store/store';
 import {
   ICreateEvaluationTag,
-  IEvaluation,
-  IEvaluationTag,
   IEvalPaginationParams,
-  IEvaluationResponse
+  IEvaluation,
+  IEvaluationResponse,
+  IEvaluationTag
 } from '@heimdall/interfaces';
 import axios from 'axios';
 import * as _ from 'lodash';

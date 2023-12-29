@@ -39,31 +39,18 @@
           />
         </v-col>
         <v-col cols="2" sm="1" md="2">
-          <v-tooltip top>
-            <template #activator="{on, attrs}">
-              <v-radio-group
-                v-model="logicOperator"
-                row
-                v-bind="attrs"
-                v-on="on"
-              >
-                <v-radio value="AND">
-                  <template #label>
-                    <div><strong class="page-of-pages-div">AND</strong></div>
-                  </template>
-                </v-radio>
-                <v-radio value="OR">
-                  <template #label>
-                    <div><strong class="page-of-pages-div">OR</strong></div>
-                  </template>
-                </v-radio>
-              </v-radio-group>
-            </template>
-            <span>
-              The logic 'AND' evaluates on both Groups and Tags,
-               filename can be blank
-            </span>
-          </v-tooltip>
+          <v-radio-group v-model="logicOperator" row>
+            <v-radio value="AND">
+              <template #label>
+                <div><strong class="page-of-pages-div">AND</strong></div>
+              </template>
+            </v-radio>
+            <v-radio value="OR">
+              <template #label>
+                <div><strong class="page-of-pages-div">OR</strong></div>
+              </template>
+            </v-radio>
+          </v-radio-group>
         </v-col>
         <v-col cols="1" sm="1" md="1" class="ml-n3 pt-4">
           <v-btn depressed color="primary" @click="executeSearch()">
@@ -99,6 +86,7 @@
           :header-props="headerprops"
           :sort-by.sync="pagination.sortBy"
           :sort-desc="pagination.sortDesc"
+          must-sort
           :footer-props="{
             showFirstLastPage: true,
             firstIcon: 'mdi-page-first',
@@ -201,10 +189,10 @@
             <GroupRow v-if="item.id" :evaluation="item" />
           </template>
           <template #[`item.evaluationTags`]="{item}">
-            <TagRow 
+            <TagRow
               v-if="item.id"
               :evaluation="item"
-              :itemsPerPage="pagination.itemsPerPage"
+              :items-per-page="pagination.itemsPerPage"
             />
           </template>
           <template #[`item.createdAt`]="{item}">
@@ -346,12 +334,7 @@ export default class LoadFileList extends Vue {
   sortOrder = ['createdAt', 'DESC']; // db sort order
 
   async getEvaluations(params: IEvalPaginationParams): Promise<void> {
-    console.log('Calling the db')
     EvaluationModule.getAllEvaluations(params);
-    // this.evaluationsLoaded = EvaluationModule.allEvaluations;
-    // this.evaluationsCount = EvaluationModule.evaluationsCount;
-    console.log(`total evaluationsLoaded (DB) are: ${EvaluationModule.allEvaluations.length}`)
-    console.log(`total evaluationsCount (DB) are: ${EvaluationModule.evaluationsCount}`)
   }
 
   clearSearchItemsClicked() {
@@ -375,7 +358,7 @@ export default class LoadFileList extends Vue {
   endSearchLoadPage() {
     this.searching = false;
     if (this.page == 1) {
-      this.updateDisplayPage(this.page);
+      this.updateDisplayPage();
     } else {
       this.page = 1; // Reload the page
     }
@@ -392,10 +375,10 @@ export default class LoadFileList extends Vue {
     // offset: where to start returning values
     // limit:  the number of records to return
     const limit =
-    this.pagination.itemsPerPage == -1
+      this.pagination.itemsPerPage == -1
         ? this.evaluationsCount
         : this.pagination.itemsPerPage;
-    const offset = page == 1 ? 0 : (page*limit) - limit;
+    const offset = page == 1 ? 0 : page * limit - limit;
     return {offset, limit};
   }
 
@@ -416,17 +399,14 @@ export default class LoadFileList extends Vue {
         'No search criteria provided (provide a file, group, or tag name)!'
       );
     } else {
-      console.log('------EXECUTE SEARCH IN-------------');
       if (this.pagination.page != 1) {
-        console.log("Setting Page to 1");
         this.setPageOnSearch = !this.setPageOnSearch;
         this.pagination.page = 1;
-        this.page = 1; // Set the page number
+        this.page = 1; // Reset the page number
       }
 
       this.searching = true;
       this.getSearchEvaluation();
-      console.log('------EXECUTE SEARCH OUT------------');
     }
   }
 
@@ -441,8 +421,6 @@ export default class LoadFileList extends Vue {
   }
 
   async getSearchEvaluation() {
-    console.log('------GET SEARCH IN------------');
-    console.log(`pagination is (updateItemsPerPage 1): ${JSON.stringify(this.pagination,null,2)}`);
     this.itemsPerPageShowing = this.pagination.itemsPerPage;
 
     const filename =
@@ -472,43 +450,51 @@ export default class LoadFileList extends Vue {
     await this.getEvaluations(params);
     this.evaluationsLoaded = EvaluationModule.allEvaluations;
     this.evaluationsCount = EvaluationModule.evaluationsCount;
-    
-    console.log(`total evaluationsLoaded are: ${this.evaluationsLoaded.length}`)
-    console.log(`total evaluationsCount are: ${this.evaluationsCount}`)
-    console.log('------GET SEARCH OUT------------');
   }
 
   //-------------------------------------------------------------------
   // Called when any of the sorted fields are invoked (@update:sort-by)
   async updateSortBy(sortField: string) {
+    /* Hack: Implementing custom headers slots, the v-data-table sorting is
+       disabled. Sort logic must be implemented by the application. The issue
+       is that when any header field is clicked initially the pagination object
+       is populated with the appropriate attributes, however on the second 
+       every other click the object pagination object is not populated. This
+       could be due too how the custom header slot is implemented.
+
+       Using local variables to maintain the sort in synchronization.
+       The else block of the this.pagination.sortBy[0] == sortField is never
+       executed. Leaving it here incase we rectify the implementation.
+    */
     if (sortField.length == 0) {
-      this.pagination.sortDesc[0] = false;
+      this.pagination.sortDesc[0] =
+        this.sortOrder[this.sortOrder.length - 1] == 'DESC' ? false : true;
       this.pagination.sortBy[0] = this.sortByField;
-      this.sortOrder = this.getSortClause(this.sortByField, 'ASC');
+      const sortOrder = this.pagination.sortDesc[0] ? 'DESC' : 'ASC';
+      this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
     } else {
+      if (this.pagination.sortBy[0] == sortField) {
+        this.pagination.sortDesc[0] = !this.pagination.sortDesc[0];
+      } else {
+        this.pagination.sortBy[0] = sortField;
+        this.pagination.sortDesc[0] = false;
+      }
       this.sortByField = sortField;
-      this.sortOrder = this.getSortClause(this.sortByField, 'DESC');
+      const sortOrder = this.pagination.sortDesc[0] ? 'DESC' : 'ASC';
+      this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
     }
 
-    console.log(`pagination is: ${JSON.stringify(this.pagination,null,2)}`)
-
-    // this.totalItemsPerPage =
-    //   this.pagination.itemsPerPage == -1 ? this.evaluationsCount
-    //    : this.pagination.itemsPerPage;
     const {offset, limit} = this.getOffSetLimit();
     const params: IEvalPaginationParams = {
-      offset: offset, limit: limit, order: this.sortOrder
+      offset: offset,
+      limit: limit,
+      order: this.sortOrder
     };
-    console.log(`params are (updateSortBy): ${JSON.stringify(params,null,2)}`);
-    
+
     // Call the Database
     await this.getEvaluations(params);
     this.evaluationsLoaded = EvaluationModule.allEvaluations;
     this.evaluationsCount = EvaluationModule.evaluationsCount;
-
-    console.log(`total evaluationsLoaded are: ${this.evaluationsLoaded.length}`)
-    console.log(`total evaluationsCount are: ${this.evaluationsCount}`)
-    console.log("------UPDATE SORT BY OUT-------------");
   }
 
   getSortClause(field: string, order: string): string[] {
@@ -526,45 +512,33 @@ export default class LoadFileList extends Vue {
 
   //------------------------------------------------------------------------
   // Called when page navigation arrows are invoked (@update:items-per-page)
-  // or when the Rows per page is invoked (@update:page) and not in Page 1 
+  // or when the Rows per page is invoked (@update:page) and not in Page 1
   // or when the page variable is programmatically set.
-  async updateDisplayPage(page: number) {
-    console.log("------UPDATE DISPLAY PAGE (<- PAGE ->) IN-------------");
-    console.log(`page is ${JSON.stringify(page,null,2)}`);
-    console.log(`pagination are (updateDisplayPage): ${JSON.stringify(this.pagination,null,2)}`);
-    
+  async updateDisplayPage() {
     if (this.setPageOnSearch) {
       this.setPageOnSearch = !this.setPageOnSearch;
-      console.log(`setPageOnSearch is ${this.setPageOnSearch}`);
-      console.log("------UPDATE DISPLAY PAGE (<- PAGE ->) OUT-------------");
       return;
     }
 
     this.updatingPage = true;
-    //this.totalItemsPerPage = this.pagination.itemsPerPage;
 
     if (this.searching) {
-      console.log("WE ARE SEARCHING (<- PAGE ->)")
-      this.getSearchEvaluation(); 
+      this.getSearchEvaluation();
     } else {
-      console.log("WE ARE NOT SEARCHING (<- PAGE ->)")
       this.itemsPerPageShowing = this.pagination.itemsPerPage;
-
       const {offset, limit} = this.getOffSetLimit();
-      const params: IEvalPaginationParams = {offset: offset, limit: limit, order: this.sortOrder};
-      console.log(`params are (updateDisplayPage): ${JSON.stringify(params,null,2)}`)
+      const params: IEvalPaginationParams = {
+        offset: offset,
+        limit: limit,
+        order: this.sortOrder
+      };
 
       // Call the Database
-      await this.getEvaluations({offset: offset, limit: limit, order: this.sortOrder})
+      await this.getEvaluations(params);
       this.evaluationsLoaded = EvaluationModule.allEvaluations;
       this.evaluationsCount = EvaluationModule.evaluationsCount;
-
-      console.log(`total evaluationsLoaded are: ${this.evaluationsLoaded.length}`)
-      console.log(`total evaluationsCount are: ${this.evaluationsCount}`)
     }
     this.updatingPage = false;
-
-    console.log("------UPDATE DISPLAY PAGE (<- PAGE ->) OUT-------------");
   }
 
   //----------------------------------------------------
@@ -572,72 +546,49 @@ export default class LoadFileList extends Vue {
   // Note: If not on Page 1 the @update:items-per-page
   //       is invoked first, hence the need for the flag
   async updateItemsPerPage(itemsCount: number) {
-    console.log("------UPDATE ITEMS PER PAGE IN-------------");
-    console.log(`itemsCount is ${JSON.stringify(itemsCount,null,2)}`);
-    console.log(`this.totalItemsPerPage is (1) ${this.totalItemsPerPage}`);
-    console.log(`this.evaluationsCount ${this.evaluationsCount}`);
-    console.log(`pagination is (updateItemsPerPage 1): ${JSON.stringify(this.pagination,null,2)}`);
-   
     // Updating the page reset to Page 1
-    //this.page = 1; 
-    if (this.updatingPage) { 
-      console.log("no can do, updating page");
-      console.log("------UPDATE ITEMS PER PAGE OUT-------------");
+    //this.page = 1;
+    if (this.updatingPage) {
       return;
     } else {
       // Occurs when we are using the Rows per page: ALL (-1)
       if (itemsCount == -1) {
         this.pagination.itemsPerPage = this.evaluationsCount;
-      }      
+      }
 
       // If the requested items per page is greater than the total evaluations
       // we are already showing all of the evaluation, no need to query the db
       const action = this.getAction();
-      console.log(`action is ${action}`);
       if (action == 'query') {
-        console.log('WE ARE QUERYING');
         if (this.searching) {
           this.getSearchEvaluation();
         } else {
-          console.log('NOT SEARCHING');
           this.itemsPerPageShowing = this.pagination.itemsPerPage;
           const {offset, limit} = this.getOffSetLimit();
-          const params = {offset: offset, limit: limit, order: this.sortOrder};
-          console.log(`Querying db with these params (updateItemsPerPage): ${JSON.stringify(params,null,2)}`);
-          
+          const params: IEvalPaginationParams = {
+            offset: offset,
+            limit: limit,
+            order: this.sortOrder
+          };
+
           // Call the Database
           await this.getEvaluations(params);
           this.evaluationsLoaded = EvaluationModule.allEvaluations;
           this.evaluationsCount = EvaluationModule.evaluationsCount;
-
-          console.log(`total evaluationsLoaded are: ${this.evaluationsLoaded.length}`)
-          console.log(`total evaluationsCount are: ${this.evaluationsCount}`)  
         }
       } else if (action == 'slice') {
-        console.log('WE ARE SLICING');
         this.itemsPerPageShowing = this.pagination.itemsPerPage;
 
         EvaluationModule.context.commit('SET_LOADING', true);
-        const newEvaluations = this.evaluationsLoaded.slice(0, this.pagination.itemsPerPage);
+        const newEvaluations = this.evaluationsLoaded.slice(
+          0,
+          this.pagination.itemsPerPage
+        );
         EvaluationModule.context.commit('SET_ALL_EVALUATION', newEvaluations);
-        //EvaluationModule.context.commit('SET_ALL_EVALUATION_COUNT', newEvaluations.length);
         this.evaluationsLoaded = EvaluationModule.allEvaluations;
         EvaluationModule.context.commit('SET_LOADING', false);
-        
-        // 
-        // console.log(`BEFORE -> total evaluationsLoaded are: ${this.evaluationsLoaded.length}`)
-        // 
-        // console.log(`AFTER -> total evaluationsLoaded are: ${this.evaluationsLoaded.length}`)
-        //DatabaseReader.allEvaluations();
-        
-        //this.evaluationsLoaded = this.evaluationsLoaded.slice(this.pagination.itemsPerPage);
-      } else {
-        console.log(`DOING NOTHING - action is ${action}`);
       }
     }
-
-    console.log(`pagination is (updateItemsPerPage 2): ${JSON.stringify(this.pagination,null,2)}`);
-    console.log('------UPDATE PAGE ITEMS PER OUT-------------');
   }
 
   /*
@@ -653,10 +604,6 @@ export default class LoadFileList extends Vue {
     totalRec = this.evaluationsCount
   */
   getAction(): string {
-    console.log(`ASKING = ${this.pagination.itemsPerPage}`);
-    console.log(`SHOWING = ${this.itemsPerPageShowing}`);
-    console.log(`TOTALCOUNT = ${this.evaluationsCount}`);
-
     let action = 'none';
     if (this.pagination.itemsPerPage < this.itemsPerPageShowing) {
       action = 'slice';
@@ -664,19 +611,7 @@ export default class LoadFileList extends Vue {
       if (this.itemsPerPageShowing <= this.evaluationsCount) {
         action = 'query';
       }
-    }      
-
-    // if (
-    //   this.pagination.itemsPerPage < this.itemsPerPageShowing && 
-    //   this.itemsPerPageShowing == this.evaluationsCount
-    // ) {
-    //   action = 'slice';
-    // } else if (
-    //   this.pagination.itemsPerPage > this.itemsPerPageShowing && 
-    //   this.itemsPerPageShowing < this.evaluationsCount
-    // ) {
-    //   action = 'query';
-    // }
+    }
 
     return action;
   }
@@ -746,4 +681,3 @@ export default class LoadFileList extends Vue {
   font-size: 0.96rem;
 }
 </style>
-

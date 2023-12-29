@@ -104,6 +104,7 @@ import {Sample, samples, fetchSample} from '@/utilities/sample_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 
+// Needed to render the show-select
 @Component({
   components: {}
 })
@@ -176,14 +177,6 @@ export default class SampleList extends Vue {
 .card-outter {
   position: absolute;
   bottom: 0;
-}
-
-.vertical-center {
-  margin: 0;
-  position: absolute;
-  top: 50%;
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
 }
 
 .page-of-pages-div {
