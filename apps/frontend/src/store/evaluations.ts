@@ -42,28 +42,27 @@ export class Evaluation extends VuexModule {
         return this.allEvaluations.find((e) => {
           return e.id === file.database_id?.toString();
         });
-      } catch(err) {
+      } catch (err) {
         return false;
       }
     };
   }
 
   get totalEvaluation(): Function {
-    return () => {this.evaluationsCount}
+    return () => {
+      this.evaluationsCount;
+    };
   }
 
   @Action
   async getAllEvaluations(params: IEvalPaginationParams): Promise<void> {
-    console.log(`evaluations.ts -> params are: ${JSON.stringify(params,null,2)}`)    
+    this.context.commit('SET_LOADING', true);
     return axios
       .get<IEvaluationResponse>('/evaluations', {params})
       .then(({data}) => {
-        const { totalCount, evaluations } = data;
-
+        const {totalCount, evaluations} = data;
         this.context.commit('SET_ALL_EVALUATION', evaluations);
         this.context.commit('SET_ALL_EVALUATION_COUNT', totalCount);
-
-        console.log(`evaluations.ts -> this.evaluationsCount 2-> data is: ${this.evaluationsCount}`)
       })
       .finally(() => {
         this.context.commit('SET_LOADING', false);
@@ -82,7 +81,6 @@ export class Evaluation extends VuexModule {
         this.loadEvaluation(id)
           .then(async (evaluation) => {
             if (await InspecIntakeModule.isHDF(evaluation.data)) {
-console.log(`evaluations.ts load_results() -> ID isHDF: ${id} `),
               InspecIntakeModule.loadText({
                 text: JSON.stringify(evaluation.data),
                 filename: evaluation.filename,
@@ -96,7 +94,6 @@ console.log(`evaluations.ts load_results() -> ID isHDF: ${id} `),
                   SnackbarModule.failure(err);
                 });
             } else if (evaluation.data) {
-console.log(`ID IS NOT isHDF: ${id} `)
               const inputFile: FileLoadOptions = {
                 filename: evaluation.filename
               };

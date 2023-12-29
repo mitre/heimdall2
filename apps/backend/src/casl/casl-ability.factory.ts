@@ -1,9 +1,9 @@
 import {
   AbilityBuilder,
+  createMongoAbility,
   ExtractSubjectType,
   InferSubjects,
-  MongoAbility,
-  createMongoAbility
+  MongoAbility
 } from '@casl/ability';
 import {Injectable} from '@nestjs/common';
 import {Evaluation} from '../evaluations/evaluation.model';
@@ -54,10 +54,9 @@ export type AppAbility = MongoAbility<PossibleAbilities>;
 
 @Injectable()
 export class CaslAbilityFactory {
-  createForUser(user: User): MongoAbility  {
+  createForUser(user: User): MongoAbility {
     const {can, cannot, build} = new AbilityBuilder(createMongoAbility);
     if (user.role === 'admin') {
-      console.log("WE ARE AN ADMIN")
       // all is a special keyword in CASL that represents "any subject".
       // read-write access to everything
       can(Action.Manage, 'all');
@@ -101,7 +100,7 @@ export class CaslAbilityFactory {
     });
 
     can<EvaluationQuery>([Action.Read], Evaluation, {
-     'groups.users.id': user.id
+      'groups.users.id': user.id
     });
 
     can<EvaluationQuery>([Action.Manage], Evaluation, {
@@ -119,9 +118,8 @@ export class CaslAbilityFactory {
   // This provides the ability to use the same codepath for validating
   // user abilities and non-registered user abilities. Useful for the
   // few anonymous endpoints we have.
-  createForAnonymous(): MongoAbility {    
+  createForAnonymous(): MongoAbility {
     const {cannot, build} = new AbilityBuilder(createMongoAbility);
-
     cannot(Action.Manage, 'all');
 
     return build();

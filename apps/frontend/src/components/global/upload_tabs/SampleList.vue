@@ -16,68 +16,77 @@
             clearable
             hide-details="auto"
           />
-          <div class="d-flex flex-column" >
-            <v-data-table 
+          <div class="d-flex flex-column">
+            <v-data-table
               v-model="selectedFiles"
               data-cy="loadFileList"
-              class="pb-8 table"  
+              class="pb-8 table"
               dense
               show-select
               fixed-header
-              mobile-breakpoint="0" 
+              mobile-breakpoint="0"
               :headers="headers"
               :items="samples"
-              :search="search" 
+              :search="search"
               :sort-by.sync="sortBy"
               :sort-desc="sortDesc"
               :loading="loading"
               :item-key="fileKey"
               :height="tableHight"
-              :headerProps="headerprops"
+              :header-props="headerprops"
               :footer-props="{
                 showFirstLastPage: true,
                 firstIcon: 'mdi-page-first',
                 lastIcon: 'mdi-page-last',
                 prevIcon: 'mdi-chevron-left-circle-outline',
                 nextIcon: 'mdi-chevron-right-circle-outline',
-                itemsPerPageText: 'Rows per page:',
+                itemsPerPageText: 'Rows per page:'
               }"
             >
               <!-- Customize the sort icon-->
-              <template v-slot:header.filename="{ header }">
+              <template #[`header.filename`]="{header}">
                 {{ header.text.toUpperCase() }}
-                <v-icon v-if="header.sortable" class="v-data-table-header__icon page-of-pages-div" medium>mdi-sort</v-icon>                
+                <v-icon
+                  v-if="header.sortable"
+                  class="v-data-table-header__icon page-of-pages-div"
+                  medium
+                >
+                  mdi-sort
+                </v-icon>
               </template>
 
               <!-- Customize pagination -->
-              <template v-slot:footer="{ props }">
+              <template #footer="{props}">
                 <div class="pr-10 text-right page-of-pages-div">
-                  <b>Page {{ props.pagination.page }} of {{ props.pagination.pageCount }}</b>
+                  <b>
+                    Page {{ props.pagination.page }} of
+                    {{ props.pagination.pageCount }}
+                  </b>
                 </div>
               </template>
-            
+
               <!-- Customize the display text -->
               <template #[`item.filename`]="{item}">
-                <span  class="cursor-pointer" @click="load_samples([item])">
+                <span class="cursor-pointer" @click="load_samples([item])">
                   {{ item.filename }}
                 </span>
               </template>
             </v-data-table>
-            
+
             <!-- Load selected scan -->
             <v-tooltip top>
-              <template v-slot:activator="{ on, attrs }">
+              <template #activator="{on, attrs}">
                 <v-btn
                   v-bind="attrs"
-                  v-on="on"
                   block
                   class="card-outter"
                   :disabled="loading"
+                  v-on="on"
                   @click="load_samples(selectedFiles)"
                 >
                   Load Selected
                   <v-icon class="pl-2">mdi-file-download</v-icon>
-                </v-btn>              
+                </v-btn>
               </template>
               <span>Load selected sample evaluation(s)</span>
             </v-tooltip>
@@ -98,9 +107,7 @@ import Component from 'vue-class-component';
 @Component({
   components: {}
 })
-
 export default class SampleList extends Vue {
-
   samples: Sample[] = samples; // Get the samples from utilities
   selectedFiles: Sample[] = [];
 
@@ -114,7 +121,7 @@ export default class SampleList extends Vue {
     }
   ];
 
-  sortBy = "filename";
+  sortBy = 'filename';
   fileKey = 'filename';
   sortDesc = false;
   loading = false;
@@ -123,13 +130,12 @@ export default class SampleList extends Vue {
   searchItem = '';
 
   headerprops = {
-    "sort-icon": 'mdi-dot',    // Hack to hide the default sort icon
-    "sort-by-text": "filename" // used when rendering the mobile view
-  }
+    'sort-icon': 'mdi-dot', // Hack to hide the default sort icon
+    'sort-by-text': 'filename' // used when rendering the mobile view
+  };
 
   // Fires when user selects entries and loads them into the visualization panel
   load_samples(selectedSamples: Sample[]) {
-
     if (selectedSamples.length != 0) {
       const promises: Promise<FileID | FileID[]>[] = [];
       this.loading = true;
@@ -145,7 +151,6 @@ export default class SampleList extends Vue {
 
       Promise.all(promises)
         .then((fileIds: (FileID | FileID[])[]) => {
-          console.log(`file id is ${fileIds}`)
           this.$emit('got-files', fileIds.flat(2));
         })
         .catch((error) => {
@@ -156,7 +161,9 @@ export default class SampleList extends Vue {
           this.selectedFiles = [];
         });
     } else {
-      SnackbarModule.notify("Please select a sample for viewing in the visualization panel")
+      SnackbarModule.notify(
+        'Please select a sample for viewing in the visualization panel'
+      );
     }
   }
 }
@@ -183,11 +190,11 @@ export default class SampleList extends Vue {
   color: deepskyblue !important;
 }
 .table >>> th {
-  font-size:0.95rem !important;
+  font-size: 0.95rem !important;
 }
 .table >>> .v-data-footer__select,
 .table >>> .v-select__selection,
 .table >>> .v-data-footer__pagination {
-  font-size:0.90rem
+  font-size: 0.96rem;
 }
 </style>

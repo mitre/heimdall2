@@ -1,4 +1,5 @@
 import {ForbiddenError, Subject} from '@casl/ability';
+import {IEvalPaginationParams} from '@heimdall/interfaces';
 import {
   BadRequestException,
   Body,
@@ -30,14 +31,12 @@ import {User} from '../users/user.model';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
 import {EvaluationDto, IEvaluationResponse} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
-import {EvaluationsService} from './evaluations.service';
-import {IEvalPaginationParams} from '@heimdall/interfaces';
 import {Evaluation} from './evaluation.model';
+import {EvaluationsService} from './evaluations.service';
 
 @Controller('evaluations')
 @UseInterceptors(LoggingInterceptor)
 export class EvaluationsController {
-
   constructor(
     private readonly evaluationsService: EvaluationsService,
     private readonly groupsService: GroupsService,
@@ -75,60 +74,45 @@ export class EvaluationsController {
 
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Get()
-  async findAndCountAll(@Query() params: IEvalPaginationParams, @Request() request: {user: User}): Promise<IEvaluationResponse> {
-    console.log('HERE @GET evaluation.controller.ts - findAndCountAll')
-    // console.log(`HERE @GET findALL user email is: ${JSON.stringify(request.user.email,null,2)}`)
-    // console.log(`evaluation.controllers.ts -> params are ${JSON.stringify(params,null,2)}`)
-
+  async findAndCountAll(
+    @Query() params: IEvalPaginationParams,
+    @Request() request: {user: User}
+  ): Promise<IEvaluationResponse> {
     const abac = this.authz.abac.createForUser(request.user);
     let evaluations: Evaluation[] = [];
-    let totalItems: number = 0;
+    let totalItems = 0;
 
     if (params.useClause) {
-      let response = await this.evaluationsService.getEvaluationsWithClause(params, request.user.email);
+      const response = await this.evaluationsService.getEvaluationsWithClause(
+        params,
+        request.user.email,
+        request.user.role
+      );
       evaluations = response.evaluations;
       totalItems = response.totalItems;
     } else {
-      let response = await this.evaluationsService.getAllEvaluations(params, request.user.email, request.user.role);
+      const response = await this.evaluationsService.getAllEvaluations(
+        params,
+        request.user.email,
+        request.user.role
+      );
       evaluations = response.evaluations;
       totalItems = response.totalItems;
     }
-    console.log(`total records (returned from service) is: ${evaluations.length}`)
-///debug
-// console.log(`TOTALITEMS  is: ${totalItems}`)
-// console.log(`EVALUATIONS ARE (1): ${evaluations.length}`)
-// evaluations.forEach(function(value: {filename: any;}) {
-//   console.log(`    EVALUATIONS IS: ${JSON.stringify(value.filename,null,2)}`);
-// })
-//end debug
 
-    // Show public evaluations or those created by logged in user 
+    // Show public evaluations or those created by logged in user
     evaluations = evaluations.filter((evaluation: Subject) =>
-          abac.can(Action.Read, evaluation)
+      abac.can(Action.Read, evaluation)
     );
 
-    console.log(`total records (after filtering) is: ${evaluations.length}`)
-// debug
-// console.log(`EVALUATIONS ARE (2): ${evaluations.length}`)
-// evaluations.forEach(function(value: {filename: any;}) {
-//   console.log(`    EVALUATIONS IS: ${JSON.stringify(value.filename,null,2)}`);
-// })
-
-let test_1 = {evaluations: evaluations.map(
-  (evaluation: Evaluation) =>
-    new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
-), totalCount: totalItems};
-console.log(`test on map (totalItems) are: ${test_1.evaluations.length}`)
-//console.log(`test on map (evaluations) is: ${JSON.stringify(test_1.evaluations,null,2)}`)
-// console.log(`test on map (totalCount) is: ${JSON.stringify(test.evaluations.length)}`)
-// end debug
-
-    return { evaluations: evaluations.map(
-      (evaluation: Evaluation) =>
-        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
-    ), totalCount: totalItems};
+    return {
+      evaluations: evaluations.map(
+        (evaluation: Evaluation) =>
+          new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+      ),
+      totalCount: totalItems
+    };
   }
-
 
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Post()

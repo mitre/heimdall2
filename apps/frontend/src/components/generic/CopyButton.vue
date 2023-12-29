@@ -1,11 +1,14 @@
 <template>
-  <v-icon 
-    small class="mr-2" 
-    type="button" 
+  <v-icon
+    small
+    class="mr-2"
+    type="button"
     b-tooltip.hover
     :title="getTooltipTitle()"
     @click="copy"
-  >{{ icon }}</v-icon>
+  >
+    {{ icon }}
+  </v-icon>
 </template>
 
 <script lang="ts">

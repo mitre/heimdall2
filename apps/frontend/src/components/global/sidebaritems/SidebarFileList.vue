@@ -18,13 +18,17 @@
 
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
       <v-btn data-cy="saveFile" icon small :disabled="disable_saving">
-        <v-icon> mdi-content-save </v-icon>
+        <v-icon title="Save evaluation to the database">
+          mdi-content-save
+        </v-icon>
       </v-btn>
     </v-list-item-action>
 
     <v-list-item-action @click.stop="remove_file">
       <v-btn data-cy="closeFile" icon small>
-        <v-icon> mdi-close </v-icon>
+        <v-icon title="Remove evaluation from result set">
+          mdi-playlist-remove
+        </v-icon>
       </v-btn>
     </v-list-item-action>
   </v-list-item>

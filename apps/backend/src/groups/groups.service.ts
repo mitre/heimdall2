@@ -23,7 +23,10 @@ export class GroupsService {
       winston.format.timestamp({
         format: 'MMM-DD-YYYY HH:mm:ss Z'
       }),
-      winston.format.printf((info) => `${this.line}[${[info.timestamp]}] (Group Service): ${info.message}`)
+      winston.format.printf(
+        (info) =>
+          `${this.line}[${[info.timestamp]}] (Group Service): ${info.message}`
+      )
     )
   });
   constructor(

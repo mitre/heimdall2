@@ -5,7 +5,7 @@ import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 import {DatabaseService} from './database.service';
 
-const line = '________________________________________________\n'
+const line = '________________________________________________\n';
 const logger = winston.createLogger({
   transports: [new winston.transports.Console()],
   format: winston.format.combine(
@@ -15,9 +15,12 @@ const logger = winston.createLogger({
     winston.format.timestamp({
       format: 'MMM-DD-YYYY HH:mm:ss Z'
     }),
-    winston.format.errors({ stack: true }),
+    winston.format.errors({stack: true}),
     winston.format.align(),
-    winston.format.printf((info) => `${line}[${info.timestamp}] Query(${info.queryType}): ${info.message}`)
+    winston.format.printf(
+      (info) =>
+        `${line}[${info.timestamp}] Query(${info.queryType}): ${info.message}`
+    )
   )
 });
 

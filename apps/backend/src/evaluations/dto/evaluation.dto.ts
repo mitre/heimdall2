@@ -21,7 +21,7 @@ export class EvaluationDto implements IEvaluation {
   constructor(
     evaluation: Evaluation,
     editable = false,
-    shareURL: string | undefined = undefined   
+    shareURL: string | undefined = undefined
   ) {
     this.id = evaluation.id;
     this.filename = evaluation.filename;
@@ -54,5 +54,6 @@ export class EvaluationDto implements IEvaluation {
 }
 
 export interface IEvaluationResponse {
-  evaluations: EvaluationDto[], totalCount: number
+  evaluations: EvaluationDto[];
+  totalCount: number;
 }

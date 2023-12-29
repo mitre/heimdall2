@@ -1,6 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions, Op} from 'sequelize';
+import {FindOptions, Op, WhereOptions} from 'sequelize';
 import {DatabaseService} from '../database/database.service';
 import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -61,7 +61,7 @@ export class EvaluationsService {
     4: Using ORDER BY on top-level and nested columns, for that reason we need 
        to reference nested columns by utilizing the '$nested.column$' syntax.
        For that reason the params.order array can have 2 or 3 indices as
-       listed belows.
+       listed bellow.
 
        params.order values are as follows () represent index):
        length       (0)           (1)               (2)
@@ -103,14 +103,14 @@ export class EvaluationsService {
     return responseEvals;
   }
 
-  async getEvaluationsWithClause(params: IEvalPaginationParams, email: string): Promise<EvaluationsResponse> {
+  async getEvaluationsWithClause(params: IEvalPaginationParams, email: string, role: string): Promise<EvaluationsResponse> {
     console.log("---IN evaluation.services.ts getEvaluationsWithClause()")
 
     const responseEvals: EvaluationsResponse = {
       totalItems: 0,
       evaluations: []
     };
-    const whereClause = this.getWhereClauseSearch(params.searchFields!, params.operator!, email);
+    const whereClause = this.getWhereClauseSearch(params.searchFields!, params.operator!, email, role);
 
     await this.evaluationModel.findAll<Evaluation>(
      {
@@ -126,7 +126,7 @@ export class EvaluationsService {
         where: whereClause
       }
     ).then(async data => {
-      let totalItems = await this.searchItemsCount(whereClause);
+      const totalItems = await this.searchItemsCount(whereClause);
       // console.log(`totalItems (SEARCH) is: ${totalItems}`)
       responseEvals.evaluations = data;
       responseEvals.totalItems = totalItems;
@@ -134,34 +134,42 @@ export class EvaluationsService {
     return responseEvals;
   }
 
-  getWhereClauseAll(role: string, email: string): {} {
-    let whereClause = [];
-    whereClause.push({ 'public': {[Op.eq]: 'true'} });
-    if (role == 'admin') {
-      whereClause.push({ 'public': {[Op.eq]: 'false'} });
-    } else {
-      whereClause.push({ '$user.email$': {[Op.like]: `${email}`} });
-    //   whereClause.push({ '$groups.users.email$': {[Op.like]: `${email}`} });
-    }
-    return {[Op.or]: whereClause}  
+  getWhereClauseAll(role: string, email: string): WhereOptions {
+    const whereClause = this.getWhereClauseBaseCriteria(role, email);
+    return {[Op.or]: whereClause};
   }
 
-  getWhereClauseSearch(fields: string[], operation: string, email: string): {} {
-    let searchFields = []
+  getWhereClauseBaseCriteria(role: string, email: string): WhereOptions {
+    let baseCriteria = [];
+    baseCriteria.push({'public': {[Op.eq]: 'true'}});
+    if (role == 'admin') {
+      baseCriteria.push({'public': {[Op.eq]: 'false'}});
+    } else {
+      baseCriteria.push({'$user.email$': {[Op.like]: `${email}`}});
+    //   whereClause.push({ '$groups.users.email$': {[Op.like]: `${email}`} });
+    }
+    return baseCriteria;   
+  }
+  getWhereClauseSearch(fields: string[], operation: string, email: string, role: string): WhereOptions {
+    let searchFields = [];
+    let baseCriteria = this.getWhereClauseBaseCriteria(role, email);
+
     if (fields[0] != '()') {
-        searchFields.push({ 'filename': { [Op.iRegexp]: `${fields![0]}` } })
+      searchFields.push({'filename': {[Op.iRegexp]: `${fields[0]}`}});
     }
     if (fields[1] != '()') {
-      searchFields.push({ '$groups.name$': { [Op.iRegexp]: `${fields![1]}` } })
+      searchFields.push({'$groups.name$': {[Op.iRegexp]: `${fields[1]}`}});
     }
     if (fields[2] != '()') {
-      searchFields.push({ '$evaluationTags.value$': { [Op.iRegexp]: `${fields![2]}` } })
+      searchFields.push({'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}});
     }
-
+  
     if (operation == 'AND') {
-      return {[Op.and]: searchFields}
+      // Expected outcome: an OR baseCriteria AND an AND searchFields
+      return {[Op.or]: baseCriteria, [Op.and]: searchFields};
     } else {
-      return {[Op.or]: searchFields}  
+      // Expected outcome: an OR baseCriteria AND an OR searchFields
+      return {[Op.and]: [{[Op.or]: baseCriteria}, {[Op.and]: {[Op.or]: searchFields}}]};
     }
   }
 
@@ -169,32 +177,28 @@ export class EvaluationsService {
     if (role == 'admin') {
       return this.evaluationModel.count();
     } else {
-      return this.evaluationModel.count(
-        {
-          include: User,
-          where: {
-            [Op.or]: [
-              { 'public': {[Op.eq]: 'true'} },
-              { '$user.email$': {[Op.like]: `${userEmail}`} }
-            ]
-          },
-          //where: { '$user.email$': {[Op.like]: `${userEmail}`} },
-          distinct: true,
-          col: 'id'
-        }
-      );      
+      return this.evaluationModel.count({
+        include: User,
+        where: {
+          [Op.or]: [
+            {'public': {[Op.eq]: 'true'}},
+            {'$user.email$': {[Op.like]: `${userEmail}`}}
+          ]
+        },
+        //where: { '$user.email$': {[Op.like]: `${userEmail}`} },
+        distinct: true,
+        col: 'id'
+      });
     }
   }
 
-  async searchItemsCount(whereClause: {}): Promise<number> {
-    return this.evaluationModel.count(
-      {
-        include: [EvaluationTag, User, {model: Group, include: [User]}],
-        where: whereClause,
-        distinct: true,
-        col: 'id'
-      }
-    );
+  async searchItemsCount(whereClause: WhereOptions): Promise<number> {
+    return this.evaluationModel.count({
+      include: [EvaluationTag, User, {model: Group, include: [User]}],
+      where: whereClause,
+      distinct: true,
+      col: 'id'
+    });
   }
 
   async count(): Promise<number> {

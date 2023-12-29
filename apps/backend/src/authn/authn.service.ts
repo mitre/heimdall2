@@ -29,7 +29,10 @@ export class AuthnService {
       winston.format.timestamp({
         format: this.loggingTimeFormat
       }),
-      winston.format.printf((info) => `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`)
+      winston.format.printf(
+        (info) =>
+          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`
+      )
     )
   });
 

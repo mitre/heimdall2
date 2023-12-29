@@ -44,14 +44,10 @@
           <FileReader @got-files="got_files" />
         </v-tab-item>
 
-        <!-- <v-tab-item value="uploadtab-local">
-          <DatabaseReader :refresh="visible" @got-files="got_files" />
-        </v-tab-item> -->
-
         <v-tab-item v-if="serverMode" value="uploadtab-database">
           <DatabaseReader :refresh="visible" @got-files="got_files" />
         </v-tab-item>
-       
+
         <v-tab-item value="uploadtab-sample">
           <SampleList @got-files="got_files" />
         </v-tab-item>
@@ -118,9 +114,6 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     return (
       this.activeTab === 'uploadtab-database' || this.$vuetify.breakpoint.mobile
     );
-    // return (
-    //   this.activeTab === 'uploadtab-local' || this.$vuetify.breakpoint.mobile
-    // );
   }
 
   // Handles change in tab

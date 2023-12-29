@@ -29,9 +29,9 @@ export class LoggingInterceptor implements NestInterceptor {
       }),
       winston.format.printf(
         (info) =>
-          `${this.line}[${[info.timestamp]}] (Interceptor): ${info.ip} ${info.referer} ${info.userAgent} ${
-            info.user
-          } ${info.message}`
+          `${this.line}[${[info.timestamp]}] (Interceptor): ${info.ip} ${
+            info.referer
+          } ${info.userAgent} ${info.user} ${info.message}`
       )
     )
   });
