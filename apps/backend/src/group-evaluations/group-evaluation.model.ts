@@ -23,11 +23,11 @@ export class GroupEvaluation extends Model {
 
   @ForeignKey(() => Group)
   @Column(DataType.BIGINT)
-  groupId!: string;
+  declare groupId: string;
 
   @ForeignKey(() => Evaluation)
   @Column(DataType.BIGINT)
-  evaluationId!: string;
+  declare evaluationId: string;
 
   @CreatedAt
   @AllowNull(false)

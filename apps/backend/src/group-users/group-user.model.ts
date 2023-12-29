@@ -25,15 +25,15 @@ export class GroupUser extends Model {
   @AllowNull(false)
   @Default('member')
   @Column(DataType.STRING)
-  role!: string;
+  declare role: string;
 
   @ForeignKey(() => Group)
   @Column(DataType.BIGINT)
-  groupId!: string;
+  declare groupId: string;
 
   @ForeignKey(() => User)
   @Column(DataType.BIGINT)
-  userId!: string;
+  declare userId: string;
 
   @CreatedAt
   @AllowNull(false)

@@ -21,7 +21,7 @@ export class EvaluationTag extends Model {
 
   @AllowNull(false)
   @Column
-  value!: string;
+  declare value: string;
 
   @AllowNull(false)
   @Column
@@ -33,8 +33,8 @@ export class EvaluationTag extends Model {
 
   @ForeignKey(() => Evaluation)
   @Column(DataType.BIGINT)
-  evaluationId!: string;
+  declare evaluationId: string;
 
   @BelongsTo(() => Evaluation)
-  evaluation!: Evaluation;
+  declare evaluation: Evaluation;
 }
