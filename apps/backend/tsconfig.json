@@ -1,9 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "declaration": true,
     "removeComments": true,
-    "emitDecoratorMetadata": true,
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,

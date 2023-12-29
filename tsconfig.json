@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-    "module": "node16",
     "declaration": true,
-    "removeComments": true,
     "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
     "experimentalDecorators": true,
+    "module": "node16",
     "moduleResolution": "node16",
-    "sourceMap": true,
     "noImplicitAny": true,
+    "removeComments": true,
     "resolveJsonModule": true,
+    "sourceMap": true,
     "useUnknownInCatchVariables": false
   },
   "include": [
