@@ -1,42 +1,49 @@
 <template>
   <v-container fluid>
     <v-card style="position: relative" class="elevation-0">
-      <v-row class="pt-1" justify="space-between">
-        <v-card-subtitle>Easily load any supported Data Format</v-card-subtitle>
-        <v-tooltip bottom>
-          <template #activator="{on, attrs}">
-            <v-icon class="pr-2" :attrs="attrs" v-on="on"
-              >mdi-information-outline</v-icon
-            >
-          </template>
-          <span>Supported Formats:</span>
-          <ul>
-            <li>InSpec/Heimdall Data Format</li>
-            <li>AWS Security Finding Format (ASFF)</li>
-            <li>Burp Suite</li>
-            <li>Checklist</li>
-            <li>DBProtect</li>
-            <li>Fortify</li>
-            <li>Golang Security Checker (GoSec)</li>
-            <li>Ion Channel</li>
-            <li>JFrog Xray</li>
-            <li>Nessus</li>
-            <li>Netsparker</li>
-            <li>Nikto</li>
-            <li>OWASP ZAP</li>
-            <li>Prisma</li>
-            <li>Static Analysis Results Interchange Format (SARIF)</li>
-            <li>Scoutsuite</li>
-            <li>Snyk</li>
-            <li>Tenable (API)</li>
-            <li>Twistlock</li>
-            <li>Veracode</li>
-            <li>
-              XCCDF Results (Supports native OpenSCAP output and SCC output)
-            </li>
-          </ul>
-        </v-tooltip>
-      </v-row>
+      <!-- <v-row class="pt-1" justify="space-between"> -->
+      <v-sheet class="d-flex mb-6 bg-surface-variant">
+        <v-sheet class="me-auto">
+          <v-card-subtitle>
+            Easily load any supported Data Format
+          </v-card-subtitle>
+        </v-sheet>
+        <v-sheet class="pr-2 primary--text">Supported Formats:</v-sheet>
+        <v-sheet>
+          <v-tooltip bottom>
+            <template #activator="{on, attrs}">
+              <v-icon class="pr-2" color="primary" :attrs="attrs" v-on="on"
+                >mdi-information-outline</v-icon
+              >
+            </template>
+            <span>Supported Formats:</span>
+            <ul>
+              <li>InSpec/Heimdall Data Format</li>
+              <li>AWS Security Finding Format (ASFF)</li>
+              <li>Burp Suite</li>
+              <li>Checklist</li>
+              <li>DBProtect</li>
+              <li>Fortify</li>
+              <li>Golang Security Checker (GoSec)</li>
+              <li>Ion Channel</li>
+              <li>JFrog Xray</li>
+              <li>Nessus</li>
+              <li>Netsparker</li>
+              <li>Nikto</li>
+              <li>OWASP ZAP</li>
+              <li>Prisma</li>
+              <li>Static Analysis Results Interchange Format (SARIF)</li>
+              <li>Scoutsuite</li>
+              <li>Snyk</li>
+              <li>Tenable (API)</li>
+              <li>Twistlock</li>
+              <li>Veracode</li>
+              <li>XCCDF Results (native OpenSCAP and SCC outputs)</li>
+            </ul>
+          </v-tooltip>
+        </v-sheet>
+      </v-sheet>
+      <!-- </v-row> -->
       <v-container style="margin-top: 5%">
         <v-row>
           <v-col cols="12" align="center">

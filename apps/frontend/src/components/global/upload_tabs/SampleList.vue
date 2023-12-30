@@ -1,10 +1,37 @@
 <template>
   <v-card class="elevation-0">
-    <v-card-subtitle>
-      Samples to show the power of the Heimdall application and supported HDF
-      formats
-    </v-card-subtitle>
+    <v-row class="pt-5" justify="space-between">
+      <v-card-subtitle>
+        Samples to show the power of the Heimdall application and supported OHDF
+        formats.
+      </v-card-subtitle>
 
+      <v-btn
+        class="pr-6"
+        icon
+        style="cursor: pointer"
+        @click="isActiveDialog = true"
+      >
+        <v-icon b-tooltip.hover title="Filtering Instructions" color="primary">
+          mdi-information-outline
+        </v-icon>
+      </v-btn>
+
+      <v-dialog v-model="isActiveDialog" width="500">
+        <v-card>
+          <v-card-title>Filter Instructions</v-card-title>
+          <v-card-text class="text-h7">
+            Sample entries can be filtered by entering the value into the search
+            input text field. The result of the filtering process will include
+            entries not currently visible (on another page).
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="isActiveDialog = false">Close Dialog</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
     <v-container class="mx-0 px-0">
       <div>
         <div class="ma-0 pa-0">
@@ -112,6 +139,8 @@ import Component from 'vue-class-component';
 export default class SampleList extends Vue {
   samples: Sample[] = samples; // Get the samples from utilities
   selectedFiles: Sample[] = [];
+
+  isActiveDialog = false;
 
   headers: Object[] = [
     {

@@ -1,17 +1,17 @@
 <template>
   <v-container class="mx-0 px-0" fluid>
-    <v-row class="pt-3" justify="space-between">
+    <v-row class="pt-2" justify="space-between">
       <v-card-subtitle>
         View files maintained (stored) in the Heimdall Server backend database.
       </v-card-subtitle>
 
       <v-btn
-        class="pr-4"
+        class="pr-6"
         icon
         style="cursor: pointer"
         @click="isActiveDialog = true"
       >
-        <v-icon b-tooltip.hover title="Search Instructions" color="blue">
+        <v-icon b-tooltip.hover title="Search Instructions" color="primary">
           mdi-information-outline
         </v-icon>
       </v-btn>
@@ -29,8 +29,8 @@
               <template #default>
                 <thead>
                   <tr>
-                    <th class="text-left">Logic</th>
-                    <th class="text-left">Outcome</th>
+                    <th class="text-left text-h6">Logic</th>
+                    <th class="text-left text-h6">Outcome</th>
                   </tr>
                 </thead>
                 <tbody>
