@@ -594,9 +594,9 @@ export default class LoadFileList extends Vue {
   /*
     Action is based on the following:
     
-    asking < showing >, =, or < totalRec -> action = slice
-    asking > showing < totalRec -> action = query
-    All other permutation       -> action = none
+    asking < showing             -> action = slice
+    asking > showing <= totalRec -> action = query
+    All other permutation        -> action = none
 
     Where:
     asking   = this.pagination.itemsPerPage

@@ -1,8 +1,69 @@
 <template>
   <v-container class="mx-0 px-0" fluid>
-    <v-card-subtitle>
-      View files maintained (stored) in the Heimdall Server backend database.
-    </v-card-subtitle>
+    <v-row class="pt-3" justify="space-between">
+      <v-card-subtitle>
+        View files maintained (stored) in the Heimdall Server backend database.
+      </v-card-subtitle>
+
+      <v-btn
+        class="pr-4"
+        icon
+        style="cursor: pointer"
+        @click="isActiveDialog = true"
+      >
+        <v-icon b-tooltip.hover title="Search Instructions" color="blue">
+          mdi-information-outline
+        </v-icon>
+      </v-btn>
+
+      <v-dialog v-model="isActiveDialog" persistent width="500">
+        <v-card>
+          <v-card-title>Search Instructions</v-card-title>
+          <v-card-text>
+            Values to be search don't need to match exactly, if searching for a
+            file name "compliant_audit_scan.nessus", the input value can be any
+            part of the name. This applies to all fields regardless of the logic
+            selected. Search logic can be inclusive or exclusive. The following
+            table provides the expected outcomes base on the logic selected.
+            <v-simple-table fixed-header>
+              <template #default>
+                <thead>
+                  <tr>
+                    <th class="text-left">Logic</th>
+                    <th class="text-left">Outcome</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>AND</td>
+                    <td>
+                      Values provided in the search fields (file, group, or tag
+                      name) are logically inclusive, there is, all field values
+                      provided must be evaluated to true for a record to be
+                      returned.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>OR</td>
+                    <td>
+                      Values provided in the search fields (file, group, or tag
+                      name) are not logically inclusive, there is, any value
+                      provided evaluates to true, records matching the field
+                      value provided are returned.
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="isActiveDialog = false">Close Dialog</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+
     <LoadFileList
       :headers="headers"
       :evaluations-loaded="allEvaluations"
@@ -37,6 +98,8 @@ import Vue from 'vue';
 })
 export default class DatabaseReader extends Vue {
   @Prop({default: false}) readonly refresh!: boolean;
+
+  isActiveDialog = false;
 
   headers: Object[] = [
     {

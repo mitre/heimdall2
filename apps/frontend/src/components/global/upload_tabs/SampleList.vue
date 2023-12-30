@@ -4,6 +4,7 @@
       Samples to show the power of the Heimdall application and supported HDF
       formats
     </v-card-subtitle>
+
     <v-container class="mx-0 px-0">
       <div>
         <div class="ma-0 pa-0">
@@ -121,6 +122,8 @@ export default class SampleList extends Vue {
       value: 'filename'
     }
   ];
+
+  isActive = false;
 
   sortBy = 'filename';
   fileKey = 'filename';
