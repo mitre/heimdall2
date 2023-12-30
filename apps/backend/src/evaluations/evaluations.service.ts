@@ -22,6 +22,13 @@ export class EvaluationsService {
     private readonly databaseService: DatabaseService
   ) {}
 
+  async findAll(): Promise<Evaluation[]> {
+    return this.evaluationModel.findAll<Evaluation>({
+      attributes: {exclude: ['data']},
+      include: [EvaluationTag, User, {model: Group, include: [User]}]
+    });
+  }
+
   /*
     NOTES: These notes are about the getAllEvaluations() and the 
            getEvaluationsWithClause() methods

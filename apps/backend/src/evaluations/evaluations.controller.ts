@@ -73,6 +73,22 @@ export class EvaluationsController {
   }
 
   @UseGuards(APIKeyOrJwtAuthGuard)
+  @Get('e2e')
+  async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
+    const abac = this.authz.abac.createForUser(request.user);
+    let evaluations = await this.evaluationsService.findAll();
+
+    evaluations = evaluations.filter((evaluation) =>
+      abac.can(Action.Read, evaluation)
+    );
+
+    return evaluations.map(
+      (evaluation) =>
+        new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+    );
+  }
+
+  @UseGuards(APIKeyOrJwtAuthGuard)
   @Get()
   async findAndCountAll(
     @Query() params: IEvalPaginationParams,

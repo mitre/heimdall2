@@ -629,7 +629,6 @@ export default class LoadFileList extends Vue {
       order: this.sortOrder
     });
     this.evaluationsLoaded = EvaluationModule.allEvaluations;
-    //this.totalItemsPerPage = EvaluationModule.evaluationsCount;
   }
 
   editItem(item: IEvaluation) {

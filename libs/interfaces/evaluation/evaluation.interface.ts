@@ -28,4 +28,3 @@ export interface IEvalPaginationParams {
   operator?: string;
   searchFields?: Array<string>;
 }
-

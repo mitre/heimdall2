@@ -15,7 +15,6 @@ import {
   MINUTE_IN_MILLISECONDS
 } from './constants/users-test.constant';
 import {login, register} from './helpers/users.helper';
-import {IEvalPaginationParams} from '@heimdall/interfaces';
 
 describe('/evaluations', () => {
   let app: INestApplication;
@@ -44,11 +43,6 @@ describe('/evaluations', () => {
   });
 
   describe('Unauthenticated', () => {
-    const params: IEvalPaginationParams = {
-      offset: 0,
-      limit: 10,
-      order: ['createdAt', 'DESC']
-    };
     describe('Create', () => {
       it('should return 401 when unauthenticated', async () => {
         await request(app.getHttpServer())
@@ -62,7 +56,7 @@ describe('/evaluations', () => {
     describe('Read', () => {
       it('should return 401 when unauthenticated', async () => {
         await request(app.getHttpServer())
-          .get('/evaluations' + params)
+          .get('/evaluations/e2e')
           .expect(HttpStatus.UNAUTHORIZED);
       });
     });
@@ -90,11 +84,6 @@ describe('/evaluations', () => {
     let userId: string;
     let jwtToken: string;
 
-    const params: IEvalPaginationParams = {
-      offset: 0,
-      limit: 10,
-      order: ['createdAt', 'DESC']
-    };
     beforeEach(async () => {
       await register(app, CREATE_USER_DTO_TEST_OBJ);
 
@@ -126,7 +115,6 @@ describe('/evaluations', () => {
             expect(updatedDelta).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
             expect(response.body.id).toBeDefined();
             expect(response.body.filename).toEqual(EVALUATION_1.filename);
-            //expect(response.body.data).toEqual(EVALUATION_1.data);
             expect(response.body.evaluationTags).toEqual(
               EVALUATION_1.evaluationTags
             );
@@ -198,7 +186,7 @@ describe('/evaluations', () => {
 
         it('should get all evaluations', async () => {
           await request(app.getHttpServer())
-            .get('/evaluations' + params)
+            .get('/evaluations/e2e')
             .set('Authorization', 'bearer ' + jwtToken)
             .expect(HttpStatus.OK)
             .then((response) => {
@@ -226,7 +214,6 @@ describe('/evaluations', () => {
               expect(updatedDelta).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
               expect(response.body.updatedAt);
               expect(response.body.data).toEqual(evaluation.data);
-              //expect(response.body.version).toEqual(evaluation.version);
             });
         });
       });
