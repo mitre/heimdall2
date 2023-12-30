@@ -1,7 +1,6 @@
 <template>
   <v-container fluid>
     <v-card style="position: relative" class="elevation-0">
-      <!-- <v-row class="pt-1" justify="space-between"> -->
       <v-sheet class="d-flex mb-6 bg-surface-variant">
         <v-sheet class="me-auto">
           <v-card-subtitle>
@@ -43,7 +42,6 @@
           </v-tooltip>
         </v-sheet>
       </v-sheet>
-      <!-- </v-row> -->
       <v-container style="margin-top: 5%">
         <v-row>
           <v-col cols="12" align="center">
