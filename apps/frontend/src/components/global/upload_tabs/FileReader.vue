@@ -7,11 +7,12 @@
             Easily load any supported Data Format
           </v-card-subtitle>
         </v-sheet>
-        <v-sheet class="pr-2 pt-2 primary--text">Supported Formats:</v-sheet>
+        <v-sheet class="pr-1 pt-2 primary--text">Supported Formats:</v-sheet>
         <v-sheet>
           <v-btn
-            class="pr-4"
+            class="pa-3 pt-4"
             icon
+            small
             style="cursor: pointer"
             @click="isActiveDialog = true"
           >

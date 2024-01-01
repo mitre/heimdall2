@@ -5,18 +5,11 @@
         Samples to show the power of the Heimdall application and supported OHDF
         formats.
       </v-card-subtitle>
-
-      <v-btn
-        class="pr-6"
-        icon
-        style="cursor: pointer"
-        @click="isActiveDialog = true"
-      >
-        <v-icon b-tooltip.hover title="Filtering Instructions" color="primary">
+      <v-btn class="mr-8 ml-2 mt-2" icon small @click="isActiveDialog = true">
+        <v-icon b-tooltip.hover title="Filter Instructions" color="primary">
           mdi-information-outline
         </v-icon>
       </v-btn>
-
       <v-dialog v-model="isActiveDialog" width="500">
         <v-card>
           <v-card-title>Filter Instructions</v-card-title>

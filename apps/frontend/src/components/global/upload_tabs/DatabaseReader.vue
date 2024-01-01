@@ -6,8 +6,9 @@
       </v-card-subtitle>
 
       <v-btn
-        class="pr-6"
+        class="mr-8 ml-2 mt-2"
         icon
+        small
         style="cursor: pointer"
         @click="isActiveDialog = true"
       >

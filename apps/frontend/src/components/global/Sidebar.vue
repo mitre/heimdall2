@@ -17,8 +17,10 @@
         header-text="Results"
         :files="visible_evaluation_files"
         :all-selected="all_evaluations_selected"
+        :any-selected="any_evaluation_selected"
         :enable-compare-view="true"
         :compare-view-active="compareViewActive"
+        @remove-selected="removeSelectedEvaluation"
         @toggle-all="toggle_all_evaluations"
         @toggle-compare-view="compareView"
         @changed-files="$emit('changed-files')"
@@ -51,7 +53,7 @@ import {ServerModule} from '../../store/server';
   }
 })
 export default class Sidebar extends mixins(RouteMixin) {
-  @Prop({type: Boolean}) readonly value!: boolean;
+  @Prop({type: Boolean}) value!: boolean;
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
@@ -94,6 +96,10 @@ export default class Sidebar extends mixins(RouteMixin) {
     return FilteredDataModule.all_evaluations_selected;
   }
 
+  get any_evaluation_selected(): Boolean {
+    return FilteredDataModule.any_evaluation_selected;
+  }
+
   get all_profiles_selected(): Trinary {
     return FilteredDataModule.all_profiles_selected;
   }
@@ -124,6 +130,17 @@ export default class Sidebar extends mixins(RouteMixin) {
     if (this.current_route === 'compare') {
       this.navigateWithNoErrors('/results');
     }
+  }
+
+  removeSelectedEvaluation(): void {
+    const selectedFiles = FilteredDataModule.selected_file_ids;
+    selectedFiles.forEach((fileId) => {
+      InspecDataModule.removeFile(fileId);
+      // Remove any database files that may have been in the URL
+      // by calling the router and causing it to write the appropriate
+      // route to the URL bar
+      this.navigateWithNoErrors(`/${this.current_route}`);
+    });
   }
 }
 </script>
