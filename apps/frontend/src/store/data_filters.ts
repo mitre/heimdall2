@@ -276,10 +276,15 @@ export class FilteredData extends VuexModule {
     }
   }
 
+  // check to see if any evaluation is selected
+  get any_evaluation_selected(): boolean {
+    return this.selectedEvaluationIds.length > 0 ? true : false;
+  }
+
   /**
    * Parameterized getter.
    * Get all controls from all profiles from the specified file id.
-   * Utlizes the profiles getter to accelerate the file filter.
+   * Utilizes the profiles getter to accelerate the file filter.
    */
   get controls(): (filter: Filter) => readonly ContextualizedControl[] {
     /** Cache by filter */

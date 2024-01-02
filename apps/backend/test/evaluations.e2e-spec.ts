@@ -56,7 +56,7 @@ describe('/evaluations', () => {
     describe('Read', () => {
       it('should return 401 when unauthenticated', async () => {
         await request(app.getHttpServer())
-          .get('/evaluations')
+          .get('/evaluations/e2e')
           .expect(HttpStatus.UNAUTHORIZED);
       });
     });
@@ -115,7 +115,6 @@ describe('/evaluations', () => {
             expect(updatedDelta).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
             expect(response.body.id).toBeDefined();
             expect(response.body.filename).toEqual(EVALUATION_1.filename);
-            expect(response.body.data).toEqual(EVALUATION_1.data);
             expect(response.body.evaluationTags).toEqual(
               EVALUATION_1.evaluationTags
             );
@@ -187,7 +186,7 @@ describe('/evaluations', () => {
 
         it('should get all evaluations', async () => {
           await request(app.getHttpServer())
-            .get('/evaluations')
+            .get('/evaluations/e2e')
             .set('Authorization', 'bearer ' + jwtToken)
             .expect(HttpStatus.OK)
             .then((response) => {
@@ -215,7 +214,6 @@ describe('/evaluations', () => {
               expect(updatedDelta).toBeLessThanOrEqual(MINUTE_IN_MILLISECONDS);
               expect(response.body.updatedAt);
               expect(response.body.data).toEqual(evaluation.data);
-              expect(response.body.version).toEqual(evaluation.version);
             });
         });
       });

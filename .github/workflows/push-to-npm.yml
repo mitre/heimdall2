@@ -36,7 +36,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish HDF Converters to NPM
+      - name: Publish OHDF Converters to NPM
         if: always()
         run: npm publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz
         env:

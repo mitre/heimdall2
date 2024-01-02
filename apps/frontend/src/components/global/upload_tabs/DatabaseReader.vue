@@ -1,12 +1,76 @@
 <template>
-  <v-container class="mx-0 px-0" fluid style="height: 80vh">
-    <v-card-subtitle>
-      View files loaded into your organizations Heimdall Server instance.
-    </v-card-subtitle>
+  <v-container class="mx-0 px-0" fluid>
+    <v-row class="pt-2" justify="space-between">
+      <v-card-subtitle>
+        View files maintained (stored) in the Heimdall Server backend database.
+      </v-card-subtitle>
+
+      <v-btn
+        class="mr-8 ml-2 mt-2"
+        icon
+        small
+        style="cursor: pointer"
+        @click="isActiveDialog = true"
+      >
+        <v-icon b-tooltip.hover title="Search Instructions" color="primary">
+          mdi-information-outline
+        </v-icon>
+      </v-btn>
+
+      <v-dialog v-model="isActiveDialog" persistent width="500">
+        <v-card>
+          <v-card-title>Search Instructions</v-card-title>
+          <v-card-text>
+            Values to be search don't need to match exactly, if searching for a
+            file name "compliant_audit_scan.nessus", the input value can be any
+            part of the name. This applies to all fields regardless of the logic
+            selected. Search logic can be inclusive or exclusive. The following
+            table provides the expected outcomes base on the logic selected.
+            <v-simple-table fixed-header>
+              <template #default>
+                <thead>
+                  <tr>
+                    <th class="text-left text-h6">Logic</th>
+                    <th class="text-left text-h6">Outcome</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>AND</td>
+                    <td>
+                      Values provided in the search fields (file, group, or tag
+                      name) are logically inclusive, there is, all field values
+                      provided must be evaluated to true for a record to be
+                      returned.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>OR</td>
+                    <td>
+                      Values provided in the search fields (file, group, or tag
+                      name) are not logically inclusive, there is, any value
+                      provided evaluates to true, records matching the field
+                      value provided are returned.
+                    </td>
+                  </tr>
+                </tbody>
+              </template>
+            </v-simple-table>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer />
+            <v-btn @click="isActiveDialog = false">Close Dialog</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </v-row>
+
     <LoadFileList
       :headers="headers"
-      :files="files"
-      :loading="loading"
+      :evaluations-loaded="allEvaluations"
+      :loading="queryingRecords"
+      :total-items-per-page="itemsPerPage"
+      :evaluations-count="evaluationsCount"
       @load-selected="load_results($event)"
     />
   </v-container>
@@ -17,11 +81,12 @@ import RefreshButton from '@/components/generic/RefreshButton.vue';
 import LoadFileList from '@/components/global/upload_tabs/LoadFileList.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import ServerMixin from '@/mixins/ServerMixin';
-import {EvaluationModule} from '@/store/evaluations';
 import {FileID} from '@/store/report_intake';
-import {IEvaluation} from '@heimdall/interfaces';
-import Component, {mixins} from 'vue-class-component';
+import {SnackbarModule} from '@/store/snackbar';
+import {EvaluationModule} from '@/store/evaluations';
+import {IEvalPaginationParams, IEvaluation} from '@heimdall/interfaces';
 import {Prop, Watch} from 'vue-property-decorator';
+import Component, {mixins} from 'vue-class-component';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -36,12 +101,14 @@ import {Prop, Watch} from 'vue-property-decorator';
 export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   @Prop({default: false}) readonly refresh!: boolean;
 
+  isActiveDialog = false;
+
   headers: Object[] = [
     {
       text: 'Filename',
-      align: 'start',
-      sortable: true,
-      value: 'filename'
+      value: 'filename',
+      align: 'left',
+      sortable: true
     },
     {
       text: 'Groups',
@@ -57,9 +124,12 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     {
       text: 'Actions',
       value: 'actions',
-      align: 'right'
+      align: 'end',
+      sortable: false
     }
   ];
+
+  itemsPerPage = 10;
 
   @Watch('refresh')
   onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
@@ -74,23 +144,42 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   }
 
   async get_all_results(): Promise<void> {
-    EvaluationModule.getAllEvaluations();
+    // Stores results in the Evaluation class field allEvaluations
+    const params: IEvalPaginationParams = {
+      offset: 0,
+      limit: this.itemsPerPage,
+      order: ['createdAt', 'DESC']
+    };
+    EvaluationModule.getAllEvaluations(params);
   }
 
-  get loading() {
+  // Loading is initially set to true in Evaluation class.
+  // When getAllEvaluations(params) finishes it sets it to false.
+  get queryingRecords() {
     return EvaluationModule.loading;
   }
 
-  get files() {
+  get allEvaluations() {
     return EvaluationModule.allEvaluations;
   }
 
+  get evaluationsCount() {
+    return EvaluationModule.evaluationsCount;
+  }
+
+  // Fires when user selects entries and loads them into the visualization panel
   load_results(evaluations: IEvaluation[]): void {
-    EvaluationModule.load_results(
-      evaluations.map((evaluation) => evaluation.id)
-    ).then((fileIds: (FileID | void)[]) => {
-      this.$emit('got-files', fileIds.filter(Boolean));
-    });
+    if (evaluations.length != 0) {
+      EvaluationModule.load_results(
+        evaluations.map((evaluation) => evaluation.id)
+      ).then((fileIds: (FileID | void)[]) => {
+        this.$emit('got-files', fileIds.filter(Boolean));
+      });
+    } else {
+      SnackbarModule.notify(
+        'Please select an evaluation for viewing in the visualization panel'
+      );
+    }
   }
 }
 </script>

@@ -1,4 +1,5 @@
-import {ForbiddenError} from '@casl/ability';
+import {ForbiddenError, Subject} from '@casl/ability';
+import {IEvalPaginationParams} from '@heimdall/interfaces';
 import {
   BadRequestException,
   Body,
@@ -8,6 +9,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UploadedFiles,
   UseGuards,
@@ -27,8 +29,9 @@ import {CreateEvaluationInterceptor} from '../interceptors/create-evaluation-int
 import {LoggingInterceptor} from '../interceptors/logging.interceptor';
 import {User} from '../users/user.model';
 import {CreateEvaluationDto} from './dto/create-evaluation.dto';
-import {EvaluationDto} from './dto/evaluation.dto';
+import {EvaluationDto, IEvaluationResponse} from './dto/evaluation.dto';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
+import {Evaluation} from './evaluation.model';
 import {EvaluationsService} from './evaluations.service';
 
 @Controller('evaluations')
@@ -40,6 +43,7 @@ export class EvaluationsController {
     private readonly configService: ConfigService,
     private readonly authz: AuthzService
   ) {}
+
   @UseGuards(APIKeyOrJwtAuthGuard)
   @Get(':id')
   async findById(
@@ -69,7 +73,7 @@ export class EvaluationsController {
   }
 
   @UseGuards(APIKeyOrJwtAuthGuard)
-  @Get()
+  @Get('e2e')
   async findAll(@Request() request: {user: User}): Promise<EvaluationDto[]> {
     const abac = this.authz.abac.createForUser(request.user);
     let evaluations = await this.evaluationsService.findAll();
@@ -82,6 +86,48 @@ export class EvaluationsController {
       (evaluation) =>
         new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
     );
+  }
+
+  @UseGuards(APIKeyOrJwtAuthGuard)
+  @Get()
+  async findAndCountAll(
+    @Query() params: IEvalPaginationParams,
+    @Request() request: {user: User}
+  ): Promise<IEvaluationResponse> {
+    const abac = this.authz.abac.createForUser(request.user);
+    let evaluations: Evaluation[] = [];
+    let totalItems = 0;
+
+    if (params.useClause) {
+      const response = await this.evaluationsService.getEvaluationsWithClause(
+        params,
+        request.user.email,
+        request.user.role
+      );
+      evaluations = response.evaluations;
+      totalItems = response.totalItems;
+    } else {
+      const response = await this.evaluationsService.getAllEvaluations(
+        params,
+        request.user.email,
+        request.user.role
+      );
+      evaluations = response.evaluations;
+      totalItems = response.totalItems;
+    }
+
+    // Show public evaluations or those created by logged in user
+    evaluations = evaluations.filter((evaluation: Subject) =>
+      abac.can(Action.Read, evaluation)
+    );
+
+    return {
+      evaluations: evaluations.map(
+        (evaluation: Evaluation) =>
+          new EvaluationDto(evaluation, abac.can(Action.Update, evaluation))
+      ),
+      totalCount: totalItems
+    };
   }
 
   @UseGuards(APIKeyOrJwtAuthGuard)

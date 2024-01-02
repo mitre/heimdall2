@@ -401,7 +401,7 @@ v2.8.1
 
 - Node Version Update to 18 - requires minimum of node v18 now @HenryXiaoHX @charleshu-8 @Amndeep7 (#3850)
 - Conveyor mapper updates @rbogren-brock (#4892)
-- Move HTML export feature to HDF Converters @charleshu-8 (#4834)
+- Move HTML export feature to OHDF Converters @charleshu-8 (#4834)
 
 ## Dependency Updates
 
@@ -491,9 +491,9 @@ v2.7.1
 v2.7.0
 
 - Unique Group Names @Rlin232 (#4722) - make sure to run the db migration scripts and be ready for your group names potentially being changed in order to enforce the uniqueness constraint
-- Using Semver Compare for ASFF "Previously HDF" Special Casing @Rlin232 (#4767)
+- Using Semver Compare for ASFF "Previously OHDF" Special Casing @Rlin232 (#4767)
 - Implemented OIDC external group import @akey77 (#3922)
-- Map XCCDF result value of "notselected" to HDF impact of 0 @candrews (#4758)
+- Map XCCDF result value of "notselected" to OHDF impact of 0 @candrews (#4758)
 - Remove jQuery import @charleshu-8 (#4752)
 
 ## Dependency Updates
@@ -538,7 +538,7 @@ v2.6.58
 
 - Group Descriptions @Rlin232 (#4695)
 - Reassign group owners upon user deletion @Rlin232 (#4403)
-- Improve xccdf_results_mapper when converting XCCDF Results to HDF Results @candrews (#4255)
+- Improve xccdf_results_mapper when converting XCCDF Results to OHDF Results @candrews (#4255)
 - Update Splunk links @charleshu-8 (#4716)
 
 

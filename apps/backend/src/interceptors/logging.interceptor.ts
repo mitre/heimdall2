@@ -16,6 +16,7 @@ import {User} from '../users/user.model';
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   private readonly configService: ConfigService;
+  private readonly line = '___________________________________________\n';
 
   constructor(configService: ConfigService) {
     this.configService = configService;
@@ -28,9 +29,9 @@ export class LoggingInterceptor implements NestInterceptor {
       }),
       winston.format.printf(
         (info) =>
-          `[${[info.timestamp]}] ${info.ip} ${info.referer} ${info.userAgent} ${
-            info.user
-          } ${info.message}`
+          `${this.line}[${[info.timestamp]}] (Interceptor): ${info.ip} ${
+            info.referer
+          } ${info.userAgent} ${info.user} ${info.message}`
       )
     )
   });

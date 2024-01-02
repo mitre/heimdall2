@@ -1,4 +1,4 @@
-name: Run HDF-Converters Tests
+name: Run OHDF-Converters Tests
 
 on:
   push:
