@@ -96,7 +96,7 @@ export default class Sidebar extends mixins(RouteMixin) {
     return FilteredDataModule.all_evaluations_selected;
   }
 
-  get any_evaluation_selected(): Boolean {
+  get any_evaluation_selected(): boolean {
     return FilteredDataModule.any_evaluation_selected;
   }
 

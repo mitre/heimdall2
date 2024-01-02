@@ -42,7 +42,7 @@ export class EvaluationsService {
        objects within the scan id, but are individual SQL records.
 
        For this reason there will be times where the number of records returned
-       are less than the asked by the LIMIT. 
+       are less than the asked by the LIMIT.
 
     2: TypeScript is not able to infer OrderItem[].
 

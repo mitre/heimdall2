@@ -277,7 +277,7 @@ export class FilteredData extends VuexModule {
   }
 
   // check to see if any evaluation is selected
-  get any_evaluation_selected(): Boolean {
+  get any_evaluation_selected(): boolean {
     return this.selectedEvaluationIds.length > 0 ? true : false;
   }
 

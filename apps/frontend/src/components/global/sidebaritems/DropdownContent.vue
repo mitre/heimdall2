@@ -103,7 +103,7 @@ export default class DropdownContent extends Vue {
     return this.allSelected === Trinary.On;
   }
 
-  get anyEvaluationSelected(): Boolean {
+  get anyEvaluationSelected(): boolean {
     return this.anySelected;
   }
 
