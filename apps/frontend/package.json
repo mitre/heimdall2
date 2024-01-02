@@ -81,7 +81,7 @@
     "lru-cache": "^10.1.0",
     "luxon": "^3.0.1",
     "mustache": "^4.2.0",
-    "node-polyfill-webpack-plugin": "^2.0.1",
+    "node-polyfill-webpack-plugin": "^3.0.0",
     "prismjs": "^1.29.0",
     "rimraf": "^5.0.0",
     "roboto-fontface": "*",
