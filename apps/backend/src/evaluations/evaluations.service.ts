@@ -36,13 +36,17 @@ export class EvaluationsService {
     1: The sequelize model is using eager loading, at the SQL level, this is a
        query with one or more joins. This is done by using the include option
        on a model finder query (findAll). Given that we are using multiple JOIN
-       operations, particularly one on the Groups, if a record has multiple
-       groups the query will return multiple rows one per group. This offsets
-       the LIMIT because the return data is in JSON format where the groups are
-       objects within the scan id, but are individual SQL records.
+       operations, particularly the ones on the Tags and Groups, if a record has
+       multiple Tags or a Group with multiple members, the query will return
+       a json object where each evaluation may contain multiple rows one per
+       Tag or group. This offsets the LIMIT because the return data is in JSON
+       format where the tags and groups are objects within the scan id, but are
+       processed as individual SQL records, resulting in an inaccurate number
+       of records returned.
 
-       For this reason there will be times where the number of records returned
-       are less than the asked by the LIMIT.
+       For this reason the pagination is not done where query the records but
+       rather by getting all records and slicing the appropriate number of
+       records based on the pagination parameters (LIMIT and OFFSET)
 
     2: TypeScript is not able to infer OrderItem[].
 
@@ -85,13 +89,19 @@ export class EvaluationsService {
       evaluations: []
     };
     const whereClause = this.getWhereClauseAll(role, email);
-
+    /*
+      NOTE: Hack to overcome the inability to retrieve the desire
+            number of evaluation (see note 1 above). Pad the 
+            requested number of records by 50%. 
+    */
+    const padLimit = params.limit == 10 ? 250 : Number(params.limit)*25 + Number(params.limit)
     await this.evaluationModel
       .findAll<Evaluation>({
         attributes: {exclude: ['data']},
-        include: [EvaluationTag, User, Group],
+        include: [EvaluationTag, User, {model: Group, include: [User]}],
+        //include: [EvaluationTag, User, Group],
         offset: params.offset,
-        limit: params.limit,
+        limit: padLimit,
         order:
           params.order.length == 2
             ? [[params.order[0], params.order[1]]]
@@ -101,10 +111,15 @@ export class EvaluationsService {
       })
       .then(async (data) => {
         const totalItems = await this.evaluationCount(email, role);
-        queryResponse.evaluations = data;
+        queryResponse.evaluations = data.slice(0, params.limit);
+        //queryResponse.evaluations = data;
+console.log(`Got this data: ${data.length}`)        
         queryResponse.totalItems = totalItems;
       });
+//console.log(`Got these evaluations: ${JSON.stringify(queryResponse.evaluations,null,2)}`)
 
+console.log(`Got these evaluations: ${JSON.stringify(queryResponse.evaluations.length,null,2)}`)
+console.log(`Padding with : ${padLimit}`)
     return queryResponse;
   }
 
@@ -123,13 +138,13 @@ export class EvaluationsService {
       email,
       role
     );
-
+    const padLimit = params.limit == 10 ? 250 : Number(params.limit)*25 + Number(params.limit)
     await this.evaluationModel
       .findAll<Evaluation>({
         attributes: {exclude: ['data']},
-        include: [EvaluationTag, User, Group],
+        include: [EvaluationTag, User, {model: Group, include: [User]}],
         offset: params.offset,
-        limit: params.limit,
+        limit: padLimit,
         order:
           params.order.length == 2
             ? [[params.order[0], params.order[1]]]
@@ -139,7 +154,12 @@ export class EvaluationsService {
       })
       .then(async (data) => {
         const totalItems = await this.searchItemsCount(whereClause);
-        queryResponse.evaluations = data;
+console.log(`Got this data: ${data.length}`)         
+        const uniqueData = data.filter((obj, index) => {
+          return index === data.findIndex(o => obj.id === o.id);
+        });
+console.log(`Got this uniqueData: ${uniqueData.length}`) 
+        queryResponse.evaluations = uniqueData;
         queryResponse.totalItems = totalItems;
       });
 
