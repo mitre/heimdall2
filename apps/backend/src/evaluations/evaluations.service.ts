@@ -1,4 +1,4 @@
-import {IEvalPaginationParams} from '@heimdall/interfaces';
+import {IEvalPaginationParams, IEvaluationTag} from '@heimdall/interfaces';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {FindOptions, Op, WhereOptions} from 'sequelize';
@@ -79,6 +79,15 @@ export class EvaluationsService {
          3      table name  field name         order (asc/desc)    
 
   */
+
+  /*
+    NOTE: Hack to overcome the inability to retrieve the desire
+          number of evaluation (see note 1 above). Pad the 
+          requested number of records by an estimated number of 
+          group members (25 per group). 
+  */
+  totalGroupMembers = 25;
+
   async getAllEvaluations(
     params: IEvalPaginationParams,
     email: string,
@@ -89,19 +98,14 @@ export class EvaluationsService {
       evaluations: []
     };
     const whereClause = this.getWhereClauseAll(role, email);
-    /*
-      NOTE: Hack to overcome the inability to retrieve the desire
-            number of evaluation (see note 1 above). Pad the 
-            requested number of records by 50%. 
-    */
-    const padLimit = params.limit == 10 ? 250 : Number(params.limit)*25 + Number(params.limit)
+
     await this.evaluationModel
       .findAll<Evaluation>({
         attributes: {exclude: ['data']},
         include: [EvaluationTag, User, {model: Group, include: [User]}],
-        //include: [EvaluationTag, User, Group],
+        // include: [EvaluationTag, User, Group],
         offset: params.offset,
-        limit: padLimit,
+        limit: Number(params.limit) * this.totalGroupMembers,
         order:
           params.order.length == 2
             ? [[params.order[0], params.order[1]]]
@@ -112,14 +116,14 @@ export class EvaluationsService {
       .then(async (data) => {
         const totalItems = await this.evaluationCount(email, role);
         queryResponse.evaluations = data.slice(0, params.limit);
-        //queryResponse.evaluations = data;
-console.log(`Got this data: ${data.length}`)        
         queryResponse.totalItems = totalItems;
+        console.log(`Got this data: ${data.length}`)
+        
       });
-//console.log(`Got these evaluations: ${JSON.stringify(queryResponse.evaluations,null,2)}`)
 
-console.log(`Got these evaluations: ${JSON.stringify(queryResponse.evaluations.length,null,2)}`)
-console.log(`Padding with : ${padLimit}`)
+    console.log(`Padding with : ${Number(params.limit) * this.totalGroupMembers}`)
+    console.log(`Returning these evaluations: ${JSON.stringify(queryResponse.evaluations.length,null,2)}`)
+    
     return queryResponse;
   }
 
@@ -132,19 +136,19 @@ console.log(`Padding with : ${padLimit}`)
       totalItems: 0,
       evaluations: []
     };
-    const whereClause = this.getWhereClauseSearch(
+    const whereClause = await this.getWhereClauseSearch(
       params.searchFields == undefined ? [''] : params.searchFields,
       params.operator == undefined ? 'OR' : params.operator,
       email,
       role
     );
-    const padLimit = params.limit == 10 ? 250 : Number(params.limit)*25 + Number(params.limit)
+
     await this.evaluationModel
       .findAll<Evaluation>({
         attributes: {exclude: ['data']},
         include: [EvaluationTag, User, {model: Group, include: [User]}],
         offset: params.offset,
-        limit: padLimit,
+        limit: Number(params.limit) * this.totalGroupMembers,
         order:
           params.order.length == 2
             ? [[params.order[0], params.order[1]]]
@@ -154,15 +158,12 @@ console.log(`Padding with : ${padLimit}`)
       })
       .then(async (data) => {
         const totalItems = await this.searchItemsCount(whereClause);
-console.log(`Got this data: ${data.length}`)         
-        const uniqueData = data.filter((obj, index) => {
-          return index === data.findIndex(o => obj.id === o.id);
-        });
-console.log(`Got this uniqueData: ${uniqueData.length}`) 
-        queryResponse.evaluations = uniqueData;
+        queryResponse.evaluations = data.slice(0, params.limit);
+        // queryResponse.evaluations = data;
         queryResponse.totalItems = totalItems;
+        console.log(`Got this data: ${data.length}`)
       });
-
+    console.log(`Returning these evaluations: ${JSON.stringify(queryResponse.evaluations.length,null,2)}`)
     return queryResponse;
   }
 
@@ -182,12 +183,12 @@ console.log(`Got this uniqueData: ${uniqueData.length}`)
     return baseCriteria;
   }
 
-  getWhereClauseSearch(
+  async getWhereClauseSearch(
     fields: string[],
     operation: string,
     email: string,
     role: string
-  ): WhereOptions {
+  ): Promise<WhereOptions> {
     const searchFields = [];
     const baseCriteria = this.getWhereClauseBaseCriteria(role, email);
 
@@ -198,10 +199,31 @@ console.log(`Got this uniqueData: ${uniqueData.length}`)
       searchFields.push({'$groups.name$': {[Op.iRegexp]: `${fields[1]}`}});
     }
     if (fields[2] != '()') {
+      // searchFields.push({
+      //   '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}      
+      // });
+
+      const evaluations =  await this.getEvaluationId(fields[2]);
+      //const evalIds = Array.from(evalIds, Number);
+      const evalIds = evaluations.map((i) => Number(i));
+
+      console.log(`eval Ids are: ${evalIds}`)  
+      console.log(`eval Ids are: ${typeof evalIds}`)     
+      // searchFields.push({
+      //   [Op.or]: [{id: [Op.in]: `${evalIds}`},
+      //   {'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`} }]
+      // });
+      //searchFields.push({id: {[Op.in]: [1,9]} });
       searchFields.push({
-        '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}
-      });
+        [Op.or]: [
+          {id: {[Op.in]: [1,4,150215]} },
+          {'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`} }
+        ]
+       });
     }
+   
+
+// ("Evaluation"."id" IN (select "EvaluationTags"."evaluationId" from "EvaluationTags" WHERE "EvaluationTags"."value" ~* '(4)')  or "evaluationTags"."value" ~* '(4)')
 
     if (operation == 'AND') {
       // Expected outcome: an OR baseCriteria AND an AND searchFields
@@ -212,6 +234,21 @@ console.log(`Got this uniqueData: ${uniqueData.length}`)
         [Op.and]: [{[Op.or]: baseCriteria}, {[Op.and]: {[Op.or]: searchFields}}]
       };
     }
+  }
+
+  async getEvaluationId(tagValue: string): Promise<string[]> {
+    let evaluationIds: string[];
+    await  EvaluationTag.findAll({
+      attributes: ['evaluationId'],
+      where: {value: {[Op.regexp]: tagValue}},
+      raw: true
+    })
+     .then(async (evalIds) => {
+      evaluationIds = evalIds.map(function(evalIds){ return evalIds.evaluationId });;
+      // console.log(`Got this data: ${JSON.stringify(evalIds)}`)
+     });
+     return evaluationIds!;
+  // }
   }
 
   async evaluationCount(userEmail: string, role: string): Promise<number> {

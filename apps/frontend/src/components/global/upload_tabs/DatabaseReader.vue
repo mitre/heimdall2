@@ -56,6 +56,10 @@
                 </tbody>
               </template>
             </v-simple-table>
+            <br />
+            <b>NOTE:</b>
+            To clear the search fields, either click the clear icon (X)
+            or deleted any value(s) and press the enter (return) key.
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -144,6 +148,8 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   }
 
   async get_all_results(): Promise<void> {
+    console.log('Turning wait cursor ON');
+    document.body.style.cursor = 'wait';
     // Stores results in the Evaluation class field allEvaluations
     const params: IEvalPaginationParams = {
       offset: 0,
