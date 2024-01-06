@@ -1,4 +1,4 @@
-import {IEvalPaginationParams, IEvaluationTag} from '@heimdall/interfaces';
+import {IEvalPaginationParams} from '@heimdall/interfaces';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
 import {FindOptions, Op, WhereOptions} from 'sequelize';
@@ -13,6 +13,14 @@ import {Evaluation} from './evaluation.model';
 interface EvaluationsResponse {
   totalItems: number;
   evaluations: Evaluation[];
+}
+
+interface WhereClauseParams {
+  searchFields: string[];
+  operator: string;
+  email: string;
+  role: string;
+  action: string;
 }
 @Injectable()
 export class EvaluationsService {
@@ -84,9 +92,9 @@ export class EvaluationsService {
     NOTE: Hack to overcome the inability to retrieve the desire
           number of evaluation (see note 1 above). Pad the 
           requested number of records by an estimated number of 
-          group members (25 per group). 
+          group members (20 per group). 
   */
-  totalGroupMembers = 25;
+  totalGroupMembers = 20;
 
   async getAllEvaluations(
     params: IEvalPaginationParams,
@@ -103,7 +111,6 @@ export class EvaluationsService {
       .findAll<Evaluation>({
         attributes: {exclude: ['data']},
         include: [EvaluationTag, User, {model: Group, include: [User]}],
-        // include: [EvaluationTag, User, Group],
         offset: params.offset,
         limit: Number(params.limit) * this.totalGroupMembers,
         order:
@@ -115,15 +122,21 @@ export class EvaluationsService {
       })
       .then(async (data) => {
         const totalItems = await this.evaluationCount(email, role);
-        queryResponse.evaluations = data.slice(0, params.limit);
-        queryResponse.totalItems = totalItems;
-        console.log(`Got this data: ${data.length}`)
-        
-      });
 
-    console.log(`Padding with : ${Number(params.limit) * this.totalGroupMembers}`)
-    console.log(`Returning these evaluations: ${JSON.stringify(queryResponse.evaluations.length,null,2)}`)
-    
+        const totalPages = Math.ceil(totalItems / params.limit);
+        const totalReturned = Number(params.offset) + Number(params.limit);
+        const onPage = Math.ceil(
+          totalReturned / 100 / (Number(params.limit) / 100)
+        );
+        if (onPage == totalPages) {
+          const returnCnt = totalItems - Number(params.offset);
+          // Return from the back of the array
+          queryResponse.evaluations = data.slice(-returnCnt);
+        } else {
+          queryResponse.evaluations = data.slice(0, params.limit);
+        }
+        queryResponse.totalItems = totalItems;
+      });
     return queryResponse;
   }
 
@@ -136,13 +149,23 @@ export class EvaluationsService {
       totalItems: 0,
       evaluations: []
     };
-    const whereClause = await this.getWhereClauseSearch(
-      params.searchFields == undefined ? [''] : params.searchFields,
-      params.operator == undefined ? 'OR' : params.operator,
-      email,
-      role
-    );
 
+    const whereClauseParams: WhereClauseParams = {
+      searchFields:
+        params.searchFields == undefined ? [''] : params.searchFields,
+      operator: params.operator == undefined ? 'OR' : params.operator,
+      email: email,
+      role: role,
+      action: 'search'
+    };
+
+    const whereClause = await this.getWhereClauseSearch(
+      whereClauseParams.searchFields,
+      whereClauseParams.operator,
+      whereClauseParams.email,
+      whereClauseParams.role,
+      whereClauseParams.action
+    );
     await this.evaluationModel
       .findAll<Evaluation>({
         attributes: {exclude: ['data']},
@@ -157,13 +180,23 @@ export class EvaluationsService {
         where: whereClause
       })
       .then(async (data) => {
-        const totalItems = await this.searchItemsCount(whereClause);
-        queryResponse.evaluations = data.slice(0, params.limit);
-        // queryResponse.evaluations = data;
+        const totalItems = await this.searchItemsCount(whereClauseParams);
+
+        const totalPages = Math.ceil(totalItems / params.limit);
+        const totalReturned = Number(params.offset) + Number(params.limit);
+        const onPage = Math.ceil(
+          totalReturned / 100 / (Number(params.limit) / 100)
+        );
+        if (onPage == totalPages) {
+          const returnCnt = totalItems - Number(params.offset);
+          // Return from the back of the array
+          queryResponse.evaluations = data.slice(-returnCnt);
+        } else {
+          queryResponse.evaluations = data.slice(0, params.limit);
+        }
         queryResponse.totalItems = totalItems;
-        console.log(`Got this data: ${data.length}`)
       });
-    console.log(`Returning these evaluations: ${JSON.stringify(queryResponse.evaluations.length,null,2)}`)
+
     return queryResponse;
   }
 
@@ -187,7 +220,8 @@ export class EvaluationsService {
     fields: string[],
     operation: string,
     email: string,
-    role: string
+    role: string,
+    action: string
   ): Promise<WhereOptions> {
     const searchFields = [];
     const baseCriteria = this.getWhereClauseBaseCriteria(role, email);
@@ -199,31 +233,21 @@ export class EvaluationsService {
       searchFields.push({'$groups.name$': {[Op.iRegexp]: `${fields[1]}`}});
     }
     if (fields[2] != '()') {
-      // searchFields.push({
-      //   '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}      
-      // });
+      if (action == 'count') {
+        searchFields.push({
+          '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}
+        });
+      } else {
+        const evaluationIds = await this.getEvaluationId(fields[2]);
 
-      const evaluations =  await this.getEvaluationId(fields[2]);
-      //const evalIds = Array.from(evalIds, Number);
-      const evalIds = evaluations.map((i) => Number(i));
-
-      console.log(`eval Ids are: ${evalIds}`)  
-      console.log(`eval Ids are: ${typeof evalIds}`)     
-      // searchFields.push({
-      //   [Op.or]: [{id: [Op.in]: `${evalIds}`},
-      //   {'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`} }]
-      // });
-      //searchFields.push({id: {[Op.in]: [1,9]} });
-      searchFields.push({
-        [Op.or]: [
-          {id: {[Op.in]: [1,4,150215]} },
-          {'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`} }
-        ]
-       });
+        searchFields.push({
+          [Op.or]: [
+            {id: {[Op.in]: evaluationIds}},
+            {'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}}
+          ]
+        });
+      }
     }
-   
-
-// ("Evaluation"."id" IN (select "EvaluationTags"."evaluationId" from "EvaluationTags" WHERE "EvaluationTags"."value" ~* '(4)')  or "evaluationTags"."value" ~* '(4)')
 
     if (operation == 'AND') {
       // Expected outcome: an OR baseCriteria AND an AND searchFields
@@ -237,18 +261,15 @@ export class EvaluationsService {
   }
 
   async getEvaluationId(tagValue: string): Promise<string[]> {
-    let evaluationIds: string[];
-    await  EvaluationTag.findAll({
+    let evaluationIds: string[] = [];
+    await EvaluationTag.findAll({
       attributes: ['evaluationId'],
-      where: {value: {[Op.regexp]: tagValue}},
+      where: {value: {[Op.iRegexp]: tagValue}},
       raw: true
-    })
-     .then(async (evalIds) => {
-      evaluationIds = evalIds.map(function(evalIds){ return evalIds.evaluationId });;
-      // console.log(`Got this data: ${JSON.stringify(evalIds)}`)
-     });
-     return evaluationIds!;
-  // }
+    }).then(async (evalIds) => {
+      evaluationIds = evalIds.map((evalIds) => evalIds.evaluationId);
+    });
+    return evaluationIds;
   }
 
   async evaluationCount(userEmail: string, role: string): Promise<number> {
@@ -269,7 +290,16 @@ export class EvaluationsService {
     }
   }
 
-  async searchItemsCount(whereClause: WhereOptions): Promise<number> {
+  async searchItemsCount(
+    whereClauseParams: WhereClauseParams
+  ): Promise<number> {
+    const whereClause = await this.getWhereClauseSearch(
+      whereClauseParams.searchFields,
+      whereClauseParams.operator,
+      whereClauseParams.email,
+      whereClauseParams.role,
+      'count'
+    );
     return this.evaluationModel.count({
       include: [EvaluationTag, User, Group],
       where: whereClause,

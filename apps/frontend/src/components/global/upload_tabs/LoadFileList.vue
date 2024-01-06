@@ -337,7 +337,6 @@ export default class LoadFileList extends Vue {
   sortOrder = ['createdAt', 'DESC']; // db sort order
 
   async getEvaluations(params: IEvalPaginationParams): Promise<void> {
-    console.log('Turning wait cursor ON');
     document.body.style.cursor = 'wait';
     EvaluationModule.getAllEvaluations(params);
   }
@@ -361,13 +360,6 @@ export default class LoadFileList extends Vue {
   }
 
   allFieldsCleared() {
-    console.log(
-      `All fields cleared: ${
-        this.isEmpty(this.searchItems) &&
-        this.isEmpty(this.searchGroups) &&
-        this.isEmpty(this.searchTags)
-      }`
-    );
     if (
       this.isEmpty(this.searchItems) &&
       this.isEmpty(this.searchGroups) &&

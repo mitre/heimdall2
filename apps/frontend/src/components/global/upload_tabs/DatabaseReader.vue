@@ -24,8 +24,10 @@
             Values to be search don't need to match exactly, if searching for a
             file name "compliant_audit_scan.nessus", the input value can be any
             part of the name. This applies to all fields regardless of the logic
-            selected. Search logic can be inclusive or exclusive. The following
-            table provides the expected outcomes base on the logic selected.
+            selected. When searching for a Tag value, the search return includes
+            all tags associated with the matching evaluation. Search logic can
+            be inclusive or exclusive. The following table provides the expected
+            outcomes base on the logic selected.
             <v-simple-table fixed-header>
               <template #default>
                 <thead>
@@ -58,8 +60,8 @@
             </v-simple-table>
             <br />
             <b>NOTE:</b>
-            To clear the search fields, either click the clear icon (X)
-            or deleted any value(s) and press the enter (return) key.
+            To clear the search fields, either click the clear icon (X) or
+            deleted any value(s) and press the enter (return) key.
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -148,7 +150,6 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   }
 
   async get_all_results(): Promise<void> {
-    console.log('Turning wait cursor ON');
     document.body.style.cursor = 'wait';
     // Stores results in the Evaluation class field allEvaluations
     const params: IEvalPaginationParams = {

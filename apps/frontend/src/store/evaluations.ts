@@ -194,7 +194,6 @@ export class Evaluation extends VuexModule {
   @Mutation
   SET_LOADING(value: boolean) {
     if (!value) {
-      console.log('Turning wait cursor OFF');
       document.body.style.cursor = 'default';
     }
     this.loading = value;

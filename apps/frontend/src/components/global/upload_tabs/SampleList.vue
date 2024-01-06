@@ -19,8 +19,8 @@
             entries not currently visible (on another page).
             <br /><br />
             <b>NOTE:</b>
-            To clear the search, either click the clear icon (X) or
-            simply deleted any value from the input box.
+            To clear the search, either click the clear icon (X) or simply
+            deleted any value from the input box.
           </v-card-text>
           <v-card-actions>
             <v-spacer />
