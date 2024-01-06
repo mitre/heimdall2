@@ -19,11 +19,11 @@ This repository contains the source code for Heimdall's [Backend](https://github
     - [Heimdall with Backend (Server)](#heimdall-with-backend-server)
     - [Features](#features)
     - [Use Cases](#use-cases)
-  - [Getting Started / Installation](#getting-started--installation)
+  - [Getting Started / Installation](#getting-started-installation)
     - [Heimdall Lite](#heimdall-lite-1)
       - [Running via npm](#running-via-npm)
       - [Running via Docker](#running-via-docker)
-    - [Heimdall Server - Docker](#heimdall-server---docker)
+    - [Heimdall Server - Docker](#heimdall-server-docker)
       - [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
       - [Updating Docker Container](#updating-docker-container)
       - [Stopping the Container](#stopping-the-container)
@@ -94,30 +94,30 @@ As a single-page javascript app - you can run Heimdall-Lite from any web-server,
 Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Lite, but is supported with a backend database to store persistent data overtime.
 
 ### Features
-| Features | Heimdall-Lite | Heimdall with Backend |
-| :----------------------------------------------------------- | :------------------------------------------------------: | :----------------------------------------------------------: |
-| Additional Installation Requirements    |      |     Postgres Server |
-| Overview Dashboard & Counts | :white_check_mark: | :white_check_mark: |
-| Deep Dive View of Security Control Results and Metadata | :white_check_mark: | :white_check_mark: |
-| 800-53 Partition and TreeMap View     | :white_check_mark: | :white_check_mark: |
-| Comparison View      | :white_check_mark: | :white_check_mark: |
-| Advanced Data / Filters for Reports and Viewing     | :white_check_mark: |  :white_check_mark: |
-| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) | :white_check_mark: | :white_check_mark: |
-| View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF) | :white_check_mark: | :white_check_mark: |
-| Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | :white_check_mark: | :white_check_mark: |
-| Authenticated REST API       |   | :white_check_mark: |
-| CRUD Capabilities            |   | :white_check_mark: |
-| Users & Roles & multi-team support    |   | :white_check_mark: |
-| Authentication & Authorization        | Hosting Webserver | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
+| Features                                                                       |   Heimdall-Lite    |                                    Heimdall with Backend                                    |
+| :----------------------------------------------------------------------------- | :----------------: | :-----------------------------------------------------------------------------------------: |
+| Additional Installation Requirements                                           |                    |                                       Postgres Server                                       |
+| Overview Dashboard & Counts                                                    | :white_check_mark: |                                     :white_check_mark:                                      |
+| Deep Dive View of Security Control Results and Metadata                        | :white_check_mark: |                                     :white_check_mark:                                      |
+| 800-53 Partition and TreeMap View                                              | :white_check_mark: |                                     :white_check_mark:                                      |
+| Comparison View                                                                | :white_check_mark: |                                     :white_check_mark:                                      |
+| Advanced Data / Filters for Reports and Viewing                                | :white_check_mark: |                                     :white_check_mark:                                      |
+| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) | :white_check_mark: |                                     :white_check_mark:                                      |
+| View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF)   | :white_check_mark: |                                     :white_check_mark:                                      |
+| Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | :white_check_mark: |                                     :white_check_mark:                                      |
+| Authenticated REST API                                                         |                    |                                     :white_check_mark:                                      |
+| CRUD Capabilities                                                              |                    |                                     :white_check_mark:                                      |
+| Users & Roles & multi-team support                                             |                    |                                     :white_check_mark:                                      |
+| Authentication & Authorization                                                 | Hosting Webserver  | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
 
 ### Use Cases
 
-| Heimdall-Lite | Heimdall with Backend  |
-| :------------------------------------------------------: | :------------------------------------------------------: |
-| Just-in-Time Use | Multiple Teams |
-| Minimal Footprint & Deployment Time  | Timeline and Report History |
-| Local or Disconnected Use | Centralized Deployment Model |
-| Minimal Authorization & Approval Time |  |
+|             Heimdall-Lite             |    Heimdall with Backend     |
+| :-----------------------------------: | :--------------------------: |
+|           Just-in-Time Use            |        Multiple Teams        |
+|  Minimal Footprint & Deployment Time  | Timeline and Report History  |
+|       Local or Disconnected Use       | Centralized Deployment Model |
+| Minimal Authorization & Approval Time |                              |
 
 ## Getting Started / Installation
 
