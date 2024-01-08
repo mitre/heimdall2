@@ -193,6 +193,9 @@ export class Evaluation extends VuexModule {
 
   @Mutation
   SET_LOADING(value: boolean) {
+    if (!value) {
+      document.body.style.cursor = 'default';
+    }
     this.loading = value;
   }
 

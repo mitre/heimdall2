@@ -11,6 +11,7 @@
             placeholder="file name"
             clearable
             hide-details="auto"
+            @change="allFieldsCleared()"
             @click:clear="clearSearchItemsClicked()"
           />
         </v-col>
@@ -23,6 +24,7 @@
             placeholder="group name"
             clearable
             hide-details="auto"
+            @change="allFieldsCleared()"
             @click:clear="clearSearchGroupsClicked()"
           />
         </v-col>
@@ -35,6 +37,7 @@
             placeholder="tag name"
             clearable
             hide-details="auto"
+            @change="allFieldsCleared()"
             @click:clear="clearSearchTagsClicked()"
           />
         </v-col>
@@ -334,6 +337,7 @@ export default class LoadFileList extends Vue {
   sortOrder = ['createdAt', 'DESC']; // db sort order
 
   async getEvaluations(params: IEvalPaginationParams): Promise<void> {
+    document.body.style.cursor = 'wait';
     EvaluationModule.getAllEvaluations(params);
   }
 
@@ -355,12 +359,13 @@ export default class LoadFileList extends Vue {
     }
   }
 
-  endSearchLoadPage() {
-    this.searching = false;
-    if (this.page == 1) {
-      this.updateDisplayPage();
-    } else {
-      this.page = 1; // Reload the page
+  allFieldsCleared() {
+    if (
+      this.isEmpty(this.searchItems) &&
+      this.isEmpty(this.searchGroups) &&
+      this.isEmpty(this.searchTags)
+    ) {
+      this.endSearchLoadPage();
     }
   }
 
@@ -368,6 +373,15 @@ export default class LoadFileList extends Vue {
     return (
       value == null || (typeof value === 'string' && value.trim().length === 0)
     );
+  }
+
+  endSearchLoadPage() {
+    this.searching = false;
+    if (this.page == 1) {
+      this.updateDisplayPage();
+    } else {
+      this.page = 1; // Reload the page
+    }
   }
 
   getOffSetLimit() {
