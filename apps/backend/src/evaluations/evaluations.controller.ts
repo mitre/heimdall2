@@ -1,5 +1,5 @@
 import {ForbiddenError, Subject} from '@casl/ability';
-import {IEvalPaginationParams} from '@heimdall/interfaces';
+import {IEvalPaginationParams} from '@heimdall/common/interfaces';
 import {
   BadRequestException,
   Body,
