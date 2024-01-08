@@ -205,7 +205,7 @@ describe('/evaluations', () => {
           await request(app.getHttpServer())
             .put('/evaluations/' + evaluation.id)
             .set('Authorization', 'bearer ' + jwtToken)
-            .set(UPDATE_EVALUATION)
+            .send(UPDATE_EVALUATION)
             .expect(HttpStatus.OK)
             .then((response) => {
               const updatedAt = response.body.updatedAt.valueOf();
