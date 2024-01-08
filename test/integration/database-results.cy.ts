@@ -63,7 +63,9 @@ context('Database results', () => {
       uploadModal.activate();
       uploadModal.switchToTab('database');
       databasePage.deleteResult(sampleToLoad);
-      dataTableVerifier.verifyTextPresent('No data found - try changing the search filter(s)');
+      dataTableVerifier.verifyTextPresent(
+        'No data found - try changing the search filter(s)'
+      );
     });
   });
 });
