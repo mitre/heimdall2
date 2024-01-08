@@ -1,3 +1,53 @@
+v2.9.4
+- Update pagination count logic @georgedias (#5402)
+
+## Dependency Updates
+Bump @aws-sdk/client-s3 from 3.484.0 to 3.485.0
+Bump chai from 4.3.10 to 4.4.0
+Bump htmlparser2 from 6.1.0 to 9.1.0
+Bump tailwindcss from 3.4.0 to 3.4.1
+Bump date-fns from 3.0.6 to 3.1.0
+Bump @types/passport-jwt from 3.0.13 to 4.0.0
+Bump @aws-sdk/client-config-service from 3.484.0 to 3.486.0
+Bump @types/luxon from 3.3.7 to 3.4.0
+
+
+v2.9.3
+
+- Database load pagination @georgedias (#5183)
+
+## Dependency Updates
+- Bump @aws-sdk/client-s3 from 3.481.0 to 3.484.0 @dependabot (#5388)
+- Bump typedoc from 0.25.4 to 0.25.6 @dependabot (#5393)
+- Bump @types/node from 20.10.5 to 20.10.6 @dependabot (#5391)
+- Bump @aws-sdk/client-config-service from 3.481.0 to 3.484.0 @dependabot (#5389)
+- Bump @aws-sdk/client-sts from 3.481.0 to 3.484.0 @dependabot (#5390)
+- Bump core-js from 3.34.0 to 3.35.0 @dependabot (#5387)
+- Bump moment from 2.29.4 to 2.30.1 @dependabot (#5385)
+- Bump @types/supertest from 6.0.1 to 6.0.2 @dependabot (#5386)
+- Bump axios from 1.6.2 to 1.6.3 @dependabot (#5381)
+- Bump @aws-sdk/client-s3 from 3.478.0 to 3.481.0 @dependabot (#5379)
+- Bump cypress from 13.6.1 to 13.6.2 @dependabot (#5378)
+- Bump @aws-sdk/client-config-service from 3.478.0 to 3.481.0 @dependabot (#5383)
+- Bump sass-loader from 10.5.0 to 13.3.3 @dependabot (#5376)
+- Bump @mdi/js from 7.3.67 to 7.4.47 @dependabot (#5380)
+- Bump @mdi/font from 7.3.67 to 7.4.47 @dependabot (#5382)
+- Bump @aws-sdk/client-sts from 3.478.0 to 3.481.0 @dependabot (#5377)
+- Bump apexcharts from 3.45.0 to 3.45.1 @dependabot (#5374)
+- Bump @types/supertest from 2.0.16 to 6.0.1 @dependabot (#5373)
+- Bump date-fns from 3.0.5 to 3.0.6 @dependabot (#5372)
+- Bump date-fns from 3.0.3 to 3.0.5 @dependabot (#5371)
+- Bump @aws-sdk/client-s3 from 3.477.0 to 3.478.0 @dependabot (#5369)
+- Bump @aws-sdk/client-config-service from 3.477.0 to 3.478.0 @dependabot (#5366)
+- Bump @aws-sdk/client-sts from 3.477.0 to 3.478.0 @dependabot (#5368)
+- Bump date-fns from 3.0.1 to 3.0.3 @dependabot (#5367)
+- Bump tailwindcss from 3.3.7 to 3.4.0 @dependabot (#5365)
+- Bump @aws-sdk/client-config-service from 3.476.0 to 3.477.0 @dependabot (#5363)
+- Bump @aws-sdk/client-s3 from 3.476.0 to 3.477.0 @dependabot (#5362)
+- Bump date-fns from 3.0.0 to 3.0.1 @dependabot (#5364)
+- Bump @aws-sdk/client-sts from 3.476.0 to 3.477.0 @dependabot (#5361)
+
+
 v2.9.2
 
 - Upgrade to aws sdk v3 @Amndeep7 (#5310)
@@ -401,7 +451,7 @@ v2.8.1
 
 - Node Version Update to 18 - requires minimum of node v18 now @HenryXiaoHX @charleshu-8 @Amndeep7 (#3850)
 - Conveyor mapper updates @rbogren-brock (#4892)
-- Move HTML export feature to HDF Converters @charleshu-8 (#4834)
+- Move HTML export feature to OHDF Converters @charleshu-8 (#4834)
 
 ## Dependency Updates
 
@@ -491,9 +541,9 @@ v2.7.1
 v2.7.0
 
 - Unique Group Names @Rlin232 (#4722) - make sure to run the db migration scripts and be ready for your group names potentially being changed in order to enforce the uniqueness constraint
-- Using Semver Compare for ASFF "Previously HDF" Special Casing @Rlin232 (#4767)
+- Using Semver Compare for ASFF "Previously OHDF" Special Casing @Rlin232 (#4767)
 - Implemented OIDC external group import @akey77 (#3922)
-- Map XCCDF result value of "notselected" to HDF impact of 0 @candrews (#4758)
+- Map XCCDF result value of "notselected" to OHDF impact of 0 @candrews (#4758)
 - Remove jQuery import @charleshu-8 (#4752)
 
 ## Dependency Updates
@@ -538,7 +588,7 @@ v2.6.58
 
 - Group Descriptions @Rlin232 (#4695)
 - Reassign group owners upon user deletion @Rlin232 (#4403)
-- Improve xccdf_results_mapper when converting XCCDF Results to HDF Results @candrews (#4255)
+- Improve xccdf_results_mapper when converting XCCDF Results to OHDF Results @candrews (#4255)
 - Update Splunk links @charleshu-8 (#4716)
 
 

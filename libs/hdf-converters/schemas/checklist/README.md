@@ -9,7 +9,7 @@ Within this directory are the contents of checklist schema versions and their as
 │       └── CKL.jsonschema # schema file from --generateJsonSchema flag and used with QuickType to generate type file
 └── README.md
 ```
-Once a newer version is published, a new version number directory should be added. Under that the schema file along with a directory named jsonix-compiler-output and the two automated files created from the [JSONIX Library](https://github.com/mitre/heimdall2/wiki/HDF-Converters-How-Tos#jsonix) section of the HDF Converters How Tos Documentation.
+Once a newer version is published, a new version number directory should be added. Under that the schema file along with a directory named jsonix-compiler-output and the two automated files created from the [JSONIX Library](https://github.com/mitre/heimdall2/wiki/HDF-Converters-How-Tos#jsonix) section of the OHDF Converters How Tos Documentation.
 
 ## How to Retrieve Latest Version
 

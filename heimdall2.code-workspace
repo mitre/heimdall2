@@ -37,7 +37,8 @@
     },
     "xml.downloadExternalResources.enabled": true,
     "cSpell.words": [
-      "fontface"
+      "fontface",
+      "headerprops"
     ]
   }
 }

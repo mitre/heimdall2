@@ -1,7 +1,9 @@
 import Store from '@/store/store';
 import {
   ICreateEvaluationTag,
+  IEvalPaginationParams,
   IEvaluation,
+  IEvaluationResponse,
   IEvaluationTag
 } from '@heimdall/common/interfaces';
 import axios from 'axios';
@@ -31,22 +33,36 @@ import {SnackbarModule} from './snackbar';
 })
 export class Evaluation extends VuexModule {
   allEvaluations: IEvaluation[] = [];
+  evaluationsCount: number = 0;
   loading = true;
 
   get evaluationForFile(): Function {
     return (file: EvaluationFile | ProfileFile) => {
-      return this.allEvaluations.find((e) => {
-        return e.id === file.database_id?.toString();
-      });
+      try {
+        return this.allEvaluations.find((e) => {
+          return e.id === file.database_id?.toString();
+        });
+      } catch (err) {
+        return false;
+      }
+    };
+  }
+
+  get totalEvaluation(): Function {
+    return () => {
+      this.evaluationsCount;
     };
   }
 
   @Action
-  async getAllEvaluations(): Promise<void> {
+  async getAllEvaluations(params: IEvalPaginationParams): Promise<void> {
+    this.context.commit('SET_LOADING', true);
     return axios
-      .get<IEvaluation[]>('/evaluations')
+      .get<IEvaluationResponse>('/evaluations', {params})
       .then(({data}) => {
-        this.context.commit('SET_ALL_EVALUATION', data);
+        const {totalCount, evaluations} = data;
+        this.context.commit('SET_ALL_EVALUATION', evaluations);
+        this.context.commit('SET_ALL_EVALUATION_COUNT', totalCount);
       })
       .finally(() => {
         this.context.commit('SET_LOADING', false);
@@ -149,6 +165,11 @@ export class Evaluation extends VuexModule {
     this.allEvaluations = evaluations;
   }
 
+  @Mutation
+  SET_ALL_EVALUATION_COUNT(evaluationsCount: number) {
+    this.evaluationsCount = evaluationsCount;
+  }
+
   // Save an evaluation or update it if is already saved.
   @Mutation
   SAVE_EVALUATION(evaluationToSave: IEvaluation) {
@@ -172,6 +193,9 @@ export class Evaluation extends VuexModule {
 
   @Mutation
   SET_LOADING(value: boolean) {
+    if (!value) {
+      document.body.style.cursor = 'default';
+    }
     this.loading = value;
   }
 

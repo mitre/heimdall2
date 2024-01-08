@@ -1,5 +1,14 @@
 <template>
-  <v-icon small class="mr-2" type="button" @click="copy">{{ icon }}</v-icon>
+  <v-icon
+    small
+    class="mr-2"
+    type="button"
+    b-tooltip.hover
+    :title="getTooltipTitle()"
+    @click="copy"
+  >
+    {{ icon }}
+  </v-icon>
 </template>
 
 <script lang="ts">
@@ -13,6 +22,13 @@ export default class CopyButton extends Vue {
   @Prop({required: true}) readonly text!: string;
   @Prop({required: false, default: 'mdi-clipboard-outline'})
   readonly icon!: string;
+
+  @Prop({required: false, type: String, default: 'Copy content to clipboard'})
+  readonly tooltip!: string;
+
+  getTooltipTitle() {
+    return this.tooltip;
+  }
 
   async copy() {
     try {

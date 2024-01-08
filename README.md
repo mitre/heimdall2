@@ -2,7 +2,7 @@
 
 ![Run E2E Backend + Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20E2E%20Backend%20+%20Frontend%20Tests/badge.svg) ![Run Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Frontend%20Tests/badge.svg) ![Run Backend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Backend%20Tests/badge.svg)
 
-This repository contains the source code for Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/master/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/master/apps/frontend), [HDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpecJS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
+This repository contains the source code for Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/master/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/master/apps/frontend), [OHDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpecJS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
 
 ## Contents
 
@@ -19,11 +19,11 @@ This repository contains the source code for Heimdall's [Backend](https://github
     - [Heimdall with Backend (Server)](#heimdall-with-backend-server)
     - [Features](#features)
     - [Use Cases](#use-cases)
-  - [Getting Started / Installation](#getting-started--installation)
+  - [Getting Started / Installation](#getting-started-installation)
     - [Heimdall Lite](#heimdall-lite-1)
       - [Running via npm](#running-via-npm)
       - [Running via Docker](#running-via-docker)
-    - [Heimdall Server - Docker](#heimdall-server---docker)
+    - [Heimdall Server - Docker](#heimdall-server-docker)
       - [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
       - [Updating Docker Container](#updating-docker-container)
       - [Stopping the Container](#stopping-the-container)
@@ -94,30 +94,30 @@ As a single-page javascript app - you can run Heimdall-Lite from any web-server,
 Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Lite, but is supported with a backend database to store persistent data overtime.
 
 ### Features
-| Features | Heimdall-Lite | Heimdall with Backend |
-| :----------------------------------------------------------- | :------------------------------------------------------: | :----------------------------------------------------------: |
-| Additional Installation Requirements    |      |     Postgres Server |
-| Overview Dashboard & Counts | :white_check_mark: | :white_check_mark: |
-| Deep Dive View of Security Control Results and Metadata | :white_check_mark: | :white_check_mark: |
-| 800-53 Partition and TreeMap View     | :white_check_mark: | :white_check_mark: |
-| Comparison View      | :white_check_mark: | :white_check_mark: |
-| Advanced Data / Filters for Reports and Viewing     | :white_check_mark: |  :white_check_mark: |
-| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) | :white_check_mark: | :white_check_mark: |
-| View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF) | :white_check_mark: | :white_check_mark: |
-| Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | :white_check_mark: | :white_check_mark: |
-| Authenticated REST API       |   | :white_check_mark: |
-| CRUD Capabilities            |   | :white_check_mark: |
-| Users & Roles & multi-team support    |   | :white_check_mark: |
-| Authentication & Authorization        | Hosting Webserver | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
+| Features                                                                       |   Heimdall-Lite    |                                    Heimdall with Backend                                    |
+| :----------------------------------------------------------------------------- | :----------------: | :-----------------------------------------------------------------------------------------: |
+| Additional Installation Requirements                                           |                    |                                       Postgres Server                                       |
+| Overview Dashboard & Counts                                                    | :white_check_mark: |                                     :white_check_mark:                                      |
+| Deep Dive View of Security Control Results and Metadata                        | :white_check_mark: |                                     :white_check_mark:                                      |
+| 800-53 Partition and TreeMap View                                              | :white_check_mark: |                                     :white_check_mark:                                      |
+| Comparison View                                                                | :white_check_mark: |                                     :white_check_mark:                                      |
+| Advanced Data / Filters for Reports and Viewing                                | :white_check_mark: |                                     :white_check_mark:                                      |
+| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) | :white_check_mark: |                                     :white_check_mark:                                      |
+| View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF)   | :white_check_mark: |                                     :white_check_mark:                                      |
+| Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | :white_check_mark: |                                     :white_check_mark:                                      |
+| Authenticated REST API                                                         |                    |                                     :white_check_mark:                                      |
+| CRUD Capabilities                                                              |                    |                                     :white_check_mark:                                      |
+| Users & Roles & multi-team support                                             |                    |                                     :white_check_mark:                                      |
+| Authentication & Authorization                                                 | Hosting Webserver  | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
 
 ### Use Cases
 
-| Heimdall-Lite | Heimdall with Backend  |
-| :------------------------------------------------------: | :------------------------------------------------------: |
-| Just-in-Time Use | Multiple Teams |
-| Minimal Footprint & Deployment Time  | Timeline and Report History |
-| Local or Disconnected Use | Centralized Deployment Model |
-| Minimal Authorization & Approval Time |  |
+|             Heimdall-Lite             |    Heimdall with Backend     |
+| :-----------------------------------: | :--------------------------: |
+|           Just-in-Time Use            |        Multiple Teams        |
+|  Minimal Footprint & Deployment Time  | Timeline and Report History  |
+|       Local or Disconnected Use       | Centralized Deployment Model |
+| Minimal Authorization & Approval Time |                              |
 
 ## Getting Started / Installation
 
@@ -299,6 +299,10 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      sudo npm install -g yarn
      ```
 
+   **NOTES** 
+
+     - The installation scripts setup_XX.x are no longer supported and are not needed anymore, as the installation process is straightforward for any RPM and DEB distro.
+     - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) nodesource for nodejs supported version and additional installation information.
    OSX:
 
    - ```bash
@@ -308,7 +312,25 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      ```
    WINDOWS:
 
-   - Use `Windows Subsystem for Linux (WSL)` - recommended Ubuntu and follow the instructions listed for Ubuntu
+   - Use `Windows Subsystem for Linux (WSL)` - (use Ubuntu as the distro, and then follow the instructions listed for Ubuntu); alternatively you could do the following steps:
+
+   - Install Node.js via MSI Installer
+     - Download the node release 18.xx installer (msi) from the [nodejs site](https://nodejs.org/en/blog/release)
+     - Open and run (double-click) the .msi file, the installation process begins, follow the installation instructions
+     - Node.js offers you options to install tools for native modules, we recommend checking the Automatically install the necessary tools check box.
+     - Verify the Node and npm version
+     ```shell
+     node --version 
+     npm --version
+     ```
+
+   - Install Yarn via MSI Installer
+     - Download the Yarn installation file from [GitHub](https://github.com/yarnpkg/yarn/releases/)
+     - Open and run the installation file, follow the installation instructions
+     - Run the following command in the PowerShell to verify the installation:
+     ```shell
+     yarn --version
+     ```
 
 2. Clone this repository:
 
@@ -359,7 +381,33 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    WINDOWS:
 
-   - Use `Windows Subsystem for Linux (WSL)` - recommended Ubuntu and follow the instructions listed for Ubuntu
+   - Use `Windows Subsystem for Linux (WSL)` - (use Ubuntu as the distro, and then follow the instructions listed for Ubuntu); alternatively you could do the following steps:
+
+   - Start the postgres server base on the installation method
+     - Starting Postgres Server Using `net start`
+       ```sql
+       net start postgresql-[x32 or x64]-[version]
+       ```
+     - Starting Postgres Server Using `pg_ctl`
+       ```sql 
+       pg_ctl -D "C:\[path-to-postgres-installation]\PostgreSQL\[version]\data" start
+       ```
+     - Starting Postgres Server Using Services Manager
+       - Press the `win key + R` to launch the `Run` window.
+       - Type `services.msc` and hit the `OK` button to open the Services Manager:
+       - Search for `Postgresql-[x32 or x64]-[version]`, select the service, and hit the `Start/play` button to start
+
+   - Create the database user
+     - Recommend using pgAdmin and follow instruction listed here 
+     - Open a postgres shell terminal (path to postgres executable directory must be set)
+       ```sql
+       # Start the terminal
+       psql -U postgres
+       # Create the database user
+       CREATE USER <username> with encrypted password '<password>';
+       ALTER USER <username> CREATEDB;
+       \q
+       ```
 
 4. Install project dependencies:
 
@@ -368,7 +416,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      yarn install
      ```
 
-5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh` or `setup-dev-env.bat` script.
+5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh or setup-dev-env.bat` script.
    - Make sure that the script is executed in the Heimdall `heimdall2` root directory. Use one of the following commands:
      ```bash
      ./setup-dev-env.sh # bash
@@ -381,6 +429,12 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 6. Create the database:
 
    - ```bash
+     # Windows
+     yarn backend sequelize-cli-windows db:create
+     yarn backend sequelize-cli-windows db:migrate
+     yarn backend sequelize-cli-windows db:seed:all
+
+     # All other OSs
      yarn backend sequelize-cli db:create
      yarn backend sequelize-cli db:migrate
      yarn backend sequelize-cli db:seed:all
@@ -396,7 +450,7 @@ This will start both the frontend and backend in development mode, meaning any c
 
 ### Debugging Heimdall Server
 
-If you are using Visual Studio Code, it is very simple to debug this application locally. First open up the Visual Studio Code workspace and ensure the [Node debuger Auto Attach](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_auto-attach) feature in Visual Studio Code is enabled. Next, open the integrated Visual Studio Code terminal and run:
+If you are using Visual Studio Code, it is very simple to debug this application locally. First open up the Visual Studio Code workspace and ensure the [Node debugger Auto Attach](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_auto-attach) feature in Visual Studio Code is enabled. Next, open the integrated Visual Studio Code terminal and run:
 
 ```
 yarn backend start:debug

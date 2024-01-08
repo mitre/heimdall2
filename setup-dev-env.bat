@@ -49,14 +49,14 @@ REM Enable API keys
 FINDSTR /C:"API_KEY_SECRET" apps\backend\.env > Nul
 IF %ERRORLEVEL% EQU 1 (
   CALL :SET_API_KEY_SECRET
-)  
+)
 
 REM Enable API keys
 FINDSTR /C:"NGINX_HOST" apps\backend\.env > Nul
 IF %ERRORLEVEL% EQU 1 (
   ECHO ".env does not contain NGINX_HOST..."
   CALL :SET_NGINX_HOST
-)  
+)
 
 REM Generate the SSL certificates
 IF EXIST ./nginx/certs/ssl_certificate.crt (
@@ -99,7 +99,7 @@ EXIT /B 0
 
 
 :SET_API_KEY_SECRET
-  SET /P enableapikeys="Enable API keys (API_KEY_SECRET) [y/n]: "
+  SET /P enableapikeys="Enable API keys (API_KEY_SECRET) [Y/n]: "
   IF /I "%enableapikeys%" EQU "Y" (
     CALL :GET_API_KEY_SECRET
   )
