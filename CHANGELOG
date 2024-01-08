@@ -1,3 +1,17 @@
+v2.9.4
+- Update pagination count logic @georgedias (#5402)
+
+## Dependency Updates
+Bump @aws-sdk/client-s3 from 3.484.0 to 3.485.0
+Bump chai from 4.3.10 to 4.4.0
+Bump htmlparser2 from 6.1.0 to 9.1.0
+Bump tailwindcss from 3.4.0 to 3.4.1
+Bump date-fns from 3.0.6 to 3.1.0
+Bump @types/passport-jwt from 3.0.13 to 4.0.0
+Bump @aws-sdk/client-config-service from 3.484.0 to 3.486.0
+Bump @types/luxon from 3.3.7 to 3.4.0
+
+
 v2.9.3
 
 - Database load pagination @georgedias (#5183)
