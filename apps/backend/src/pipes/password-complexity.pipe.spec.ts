@@ -1,5 +1,5 @@
-import {ArgumentMetadata, BadRequestException} from '@nestjs/common';
 import {validators} from '@heimdall/password-complexity';
+import {ArgumentMetadata, BadRequestException} from '@nestjs/common';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
