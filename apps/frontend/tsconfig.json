@@ -3,7 +3,6 @@
   "compilerOptions": {
     "strict": true,
     "jsx": "preserve",
-    "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "types": ["jest", "chai", "vuetify", "node"],
