@@ -20,7 +20,7 @@
         :any-selected="any_evaluation_selected"
         :enable-compare-view="true"
         :compare-view-active="compareViewActive"
-        @remove-selected="removeSelectedEvaluation"
+        @remove-selected="removeSelectedEvaluations"
         @toggle-all="toggle_all_evaluations"
         @toggle-compare-view="compareView"
         @changed-files="$emit('changed-files')"
@@ -29,6 +29,8 @@
         header-text="Profiles"
         :files="visible_profile_files"
         :all-selected="all_profiles_selected"
+        :any-selected="any_profile_selected"
+        @remove-selected="removeSelectedProfiles"
         @toggle-all="toggle_all_profiles"
         @changed-files="$emit('changed-files')"
       />
@@ -104,6 +106,10 @@ export default class Sidebar extends mixins(RouteMixin) {
     return FilteredDataModule.all_profiles_selected;
   }
 
+  get any_profile_selected(): boolean {
+    return FilteredDataModule.any_profile_selected;
+  }
+
   get compareViewActive(): boolean {
     return this.current_route === 'compare';
   }
@@ -132,8 +138,19 @@ export default class Sidebar extends mixins(RouteMixin) {
     }
   }
 
-  removeSelectedEvaluation(): void {
-    const selectedFiles = FilteredDataModule.selected_file_ids;
+  removeSelectedEvaluations(): void {
+    const selectedFiles = FilteredDataModule.selected_evaluation_ids;
+    selectedFiles.forEach((fileId) => {
+      InspecDataModule.removeFile(fileId);
+      // Remove any database files that may have been in the URL
+      // by calling the router and causing it to write the appropriate
+      // route to the URL bar
+      this.navigateWithNoErrors(`/${this.current_route}`);
+    });
+  }
+
+  removeSelectedProfiles(): void {
+    const selectedFiles = FilteredDataModule.selected_profile_ids;
     selectedFiles.forEach((fileId) => {
       InspecDataModule.removeFile(fileId);
       // Remove any database files that may have been in the URL

@@ -116,7 +116,13 @@ export default class TagRow extends Vue {
 
     Promise.all(addedTagPromises.concat(removedTagPromises))
       .then(() => SnackbarModule.notify('Successfully updated tags.'))
-      .finally(() => EvaluationModule.getAllEvaluations(this.params));
+      .finally(() => {
+        if (this.itemsPerPage) {
+          EvaluationModule.getAllEvaluations(this.params);
+        } else {
+          EvaluationModule.loadEvaluation(this.evaluation.id);
+        }
+      });
   }
 
   syncEvaluationTags() {
