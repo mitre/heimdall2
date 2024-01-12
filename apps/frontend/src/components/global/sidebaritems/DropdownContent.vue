@@ -38,7 +38,7 @@
           <v-btn
             small
             style="cursor: pointer"
-            :disabled="!anyEvaluationSelected"
+            :disabled="!anyItemSelected"
             @click="$emit('remove-selected')"
           >
             <span>Remove selected results</span>
@@ -103,7 +103,7 @@ export default class DropdownContent extends Vue {
     return this.allSelected === Trinary.On;
   }
 
-  get anyEvaluationSelected(): boolean {
+  get anyItemSelected(): boolean {
     return this.anySelected;
   }
 

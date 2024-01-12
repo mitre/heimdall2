@@ -71,6 +71,7 @@ export class Evaluation extends VuexModule {
 
   @Action
   async load_results(evaluationIds: string[]): Promise<(FileID | void)[]> {
+    document.body.style.cursor = 'wait';
     const unloadedIds = _.difference(
       evaluationIds,
       InspecDataModule.loadedDatabaseIds
@@ -117,6 +118,7 @@ export class Evaluation extends VuexModule {
           })
       )
     );
+    document.body.style.cursor = 'default';
     return loadedIds;
   }
 
