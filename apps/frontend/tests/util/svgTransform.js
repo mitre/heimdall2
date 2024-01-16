@@ -9,6 +9,6 @@ module.exports = {
       }
     });
 
-    return `module.exports = { render: ${render} }`;
+    return {code: `module.exports = { render: ${render} }`};
   }
 };

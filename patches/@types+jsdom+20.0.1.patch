@@ -1,0 +1,14 @@
+diff --git a/node_modules/@types/jsdom/base.d.ts b/node_modules/@types/jsdom/base.d.ts
+index 67d7514..8519113 100755
+--- a/node_modules/@types/jsdom/base.d.ts
++++ b/node_modules/@types/jsdom/base.d.ts
+@@ -191,7 +191,9 @@ declare module "jsdom" {
+ 
+         /* ECMAScript Globals */
+         globalThis: DOMWindow;
++        // @ts-ignore
+         readonly ["Infinity"]: number;
++        // @ts-ignore
+         readonly ["NaN"]: number;
+         readonly undefined: undefined;
+ 
