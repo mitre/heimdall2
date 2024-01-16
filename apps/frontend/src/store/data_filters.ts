@@ -274,7 +274,7 @@ export class FilteredData extends VuexModule {
 
   // check to see if any profile is selected
   get any_profile_selected(): boolean {
-    return this.selectedProfileIds.length > 0 ? true : false;
+    return this.selectedProfileIds.length > 0;
   }
 
   // check to see if all evaluations are selected
@@ -291,7 +291,7 @@ export class FilteredData extends VuexModule {
 
   // check to see if any evaluation is selected
   get any_evaluation_selected(): boolean {
-    return this.selectedEvaluationIds.length > 0 ? true : false;
+    return this.selectedEvaluationIds.length > 0;
   }
 
   /**

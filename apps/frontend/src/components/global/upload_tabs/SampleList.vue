@@ -113,7 +113,7 @@
                   <v-icon class="pl-2">mdi-file-download</v-icon>
                 </v-btn>
               </template>
-              <span>Load selected sample evaluation(s)</span>
+              <span>Load selected items(s)</span>
             </v-tooltip>
           </div>
         </div>
@@ -128,6 +128,7 @@ import {FileID, InspecIntakeModule} from '@/store/report_intake';
 import {Sample, samples, fetchSample} from '@/utilities/sample_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
+import App from '../../../App.vue';
 
 // Needed to render the show-select
 @Component({
@@ -138,7 +139,6 @@ export default class SampleList extends Vue {
   selectedFiles: Sample[] = [];
 
   isActiveDialog = false;
-
   headers: Object[] = [
     {
       text: 'Filename',
@@ -148,8 +148,6 @@ export default class SampleList extends Vue {
       value: 'filename'
     }
   ];
-
-  isActive = false;
 
   sortBy = 'filename';
   fileKey = 'filename';
@@ -169,12 +167,15 @@ export default class SampleList extends Vue {
     if (selectedSamples.length != 0) {
       const promises: Promise<FileID | FileID[]>[] = [];
       this.loading = true;
+      App.spinAction(true);
       for (const sample of selectedSamples) {
-        const requestFile = fetchSample(sample).then((data: File) => {
-          return InspecIntakeModule.loadFile({
+        const requestFile = fetchSample(sample).then(async (data: File) => {
+          const done = await InspecIntakeModule.loadFile({
             file: data,
             filename: sample.filename
           });
+          App.spinMessage(`Loading: ${sample.filename}`);
+          return done;
         });
         promises.push(requestFile);
       }
@@ -188,6 +189,7 @@ export default class SampleList extends Vue {
         })
         .finally(() => {
           this.loading = false;
+          App.spinAction(false);
           this.selectedFiles = [];
         });
     } else {

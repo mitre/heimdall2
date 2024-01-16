@@ -48,6 +48,7 @@ import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '../../store/server';
+import {EvaluationModule} from '@/store/evaluations';
 
 @Component({
   components: {
@@ -141,6 +142,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   removeSelectedEvaluations(): void {
     const selectedFiles = FilteredDataModule.selected_evaluation_ids;
     selectedFiles.forEach((fileId) => {
+      EvaluationModule.removeEvaluation(fileId);
       InspecDataModule.removeFile(fileId);
       // Remove any database files that may have been in the URL
       // by calling the router and causing it to write the appropriate
@@ -152,6 +154,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   removeSelectedProfiles(): void {
     const selectedFiles = FilteredDataModule.selected_profile_ids;
     selectedFiles.forEach((fileId) => {
+      EvaluationModule.removeEvaluation(fileId);
       InspecDataModule.removeFile(fileId);
       // Remove any database files that may have been in the URL
       // by calling the router and causing it to write the appropriate

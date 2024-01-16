@@ -195,7 +195,7 @@
             <TagRow
               v-if="item.id"
               :evaluation="item"
-              :items-per-page="pagination.itemsPerPage"
+              :on-loading-panel="true"
             />
           </template>
           <template #[`item.createdAt`]="{item}">
@@ -254,7 +254,7 @@
               <v-icon class="pl-2"> mdi-file-download</v-icon>
             </v-btn>
           </template>
-          <span>Load selected evaluation(s)</span>
+          <span>Load selected item(s)</span>
         </v-tooltip>
       </div>
     </div>
@@ -313,7 +313,7 @@ export default class LoadFileList extends Vue {
   };
 
   tableHight = '440px';
-  page = 1;
+  page = EvaluationModule.page; //1;
   itemsPerPageShowing = this.totalItemsPerPage;
   pagination = {
     page: this.page,
@@ -382,6 +382,10 @@ export default class LoadFileList extends Vue {
     } else {
       this.page = 1; // Reload the page
     }
+  }
+
+  get offset() {
+    return this.getOffSetLimit().offset;
   }
 
   getOffSetLimit() {
@@ -462,7 +466,7 @@ export default class LoadFileList extends Vue {
 
     // Call the Database
     await this.getEvaluations(params);
-    this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
     this.evaluationsCount = EvaluationModule.evaluationsCount;
   }
 
@@ -507,7 +511,7 @@ export default class LoadFileList extends Vue {
 
     // Call the Database
     await this.getEvaluations(params);
-    this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
     this.evaluationsCount = EvaluationModule.evaluationsCount;
   }
 
@@ -549,7 +553,7 @@ export default class LoadFileList extends Vue {
 
       // Call the Database
       await this.getEvaluations(params);
-      this.evaluationsLoaded = EvaluationModule.allEvaluations;
+      this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
       this.evaluationsCount = EvaluationModule.evaluationsCount;
     }
     this.updatingPage = false;
@@ -587,7 +591,7 @@ export default class LoadFileList extends Vue {
 
           // Call the Database
           await this.getEvaluations(params);
-          this.evaluationsLoaded = EvaluationModule.allEvaluations;
+          this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
           this.evaluationsCount = EvaluationModule.evaluationsCount;
         }
       } else if (action == 'slice') {
@@ -599,7 +603,7 @@ export default class LoadFileList extends Vue {
           this.pagination.itemsPerPage
         );
         EvaluationModule.context.commit('SET_ALL_EVALUATION', newEvaluations);
-        this.evaluationsLoaded = EvaluationModule.allEvaluations;
+        this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
         EvaluationModule.context.commit('SET_LOADING', false);
       }
     }
@@ -642,7 +646,7 @@ export default class LoadFileList extends Vue {
       limit: limit,
       order: this.sortOrder
     });
-    this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
   }
 
   editItem(item: IEvaluation) {
