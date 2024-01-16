@@ -111,7 +111,6 @@ export default class TagRow extends Vue {
     const toRemove: IEvaluationTag[] = this.evaluation.evaluationTags.filter(
       (tag) => !this.tags.includes(tag.value)
     );
-
     const addedTagPromises = toAdd.map((tag) =>
       EvaluationModule.addTag({evaluation: this.evaluation, tag: {value: tag}})
     );
@@ -122,7 +121,7 @@ export default class TagRow extends Vue {
 
     Promise.all(addedTagPromises.concat(removedTagPromises))
       .then(() => SnackbarModule.notify('Successfully updated tags.'))
-      .finally(async () => {
+      .finally(() => {
         if (this.onLoadingPanel) {
           EvaluationModule.getAllEvaluations(this.params);
           if (
