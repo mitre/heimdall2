@@ -15,7 +15,6 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
-import App from '../App.vue'
 import {InspecDataModule} from './data_store';
 import {
   EvaluationFile,
@@ -54,11 +53,11 @@ export class Evaluation extends VuexModule {
     };
   }
 
-  get evaluationsLoaded(): Number {
+  get evaluationsLoaded(): number {
     return this.allEvaluations.length;
   }
 
-  get pagedEvaluationsCount(): Number {
+  get pagedEvaluationsCount(): number {
     return this.pagedEvaluations.length;
   }
 
@@ -96,7 +95,6 @@ export class Evaluation extends VuexModule {
       unloadedIds.map(async (id) =>
         this.loadEvaluation(id)
           .then(async (evaluation) => {
-            App.spinMessage(`Loading: ${evaluation.filename}`);
             if (await InspecIntakeModule.isHDF(evaluation.data)) {
               InspecIntakeModule.loadText({
                 text: JSON.stringify(evaluation.data),
