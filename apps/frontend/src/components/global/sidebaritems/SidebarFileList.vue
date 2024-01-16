@@ -75,6 +75,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
 
   //removes uploaded file from the currently observed files
   remove_file() {
+    EvaluationModule.removeEvaluation(this.file.uniqueId);
     InspecDataModule.removeFile(this.file.uniqueId);
     // Remove any database files that may have been in the URL
     // by calling the router and causing it to write the appropriate

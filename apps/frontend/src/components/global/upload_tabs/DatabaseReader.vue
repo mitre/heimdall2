@@ -73,7 +73,7 @@
 
     <LoadFileList
       :headers="headers"
-      :evaluations-loaded="allEvaluations"
+      :evaluations-loaded="pagedEvaluations"
       :loading="queryingRecords"
       :total-items-per-page="itemsPerPage"
       :evaluations-count="evaluationsCount"
@@ -93,6 +93,7 @@ import {EvaluationModule} from '@/store/evaluations';
 import {IEvalPaginationParams, IEvaluation} from '@heimdall/interfaces';
 import {Prop, Watch} from 'vue-property-decorator';
 import Component, {mixins} from 'vue-class-component';
+import App from '../../../App.vue';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -135,7 +136,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     }
   ];
 
-  itemsPerPage = 10;
+  itemsPerPage = EvaluationModule.limit;
 
   @Watch('refresh')
   onChildChanged(newRefreshValue: boolean, _oldValue: boolean) {
@@ -150,13 +151,14 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   }
 
   async get_all_results(): Promise<void> {
+    // Cursor is set back to default when the query finishes
     document.body.style.cursor = 'wait';
-    // Stores results in the Evaluation class field allEvaluations
     const params: IEvalPaginationParams = {
-      offset: 0,
+      offset: EvaluationModule.offset,
       limit: this.itemsPerPage,
-      order: ['createdAt', 'DESC']
+      order: EvaluationModule.order
     };
+    // Stores results in the Evaluation class field pagedEvaluations
     EvaluationModule.getAllEvaluations(params);
   }
 
@@ -166,8 +168,8 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
     return EvaluationModule.loading;
   }
 
-  get allEvaluations() {
-    return EvaluationModule.allEvaluations;
+  get pagedEvaluations() {
+    return EvaluationModule.pagedEvaluations;
   }
 
   get evaluationsCount() {
@@ -175,16 +177,21 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   }
 
   // Fires when user selects entries and loads them into the visualization panel
-  load_results(evaluations: IEvaluation[]): void {
+  async load_results(evaluations: IEvaluation[]): Promise<void> {
     if (evaluations.length != 0) {
+      App.spinAction(true);
       EvaluationModule.load_results(
         evaluations.map((evaluation) => evaluation.id)
-      ).then((fileIds: (FileID | void)[]) => {
-        this.$emit('got-files', fileIds.filter(Boolean));
-      });
+      )
+        .then((fileIds: (FileID | void)[]) => {
+          this.$emit('got-files', fileIds.filter(Boolean));
+        })
+        .finally(() => {
+          App.spinAction(false);
+        });
     } else {
       SnackbarModule.notify(
-        'Please select an evaluation for viewing in the visualization panel'
+        'Please select an entry for viewing in the visualization panel'
       );
     }
   }
