@@ -75,7 +75,7 @@
     "express": "^4.17.1",
     "file-saver": "^2.0.2",
     "highlight.js": "^11.0.0",
-    "html-loader": "^4.1.0",
+    "html-loader": "^5.0.0",
     "inspecjs": "^2.8.1",
     "lodash": "4.17.21",
     "lru-cache": "^10.1.0",
