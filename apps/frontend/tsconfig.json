@@ -5,7 +5,7 @@
     "jsx": "preserve",
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
-    "types": ["jest", "chai", "vuetify", "node"],
+    "types": ["jest", "chai", "vue", "vuetify", "node"],
     "paths": {
       "@/*": ["src/*"]
     },

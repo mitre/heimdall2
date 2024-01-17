@@ -117,16 +117,15 @@ export class FilteredData extends VuexModule {
 
   @Mutation
   SELECT_EVALUATIONS(files: FileID[]): void {
-    this.selectedEvaluationIds = [
-      ...new Set([...files, ...this.selectedEvaluationIds])
-    ];
+    this.selectedEvaluationIds = _.uniq([
+      ...files,
+      ...this.selectedEvaluationIds
+    ]);
   }
 
   @Mutation
   SELECT_PROFILES(files: FileID[]): void {
-    this.selectedProfileIds = [
-      ...new Set([...files, ...this.selectedProfileIds])
-    ];
+    this.selectedProfileIds = _.uniq([...files, ...this.selectedProfileIds]);
   }
 
   @Mutation
