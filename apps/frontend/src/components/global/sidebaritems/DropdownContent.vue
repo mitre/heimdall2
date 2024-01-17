@@ -41,7 +41,7 @@
             :disabled="!anyItemSelected"
             @click="$emit('remove-selected')"
           >
-            <span>Remove selected results</span>
+            <span>Remove selected {{ headerText }} </span>
             <v-icon right>mdi-text-box-remove-outline</v-icon>
           </v-btn>
         </v-row>

@@ -90,10 +90,10 @@ import ServerMixin from '@/mixins/ServerMixin';
 import {FileID} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
+import {SpinnerModule} from '@/store/spinner';
 import {IEvalPaginationParams, IEvaluation} from '@heimdall/interfaces';
 import {Prop, Watch} from 'vue-property-decorator';
 import Component, {mixins} from 'vue-class-component';
-import App from '../../../App.vue';
 
 /**
  * Uploads data to the store with unique IDs asynchronously as soon as data is entered.
@@ -179,7 +179,8 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
   // Fires when user selects entries and loads them into the visualization panel
   async load_results(evaluations: IEvaluation[]): Promise<void> {
     if (evaluations.length != 0) {
-      App.spinAction(true);
+      SpinnerModule.reset();
+      SpinnerModule.visibility(true);
       EvaluationModule.load_results(
         evaluations.map((evaluation) => evaluation.id)
       )
@@ -187,7 +188,7 @@ export default class DatabaseReader extends mixins(ServerMixin, RouteMixin) {
           this.$emit('got-files', fileIds.filter(Boolean));
         })
         .finally(() => {
-          App.spinAction(false);
+          SpinnerModule.visibility(false);
         });
     } else {
       SnackbarModule.notify(

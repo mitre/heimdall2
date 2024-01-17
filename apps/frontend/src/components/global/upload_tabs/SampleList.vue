@@ -124,11 +124,12 @@
 
 <script lang="ts">
 import {SnackbarModule} from '@/store/snackbar';
+import {SpinnerModule} from '@/store/spinner';
 import {FileID, InspecIntakeModule} from '@/store/report_intake';
 import {Sample, samples, fetchSample} from '@/utilities/sample_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import App from '../../../App.vue';
+//import App from '../../../App.vue';
 
 // Needed to render the show-select
 @Component({
@@ -167,14 +168,18 @@ export default class SampleList extends Vue {
     if (selectedSamples.length != 0) {
       const promises: Promise<FileID | FileID[]>[] = [];
       this.loading = true;
-      App.spinAction(true);
+      SpinnerModule.reset();
+      SpinnerModule.visibility(true);
+      let index = 1;
       for (const sample of selectedSamples) {
         const requestFile = fetchSample(sample).then(async (data: File) => {
           const done = await InspecIntakeModule.loadFile({
             file: data,
             filename: sample.filename
           });
-          App.spinMessage(`Loading: ${sample.filename}`);
+          SpinnerModule.setMessage(`Loading: ${sample.filename}`);
+          const value = Math.floor((index++ / selectedSamples.length) * 100);
+          SpinnerModule.setValue(value);
           return done;
         });
         promises.push(requestFile);
@@ -189,7 +194,7 @@ export default class SampleList extends Vue {
         })
         .finally(() => {
           this.loading = false;
-          App.spinAction(false);
+          SpinnerModule.visibility(false);
           this.selectedFiles = [];
         });
     } else {

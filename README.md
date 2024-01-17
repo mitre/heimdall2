@@ -19,11 +19,11 @@ This repository contains the source code for Heimdall's [Backend](https://github
     - [Heimdall with Backend (Server)](#heimdall-with-backend-server)
     - [Features](#features)
     - [Use Cases](#use-cases)
-  - [Getting Started / Installation](#getting-started-installation)
+  - [Getting Started / Installation](#getting-started--installation)
     - [Heimdall Lite](#heimdall-lite-1)
       - [Running via npm](#running-via-npm)
       - [Running via Docker](#running-via-docker)
-    - [Heimdall Server - Docker](#heimdall-server-docker)
+    - [Heimdall Server - Docker](#heimdall-server---docker)
       - [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
       - [Updating Docker Container](#updating-docker-container)
       - [Stopping the Container](#stopping-the-container)
@@ -96,7 +96,7 @@ Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Li
 ### Features
 | Features                                                                       |   Heimdall-Lite    |                                    Heimdall with Backend                                    |
 | :----------------------------------------------------------------------------- | :----------------: | :-----------------------------------------------------------------------------------------: |
-| Additional Installation Requirements                                           |                    |                                       Postgres Server                                       |
+| Additional Installation Requirements                                           |                    |                                       PostgreSQL Server                                       |
 | Overview Dashboard & Counts                                                    | :white_check_mark: |                                     :white_check_mark:                                      |
 | Deep Dive View of Security Control Results and Metadata                        | :white_check_mark: |                                     :white_check_mark:                                      |
 | 800-53 Partition and TreeMap View                                              | :white_check_mark: |                                     :white_check_mark:                                      |
@@ -229,7 +229,7 @@ $ cf login -a api.fr.cloud.gov  --sso
 $ cf target -o sandbox-rename create-space heimdall2-rename
 ```
 
-5. Create a postgresql database
+5. Create a PostgreSQL database
 ```
 # Update manifest.yml file to rename application and database key name
 $ cf marketplace
@@ -336,7 +336,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      git clone https://github.com/mitre/heimdall2
      ```
 
-3. Run the Postgres server:
+3. Run the PostgreSQL server:
 
    Ubuntu:
    
@@ -467,12 +467,21 @@ To test your code to make sure everything still works:
 
     # Run Frontend Vue Tests
     yarn frontend test
-    # Run Backend Nest Tests
+    # Run Backend Nest Tests (see note)
     yarn backend test:ci-cov
+
+<span style="color:red">**NOTE:**</span> The `Backend Nest Tests` will remove (BULKDELETE) all entries in the configured PostgreSQL server for the following tables:
+ - EvaluationTags
+ - Evaluations
+ - Users
+ - GroupEvaluations
+ - Groups
+ - GroupUsers
+
 
 #### Run Cypress End to End Tests
 
-The application includes E2E frontend + Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). These perform automated checking that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
+The application includes an End-to-End (E2E) frontend + Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). The E2E tests performed is to validate  that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
 
     CYPRESS_TESTING=true yarn start:dev
     CYPRESS_BASE_URL=http://localhost:8080 yarn test:ui:open

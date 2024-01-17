@@ -1,3 +1,4 @@
+import {SpinnerModule} from '@/store/spinner';
 import Store from '@/store/store';
 import {
   ICreateEvaluationTag,
@@ -90,11 +91,15 @@ export class Evaluation extends VuexModule {
       evaluationIds,
       InspecDataModule.loadedDatabaseIds
     );
+    let index = 1;
     const loadedIds: FileID[] = [];
     await Promise.all(
       unloadedIds.map(async (id) =>
         this.loadEvaluation(id)
           .then(async (evaluation) => {
+            SpinnerModule.setMessage(`Loading: ${evaluation.filename}`);
+            const value = Math.floor((index++ / evaluationIds.length) * 100);
+            SpinnerModule.setValue(value);
             if (await InspecIntakeModule.isHDF(evaluation.data)) {
               InspecIntakeModule.loadText({
                 text: JSON.stringify(evaluation.data),
