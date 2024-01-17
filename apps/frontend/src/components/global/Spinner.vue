@@ -1,36 +1,42 @@
 <template>
-  <div v-if="startSpinner" class="spin">
-    <div class="ring">
-      <div class="lds-spinner">
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-        <div />
-      </div>
-      <div v-if="message.length > 0" class="vue-simple-progress-text">
-        {{ message }}
-      </div>
+  <div v-if="show" class="spin">
+    <div class="ring" style="font-size: 160%">
+      <v-progress-circular
+        :rotate="360"
+        :size="200"
+        :width="15"
+        :value="value"
+        color="light-blue"
+      >
+        <template #default
+          ><b>{{ value }} %</b></template
+        >
+      </v-progress-circular>
+    </div>
+    <div v-if="message.length > 0" class="ring" style="top: 65%">
+      <b>{{ message }}</b>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-import {Prop} from 'vue-property-decorator';
 import Component from 'vue-class-component';
+import {SpinnerModule} from '@/store/spinner';
 
 @Component
 export default class Spinner extends Vue {
-  @Prop({type: Boolean, default: false}) startSpinner!: boolean;
-  @Prop({type: String, default: 'Loading...'}) message!: string;
+  get show(): boolean {
+    return SpinnerModule.show;
+  }
+
+  get message(): string {
+    return SpinnerModule.message;
+  }
+
+  get value(): number {
+    return SpinnerModule.value;
+  }
 }
 </script>
 
@@ -39,94 +45,17 @@ export default class Spinner extends Vue {
   z-index: 999;
   width: 100%;
   height: 100%;
-  background-color: rgba($color: #585252, $alpha: 0.7);
+  background-color: rgba($color: #585252, $alpha: 0.8);
   position: fixed;
 }
-
 .ring {
-  z-index: 999;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
-  margin: 0 auto;
-  height: 100%;
-}
-.lds-spinner {
-  color: official;
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.lds-spinner div {
-  transform-origin: 40px 40px;
-  animation: lds-spinner 1.2s linear infinite;
-}
-.lds-spinner div:after {
-  content: ' ';
-  display: block;
-  position: absolute;
-  top: 3px;
-  left: 37px;
-  width: 6px;
-  height: 18px;
-  border-radius: 20%;
-  background: #83afe9;
-}
-.lds-spinner div:nth-child(1) {
-  transform: rotate(0deg);
-  animation-delay: -1.1s;
-}
-.lds-spinner div:nth-child(2) {
-  transform: rotate(30deg);
-  animation-delay: -1s;
-}
-.lds-spinner div:nth-child(3) {
-  transform: rotate(60deg);
-  animation-delay: -0.9s;
-}
-.lds-spinner div:nth-child(4) {
-  transform: rotate(90deg);
-  animation-delay: -0.8s;
-}
-.lds-spinner div:nth-child(5) {
-  transform: rotate(120deg);
-  animation-delay: -0.7s;
-}
-.lds-spinner div:nth-child(6) {
-  transform: rotate(150deg);
-  animation-delay: -0.6s;
-}
-.lds-spinner div:nth-child(7) {
-  transform: rotate(180deg);
-  animation-delay: -0.5s;
-}
-.lds-spinner div:nth-child(8) {
-  transform: rotate(210deg);
-  animation-delay: -0.4s;
-}
-.lds-spinner div:nth-child(9) {
-  transform: rotate(240deg);
-  animation-delay: -0.3s;
-}
-.lds-spinner div:nth-child(10) {
-  transform: rotate(270deg);
-  animation-delay: -0.2s;
-}
-.lds-spinner div:nth-child(11) {
-  transform: rotate(300deg);
-  animation-delay: -0.1s;
-}
-.lds-spinner div:nth-child(12) {
-  transform: rotate(330deg);
-  animation-delay: 0s;
-}
-@keyframes lds-spinner {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  font-size: medium;
+  color: #409ae9;
 }
 </style>
