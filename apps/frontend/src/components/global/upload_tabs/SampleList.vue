@@ -129,7 +129,6 @@ import {FileID, InspecIntakeModule} from '@/store/report_intake';
 import {Sample, samples, fetchSample} from '@/utilities/sample_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-//import App from '../../../App.vue';
 
 // Needed to render the show-select
 @Component({
