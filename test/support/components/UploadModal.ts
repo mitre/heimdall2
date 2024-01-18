@@ -3,22 +3,6 @@ export default class UploadModal {
     cy.get('#upload-btn').click();
   }
 
-  // loadSample(name: string): void {
-  //   this.switchToTab('sample');
-  //   this.loadFile('uploadtab-sample', name);
-  // }
-
-  // loadFromDatabase(name: string): void {
-  //   this.switchToTab('database');
-  //   this.loadFile('uploadtab-database', name);
-  // }
-
-  // loadFile(parentTabId: string, name: string): void {
-  //   cy.get(`#${parentTabId} [data-cy=loadFileList]`).within(() => {
-  //     cy.contains(name).click({force: true});
-  //   });
-  // }
-
   loadSample(name: string): void {
     this.switchToTab('sample');
     this.loadFile('uploadtab-sample [data-cy=loadSampleFileList]', name);
