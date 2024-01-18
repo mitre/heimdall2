@@ -44,7 +44,7 @@
           <div class="d-flex flex-column">
             <v-data-table
               v-model="selectedFiles"
-              data-cy="loadFileList"
+              data-cy="loadSampleFileList"
               class="pb-8 table"
               dense
               show-select
