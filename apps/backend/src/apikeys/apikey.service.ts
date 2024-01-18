@@ -1,6 +1,6 @@
+import {hashAndSaltPassword} from '@heimdall/common/crypto';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {hash} from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import {CreateApiKeyDto} from '../apikeys/dto/create-apikey.dto';
 import {ConfigService} from '../config/config.service';
@@ -40,7 +40,13 @@ export class ApiKeyService {
     );
     // Since BCrypt has a 72 byte limit only hash the JWT signature
     const JWTSignature = newJWT.split('.')[2];
-    newApiKey.apiKey = await hash(JWTSignature, 14);
+    newApiKey.apiKey = await hashAndSaltPassword(
+      JWTSignature,
+      !(
+        this.configService.get('USE_NEW_ENCRYPTION_STRATEGY')?.toLowerCase() ===
+        'true'
+      )
+    );
     newApiKey.save();
     return {id: newApiKey.id, name: newApiKey.name, apiKey: newJWT};
   }

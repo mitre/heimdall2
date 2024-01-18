@@ -1,4 +1,5 @@
 import {Ability} from '@casl/ability';
+import {comparePassword, hashAndSaltPassword} from '@heimdall/common/crypto';
 import {
   BadRequestException,
   ForbiddenException,
@@ -6,11 +7,11 @@ import {
   NotFoundException
 } from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {compare, hash} from 'bcryptjs';
 import {FindOptions} from 'sequelize';
 import {v4} from 'uuid';
 import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
+import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
@@ -22,6 +23,7 @@ export class UsersService {
   constructor(
     @InjectModel(User)
     private readonly userModel: typeof User,
+    private readonly configService: ConfigService,
     private readonly groupsService: GroupsService
   ) {}
 
@@ -61,7 +63,14 @@ export class UsersService {
     user.role = createUserDto.role;
     user.creationMethod = createUserDto.creationMethod;
     try {
-      user.encryptedPassword = await hash(createUserDto.password, 14);
+      user.encryptedPassword = await hashAndSaltPassword(
+        createUserDto.password,
+        !(
+          this.configService
+            .get('USE_NEW_ENCRYPTION_STRATEGY')
+            ?.toLowerCase() === 'true'
+        )
+      );
     } catch {
       throw new BadRequestException();
     }
@@ -83,7 +92,14 @@ export class UsersService {
     ) {
       throw new BadRequestException('You must change your password');
     } else if (updateUserDto.password) {
-      userToUpdate.encryptedPassword = await hash(updateUserDto.password, 14);
+      userToUpdate.encryptedPassword = await hashAndSaltPassword(
+        updateUserDto.password,
+        !(
+          this.configService
+            .get('USE_NEW_ENCRYPTION_STRATEGY')
+            ?.toLowerCase() === 'true'
+        )
+      );
       userToUpdate.passwordChangedAt = new Date();
       userToUpdate.forcePasswordChange = false;
     }
@@ -120,9 +136,14 @@ export class UsersService {
   ): Promise<User> {
     if (
       abac.cannot(Action.DeleteNoPassword, userToDelete) &&
-      !(await compare(
+      !(await comparePassword(
         deleteUserDto.password || '',
-        userToDelete.encryptedPassword
+        userToDelete.encryptedPassword,
+        !(
+          this.configService
+            .get('USE_NEW_ENCRYPTION_STRATEGY')
+            ?.toLowerCase() === 'true'
+        )
       ))
     ) {
       throw new ForbiddenException(

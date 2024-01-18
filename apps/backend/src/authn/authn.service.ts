@@ -1,11 +1,14 @@
 import {
+  asHexString,
+  comparePassword,
+  randomBytes
+} from '@heimdall/common/crypto';
+import {
   ForbiddenException,
   Injectable,
   UnauthorizedException
 } from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
-import {compare} from 'bcryptjs';
-import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 import * as _ from 'lodash';
 import moment from 'moment';
@@ -50,7 +53,18 @@ export class AuthnService {
     } catch {
       throw new UnauthorizedException('Incorrect Username or Password');
     }
-    if (user && (await compare(password, user.encryptedPassword))) {
+    if (
+      user &&
+      (await comparePassword(
+        password,
+        user.encryptedPassword,
+        !(
+          this.configService
+            .get('USE_NEW_ENCRYPTION_STRATEGY')
+            ?.toLowerCase() === 'true'
+        )
+      ))
+    ) {
       this.usersService.updateLoginMetadata(user);
       return user;
     } else {
@@ -72,7 +86,17 @@ export class AuthnService {
           const matchingKey = await this.apiKeyService.findById(
             jwtPayload.keyId
           );
-          if (await compare(JWTSignature, matchingKey.apiKey)) {
+          if (
+            await comparePassword(
+              JWTSignature,
+              matchingKey.apiKey,
+              !(
+                this.configService
+                  .get('USE_NEW_ENCRYPTION_STRATEGY')
+                  ?.toLowerCase() === 'true'
+              )
+            )
+          ) {
             if (matchingKey.type === 'user') {
               return matchingKey.user;
             } else if (matchingKey.type === 'group') {
@@ -106,7 +130,7 @@ export class AuthnService {
     try {
       user = await this.usersService.findByEmail(email);
     } catch {
-      const randomPass = crypto.randomBytes(128).toString('hex');
+      const randomPass = asHexString(randomBytes(128));
       const createUser: CreateUserDto = {
         email: email,
         password: randomPass,
@@ -205,9 +229,14 @@ export class AuthnService {
   ): Promise<void> {
     try {
       if (
-        !(await compare(
+        !(await comparePassword(
           updateUserDto.currentPassword || '',
-          user.encryptedPassword
+          user.encryptedPassword,
+          !(
+            this.configService
+              .get('USE_NEW_ENCRYPTION_STRATEGY')
+              ?.toLowerCase() === 'true'
+          )
         ))
       ) {
         throw new ForbiddenException('Current password is incorrect');
