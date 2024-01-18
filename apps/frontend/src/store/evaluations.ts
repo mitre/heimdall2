@@ -152,6 +152,7 @@ export class Evaluation extends VuexModule {
   async loadEvaluation(id: string) {
     return axios.get<IEvaluation>(`/evaluations/${id}`).then(({data}) => {
       this.context.commit('SAVE_EVALUATION', data);
+      this.context.commit('SAVE_PAGED_EVALUATION', data);
       return data;
     });
   }
@@ -240,6 +241,23 @@ export class Evaluation extends VuexModule {
     }
     if (!found) {
       this.allEvaluations.push(evaluationToSave);
+    }
+  }
+
+  // Save a paged evaluation (on the selection database panel)
+  // to the paged variable. Update it if is already saved.
+  @Mutation
+  SAVE_PAGED_EVALUATION(evaluationToSave: IEvaluation) {
+    let found = false;
+    for (const [index, evaluation] of this.pagedEvaluations.entries()) {
+      if (evaluationToSave.id === evaluation.id) {
+        this.pagedEvaluations.splice(index, 1, evaluationToSave);
+        found = true;
+        break;
+      }
+    }
+    if (!found) {
+      this.pagedEvaluations.push(evaluationToSave);
     }
   }
 
