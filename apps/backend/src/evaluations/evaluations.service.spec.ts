@@ -11,6 +11,7 @@ import {
 } from '../../test/constants/evaluations-test.constant';
 import {GROUP_1} from '../../test/constants/groups-test.constant';
 import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
+import {ConfigService} from '../config/config.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
@@ -48,6 +49,7 @@ describe('EvaluationsService', () => {
         UsersModule
       ],
       providers: [
+        ConfigService,
         EvaluationsService,
         DatabaseService,
         UsersService,

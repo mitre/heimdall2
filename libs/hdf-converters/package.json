@@ -7,9 +7,6 @@
     "lib"
   ],
   "main": "src/index.ts",
-  "publishConfig": {
-    "main": "lib/index.js"
-  },
   "scripts": {
     "prepack": "yarn build && node prepack.js",
     "postpack": "run-script-os",

@@ -1,11 +1,11 @@
 'use strict';
-const bcrypt = require('bcryptjs');
-const crypto = require('crypto');
+const crypto = require('@heimdall/common/crypto');
 const dotenv = require('dotenv');
 const fs = require('fs');
 
+/** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: async (queryInterface, _Sequelize) => {
+  async up (queryInterface, _Sequelize) {
     const result = await queryInterface.sequelize.query(
       'SELECT COUNT(id) FROM "Users" WHERE role = \'admin\'',
       {type: queryInterface.sequelize.QueryTypes.SELECT}
@@ -19,7 +19,7 @@ module.exports = {
       if (error.code === 'ENOENT') {
         // File probably does not exist
         console.log('Unable to read configuration file `.env`!');
-        console.log('Falling back to environment or undefined values!');
+        console.log('Falling back to purely environment or undefined values!');
       } else {
         throw error;
       }
@@ -38,7 +38,7 @@ module.exports = {
           envConfig.ADMIN_USES_EXTERNAL_AUTH.toLowerCase() === 'true';
       }
       const password =
-        envConfig.ADMIN_PASSWORD || crypto.randomBytes(16).toString('hex');
+        envConfig.ADMIN_PASSWORD || crypto.asHexString(crypto.randomBytes(16));
 
       console.log(`New administrator email is: ${email}`);
       if (!adminUsesExternalAuth) {
@@ -53,7 +53,7 @@ module.exports = {
             firstName: 'Admin',
             email: email,
             role: 'admin',
-            encryptedPassword: bcrypt.hashSync(password, 14),
+            encryptedPassword: await crypto.hashAndSaltPassword(password, !(envConfig.USE_NEW_ENCRYPTION_STRATEGY?.toLowerCase() === 'true')),
             creationMethod: adminUsesExternalAuth ? 'ldap' : 'local',
             passwordChangedAt: new Date(),
             forcePasswordChange: true,
@@ -69,7 +69,7 @@ module.exports = {
     }
   },
 
-  down: (queryInterface, _Sequelize) => {
+  async down (queryInterface, _Sequelize) {
     return queryInterface.bulkDelete('Users', {role: 'admin'});
   }
 };

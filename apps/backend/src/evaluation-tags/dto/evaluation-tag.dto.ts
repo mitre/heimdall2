@@ -1,4 +1,4 @@
-import {IEvaluationTag} from '@heimdall/interfaces';
+import {IEvaluationTag} from '@heimdall/common/interfaces';
 import {EvaluationTag} from '../evaluation-tag.model';
 
 export class EvaluationTagDto implements IEvaluationTag {

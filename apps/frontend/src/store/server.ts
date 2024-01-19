@@ -5,7 +5,7 @@ import {
   IStartupSettings,
   IUpdateUser,
   IUser
-} from '@heimdall/interfaces';
+} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
 import {

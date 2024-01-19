@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import {IEvaluation} from '@heimdall/interfaces';
+import {IEvaluation} from '@heimdall/common/interfaces';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import EvaluationMixin from '../../../mixins/EvaluationMixin';

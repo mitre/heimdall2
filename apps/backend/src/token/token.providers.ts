@@ -1,11 +1,11 @@
+import {asHexString, randomBytes} from '@heimdall/common/crypto';
 import {JwtModule} from '@nestjs/jwt';
-import * as crypto from 'crypto';
 import ms from 'ms';
 import {ConfigModule} from '../config/config.module';
 import {ConfigService} from '../config/config.service';
 
 export function generateDefault(): string {
-  return crypto.randomBytes(64).toString('hex');
+  return asHexString(randomBytes(64));
 }
 
 export function limitJWTTime(time: string, logLimit: boolean) {

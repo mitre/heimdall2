@@ -1,6 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions} from 'sequelize/types';
+import {FindOptions} from 'sequelize';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
