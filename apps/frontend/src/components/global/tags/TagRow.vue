@@ -1,6 +1,11 @@
 <template>
   <div v-if="evaluation">
-    <v-edit-dialog large @save="save" @cancel="syncEvaluationTags">
+    <v-edit-dialog
+      large
+      @save="save"
+      @open="syncEvaluationTags"
+      @cancel="syncEvaluationTags"
+    >
       <template v-for="tag in evaluation.evaluationTags">
         <v-chip
           v-if="evaluation.editable"
@@ -73,7 +78,7 @@ import {Prop} from 'vue-property-decorator';
 })
 export default class TagRow extends Vue {
   @Prop({required: true}) readonly evaluation!: IEvaluation;
-  @Prop({required: true}) itemsPerPage!: number;
+  @Prop({type: Boolean, default: false}) onLoadingPanel!: boolean;
 
   tags: string[] = [];
   search = '';
@@ -87,9 +92,9 @@ export default class TagRow extends Vue {
   };
 
   params = {
-    offset: 0,
-    limit: this.itemsPerPage,
-    order: ['createdAt', 'DESC']
+    offset: EvaluationModule.offset,
+    limit: EvaluationModule.limit,
+    order: EvaluationModule.order
   };
 
   mounted() {
@@ -116,9 +121,21 @@ export default class TagRow extends Vue {
 
     Promise.all(addedTagPromises.concat(removedTagPromises))
       .then(() => SnackbarModule.notify('Successfully updated tags.'))
-      .finally(() => EvaluationModule.getAllEvaluations(this.params));
+      .finally(() => {
+        if (this.onLoadingPanel) {
+          EvaluationModule.getAllEvaluations(this.params);
+          if (
+            EvaluationModule.evaluationLoaded(this.evaluation.id) !== undefined
+          ) {
+            EvaluationModule.loadEvaluation(this.evaluation.id);
+          }
+        } else {
+          EvaluationModule.loadEvaluation(this.evaluation.id);
+        }
+      });
   }
 
+  // Used to update the Tags in the v-combobox
   syncEvaluationTags() {
     this.tags = this.evaluationTagsToStrings();
   }
@@ -135,9 +152,18 @@ export default class TagRow extends Vue {
   deleteTagConfirm() {
     EvaluationModule.deleteTag(this.activeTag).then(() => {
       SnackbarModule.notify('Deleted tag successfully.');
-      EvaluationModule.getAllEvaluations(this.params).then(() => {
-        this.syncEvaluationTags();
-      });
+      if (this.onLoadingPanel) {
+        EvaluationModule.getAllEvaluations(this.params);
+        if (
+          EvaluationModule.evaluationLoaded(this.evaluation.id) !== undefined
+        ) {
+          EvaluationModule.loadEvaluation(this.evaluation.id);
+        }
+      } else {
+        EvaluationModule.loadEvaluation(this.evaluation.id).then(() => {
+          this.syncEvaluationTags();
+        });
+      }
     });
     this.deleteTagDialog = false;
   }

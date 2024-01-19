@@ -116,7 +116,7 @@ export class EvaluationsController {
       totalItems = response.totalItems;
     }
 
-    // Show public evaluations or those created by logged in user
+    // Show public evaluations or those created by logged-in user
     evaluations = evaluations.filter((evaluation: Subject) =>
       abac.can(Action.Read, evaluation)
     );

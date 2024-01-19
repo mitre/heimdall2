@@ -22,7 +22,7 @@ beforeEach(function () {
 // "Uncaught TypeError: Cannot read property 'getBoundingClientRect' of undefined"
 // On a null-obj
 Cypress.on('uncaught:exception', (err) => {
-  // Return false if the error messaage includes `getBoundingClientRect`
+  // Return false if the error message includes `getBoundingClientRect`
   return !err.message.includes('getBoundingClientRect');
 });
 

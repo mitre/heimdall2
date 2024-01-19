@@ -53,7 +53,7 @@ export default class Snackbar extends Vue {
       if (this.messageContent) {
         return this.messageContent;
       } else {
-        return 'ERROR: An unidentified error has occurred, if functionality has degraded please try refreshing the page. If that does not fix the issue you are experiencing, then please report the issue.';
+        return 'ERROR: An unidentified error has occurred, if functionality is degraded please try refreshing the page. If that does not fix the issue you are experiencing, then please report the issue.';
       }
     } else {
       if (this.messageContent) {

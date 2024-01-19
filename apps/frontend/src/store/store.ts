@@ -7,6 +7,7 @@ import {InspecIntake} from '@/store/report_intake';
 import {IServerState} from '@/store/server';
 import {SeverityCount} from '@/store/severity_counts';
 import {ISidebarState} from '@/store/sidebar_state';
+import {ISpinnerState} from '@/store/spinner';
 import {StatusCount} from '@/store/status_counts';
 import Vue from 'vue';
 import Vuex from 'vuex';
@@ -42,6 +43,7 @@ export interface StoreType {
   server: IServerState;
   sidebar: ISidebarState;
   groups: IGroupState;
+  spinner: ISpinnerState;
 }
 const store = new Vuex.Store<StoreType>({});
 

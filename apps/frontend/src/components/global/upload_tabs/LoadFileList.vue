@@ -70,7 +70,7 @@
       <div class="d-flex flex-column">
         <v-data-table
           v-model="selectedFiles"
-          data-cy="loadFileList"
+          data-cy="loadDatabaseFileList"
           class="pb-8 table"
           dense
           fixed-header
@@ -195,7 +195,7 @@
             <TagRow
               v-if="item.id"
               :evaluation="item"
-              :items-per-page="pagination.itemsPerPage"
+              :on-loading-panel="true"
             />
           </template>
           <template #[`item.createdAt`]="{item}">
@@ -208,7 +208,6 @@
                 id="editEvaluationModal"
                 :active="activeItem"
                 :visible="editEvaluationDialog && activeItem.id === item.id"
-                @updateEvaluations="updateEvaluations"
                 @close="editEvaluationDialog = false"
               />
               <CopyButton
@@ -220,7 +219,7 @@
                 <v-icon
                   data-cy="edit"
                   small
-                  title="Edit groups association"
+                  title="Edit record (name, visibility, groups)"
                   class="mr-2"
                   @click="editItem(item)"
                 >
@@ -254,7 +253,7 @@
               <v-icon class="pl-2"> mdi-file-download</v-icon>
             </v-btn>
           </template>
-          <span>Load selected evaluation(s)</span>
+          <span>Load selected item(s)</span>
         </v-tooltip>
       </div>
     </div>
@@ -269,14 +268,17 @@ import TagRow from '@/components/global/tags/TagRow.vue';
 import EditEvaluationModal from '@/components/global/upload_tabs/EditEvaluationModal.vue';
 import {EvaluationModule} from '@/store/evaluations';
 import {SnackbarModule} from '@/store/snackbar';
+import {InspecDataModule} from '@/store/data_store';
 import {
   IEvalPaginationParams,
   IEvaluation,
   IEvaluationTag
 } from '@heimdall/common/interfaces';
-import Vue from 'vue';
 import {Prop} from 'vue-property-decorator';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
+import {FilteredDataModule} from '../../../store/data_filters';
+import ServerMixin from '../../../mixins/ServerMixin';
+import RouteMixin from '@/mixins/RouteMixin';
 
 @Component({
   components: {
@@ -287,7 +289,7 @@ import Component from 'vue-class-component';
     TagRow
   }
 })
-export default class LoadFileList extends Vue {
+export default class LoadFileList extends mixins(ServerMixin, RouteMixin) {
   @Prop({required: true}) readonly headers!: Object[];
   @Prop({type: Boolean, default: false}) loading!: boolean;
   @Prop({type: String, default: 'id'}) readonly fileKey!: string;
@@ -313,7 +315,7 @@ export default class LoadFileList extends Vue {
   };
 
   tableHight = '440px';
-  page = 1;
+  page = EvaluationModule.page;
   itemsPerPageShowing = this.totalItemsPerPage;
   pagination = {
     page: this.page,
@@ -384,6 +386,16 @@ export default class LoadFileList extends Vue {
     }
   }
 
+  getQueryParams(): IEvalPaginationParams {
+    const {offset, limit} = this.getOffSetLimit();
+    let params: IEvalPaginationParams = {
+      offset: offset,
+      limit: limit,
+      order: this.sortOrder
+    };
+    return params;
+  }
+
   getOffSetLimit() {
     const page = this.pagination.page;
     // offset: where to start returning values
@@ -450,19 +462,15 @@ export default class LoadFileList extends Vue {
         ? ''
         : this.formatSearchParam(this.searchTags.trim());
     const searchFields = [filename, groups, tags];
-    const {offset, limit} = this.getOffSetLimit();
-    let params: IEvalPaginationParams = {
-      offset: offset,
-      limit: limit,
-      order: this.sortOrder
-    };
+
+    let params = this.getQueryParams();
     params.useClause = true;
     params.operator = this.logicOperator;
     params.searchFields = searchFields;
 
     // Call the Database
     await this.getEvaluations(params);
-    this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
     this.evaluationsCount = EvaluationModule.evaluationsCount;
   }
 
@@ -498,16 +506,10 @@ export default class LoadFileList extends Vue {
       this.sortOrder = this.getSortClause(this.sortByField, sortOrder);
     }
 
-    const {offset, limit} = this.getOffSetLimit();
-    const params: IEvalPaginationParams = {
-      offset: offset,
-      limit: limit,
-      order: this.sortOrder
-    };
-
-    // Call the Database
+    // Call the Database - update display
+    const params = this.getQueryParams();
     await this.getEvaluations(params);
-    this.evaluationsLoaded = EvaluationModule.allEvaluations;
+    this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
     this.evaluationsCount = EvaluationModule.evaluationsCount;
   }
 
@@ -540,16 +542,11 @@ export default class LoadFileList extends Vue {
       this.getSearchEvaluation();
     } else {
       this.itemsPerPageShowing = this.pagination.itemsPerPage;
-      const {offset, limit} = this.getOffSetLimit();
-      const params: IEvalPaginationParams = {
-        offset: offset,
-        limit: limit,
-        order: this.sortOrder
-      };
 
-      // Call the Database
+      // Call the Database - update display
+      const params = this.getQueryParams();
       await this.getEvaluations(params);
-      this.evaluationsLoaded = EvaluationModule.allEvaluations;
+      this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
       this.evaluationsCount = EvaluationModule.evaluationsCount;
     }
     this.updatingPage = false;
@@ -578,16 +575,11 @@ export default class LoadFileList extends Vue {
           this.getSearchEvaluation();
         } else {
           this.itemsPerPageShowing = this.pagination.itemsPerPage;
-          const {offset, limit} = this.getOffSetLimit();
-          const params: IEvalPaginationParams = {
-            offset: offset,
-            limit: limit,
-            order: this.sortOrder
-          };
 
-          // Call the Database
+          // Call the Database - update display
+          const params = this.getQueryParams();
           await this.getEvaluations(params);
-          this.evaluationsLoaded = EvaluationModule.allEvaluations;
+          this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
           this.evaluationsCount = EvaluationModule.evaluationsCount;
         }
       } else if (action == 'slice') {
@@ -598,8 +590,11 @@ export default class LoadFileList extends Vue {
           0,
           this.pagination.itemsPerPage
         );
-        EvaluationModule.context.commit('SET_ALL_EVALUATION', newEvaluations);
-        this.evaluationsLoaded = EvaluationModule.allEvaluations;
+        EvaluationModule.context.commit(
+          'SET_PAGED_EVALUATIONS',
+          newEvaluations
+        );
+        this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
         EvaluationModule.context.commit('SET_LOADING', false);
       }
     }
@@ -636,13 +631,10 @@ export default class LoadFileList extends Vue {
   }
 
   async updateEvaluations() {
-    const {offset, limit} = this.getOffSetLimit();
-    await this.getEvaluations({
-      offset: offset,
-      limit: limit,
-      order: this.sortOrder
+    const params = this.getQueryParams();
+    this.getEvaluations(params).then(() => {
+      this.evaluationsLoaded = EvaluationModule.pagedEvaluations;
     });
-    this.evaluationsLoaded = EvaluationModule.allEvaluations;
   }
 
   editItem(item: IEvaluation) {
@@ -661,8 +653,22 @@ export default class LoadFileList extends Vue {
   }
 
   async deleteItemConfirm(): Promise<void> {
-    EvaluationModule.deleteEvaluation(this.activeItem).then(() => {
+    EvaluationModule.deleteEvaluation(this.activeItem).then(async () => {
       SnackbarModule.notify('Deleted evaluation successfully.');
+      this.updateEvaluations();
+      // Remove the file from the visualization panel if it is loaded.
+      const fileId = await InspecDataModule.loadedFileIsForDatabaseIds(
+        Number(this.activeItem.id)
+      );
+      if (FilteredDataModule.selected_file_ids.includes(fileId)) {
+        //removes uploaded file from the currently observed files
+        EvaluationModule.removeEvaluation(fileId);
+        InspecDataModule.removeFile(fileId);
+        // Remove any database files that may have been in the URL
+        // by calling the router and causing it to write the appropriate
+        // route to the URL bar
+        this.navigateWithNoErrors(`/${this.current_route}`);
+      }
     });
     this.deleteItemDialog = false;
   }

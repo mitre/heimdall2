@@ -1,4 +1,4 @@
-import {Ability} from '@casl/ability';
+import {MongoAbility} from '@casl/ability';
 import {
   ADMIN_WITH_ID,
   TEST_USER_WITH_ID
@@ -8,8 +8,8 @@ import {Action, CaslAbilityFactory} from './casl-ability.factory';
 
 describe('CaslAbilityFactory', () => {
   let abilityFactory: CaslAbilityFactory;
-  let userAbility: Ability;
-  let adminAbility: Ability;
+  let userAbility: MongoAbility;
+  let adminAbility: MongoAbility;
 
   beforeEach(async () => {
     abilityFactory = new CaslAbilityFactory();
