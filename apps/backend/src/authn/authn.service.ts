@@ -225,7 +225,8 @@ export class AuthnService {
 
   async testPassword(
     updateUserDto: {currentPassword?: string},
-    user: User
+    user: User,
+    configService?: ConfigService
   ): Promise<void> {
     try {
       if (
@@ -233,8 +234,7 @@ export class AuthnService {
           updateUserDto.currentPassword || '',
           user.encryptedPassword,
           !(
-            this.configService
-              .get('USE_NEW_ENCRYPTION_STRATEGY')
+            configService?.get('USE_NEW_ENCRYPTION_STRATEGY')
               ?.toLowerCase() === 'true'
           )
         ))
