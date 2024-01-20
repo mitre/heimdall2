@@ -4,15 +4,15 @@ import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
   ILookupPath,
-  impactMapping,
   MappedTransform,
+  impactMapping,
   parseHtml,
   parseXml
 } from './base-converter';
 import {CciNistMapping} from './mappings/CciNistMapping';
 import {
-  conditionallyProvideAttribute,
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
+  conditionallyProvideAttribute
 } from './utils/global';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([

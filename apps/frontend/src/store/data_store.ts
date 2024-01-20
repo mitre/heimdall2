@@ -12,10 +12,10 @@ import {
 import Store from '@/store/store';
 import {
   Action,
-  getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
+  getModule
 } from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
 
