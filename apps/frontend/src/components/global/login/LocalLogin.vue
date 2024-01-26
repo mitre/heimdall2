@@ -210,7 +210,7 @@ export default class LocalLogin extends Vue {
 
   openExternalAuthModeDocumentation() {
     window.open(
-      'https://github.com/mitre/heimdall2/wiki/External-Authentication-Only'
+      'https://github.com/mitre/heimdall2/wiki/Heimdall-Authentication-Methods#external-authentication-only'
     );
   }
 

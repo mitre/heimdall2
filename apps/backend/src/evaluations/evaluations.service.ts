@@ -14,6 +14,14 @@ interface EvaluationsResponse {
   totalItems: number;
   evaluations: Evaluation[];
 }
+
+interface WhereClauseParams {
+  searchFields: string[];
+  operator: string;
+  email: string;
+  role: string;
+  action: string;
+}
 @Injectable()
 export class EvaluationsService {
   constructor(
@@ -36,13 +44,17 @@ export class EvaluationsService {
     1: The sequelize model is using eager loading, at the SQL level, this is a
        query with one or more joins. This is done by using the include option
        on a model finder query (findAll). Given that we are using multiple JOIN
-       operations, particularly one on the Groups, if a record has multiple
-       groups the query will return multiple rows one per group. This offsets
-       the LIMIT because the return data is in JSON format where the groups are
-       objects within the scan id, but are individual SQL records.
+       operations, particularly the ones on the Tags and Groups, if a record has
+       multiple Tags or a Group with multiple members, the query will return
+       a json object where each evaluation may contain multiple rows one per
+       Tag or group. This offsets the LIMIT because the return data is in JSON
+       format where the tags and groups are objects within the scan id, but are
+       processed as individual SQL records, resulting in an inaccurate number
+       of records returned.
 
-       For this reason there will be times where the number of records returned
-       are less than the asked by the LIMIT.
+       For this reason the pagination is not done where query the records but
+       rather by getting all records and slicing the appropriate number of
+       records based on the pagination parameters (LIMIT and OFFSET)
 
     2: TypeScript is not able to infer OrderItem[].
 
@@ -75,6 +87,15 @@ export class EvaluationsService {
          3      table name  field name         order (asc/desc)    
 
   */
+
+  /*
+    NOTE: Hack to overcome the inability to retrieve the desire
+          number of evaluation (see note 1 above). Pad the 
+          requested number of records by an estimated number of 
+          group members (20 per group). 
+  */
+  totalGroupMembers = 20;
+
   async getAllEvaluations(
     params: IEvalPaginationParams,
     email: string,
@@ -89,9 +110,9 @@ export class EvaluationsService {
     await this.evaluationModel
       .findAll<Evaluation>({
         attributes: {exclude: ['data']},
-        include: [EvaluationTag, User, Group],
+        include: [EvaluationTag, User, {model: Group, include: [User]}],
         offset: params.offset,
-        limit: params.limit,
+        limit: Number(params.limit) * this.totalGroupMembers,
         order:
           params.order.length == 2
             ? [[params.order[0], params.order[1]]]
@@ -101,10 +122,21 @@ export class EvaluationsService {
       })
       .then(async (data) => {
         const totalItems = await this.evaluationCount(email, role);
-        queryResponse.evaluations = data;
+
+        const totalPages = Math.ceil(totalItems / params.limit);
+        const totalReturned = Number(params.offset) + Number(params.limit);
+        const onPage = Math.ceil(
+          totalReturned / 100 / (Number(params.limit) / 100)
+        );
+        if (onPage == totalPages) {
+          const returnCnt = totalItems - Number(params.offset);
+          // Return from the back of the array
+          queryResponse.evaluations = data.slice(-returnCnt);
+        } else {
+          queryResponse.evaluations = data.slice(0, params.limit);
+        }
         queryResponse.totalItems = totalItems;
       });
-
     return queryResponse;
   }
 
@@ -117,19 +149,29 @@ export class EvaluationsService {
       totalItems: 0,
       evaluations: []
     };
-    const whereClause = this.getWhereClauseSearch(
-      params.searchFields == undefined ? [''] : params.searchFields,
-      params.operator == undefined ? 'OR' : params.operator,
-      email,
-      role
-    );
 
+    const whereClauseParams: WhereClauseParams = {
+      searchFields:
+        params.searchFields == undefined ? [''] : params.searchFields,
+      operator: params.operator == undefined ? 'OR' : params.operator,
+      email: email,
+      role: role,
+      action: 'search'
+    };
+
+    const whereClause = await this.getWhereClauseSearch(
+      whereClauseParams.searchFields,
+      whereClauseParams.operator,
+      whereClauseParams.email,
+      whereClauseParams.role,
+      whereClauseParams.action
+    );
     await this.evaluationModel
       .findAll<Evaluation>({
         attributes: {exclude: ['data']},
-        include: [EvaluationTag, User, Group],
+        include: [EvaluationTag, User, {model: Group, include: [User]}],
         offset: params.offset,
-        limit: params.limit,
+        limit: Number(params.limit) * this.totalGroupMembers,
         order:
           params.order.length == 2
             ? [[params.order[0], params.order[1]]]
@@ -138,8 +180,20 @@ export class EvaluationsService {
         where: whereClause
       })
       .then(async (data) => {
-        const totalItems = await this.searchItemsCount(whereClause);
-        queryResponse.evaluations = data;
+        const totalItems = await this.searchItemsCount(whereClauseParams);
+
+        const totalPages = Math.ceil(totalItems / params.limit);
+        const totalReturned = Number(params.offset) + Number(params.limit);
+        const onPage = Math.ceil(
+          totalReturned / 100 / (Number(params.limit) / 100)
+        );
+        if (onPage == totalPages) {
+          const returnCnt = totalItems - Number(params.offset);
+          // Return from the back of the array
+          queryResponse.evaluations = data.slice(-returnCnt);
+        } else {
+          queryResponse.evaluations = data.slice(0, params.limit);
+        }
         queryResponse.totalItems = totalItems;
       });
 
@@ -162,12 +216,13 @@ export class EvaluationsService {
     return baseCriteria;
   }
 
-  getWhereClauseSearch(
+  async getWhereClauseSearch(
     fields: string[],
     operation: string,
     email: string,
-    role: string
-  ): WhereOptions {
+    role: string,
+    action: string
+  ): Promise<WhereOptions> {
     const searchFields = [];
     const baseCriteria = this.getWhereClauseBaseCriteria(role, email);
 
@@ -178,9 +233,20 @@ export class EvaluationsService {
       searchFields.push({'$groups.name$': {[Op.iRegexp]: `${fields[1]}`}});
     }
     if (fields[2] != '()') {
-      searchFields.push({
-        '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}
-      });
+      if (action == 'count') {
+        searchFields.push({
+          '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}
+        });
+      } else {
+        const evaluationIds = await this.getEvaluationId(fields[2]);
+
+        searchFields.push({
+          [Op.or]: [
+            {id: {[Op.in]: evaluationIds}},
+            {'$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}}
+          ]
+        });
+      }
     }
 
     if (operation == 'AND') {
@@ -192,6 +258,18 @@ export class EvaluationsService {
         [Op.and]: [{[Op.or]: baseCriteria}, {[Op.and]: {[Op.or]: searchFields}}]
       };
     }
+  }
+
+  async getEvaluationId(tagValue: string): Promise<string[]> {
+    let evaluationIds: string[] = [];
+    await EvaluationTag.findAll({
+      attributes: ['evaluationId'],
+      where: {value: {[Op.iRegexp]: tagValue}},
+      raw: true
+    }).then(async (evalIds) => {
+      evaluationIds = evalIds.map((evalIds) => evalIds.evaluationId);
+    });
+    return evaluationIds;
   }
 
   async evaluationCount(userEmail: string, role: string): Promise<number> {
@@ -212,7 +290,16 @@ export class EvaluationsService {
     }
   }
 
-  async searchItemsCount(whereClause: WhereOptions): Promise<number> {
+  async searchItemsCount(
+    whereClauseParams: WhereClauseParams
+  ): Promise<number> {
+    const whereClause = await this.getWhereClauseSearch(
+      whereClauseParams.searchFields,
+      whereClauseParams.operator,
+      whereClauseParams.email,
+      whereClauseParams.role,
+      'count'
+    );
     return this.evaluationModel.count({
       include: [EvaluationTag, User, Group],
       where: whereClause,
