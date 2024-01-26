@@ -1,6 +1,6 @@
 {
   "name": "@mitre/hdf-converters",
-  "version": "2.9.3",
+  "version": "2.9.4",
   "license": "Apache-2.0",
   "description": "Converter util library used to transform various scan results into HDF format",
   "files": [
@@ -41,7 +41,7 @@
     "csv2json": "^2.0.2",
     "fast-xml-parser": "^4.2.0",
     "html-entities": "^2.3.2",
-    "htmlparser2": "^6.1.0",
+    "htmlparser2": "^9.1.0",
     "inspecjs": "^2.8.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
