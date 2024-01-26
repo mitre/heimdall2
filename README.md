@@ -171,16 +171,40 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
 
 4. By default Heimdall will generate self-signed certificates that will last for 7 days. For production use, place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively. For development use, you can use the default generated certificates which means you do not need to put any certificate files in the `./nginx/certs/` folder.
 
-*NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
+  *NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
-   - ```bash
-     ./setup-docker-env.sh
-     # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
-     docker-compose up
-     ```
+   ```bash
+   ./setup-docker-env.sh
+   # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
+   ```
 
-6. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.) 
+6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server).  Please convert any certificates into PEM files and place them in `./certs/` where they will be automatically ingested.  Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the `command` attribute underneath the `certs` service in the `docker-compose.yml` to run that script.
+  ```bash
+  # What ./certs should look like with any scripts or certificates
+  # ./certs/
+  # ├── dodcerts.sh
+  # └── my_certificates.pem
+
+  # What ./docker-compose.yml should look like for the above situation
+  # NOTE: the `command` attribute only needs to know about scripts not any particular certificates
+  services:
+    ...
+    certs:
+      ...
+      command: sh -c "sh /etc/pki/ca-trust/source/anchors/dodcerts.sh && update-ca-trust && tail -f /dev/null"
+      ...
+    ...
+  ```
+  To make the `docker-compose.yml` aware of additional scripts, add `sh /etc/pki/ca-trust/source/anchors/NAME_OF_SCRIPT.sh && ` to the beginning of the section in quotes.
+  NOTE: The script should make sure to place the certs within `/etc/pki/ca-trust/source/anchors/`.
+
+7. Spin up Heimdall Server
+  ```bash
+  docker-compose up
+  ```
+
+8. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.)
 
 #### Updating Docker Container
 
