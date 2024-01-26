@@ -56,7 +56,7 @@
     "@vue/cli-plugin-typescript": "^5.0.3",
     "@vue/cli-plugin-unit-jest": "~5.0.3",
     "@vue/cli-service": "^5.0.8",
-    "@vue/eslint-config-prettier": "^7.0.0",
+    "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/eslint-config-typescript": "^12.0.0",
     "adm-zip": "^0.5.10",
     "apexcharts": "^3.10.1",
