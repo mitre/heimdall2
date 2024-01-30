@@ -21,8 +21,6 @@ jobs:
         env:
           SPLUNK_START_ARGS: --accept-license
           SPLUNKD_SSL_ENABLE: False
-          SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
-          SPLUNK_HEC_SSL: False
           SPLUNK_PASSWORD: Valid_password!
 
     steps:
