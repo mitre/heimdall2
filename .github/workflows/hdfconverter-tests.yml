@@ -20,7 +20,7 @@ jobs:
           - 8088:8088
         env:
           SPLUNK_START_ARGS: --accept-license
-          SPLUNKD_SSL_ENABLE: False
+          # SPLUNKD_SSL_ENABLE: False
           SPLUNK_PASSWORD: Valid_password!
 
     steps:
