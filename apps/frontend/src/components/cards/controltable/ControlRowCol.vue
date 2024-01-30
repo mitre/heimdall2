@@ -40,6 +40,22 @@
       />
       <!-- eslint-enable vue/no-v-html -->
     </v-col>
+    <v-col v-if="result['backtrace'] !== undefined" cols="12" class="pa-2">
+      <v-expansion-panels>
+        <v-expansion-panel>
+          <v-expansion-panel-header>Backtrace</v-expansion-panel-header>
+          <v-expansion-panel-content>
+            <span
+              v-for="(trace, i) in result.backtrace"
+              :key="i"
+              class="inline-text"
+            >
+              {{ trace }}
+            </span>
+          </v-expansion-panel-content>
+        </v-expansion-panel>
+      </v-expansion-panels>
+    </v-col>
   </v-row>
 </template>
 
@@ -79,5 +95,9 @@ button.unclickable-button {
 
 .pre-formatted {
   white-space: pre-wrap;
+}
+
+.inline-text {
+  display: inline-block;
 }
 </style>

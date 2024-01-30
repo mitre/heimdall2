@@ -13,7 +13,8 @@ jobs:
       - name: setup node
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: "18.18"
+          check-latest: true
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
 
@@ -35,7 +36,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Publish HDF Converters to NPM
+      - name: Publish OHDF Converters to NPM
         if: always()
         run: npm publish --access public libs/hdf-converters/mitre-hdf-converters*.tgz
         env:

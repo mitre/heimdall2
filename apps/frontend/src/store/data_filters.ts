@@ -30,7 +30,7 @@ import {
   Severity
 } from 'inspecjs';
 import * as _ from 'lodash';
-import LRUCache from 'lru-cache';
+import {LRUCache} from 'lru-cache';
 import {
   Action,
   getModule,
@@ -264,8 +264,8 @@ export function fileMatchesFilter(
   // if an evaluation exists from the database, populate the group names and tag values
   const evaluation = EvaluationModule.evaluationForFile(file);
   if (evaluation) {
-    fileProperties.groups = evaluation.groups.map((g) => g.name.toLowerCase());
-    fileProperties.tags = evaluation.evaluationTags.map((t) =>
+    fileProperties.groups = evaluation.groups.map((g: { name: string; }) => g.name.toLowerCase());
+    fileProperties.tags = evaluation.evaluationTags.map((t: { value: string; }) =>
       t.value.toLowerCase()
     );
   }
@@ -612,6 +612,14 @@ export class FilteredData extends VuexModule {
   get selected_checklist(): FileID {
     return this.selectedChecklistId;
   }
+  
+  get selected_evaluation_ids(): FileID[] {
+    return this.selectedEvaluationIds;
+  }
+
+  get selected_profile_ids(): FileID[] {
+    return this.selectedProfileIds;
+  }
 
   // check to see if all profiles are selected
   get all_profiles_selected(): Trinary {
@@ -623,6 +631,11 @@ export class FilteredData extends VuexModule {
       default:
         return Trinary.Mixed;
     }
+  }
+
+  // check to see if any profile is selected
+  get any_profile_selected(): boolean {
+    return this.selectedProfileIds.length > 0;
   }
 
   // check to see if all evaluations are selected
@@ -639,6 +652,11 @@ export class FilteredData extends VuexModule {
 
   get checklist_selected(): Trinary {
     return this.selectedChecklistId ? Trinary.On : Trinary.Off;
+  }
+  
+  // check to see if any evaluation is selected
+  get any_evaluation_selected(): boolean {
+    return this.selectedEvaluationIds.length > 0;
   }
 
   /**

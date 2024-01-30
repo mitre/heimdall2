@@ -22,7 +22,7 @@
     "test:ui:open": "cypress open"
   },
   "dependencies": {
-    "@aws-sdk/client-config-service": "~3.428.0",
+    "@aws-sdk/client-config-service": "^3.95.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.9.0",
@@ -41,7 +41,7 @@
     "vue": "2.6.14"
   },
   "engines": {
-    "node": "^18.12.0"
+    "node": "~18.18.0"
   },
   "version": "0.0.0"
 }

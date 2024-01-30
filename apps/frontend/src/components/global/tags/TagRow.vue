@@ -1,12 +1,31 @@
 <template>
   <div v-if="evaluation">
-    <v-edit-dialog large @save="save" @cancel="syncEvaluationTags">
+    <v-edit-dialog
+      large
+      @save="save"
+      @open="syncEvaluationTags"
+      @cancel="syncEvaluationTags"
+    >
       <template v-for="tag in evaluation.evaluationTags">
-        <v-chip :key="tag.id + '_'" small close @click:close="deleteTag(tag)">{{
-          tag.value
-        }}</v-chip>
+        <v-chip
+          v-if="evaluation.editable"
+          :key="tag.id + '_'"
+          small
+          close
+          @click:close="deleteTag(tag)"
+        >
+          {{ tag.value }}
+        </v-chip>
+        <v-chip v-else :key="tag.id + '_'" small>{{ tag.value }}</v-chip>
       </template>
-      <v-icon small class="ma-2"> mdi-tag-plus </v-icon>
+      <v-icon
+        v-if="evaluation.editable"
+        small
+        class="ma-2"
+        title="Edit/Add Tag(s)"
+      >
+        mdi-tag-plus
+      </v-icon>
       <template #input>
         <v-combobox
           v-model="tags"
@@ -59,6 +78,7 @@ import {Prop} from 'vue-property-decorator';
 })
 export default class TagRow extends Vue {
   @Prop({required: true}) readonly evaluation!: IEvaluation;
+  @Prop({type: Boolean, default: false}) onLoadingPanel!: boolean;
 
   tags: string[] = [];
   search = '';
@@ -69,6 +89,12 @@ export default class TagRow extends Vue {
     value: '',
     createdAt: new Date(),
     updatedAt: new Date()
+  };
+
+  params = {
+    offset: EvaluationModule.offset,
+    limit: EvaluationModule.limit,
+    order: EvaluationModule.order
   };
 
   mounted() {
@@ -95,9 +121,21 @@ export default class TagRow extends Vue {
 
     Promise.all(addedTagPromises.concat(removedTagPromises))
       .then(() => SnackbarModule.notify('Successfully updated tags.'))
-      .finally(() => EvaluationModule.getAllEvaluations());
+      .finally(() => {
+        if (this.onLoadingPanel) {
+          EvaluationModule.getAllEvaluations(this.params);
+          if (
+            EvaluationModule.evaluationLoaded(this.evaluation.id) !== undefined
+          ) {
+            EvaluationModule.loadEvaluation(this.evaluation.id);
+          }
+        } else {
+          EvaluationModule.loadEvaluation(this.evaluation.id);
+        }
+      });
   }
 
+  // Used to update the Tags in the v-combobox
   syncEvaluationTags() {
     this.tags = this.evaluationTagsToStrings();
   }
@@ -114,9 +152,18 @@ export default class TagRow extends Vue {
   deleteTagConfirm() {
     EvaluationModule.deleteTag(this.activeTag).then(() => {
       SnackbarModule.notify('Deleted tag successfully.');
-      EvaluationModule.getAllEvaluations().then(() => {
-        this.syncEvaluationTags();
-      });
+      if (this.onLoadingPanel) {
+        EvaluationModule.getAllEvaluations(this.params);
+        if (
+          EvaluationModule.evaluationLoaded(this.evaluation.id) !== undefined
+        ) {
+          EvaluationModule.loadEvaluation(this.evaluation.id);
+        }
+      } else {
+        EvaluationModule.loadEvaluation(this.evaluation.id).then(() => {
+          this.syncEvaluationTags();
+        });
+      }
     });
     this.deleteTagDialog = false;
   }

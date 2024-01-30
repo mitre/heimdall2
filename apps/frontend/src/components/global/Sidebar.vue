@@ -44,11 +44,13 @@
       <div v-if="isUtilityDrawerShown">
         <v-expansion-panels v-model="active_path" accordion>
           <DropdownContent
-            header-text="Result Sets"
+            header-text="Results"
             :files="visible_evaluation_files"
             :all-selected="all_evaluations_selected"
+            :any-selected="any_evaluation_selected"
             :enable-compare-view="true"
             :compare-view-active="compareViewActive"
+            @remove-selected="removeSelectedEvaluations"
             @toggle-all="toggle_all_evaluations"
             @toggle-compare-view="compareView"
             @changed-files="$emit('changed-files')"
@@ -57,6 +59,8 @@
             header-text="Profiles"
             :files="visible_profile_files"
             :all-selected="all_profiles_selected"
+            :any-selected="any_profile_selected"
+            @remove-selected="removeSelectedProfiles"
             @toggle-all="toggle_all_profiles"
             @changed-files="$emit('changed-files')"
           />
@@ -117,6 +121,7 @@ import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import Component, {mixins} from 'vue-class-component';
 import {ServerModule} from '../../store/server';
+import {EvaluationModule} from '@/store/evaluations';
 import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
 import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
 import {AppInfoModule} from '@/store/app_info';
@@ -244,8 +249,16 @@ export default class Sidebar extends mixins(RouteMixin) {
     return FilteredDataModule.all_evaluations_selected;
   }
 
+  get any_evaluation_selected(): boolean {
+    return FilteredDataModule.any_evaluation_selected;
+  }
+
   get all_profiles_selected(): Trinary {
     return FilteredDataModule.all_profiles_selected;
+  }
+
+  get any_profile_selected(): boolean {
+    return FilteredDataModule.any_profile_selected;
   }
 
   get checklist_selected(): Trinary {
@@ -277,6 +290,30 @@ export default class Sidebar extends mixins(RouteMixin) {
     } else if (this.currentRoute === views.Compare) {
       this.navigateWithNoErrors('/results');
     }
+  }
+
+  removeSelectedEvaluations(): void {
+    const selectedFiles = FilteredDataModule.selected_evaluation_ids;
+    selectedFiles.forEach((fileId) => {
+      EvaluationModule.removeEvaluation(fileId);
+      InspecDataModule.removeFile(fileId);
+      // Remove any database files that may have been in the URL
+      // by calling the router and causing it to write the appropriate
+      // route to the URL bar
+      this.navigateWithNoErrors(`/${this.currentRoute}`);
+    });
+  }
+
+  removeSelectedProfiles(): void {
+    const selectedFiles = FilteredDataModule.selected_profile_ids;
+    selectedFiles.forEach((fileId) => {
+      EvaluationModule.removeEvaluation(fileId);
+      InspecDataModule.removeFile(fileId);
+      // Remove any database files that may have been in the URL
+      // by calling the router and causing it to write the appropriate
+      // route to the URL bar
+      this.navigateWithNoErrors(`/${this.currentRoute}`);
+    });
   }
 }
 </script>

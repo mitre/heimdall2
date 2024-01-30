@@ -108,7 +108,7 @@
             text="Controls Viewed"
             sort="disabled"
             :viewed-header="true"
-            :number-of-viewed-controls="viewedControlIds.length"
+            :number-of-viewed-controls="numOfViewed"
             :number-of-all-controls="raw_items.length"
           />
         </template>
@@ -206,6 +206,12 @@ export default class ControlTable extends Vue {
   // Used for viewed/unviewed controls.
   viewedControlIds: string[] = [];
   displayUnviewedControls = true;
+
+  get numOfViewed() {
+    return this.raw_items.filter((elem) =>
+      this.viewedControlIds.some((id) => elem.control.data.id === id)
+    ).length;
+  }
 
   toggleControlViewed(control: ContextualizedControl) {
     const alreadyViewed = this.viewedControlIds.indexOf(control.data.id);

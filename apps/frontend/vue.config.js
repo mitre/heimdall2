@@ -39,7 +39,8 @@ module.exports = {
   configureWebpack: {
     resolve: {
       fallback: {
-        fs: false
+        fs: false,
+        http2: false
       }
     },
     module: {

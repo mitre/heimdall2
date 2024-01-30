@@ -16,13 +16,17 @@ import {UpdateGroupUserRoleDto} from './dto/update-group-user.dto';
 import {Group} from './group.model';
 @Injectable()
 export class GroupsService {
+  private readonly line = '_______________________________________________\n';
   public logger = winston.createLogger({
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
       winston.format.timestamp({
         format: 'MMM-DD-YYYY HH:mm:ss Z'
       }),
-      winston.format.printf((info) => `[${[info.timestamp]}] ${info.message}`)
+      winston.format.printf(
+        (info) =>
+          `${this.line}[${[info.timestamp]}] (Group Service): ${info.message}`
+      )
     )
   });
   constructor(
