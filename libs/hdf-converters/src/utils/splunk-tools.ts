@@ -68,6 +68,8 @@ export async function checkSplunkCredentials(
     // Kill timer since request has failed
     clearTimeout(loginTimer);
 
+    console.log(`Splunk axios error: ${error}`);
+
     // Parse error response and report why request failed
     const errorCode = handleSplunkErrorResponse(error);
     if (errorCode === 'Unexpected error') {
