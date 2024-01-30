@@ -72,7 +72,7 @@ export async function checkSplunkCredentials(
     const errorCode = handleSplunkErrorResponse(error);
     if (errorCode === 'Unexpected error') {
       throw new Error(
-        'Failed to login - Please check your CORS configuration and validate that your input has the correct domain'
+        `Failed to login - Please check your CORS configuration and validate that your input has the correct domain: ${error}`
       );
     } else {
       throw new Error(`Failed to login - ${errorCode}`);
