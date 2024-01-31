@@ -34,7 +34,7 @@ describe('Datatable', () => {
   it('displays correct number of rules with loaded checklist', async () => {
     await loadChecklistFile('Clean RHEL 8 Checklist');
 
-    const total_count: number = 0;
+    // const total_count: number = 0;
     // Get example checklist file and count
     // const countFilename = `tests/hdf_data/counts/Red_Hat_7_STIG_Baseline_Checklist.ckl.info.counts`;
     // const countFileContent = readFileSync(countFilename, 'utf-8');

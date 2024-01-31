@@ -18,11 +18,11 @@ import {
 } from 'vuex-module-decorators';
 import {InspecDataModule} from './data_store';
 import {
+  EvaluationFile,
   FileID,
   FileLoadOptions,
-  EvaluationFile,
-  ProfileFile,
-  InspecIntakeModule
+  InspecIntakeModule,
+  ProfileFile
 } from './report_intake';
 import {SnackbarModule} from './snackbar';
 

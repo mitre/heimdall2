@@ -264,8 +264,10 @@ export function fileMatchesFilter(
   // if an evaluation exists from the database, populate the group names and tag values
   const evaluation = EvaluationModule.evaluationForFile(file);
   if (evaluation) {
-    fileProperties.groups = evaluation.groups.map((g: { name: string; }) => g.name.toLowerCase());
-    fileProperties.tags = evaluation.evaluationTags.map((t: { value: string; }) =>
+    fileProperties.groups = evaluation.groups.map((g: {name: string}) =>
+      g.name.toLowerCase()
+    );
+    fileProperties.tags = evaluation.evaluationTags.map((t: {value: string}) =>
       t.value.toLowerCase()
     );
   }
@@ -612,7 +614,7 @@ export class FilteredData extends VuexModule {
   get selected_checklist(): FileID {
     return this.selectedChecklistId;
   }
-  
+
   get selected_evaluation_ids(): FileID[] {
     return this.selectedEvaluationIds;
   }
@@ -653,7 +655,7 @@ export class FilteredData extends VuexModule {
   get checklist_selected(): Trinary {
     return this.selectedChecklistId ? Trinary.On : Trinary.Off;
   }
-  
+
   // check to see if any evaluation is selected
   get any_evaluation_selected(): boolean {
     return this.selectedEvaluationIds.length > 0;

@@ -53,7 +53,7 @@ import {saveAs} from 'file-saver';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
-import {ControlsFilter, FilteredDataModule} from '../../store/data_filters';
+import {ControlsFilter} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {SnackbarModule} from '../../store/snackbar';
 import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
