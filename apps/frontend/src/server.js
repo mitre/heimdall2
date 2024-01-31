@@ -9,10 +9,10 @@
 // Node internals
 const process = require('process');
 const path = require('path');
-var express = require('express');
+const express = require('express');
 
 // Figure out port number
-var port = 8000;
+let port = 8000;
 if (process.argv.length > 2) {
   port = Number.parseInt(process.argv[2]);
   if (Number.isNaN(port) || port < 1 || port >= 65536) {

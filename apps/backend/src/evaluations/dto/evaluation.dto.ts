@@ -52,3 +52,8 @@ export class EvaluationDto implements IEvaluation {
     this.shareURL = shareURL;
   }
 }
+
+export interface IEvaluationResponse {
+  evaluations: EvaluationDto[];
+  totalCount: number;
+}

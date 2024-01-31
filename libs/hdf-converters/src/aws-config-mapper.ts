@@ -1,10 +1,14 @@
 import {
   ComplianceByConfigRule,
   ConfigRule,
+  ConfigService,
+  ConfigServiceClientConfig,
   DescribeConfigRulesCommandInput,
-  EvaluationResult
+  DescribeConfigRulesResponse,
+  EvaluationResult,
+  ResourceType
 } from '@aws-sdk/client-config-service';
-import AWS from 'aws-sdk';
+import {NodeHttpHandler} from '@smithy/node-http-handler';
 import https from 'https';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
@@ -20,21 +24,26 @@ const NAME = 'AWS Config';
 const AWS_CONFIG_MAPPING = new AwsConfigMapping();
 
 export class AwsConfigMapper {
-  configService: AWS.ConfigService;
+  configService: ConfigService;
   issues: Promise<ConfigRule[]>;
   results: ExecJSON.ControlResult[][];
   constructor(
-    options: AWS.ConfigService.ClientConfiguration,
-    verifySSLCertificates = true
+    options: ConfigServiceClientConfig,
+    verifySSLCertificates = true,
+    certificate?: string
   ) {
-    AWS.config.update({
-      httpOptions: {
-        agent: new https.Agent({
-          rejectUnauthorized: verifySSLCertificates
+    const clientOptions: ConfigServiceClientConfig = {
+      ...options,
+      requestHandler: new NodeHttpHandler({
+        httpsAgent: new https.Agent({
+          // Disable HTTPS verification if requested
+          rejectUnauthorized: verifySSLCertificates,
+          // Pass an SSL certificate to trust
+          ca: certificate
         })
-      }
-    });
-    this.configService = new AWS.ConfigService(options);
+      })
+    };
+    this.configService = new ConfigService(clientOptions);
     this.results = [];
     this.issues = this.getAllConfigRules();
   }
@@ -69,19 +78,11 @@ export class AwsConfigMapper {
     return configRules;
   }
 
-  private chunkArray(sourceArray: Array<any>, chunkSize: number) {
-    const result = [];
-    for (let i = 0; i < sourceArray.length; i += chunkSize) {
-      result.push(sourceArray.slice(i, i + chunkSize));
-    }
-    return result;
-  }
-
   private async getConfigRulePage(
     params: DescribeConfigRulesCommandInput
-  ): Promise<AWS.ConfigService.Types.DescribeConfigRulesResponse> {
+  ): Promise<DescribeConfigRulesResponse> {
     await this.delay(150);
-    return this.configService.describeConfigRules(params).promise();
+    return this.configService.describeConfigRules(params);
   }
 
   private async getResults(
@@ -90,7 +91,7 @@ export class AwsConfigMapper {
     const complianceResults: ComplianceByConfigRule[] =
       await this.fetchAllComplianceInfo(configRules);
     const ruleData: ExecJSON.ControlResult[][] = [];
-    const allRulesResolved: AWS.ConfigService.EvaluationResults = [];
+    const allRulesResolved: EvaluationResult[] = [];
     for (const configRule of configRules) {
       const result: ExecJSON.ControlResult[] = [];
       let params = {
@@ -98,17 +99,17 @@ export class AwsConfigMapper {
         Limit: 100
       };
       await this.delay(150);
-      let response = await this.configService
-        .getComplianceDetailsByConfigRule(params)
-        .promise();
+      let response = await this.configService.getComplianceDetailsByConfigRule(
+        params
+      );
       let ruleResults = response.EvaluationResults || [];
       allRulesResolved.push(...ruleResults);
       while (response.NextToken !== undefined) {
         params = _.set(params, 'NextToken', response.NextToken);
         await this.delay(150);
-        response = await this.configService
-          .getComplianceDetailsByConfigRule(params)
-          .promise();
+        response = await this.configService.getComplianceDetailsByConfigRule(
+          params
+        );
         ruleResults = ruleResults?.concat(response.EvaluationResults || []);
         allRulesResolved.push(...ruleResults);
       }
@@ -195,44 +196,46 @@ export class AwsConfigMapper {
   }
 
   private async extractResourceNamesFromIds(
-    evaluationResults: AWS.ConfigService.EvaluationResults
+    evaluationResults: EvaluationResult[]
   ) {
     // Map of resource types to resource IDs {resourceType: ResourceId[]}
-    const resourceMap: Record<string, string[]> = {};
+    const resourceMap: Partial<Record<ResourceType, string[]>> = {};
     // Map of resource IDs to resource names
     const resolvedResourcesMap: Record<string, string> = {};
     // Extract resource Ids
     evaluationResults.forEach((result) => {
-      const resourceType: string = _.get(
-        result,
-        'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceType'
-      ) as unknown as string;
+      const resourceType: ResourceType =
+        ResourceType[
+          _.get(
+            result,
+            'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceType'
+          ) as keyof typeof ResourceType
+        ];
       const resourceId: string = _.get(
         result,
         'EvaluationResultIdentifier.EvaluationResultQualifier.ResourceId'
       ) as unknown as string;
-      if (!(resourceType in resourceMap)) {
-        resourceMap[resourceType] = [resourceId];
-      } else {
+      if (resourceType in resourceMap) {
         if (
-          !resourceMap[resourceType].includes(resourceId) &&
+          !resourceMap[resourceType]?.includes(resourceId) &&
           typeof resourceId === 'string'
         ) {
-          resourceMap[resourceType].push(resourceId);
+          resourceMap[resourceType]?.push(resourceId);
         }
+      } else {
+        resourceMap[resourceType] = [resourceId];
       }
     });
     // Resolve resource names from AWS
-    for (const resourceType in resourceMap) {
-      const resourceIDSlices = this.chunkArray(resourceMap[resourceType], 20);
+    let resourceType: ResourceType;
+    for (resourceType in resourceMap) {
+      const resourceIDSlices = _.chunk(resourceMap[resourceType], 20);
       for (const slice of resourceIDSlices) {
         await this.delay(150);
-        const resources = await this.configService
-          .listDiscoveredResources({
-            resourceType: resourceType,
-            resourceIds: slice
-          })
-          .promise();
+        const resources = await this.configService.listDiscoveredResources({
+          resourceType: resourceType,
+          resourceIds: slice
+        });
         resources.resourceIdentifiers?.forEach((resource) => {
           if (resource.resourceId && resource.resourceName) {
             resolvedResourcesMap[resource.resourceId] = resource.resourceName;
@@ -302,14 +305,12 @@ export class AwsConfigMapper {
   ): Promise<ComplianceByConfigRule[]> {
     const complianceResults: ComplianceByConfigRule[] = [];
     // Should slice config rules into arrays of max size: 25 and make one request for each slice
-    const configRuleSlices = this.chunkArray(configRules, 25);
+    const configRuleSlices = _.chunk(configRules, 25);
     for (const slice of configRuleSlices) {
       await this.delay(150);
-      const response = await this.configService
-        .describeComplianceByConfigRule({
-          ConfigRuleNames: slice.map((rule) => rule.ConfigRuleName || '')
-        })
-        .promise();
+      const response = await this.configService.describeComplianceByConfigRule({
+        ConfigRuleNames: slice.map((rule) => rule.ConfigRuleName || '')
+      });
       if (response.ComplianceByConfigRules === undefined) {
         throw new Error('No compliance data was returned');
       } else {

@@ -18,7 +18,7 @@ import {
   Severity
 } from 'inspecjs';
 import * as _ from 'lodash';
-import LRUCache from 'lru-cache';
+import {LRUCache} from 'lru-cache';
 import {
   Action,
   getModule,
@@ -252,6 +252,14 @@ export class FilteredData extends VuexModule {
     return [...this.selectedEvaluationIds, ...this.selectedProfileIds];
   }
 
+  get selected_evaluation_ids(): FileID[] {
+    return this.selectedEvaluationIds;
+  }
+
+  get selected_profile_ids(): FileID[] {
+    return this.selectedProfileIds;
+  }
+
   // check to see if all profiles are selected
   get all_profiles_selected(): Trinary {
     switch (this.selectedProfileIds.length) {
@@ -262,6 +270,11 @@ export class FilteredData extends VuexModule {
       default:
         return Trinary.Mixed;
     }
+  }
+
+  // check to see if any profile is selected
+  get any_profile_selected(): boolean {
+    return this.selectedProfileIds.length > 0;
   }
 
   // check to see if all evaluations are selected
@@ -276,10 +289,15 @@ export class FilteredData extends VuexModule {
     }
   }
 
+  // check to see if any evaluation is selected
+  get any_evaluation_selected(): boolean {
+    return this.selectedEvaluationIds.length > 0;
+  }
+
   /**
    * Parameterized getter.
    * Get all controls from all profiles from the specified file id.
-   * Utlizes the profiles getter to accelerate the file filter.
+   * Utilizes the profiles getter to accelerate the file filter.
    */
   get controls(): (filter: Filter) => readonly ContextualizedControl[] {
     /** Cache by filter */
