@@ -155,5 +155,9 @@ export default class Login extends Vue {
       }
     }
   }
+
+  // adding to supress setter error message
+  set logoffSnackbar(val: boolean) {
+  }
 }
 </script>

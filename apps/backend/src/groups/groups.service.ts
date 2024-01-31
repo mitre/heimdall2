@@ -14,6 +14,9 @@ import {User} from '../users/user.model';
 import {CreateGroupDto} from './dto/create-group.dto';
 import {UpdateGroupUserRoleDto} from './dto/update-group-user.dto';
 import {Group} from './group.model';
+import {Build} from '../builds/build.model';
+import {Product} from '../products/product.model';
+
 @Injectable()
 export class GroupsService {
   private readonly line = '_______________________________________________\n';
@@ -191,6 +194,32 @@ export class GroupsService {
     await groupToDelete.destroy();
 
     return groupToDelete;
+  }
+
+  async addBuildToGroup(group: Group, build: Build): Promise<void> {
+    await group.$add('build', build, {
+      through: {createdAt: new Date(), updatedAt: new Date()}
+    });
+  }
+
+  async removeBuildFromGroup(
+    group: Group,
+    build: Build
+  ): Promise<Group> {
+    return group.$remove('build', build);
+  }
+
+  async addProductToGroup(group: Group, product: Product): Promise<void> {
+    await group.$add('product', product, {
+      through: {createdAt: new Date(), updatedAt: new Date()}
+    });
+  }
+
+  async removeProductFromGroup(
+    group: Group,
+    product: Product
+  ): Promise<Group> {
+    return group.$remove('product', product);
   }
 
   // This method ensures that the passed in user is in all of the

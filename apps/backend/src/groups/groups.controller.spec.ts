@@ -19,7 +19,13 @@ import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import { GroupBuild } from '../group-builds/group-build.model';
+import { GroupProduct } from '../group-products/group-product.model';
 import {GroupUser} from '../group-users/group-user.model';
+import { Build } from '../builds/build.model';
+import { BuildEvaluation } from '../build-evaluations/build-evaluations.model';
+import {Product} from '../products/product.model';
+import { ProductBuild } from '../product-builds/product-builds.model';
 import {SlimUserDto} from '../users/dto/slim-user.dto';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
@@ -49,7 +55,13 @@ describe('GroupsController', () => {
           GroupEvaluation,
           Evaluation,
           EvaluationTag,
-          User
+          User,
+          GroupProduct,
+          Product,
+          GroupBuild,
+          Build,
+          ProductBuild,
+          BuildEvaluation
         ])
       ],
       providers: [

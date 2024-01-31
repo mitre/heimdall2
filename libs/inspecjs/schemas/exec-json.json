@@ -163,6 +163,30 @@
             }
           ],
           "description": "The stacktrace/backtrace of the exception if one occurred."
+        },
+        "override": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Control_Result_Override"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "result_source": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Result source"
+        },
+        "originalStatus": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Original status of the control (only set if overriden)"
         }
       },
       "description": "A test within a control and its results and findings such as how long it took to run.",
@@ -174,7 +198,9 @@
         "passed",
         "failed",
         "skipped",
-        "error"
+        "error",
+        "pending",
+        "not_applicable"
       ],
       "description": "The status of a control.  Should be one of 'passed', 'failed', 'skipped', or 'error'.",
       "title": "Control Result Status"
@@ -825,6 +851,102 @@
         },
         "updated_by": {
           "type": "string"
+        }
+      }
+    },
+    "Control_Result_Override": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Control override extended information",
+      "required": [],
+      "properties": {
+        "cab_date": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "cab_status": {
+          "anyOf": [
+            {
+              "$ref": "#/definitions/Control_Result_Status"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "is_approved": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "cyber_reviewer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "date_modified": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "info_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "pipeline_hash": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "review_update": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revised_categorization": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revised_severity": {
+          "type": [
+            "number",
+            "null"
+          ]
+        },
+        "request_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewer": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ticket_tracking": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     }

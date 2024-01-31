@@ -16,9 +16,15 @@ import {DatabaseService} from '../database/database.service';
 import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
 import {EvaluationTagsService} from '../evaluation-tags/evaluation-tags.service';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import { GroupBuild } from '../group-builds/group-build.model';
+import { GroupProduct } from '../group-products/group-product.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
+import { Build } from '../builds/build.model';
+import { BuildEvaluation } from '../build-evaluations/build-evaluations.model';
+import {Product} from '../products/product.model';
+import { ProductBuild } from '../product-builds/product-builds.model';
 import {UserDto} from '../users/dto/user.dto';
 import {UsersModule} from '../users/users.module';
 import {UsersService} from '../users/users.service';
@@ -42,7 +48,13 @@ describe('EvaluationsService', () => {
           Evaluation,
           GroupUser,
           Group,
-          GroupEvaluation
+          GroupEvaluation,
+          GroupProduct,
+          Product,
+          GroupBuild,
+          Build,
+          ProductBuild,
+          BuildEvaluation
         ]),
         EvaluationTagsModule,
         UsersModule

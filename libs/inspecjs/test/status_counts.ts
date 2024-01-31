@@ -12,6 +12,7 @@ export const statusCounts = {
       'Not Applicable': 0,
       'Not Reviewed': 0,
       'Profile Error': 0,
+      'Pending': 0,
       Failed: 0,
       Passed: 0
     };

@@ -10,8 +10,10 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
+import {Build} from '../builds/build.model';
+import {Product} from '../products/product.model';
 
-type AllTypes = typeof User | typeof Evaluation | typeof Group;
+type AllTypes = typeof User | typeof Evaluation | typeof Group | typeof Build | typeof Product;
 
 type Subjects = InferSubjects<AllTypes, true> | 'all';
 type PossibleAbilities = [Action, Subjects];
@@ -46,6 +48,16 @@ interface GroupQuery extends Group {
 }
 
 interface EvaluationQuery extends Evaluation {
+  'groups.users': UserQuery[];
+  'groups.users.id': User['id'];
+}
+
+interface BuildQuery extends Build {
+  'groups.users': UserQuery[];
+  'groups.users.id': User['id'];
+}
+
+interface ProductQuery extends Product {
   'groups.users': UserQuery[];
   'groups.users.id': User['id'];
 }
@@ -104,6 +116,26 @@ export class CaslAbilityFactory {
     });
 
     can<EvaluationQuery>([Action.Manage], Evaluation, {
+      'groups.users': {
+        $elemMatch: {id: user.id, 'GroupUser.role': 'owner'}
+      }
+    });
+
+    can<BuildQuery>([Action.Read], Build, {
+      'groups.users.id': user.id
+    });
+
+    can<ProductQuery>([Action.Read], Product, {
+      'groups.users.id': user.id
+    });
+
+    can<BuildQuery>([Action.Manage], Build, {
+      'groups.users': {
+        $elemMatch: {id: user.id, 'GroupUser.role': 'owner'}
+      }
+    });
+
+    can<ProductQuery>([Action.Manage], Product, {
       'groups.users': {
         $elemMatch: {id: user.id, 'GroupUser.role': 'owner'}
       }

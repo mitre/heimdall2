@@ -145,7 +145,14 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
       if (this.current_route === 'compare') {
         this.navigateWithNoErrors(`/compare/${loadedDatabaseIds}`);
       } else {
-        this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
+        if (this.current_route === "") {
+          this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
+        } else if (this.current_route === "classic") {
+          this.navigateWithNoErrors(`/results/${loadedDatabaseIds}`);
+        }
+        else {
+          this.navigateWithNoErrors(`/${this.current_route}/${loadedDatabaseIds}`);
+        }
       }
     } else {
       this.navigateWithNoErrors(`/profiles/${loadedDatabaseIds}`);

@@ -29,9 +29,15 @@ import {DatabaseService} from '../database/database.service';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import { GroupBuild } from '../group-builds/group-build.model';
+import { GroupProduct } from '../group-products/group-product.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
+import { Build } from '../builds/build.model';
+import { BuildEvaluation } from '../build-evaluations/build-evaluations.model';
+import {Product} from '../products/product.model';
+import { ProductBuild } from '../product-builds/product-builds.model';
 import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
 import {UsersController} from './users.controller';
@@ -60,7 +66,13 @@ describe('UsersController Unit Tests', () => {
           Group,
           GroupEvaluation,
           Evaluation,
-          EvaluationTag
+          EvaluationTag,
+          GroupProduct,
+          Product,
+          GroupBuild,
+          Build,
+          ProductBuild,
+          BuildEvaluation
         ])
       ],
       providers: [

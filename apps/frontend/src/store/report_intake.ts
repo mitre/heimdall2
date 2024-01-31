@@ -310,6 +310,11 @@ export class InspecIntake extends VuexModule {
   }
 
   @Action
+  async clear_quiet() {
+    InspecDataModule.clear_quiet();
+  }
+
+  @Action
   async loadText(options: TextLoadOptions): Promise<FileID> {
     // Convert it
     const fileID: FileID = uuid();
@@ -366,6 +371,60 @@ export class InspecIntake extends VuexModule {
     return fileID;
   }
 
+  @Action
+  async loadQuietText(options: TextLoadOptions): Promise<FileID> {
+    // Convert it
+    const fileID: FileID = uuid();
+    const result: ConversionResult = convertFile(options.text, true);
+    // Determine what sort of file we (hopefully) have, then add it
+    if (result['1_0_ExecJson']) {
+      const evalFile = {
+        uniqueId: fileID,
+        filename: options.filename,
+        database_id: options.database_id,
+        createdAt: options.createdAt,
+        updatedAt: options.updatedAt,
+        tags: options.tags
+        // evaluation
+      } as EvaluationFile;
+
+      // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
+      const evaluation = contextualizeEvaluation(
+        result['1_0_ExecJson']
+      ) as unknown as SourcedContextualizedEvaluation;
+      evaluation.from_file = evalFile;
+
+      // Set and freeze
+      evalFile.evaluation = evaluation;
+      Object.freeze(evaluation);
+      InspecDataModule.addExecution(evalFile);
+    } else if (result['1_0_ProfileJson']) {
+      // Handle as profile
+      const profileFile = {
+        uniqueId: fileID,
+        filename: options.filename
+      } as ProfileFile;
+
+      // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
+      const profile = contextualizeProfile(
+        result['1_0_ProfileJson']
+      ) as unknown as SourcedContextualizedProfile;
+      profile.from_file = profileFile;
+
+      // Set and freeze
+      profileFile.profile = profile;
+      Object.freeze(profile);
+      InspecDataModule.addProfile(profileFile);
+    } else {
+      // eslint-disable-next-line no-console
+      console.error(result.errors);
+      throw new Error(
+        "Couldn't parse data. See developer's tools for more details."
+      );
+    }
+    return fileID;
+  }
+  
   // Instead of re-stringifying converted evaluations, add the allow loading the ExecJSON directly.
   @Action
   async loadExecJson(options: ExecJSONLoadOptions) {

@@ -85,6 +85,70 @@ export class Evaluation extends VuexModule {
   }
 
   @Action
+  async clear_quiet_results() {
+    console.log(InspecIntakeModule.clear_quiet());
+    return true;
+  }
+
+
+  @Action
+  async load_quiet_results(evaluationIds: string[]): Promise<(FileID | void)[]> {
+    if (evaluationIds.length > 10) {
+      SnackbarModule.notify(`Large data set detected: loading ${evaluationIds.length} results.`);
+    }
+
+    const unloadedIds = _.difference(
+      evaluationIds,
+      InspecDataModule.loadedDatabaseIds
+    );
+    const loadedIds: FileID[] = [];
+    await Promise.all(
+      unloadedIds.map(async (id) =>
+        this.loadEvaluation(id)
+          .then(async (evaluation) => {
+            if (await InspecIntakeModule.isHDF(evaluation.data)) {
+              InspecIntakeModule.loadQuietText({
+                text: JSON.stringify(evaluation.data),
+                filename: evaluation.filename,
+                database_id: evaluation.id,
+                createdAt: evaluation.createdAt,
+                updatedAt: evaluation.updatedAt,
+                tags: [] // Tags are not yet implemented, so for now the value is passed in empty
+              })
+                .then((fileId) => loadedIds.push(fileId))
+                .catch((err) => {
+                  SnackbarModule.failure(err);
+                });
+            } else if (evaluation.data) {
+              const inputFile: FileLoadOptions = {
+                filename: evaluation.filename
+              };
+              if (
+                'originalResultsData' in evaluation.data &&
+                evaluation.data.originalResultsData
+              ) {
+                inputFile.data = evaluation.data.originalResultsData;
+              } else {
+                inputFile.data = JSON.stringify(evaluation.data);
+              }
+
+              const fileIds = await InspecIntakeModule.loadFile(inputFile);
+              loadedIds.push(...fileIds);
+            } else {
+              SnackbarModule.failure(`Empty File: ${evaluation.filename}`);
+            }
+          })
+          .catch((err) => {
+            SnackbarModule.failure(err);
+          })
+      )
+    );
+
+    SnackbarModule.notify('All result sets have been loaded');
+    return loadedIds;
+  }
+
+  @Action
   async load_results(evaluationIds: string[]): Promise<(FileID | void)[]> {
     document.body.style.cursor = 'wait';
     const unloadedIds = _.difference(

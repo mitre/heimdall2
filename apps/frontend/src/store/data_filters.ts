@@ -29,7 +29,7 @@ import {
 
 const MAX_CACHE_ENTRIES = 20;
 
-export declare type ExtendedControlStatus = ControlStatus | 'Waived';
+export declare type ExtendedControlStatus = ControlStatus | 'Waived' | 'Failed,Pending';
 
 /** Contains common filters on data from the store. */
 export interface Filter {
@@ -78,6 +78,9 @@ export interface Filter {
 
   /** A specific control id */
   control_id?: string;
+
+  /** Result source to search for */
+  resultSourceSearchTerms?: string[];
 }
 
 export type TreeMapState = string[]; // Representing the current path spec, from root
@@ -225,6 +228,16 @@ export class FilteredData extends VuexModule {
     };
   }
 
+  get evaluation(): (
+    file: FileID
+  ) => SourcedContextualizedEvaluation | undefined{
+    return (file: FileID) => {
+      return  _.first(InspecDataModule.contextualExecutions.filter((e) =>
+        e.from_file.uniqueId === file
+      ));
+    }
+  }
+
   get profiles_for_evaluations(): (
     files: FileID[]
   ) => readonly ContextualizedProfile[] {
@@ -340,6 +353,7 @@ export class FilteredData extends VuexModule {
         'hdf.rawNistTags': filter.nistIdFilter,
         full_code: filter.codeSearchTerms,
         'hdf.waived': filter.status?.includes('Waived'),
+        'hdf.parsedResultSourceTags': filter.resultSourceSearchTerms,
         'root.hdf.status': _.filter(
           filter.status,
           (status) => status !== 'Waived'

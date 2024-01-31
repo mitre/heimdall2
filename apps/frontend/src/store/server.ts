@@ -16,6 +16,10 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import {GroupsModule} from './groups';
+import router from '@/router';
+import Certifier from '@/views/Certifier.vue';
+import Cyber from '@/views/Cyber.vue';
+import Developer from '@/views/Developer.vue';
 
 const localToken = new LocalStorageVal<string | null>('auth_token');
 const localUserID = new LocalStorageVal<string | null>('localUserID');
@@ -32,6 +36,7 @@ export interface IServerState {
   enabledOAuth: string[];
   registrationEnabled: boolean;
   oidcName: string;
+  projectMode: boolean;
   ldap: boolean;
   localLoginEnabled: boolean;
   userInfo: IUser;
@@ -63,6 +68,7 @@ class Server extends VuexModule implements IServerState {
   enabledOAuth: string[] = [];
   allUsers: ISlimUser[] = [];
   oidcName = '';
+  projectMode = false;
   /** Our currently granted JWT token */
   token = '';
   /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
@@ -104,6 +110,7 @@ class Server extends VuexModule implements IServerState {
     this.enabledOAuth = settings.enabledOAuth;
     this.registrationEnabled = settings.registrationEnabled;
     this.oidcName = settings.oidcName;
+    this.projectMode = settings.projectMode;
     this.ldap = settings.ldap;
     this.localLoginEnabled = settings.localLoginEnabled;
   }
@@ -168,6 +175,9 @@ class Server extends VuexModule implements IServerState {
           }
           if (userID !== null) {
             this.context.commit('SET_USERID', userID);
+          }
+          if (this.projectMode) {
+            this.SetupProjectRoutes();
           }
           return this.GetUserInfo();
         }
@@ -282,6 +292,55 @@ class Server extends VuexModule implements IServerState {
           `/login?logoff=true&error=${error.response.data.message}`
         );
       });
+  }
+
+  @Action
+  public SetupProjectRoutes() {
+    const routes = [
+      {
+        path: '/certifier',
+        name: 'certifier',
+        component: Certifier,
+        meta: {requiresAuth: true, hasIdParams: true},
+        children: [
+          {
+            path: ':id',
+            component: Certifier,
+            meta: {requiresAuth: true, hasIdParams: true}
+          }
+        ]
+      },
+      {
+        path: '/cyber',
+        name: 'cyber',
+        component: Cyber,
+        meta: {requiresAuth: true, hasIdParams: true},
+        children: [
+          {
+            path: ':id',
+            component: Cyber,
+            meta: {requiresAuth: true, hasIdParams: true}
+          }
+        ]
+      },
+      {
+        path: '/developer',
+        name: 'developer',
+        component: Developer,
+        meta: {requiresAuth: true, hasIdParams: true},
+        children: [
+          {
+            path: ':id',
+            component: Developer,
+            meta: {requiresAuth: true, hasIdParams: true}
+          }
+        ]
+      }
+    ]
+
+    routes.forEach((route) => {
+      router.addRoute(route);
+    });
   }
 }
 

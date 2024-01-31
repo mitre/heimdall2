@@ -269,6 +269,11 @@ export interface ControlResult {
      */
     message?: null | string;
     /**
+     * Original status of the control (only set if overriden)
+     */
+    originalStatus?: null | string;
+    override?:       null | ControlResultOverride;
+    /**
      * The resource used in the test.  Example: in Inspec, you can use the 'File' resource.
      */
     resource?: null | string;
@@ -276,6 +281,10 @@ export interface ControlResult {
      * The unique identifier of the resource.
      */
     resource_id?: null | string;
+    /**
+     * Result source
+     */
+    result_source?: null | string;
     /**
      * The execution time in seconds for the test.
      */
@@ -292,14 +301,36 @@ export interface ControlResult {
 }
 
 /**
- * The status of this test within the control.  Example: 'failed'.
- *
+ * Control override extended information
+ */
+export interface ControlResultOverride {
+    cab_date?:               null | string;
+    cab_status?:             ControlResultStatus | null;
+    cyber_reviewer?:         null | string;
+    date_modified?:          null | string;
+    description?:            null | string;
+    info_url?:               null | string;
+    is_approved?:            boolean | null;
+    pipeline_hash?:          null | string;
+    request_type?:           null | string;
+    review_update?:          null | string;
+    reviewer?:               null | string;
+    revised_categorization?: null | string;
+    revised_severity?:       number | null;
+    ticket_tracking?:        null | string;
+}
+
+/**
  * The status of a control.  Should be one of 'passed', 'failed', 'skipped', or 'error'.
+ *
+ * The status of this test within the control.  Example: 'failed'.
  */
 export enum ControlResultStatus {
     Error = "error",
     Failed = "failed",
+    NotApplicable = "not_applicable",
     Passed = "passed",
+    Pending = "pending",
     Skipped = "skipped",
 }
 
@@ -523,7 +554,10 @@ function transform(val: any, typ: any, getProps: any, key: any = ''): any {
 
     function transformArray(typ: any, val: any): any {
         // val must be an array with no invalid elements
-        if (!Array.isArray(val)) return invalidValue("array", val);
+        if (!Array.isArray(val)) {
+            const objArr: object[] = [];
+            return objArr;
+        }
         return val.map(el => transform(el, typ, getProps));
     }
 
@@ -675,12 +709,31 @@ const typeMap: any = {
         { json: "code_desc", js: "code_desc", typ: "" },
         { json: "exception", js: "exception", typ: u(undefined, u(null, "")) },
         { json: "message", js: "message", typ: u(undefined, u(null, "")) },
+        { json: "originalStatus", js: "originalStatus", typ: u(undefined, u(null, "")) },
+        { json: "override", js: "override", typ: u(undefined, u(null, r("ControlResultOverride"))) },
         { json: "resource", js: "resource", typ: u(undefined, u(null, "")) },
         { json: "resource_id", js: "resource_id", typ: u(undefined, u(null, "")) },
+        { json: "result_source", js: "result_source", typ: u(undefined, u(null, "")) },
         { json: "run_time", js: "run_time", typ: u(undefined, u(3.14, null)) },
         { json: "skip_message", js: "skip_message", typ: u(undefined, u(null, "")) },
         { json: "start_time", js: "start_time", typ: "" },
         { json: "status", js: "status", typ: u(undefined, u(r("ControlResultStatus"), null)) },
+    ], "any"),
+    "ControlResultOverride": o([
+        { json: "cab_date", js: "cab_date", typ: u(undefined, u(null, "")) },
+        { json: "cab_status", js: "cab_status", typ: u(undefined, u(r("ControlResultStatus"), null)) },
+        { json: "cyber_reviewer", js: "cyber_reviewer", typ: u(undefined, u(null, "")) },
+        { json: "date_modified", js: "date_modified", typ: u(undefined, u(null, "")) },
+        { json: "description", js: "description", typ: u(undefined, u(null, "")) },
+        { json: "info_url", js: "info_url", typ: u(undefined, u(null, "")) },
+        { json: "is_approved", js: "is_approved", typ: u(undefined, u(true, null)) },
+        { json: "pipeline_hash", js: "pipeline_hash", typ: u(undefined, u(null, "")) },
+        { json: "request_type", js: "request_type", typ: u(undefined, u(null, "")) },
+        { json: "review_update", js: "review_update", typ: u(undefined, u(null, "")) },
+        { json: "reviewer", js: "reviewer", typ: u(undefined, u(null, "")) },
+        { json: "revised_categorization", js: "revised_categorization", typ: u(undefined, u(null, "")) },
+        { json: "revised_severity", js: "revised_severity", typ: u(undefined, u(3.14, null)) },
+        { json: "ticket_tracking", js: "ticket_tracking", typ: u(undefined, u(null, "")) },
     ], "any"),
     "SourceLocation": o([
         { json: "line", js: "line", typ: u(undefined, u(3.14, null)) },
@@ -736,7 +789,9 @@ const typeMap: any = {
     "ControlResultStatus": [
         "error",
         "failed",
+        "not_applicable",
         "passed",
+        "pending",
         "skipped",
     ],
 };

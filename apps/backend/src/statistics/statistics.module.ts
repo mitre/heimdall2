@@ -11,6 +11,10 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {Group} from '../groups/group.model';
 import {GroupsService} from '../groups/groups.service';
+import {Build} from '../builds/build.model';
+import {BuildsService} from '../builds/builds.service';
+import {Product} from '../products/product.model';
+import {ProductsService} from '../products/products.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {StatisticsController} from './statistics.controller';
@@ -23,7 +27,9 @@ import {StatisticsService} from './statistics.service';
       Evaluation,
       EvaluationTag,
       User,
-      Group
+      Group,
+      Build,
+      Product
     ]),
     ConfigModule
   ],
@@ -35,7 +41,9 @@ import {StatisticsService} from './statistics.service';
     EvaluationsService,
     EvaluationTagsService,
     UsersService,
-    GroupsService
+    GroupsService,
+    BuildsService,
+    ProductsService
   ],
   controllers: [StatisticsController]
 })

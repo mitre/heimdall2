@@ -2,6 +2,12 @@ import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import { Dialect } from 'sequelize/types';
 
+export interface AuthArtiAuthCreds {
+  accessKeyId: string | undefined;
+  secretAccessKey: string | undefined;
+  sessionToken: string | undefined;
+}
+
 export default class AppConfig {
   private envConfig: { [key: string]: string | undefined };
 
@@ -165,5 +171,29 @@ export default class AppConfig {
       );
       return true;
     }
+  }
+
+  getAuthArtiS3URL() {
+    return this.get("S3_URL") || '';
+  }
+  getAuthArtiS3AccessKey() {
+    return this.get("S3_ACCESS_KEY") || '';
+  }
+
+  getAuthArtiS3Secret() {
+    return this.get("S3_SECRET_KEY") || '';
+  }
+
+  getAuthArtiS3BucketName() {
+    return this.get("S3_BUCKET_NAME") || '';
+  }
+
+  getAuthArtiS3AuthCreds() {
+    let s3AuthCreds: AuthArtiAuthCreds = {
+      accessKeyId: this.get("S3_ACCESS_KEY"),
+      secretAccessKey: this.get("S3_SECRET_KEY"),
+      sessionToken: ""
+    }
+    return s3AuthCreds;
   }
 }

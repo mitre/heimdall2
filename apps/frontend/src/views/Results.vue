@@ -56,6 +56,7 @@
           </v-list>
         </v-menu>
       </div>
+      <ViewModeButton />
       <PrintButton />
     </template>
 
@@ -154,6 +155,16 @@
           </v-col>
         </v-row>
 
+          <!-- ProductControlsPanel -->
+          <v-row>
+          <v-col xs-12>
+            <v-card elevation="2">
+              <ProductControlsPanel
+              />
+            </v-card>
+          </v-col>
+        </v-row>
+
         <!-- DataTable -->
         <v-row>
           <v-col xs-12>
@@ -200,6 +211,7 @@
 <script lang="ts">
 import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import ControlTable from '@/components/cards/controltable/ControlTable.vue';
+import ProductControlsPanel from '@/components/cards/productcontrols/ProductControlsPanel.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 import ProfileData from '@/components/cards/ProfileData.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
@@ -207,6 +219,7 @@ import StatusCardRow from '@/components/cards/StatusCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import Treemap from '@/components/cards/treemap/Treemap.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
+import ViewModeButton from '@/components/generic/ViewModeButton.vue';
 import ExportASFFModal from '@/components/global/ExportASFFModal.vue';
 import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportCKLModal from '@/components/global/ExportCKLModal.vue';
@@ -250,6 +263,7 @@ import {compare_times} from '../utilities/delta_util';
     StatusCardRow,
     Treemap,
     ControlTable,
+    ProductControlsPanel,
     StatusChart,
     SeverityChart,
     ComplianceChart,
@@ -265,7 +279,8 @@ import {compare_times} from '../utilities/delta_util';
     EvaluationInfo,
     ExportSplunkModal,
     ProfileData,
-    UploadButton
+    UploadButton,
+    ViewModeButton
   }
 })
 export default class Results extends mixins(RouteMixin, ServerMixin) {
@@ -364,6 +379,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       ids: SearchModule.controlIdSearchTerms,
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      resultSourceSearchTerms: SearchModule.resultSourceSearchTerms,
       nistIdFilter: SearchModule.NISTIdFilter,
       searchTerm: SearchModule.freeSearch || '',
       codeSearchTerms: SearchModule.codeSearchTerms,
@@ -382,6 +398,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       severity: SearchModule.severityFilter,
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      resultSourceSearchTerms: SearchModule.resultSourceSearchTerms,
       codeSearchTerms: SearchModule.codeSearchTerms,
       nistIdFilter: SearchModule.NISTIdFilter,
       ids: SearchModule.controlIdSearchTerms,

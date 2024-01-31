@@ -5,6 +5,8 @@ import {AuthzModule} from '../authz/authz.module';
 import {ConfigModule} from '../config/config.module';
 import {EvaluationTagsModule} from '../evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from '../evaluations/evaluations.module';
+import {BuildsModule} from '../builds/builds.module';
+import {ProductsModule} from '../products/products.module';
 import {UsersModule} from '../users/users.module';
 import {Group} from './group.model';
 import {GroupsController} from './groups.controller';
@@ -16,6 +18,8 @@ import {GroupsService} from './groups.service';
     ApiKeyModule,
     AuthzModule,
     ConfigModule,
+    BuildsModule,
+    ProductsModule,
     forwardRef(() => UsersModule),
     EvaluationsModule,
     EvaluationTagsModule

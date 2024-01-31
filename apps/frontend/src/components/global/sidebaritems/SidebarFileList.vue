@@ -41,6 +41,7 @@ import {EvaluationModule} from '@/store/evaluations';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
+import { assessment_eval } from '../../../store/assessment_data';
 import axios from 'axios';
 import * as _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
@@ -55,6 +56,11 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
       FilteredDataModule.toggle_evaluation(this.file.uniqueId);
+
+      let ev = FilteredDataModule.evaluation(this.file.uniqueId)
+      if (ev != undefined){
+        const at = assessment_eval(ev)
+      }   
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.toggle_profile(this.file.uniqueId);
     }

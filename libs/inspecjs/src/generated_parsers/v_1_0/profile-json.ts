@@ -305,7 +305,10 @@ function transform(val: any, typ: any, getProps: any, key: any = ''): any {
 
     function transformArray(typ: any, val: any): any {
         // val must be an array with no invalid elements
-        if (!Array.isArray(val)) return invalidValue("array", val);
+        if (!Array.isArray(val)) {
+            const objArr: object[] = [];
+            return objArr;
+        }
         return val.map(el => transform(el, typ, getProps));
     }
 

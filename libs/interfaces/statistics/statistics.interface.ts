@@ -4,4 +4,6 @@ export interface IStatistics {
   readonly evaluationCount: number;
   readonly evaluationTagCount: number;
   readonly groupCount: number;
+  readonly buildCount: number;
+  readonly productCount: number;
 }

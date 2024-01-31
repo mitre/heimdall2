@@ -50,11 +50,14 @@ import Topbar from '@/components/global/Topbar.vue';
 import UpdateNotification from '@/components/global/UpdateNotification.vue';
 import {SidebarModule} from '@/store/sidebar_state';
 import Vue from 'vue';
-import Component from 'vue-class-component';
+import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {InspecIntakeModule} from '../store/report_intake';
+import { FilteredDataModule } from '../store/data_filters';
+import { ProductModuleState } from '../store/product_module_state';
 import {ServerModule} from '../store/server';
 import {SnackbarModule} from '../store/snackbar';
+import RouteMixin from '../mixins/RouteMixin';
 
 @Component({
   components: {
@@ -65,7 +68,7 @@ import {SnackbarModule} from '../store/snackbar';
     UpdateNotification
   }
 })
-export default class Base extends Vue {
+export default class Base extends mixins(RouteMixin){
   @Prop({default: 'Heimdall'}) readonly title!: string;
   @Prop({default: 11}) readonly topbarZIndex!: number;
   @Prop({default: false}) readonly minimalTopbar!: boolean;

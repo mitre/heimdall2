@@ -29,7 +29,7 @@ abstract class HDFControl10 implements HDFControl {
   readonly rawNistTags: string[];
   readonly parsedNistTags: NistControl[];
   readonly parsedNistRevision: NistRevision | null;
-  readonly severity: Severity;
+  severity: Severity;
   readonly waived: boolean;
   readonly attested: boolean;
   readonly attestationStatus?: 'passed' | 'failed';
@@ -76,6 +76,8 @@ abstract class HDFControl10 implements HDFControl {
         return `One or more of the automated tests failed or was inconclusive for the control:\n\n${this.message}\n`;
       case 'Passed':
         return `All Automated tests passed for the control:\n\n${this.message}\n`;
+      case 'Pending':
+        return `One or more of the automated tests has status overrides, failed or was inconclusive for the control:\n\n${this.message}\n`;         
       case 'Not Reviewed':
         return `Automated test skipped due to known accepted condition in the control:\n\n${this.message}\n`;
       case 'Not Applicable':
@@ -100,6 +102,43 @@ abstract class HDFControl10 implements HDFControl {
     if (this.segments !== undefined) {
       return this.segments.map((s) => s.status);
     }
+  }
+
+  /** Only returns true if all present overrides are approved, returns false when a single override data is not marked is_approved or is undefined.
+   * returns true if there is no override data, only to be used with controls that have known override data. 
+   *
+  */
+  get isOverideStatusApproved(): boolean{
+    let overrideApproved = true;
+    if (this.segments !== undefined) {      
+      for(let s of this.segments){
+        if (s.override !== undefined){
+          if ( s.override?.is_approved !== undefined && s.override?.is_approved === true ) {
+            continue;
+          }else{
+            return false; 
+          }
+         }else{
+          continue;
+         }
+        }
+    }
+    return overrideApproved;
+  }
+
+  get hasControlStatusOverride(): boolean {
+    let hasOverride = false;
+    if (this.segments !== undefined) {      
+      const origStats = this.segments.map((s) => s.originalStatus);
+      if (origStats.length > 0) {
+          origStats.forEach((val) => {
+            if (val !== "") {
+              hasOverride = true
+            } 
+          });
+      }
+    }
+    return hasOverride
   }
 
   // Everything below here are helpers for computing our properties
@@ -184,7 +223,8 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   readonly message: string;
   readonly segments: HDFControlSegment[];
   readonly status: ControlStatus;
-
+  readonly parsedResultSourceTags: string[];
+  
   constructor(control: ResultControl_1_0) {
     // Waived is true if skipped_due_to_waiver is true
     super(
@@ -208,6 +248,12 @@ export class ExecControl extends HDFControl10 implements HDFControl {
     // Build segments
     this.segments = ExecControl.compute_segments(control);
 
+    // Override severity
+    this.severity = ExecControl.compute_override_severity(control);
+
+    // Build result source
+    this.parsedResultSourceTags = ExecControl.compute_result_source(this.segments);
+
     // Build status (using segments! Must be after that!!)
     this.status = this.compute_status();
   }
@@ -217,6 +263,19 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       return this.segments[0].start_time;
     }
     return undefined;
+  }
+
+  private static compute_result_source(segment: HDFControlSegment[]): string[]  {
+    const result: string[] = [];
+    for (const v of segment) {
+      const s = v.result_source;
+      if (s !== undefined) {
+        if (!result.includes(s)) {
+          result.push(s);
+        }
+      }
+    }
+    return result;
   }
 
   private static compute_message(control: ResultControl_1_0): string {
@@ -243,6 +302,8 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       return 'Failed';
     } else if (this.status_list.includes('passed')) {
       return 'Passed';
+    } else if (this.status_list.includes('pending')) {
+      return 'Pending';          
     } else if (this.attested) {
       if (this.attestationStatus === 'failed') {
         return 'Failed';
@@ -255,6 +316,8 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       }
     } else if (this.status_list.includes('skipped')) {
       return 'Not Reviewed';
+    } else if (this.status_list.includes('not_applicable')) {
+      return 'Not Applicable';      
     } else {
       return profileError; // Shouldn't get here, but might as well have fallback
     }
@@ -282,19 +345,55 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       // Set status to error if backtrace is not found. Also, default no_status
       const status: SegmentStatus = result.backtrace
         ? 'error'
-        : result.status || 'no_status';
+        : result.status || 'no_status';       
+      const overrideStatus: SegmentStatus = result.override?.cab_status
+        ? result.override?.cab_status
+        : status
+      const revisedSeverity: number = result.override?.revised_severity
+        ? result.override?.revised_severity
+        : control.impact
       return {
-        status: status,
+        status: overrideStatus,
         message: result.message || undefined,
-        code_desc: result.code_desc,
+        code_desc: result.code_desc,        
         skip_message: result.skip_message || undefined,
         exception: result.exception || undefined,
         backtrace: result.backtrace || undefined,
+        result_source: result.result_source || undefined,
+        override: result.override || undefined,
+        originalStatus: result.override?.cab_status ? status : "",
         start_time: result.start_time,
         run_time: result.run_time || undefined,
-        resource: result.resource || undefined
+        resource: result.resource || undefined,
+        originalSeverity: result.override?.revised_severity ? control.impact : undefined
       };
     });
+  }
+
+  private static compute_override_severity(
+    control: ResultControl_1_0
+  ): Severity {
+    let impact: number = 0
+    control.results.forEach(function(result) {
+      if(result.override?.revised_severity) {
+        impact = Math.max(impact, result.override?.revised_severity)
+      }
+      else {
+        impact = Math.max(impact, control.impact)
+      }
+    })
+    
+    if (impact < 0.1) {
+      return 'none';
+    } else if (impact < 0.4) {
+      return 'low';
+    } else if (impact < 0.7) {
+      return 'medium';
+    } else if (impact < 0.9) {
+      return 'high';
+    } else {
+      return 'critical';
+    }
   }
 }
 

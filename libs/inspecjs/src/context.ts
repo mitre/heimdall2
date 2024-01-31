@@ -274,11 +274,13 @@ export function contextualizeProfile(
     sourcedFrom: null
   };
 
-  // Now give it its controls
-  for (const c of profile.controls) {
-    const result = new ContextualizedControlImp(c, profileContext, [], []);
-    profileContext.contains.push(result);
+  if (profile.controls != null)
+  {
+    // Now give it its controls
+    for (const c of profile.controls) {
+      const result = new ContextualizedControlImp(c, profileContext, [], []);
+      profileContext.contains.push(result);
+    }
   }
-
   return profileContext;
 }

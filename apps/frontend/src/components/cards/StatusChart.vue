@@ -47,6 +47,11 @@ export default class StatusChart extends Vue {
       color: 'statusFailed'
     },
     {
+      label: 'Pending',
+      value: 'Pending',
+      color: 'statuspending'
+    },    
+    {
       label: 'Not Applicable',
       value: 'Not Applicable',
       color: 'statusNotApplicable'

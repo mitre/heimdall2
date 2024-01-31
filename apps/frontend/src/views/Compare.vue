@@ -266,6 +266,11 @@ export default class Compare extends Vue {
       color: 'statusFailed'
     },
     {
+      label: 'Pending',
+      value: 'Pending',
+      color: 'statuspending'
+    },       
+    {
       label: 'Not Applicable',
       value: 'Not Applicable',
       color: 'statusNotApplicable'
@@ -339,6 +344,7 @@ export default class Compare extends Vue {
       ids: SearchModule.controlIdSearchTerms,
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      resultSourceSearchTerms: SearchModule.resultSourceSearchTerms,
       nistIdFilter: SearchModule.NISTIdFilter,
       searchTerm: SearchModule.freeSearch,
       codeSearchTerms: SearchModule.codeSearchTerms,

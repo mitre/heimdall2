@@ -47,6 +47,7 @@ describe('Parsing', () => {
         'Profile Error': counts.error.total,
         'Not Reviewed': counts.skipped.total,
         'Not Applicable': counts.no_impact.total,
+        'Pending': 0,
         Waived: 0
       };
 

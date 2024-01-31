@@ -5,6 +5,7 @@ export {
   ControlStatus,
   HDFControl,
   HDFControlSegment,
+  HDFControlSegmentOverride,
   hdfWrapControl,
   SegmentStatus,
   Severity
