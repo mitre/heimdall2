@@ -1,7 +1,6 @@
 import {ExecJSON} from 'inspecjs';
 import {ControlResultStatus} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
-import {v4} from 'uuid';
 import {JsonixIntermediateConverter} from '../jsonix-intermediate-converter';
 import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
 import {getDescription} from '../utils/global';
