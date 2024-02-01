@@ -181,25 +181,25 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
 
 6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server).  Please convert any certificates into PEM files and place them in `./certs/` where they will be automatically ingested.  Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the `command` attribute underneath the `certs` service in the `docker-compose.yml` to run that script.
   ```bash
-  # What ./certs should look like with any scripts or certificates
+  # Below is an example of what may be in the ./certs directory, including any scripts or certificates.
   # ./certs/
   # ├── dodcerts.sh
   # └── my_certificates.pem
 
-  # What ./docker-compose.yml should look like for the above situation
-  # NOTE: the `command` attribute only needs to know about scripts not any particular certificates
+  # For the given example, the ./docker-compose.yml should look like the following:
   services:
     ...
     certs:
       ...
       command: sh -c "sh /etc/pki/ca-trust/source/anchors/dodcerts.sh && update-ca-trust && tail -f /dev/null"
+      # NOTE: The `command` attribute only needs to know about scripts not any particular certificates.
       ...
     ...
   ```
   To make the `docker-compose.yml` aware of additional scripts, add `sh /etc/pki/ca-trust/source/anchors/NAME_OF_SCRIPT.sh && ` to the beginning of the section in quotes.
-  NOTE: The script should make sure to place the certs within `/etc/pki/ca-trust/source/anchors/`.
+  NOTE: The script should make sure to place the certs within `/etc/pki/ca-trust/source/anchors/` since it will be run from the container, not the host.
 
-7. Spin up Heimdall Server
+7. Start Heimdall Server by running this command:
   ```bash
   docker-compose up
   ```
