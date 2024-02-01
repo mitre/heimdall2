@@ -27,8 +27,10 @@ bundle=$(curl "$url" | grep -ioP '(?<=").*dod.zip(?=")')
 # download the cert bundle
 curl -o dodcerts.zip "$bundle"
 
-# unzip the cert chain, grab the PEM file, and move it to /etc/pki/ca-trust/source/anchors which is where RedHat systems expect unprocessed certs to be stored
+# unzip the cert chain, convert it to PEM from DER, and move it to /etc/pki/ca-trust/source/anchors which is where RedHat systems expect unprocessed certs to be stored
 # reminder that this script will be run in a UBI container which is why we use that particular path
-unzip -l dodcerts.zip | grep -ioP '.*\s+\K.*.pem' | xargs -I{} unzip -o -j dodcerts.zip {} -d /etc/pki/ca-trust/source/anchors/
+chainfile=$(unzip -l dodcerts.zip | grep -ioP '.*\s+\K.*dod_der.p7b')
+unzip -o -j dodcerts.zip "$chainfile" -d /tmp
+openssl pkcs7 -in "/tmp/$(basename $chainfile)" -inform der -print_certs -out /etc/pki/ca-trust/source/anchors/dod_certs.pem
 
 echo "Finished downloading the DoD certs..."
