@@ -68,11 +68,13 @@ export async function checkSplunkCredentials(
     // Kill timer since request has failed
     clearTimeout(loginTimer);
 
+    console.log(`Splunk axios error: ${error}`);
+
     // Parse error response and report why request failed
     const errorCode = handleSplunkErrorResponse(error);
     if (errorCode === 'Unexpected error') {
       throw new Error(
-        'Failed to login - Please check your CORS configuration and validate that your input has the correct domain'
+        `Failed to login - Please check your CORS configuration and validate that your input has the correct domain: ${error}`
       );
     } else {
       throw new Error(`Failed to login - ${errorCode}`);

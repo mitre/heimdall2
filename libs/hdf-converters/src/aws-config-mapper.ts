@@ -98,17 +98,15 @@ export class AwsConfigMapper {
         Limit: 100
       };
       await this.delay(150);
-      let response = await this.configService
-        .getComplianceDetailsByConfigRule(params)
-        .promise();
+      let response =
+        await this.configService.getComplianceDetailsByConfigRule(params);
       let ruleResults = response.EvaluationResults || [];
       allRulesResolved.push(...ruleResults);
       while (response.NextToken !== undefined) {
         params = _.set(params, 'NextToken', response.NextToken);
         await this.delay(150);
-        response = await this.configService
-          .getComplianceDetailsByConfigRule(params)
-          .promise();
+        response =
+          await this.configService.getComplianceDetailsByConfigRule(params);
         ruleResults = ruleResults?.concat(response.EvaluationResults || []);
         allRulesResolved.push(...ruleResults);
       }

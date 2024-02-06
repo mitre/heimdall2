@@ -405,9 +405,8 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
 
     // Attempt to authenticate using given credentials
     const authResponse = await checkSplunkCredentials(config);
-    this.axiosInstance.defaults.headers.common[
-      'Authorization'
-    ] = `Bearer ${authResponse}`;
+    this.axiosInstance.defaults.headers.common['Authorization'] =
+      `Bearer ${authResponse}`;
 
     // Request all available indexes
     try {

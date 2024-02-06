@@ -12,7 +12,7 @@ jobs:
   
     services:
       splunk:
-        image: splunk/splunk
+        image: splunk/splunk:9.1.2
         volumes:
           - /$(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
         ports:
@@ -20,9 +20,7 @@ jobs:
           - 8088:8088
         env:
           SPLUNK_START_ARGS: --accept-license
-          SPLUNKD_SSL_ENABLE: False
-          SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
-          SPLUNK_HEC_SSL: False
+          SPLUNKD_SSL_ENABLE: false
           SPLUNK_PASSWORD: Valid_password!
 
     steps:

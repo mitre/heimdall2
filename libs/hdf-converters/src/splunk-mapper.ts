@@ -351,9 +351,8 @@ export class SplunkMapper {
 
     // Request session key for Axios instance
     const authToken = await checkSplunkCredentials(this.config);
-    this.axiosInstance.defaults.headers.common[
-      'Authorization'
-    ] = `Bearer ${authToken}`;
+    this.axiosInstance.defaults.headers.common['Authorization'] =
+      `Bearer ${authToken}`;
 
     // Create new search job from given query
     const job = await this.createJob(query);
