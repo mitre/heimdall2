@@ -189,7 +189,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   }
 
   get errorMessage(): string {
-    return this.control.hdf.segments?.length == 0
+    return this.control.root.hdf.segments?.length == 0
       ? "The control didn't return any results.  Check with the author of the profile to ensure the code is correct."
       : '';
   }

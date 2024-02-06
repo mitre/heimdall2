@@ -19,11 +19,11 @@ This repository contains the source code for Heimdall's [Backend](https://github
     - [Heimdall with Backend (Server)](#heimdall-with-backend-server)
     - [Features](#features)
     - [Use Cases](#use-cases)
-  - [Getting Started / Installation](#getting-started-installation)
+  - [Getting Started / Installation](#getting-started--installation)
     - [Heimdall Lite](#heimdall-lite-1)
       - [Running via npm](#running-via-npm)
       - [Running via Docker](#running-via-docker)
-    - [Heimdall Server - Docker](#heimdall-server-docker)
+    - [Heimdall Server - Docker](#heimdall-server---docker)
       - [Setup Docker Container (Clean Install)](#setup-docker-container-clean-install)
       - [Updating Docker Container](#updating-docker-container)
       - [Stopping the Container](#stopping-the-container)
@@ -96,7 +96,7 @@ Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Li
 ### Features
 | Features                                                                       |   Heimdall-Lite    |                                    Heimdall with Backend                                    |
 | :----------------------------------------------------------------------------- | :----------------: | :-----------------------------------------------------------------------------------------: |
-| Additional Installation Requirements                                           |                    |                                       Postgres Server                                       |
+| Additional Installation Requirements                                           |                    |                                       PostgreSQL Server                                       |
 | Overview Dashboard & Counts                                                    | :white_check_mark: |                                     :white_check_mark:                                      |
 | Deep Dive View of Security Control Results and Metadata                        | :white_check_mark: |                                     :white_check_mark:                                      |
 | 800-53 Partition and TreeMap View                                              | :white_check_mark: |                                     :white_check_mark:                                      |
@@ -171,16 +171,40 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
 
 4. By default Heimdall will generate self-signed certificates that will last for 7 days. For production use, place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively. For development use, you can use the default generated certificates which means you do not need to put any certificate files in the `./nginx/certs/` folder.
 
-*NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
+  *NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
-   - ```bash
-     ./setup-docker-env.sh
-     # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
-     docker-compose up
-     ```
+   ```bash
+   ./setup-docker-env.sh
+   # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
+   ```
 
-6. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.) 
+6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server).  Please convert any certificates into PEM files and place them in `./certs/` where they will be automatically ingested.  Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the `command` attribute underneath the `certs` service in the `docker-compose.yml` to run that script.
+  ```bash
+  # Below is an example of what may be in the ./certs directory, including any scripts or certificates.
+  # ./certs/
+  # ├── dodcerts.sh
+  # └── my_certificates.pem
+
+  # For the given example, the ./docker-compose.yml should look like the following:
+  services:
+    ...
+    certs:
+      ...
+      command: sh -c "sh /etc/pki/ca-trust/source/anchors/dodcerts.sh && update-ca-trust && tail -f /dev/null"
+      # NOTE: The `command` attribute only needs to know about scripts not any particular certificates.
+      ...
+    ...
+  ```
+  To make the `docker-compose.yml` aware of additional scripts, add `sh /etc/pki/ca-trust/source/anchors/NAME_OF_SCRIPT.sh && ` to the beginning of the section in quotes.
+  NOTE: The script should make sure to place the certs within `/etc/pki/ca-trust/source/anchors/` since it will be run from the container, not the host.
+
+7. Start Heimdall Server by running this command:
+  ```bash
+  docker-compose up
+  ```
+
+8. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.)
 
 #### Updating Docker Container
 
@@ -229,7 +253,7 @@ $ cf login -a api.fr.cloud.gov  --sso
 $ cf target -o sandbox-rename create-space heimdall2-rename
 ```
 
-5. Create a postgresql database
+5. Create a PostgreSQL database
 ```
 # Update manifest.yml file to rename application and database key name
 $ cf marketplace
@@ -336,7 +360,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      git clone https://github.com/mitre/heimdall2
      ```
 
-3. Run the Postgres server:
+3. Run the PostgreSQL server:
 
    Ubuntu:
    
@@ -467,12 +491,21 @@ To test your code to make sure everything still works:
 
     # Run Frontend Vue Tests
     yarn frontend test
-    # Run Backend Nest Tests
+    # Run Backend Nest Tests (see note)
     yarn backend test:ci-cov
+
+<span style="color:red">**NOTE:**</span> The `Backend Nest Tests` will remove (BULKDELETE) all entries in the configured PostgreSQL server for the following tables:
+ - EvaluationTags
+ - Evaluations
+ - Users
+ - GroupEvaluations
+ - Groups
+ - GroupUsers
+
 
 #### Run Cypress End to End Tests
 
-The application includes E2E frontend + Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). These perform automated checking that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
+The application includes an End-to-End (E2E) frontend + Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). The E2E tests performed is to validate  that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
 
     CYPRESS_TESTING=true yarn start:dev
     CYPRESS_BASE_URL=http://localhost:8080 yarn test:ui:open

@@ -1,3 +1,34 @@
+v2.9.5
+- Fix error message incorrectly showing up for overlay profile results @Amndeep7 (#5437)
+- Add tags in results view fix @georgedias (#5432)
+- Add tags in results view fix @georgedias (#5432)
+
+## Dependency Updates
+
+- Bump @smithy/node-http-handler from 2.2.2 to 2.3.0 @dependabot (#5448)
+- Bump @types/node from 20.11.3 to 20.11.4 @dependabot (#5445)
+- Bump cypress from 13.6.2 to 13.6.3 @dependabot (#5444)
+- Bump html-loader from 4.2.0 to 5.0.0 @dependabot (#5443)
+- Bump @types/luxon from 3.4.0 to 3.4.1 @dependabot (#5439)
+- Bump supertest from 6.3.3 to 6.3.4 @dependabot (#5442)
+- Bump sass-loader from 13.3.3 to 14.0.0 @dependabot (#5441)
+- Bump @types/node from 20.11.0 to 20.11.3 @dependabot (#5438)
+- Bump eslint-plugin-vue from 9.20.0 to 9.20.1 @dependabot (#5434)
+- Bump class-validator from 0.14.0 to 0.14.1 @dependabot (#5436)
+- Bump diff2html from 3.4.46 to 3.4.47 @dependabot (#5433)
+- Bump @aws-sdk/client-s3 from 3.489.0 to 3.490.0 @dependabot (#5428)
+- Bump @aws-sdk/client-config-service from 3.489.0 to 3.490.0 @dependabot (#5430)
+- Bump @types/sequelize from 4.28.19 to 4.28.20 @dependabot (#5431)
+- Bump @types/node from 20.10.8 to 20.11.0 @dependabot (#5427)
+- Bump @types/node from 20.10.7 to 20.10.8 @dependabot (#5417)
+- Bump @aws-sdk/client-s3 from 3.485.0 to 3.489.0 @dependabot (#5424)
+- Bump fast-xml-parser from 4.3.2 to 4.3.3 @dependabot (#5423)
+- Bump @aws-sdk/client-config-service from 3.486.0 to 3.489.0 @dependabot (#5420)
+- Bump eslint-plugin-vue from 9.19.2 to 9.20.0 @dependabot (#5421)
+- Bump @aws-sdk/client-sts from 3.485.0 to 3.489.0 @dependabot (#5422)
+- Bump @types/sinon from 17.0.2 to 17.0.3 @dependabot (#5419)
+- Bump date-fns from 3.1.0 to 3.2.0 @dependabot (#5416)
+
 v2.9.4
 - Update pagination count logic @georgedias (#5402)
 

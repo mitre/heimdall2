@@ -44,7 +44,7 @@
           <div class="d-flex flex-column">
             <v-data-table
               v-model="selectedFiles"
-              data-cy="loadFileList"
+              data-cy="loadSampleFileList"
               class="pb-8 table"
               dense
               show-select
@@ -113,7 +113,7 @@
                   <v-icon class="pl-2">mdi-file-download</v-icon>
                 </v-btn>
               </template>
-              <span>Load selected sample evaluation(s)</span>
+              <span>Load selected items(s)</span>
             </v-tooltip>
           </div>
         </div>
@@ -124,6 +124,7 @@
 
 <script lang="ts">
 import {SnackbarModule} from '@/store/snackbar';
+import {SpinnerModule} from '@/store/spinner';
 import {FileID, InspecIntakeModule} from '@/store/report_intake';
 import {Sample, samples, fetchSample} from '@/utilities/sample_util';
 import Vue from 'vue';
@@ -138,7 +139,6 @@ export default class SampleList extends Vue {
   selectedFiles: Sample[] = [];
 
   isActiveDialog = false;
-
   headers: Object[] = [
     {
       text: 'Filename',
@@ -148,8 +148,6 @@ export default class SampleList extends Vue {
       value: 'filename'
     }
   ];
-
-  isActive = false;
 
   sortBy = 'filename';
   fileKey = 'filename';
@@ -169,12 +167,19 @@ export default class SampleList extends Vue {
     if (selectedSamples.length != 0) {
       const promises: Promise<FileID | FileID[]>[] = [];
       this.loading = true;
+      SpinnerModule.reset();
+      SpinnerModule.visibility(true);
+      let index = 1;
       for (const sample of selectedSamples) {
-        const requestFile = fetchSample(sample).then((data: File) => {
-          return InspecIntakeModule.loadFile({
+        const requestFile = fetchSample(sample).then(async (data: File) => {
+          const done = await InspecIntakeModule.loadFile({
             file: data,
             filename: sample.filename
           });
+          SpinnerModule.setMessage(`Loading: ${sample.filename}`);
+          const value = Math.floor((index++ / selectedSamples.length) * 100);
+          SpinnerModule.setValue(value);
+          return done;
         });
         promises.push(requestFile);
       }
@@ -188,6 +193,7 @@ export default class SampleList extends Vue {
         })
         .finally(() => {
           this.loading = false;
+          SpinnerModule.visibility(false);
           this.selectedFiles = [];
         });
     } else {

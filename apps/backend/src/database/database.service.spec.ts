@@ -3,7 +3,7 @@ import {DatabaseModule} from './database.module';
 import {DatabaseService} from './database.service';
 import {DeltaArgs} from './interfaces/delta-args.interface';
 
-describe('DatabaseSerivce', () => {
+describe('DatabaseService', () => {
   let databaseService: DatabaseService;
 
   beforeAll(async () => {
