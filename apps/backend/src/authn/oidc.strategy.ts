@@ -36,12 +36,13 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       },
       async function (
         _accessToken: string, //Unused param. Should be 'issuer' based on spec. 'issuer' is defined on line 27 of this file
-        profile: OIDCProfile,
+        profile: any, //OIDCProfile,
         _refreshToken: string, //Unused param. Should be 'context' based on spec. 'context' is not defined in this file
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) {
         console.log(Object.keys(profile));
+        console.log(profile['id']);
         const userData = profile._json;
         console.log(userData);
         const {given_name, family_name, email, email_verified, groups} =
