@@ -16465,15 +16465,13 @@ passport-openid@^0.4.0:
     openid "1.x.x"
     passport-strategy "1.x.x"
 
-passport-openidconnect@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.npmjs.org/passport-openidconnect/-/passport-openidconnect-0.0.2.tgz#e488f8bdb386c9a9fd39c91d5ab8c880156e8153"
-  integrity sha512-kvcMiQkivMytg3ykhHgaXj5K6Yx/ZaqkTqtVw4Ddu1EMwRBiI6dKHzPGsUwSOzck2DFcseqdsjwv25KVnk7rTQ==
+passport-openidconnect@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/passport-openidconnect/-/passport-openidconnect-0.1.1.tgz#83921ff5f87f634079f65262dada834af1972244"
+  integrity sha512-r0QJiWEzwCg2MeCIXVP5G6YxVRqnEsZ2HpgKRthZ9AiQHJrgGUytXpsdcGF9BRwd3yMrEesb/uG/Yxb86rrY0g==
   dependencies:
     oauth "0.9.x"
     passport-strategy "1.x.x"
-    request "^2.75.0"
-    webfinger "0.4.x"
 
 passport-strategy@1.x.x, passport-strategy@^1.0.0:
   version "1.0.0"
@@ -17880,7 +17878,7 @@ request-progress@^3.0.0:
   dependencies:
     throttleit "^1.0.0"
 
-request@^2.61.0, request@^2.75.0:
+request@^2.61.0:
   version "2.88.2"
   resolved "https://registry.npmjs.org/request/-/request-2.88.2.tgz#d73c918731cb5a87da047e207234146f664d12b3"
   integrity sha512-MsvtOrfG9ZcrOwAW+Qi+F6HbD0CWXEh9ou77uOb7FM2WPhwT7smM833PzanhJLsgXjN89Ir6V2PczXNnMpwKhw==
@@ -18187,7 +18185,7 @@ sass@~1.32.6:
   dependencies:
     chokidar ">=3.0.0 <4.0.0"
 
-sax@>=0.1.1, sax@>=0.6.0, sax@^1.2.4:
+sax@>=0.6.0, sax@^1.2.4:
   version "1.3.0"
   resolved "https://registry.npmjs.org/sax/-/sax-1.3.0.tgz#a5dbe77db3be05c9d1ee7785dbd3ea9de51593d0"
   integrity sha512-0s+oAmw9zLl1V1cS9BtZN7JAd0cW5e0QH4W3LWEK6a4LaLEA2OTpGYWDY+6XasBLtz6wkm3u1xRw95mRuJ59WA==
@@ -18922,11 +18920,6 @@ steno@^0.4.1:
   integrity sha512-EEHMVYHNXFHfGtgjNITnka0aHhiAlo93F7z2/Pwd+g0teG9CnM3JIINM7hVVB5/rhw9voufD7Wukwgtw2uqh6w==
   dependencies:
     graceful-fs "^4.1.3"
-
-step@0.0.x:
-  version "0.0.6"
-  resolved "https://registry.npmjs.org/step/-/step-0.0.6.tgz#143e7849a5d7d3f4a088fe29af94915216eeede2"
-  integrity sha512-qSSeQinUJk2w38vUFobjFoE307GqsozMC8VisOCkJLpklvKPT0ptPHwWOrENoag8rgLudvTkfP3bancwP93/Jw==
 
 stream-browserify@^3.0.0:
   version "3.0.0"
@@ -20748,14 +20741,6 @@ wcwidth@^1.0.0, wcwidth@^1.0.1:
   dependencies:
     defaults "^1.0.3"
 
-webfinger@0.4.x:
-  version "0.4.2"
-  resolved "https://registry.npmjs.org/webfinger/-/webfinger-0.4.2.tgz#3477a6d97799461896039fcffc650b73468ee76d"
-  integrity sha512-PvvQ/k74HkC3q5G7bGu4VYeKDt3ePZMzT5qFPtEnOL8eyIU1/06OtDn9X5vlkQ23BlegA3eN89rDLiYUife3xQ==
-  dependencies:
-    step "0.0.x"
-    xml2js "0.1.x"
-
 webidl-conversions@^3.0.0:
   version "3.0.1"
   resolved "https://registry.npmjs.org/webidl-conversions/-/webidl-conversions-3.0.1.tgz#24534275e2a7bc6be7bc86611cc16ae0a5654871"
@@ -21197,13 +21182,6 @@ xml-name-validator@^4.0.0:
   version "4.0.0"
   resolved "https://registry.npmjs.org/xml-name-validator/-/xml-name-validator-4.0.0.tgz#79a006e2e63149a8600f15430f0a4725d1524835"
   integrity sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==
-
-xml2js@0.1.x:
-  version "0.1.14"
-  resolved "https://registry.npmjs.org/xml2js/-/xml2js-0.1.14.tgz#5274e67f5a64c5f92974cd85139e0332adc6b90c"
-  integrity sha512-pbdws4PPPNc1HPluSUKamY4GWMk592K7qwcj6BExbVOhhubub8+pMda/ql68b6L3luZs/OGjGSB5goV7SnmgnA==
-  dependencies:
-    sax ">=0.1.1"
 
 xml2js@^0.5.0:
   version "0.5.0"
