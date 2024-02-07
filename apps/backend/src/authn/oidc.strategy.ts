@@ -43,6 +43,9 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       ) {
         console.log(Object.keys(profile));
         console.log(profile['id']);
+        console.log(_accessToken);
+        console.log(_refreshToken);
+        console.log(done);
         const userData = profile._json;
         console.log(userData);
         const {given_name, family_name, email, email_verified, groups} =
