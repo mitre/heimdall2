@@ -35,9 +35,9 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         scope: 'openid profile email'
       },
       async function (
-        _accessToken: string,
-        _refreshToken: string,
+        _accessToken: string, //Unused param. Should be 'issuer' based on spec. 'issuer' is defined on line 27 of this file
         profile: OIDCProfile,
+        _refreshToken: string, //Unused param. Should be 'context' based on spec. 'context' is not defined in this file
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) {
