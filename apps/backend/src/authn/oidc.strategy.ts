@@ -41,7 +41,9 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) {
+        console.log(Object.keys(profile))
         const userData = profile._json;
+        console.log(userData)
         const {given_name, family_name, email, email_verified, groups} =
           userData;
         if (email_verified) {
