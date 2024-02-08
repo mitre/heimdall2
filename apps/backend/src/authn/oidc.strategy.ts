@@ -36,16 +36,16 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       },
       async function (
         _accessToken: string, //Unused param. Should be 'issuer' based on spec. 'issuer' is defined on line 27 of this file
-        profile: any, //OIDCProfile,
-        _refreshToken: string, //Unused param. Should be 'context' based on spec. 'context' is not defined in this file
+         //OIDCProfile,
+        _refreshToken: string, profile: any, //Unused param. Should be 'context' based on spec. 'context' is not defined in this file
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) {
-        console.log(Object.keys(profile));
-        console.log(profile['id']);
-        console.log(_accessToken);
-        console.log(_refreshToken);
-        console.log(done);
+        console.log(Object.keys(profile)); //['id']
+        console.log(profile['id']); // johndoe
+        console.log(_accessToken); //issuer: http://localhost:8082
+        console.log(_refreshToken); //context: {}
+        console.log(done); //[Function: verified]
         const userData = profile._json;
         console.log(userData);
         const {given_name, family_name, email, email_verified, groups} =
