@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="my-4">Selected Filters:</h1>
+    <h4 class="my-4">Selected Filters:</h4>
     <v-row class="mt-4 mx-auto">
       <v-data-table
         v-model="selectedFilters"

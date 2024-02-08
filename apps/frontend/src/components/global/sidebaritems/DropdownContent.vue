@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel>
+  <v-expansion-panel expand v-model="activePath">
     <v-expansion-panel-header :title="headerText">
       {{ headerText }}
     </v-expansion-panel-header>
@@ -62,7 +62,7 @@
           </v-list-item-content>
         </v-list-item>
 
-        <v-row class="pt-5 pb-5" justify="center">
+        <v-row v-if="!inChecklistView" class="pt-5 pb-5" justify="center">
           <v-btn
             small
             style="cursor: pointer"
@@ -126,6 +126,9 @@ export default class DropdownContent extends Vue {
 
   @Prop({default: false, type: Boolean, required: false})
   readonly anySelected!: boolean;
+
+  @Prop({ default: 0, type: Number, required: true })
+  readonly activePath!: number;
 
   showFilteredOutFiles = false;
 

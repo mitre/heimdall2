@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="my-4">Quick Filters:</h1>
+    <h4 class="my-4">Quick Filters:</h4>
     <v-row class="my-4">
       <v-col v-for="item in controlStatusSwitches" :key="item.name" :cols="3">
         {{ item.name }}

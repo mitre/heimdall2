@@ -1,13 +1,16 @@
 <template>
   <div>
-    <ChecklistTargetDataModal
-      :visible="showTargetModal"
-      @close-modal="showTargetModal = false"
-    />
-    <ChecklistTechnologyAreaModal
-      :visible="showTechnologyModal"
-      @close-modal="showTechnologyModal = false"
-    />
+    <div v-if="visible_checklist_files.length > 0">
+      <ChecklistTargetDataModal
+        :visible="showTargetModal"
+        @close-modal="showTargetModal = false"
+      />
+      <ChecklistTechnologyAreaModal
+        :visible="showTechnologyModal"
+        @close-modal="showTechnologyModal = false"
+      />
+    </div>
+
 
     <!-- Due to how the vuetify components work, one drawer is permanent to always be appended to the side and the other will be the temporary that can be pulled out -->
     <v-navigation-drawer
@@ -42,7 +45,8 @@
       @input="$emit('input', $event)"
     >
       <div v-if="isUtilityDrawerShown">
-        <v-expansion-panels v-model="active_path" accordion>
+        <v-expansion-panels v-model="active_path" default>
+        <!-- <v-expansion-panels :value="active_path" default> -->
           <DropdownContent
             header-text="Results"
             :files="visible_evaluation_files"
@@ -50,6 +54,7 @@
             :any-selected="any_evaluation_selected"
             :enable-compare-view="true"
             :compare-view-active="compareViewActive"
+            :active-path="active_path"
             @remove-selected="removeSelectedEvaluations"
             @toggle-all="toggle_all_evaluations"
             @toggle-compare-view="compareView"
@@ -60,6 +65,7 @@
             :files="visible_profile_files"
             :all-selected="all_profiles_selected"
             :any-selected="any_profile_selected"
+            :active-path="active_path"
             @remove-selected="removeSelectedProfiles"
             @toggle-all="toggle_all_profiles"
             @changed-files="$emit('changed-files')"
@@ -67,6 +73,7 @@
           <DropdownContent
             header-text="Checklists"
             :files="visible_checklist_files"
+            :active-path="active_path"
             @changed-files="$emit('changed-files')"
           />
         </v-expansion-panels>
@@ -186,6 +193,12 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
+    console.log(`this.currentRoute: ${this.currentRoute}`)
+    console.log(`views.Checklist: ${(this.currentRoute === views.Checklist)}`)
+    console.log(`views.Profile: ${(this.currentRoute === views.Profile)}`)
+    console.log(`views.Result: ${(this.currentRoute === views.Result)}`)
+    console.log(`views.Compare: ${(this.currentRoute === views.Compare)}`)
+
     if (this.currentRoute === views.Checklist) {
       return 2;
     } else if (this.currentRoute === views.Profile) {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="mt-5">{{ header }}:</h1>
+    <h4 class="mt-5">{{ header }}:</h4>
     <v-row class="mt-4">
       <v-select
         v-model="currentFreeTextFilterCategory"
