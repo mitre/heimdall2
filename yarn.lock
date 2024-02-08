@@ -280,15 +280,15 @@
     tslib "^1.11.1"
 
 "@aws-sdk/client-config-service@^3.95.0":
-  version "3.507.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.507.0.tgz#8a653179479a1ae52a26652d050b6508dba4d5ca"
-  integrity sha512-ty2NGMMyPZ6NrgfZLoqsl3TjPM7Li0Eii9p2zVip6LWCVgL9gXom3JKDGrhc0W3dsSKTZFW9DDV5B6plOCMarw==
+  version "3.509.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.509.0.tgz#88a1f00a6f3d5e9f78ba2728014d8852ad7c6970"
+  integrity sha512-0duP6CPqIHAveaytXRVAigcu7VEgHB91iAuJaWI+ANkVtKX6w/rSrkcG3ksYcDgynQv5Rfj924LoYqTBHsYUiQ==
   dependencies:
     "@aws-crypto/sha256-browser" "3.0.0"
     "@aws-crypto/sha256-js" "3.0.0"
     "@aws-sdk/client-sts" "3.507.0"
     "@aws-sdk/core" "3.496.0"
-    "@aws-sdk/credential-provider-node" "3.507.0"
+    "@aws-sdk/credential-provider-node" "3.509.0"
     "@aws-sdk/middleware-host-header" "3.502.0"
     "@aws-sdk/middleware-logger" "3.502.0"
     "@aws-sdk/middleware-recursion-detection" "3.502.0"
@@ -566,24 +566,6 @@
   dependencies:
     "@aws-sdk/client-sts" "3.507.0"
     "@aws-sdk/credential-provider-env" "3.502.0"
-    "@aws-sdk/credential-provider-process" "3.502.0"
-    "@aws-sdk/credential-provider-sso" "3.507.0"
-    "@aws-sdk/credential-provider-web-identity" "3.507.0"
-    "@aws-sdk/types" "3.502.0"
-    "@smithy/credential-provider-imds" "^2.2.1"
-    "@smithy/property-provider" "^2.1.1"
-    "@smithy/shared-ini-file-loader" "^2.3.1"
-    "@smithy/types" "^2.9.1"
-    tslib "^2.5.0"
-
-"@aws-sdk/credential-provider-node@3.507.0":
-  version "3.507.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.507.0.tgz#b6c9f3c2c8294911c4f12e267f16a26e1eba4813"
-  integrity sha512-tkQnmOLkRBXfMLgDYHzogrqTNdtl0Im0ipzJb2IV5hfM5NoTfCf795e9A9isgwjSP/g/YEU0xQWxa4lq8LRtuA==
-  dependencies:
-    "@aws-sdk/credential-provider-env" "3.502.0"
-    "@aws-sdk/credential-provider-http" "3.503.1"
-    "@aws-sdk/credential-provider-ini" "3.507.0"
     "@aws-sdk/credential-provider-process" "3.502.0"
     "@aws-sdk/credential-provider-sso" "3.507.0"
     "@aws-sdk/credential-provider-web-identity" "3.507.0"
