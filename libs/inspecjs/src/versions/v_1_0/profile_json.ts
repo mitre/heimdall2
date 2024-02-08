@@ -1,9 +1,9 @@
 export {
+  ProfileJSONControl as Control,
   ControlGroup,
   Convert,
-  Dependency as ProfileDependency,
   ProfileJSON as Profile,
-  ProfileJSONControl as Control,
+  Dependency as ProfileDependency,
   Reference,
   SourceLocation,
   SupportedPlatform

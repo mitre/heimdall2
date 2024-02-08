@@ -1,19 +1,19 @@
 export {
+  ExecJSONControl as Control,
   ControlDescription,
   ControlGroup,
   ControlResult,
   ControlResultStatus,
+  WaiverData as ControlWaiverData,
   Convert,
-  Dependency as ProfileDependency,
   ExecJSON as Execution,
-  ExecJSONControl as Control,
-  ExecJSONProfile as Profile,
   Platform,
+  ExecJSONProfile as Profile,
+  Dependency as ProfileDependency,
   Reference,
   SourceLocation,
   StatisticBlock,
   StatisticHash,
   Statistics,
-  SupportedPlatform,
-  WaiverData as ControlWaiverData
+  SupportedPlatform
 } from '../../generated_parsers/v_1_0/exec-json';

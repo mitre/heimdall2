@@ -21,10 +21,10 @@ import * as _ from 'lodash';
 import {LRUCache} from 'lru-cache';
 import {
   Action,
-  getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
+  getModule
 } from 'vuex-module-decorators';
 
 const MAX_CACHE_ENTRIES = 20;

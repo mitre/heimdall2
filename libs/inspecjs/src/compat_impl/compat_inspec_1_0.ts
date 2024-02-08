@@ -16,9 +16,9 @@ import {
 import {ProfileJSONControl as ProfileControl_1_0} from '../generated_parsers/v_1_0/profile-json';
 import {
   CanonizationConfig,
-  is_control,
   NistControl,
   NistRevision,
+  is_control,
   parse_nist
 } from '../nist';
 

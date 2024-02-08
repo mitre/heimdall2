@@ -5,9 +5,9 @@ export {
   ControlStatus,
   HDFControl,
   HDFControlSegment,
-  hdfWrapControl,
   SegmentStatus,
-  Severity
+  Severity,
+  hdfWrapControl
 } from './compat_wrappers';
 // Export Conversion functions
 export * from './context';
