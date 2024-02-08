@@ -47,6 +47,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         done: any
       ) {
         console.log(Object.keys(profile)); //['id']
+        console.log(typeof profile);
         console.log(issuer);
         //console.log(uiProfile);
         console.log(profile);
