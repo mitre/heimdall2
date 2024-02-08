@@ -48,16 +48,16 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       ) {
         console.log(Object.keys(profile)); //['id']
         console.log(typeof profile);
-        //console.log(issuer);
-        //console.log(uiProfile);
+        console.log(issuer);
+        console.log(uiProfile);
         console.log(profile);
         //console.log(profile['id']); // johndoe
-        //console.log(context);
-        //console.log(idToken);
-        //console.log(_accessToken); //issuer: http://localhost:8082
-        //console.log(_refreshToken); //context: {}
-        //console.log(params);
-        //console.log(done); //[Function: verified]
+        console.log(context);
+        console.log(idToken);
+        console.log(_accessToken); //issuer: http://localhost:8082
+        console.log(_refreshToken); //context: {}
+        console.log(params);
+        console.log(done); //[Function: verified]
         const userData = profile._json;
         console.log(userData);
         const {given_name, family_name, email, email_verified, groups} =
