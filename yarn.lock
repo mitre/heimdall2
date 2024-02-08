@@ -3437,9 +3437,9 @@
     uuid "9.0.0"
 
 "@nestjs/serve-static@^4.0.0":
-  version "4.0.0"
-  resolved "https://registry.npmjs.org/@nestjs/serve-static/-/serve-static-4.0.0.tgz#3baeea982f66d64718a59f3d8f67281b74d4dbdd"
-  integrity sha512-8cTrNV2ngdHIjiLNsXePnw0+KY1ThrZGz/WeyAG5gIvmZNDbnZBOrPoYlKL+MOzlXlQStxR5jKLYmn+nJeoncQ==
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/serve-static/-/serve-static-4.0.1.tgz#287b8b059602705184980b4c8c24b62cc24d26c1"
+  integrity sha512-AoOrVdAe+WmsceuCcA8nWmKUYmaOsg9pqBCbIj7PS4W3XdikJQMtfxgSIoOlyUksZdhTBFjHqKh0Yhpj6pulwQ==
   dependencies:
     path-to-regexp "0.2.5"
 
