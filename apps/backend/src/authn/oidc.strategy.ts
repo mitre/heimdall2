@@ -49,7 +49,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         _refreshToken: string,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         params: object,
-        done: any
+        done: any //any //shouldn't be any according to linter
       ) {
         const userData = profile._json;
         const {given_name, family_name, email, email_verified, groups} =
