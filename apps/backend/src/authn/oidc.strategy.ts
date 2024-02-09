@@ -4,8 +4,14 @@ import {Strategy} from 'passport-openidconnect';
 import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from './authn.service';
+import { Context } from 'vm';
 
 interface OIDCProfile {
+  id: string;
+  displayName: string;
+  name: {familyName: string, givenName: string};
+  emails: [ { value: string } ];
+  _raw: string;
   _json: {
     given_name: string;
     family_name: string;
@@ -14,6 +20,22 @@ interface OIDCProfile {
     groups: string[];
   };
 }
+
+
+/*{
+  id: undefined,
+  displayName: 'Example User',
+  name: { familyName: 'User', givenName: 'Example' },
+  emails: [ { value: 'example@example.com' } ],
+  _raw: '{"email":"example@example.com","email_verified":true,"name":"Example User","given_name":"Example","family_name":"User"}',
+  _json: {
+    email: 'example@example.com',
+    email_verified: true,
+    name: 'Example User',
+    given_name: 'Example',
+    family_name: 'User'
+  }
+} */
 
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
@@ -38,7 +60,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         issuer: any, //Unused param. Should be 'issuer' based on spec. 'issuer' is defined on line 27 of this file
         uiProfile: any,
         profile: OIDCProfile, //idProfile
-        context: any,
+        context: Context,
         idToken: any,
         _accessToken: string,
         _refreshToken: string, //profile: any, //Unused param. Should be 'context' based on spec. 'context' is not defined in this file
@@ -46,7 +68,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         params: any,
         done: any
       ) {
-        console.log(Object.keys(profile)); //['id']
+        //console.log(Object.keys(profile)); //['id']
         console.log(typeof profile);
         console.log(issuer);
         console.log(uiProfile);
@@ -59,6 +81,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         console.log(params);
         console.log(done); //[Function: verified]
         const userData = profile._json;
+        console.log(profile._json)
         console.log(userData);
         const {given_name, family_name, email, email_verified, groups} =
           userData;
