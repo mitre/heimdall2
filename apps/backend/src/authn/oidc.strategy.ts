@@ -58,8 +58,8 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       },
       async function (
         issuer: any, //Unused param. Should be 'issuer' based on spec. 'issuer' is defined on line 27 of this file
-        uiProfile: any,
-        profile: OIDCProfile, //idProfile
+        profile: OIDCProfile,
+        idProfile: any, //idProfile
         context: Context,
         idToken: any,
         _accessToken: string,
@@ -70,7 +70,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       ) {
         //console.log(Object.keys(profile)); //['id']
         console.log(typeof profile);
-        console.log(issuer);
+        //console.log(issuer);
         //console.log(uiProfile);
         console.log(profile);
         //console.log(profile['id']); // johndoe
