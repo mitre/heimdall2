@@ -4,7 +4,6 @@ import {Strategy} from 'passport-openidconnect';
 import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from './authn.service';
-import {Context} from 'vm';
 
 interface OIDCProfile {
   id: string;
@@ -41,23 +40,17 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         scope: 'openid profile email'
       },
       async function (
-        issuer: any, 
+        issuer: string,
         profile: OIDCProfile, //uiProfile
-        idProfile: any,
-        context: any,
-        idToken: any,
+        idProfile: object,
+        context: object,
+        idToken: string,
         _accessToken: string,
-        _refreshToken: string, 
+        _refreshToken: string,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        params: any,
+        params: object,
         done: any
       ) {
-        console.log(typeof issuer);
-        console.log(typeof idProfile);
-        console.log(typeof context);
-        console.log(typeof idToken);
-        console.log(typeof params);
-        console.log(typeof done);
         const userData = profile._json;
         const {given_name, family_name, email, email_verified, groups} =
           userData;
