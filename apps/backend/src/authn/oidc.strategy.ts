@@ -4,13 +4,13 @@ import {Strategy} from 'passport-openidconnect';
 import {ConfigService} from '../config/config.service';
 import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from './authn.service';
-import { Context } from 'vm';
+import {Context} from 'vm';
 
 interface OIDCProfile {
   id: string;
   displayName: string;
-  name: {familyName: string, givenName: string};
-  emails: [ { value: string } ];
+  name: {familyName: string; givenName: string};
+  emails: [{value: string}];
   _raw: string;
   _json: {
     given_name: string;
@@ -20,22 +20,6 @@ interface OIDCProfile {
     groups: string[];
   };
 }
-
-
-/*{
-  id: undefined,
-  displayName: 'Example User',
-  name: { familyName: 'User', givenName: 'Example' },
-  emails: [ { value: 'example@example.com' } ],
-  _raw: '{"email":"example@example.com","email_verified":true,"name":"Example User","given_name":"Example","family_name":"User"}',
-  _json: {
-    email: 'example@example.com',
-    email_verified: true,
-    name: 'Example User',
-    given_name: 'Example',
-    family_name: 'User'
-  }
-} */
 
 @Injectable()
 export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
@@ -57,32 +41,24 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         scope: 'openid profile email'
       },
       async function (
-        issuer: any, //Unused param. Should be 'issuer' based on spec. 'issuer' is defined on line 27 of this file
-        profile: OIDCProfile,
-        idProfile: any, //idProfile
-        context: Context,
+        issuer: any, 
+        profile: OIDCProfile, //uiProfile
+        idProfile: any,
+        context: any,
         idToken: any,
         _accessToken: string,
-        _refreshToken: string, //profile: any, //Unused param. Should be 'context' based on spec. 'context' is not defined in this file
+        _refreshToken: string, 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         params: any,
         done: any
       ) {
-        //console.log(Object.keys(profile)); //['id']
-        console.log(typeof profile);
-        //console.log(issuer);
-        //console.log(uiProfile);
-        console.log(profile);
-        //console.log(profile['id']); // johndoe
-        //console.log(context);
-        //console.log(idToken);
-        //console.log(_accessToken); //issuer: http://localhost:8082
-        //console.log(_refreshToken); //context: {}
-        //console.log(params);
-        //console.log(done); //[Function: verified]
+        console.log(typeof issuer);
+        console.log(typeof idProfile);
+        console.log(typeof context);
+        console.log(typeof idToken);
+        console.log(typeof params);
+        console.log(typeof done);
         const userData = profile._json;
-        console.log(profile._json)
-        console.log(userData);
         const {given_name, family_name, email, email_verified, groups} =
           userData;
         if (email_verified) {
