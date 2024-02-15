@@ -257,15 +257,15 @@
     tslib "^1.11.1"
 
 "@aws-sdk/client-config-service@^3.95.0":
-  version "3.513.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.513.0.tgz#12a3e733e60fb4b6a34caffc3434ce1c27b7249b"
-  integrity sha512-f2gslgiJGzmpGdCydAfvBVu8Q4ulYGYG8teUMk7vF+8Ko3Em3wj2it7ShDphqdKHvB8zWtAgNRcirXe4j1JsPw==
+  version "3.514.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-config-service/-/client-config-service-3.514.0.tgz#01a816bf25de18e97703d5841c78961e06914fce"
+  integrity sha512-pWPWrbuX86a0E2h2IzkqRmkDyB5c3AkjUSnDVNlfHClmhFsMRpXFP7QQErTeis1PhPXrK4GRIzZPaNKqALzroQ==
   dependencies:
     "@aws-crypto/sha256-browser" "3.0.0"
     "@aws-crypto/sha256-js" "3.0.0"
     "@aws-sdk/client-sts" "3.513.0"
     "@aws-sdk/core" "3.513.0"
-    "@aws-sdk/credential-provider-node" "3.513.0"
+    "@aws-sdk/credential-provider-node" "3.514.0"
     "@aws-sdk/middleware-host-header" "3.511.0"
     "@aws-sdk/middleware-logger" "3.511.0"
     "@aws-sdk/middleware-recursion-detection" "3.511.0"
@@ -303,16 +303,16 @@
     tslib "^2.5.0"
 
 "@aws-sdk/client-s3@^3.425.0":
-  version "3.513.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.513.0.tgz#3353cd48a3815c2ca8ed492e7cd5e4c3ea3f9269"
-  integrity sha512-Y7kbPLvVVgcn38sTyQP/WnD5Zc7lnJ4XQ8qIPobbkwhCL+rl4hIWcxpQLf1OGS4zw2fBFQAxZnDotuBrAvgNsw==
+  version "3.514.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.514.0.tgz#ffbd5b33d1b26f06bf98e139c3925ebf3ce00d83"
+  integrity sha512-W1//7NyI/3Gs3u6o7J+hisD66liEeRpCQ7pJzyJl+rpXTp5ZOghTZzEEcIeHIPNSxCWywmt6E6r3yrMdoMktwg==
   dependencies:
     "@aws-crypto/sha1-browser" "3.0.0"
     "@aws-crypto/sha256-browser" "3.0.0"
     "@aws-crypto/sha256-js" "3.0.0"
     "@aws-sdk/client-sts" "3.513.0"
     "@aws-sdk/core" "3.513.0"
-    "@aws-sdk/credential-provider-node" "3.513.0"
+    "@aws-sdk/credential-provider-node" "3.514.0"
     "@aws-sdk/middleware-bucket-endpoint" "3.511.0"
     "@aws-sdk/middleware-expect-continue" "3.511.0"
     "@aws-sdk/middleware-flexible-checksums" "3.511.0"
@@ -554,10 +554,10 @@
     "@smithy/types" "^2.9.1"
     tslib "^2.5.0"
 
-"@aws-sdk/credential-provider-node@3.513.0":
-  version "3.513.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.513.0.tgz#7ce79ce6faea1850fb8992bb86e79e5f5e6f4e9c"
-  integrity sha512-Cp6tYUJ+g8zJxI8vE0A9W6AxRLq3iR2zGGKsrPLNmZkUaHoVaJiNEd+2nL9RwCqDRve+N+Sh3mbZrLiqh3DO6A==
+"@aws-sdk/credential-provider-node@3.514.0":
+  version "3.514.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/credential-provider-node/-/credential-provider-node-3.514.0.tgz#b7149b3b8850c1ee3d50b185ac24c0a517c85123"
+  integrity sha512-z6HYiJN5+WO4Obnu36pIKnWkt1cVb3/3QeqE0lwF6cwLVHv1DCTV6OAWlQO5Q9EO9VcsmZU3aIH7MyGrhvYuHg==
   dependencies:
     "@aws-sdk/credential-provider-env" "3.511.0"
     "@aws-sdk/credential-provider-http" "3.511.0"
@@ -7887,9 +7887,9 @@ core-js@^2.4.0:
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
 core-js@^3.4.1:
-  version "3.35.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.35.1.tgz#9c28f8b7ccee482796f8590cc8d15739eaaf980c"
-  integrity sha512-IgdsbxNyMskrTFxa9lWHyMwAJU5gXOPP+1yO+K59d50VLVAIDAbs7gIv705KzALModfK3ZrSZTPNpC0PQgIZuw==
+  version "3.36.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.36.0.tgz#e752fa0b0b462a0787d56e9d73f80b0f7c0dde68"
+  integrity sha512-mt7+TUBbTFg5+GngsAxeKBTl5/VS0guFeJacYge9OmHb+m058UwwIm41SE9T4Den7ClatV57B6TYTuJ0CX1MAw==
 
 core-util-is@1.0.2:
   version "1.0.2"
@@ -20284,9 +20284,9 @@ vuetify-loader@^1.6.0:
     loader-utils "^2.0.0"
 
 vuetify@^2.3.9:
-  version "2.7.1"
-  resolved "https://registry.npmjs.org/vuetify/-/vuetify-2.7.1.tgz#49fc4d460ecfb51ed40d5befff779ceabf4f5a03"
-  integrity sha512-DVFmRsDtYrITw9yuGLwpFWngFYzEgk0KwloDCIV3+vhZw+NBFJOSzdbttbYmOwtqvQlhDxUyIRQolrRbSFAKlg==
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/vuetify/-/vuetify-2.7.2.tgz#b2b687e519257d789a63b87c418f98099f38990f"
+  integrity sha512-qr04ww7uzAPQbpk751x4fSdjsJ+zREzjQ/rBlcQGuWS6MIMFMXcXcwvp4+/tnGsULZxPMWfQ0kmZmg5Yc/XzgQ==
 
 vuex-module-decorators@^1.0.1:
   version "1.2.0"
