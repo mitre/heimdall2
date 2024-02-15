@@ -5,7 +5,7 @@
         <v-icon
           b-tooltip.hover
           title="Request content from the server"
-          color="blue"
+          color="primary"
           >mdi-refresh</v-icon
         >
       </v-btn>
@@ -254,3 +254,10 @@ export default class FileList extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.card-outter {
+  position: absolute;
+  bottom: 0;
+}
+</style>

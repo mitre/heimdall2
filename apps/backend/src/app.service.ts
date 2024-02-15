@@ -14,13 +14,27 @@ export class AppService
     BeforeApplicationShutdown,
     OnApplicationShutdown
 {
+  private readonly line = '____________________________________________\n';
+  private colors = winston.addColors({
+    info: 'cyan',
+    warn: 'yellow',
+    error: 'red',
+    verbose: 'blue'
+  });
+
   public logger = winston.createLogger({
     transports: [new winston.transports.Console()],
     format: winston.format.combine(
+      winston.format.colorize({all: true}),
       winston.format.timestamp({
         format: 'MMM-DD-YYYY HH:mm:ss Z'
       }),
-      winston.format.printf((info) => `[${[info.timestamp]}] ${info.message}`)
+      winston.format.errors({stack: true}),
+      winston.format.align(),
+      winston.format.printf(
+        (info) =>
+          `${this.line}[${[info.timestamp]}] (App Service): ${info.message}`
+      )
     )
   });
 

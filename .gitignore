@@ -29,7 +29,6 @@ test/videos
 *.launch
 .settings/
 *.sublime-workspace
-.nvmrc
 .editorconfig
 
 # Editor - Vim
@@ -55,6 +54,9 @@ manifest.yml
 # Ignore nginx SSL certificate and key
 nginx/certs/ssl_certificate.crt
 nginx/certs/ssl_certificate_key.key
+
+# Ignore certs
+certs/*.pem
 
 # Ignore yarn 2 new files
 .yarn/*

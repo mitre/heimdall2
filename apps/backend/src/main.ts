@@ -8,7 +8,7 @@ import {ConfigService} from './config/config.service';
 import {generateDefault} from './token/token.providers';
 import session = require('express-session');
 import postgresSessionStore = require('connect-pg-simple');
-import helmet = require('helmet');
+import helmet from 'helmet';
 import passport = require('passport');
 
 async function bootstrap() {

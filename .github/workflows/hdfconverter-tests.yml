@@ -1,4 +1,4 @@
-name: Run HDF-Converters Tests
+name: Run OHDF-Converters Tests
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     services:
       splunk:
-        image: splunk/splunk
+        image: splunk/splunk:9.1.2
         volumes:
           - /$(pwd)/test/configs/splunk/server.conf:/etc/system/local/server.conf
         ports:
@@ -20,9 +20,7 @@ jobs:
           - 8088:8088
         env:
           SPLUNK_START_ARGS: --accept-license
-          SPLUNKD_SSL_ENABLE: False
-          SPLUNK_HEC_TOKEN: ${{ secrets.SPLUNK_HEC_TOKEN }}
-          SPLUNK_HEC_SSL: False
+          SPLUNKD_SSL_ENABLE: false
           SPLUNK_PASSWORD: Valid_password!
 
     steps:
@@ -31,7 +29,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: "18.18"
+          check-latest: true
           cache: 'yarn'
 
       - name: Remove frontend and backend code to ensure the proper dependencies are declared in the hdf-converters package.json

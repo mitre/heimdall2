@@ -1,4 +1,4 @@
-import {Ability} from '@casl/ability';
+import {MongoAbility} from '@casl/ability';
 import {FindOptions} from 'sequelize';
 import {CreateUserDto} from '../../src/users/dto/create-user.dto';
 import {DeleteUserDto} from '../../src/users/dto/delete-user.dto';
@@ -682,7 +682,7 @@ export const USERS_SERVICE_MOCK = {
   async update(
     _userToUpdate: User,
     _updateUserDto: UpdateUserDto,
-    _abac: Ability
+    _abac: MongoAbility
   ): Promise<User> {
     return new User();
   },
@@ -695,7 +695,7 @@ export const USERS_SERVICE_MOCK = {
   async remove(
     _userToDelete: User,
     _deleteUserDto: DeleteUserDto,
-    _abac: Ability
+    _abac: MongoAbility
   ): Promise<User> {
     return new User();
   },

@@ -5,7 +5,7 @@ FROM $BASE_CONTAINER as builder
 ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
 
-ARG YARNREPO_MIRROR=https://registry.yarnpkg.com
+ARG YARNREPO_MIRROR=https://registry.npmjs.org
 ENV YARNREPO=$YARNREPO_MIRROR
 
 USER 0

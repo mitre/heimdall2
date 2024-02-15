@@ -34,6 +34,18 @@
           </v-list-item-content>
         </v-list-item>
 
+        <v-row class="pt-5 pb-5" justify="center">
+          <v-btn
+            small
+            style="cursor: pointer"
+            :disabled="!anyItemSelected"
+            @click="$emit('remove-selected')"
+          >
+            <span>Remove selected {{ headerText }} </span>
+            <v-icon right>mdi-text-box-remove-outline</v-icon>
+          </v-btn>
+        </v-row>
+
         <v-divider v-if="enableCompareView" />
 
         <v-list-item
@@ -72,6 +84,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 export default class DropdownContent extends Vue {
   @Prop({type: String, required: true}) readonly headerText!: string;
   @Prop({type: String, required: true}) readonly allSelected!: Trinary;
+
   @Prop({type: Array, required: true}) readonly files!:
     | EvaluationFile[]
     | ProfileFile[];
@@ -83,8 +96,15 @@ export default class DropdownContent extends Vue {
   @Prop({default: false, type: Boolean, required: false})
   readonly enableCompareView!: boolean;
 
+  @Prop({default: false, type: Boolean, required: false})
+  readonly anySelected!: boolean;
+
   get allSelectedValue(): boolean {
     return this.allSelected === Trinary.On;
+  }
+
+  get anyItemSelected(): boolean {
+    return this.anySelected;
   }
 
   get isIndeterminate(): boolean {
