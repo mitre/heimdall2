@@ -39,7 +39,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         callbackURL: `${configService.get('EXTERNAL_URL')}/authn/oidc/callback`,
         scope: 'openid profile email'
       },
-      async function ( 
+      async function (
         //changed from 4-arity function to 9-arity, because 'profile' in 4-arity was not providing required data
         //by changing to 9-arity we can access the data we need from the 'uiProfile' parameter
         //the lack of needed data in 4-arity function may be a bug
