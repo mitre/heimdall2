@@ -69,4 +69,3 @@ certs/*.pem
 
 # Database Content
 data/*
-strategy_v002.js
