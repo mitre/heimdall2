@@ -170,7 +170,11 @@ describe('Compare table data', () => {
       'Not Applicable': StatusCountModule.hash({
         omit_overlayed_controls: true,
         fromFile: [...FilteredDataModule.selected_file_ids]
-      })['Not Applicable']
+      })['Not Applicable'],
+      'Pending': StatusCountModule.hash({
+        omit_overlayed_controls: true,
+        fromFile: [...FilteredDataModule.selected_file_ids]
+      })['Pending']
     };
     const actual = {
       Failed: failed,
@@ -178,7 +182,8 @@ describe('Compare table data', () => {
       'From Profile': 0,
       'Profile Error': pe,
       'Not Reviewed': nr,
-      'Not Applicable': na
+      'Not Applicable': na,
+      'Pending': 0
     };
     expect(actual).toEqual(expected);
   });

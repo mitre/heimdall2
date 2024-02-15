@@ -31,9 +31,10 @@
       v-if="depth === 1"
       dominant-baseline="middle"
       text-anchor="middle"
+      :style="cellSizeAdjust"
       :x="x + width / 2"
       :y="y + height / 2"
-      >{{ node.data.title }}</text
+      >{{ cellTitleText  }}</text
     >
   </g>
 </template>
@@ -82,7 +83,7 @@ export default class Cell extends Vue {
     return (
       this.is_control && // We are a control
       (this.node.data as TreemapNodeLeaf).control.data.id ===
-        this.selectedControlId // Our control id matches
+      this.selectedControlId // Our control id matches
     );
   }
 
@@ -108,6 +109,39 @@ export default class Cell extends Vue {
    */
   get height(): number {
     return this.scales.scale_y(this.node.y1) - this.y;
+  }
+
+  /**
+   * Crop control title text strings that are too long to fit in the cell
+   */
+  get cellTitleText(): string {
+    const title = this.node.data.title;
+    const ruleDelimIndex = title.lastIndexOf("|");
+    let element: string;
+    let maxLength = Math.floor(this.width / 10);
+
+    if (ruleDelimIndex === -1) {
+      element = title;
+    } else {
+      element = title.substring(ruleDelimIndex + 1);
+    }
+
+    if (element.length > maxLength) {
+      element = element.substring(0, maxLength) + '...';
+    }
+
+    return element;
+  }
+
+  /**
+   * Adjust cell font style to better fit cell
+   */
+  get cellSizeAdjust() {
+    if (this.cellTitleText.length > 5) {
+      return {
+        fontSize: '100%'
+      };
+    }
   }
 
   /** Returns a list of classes appropriate to this nodes Rect

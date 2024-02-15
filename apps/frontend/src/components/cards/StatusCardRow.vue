@@ -207,6 +207,15 @@ export default class StatusCardRow extends Vue {
   }
 
   toggleFilter(filter: ExtendedControlStatus) {
+    // Workaround to pin Pending status to Failed status toggle
+    if (filter === "Failed") {
+      if (this.filter.status?.includes("Pending")) {
+        this.$emit('remove-filter', "Pending");
+      } else {
+        filter = "Failed,Pending";
+      }
+    }
+
     if (this.filter.status?.includes(filter)) {
       this.$emit('remove-filter', filter);
     } else {

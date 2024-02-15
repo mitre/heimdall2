@@ -43,6 +43,7 @@ function count_statuses(data: FilteredData, filter: Filter): StatusHash {
     'Not Reviewed': 0,
     Passed: 0,
     'Profile Error': 0,
+    'Pending': 0,
     PassedTests: 0,
     FailedTests: 0,
     PassingTestsFailedControl: 0,

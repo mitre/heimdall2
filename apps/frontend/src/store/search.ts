@@ -19,7 +19,8 @@ export interface ISearchState {
   codeSearchTerms: string[];
   NISTIdFilter: string[];
   statusFilter: ExtendedControlStatus[];
-  severityFilter: Severity[];
+  severityFilter: Severity[];  
+  resultSourceSearchTerms: string[];
 }
 
 export interface SearchQuery {
@@ -36,7 +37,8 @@ export const statusTypes = [
   'Passed',
   'Failed',
   'Not Reviewed',
-  'Waived'
+  'Waived',
+  'Pending'
 ];
 
 export const severityTypes = ['none', 'low', 'medium', 'high', 'critical'];
@@ -74,6 +76,7 @@ class Search extends VuexModule implements ISearchState {
   statusFilter: ExtendedControlStatus[] = [];
   severityFilter: Severity[] = [];
   titleSearchTerms: string[] = [];
+  resultSourceSearchTerms: string[] = []; 
 
   /** Update the current search */
   @Action
@@ -99,7 +102,8 @@ class Search extends VuexModule implements ISearchState {
         'desc',
         'description',
         'code',
-        'input'
+        'input',
+        'rsrc'
       ]
     };
     const searchResult = parse(this.searchTerm, options);
@@ -138,6 +142,9 @@ class Search extends VuexModule implements ISearchState {
               this.setFreesearch(include);
             }
             break;
+          case 'rsrc':
+            this.addResultSourceFilter(lowercaseAll(include));
+            break;
         }
       }
     }
@@ -160,6 +167,7 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_DESCRIPTION');
     this.context.commit('CLEAR_CODE');
     this.context.commit('CLEAR_FREESEARCH');
+    this.context.commit('CLEAR_RESULT_SOURCE_FILTER');
   }
 
   // Generic filtering
@@ -443,6 +451,26 @@ class Search extends VuexModule implements ISearchState {
   CLEAR_FREESEARCH() {
     this.freeSearch = '';
   }
+
+  // Result Source Filtering
+
+  /** Adds result source to filter */
+  @Action
+  addResultSourceFilter(RsId: string | string[]) {
+    this.context.commit('ADD_RESULT_SOURCE_FILTER', RsId);
+  }
+
+  @Mutation
+  ADD_RESULT_SOURCE_FILTER(RsId: string | string[]) {
+    this.resultSourceSearchTerms = this.resultSourceSearchTerms.concat(RsId);
+  }
+
+  /** Clears all result source filters */
+  @Mutation
+  CLEAR_RESULT_SOURCE_FILTER() {
+    this.resultSourceSearchTerms = [];
+  }  
+
 }
 
 export const SearchModule = getModule(Search);

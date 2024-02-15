@@ -14,9 +14,16 @@ import {EvaluationTagsModule} from './evaluation-tags/evaluation-tags.module';
 import {EvaluationsModule} from './evaluations/evaluations.module';
 import {GroupEvaluationsModule} from './group-evaluations/group-evaluations.module';
 import {GroupUsersModule} from './group-users/group-users.module';
+import {GroupBuildsModule} from './group-builds/group-builds.module';
+import {GroupProductsModule} from './group-products/group-products.module';
 import {GroupsModule} from './groups/groups.module';
 import {StatisticsModule} from './statistics/statistics.module';
 import {UsersModule} from './users/users.module';
+import {BuildsModule} from './builds/builds.module';
+import {BuildEvaluationsModule} from './build-evaluations/build-evaluations.module';
+import {ProductsModule} from './products/products.module';
+import {ProductBuildsModule} from './product-builds/product-builds.module';
+import {AuthorizationArtifactModule} from './authorization-artifact/authorization-artifact.module';
 
 @Module({
   controllers: [AppController],
@@ -33,9 +40,16 @@ import {UsersModule} from './users/users.module';
     EvaluationTagsModule,
     EvaluationsModule,
     GroupEvaluationsModule,
+    GroupBuildsModule,
+    GroupProductsModule,
     GroupsModule,
     GroupUsersModule,
-    StatisticsModule
+    BuildsModule,
+    BuildEvaluationsModule,
+    ProductsModule,
+    ProductBuildsModule,
+    StatisticsModule,
+    AuthorizationArtifactModule
   ],
   providers: [
     AppService,

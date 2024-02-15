@@ -14,7 +14,11 @@ import {
 } from 'sequelize-typescript';
 import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
+import {GroupBuild} from '../group-builds/group-build.model';
+import {GroupProduct} from '../group-products/group-product.model';
 import {GroupUser} from '../group-users/group-user.model';
+import {Build} from '../builds/build.model';
+import {Product} from '../products/product.model';
 import {User} from '../users/user.model';
 
 @Table
@@ -55,4 +59,10 @@ export class Group extends Model {
 
   @BelongsToMany(() => Evaluation, () => GroupEvaluation)
   evaluations!: Array<Evaluation & {GroupEvaluation: GroupEvaluation}>;
+
+  @BelongsToMany(() => Product, () => GroupProduct)
+  products!: Array<Product & {GroupProduct: GroupProduct}>;
+
+  @BelongsToMany(() => Build, () => GroupBuild)
+  builds!: Array<Build & {GroupBuild: GroupBuild}>;
 }

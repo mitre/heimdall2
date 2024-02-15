@@ -1,7 +1,7 @@
 <template>
   <v-row class="foreground" :dense="dense">
     <v-col cols="12">
-      <v-card color="grey darken-3" data-cy="controlRow" elevation="3">
+      <v-card  data-cy="controlRow" elevation="3">
         <ResponsiveRowSmall
           v-if="$vuetify.breakpoint.xsOnly"
           @toggle="$emit('toggle')"
@@ -58,13 +58,20 @@
             <slot name="viewed" />
           </template>
         </ResponsiveRowMedium>
-
-        <ResponsiveRowLarge v-else>
+        
+	<!-- should match ControlRowHeader -->
+        <ResponsiveRowLarge v-else :assessment_type=assessment_type>
           <template #status>
             <slot name="status" />
           </template>
           <template #set>
             <slot name="set" />
+          </template>
+          <template #compVulnID>
+            <slot name="compVulnID" />
+          </template>
+          <template v-if=general() #compCWE>
+            <slot name="compCWE" />
           </template>
           <template #severity>
             <slot name="severity" />
@@ -77,6 +84,9 @@
           </template>
           <template #tags>
             <slot name="tags" />
+          </template>
+          <template #compResultSource>
+            <slot name="compResultSource" />
           </template>
           <template #runTime>
             <slot name="runTime" />
@@ -107,5 +117,10 @@ import {Prop} from 'vue-property-decorator';
 })
 export default class ResponsiveRowSwitch extends Vue {
   @Prop({type: Boolean, required: false, default: false}) dense!: boolean;
+  @Prop({type: String, required: false, default: "general"}) assessment_type!: String;
+
+  general(): boolean{
+    return this.assessment_type.toString() === "general";
+  }
 }
 </script>

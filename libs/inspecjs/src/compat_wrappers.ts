@@ -3,7 +3,7 @@ import {
   ProfileControl as HDFProfileControl_1_0
 } from './compat_impl/compat_inspec_1_0';
 import * as parse from './fileparse';
-import {ExecJSONControl as ResultControl_1_0} from './generated_parsers/v_1_0/exec-json';
+import {ExecJSONControl as ResultControl_1_0, ControlResultStatus} from './generated_parsers/v_1_0/exec-json';
 import {ProfileJSONControl as ProfileControl_1_0} from './generated_parsers/v_1_0/profile-json';
 import {CanonizationConfig, NistControl, NistRevision} from './nist';
 
@@ -29,7 +29,8 @@ export type ControlStatus =
   | 'Profile Error'
   | 'Passed'
   | 'Failed'
-  | 'Not Reviewed';
+  | 'Not Reviewed'
+  | 'Pending';
 
 /** The severities a control can have. These map numeric impact values to No/Low/Medium/High/Crtiical impact
  * [0, 0.01) => No impact
@@ -46,7 +47,9 @@ export type SegmentStatus =
   | 'failed'
   | 'skipped'
   | 'error'
-  | 'no_status';
+  | 'no_status'
+  | 'pending'
+  | 'not_applicable';
 
 /**
  * This interface acts as a polyfill on controls for our HDF "guaranteed" derived types, to provide a stable
@@ -134,6 +137,12 @@ export interface HDFControl {
 
   /** Returns whether this control was waived. */
   waived: boolean;
+
+  /** Returns whether this control has results with status overrides. */
+  hasControlStatusOverride: boolean;
+
+  /** Returns true if all results with overrides have been approved */
+  isOverideStatusApproved: boolean;
 }
 
 /**
@@ -175,6 +184,35 @@ export interface HDFControlSegment {
 
   /** Which inspec resource this control used, if one could be determined */
   resource?: string;
+  
+  /** Result source */
+  result_source?: string
+
+  /** Control override extended information */
+  override?: HDFControlSegmentOverride;
+
+  /** Original status of the control (only set if overriden) */
+  originalStatus?: string;
+
+  /** Original Severity (can be overriden) */
+  originalSeverity?: number;
+}
+
+export interface HDFControlSegmentOverride {
+  cab_date?:               null | string;
+  cab_status?:             ControlResultStatus | null;
+  cyber_reviewer?:         null | string;
+  date_modified?:          null | string;
+  description?:            null | string;
+  info_url?:               null | string;
+  is_approved?:            boolean | null;
+  pipeline_hash?:          null | string;
+  request_type?:           null | string;
+  review_update?:          null | string;
+  reviewer?:               null | string;
+  revised_categorization?: null | string;
+  revised_severity?:       number | null;
+  ticket_tracking?:        null | string; 
 }
 
 /**

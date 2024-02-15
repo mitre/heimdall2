@@ -113,6 +113,13 @@ export class InspecData extends VuexModule {
     this.executionFiles.push(newExecution);
   }
 
+  @Action
+  clear_quiet() {
+    FilteredDataModule.CLEAR_ALL_EVALUATIONS();
+    FilteredDataModule.CLEAR_ALL_PROFILES();
+    this.context.commit('reset');
+  }
+
   /**
    * Unloads the file with the given id
    */

@@ -8,7 +8,7 @@ module.exports = {
   cacheDirectory: '<rootDir>/.cache/unit',
   transform: {
     '.*\\.(vue)$': 'vue-jest',
-    '^.+\\.tsx?$': 'ts-jest',
+    '^.+\\.tsx?$': ['ts-jest', {isolatedModules: true}],
     '^.+\\.svg$': '<rootDir>/tests/util/svgTransform.js'
   },
   moduleDirectories: ['node_modules', 'src'],

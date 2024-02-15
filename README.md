@@ -19,6 +19,7 @@ This repository contains the source code for Heimdall's [Backend](https://github
     - [Heimdall with Backend (Server)](#heimdall-with-backend-server)
     - [Features](#features)
     - [Use Cases](#use-cases)
+    - [Heimdall Server - Project Mode]
   - [Getting Started / Installation](#getting-started--installation)
     - [Heimdall Lite](#heimdall-lite-1)
       - [Running via npm](#running-via-npm)

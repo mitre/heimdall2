@@ -109,7 +109,8 @@
     "ts-node": "^10.0.0",
     "tsconfig-paths": "^4.0.0",
     "uuid": "^9.0.0",
-    "winston": "^3.3.3"
+    "winston": "^3.3.3",
+    "aws-sdk": "^2.573.0"
   },
   "devDependencies": {
     "@nestjs/testing": "^10.2.1",

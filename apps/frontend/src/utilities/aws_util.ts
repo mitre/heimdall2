@@ -4,6 +4,8 @@ import {
   GetSessionTokenCommand,
   STSClient
 } from '@aws-sdk/client-sts';
+import axios from 'axios';
+import { saveAs } from 'file-saver';
 
 export const AUTH_DURATION = 8 * 60 * 60; // 8 hours
 
@@ -178,4 +180,18 @@ export function transcribeError(error: {
     default:
       return `Unknown error ${name}. Message: ${message}`;
   }
+}
+
+export async function s3ListFiles(prefix: string): Promise<any> {
+    return axios.get<S3.ListObjectsV2Output | undefined>('/autharti', { params: { prefix: prefix } });
+}
+
+export function s3DownloadFile(key: string) {
+  const fileName = key.split('/').pop();
+  axios.get('/autharti/download', { params: {key: key}}).then(response => {
+    console.log("response", response);
+    const data = Buffer.from(response.data, 'hex');
+    console.log("buffer data", data);
+    saveAs(new Blob([data], {type: 'application/zip'}), fileName);
+  });
 }

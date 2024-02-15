@@ -274,7 +274,8 @@ export function compare_statuses(
     'Not Applicable',
     'Not Reviewed',
     'Passed',
-    'Failed',
+    'Failed',    
+    'Pending',
     'Profile Error'
   ];
   const idA = precedence.indexOf(a);

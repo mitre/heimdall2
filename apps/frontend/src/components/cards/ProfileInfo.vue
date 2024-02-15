@@ -37,6 +37,30 @@
               <div v-if="control_count">
                 <strong>Control Count:</strong> {{ control_count }}
               </div>
+              <div v-if="compdb_date">
+                <strong>Date:</strong> {{ compdb_date }}
+              </div>
+              <div v-if="compdb_job_name">
+                <strong>Job Name:</strong> {{ compdb_job_name }}
+              </div>              
+              <div v-if="compdb_job_start">
+                <strong>Job Start:</strong> {{ compdb_job_start }}
+              </div>
+              <div v-if="compdb_pipeline_id">
+                <strong>Pipeline ID:</strong> {{ compdb_pipeline_id }}
+              </div>              
+              <div v-if="compdb_pipeline_url">
+                <strong>Pipeline URL:</strong> <a target="_blank" :href="compdb_pipeline_url">{{ compdb_pipeline_url }}</a>
+              </div>
+              <div v-if="compdb_project_name">
+                <strong>Project Name:</strong> {{ compdb_project_name }}
+              </div>
+              <div v-if="compdb_project_url">
+                <strong>Project URL:</strong> <a target="_blank" :href="compdb_project_url">{{ compdb_project_url }}</a>
+              </div>
+              <div v-if="compdb_uuid">
+                <strong>UUID:</strong> {{ compdb_uuid }}
+              </div>                            
             </v-col>
           </v-row>
         </v-card>
@@ -142,6 +166,42 @@ export default class ProfileInfo extends Vue {
         >[]
       ).length
     }`;
+  }
+
+  get pipeline_id(): string | undefined {
+    return _.get(this.profile, 'data.pipeline_id');
+  }
+
+  get compdb_date(): string | undefined {
+    return _.get(this.profile, 'data.compdb.date');
+  }
+
+  get compdb_job_name(): string | undefined {
+    return _.get(this.profile, 'data.compdb.job_name');
+  }
+
+  get compdb_job_start(): string | undefined {
+    return _.get(this.profile, 'data.compdb.job_start');
+  }
+
+  get compdb_pipeline_id(): number | undefined {
+    return _.get(this.profile, 'data.compdb.pipeline_id');
+  }
+
+  get compdb_pipeline_url(): string | undefined {
+    return _.get(this.profile, 'data.compdb.pipeline_url');
+  }
+
+  get compdb_project_name(): string | undefined {
+    return _.get(this.profile, 'data.compdb.project_name');
+  }
+
+  get compdb_project_url(): string | undefined {
+    return _.get(this.profile, 'data.compdb.project_url');
+  }
+
+  get compdb_uuid(): string | undefined {
+    return _.get(this.profile, 'data.compdb.uuid');
   }
 
   get inputs(): Attribute[] {

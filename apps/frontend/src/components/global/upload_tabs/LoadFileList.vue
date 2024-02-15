@@ -68,6 +68,12 @@
         @confirm="deleteItemConfirm"
       />
       <div class="d-flex flex-column">
+        <ul v-if="selectedFiles.length != 0">
+          <p>Entries</p>
+        </ul>
+        <ul v-else>
+          <p>No entries found</p>
+          </ul>
         <v-data-table
           v-model="selectedFiles"
           data-cy="loadDatabaseFileList"

@@ -18,7 +18,14 @@ const statuses = {
   statusskipped: colors.orange.base,
   statusprofileerror: colors.indigo.lighten2,
   statusnotrun: colors.teal.darken2,
-  statusfromprofile: colors.teal.base
+  statusfromprofile: colors.teal.base,
+  /**
+   * Case sensitivity is inconsistent between the result layer, and the control layer. 
+   * An improviement in this area would eliminate the duplicate lines below
+   */
+  statusPending: colors.lightBlue.base,
+  statuspending: colors.lightBlue.base,
+  statusnot_applicable: colors.lightBlue.base, 
 };
 
 // Get colors generated from base mitre using UtilColorGenerator.

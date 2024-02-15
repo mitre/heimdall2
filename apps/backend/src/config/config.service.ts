@@ -1,5 +1,6 @@
 import {SequelizeOptions} from 'sequelize-typescript';
 import AppConfig from '../../config/app_config';
+import {AuthArtiAuthCreds} from '../../config/app_config';
 import {StartupSettingsDto} from './dto/startup-settings.dto';
 
 export class ConfigService {
@@ -34,6 +35,10 @@ export class ConfigService {
     return this.get('NODE_ENV')?.toLowerCase() === 'production';
   }
 
+  isProjectMode(): boolean {
+    return this.get('PROJECT_MODE')?.toLowerCase() === 'true';
+  }
+
   enabledOauthStrategies() {
     const enabledOauth: string[] = [];
     supportedOauth.forEach((oauthStrategy) => {
@@ -55,6 +60,7 @@ export class ConfigService {
         this.get('CLASSIFICATION_BANNER_TEXT_COLOR') || 'white',
       enabledOAuth: this.enabledOauthStrategies(),
       oidcName: this.get('OIDC_NAME') || '',
+      projectMode: this.isProjectMode(),
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
       registrationEnabled: this.isRegistrationAllowed(),
       localLoginEnabled: this.isLocalLoginAllowed()
@@ -67,6 +73,18 @@ export class ConfigService {
 
   getSSLConfig(): false | Record<string, unknown> {
     return this.appConfig.getSSLConfig();
+  }
+
+  getAuthArtiS3URL(): string {
+    return this.appConfig.getAuthArtiS3URL();
+  }
+
+  getAuthArtiS3BucketName(): string {
+    return this.appConfig.getAuthArtiS3BucketName();
+  }
+
+  getAuthArtiS3AuthCreds(): AuthArtiAuthCreds {
+    return this.appConfig.getAuthArtiS3AuthCreds();
   }
 
   set(key: string, value: string | undefined): void {

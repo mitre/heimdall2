@@ -5,6 +5,7 @@
         <v-tabs v-model="localTab" fixed-tabs show-arrows @change="tab_change">
           <!-- Declare our tabs -->
           <v-tab href="#tab-test"> Test </v-tab>
+          <v-tab href="#tab-override"> Override </v-tab>
           <v-tab href="#tab-details"> Details </v-tab>
           <v-tab href="#tab-code"> Code </v-tab>
 
@@ -54,6 +55,16 @@
             />
           </v-tab-item>
 
+          <v-tab-item value="tab-override">
+            <OverrideRowCol
+              v-for="(result, index) in control.root.hdf.segments"
+              :key="'col' + index"
+              :class="zebra(index)"
+              :result="result"
+              :status-code="result.status"
+            />
+          </v-tab-item>
+
           <v-tab-item value="tab-details">
             <v-container fluid>
               <!-- Create a row for each detail -->
@@ -90,9 +101,10 @@
 
 <script lang="ts">
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
+import OverrideRowCol from '@/components/cards/controltable/OverrideRowCol.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import {ContextualizedControl} from 'inspecjs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 //TODO: add line numbers
 import 'prismjs';
 import 'prismjs/components/prism-json';
@@ -113,13 +125,22 @@ interface Detail {
 @Component({
   components: {
     ControlRowCol,
+    OverrideRowCol,
     Prism
   }
 })
 export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
   @Prop({type: String, default: 'tab-test'}) readonly tab!: string;
   @Prop({type: Object, required: true})
-  readonly control!: ContextualizedControl;
+  
+  //control prop
+  @Prop ({ type: Object, required: true }) readonly control!: ContextualizedControl;
+  //Accepts the difference values from ControlRowDetails as props
+  @Prop ({ type: String, default: '' }) readonly Caveat!: string;
+  @Prop ({ type: String, default: ''  }) readonly Rationale!: string;
+  @Prop ({ type: String, default: ''  }) readonly Justification!: string;
+  @Prop ({ type: String, default: '' }) readonly Comments!: string;
+
 
   localTab = this.tab;
 
@@ -199,9 +220,9 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
 
     detailsMap.set('Control', this.control.data.id);
     detailsMap.set('Title', this.control.data.title);
-    detailsMap.set('Caveat', this.control.hdf.descriptions.caveat);
+    detailsMap.set('Caveat', this.Caveat);
     detailsMap.set('Desc', this.control.data.desc);
-    detailsMap.set('Rationale', this.control.hdf.descriptions.rationale);
+    detailsMap.set('Rationale', this.Rationale);
     detailsMap.set('Severity', this.control.root.hdf.severity);
     detailsMap.set('Impact', this.control.data.impact);
     detailsMap.set('NIST Controls', this.control.hdf.rawNistTags.join(', '));
@@ -212,7 +233,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     );
     detailsMap.set(
       'Fix',
-      this.control.hdf.descriptions.fix || this.control.data.tags.fix
+      this.Justification
     );
     detailsMap.set('CWE ID', _.get(this.control, 'hdf.wraps.tags.cweid'));
 
