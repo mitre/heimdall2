@@ -41,17 +41,20 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       },
       async function (
         issuer: string,
-        uiProfile: OIDCProfile,
-        idProfile: object,
+        // uiProfile: OIDCProfile,
+        // idProfile: object,
+        profile: any,
         context: object,
-        idToken: string,
-        _accessToken: string,
-        _refreshToken: string,
-        params: object,
+        // idToken: string,
+        // _accessToken: string,
+        // _refreshToken: string,
+        // params: object,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) {
-        const userData = uiProfile._json;
+        console.log(JSON.stringify(profile, null, 2));
+        console.log(profile);
+        const userData = profile._json;
         const {given_name, family_name, email, email_verified, groups} =
           userData;
         if (email_verified) {
