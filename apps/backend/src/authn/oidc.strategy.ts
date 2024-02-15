@@ -6,6 +6,11 @@ import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from './authn.service';
 
 interface OIDCProfile {
+  id: string;
+  displayName: string;
+  name: {familyName: string; givenName: string};
+  emails: [{value: string}];
+  _raw: string;
   _json: {
     given_name: string;
     family_name: string;
@@ -35,13 +40,18 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         scope: 'openid profile email'
       },
       async function (
+        issuer: string,
+        uiProfile: OIDCProfile,
+        idProfile: object,
+        context: object,
+        idToken: string,
         _accessToken: string,
         _refreshToken: string,
-        profile: OIDCProfile,
+        params: object,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) {
-        const userData = profile._json;
+        const userData = uiProfile._json;
         const {given_name, family_name, email, email_verified, groups} =
           userData;
         if (email_verified) {
