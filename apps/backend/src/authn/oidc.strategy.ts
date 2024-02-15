@@ -41,7 +41,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
       },
       async function (
         issuer: string,
-        uiProfile: OIDCProfile, //uiProfile
+        uiProfile: OIDCProfile,
         idProfile: object,
         context: object,
         idToken: string,
