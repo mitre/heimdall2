@@ -212,6 +212,8 @@ export class EvaluationsService {
       baseCriteria.push({public: {[Op.eq]: 'false'}});
     } else {
       baseCriteria.push({'$user.email$': {[Op.like]: `${email}`}});
+      //baseCriteria.push({'$Evaluation.id$': {[Op.eq]: '$groups->GroupEvaluation$.$evaluationId$'}});
+      baseCriteria.push({'$Evaluation.id$': {[Op.eq]: '$Evaluation.id$'}});
     }
     return baseCriteria;
   }
