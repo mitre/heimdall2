@@ -114,7 +114,7 @@ export class EvaluationsService {
         offset: params.offset,
         limit: Number(params.limit) * this.totalGroupMembers,
         order:
-          params.order.length == 2
+          params.order.length === 2
             ? [[params.order[0], params.order[1]]]
             : [[params.order[0], params.order[1], params.order[2]]],
         subQuery: false, // enable where clause to reference attributes from the included models
@@ -152,8 +152,8 @@ export class EvaluationsService {
 
     const whereClauseParams: WhereClauseParams = {
       searchFields:
-        params.searchFields == undefined ? [''] : params.searchFields,
-      operator: params.operator == undefined ? 'OR' : params.operator,
+        params.searchFields === undefined ? [''] : params.searchFields,
+      operator: params.operator === undefined ? 'OR' : params.operator,
       email: email,
       role: role,
       action: 'search'
@@ -173,7 +173,7 @@ export class EvaluationsService {
         offset: params.offset,
         limit: Number(params.limit) * this.totalGroupMembers,
         order:
-          params.order.length == 2
+          params.order.length === 2
             ? [[params.order[0], params.order[1]]]
             : [[params.order[0], params.order[1], params.order[2]]],
         subQuery: false,
@@ -187,7 +187,7 @@ export class EvaluationsService {
         const onPage = Math.ceil(
           totalReturned / 100 / (Number(params.limit) / 100)
         );
-        if (onPage == totalPages) {
+        if (onPage === totalPages) {
           const returnCnt = totalItems - Number(params.offset);
           // Return from the back of the array
           queryResponse.evaluations = data.slice(-returnCnt);
@@ -208,7 +208,7 @@ export class EvaluationsService {
   getWhereClauseBaseCriteria(role: string, email: string): WhereOptions {
     const baseCriteria = [];
     baseCriteria.push({public: {[Op.eq]: 'true'}});
-    if (role == 'admin') {
+    if (role === 'admin') {
       baseCriteria.push({public: {[Op.eq]: 'false'}});
     } else {
       baseCriteria.push({'$user.email$': {[Op.like]: `${email}`}});
@@ -235,14 +235,14 @@ export class EvaluationsService {
     const searchFields = [];
     const baseCriteria = this.getWhereClauseBaseCriteria(role, email);
 
-    if (fields[0] != '()') {
+    if (fields[0] !== '()') {
       searchFields.push({filename: {[Op.iRegexp]: `${fields[0]}`}});
     }
-    if (fields[1] != '()') {
+    if (fields[1] !== '()') {
       searchFields.push({'$groups.name$': {[Op.iRegexp]: `${fields[1]}`}});
     }
-    if (fields[2] != '()') {
-      if (action == 'count') {
+    if (fields[2] !== '()') {
+      if (action === 'count') {
         searchFields.push({
           '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}
         });
@@ -258,7 +258,7 @@ export class EvaluationsService {
       }
     }
 
-    if (operation == 'AND') {
+    if (operation === 'AND') {
       // Expected outcome: an OR baseCriteria AND an AND searchFields
       return {[Op.or]: baseCriteria, [Op.and]: searchFields};
     } else {
@@ -282,7 +282,7 @@ export class EvaluationsService {
   }
 
   async evaluationCount(userEmail: string, role: string): Promise<number> {
-    if (role == 'admin') {
+    if (role === 'admin') {
       return this.evaluationModel.count();
     } else {
       return this.evaluationModel.count({
