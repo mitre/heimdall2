@@ -9,6 +9,7 @@ import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {Evaluation} from './evaluation.model';
+import sequelize from 'sequelize';
 
 interface EvaluationsResponse {
   totalItems: number;
@@ -117,7 +118,7 @@ export class EvaluationsService {
           params.order.length == 2
             ? [[params.order[0], params.order[1]]]
             : [[params.order[0], params.order[1], params.order[2]]],
-        subQuery: false,
+        subQuery: false, // enable where clause to reference attributes from the included models
         where: whereClause
       })
       .then(async (data) => {
@@ -212,8 +213,15 @@ export class EvaluationsService {
       baseCriteria.push({public: {[Op.eq]: 'false'}});
     } else {
       baseCriteria.push({'$user.email$': {[Op.like]: `${email}`}});
-      //baseCriteria.push({'$Evaluation.id$': {[Op.eq]: '$groups->GroupEvaluation$.$evaluationId$'}});
-      baseCriteria.push({'$Evaluation.id$': {[Op.eq]: '$Evaluation.id$'}});
+      baseCriteria.push({
+        [Op.and]: {
+          '$groups->users.id$': {
+            [Op.eq]: sequelize.literal(
+              `(SELECT id FROM "Users" WHERE "email" LIKE '${email}')`
+            )
+          }
+        }
+      });
     }
     return baseCriteria;
   }
@@ -240,7 +248,7 @@ export class EvaluationsService {
           '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}
         });
       } else {
-        const evaluationIds = await this.getEvaluationId(fields[2]);
+        const evaluationIds = await this.getEvaluationIdsForTagName(fields[2]);
 
         searchFields.push({
           [Op.or]: [
@@ -262,7 +270,7 @@ export class EvaluationsService {
     }
   }
 
-  async getEvaluationId(tagValue: string): Promise<string[]> {
+  async getEvaluationIdsForTagName(tagValue: string): Promise<string[]> {
     let evaluationIds: string[] = [];
     await EvaluationTag.findAll({
       attributes: ['evaluationId'],
@@ -279,11 +287,20 @@ export class EvaluationsService {
       return this.evaluationModel.count();
     } else {
       return this.evaluationModel.count({
-        include: User,
+        include: [User, {model: Group, include: [User]}],
         where: {
           [Op.or]: [
             {public: {[Op.eq]: 'true'}},
-            {'$user.email$': {[Op.like]: `${userEmail}`}}
+            {'$user.email$': {[Op.like]: `${userEmail}`}},
+            {
+              [Op.and]: {
+                '$groups->users.id$': {
+                  [Op.eq]: sequelize.literal(
+                    `(SELECT id FROM "Users" WHERE "email" LIKE '${userEmail}')`
+                  )
+                }
+              }
+            }
           ]
         },
         distinct: true,
@@ -303,7 +320,7 @@ export class EvaluationsService {
       'count'
     );
     return this.evaluationModel.count({
-      include: [EvaluationTag, User, Group],
+      include: [EvaluationTag, User, {model: Group, include: [User]}],
       where: whereClause,
       distinct: true,
       col: 'id'

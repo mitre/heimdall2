@@ -116,7 +116,9 @@ export class EvaluationsController {
       totalItems = response.totalItems;
     }
 
-    // Show public evaluations or those created by logged-in user
+    // Perform an policy-based access control (AKA Attribute-based access control)
+    // Show public evaluations, evaluations that belong to a group the logged-in user
+    // belongs too, or those created by logged-in user.
     evaluations = evaluations.filter((evaluation: Subject) =>
       abac.can(Action.Read, evaluation)
     );
