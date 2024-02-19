@@ -1,7 +1,7 @@
 import {IEvalPaginationParams} from '@heimdall/interfaces';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions, Op, WhereOptions} from 'sequelize';
+import {FindOptions, Op, WhereOptions, Sequelize} from 'sequelize';
 import {DatabaseService} from '../database/database.service';
 import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -9,7 +9,6 @@ import {Group} from '../groups/group.model';
 import {User} from '../users/user.model';
 import {UpdateEvaluationDto} from './dto/update-evaluation.dto';
 import {Evaluation} from './evaluation.model';
-import sequelize from 'sequelize';
 
 interface EvaluationsResponse {
   totalItems: number;
@@ -65,8 +64,8 @@ export class EvaluationsService {
          [Model<any, any>, Model<any, any>, string, string]
 
        When using TypeScript the order variable is of type string[], which is not
-       supported by OrderItem. The only way to avoid it is to add string[] to the
-       list of accepted types in OrderItem.
+       supported by OrderItem. The only way to avoid a type error is to add string[]
+       to the list of accepted types in OrderItem.
 
        Hence the reason the order option is being initialized with array indices.
     
@@ -216,7 +215,7 @@ export class EvaluationsService {
       baseCriteria.push({
         [Op.and]: {
           '$groups->users.id$': {
-            [Op.eq]: sequelize.literal(
+            [Op.eq]: Sequelize.literal(
               `(SELECT id FROM "Users" WHERE "email" LIKE '${email}')`
             )
           }
@@ -295,7 +294,7 @@ export class EvaluationsService {
             {
               [Op.and]: {
                 '$groups->users.id$': {
-                  [Op.eq]: sequelize.literal(
+                  [Op.eq]: Sequelize.literal(
                     `(SELECT id FROM "Users" WHERE "email" LIKE '${userEmail}')`
                   )
                 }
