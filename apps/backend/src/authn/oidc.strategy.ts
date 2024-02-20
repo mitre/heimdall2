@@ -40,15 +40,18 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         scope: 'openid profile email'
       },
       async function (
-        issuer: string,
+        //changed from 4-arity function to 9-arity, because 'profile' in 4-arity was not providing required data
+        //by changing to 9-arity we can access the data we need from the 'uiProfile' parameter
+        //the lack of needed data in 4-arity function may be a bug
+        _issuer: string,
         uiProfile: OIDCProfile,
-        idProfile: object,
-        context: object,
-        idToken: string,
+        _idProfile: object,
+        _context: object,
+        _idToken: string,
         _accessToken: string,
         _refreshToken: string,
-        params: object,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        _params: object,
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) {
         const userData = uiProfile._json;
