@@ -6,6 +6,11 @@ import {GroupsService} from '../groups/groups.service';
 import {AuthnService} from './authn.service';
 
 interface OIDCProfile {
+  id: string;
+  displayName: string;
+  name: {familyName: string; givenName: string};
+  emails: [{value: string}];
+  _raw: string;
   _json: {
     given_name: string;
     family_name: string;
@@ -35,13 +40,21 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         scope: 'openid profile email'
       },
       async function (
+        //changed from 4-arity function to 9-arity, because 'profile' in 4-arity was not providing required data
+        //by changing to 9-arity we can access the data we need from the 'uiProfile' parameter
+        //the lack of needed data in 4-arity function may be a bug
+        _issuer: string,
+        uiProfile: OIDCProfile,
+        _idProfile: object,
+        _context: object,
+        _idToken: string,
         _accessToken: string,
         _refreshToken: string,
-        profile: OIDCProfile,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        _params: object,
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
       ) {
-        const userData = profile._json;
+        const userData = uiProfile._json;
         const {given_name, family_name, email, email_verified, groups} =
           userData;
         if (email_verified) {

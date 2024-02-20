@@ -17,8 +17,10 @@
         header-text="Results"
         :files="visible_evaluation_files"
         :all-selected="all_evaluations_selected"
+        :any-selected="any_evaluation_selected"
         :enable-compare-view="true"
         :compare-view-active="compareViewActive"
+        @remove-selected="removeSelectedEvaluations"
         @toggle-all="toggle_all_evaluations"
         @toggle-compare-view="compareView"
         @changed-files="$emit('changed-files')"
@@ -27,6 +29,8 @@
         header-text="Profiles"
         :files="visible_profile_files"
         :all-selected="all_profiles_selected"
+        :any-selected="any_profile_selected"
+        @remove-selected="removeSelectedProfiles"
         @toggle-all="toggle_all_profiles"
         @changed-files="$emit('changed-files')"
       />
@@ -44,6 +48,7 @@ import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '../../store/server';
+import {EvaluationModule} from '@/store/evaluations';
 
 @Component({
   components: {
@@ -51,7 +56,7 @@ import {ServerModule} from '../../store/server';
   }
 })
 export default class Sidebar extends mixins(RouteMixin) {
-  @Prop({type: Boolean}) readonly value!: boolean;
+  @Prop({type: Boolean}) value!: boolean;
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
@@ -94,8 +99,16 @@ export default class Sidebar extends mixins(RouteMixin) {
     return FilteredDataModule.all_evaluations_selected;
   }
 
+  get any_evaluation_selected(): boolean {
+    return FilteredDataModule.any_evaluation_selected;
+  }
+
   get all_profiles_selected(): Trinary {
     return FilteredDataModule.all_profiles_selected;
+  }
+
+  get any_profile_selected(): boolean {
+    return FilteredDataModule.any_profile_selected;
   }
 
   get compareViewActive(): boolean {
@@ -124,6 +137,30 @@ export default class Sidebar extends mixins(RouteMixin) {
     if (this.current_route === 'compare') {
       this.navigateWithNoErrors('/results');
     }
+  }
+
+  removeSelectedEvaluations(): void {
+    const selectedFiles = FilteredDataModule.selected_evaluation_ids;
+    selectedFiles.forEach((fileId) => {
+      EvaluationModule.removeEvaluation(fileId);
+      InspecDataModule.removeFile(fileId);
+      // Remove any database files that may have been in the URL
+      // by calling the router and causing it to write the appropriate
+      // route to the URL bar
+      this.navigateWithNoErrors(`/${this.current_route}`);
+    });
+  }
+
+  removeSelectedProfiles(): void {
+    const selectedFiles = FilteredDataModule.selected_profile_ids;
+    selectedFiles.forEach((fileId) => {
+      EvaluationModule.removeEvaluation(fileId);
+      InspecDataModule.removeFile(fileId);
+      // Remove any database files that may have been in the URL
+      // by calling the router and causing it to write the appropriate
+      // route to the URL bar
+      this.navigateWithNoErrors(`/${this.current_route}`);
+    });
   }
 }
 </script>

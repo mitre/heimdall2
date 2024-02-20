@@ -123,6 +123,28 @@ export class InspecData extends VuexModule {
     this.context.commit('REMOVE_RESULT', fileId);
   }
 
+  @Action
+  async loadedDatabaseIdsForFileId(fileId: FileID): Promise<string> {
+    let dbId: string | undefined = '';
+    this.allFiles.forEach((file) => {
+      if (file.uniqueId == fileId) {
+        dbId = file.database_id?.toString();
+      }
+    });
+    return dbId;
+  }
+
+  @Action
+  async loadedFileIsForDatabaseIds(databaseId: number): Promise<FileID> {
+    let fileId: string | undefined = '';
+    this.allFiles.forEach((file) => {
+      if (file.database_id == databaseId) {
+        fileId = file.uniqueId;
+      }
+    });
+    return fileId;
+  }
+
   @Mutation
   REMOVE_PROFILE(fileId: FileID) {
     this.profileFiles = this.profileFiles.filter(

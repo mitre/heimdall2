@@ -7,7 +7,7 @@
           <tbody>
             <tr v-for="(value, name) in statistics" :key="name">
               <td>{{ toCapitalizedWords(name) }}</td>
-              <td>{{ value }}</td>
+              <td>{{ value.toLocaleString() }}</td>
             </tr>
           </tbody>
         </template>
