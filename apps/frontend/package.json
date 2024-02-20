@@ -91,7 +91,7 @@
     "search-query-parser": "^1.5.5",
     "search-string": "^3.1.0",
     "uuid": "^9.0.0",
-    "vue": "~2.6.10",
+    "vue": "~2.7.16",
     "vue-apexcharts": "^1.5.1",
     "vue-class-component": "^7.0.2",
     "vue-cli-plugin-vuetify": "~2.5.0",
