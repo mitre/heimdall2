@@ -505,7 +505,7 @@ To test your code to make sure everything still works:
 
 #### Run Cypress End to End Tests
 
-The application includes an End-to-End (E2E) frontend + Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). The E2E tests performed is to validate  that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
+The application includes an End-to-End (E2E) frontend and Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). The E2E tests performed is to validate  that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
 
     CYPRESS_TESTING=true yarn start:dev
     CYPRESS_BASE_URL=http://localhost:8080 yarn test:ui:open

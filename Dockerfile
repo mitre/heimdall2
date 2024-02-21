@@ -1,4 +1,4 @@
-ARG BASE_CONTAINER=registry.access.redhat.com/ubi8/nodejs-18-minimal:1
+ARG BASE_CONTAINER=registry.access.redhat.com/ubi8/nodejs-18-minimal:1-91
 
 FROM $BASE_CONTAINER as builder
 
