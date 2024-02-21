@@ -1,4 +1,4 @@
-ARG BUILD_CONTAINER=registry.access.redhat.com/ubi8/nodejs-18-minimal:1
+ARG BUILD_CONTAINER=registry.access.redhat.com/ubi8/nodejs-18-minimal:1-91
 ARG BASE_CONTAINER=nginx:alpine
 
 FROM $BUILD_CONTAINER as builder
