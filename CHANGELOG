@@ -1,3 +1,24 @@
+v2.10.0
+
+- Node1819plus - requires minimum of Node 18.19 now @Amndeep7 (#5574)
+
+## Dependency Updates
+
+- Bump yaml from 2.3.4 to 2.4.0 @dependabot (#5576)
+- Bump @aws-sdk/client-s3 from 3.515.0 to 3.521.0 @dependabot (#5569)
+- Bump @aws-sdk/client-config-service from 3.517.0 to 3.521.0 @dependabot (#5570)
+- Bump @aws-sdk/client-sts from 3.515.0 to 3.521.0 @dependabot (#5572)
+- Bump @casl/ability from 6.5.0 to 6.7.0 @dependabot (#5571)
+- Bump eslint from 8.56.0 to 8.57.0 @dependabot (#5568)
+- Bump eslint-plugin-vue from 9.21.1 to 9.22.0 @dependabot (#5567)
+- Bump @types/node from 20.11.19 to 20.11.20 @dependabot (#5566)
+- Bump sanitize-html from 2.12.0 to 2.12.1 @dependabot (#5564)
+- Bump @smithy/node-http-handler from 2.3.1 to 2.4.0 @dependabot (#5565)
+- Bump cypress from 13.6.5 to 13.6.6 @dependabot (#5563)
+- Bump sanitize-html from 2.11.0 to 2.12.0 @dependabot (#5562)
+- Bump fast-xml-parser from 4.3.3 to 4.3.4 @dependabot (#5490)
+- Bump cypress from 13.6.4 to 13.6.5 @dependabot (#5561)
+
 v2.9.6
 
 - Passport openidconnect clarifications @kentpsanders (#5548)
