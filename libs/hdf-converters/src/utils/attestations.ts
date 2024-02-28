@@ -50,11 +50,26 @@ export function advanceDate(
       date.add(1, 'day');
       break;
     default:
-      const msTime = ms(frequency);
-      if (!msTime) {
-        throw new Error('Unknown date format: ' + frequency);
-      } else {
-        date.add(msTime, 'milliseconds');
+      const match = frequency.match(/(\d+(?:\.\d+)?)([a-z]+)/);
+      
+      if (!match){ throw new Error('Unknown date format: '+frequency); };
+
+      const number = match[1];
+      const unit = match[2];
+
+      switch (match[2]) {
+        case 'd':
+          date.add(match[1], 'days');
+          break;
+        case 'wk':
+          date.add(match[1], 'weeks');
+          break;
+        case 'm':
+          date.add(match[1], 'months');
+          break;
+        case 'yr':
+          date.add(match[1], 'years');
+          break;
       }
       break;
   }
