@@ -1,9 +1,18 @@
-v2.10.0
+v2.10.1
 
+- Add refs to details tab @Amndeep7 (#5587)
 - Node1819plus - requires minimum of Node 18.19 now @Amndeep7 (#5574)
 
 ## Dependency Updates
 
+- Bump csv-stringify from 6.4.5 to 6.4.6 @dependabot (#5582)
+- Bump @aws-sdk/client-config-service from 3.521.0 to 3.523.0 @dependabot (#5585)
+- Bump @aws-sdk/client-s3 from 3.521.0 to 3.523.0 @dependabot (#5586)
+- Bump @aws-sdk/client-sts from 3.521.0 to 3.523.0 @dependabot (#5581)
+- Bump typedoc from 0.25.8 to 0.25.9 @dependabot (#5575)
+- Bump fast-xml-parser from 4.3.4 to 4.3.5 @dependabot (#5578)
+- Bump es5-ext from 0.10.62 to 0.10.64 @dependabot (#5580)
+- Bump @types/express-session from 1.17.10 to 1.18.0 @dependabot (#5577)
 - Bump yaml from 2.3.4 to 2.4.0 @dependabot (#5576)
 - Bump @aws-sdk/client-s3 from 3.515.0 to 3.521.0 @dependabot (#5569)
 - Bump @aws-sdk/client-config-service from 3.517.0 to 3.521.0 @dependabot (#5570)
