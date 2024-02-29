@@ -21,7 +21,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     expect(omitCklUuid(mapper.toCkl())).toEqual(
       omitCklUuid(
         fs.readFileSync(
-          'sample_jsons/checklist_mapper/sample_input_report/converted-RHEL8V1R3.ckl',
+          'sample_jsons/checklist_mapper/converted-RHEL8V1R3.ckl',
           {
             encoding: 'utf-8'
           }
