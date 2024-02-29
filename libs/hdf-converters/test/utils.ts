@@ -1,5 +1,6 @@
-import * as htmlparser2 from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
+import xmlFormat from 'xml-formatter';
+import {XmlParserCommentNode} from 'xml-parser-xo';
 import * as _ from 'lodash';
 import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
 
@@ -67,34 +68,12 @@ export function omitHDFTimes(
   };
 }
 
-export function omitCklUuid(input: string): string {
-  let result = '';
-  let omitData = false;
-  const parser = new htmlparser2.Parser(
-    {
-      onopentag: (name) => {
-        result += `<${name}>`;
-      },
-      ontext: (text) => {
-        if (!omitData) {
-          result += text;
-        }
-        if (text === 'uuid') {
-          omitData = true;
-        }
-      },
-      onclosetag: (name) => {
-        result += `</${name}>`;
-        if (name === 'SID_DATA') {
-          omitData = false;
-        }
-      }
-    },
-    {
-      lowerCaseTags: false
-    }
-  );
-  parser.write(input);
-  parser.end();
-  return result;
+export function omitCklVersion(input: string): string {
+  return xmlFormat(input, {
+    lineSeparator: '\n',
+    collapseContent: true,
+    filter: (node) =>
+      node.type === 'Comment' &&
+      (node as XmlParserCommentNode).content.startsWith('Heimdall Version')
+  });
 }

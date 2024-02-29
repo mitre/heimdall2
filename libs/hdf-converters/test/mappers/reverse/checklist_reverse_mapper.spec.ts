@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
-import {omitCklUuid} from '../../utils';
+import {omitCklVersion} from '../../utils';
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
@@ -18,8 +18,8 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     //   mapper.toCkl()
     // );
 
-    expect(omitCklUuid(mapper.toCkl())).toEqual(
-      omitCklUuid(
+    expect(omitCklVersion(mapper.toCkl())).toEqual(
+      omitCklVersion(
         fs.readFileSync(
           'sample_jsons/checklist_mapper/converted-RHEL8V1R3.ckl',
           {
