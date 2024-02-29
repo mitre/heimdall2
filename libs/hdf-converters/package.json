@@ -1,6 +1,6 @@
 {
   "name": "@mitre/hdf-converters",
-  "version": "2.9.4",
+  "version": "2.10.1",
   "license": "Apache-2.0",
   "description": "Converter util library used to transform various scan results into HDF format",
   "files": [
@@ -21,8 +21,8 @@
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest",
-    "csv2json": "ts-node data/converters/csv2json.ts",
-    "xml2json": "ts-node data/converters/xml2json.ts"
+    "csv2json": "tsx data/converters/csv2json.ts",
+    "xml2json": "tsx data/converters/xml2json.ts"
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",
@@ -62,7 +62,7 @@
     "jest": "^27.0.6",
     "quicktype": "^15.0.260",
     "ts-jest": "^29.1.0",
-    "ts-node": "^10.0.0",
+    "tsx": "^4.7.1",
     "typedoc": "^0.25.0"
   },
   "jest": {
