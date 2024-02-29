@@ -1,5 +1,6 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
+import xmlFormat from 'xml-formatter';
 import {version as HeimdallToolsVersion} from '../../package.json';
 import {
   BaseConverter,
@@ -301,9 +302,12 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   }
 
   toCkl(): string {
-    return `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
-      this.jsonixData
-    )}`;
+    return xmlFormat(
+      `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
+        this.jsonixData
+      )}`,
+      {lineSeparator: '\n', collapseContent: true}
+    );
   }
 
   toHdf(): ExecJSON.Execution {
