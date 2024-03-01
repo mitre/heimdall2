@@ -147,7 +147,6 @@ export class InspecData extends VuexModule {
 
   @Mutation
   REMOVE_PROFILE(fileId: FileID) {
-    console.log('HERE REMOVE_PROFILE(fileId: FileID) ');
     this.profileFiles = this.profileFiles.filter(
       (pf) => pf.uniqueId !== fileId
     );
@@ -155,7 +154,6 @@ export class InspecData extends VuexModule {
 
   @Mutation
   REMOVE_RESULT(fileId: FileID) {
-    console.log('HERE REMOVE_RESULT(fileId: FileID) ');
     this.executionFiles = this.executionFiles.filter(
       (ef) => ef.uniqueId !== fileId
     );

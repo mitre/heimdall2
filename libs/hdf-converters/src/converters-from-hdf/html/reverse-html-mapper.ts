@@ -29,12 +29,14 @@ type InputData = {
   data: ContextualizedEvaluation | string;
   fileName: string;
   fileID: string;
+  filteredControls: string[];
 };
 
 type ProcessedData = {
   data: ContextualizedEvaluation;
   fileName: string;
   fileID: string;
+  filteredControls: string[];
 };
 
 // All selectable export types for an HTML export
@@ -172,10 +174,14 @@ export class FromHDFToHTMLMapper {
         }
         file.data = contextualizedFile;
       }
-console.log("HHHHHHERE");
-console.log(`reverse-html-mapper control count is: ${JSON.stringify(file.data.data.profiles[0].controls.length,null,2)}`)
+
       this.addFiledata(
-        {data: file.data, fileName: file.fileName, fileID: file.fileID},
+        {
+          data: file.data,
+          fileName: file.fileName,
+          fileID: file.fileID,
+          filteredControls: file.filteredControls
+        },
         exportType
       );
     }
@@ -200,19 +206,11 @@ console.log(`reverse-html-mapper control count is: ${JSON.stringify(file.data.da
 
     // Pull out results from file
     const allResultLevels: ContextualizedControl[] = [];
-    // file.data.contains.map((profile) => {
-    //   profile.contains.map((result) => {
-    //     //console.log(`Adding this result: ${result.data.id}  Result: ${JSON.stringify(result.data)}`)
-    //     allResultLevels.push(result);
-    //   });
-    // });
-
-    file.data.contains.map((profile, index) => {
-      profile.contains.forEach((control, index2) => {        
-        //console.log(`index1 is: ${index} index2 is ${index2} file.data: ${JSON.stringify(profile.data.controls.at(index2)?.id,null,2)} control; ${control.data.id}`)
-        profile.data.controls.forEach(element => {
-          if(element.id === control.data.id ) {
-            allResultLevels.push(control);
+    file.data.contains.map((profile) => {
+      profile.contains.map((result) => {
+        file.filteredControls.forEach((element) => {
+          if (element === result.data.id) {
+            allResultLevels.push(result);
           }
         });
       });
@@ -337,7 +335,9 @@ console.log(`reverse-html-mapper control count is: ${JSON.stringify(file.data.da
           100
       );
       // Set compliance level
-      this.outputData.compliance.level = complianceLevel;
+      this.outputData.compliance.level = complianceLevel.includes('NaN')
+        ? '0.00%'
+        : complianceLevel;
       // Determine color of compliance level
       // High compliance is green, medium is yellow, low is red
       this.outputData.compliance.color = translateCompliance(complianceLevel);

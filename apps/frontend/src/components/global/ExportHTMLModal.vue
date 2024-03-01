@@ -56,9 +56,8 @@ import {Prop, Watch} from 'vue-property-decorator';
 import {Filter} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {SnackbarModule} from '../../store/snackbar';
-//import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
-import {FromHDFToHTMLMapper} from '../../../../../libs/hdf-converters/src/converters-from-hdf/html/reverse-html-mapper';
-import {SourcedContextualizedEvaluation} from '../../store/report_intake';
+import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
+//import {FromHDFToHTMLMapper} from '../../../../../libs/hdf-converters/src/converters-from-hdf/html/reverse-html-mapper';
 
 // All selectable export types for an HTML export
 enum FileExportTypes {
@@ -80,10 +79,6 @@ const enum FileExportDescriptions {
   }
 })
 export default class ExportHTMLModal extends Vue {
-  vText(vText: any) {
-    throw new Error('Method not implemented.');
-  }
-
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   // If we are exporting a profile we can remove the test/results table
   @Prop({type: String, required: true}) readonly fileType!: string;
@@ -131,49 +126,47 @@ export default class ExportHTMLModal extends Vue {
       const file = InspecDataModule.allEvaluationFiles.find(
         (f) => f.uniqueId === fileId
       );
+
       if (file) {
-        let data: SourcedContextualizedEvaluation;
-        data = file.evaluation;
+        const data = file.evaluation;
 
-        const cashData = file.evaluation;
-
-        console.log(`attributes: ${JSON.stringify(data.data.profiles[0].attributes.length, null, 2)}`);
-        console.log(`controls-1: ${JSON.stringify(data.data.profiles[0].controls.length, null, 2)}`);
-        console.log(`cashData: ${JSON.stringify(cashData.data.profiles[0].controls.length, null, 2)}`);
-
+        /**
+         * NOTE: The filterControls array is used to specify which
+         * controls are selected.
+         * If we use the approach of filtering the content from the data object
+         * (e.g.
+         *   data.data.profiles[0].controls =
+         *     data.data.profiles[0].controls.filter((control) => {
+         *       if (filteredControls.includes(control.id)) {
+         *         return filteredControls.includes(control.id);
+         *       }
+         *     });
+         * )
+         * the contextualize object does not get updated and the results
+         * in data_store get out of sync, there is when utilizing the
+         * ".contains" it returns ann results where the file.evaluations
+         * returns the filtered controls.
+         */
+        let filteredControls: string[] = [];
         if (filteredOn!.length > 0) {
-          let filteredControls: String[] = [];
-
           data.contains.map((profile) => {
             profile.contains.map((result) => {
               if (filteredOn?.includes(result.root.hdf.status)) {
-                filteredControls.push(result.data.id.toString());
+                filteredControls.push(result.data.id);
               }
             });
           });
-
-          console.log(`filteredControls : ${filteredControls}`);
-
-          data.data.profiles[0].controls =
-            data.data.profiles[0].controls.filter((control) => {
-              if (filteredControls.includes(control.id)) {
-                console.log(`Adding this result: ${control.id}`);
-                return filteredControls.includes(control.id);
-              }
+        } else {
+          data.contains.map((profile) => {
+            profile.contains.map((result) => {
+              filteredControls.push(result.data.id);
             });
-          console.log('filter is on');
+          });
         }
 
-        //console.log(`new controls: ${JSON.stringify(data.data.profiles[0].controls.length,null,2)}`)
-        //console.log(`Results: ${JSON.stringify(data.data.profiles[0].controls[0].results.length,null,2)}`)
-        //console.log(`data: ${JSON.stringify(data.data,null,2)}`)
-
-        //const data = file.evaluation;
         const fileName = file.filename;
         const fileID = file.uniqueId;
-        files.push({data, fileName, fileID});
-
-        data.data.profiles[0].controls = cashData.data.profiles[0].controls;
+        files.push({data, fileName, fileID, filteredControls});
       }
     }
     // Generate and export HTML file

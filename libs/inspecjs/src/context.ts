@@ -1,5 +1,5 @@
 /**
- * Provides general utilities for articulating associations beteen evaluations, profiles, and controls.
+ * Provides general utilities for articulating associations between evaluations, profiles, and controls.
  * Especially useful for handling overlay/wrapper profiles.
  */
 
