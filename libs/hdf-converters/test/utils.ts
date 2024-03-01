@@ -72,6 +72,7 @@ export function omitCklVersion(input: string): string {
   return xmlFormat(input, {
     lineSeparator: '\n',
     collapseContent: true,
+    indentation: '\t',
     filter: (node) =>
       node.type === 'Comment' &&
       (node as XmlParserCommentNode).content.startsWith('Heimdall Version')

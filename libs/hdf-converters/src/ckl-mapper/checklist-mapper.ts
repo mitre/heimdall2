@@ -306,7 +306,7 @@ export class ChecklistResults extends ChecklistJsonixConverter {
       `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
         this.jsonixData
       )}`,
-      {lineSeparator: '\n', collapseContent: true}
+      {lineSeparator: '\n', collapseContent: true, indentation: '\t'}
     );
   }
 
