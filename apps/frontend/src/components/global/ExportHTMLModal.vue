@@ -56,7 +56,9 @@ import {Prop, Watch} from 'vue-property-decorator';
 import {Filter} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {SnackbarModule} from '../../store/snackbar';
-import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
+//import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
+import {FromHDFToHTMLMapper} from '../../../../../libs/hdf-converters/src/converters-from-hdf/html/reverse-html-mapper';
+import {SourcedContextualizedEvaluation} from '../../store/report_intake';
 
 // All selectable export types for an HTML export
 enum FileExportTypes {
@@ -78,6 +80,10 @@ const enum FileExportDescriptions {
   }
 })
 export default class ExportHTMLModal extends Vue {
+  vText(vText: any) {
+    throw new Error('Method not implemented.');
+  }
+
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   // If we are exporting a profile we can remove the test/results table
   @Prop({type: String, required: true}) readonly fileType!: string;
@@ -119,22 +125,62 @@ export default class ExportHTMLModal extends Vue {
     }
 
     const files = [];
+    const filteredOn = this.filter.status;
+
     for (const fileId of this.filter.fromFile) {
       const file = InspecDataModule.allEvaluationFiles.find(
         (f) => f.uniqueId === fileId
       );
       if (file) {
-        const data = file.evaluation;
+        let data: SourcedContextualizedEvaluation;
+        data = file.evaluation;
+
+        const cashData = file.evaluation;
+
+        console.log(`attributes: ${JSON.stringify(data.data.profiles[0].attributes.length, null, 2)}`);
+        console.log(`controls-1: ${JSON.stringify(data.data.profiles[0].controls.length, null, 2)}`);
+        console.log(`cashData: ${JSON.stringify(cashData.data.profiles[0].controls.length, null, 2)}`);
+
+        if (filteredOn!.length > 0) {
+          let filteredControls: String[] = [];
+
+          data.contains.map((profile) => {
+            profile.contains.map((result) => {
+              if (filteredOn?.includes(result.root.hdf.status)) {
+                filteredControls.push(result.data.id.toString());
+              }
+            });
+          });
+
+          console.log(`filteredControls : ${filteredControls}`);
+
+          data.data.profiles[0].controls =
+            data.data.profiles[0].controls.filter((control) => {
+              if (filteredControls.includes(control.id)) {
+                console.log(`Adding this result: ${control.id}`);
+                return filteredControls.includes(control.id);
+              }
+            });
+          console.log('filter is on');
+        }
+
+        //console.log(`new controls: ${JSON.stringify(data.data.profiles[0].controls.length,null,2)}`)
+        //console.log(`Results: ${JSON.stringify(data.data.profiles[0].controls[0].results.length,null,2)}`)
+        //console.log(`data: ${JSON.stringify(data.data,null,2)}`)
+
+        //const data = file.evaluation;
         const fileName = file.filename;
         const fileID = file.uniqueId;
         files.push({data, fileName, fileID});
+
+        data.data.profiles[0].controls = cashData.data.profiles[0].controls;
       }
     }
-
     // Generate and export HTML file
     const body = await new FromHDFToHTMLMapper(files, this.exportType).toHTML(
       '/static/export/'
     );
+
     saveAs(
       new Blob([s2ab(body)], {type: 'application/octet-stream'}),
       `${this.exportType}_Report_${new Date().toString()}.html`.replace(

@@ -6,7 +6,7 @@
   "files": [
     "lib"
   ],
-  "main": "src/index.ts",
+  "main": "lib/index.js",
   "publishConfig": {
     "main": "lib/index.js"
   },

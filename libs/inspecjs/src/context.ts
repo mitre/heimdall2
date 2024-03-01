@@ -206,7 +206,7 @@ export function contextualizeEvaluation(
 
   // Link each contextualized control
   for (const cc of allControls) {
-    // Behaviour changes based on if we have well-formed or malformed profile dependency
+    // Behavior changes based on if we have well-formed or malformed profile dependency
     if (cc.sourcedFrom.extendsFrom.length || cc.sourcedFrom.extendedBy.length) {
       // Our profile is a baseline! No need to continue - children will make connections for us
       // If we aren't extended from something we just drop. Our children will make connections for us

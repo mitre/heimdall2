@@ -172,7 +172,8 @@ export class FromHDFToHTMLMapper {
         }
         file.data = contextualizedFile;
       }
-
+console.log("HHHHHHERE");
+console.log(`reverse-html-mapper control count is: ${JSON.stringify(file.data.data.profiles[0].controls.length,null,2)}`)
       this.addFiledata(
         {data: file.data, fileName: file.fileName, fileID: file.fileID},
         exportType
@@ -199,9 +200,21 @@ export class FromHDFToHTMLMapper {
 
     // Pull out results from file
     const allResultLevels: ContextualizedControl[] = [];
-    file.data.contains.map((profile) => {
-      profile.contains.map((result) => {
-        allResultLevels.push(result);
+    // file.data.contains.map((profile) => {
+    //   profile.contains.map((result) => {
+    //     //console.log(`Adding this result: ${result.data.id}  Result: ${JSON.stringify(result.data)}`)
+    //     allResultLevels.push(result);
+    //   });
+    // });
+
+    file.data.contains.map((profile, index) => {
+      profile.contains.forEach((control, index2) => {        
+        //console.log(`index1 is: ${index} index2 is ${index2} file.data: ${JSON.stringify(profile.data.controls.at(index2)?.id,null,2)} control; ${control.data.id}`)
+        profile.data.controls.forEach(element => {
+          if(element.id === control.data.id ) {
+            allResultLevels.push(control);
+          }
+        });
       });
     });
 
@@ -310,7 +323,7 @@ export class FromHDFToHTMLMapper {
     };
 
     // Calculate & set compliance level and color from result statuses
-    // Set default complaince level and color
+    // Set default compliance level and color
     this.outputData.compliance.level = '0.00%';
     this.outputData.compliance.color = 'low';
 
@@ -495,7 +508,7 @@ export class FromHDFToHTMLMapper {
     return text;
   }
 
-  // Prompt HTML generation from data pulled from file during constructor intialization
+  // Prompt HTML generation from data pulled from file during constructor initialization
   // Requires path to prompt location of needed files relative to function call location
   async toHTML(path: string): Promise<string> {
     // Pull export template + styles and create outputData object containing data to fill template with
