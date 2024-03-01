@@ -241,6 +241,17 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
         detailsMap.set(_.startCase(prop), this.control.hdf.descriptions[prop]);
       }
     }
+
+    // Convert all refs to a Detail
+    if (this.control.data.refs?.length) {
+      detailsMap.set(
+        'References',
+        this.control.data.refs
+          ?.map((ref) => JSON.stringify(ref, null, 2))
+          .join('\n')
+      );
+    }
+
     return Array.from(detailsMap, ([name, value]) => ({name, value})).filter(
       (v) => v.value
     );
