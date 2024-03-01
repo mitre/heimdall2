@@ -57,7 +57,6 @@ import {Filter} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {SnackbarModule} from '../../store/snackbar';
 import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
-//import {FromHDFToHTMLMapper} from '../../../../../libs/hdf-converters/src/converters-from-hdf/html/reverse-html-mapper';
 
 // All selectable export types for an HTML export
 enum FileExportTypes {
