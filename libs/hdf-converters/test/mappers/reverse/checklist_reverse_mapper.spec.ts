@@ -70,10 +70,10 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/checklist_mapper/converted-nessus.ckl',
-      mapper.toCkl()
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/converted-nessus.ckl',
+    //   mapper.toCkl()
+    // );
 
     expect(omitCklVersion(mapper.toCkl())).toEqual(
       omitCklVersion(
