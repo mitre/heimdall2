@@ -6,8 +6,12 @@ import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
 import {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 
 export function omitVersions(
-  input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {profiles?: Partial<ExecJSONProfile>[]}
-): Omit<Partial<ExecJSON.Execution>, 'profiles'> & {profiles?: Partial<ExecJSONProfile>[]} {
+  input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+    profiles?: Partial<ExecJSONProfile>[];
+  }
+): Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+  profiles?: Partial<ExecJSONProfile>[];
+} {
   const output = _.omit(input, ['version', 'platform.release']);
 
   output.profiles = _.map(output.profiles, (profile) => {
@@ -46,7 +50,9 @@ export function omitASFFVersions(
 }
 
 export function omitHDFTimes(
-  input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {profiles?: Partial<ExecJSONProfile>[]}
+  input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+    profiles?: Partial<ExecJSONProfile>[];
+  }
 ) {
   return {
     ...input,
