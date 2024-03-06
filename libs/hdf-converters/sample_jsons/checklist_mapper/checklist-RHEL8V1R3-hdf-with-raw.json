@@ -1,20 +1,17 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.50"
+    "release": "2.10.1"
   },
-  "version": "2.6.50",
+  "version": "2.10.1",
   "statistics": {},
   "profiles": [
     {
       "name": "RHEL_8_STIG",
       "version": "1",
       "title": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide",
-      "maintainer": "",
       "summary": "This Security Technical Implementation Guide is published as a tool to improve the security of Department of Defense (DoD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
       "license": "terms-of-use",
-      "copyright": "",
-      "copyright_email": "",
       "supports": [],
       "attributes": [],
       "groups": [],
@@ -15181,7 +15178,7 @@
           ]
         }
       ],
-      "sha256": "381afbc0858523fa713fc63d5d2bfc49c3918b87e84478a7f6be6c2df864276b"
+      "sha256": "26f379f219eaff4c05580e7e4524d88f106f588d65426733aeeebb4e1ff6b3f1"
     }
   ],
   "passthrough": {

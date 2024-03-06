@@ -230,6 +230,9 @@ export function getChecklistObjectFromHdf(
   return _.get(hdf, 'passthrough.checklist', EmptyChecklistObject);
 }
 
+// baseconverter makes it difficult to assign an array to attributes using just path+transformer in this case because i think it gets instantly redirected along the 'isString' pathway due to the path pointing at a stringified json blob
+// consequently we have to use the arraytransformer, but that doesn't run if we provide a path at the top level of the object for the same reason as specified above, so we have to put the 'hdfSpecificData' object into the subobject 'data'
+// which we can then extract here
 function getAttributes(input: unknown[]) {
   const passthrough = input as unknown as [{data: string}];
   const data = passthrough[0].data;
@@ -240,28 +243,20 @@ function getAttributes(input: unknown[]) {
   }
 }
 
-function getMaintainer(input: string): string {
-  if (!input) {
-    return '';
-  } else {
-    return JSON.parse(input).hdfSpecificData?.maintainer;
+function getHdfSpecificDataAttribute(
+  attribute: string,
+  input: string
+): {[key: string]: any}[] | string | undefined {
+  let data;
+  if (
+    !input ||
+    !isJsonString(input) ||
+    !_.isObject((data = JSON.parse(input)).hdfSpecificData)
+  ) {
+    return undefined;
   }
-}
 
-function getCopyright(input: string): string {
-  if (!input) {
-    return '';
-  } else {
-    return JSON.parse(input).hdfSpecificData?.copyright;
-  }
-}
-
-function getCopyrightEmail(input: string): string {
-  if (!input) {
-    return '';
-  } else {
-    return JSON.parse(input).hdfSpecificData?.copyright_email;
-  }
+  return data[attribute] || undefined;
 }
 
 /**
@@ -363,13 +358,19 @@ export class ChecklistMapper extends BaseConverter {
         name: {path: 'header.stigid'},
         version: {path: 'header.version'},
         title: {path: 'header.title'},
-        maintainer: {path: 'header.customname', transformer: getMaintainer},
+        maintainer: {
+          path: 'header.customname',
+          transformer: _.partial(getHdfSpecificDataAttribute, 'maintainer')
+        },
         summary: {path: 'header.description'},
         license: {path: 'header.notice'},
-        copyright: {path: 'header.customname', transformer: getCopyright},
+        copyright: {
+          path: 'header.customname',
+          transformer: _.partial(getHdfSpecificDataAttribute, 'copyright')
+        },
         copyright_email: {
           path: 'header.customname',
-          transformer: getCopyrightEmail
+          transformer: _.partial(getHdfSpecificDataAttribute, 'copyright_email')
         },
         supports: [],
         attributes: [
