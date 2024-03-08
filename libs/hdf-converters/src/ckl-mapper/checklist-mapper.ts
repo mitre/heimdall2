@@ -239,7 +239,7 @@ function getAttributes(input: unknown[]) {
   if (!data) {
     return [];
   } else {
-    return JSON.parse(data).hdfSpecificData?.attributes;
+    return JSON.parse(data).hdfSpecificData?.attributes || [];
   }
 }
 
