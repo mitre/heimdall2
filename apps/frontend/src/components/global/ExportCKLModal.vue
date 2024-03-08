@@ -98,13 +98,13 @@
                   >
                     <h2>{{ profile.name }}</h2>
                     <v-text-field
-                      v-model="profile.releasenumber"
-                      label="Release Number"
+                      v-model="profile.version"
+                      label="Version"
                       type="number"
                     />
                     <v-text-field
-                      v-model="profile.version"
-                      label="Version"
+                      v-model="profile.releasenumber"
+                      label="Release Number"
                       type="number"
                     />
                     <v-text-field
