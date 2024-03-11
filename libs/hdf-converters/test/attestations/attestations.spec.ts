@@ -62,7 +62,7 @@ describe('attestations', () => {
 
     const output = addAttestationToHDF(inputData, attestationArray);
 
-//    fs.writeFileSync('sample_jsons/attestations/rhel7-json-attestedjson.json', JSON.stringify(output, null, 2))
+    //    fs.writeFileSync('sample_jsons/attestations/rhel7-json-attestedjson.json', JSON.stringify(output, null, 2))
 
     const expected = JSON.parse(
       fs.readFileSync(
@@ -98,7 +98,7 @@ describe('attestations', () => {
       )
     );
 
-  //  fs.writeFileSync('sample_jsons/attestations/rhel7-json-spreadsheet.json', JSON.stringify(output, null, 2))
+    //  fs.writeFileSync('sample_jsons/attestations/rhel7-json-spreadsheet.json', JSON.stringify(output, null, 2))
 
     expect(omitHDFTimes(omitVersions(output))).toEqual(
       omitHDFTimes(omitVersions(expected))
@@ -110,7 +110,7 @@ describe('attestations', () => {
       advanceDate(moment.utc(1662758942000), 'fortnightly').toISOString(true)
     ).toEqual('2022-09-23T21:29:02.000+00:00');
   });
-  
+
   it('Should parse input for custom number of days correctly', () => {
     expect(
       advanceDate(moment.utc(1662758942000), '2d').toISOString(true)
@@ -134,5 +134,4 @@ describe('attestations', () => {
       advanceDate(moment.utc(1662758942000), '5y').toISOString(true)
     ).toEqual('2027-09-09T21:29:02.000+00:00');
   });
-
 });

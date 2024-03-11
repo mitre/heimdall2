@@ -50,10 +50,16 @@ export function advanceDate(
       break;
     default: {
       // a number followed by d/w/m/y, with or without spaces in between
-      const re = new RegExp("(\\d+(?:\\.\\d+)?)(\\s*)([a-z])");
+      const re = /(\d+(?:.\d+)?)(\s*)([a-zA-Z]+)/;
       const match = re.exec(frequency);
-      
-      if (!match){ throw new Error('Unknown date format: '+frequency+'. Please use a number followed by d/w/m/y to indicate days, weeks, months, or years.'); };
+
+      if (!match) {
+        throw new Error(
+          'Unknown date format: ' +
+            frequency +
+            '. Please use a number followed by d/w/m/y to indicate days, weeks, months, or years.'
+        );
+      }
 
       const number = match[1];
       const unit = match[3];
