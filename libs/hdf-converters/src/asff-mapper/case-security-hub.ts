@@ -1,5 +1,5 @@
 import {encode} from 'html-entities';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {AwsConfigMapping} from '../mappings/AwsConfigMapping';
 const FINDING_STANDARDS_CONTROL_ARN = 'ProductFields.StandardsControlArn';
 

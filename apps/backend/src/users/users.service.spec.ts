@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test} from '@nestjs/testing';
+import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
 import {
   CREATE_ADMIN_DTO,
   CREATE_SECOND_ADMIN_DTO,
@@ -41,6 +42,7 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
+import {GroupsService} from '../groups/groups.service';
 import {SlimUserDto} from './dto/slim-user.dto';
 import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
@@ -67,7 +69,12 @@ describe('UsersService', () => {
         ]),
         AuthzModule
       ],
-      providers: [UsersService, DatabaseService, AuthzService]
+      providers: [
+        UsersService,
+        DatabaseService,
+        AuthzService,
+        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK}
+      ]
     }).compile();
 
     authzService = module.get<AuthzService>(AuthzService);

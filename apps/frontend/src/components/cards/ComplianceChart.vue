@@ -14,6 +14,7 @@
 import {ColorHackModule} from '@/store/color_hack';
 import {Filter} from '@/store/data_filters';
 import {calculateCompliance} from '@/store/status_counts';
+import {formatCompliance} from '@mitre/hdf-converters';
 import {ApexOptions} from 'apexcharts';
 import Vue from 'vue';
 import VueApexCharts from 'vue-apexcharts';
@@ -45,7 +46,8 @@ export default class ComplianceChart extends Vue {
             show: true,
             value: {
               color: '#99a2ac',
-              fontSize: '2rem'
+              fontSize: '2rem',
+              formatter: (val: number) => formatCompliance(val)
             }
           }
         }

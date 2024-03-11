@@ -10,12 +10,35 @@
 
           <v-tab-item value="tab-test">
             <div class="pa-4">
-              <div v-if="caveat || justification || rationale">
+              <div
+                v-if="
+                  caveat ||
+                  justification ||
+                  rationale ||
+                  comments ||
+                  errorMessage
+                "
+              >
+                <div v-if="errorMessage" class="mb-2">
+                  <v-btn
+                    class="unclickable-button mr-3"
+                    elevation="2"
+                    depressed
+                  >
+                    Error
+                  </v-btn>
+                  <span>
+                    {{ errorMessage }}
+                    <br />
+                  </span>
+                </div>
                 <span v-if="caveat">Caveat: {{ caveat }}<br /></span>
                 <span v-if="justification"
                   >Justification: {{ justification }}<br
                 /></span>
+
                 <span v-if="rationale">Rationale: {{ rationale }}<br /></span>
+                <span v-if="comments">Comments: {{ comments }}<br /></span>
                 <v-divider />
                 <br />
               </div>
@@ -69,7 +92,7 @@
 import ControlRowCol from '@/components/cards/controltable/ControlRowCol.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import {ContextualizedControl} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 //TODO: add line numbers
 import 'prismjs';
 import 'prismjs/components/prism-json';
@@ -161,6 +184,16 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     return this.control.hdf.descriptions.justification;
   }
 
+  get comments(): string | undefined {
+    return this.control.hdf.descriptions.comments;
+  }
+
+  get errorMessage(): string {
+    return this.control.root.hdf.segments?.length == 0
+      ? "The control didn't return any results.  Check with the author of the profile to ensure the code is correct."
+      : '';
+  }
+
   get details(): Detail[] {
     const detailsMap = new Map();
 
@@ -208,6 +241,17 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
         detailsMap.set(_.startCase(prop), this.control.hdf.descriptions[prop]);
       }
     }
+
+    // Convert all refs to a Detail
+    if (this.control.data.refs?.length) {
+      detailsMap.set(
+        'References',
+        this.control.data.refs
+          ?.map((ref) => JSON.stringify(ref, null, 2))
+          .join('\n')
+      );
+    }
+
     return Array.from(detailsMap, ([name, value]) => ({name, value})).filter(
       (v) => v.value
     );
@@ -228,6 +272,10 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
 
 .clickable {
   cursor: pointer;
+}
+
+button.unclickable-button {
+  pointer-events: none;
 }
 
 .v-application {

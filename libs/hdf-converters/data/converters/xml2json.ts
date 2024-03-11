@@ -1,5 +1,5 @@
 import fs from 'fs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import xml2js from 'xml2js';
 
 const parser = new xml2js.Parser();

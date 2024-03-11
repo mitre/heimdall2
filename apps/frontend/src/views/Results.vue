@@ -56,6 +56,7 @@
           </v-list>
         </v-menu>
       </div>
+      <PrintButton />
     </template>
 
     <!-- The main content: cards, etc -->
@@ -213,6 +214,7 @@ import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
+import PrintButton from '@/components/global/PrintButton.vue';
 import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
 import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import RouteMixin from '@/mixins/RouteMixin';
@@ -259,6 +261,7 @@ import {compare_times} from '../utilities/delta_util';
     ExportXCCDFResults,
     ExportCKLModal,
     ExportHTMLModal,
+    PrintButton,
     EvaluationInfo,
     ExportSplunkModal,
     ProfileData,

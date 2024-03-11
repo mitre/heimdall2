@@ -24,7 +24,7 @@
     </v-col>
     <v-col cols="1">
       <div
-        v-if="file.from_file.database_id && evaluation.editable"
+        v-if="file.from_file.database_id && evaluation && evaluation.editable"
         class="top-right"
       >
         <v-icon
@@ -36,7 +36,7 @@
           mdi-pencil
         </v-icon>
         <EditEvaluationModal
-          v-if="showEditEvaluationModal"
+          v-if="evaluation && showEditEvaluationModal"
           id="editEvaluationModal"
           :visible="showEditEvaluationModal"
           :active="evaluation"
@@ -59,7 +59,7 @@ import {
 } from '@/store/report_intake';
 import {IEvaluation} from '@heimdall/interfaces';
 import {ContextualizedEvaluation} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';

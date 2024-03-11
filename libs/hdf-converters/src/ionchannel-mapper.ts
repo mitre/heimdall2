@@ -1,6 +1,6 @@
 import axios, {AxiosInstance} from 'axios';
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   ContextualizedDependency,
@@ -126,9 +126,8 @@ export class IonChannelAPIMapper {
     this.analysisId = analysisId;
 
     this.apiClient = axios.create();
-    this.apiClient.defaults.headers.common[
-      'Authorization'
-    ] = `Bearer ${this.apiKey}`;
+    this.apiClient.defaults.headers.common['Authorization'] =
+      `Bearer ${this.apiKey}`;
     this.apiClient.defaults.headers.common['Accept'] =
       'application/json, text/plain, */*';
   }

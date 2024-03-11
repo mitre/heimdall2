@@ -73,7 +73,7 @@ import {
   Severity
 } from 'inspecjs';
 import {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Mustache from 'mustache';
 import {v4} from 'uuid';
 import Vue from 'vue';

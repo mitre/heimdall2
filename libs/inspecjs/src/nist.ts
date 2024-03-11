@@ -2,17 +2,18 @@ import {ControlStatus} from './compat_wrappers';
 import {ALL_NIST_CONTROL_NUMBERS, ALL_NIST_FAMILIES} from './raw_nist';
 
 // Regexes.
-const NIST_FAMILY_RE = /^[A-Z]{2}$/;
+// Matches against only currently existing NIST Control families instead of allowing any two adjacent uppercase letters
+const NIST_FAMILY_RE =
+  /^(?:A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])$/;
 // Limit length of children to avoid potential DoS on malicious NIST Control strings
-const NIST_CONTROL_RE = /^([A-Z]{2})-([0-9]+)(.{0,60})$/;
+const NIST_CONTROL_RE =
+  /^(A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])-(\d+)(.{0,60})$/;
 const SPEC_SPLITTER = /[\s\(\)\.]+/; // Includes all whitespace, periods, and parenthesis
 const REV_RE = /^rev[\s_.]+(\d+)$/i; // Matches Rev_5 etc
 type ParseNist = NistControl | NistRevision | null;
 
 export interface CanonizationConfig {
-  max_specifiers: number;
-
-  // All are assumed false
+  max_specifiers?: number; // default 5: $ rg '<number>' SP_800-53_v5_1_XML.xml | awk -F'[^ ]' '{print length($1)}' | sort -nr | head -1 | xargs -I{} expr \( {} - 6 \) / 3 # this equals 5 as of rev5
   pad_zeros?: boolean; // default false
   allow_letters?: boolean; // default true
   add_spaces?: boolean; // default true
@@ -20,15 +21,19 @@ export interface CanonizationConfig {
   add_periods?: boolean; // default true
 }
 
-function default_partial_config(c: CanonizationConfig): CanonizationConfig {
-  return {
-    pad_zeros: false,
-    allow_letters: true,
-    add_spaces: true,
-    add_parens: true,
-    add_periods: true,
-    ...c
-  };
+export const DEFAULT_CANONIZATION_CONFIG = {
+  max_specifiers: 5,
+  pad_zeros: false,
+  allow_letters: true,
+  add_spaces: true,
+  add_parens: true,
+  add_periods: true
+};
+
+function default_partial_config(
+  c?: CanonizationConfig
+): Required<CanonizationConfig> {
+  return {...DEFAULT_CANONIZATION_CONFIG, ...c};
 }
 
 /** Represents a single nist control, or group of controls if the sub specs are vague enoug. */
@@ -123,8 +128,8 @@ export class NistControl {
    * This is, unfortunately, slightly expensive.
    * Avoid repeating this if possible.
    */
-  canonize(config: CanonizationConfig): string {
-    config = default_partial_config(config);
+  canonize(c?: CanonizationConfig): string {
+    const config = default_partial_config(c);
     const ss = this.subSpecifiers;
 
     // Build our string. Start with family

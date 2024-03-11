@@ -1,4 +1,4 @@
-import {Module} from '@nestjs/common';
+import {forwardRef, Module} from '@nestjs/common';
 import {SequelizeModule} from '@nestjs/sequelize';
 import {ApiKeyModule} from '../apikeys/apikeys.module';
 import {AuthzModule} from '../authz/authz.module';
@@ -16,7 +16,7 @@ import {GroupsService} from './groups.service';
     ApiKeyModule,
     AuthzModule,
     ConfigModule,
-    UsersModule,
+    forwardRef(() => UsersModule),
     EvaluationsModule,
     EvaluationTagsModule
   ],

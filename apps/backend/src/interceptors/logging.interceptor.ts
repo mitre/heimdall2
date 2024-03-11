@@ -5,7 +5,7 @@ import {
   NestInterceptor
 } from '@nestjs/common';
 import {Request} from 'express';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Observable} from 'rxjs';
 import winston from 'winston';
 import {ConfigService} from '../config/config.service';
@@ -16,6 +16,7 @@ import {User} from '../users/user.model';
 @Injectable()
 export class LoggingInterceptor implements NestInterceptor {
   private readonly configService: ConfigService;
+  private readonly line = '___________________________________________\n';
 
   constructor(configService: ConfigService) {
     this.configService = configService;
@@ -28,9 +29,9 @@ export class LoggingInterceptor implements NestInterceptor {
       }),
       winston.format.printf(
         (info) =>
-          `[${[info.timestamp]}] ${info.ip} ${info.referer} ${info.userAgent} ${
-            info.user
-          } ${info.message}`
+          `${this.line}[${[info.timestamp]}] (Interceptor): ${info.ip} ${
+            info.referer
+          } ${info.userAgent} ${info.user} ${info.message}`
       )
     )
   });
@@ -65,7 +66,7 @@ export class LoggingInterceptor implements NestInterceptor {
     return `User<Unknown>`;
   }
 
-  getRealIP(request: Request): string {
+  getRealIP(request: Request): string | unknown {
     const realIP = Object.keys(request.headers).find(
       (header) =>
         header.toLowerCase() === 'x-forwarded-for' ||

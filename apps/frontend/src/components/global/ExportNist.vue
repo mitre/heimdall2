@@ -24,7 +24,7 @@ import {NistControl} from 'inspecjs';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import XLSX from 'xlsx';
+import * as XLSX from '@e965/xlsx';
 
 const MAX_SHEET_NAME_SIZE = 31;
 export type NISTRow = [string];

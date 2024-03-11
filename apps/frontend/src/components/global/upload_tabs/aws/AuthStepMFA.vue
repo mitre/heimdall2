@@ -29,10 +29,11 @@
 </template>
 
 <script lang="ts">
-import {LocalStorageVal} from '@/utilities/helper_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {PropSync} from 'vue-property-decorator';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import {requireFieldRule} from '@/utilities/upload_util';
 
 /** Localstorage keys */
 const localMFASerial = new LocalStorageVal<string>('aws_s3_mfa_serial');
@@ -51,9 +52,8 @@ export default class S3Reader extends Vue {
    */
   valid = false;
 
-  /** Form required field rules. Maybe eventually expand to other stuff */
-  reqRule = (v: string | null | undefined) =>
-    (v || '').trim().length > 0 || 'Field is Required';
+  // Form required field rule
+  reqRule = requireFieldRule;
 
   mfaRule = (v: string | null | undefined) =>
     (v || '').trim().match('^\\d{6}$') !== null ||
@@ -61,7 +61,7 @@ export default class S3Reader extends Vue {
 
   /** On mount, try to look up stored auth info */
   mounted() {
-    this.changeMFASerial(localMFASerial.get_default(''));
+    this.changeMFASerial(localMFASerial.getDefault(''));
   }
 
   /** Handles changes to mfa serial */

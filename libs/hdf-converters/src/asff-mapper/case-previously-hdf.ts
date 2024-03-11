@@ -1,6 +1,6 @@
 import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {ILookupPath, MappedTransform} from '../base-converter';
 import {
   conditionallyProvideAttribute,

@@ -17,8 +17,8 @@ import {
   NistControl,
   Severity
 } from 'inspecjs';
-import _ from 'lodash';
-import LRUCache from 'lru-cache';
+import * as _ from 'lodash';
+import {LRUCache} from 'lru-cache';
 import {
   Action,
   getModule,
@@ -83,7 +83,7 @@ export interface Filter {
 export type TreeMapState = string[]; // Representing the current path spec, from root
 
 /**
- * Facillitates the search functionality
+ * Checks certain attributes from the given control to see if they include the given search term
  * @param term The string to search with
  * @param contextControl The control to search for term in
  */
@@ -92,7 +92,7 @@ function contains_term(
   term: string
 ): boolean {
   const asHDF = contextControl.root.hdf;
-  // Get our (non-null) searchable data
+  // Get our searchable data (some attributes are optional so may be null or undefined)
   const searchables: string[] = [
     asHDF.wraps.id,
     asHDF.wraps.title,
@@ -100,9 +100,8 @@ function contains_term(
     asHDF.severity,
     asHDF.status,
     asHDF.finding_details
-  ].filter((s) => s !== null) as string[];
+  ].filter(_.isString);
 
-  // See if any contain term
   return searchables.some((s) => s.toLowerCase().includes(term));
 }
 
@@ -253,6 +252,14 @@ export class FilteredData extends VuexModule {
     return [...this.selectedEvaluationIds, ...this.selectedProfileIds];
   }
 
+  get selected_evaluation_ids(): FileID[] {
+    return this.selectedEvaluationIds;
+  }
+
+  get selected_profile_ids(): FileID[] {
+    return this.selectedProfileIds;
+  }
+
   // check to see if all profiles are selected
   get all_profiles_selected(): Trinary {
     switch (this.selectedProfileIds.length) {
@@ -263,6 +270,11 @@ export class FilteredData extends VuexModule {
       default:
         return Trinary.Mixed;
     }
+  }
+
+  // check to see if any profile is selected
+  get any_profile_selected(): boolean {
+    return this.selectedProfileIds.length > 0;
   }
 
   // check to see if all evaluations are selected
@@ -277,10 +289,15 @@ export class FilteredData extends VuexModule {
     }
   }
 
+  // check to see if any evaluation is selected
+  get any_evaluation_selected(): boolean {
+    return this.selectedEvaluationIds.length > 0;
+  }
+
   /**
    * Parameterized getter.
    * Get all controls from all profiles from the specified file id.
-   * Utlizes the profiles getter to accelerate the file filter.
+   * Utilizes the profiles getter to accelerate the file filter.
    */
   get controls(): (filter: Filter) => readonly ContextualizedControl[] {
     /** Cache by filter */

@@ -8,6 +8,9 @@
       <v-card-title class="headline"
         >Are you sure you want to {{ action }} this {{ type }}?</v-card-title
       >
+      <v-card-text>
+        {{ message }}
+      </v-card-text>
       <v-card-actions>
         <v-spacer />
         <v-btn color="blue darken-1" text @click="$emit('cancel')"
@@ -37,6 +40,9 @@ import {Prop, VModel} from 'vue-property-decorator';
 export default class ActionDialog extends Vue {
   @Prop({required: false, type: String, default: 'delete'})
   readonly action!: string;
+
+  @Prop({required: false, type: String, default: ''})
+  readonly message!: string;
 
   @Prop({required: true, type: String}) readonly type!: string;
   @Prop({required: true, type: Boolean}) readonly value!: boolean;

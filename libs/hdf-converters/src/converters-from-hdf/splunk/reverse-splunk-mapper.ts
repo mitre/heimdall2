@@ -1,39 +1,32 @@
-import splunkjs from '@mitre/splunk-sdk-no-env';
-import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
+import axios, {AxiosInstance, AxiosResponse} from 'axios';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
   ContextualizedProfile,
-  contextualizeEvaluation,
   ExecJSON
 } from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Logger} from 'winston';
+import {SplunkConfig} from '../../../types/splunk-config-types';
+import {SplunkControl} from '../../../types/splunk-control-types';
+import {SplunkProfile} from '../../../types/splunk-profile-types';
+import {SplunkReport} from '../../../types/splunk-report-types';
 import {MappedTransform} from '../../base-converter';
-import {createWinstonLogger} from '../../utils/global';
+import {
+  createWinstonLogger,
+  ensureContextualizedEvaluation
+} from '../../utils/global';
+import {
+  checkSplunkCredentials,
+  generateHostname,
+  handleSplunkErrorResponse
+} from '../../utils/splunk-tools';
 import {FromAnyBaseConverter} from '../reverse-any-base-converter';
 import {ILookupPathFH} from '../reverse-base-converter';
-import {SplunkControl} from './splunk-control-types';
-import {SplunkProfile} from './splunk-profile-types';
-import {SplunkReport} from './splunk-report-types';
 
 const HDF_SPLUNK_SCHEMA = '1.1';
 const MAPPER_NAME = 'HDF2Splunk';
 const UPLOAD_CHUNK_SIZE = 100;
-
-export type SplunkConfig = {
-  scheme: string;
-  host: string;
-  port?: number;
-  username?: string;
-  password?: string;
-  index: string;
-  owner?: string;
-  app?: string;
-  sessionKey?: string;
-  autologin?: boolean;
-  version?: string;
-};
 
 export type SplunkData = {
   profiles: SplunkProfile[];
@@ -52,16 +45,6 @@ export function createGUID(length: number) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));
   }
   return result;
-}
-
-export function contextualizeIfNeeded(
-  data: ExecJSON.Execution | ContextualizedEvaluation
-) {
-  if ('contains' in data) {
-    return data;
-  } else {
-    return contextualizeEvaluation(data);
-  }
 }
 
 export function createReportMapping(
@@ -91,19 +74,21 @@ export function getDependencies(
 ) {
   if (profile && execution) {
     const dependencies: string[] = [];
-    profile.data.depends?.forEach((dependency) => {
-      if (dependency.name) {
-        dependencies.push(dependency.name);
-        dependencies.push(
-          ...getDependencies(
-            execution.contains.find(
-              (execProfile) => execProfile.data.name === dependency.name
-            ),
-            execution
-          )
-        );
+    if (profile.data.depends) {
+      for (const dependency of profile.data.depends) {
+        if (dependency.name) {
+          dependencies.push(dependency.name);
+          dependencies.push(
+            ...getDependencies(
+              execution.contains.find(
+                (execProfile) => execProfile.data.name === dependency.name
+              ),
+              execution
+            )
+          );
+        }
       }
-    });
+    }
     return dependencies;
   }
 
@@ -227,9 +212,9 @@ export function createControlMapping(
       transformer: (data: {label: string; data: string}[]) => {
         const descObjects: Record<string, string> = {};
         if (Array.isArray(data)) {
-          data.forEach((item) => {
+          for (const item of data) {
             descObjects[item['label']] = item['data'];
-          });
+          }
         }
         return descObjects;
       }
@@ -291,6 +276,7 @@ export class FromHDFControlToSplunkControlMapper extends FromAnyBaseConverter {
 export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
   mappings?: MappedTransform<SplunkData, ILookupPathFH>;
   contextualizedEvaluation?: ContextualizedEvaluation;
+  axiosInstance: AxiosInstance;
 
   constructor(
     data: ExecJSON.Execution | ContextualizedEvaluation,
@@ -302,7 +288,8 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
     } else {
       logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     }
-    super(contextualizeIfNeeded(data));
+    super(ensureContextualizedEvaluation(data));
+    this.axiosInstance = axios.create({params: {output_mode: 'json'}});
     logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
@@ -319,7 +306,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
         guid
       ).toSplunkExecution() as SplunkReport
     );
-    this.data.contains.forEach((profile: ContextualizedProfile) => {
+    for (const profile of this.data.contains) {
       splunkData.profiles.push(
         new FromHDFProfileToSplunkProfileMapper(
           profile,
@@ -327,7 +314,7 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
           guid
         ).toSplunkProfile() as SplunkProfile
       );
-      profile.contains.forEach((control) => {
+      for (const control of profile.contains) {
         splunkData.controls.push(
           new FromHDFControlToSplunkControlMapper(
             control,
@@ -337,158 +324,137 @@ export class FromHDFToSplunkMapper extends FromAnyBaseConverter {
             guid
           ).toSplunkControl() as SplunkControl
         );
-      });
-    });
+      }
+    }
     return splunkData;
   }
 
   async uploadSplunkData(
-    targetIndex: splunkjs.Index,
+    config: SplunkConfig,
+    targetIndex: any,
     splunkData: SplunkData
   ): Promise<void> {
-    return new Promise((resolve, reject) => {
+    const hostname = generateHostname(config);
+    this.axiosInstance.defaults.params['sourcetype'] = MAPPER_NAME;
+    this.axiosInstance.defaults.params['index'] = targetIndex.name;
+
+    try {
       // Upload execution event
-      splunkData.reports.forEach((report) => {
-        targetIndex.submitEvent(
-          JSON.stringify(report),
-          {
-            sourcetype: MAPPER_NAME,
-            index: targetIndex.name
-          },
-          (err: any) => {
-            if (err) {
-              reject(err);
-            }
+      const execEvents = splunkData.reports.map((report) => {
+        return this.axiosInstance
+          .post(`${hostname}/services/receivers/simple`, JSON.stringify(report))
+          .then(() => {
             logger.verbose(
               `Successfully uploaded execution for ${report.meta.filename}`
             );
-          }
-        );
+          });
       });
+      await Promise.all(execEvents);
+
       // Upload profile event(s)
       // \r\n Is the default LINE_BREAKER for splunk, this is very poorly documented.
       // See https://docs.splunk.com/Documentation/StreamProcessor/standard/FunctionReference/LineBreak
-      targetIndex.submitEvent(
-        splunkData.profiles
-          .map((profile) => JSON.stringify(profile))
-          .join('\n'),
-        {
-          sourcetype: MAPPER_NAME,
-          index: targetIndex.name
-        },
-        (err: any) => {
-          if (err) {
-            reject(err);
-          }
-          logger.verbose(
-            `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
-          );
-        }
+      await this.axiosInstance.post(
+        `${hostname}/services/receivers/simple`,
+        splunkData.profiles.map((profile) => JSON.stringify(profile)).join('\n')
+      );
+      logger.verbose(
+        `Successfully uploaded ${splunkData.profiles.length} profile layer(s)`
       );
 
       // Upload control event(s)
-      _.chunk(splunkData.controls, UPLOAD_CHUNK_SIZE).forEach((chunk) => {
-        targetIndex.submitEvent(
-          chunk.map((control) => JSON.stringify(control)).join('\n'),
-          {
-            sourcetype: MAPPER_NAME,
-            index: targetIndex.name
-          },
-          (err: any) => {
-            if (err) {
-              reject(err);
-            }
-            logger.verbose(`Successfully uploaded ${chunk.length} control(s)`);
-            resolve();
-          }
-        );
-      });
-    });
-  }
-
-  handleSplunkError(error?: Record<string, unknown>): void {
-    if (error) {
-      let errorMessage = '';
-      try {
-        const errorCode = _.get(error, 'status');
-        // Connection errors are reported as 6XX here
-        if (typeof errorCode === 'number' && errorCode >= 600) {
-          errorMessage =
-            "Unable to connect to your splunk instance. Are you sure you're using the right HTTP Scheme? (http/https)";
-        } else if (typeof errorCode === 'number' && errorCode === 401) {
-          errorMessage =
-            'Unable to login to your splunk instance. Incorrect username or password';
-        } else if (typeof errorCode === 'number' && errorCode === 400) {
-          errorMessage =
-            'Unable to authenticate to your splunk instance. Invalid Token provided';
-        } else {
-          errorMessage = JSON.stringify(error);
+      const controlEvents = _.chunk(splunkData.controls, UPLOAD_CHUNK_SIZE).map(
+        (chunk) => {
+          return this.axiosInstance
+            .post(
+              `${hostname}/services/receivers/simple`,
+              chunk.map((control) => JSON.stringify(control)).join('\n')
+            )
+            .then(() =>
+              logger.verbose(`Successfully uploaded ${chunk.length} control(s)`)
+            );
         }
-      } catch {
-        errorMessage = String(error);
-      }
-      logger.error(errorMessage);
-      throw new Error(errorMessage);
+      );
+      await Promise.all(controlEvents);
+    } catch (error) {
+      throw new Error(handleSplunkErrorResponse(error));
     }
   }
 
-  async toSplunk(
-    config: SplunkConfig,
-    filename: string,
-    webCompatibility = false
-  ): Promise<string> {
-    let service: splunkjs.Service;
-    if (webCompatibility) {
-      service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
-    } else {
-      service = new splunkjs.Service(config);
-    }
+  async toSplunk(config: SplunkConfig, filename: string): Promise<string> {
+    const hostname = generateHostname(config);
+    // returnCount specifies the number of found results to return, if set to 0 returns all available data
+    // Per https://docs.splunk.com/Documentation/Splunk/9.0.5/RESTREF/RESTintrospect#data.2Findexes
+    const returnCount = 0;
+    let indexResponse: AxiosResponse;
+
     logger.info(
-      `Logging into Splunk Service: ${config.host} with user ${config.username}`
+      `Logging into Splunk instance at ${hostname} with user ${config.username}`
     );
-    logger.verbose('Got Execution: ' + filename);
+    logger.verbose(`Found designated file to transfer: ${filename}`);
     const guid = createGUID(30);
-    logger.verbose('Using GUID: ' + guid);
-    return new Promise((resolve) => {
-      if (config.username && config.password) {
-        service.login((error: any) => {
-          this.handleSplunkError(error);
-        });
-      }
-      service.indexes().fetch(async (error: any, indexes: any) => {
-        if (error) {
-          this.handleSplunkError(error);
-        } else if (!indexes) {
-          throw new Error(
-            'Unable to get available indexes, double-check your scheme configuration and try again'
-          );
-        } else {
-          const availableIndexes: string[] = indexes
-            .list()
-            .map((index: {name: string}) => index.name);
-          logger.verbose(
-            `Available Indexes:  + ${availableIndexes.join(', ')}`
-          );
-          if (availableIndexes.includes(config.index)) {
-            const targetIndex = indexes.item(config.index);
-            logger?.verbose(`Have index ${targetIndex.name}`);
-            const splunkData = this.createSplunkData(guid, filename);
-            this.uploadSplunkData(targetIndex, splunkData)
-              .then(() => {
-                logger.info(`Successfully uploaded to ${config.index}`);
-                resolve(guid);
-              })
-              .catch((resolvedError) => {
-                throw new Error(resolvedError);
-              });
-          } else {
-            logger.error(`Invalid Index: ${config.index}`);
-            throw new Error(`Invalid Index: ${config.index}`);
-          }
-        }
-      });
+    logger.verbose(`Using GUID: ${guid}`);
 
-      return guid;
-    });
+    // Attempt to authenticate using given credentials
+    const authResponse = await checkSplunkCredentials(config);
+    this.axiosInstance.defaults.headers.common['Authorization'] =
+      `Bearer ${authResponse}`;
+
+    // Request all available indexes
+    try {
+      indexResponse = await this.axiosInstance.get(
+        `${hostname}/services/data/indexes`,
+        {
+          params: {count: returnCount}
+        }
+      );
+    } catch (error) {
+      throw new Error(
+        `Failed to request indexes - ${handleSplunkErrorResponse(error)}`
+      );
+    }
+
+    // Check if index request reponse schema is valid
+    if (!_.has(indexResponse, ['data', 'entry'])) {
+      throw new Error(
+        'Failed to request indexes - Malformed index reponse received'
+      );
+    }
+
+    // Report provided indexes
+    const indexes = indexResponse.data.entry;
+    if (indexes.length <= 0) {
+      throw new Error(
+        'Unable to retrieve available indexes, double-check your scheme configuration and try again'
+      );
+    } else {
+      const indexNames: string[] = indexes.map(
+        (index: {name: string}) => index.name
+      );
+      logger.verbose(`Available indexes: ${indexNames.join(', ')}`);
+
+      // Parse available indexes for user desired index
+      if (indexNames.includes(config.index)) {
+        const targetIndex = indexes.filter(
+          (index: {name: string}) => index.name === config.index
+        )[0];
+        logger.verbose(`Found index: ${targetIndex.name}`);
+
+        // Post given file(s) to identified index
+        const splunkData = this.createSplunkData(guid, filename);
+
+        try {
+          await this.uploadSplunkData(config, targetIndex, splunkData);
+        } catch (error) {
+          throw new Error(
+            `Failed to upload to Splunk - ${handleSplunkErrorResponse(error)}`
+          );
+        }
+        logger.info(`Successfully uploaded to ${config.index}`);
+        return guid;
+      } else {
+        throw new Error(`Invalid index - ${config.index}`);
+      }
+    }
   }
 }

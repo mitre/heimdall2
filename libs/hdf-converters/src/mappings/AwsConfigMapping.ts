@@ -1,4 +1,4 @@
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {data as AWSConfigMappingData} from './AwsConfigMappingData';
 
 export class AwsConfigMapping {

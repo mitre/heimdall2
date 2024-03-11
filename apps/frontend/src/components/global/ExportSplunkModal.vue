@@ -23,7 +23,7 @@
           <v-stepper-items>
             <v-stepper-content step="1">
               <AuthStep
-                index-to-show="hdf"
+                index-to-show=""
                 @authenticated="onAuthenticationComplete"
                 @error="errorCount += 1"
                 @show-help="errorCount = -1"
@@ -38,7 +38,7 @@
             absolute="absolute"
             :value="errorCount >= 3 || errorCount < 0"
           >
-            <div class="text-center">
+            <div class="text-left">
               <p>
                 <span v-if="errorCount > 0">
                   It seems you may be having trouble using the Splunk toolkit.
@@ -46,18 +46,32 @@
                 </span>
                 <br />
                 <span>
-                  For installation instructions and further information, check
-                  here:
+                  Accessing a Splunk instance from Heimdall requires the input
+                  of the following information:
+                  <br />
+                  username: A qualified username recognized by the referenced
+                  Splunk instance.
+                  <br />
+                  password: A qualified password recognized by the referenced
+                  Splunk instance.
+                  <br />
+                  hostname: The domain name for the desired Splunk instance.
+                  Include port number if available.
+                  <br />
+                  index: A valid index name within the referenced Splunk
+                  instance.
+                  <br />
+                  For installation instructions and further information, see:
                 </span>
                 <v-btn
                   target="_blank"
-                  href="https://github.com/mitre/hdf-json-to-splunk/"
+                  href="https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections"
                   text
                   color="info"
                   px-0
                 >
                   <v-icon pr-2>mdi-github-circle</v-icon>
-                  Splunk HDF Plugin
+                  Splunk Interfacing Guide
                 </v-btn>
               </p>
               <v-btn color="info" @click="errorCount = 0"> Ok </v-btn>
@@ -77,12 +91,13 @@
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {FileID} from '@/store/report_intake';
-import {FromHDFToSplunkMapper, SplunkConfig} from '@mitre/hdf-converters';
+import {FromHDFToSplunkMapper} from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Logger} from 'winston';
 import {SnackbarModule} from '../../store/snackbar';
 import AuthStep from '../global/upload_tabs/splunk/AuthStep.vue';
+import {SplunkConfig} from '@mitre/hdf-converters/types/splunk-config-types';
 
 @Component({
   components: {
@@ -140,7 +155,7 @@ export default class ExportSplunkModal extends Vue {
       this.statusLog += `Starting Upload of File: ${evaluation.from_file.filename}\n`;
       if (this.splunkConfig) {
         new FromHDFToSplunkMapper(evaluation, this.logger as Logger)
-          .toSplunk(this.splunkConfig, evaluation.from_file.filename, true)
+          .toSplunk(this.splunkConfig, evaluation.from_file.filename)
           .then(() => {
             this.statusLog += `Sucessfully uploaded file ${evaluation.from_file.filename}\n`;
           })

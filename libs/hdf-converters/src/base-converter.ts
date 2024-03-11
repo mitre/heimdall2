@@ -2,7 +2,7 @@ import {createHash} from 'crypto';
 import {XMLParser} from 'fast-xml-parser';
 import * as htmlparser from 'htmlparser2';
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Papa from 'papaparse';
 
 export interface ILookupPath {
@@ -20,17 +20,17 @@ export type MappedTransform<T, U extends ILookupPath> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
     ? MappedTransform<T[K], U>
     : T[K] extends Function
-    ? T[K]
-    : T[K] extends object
-    ? MappedTransform<T[K] & U, U>
-    : T[K] | U;
+      ? T[K]
+      : T[K] extends object
+        ? MappedTransform<T[K] & U, U>
+        : T[K] | U;
 };
 export type MappedReform<T, U> = {
   [K in keyof T]: Exclude<T[K], undefined | null> extends Array<any>
     ? MappedReform<T[K], U>
     : T[K] extends object
-    ? MappedReform<T[K] & U, U>
-    : Exclude<T[K], U>;
+      ? MappedReform<T[K] & U, U>
+      : Exclude<T[K], U>;
 };
 /* eslint-enable @typescript-eslint/ban-types */
 
@@ -174,12 +174,12 @@ export class BaseConverter {
     }
   }
 
-  objectMap<T, V>(
+  objectMap<T extends Array<unknown>, V>(
     obj: T,
     fn: (v: ObjectEntryValue<T>) => V
   ): {[K in keyof T]: V} {
     return Object.fromEntries(
-      Object.entries(obj).map(([k, v]) => [k, fn(v)])
+      Object.entries(obj).map(([k, v]) => [k, fn(v as ObjectEntryValue<T>)])
     ) as Record<keyof T, V>;
   }
   convertInternal<T>(
@@ -198,8 +198,8 @@ export class BaseConverter {
       >;
     }
 
-    const result = this.objectMap(fields, (v: ObjectEntryValue<T>) =>
-      this.evaluate(file, v)
+    const result = this.objectMap(fields as T[], (v) =>
+      this.evaluate(file, v as T & object & ILookupPath)
     );
     return result as MappedReform<T, ILookupPath>;
   }

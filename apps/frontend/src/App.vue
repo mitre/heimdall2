@@ -1,5 +1,6 @@
 <template>
   <v-app id="inspire">
+    <Spinner />
     <span
       v-if="classification"
       :style="classificationStyle"
@@ -8,7 +9,6 @@
     >
     <!-- Router view. Typically a "subclass" of Base -->
     <router-view :key="$route.fullPath" :class="classification ? 'pt-5' : ''" />
-
     <!-- Footer -->
     <v-spacer />
     <Footer />
@@ -19,6 +19,7 @@
 <script lang="ts">
 import Footer from '@/components/global/Footer.vue';
 import Snackbar from '@/components/global/Snackbar.vue';
+import Spinner from '@/components/global/Spinner.vue';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {ServerModule} from './store/server';
@@ -26,7 +27,8 @@ import {ServerModule} from './store/server';
 @Component({
   components: {
     Footer,
-    Snackbar
+    Snackbar,
+    Spinner
   }
 })
 export default class App extends Vue {

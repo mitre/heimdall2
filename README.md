@@ -2,7 +2,7 @@
 
 ![Run E2E Backend + Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20E2E%20Backend%20+%20Frontend%20Tests/badge.svg) ![Run Frontend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Frontend%20Tests/badge.svg) ![Run Backend Tests](https://github.com/mitre/heimdall2/workflows/Run%20Backend%20Tests/badge.svg)
 
-This repository contains the source code for Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/master/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/master/apps/frontend), [HDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpecJS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
+This repository contains the source code for Heimdall's [Backend](https://github.com/mitre/heimdall2/tree/master/apps/backend), [Frontend (AKA Heimdall Lite)](https://github.com/mitre/heimdall2/tree/master/apps/frontend), [OHDF Converters](https://github.com/mitre/heimdall2/tree/master/libs/hdf-converters), and [InSpecJS](https://github.com/mitre/heimdall2/tree/master/libs/inspecjs).
 
 ## Contents
 
@@ -29,8 +29,9 @@ This repository contains the source code for Heimdall's [Backend](https://github
       - [Stopping the Container](#stopping-the-container)
       - [Helm Chart](#helm-chart)
       - [Running via Cloud.gov](#running-via-cloudgov)
-  - [External Data Sources](#external-data-sources)
+  - [External Data Sources (Interfaces)](#external-data-sources-interfaces)
     - [AWS S3](#aws-s3)
+    - [Splunk](#splunk)
     - [Tenable.SC](#tenablesc)
   - [API Usage](#api-usage)
   - [For Developers](#for-developers)
@@ -82,7 +83,7 @@ This repository contains the source code for Heimdall's [Backend](https://github
 
 ## Heimdall (Lite) vs Heimdall with Backend (Server)
 
-There are two ways to deploy MITRE Heimdall - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
+There are two ways to deploy the MITRE Heimdall application - Heimdall-Lite and the full Heimdall with Backend Server. Both share the same frontend but have been produced to meet different needs and use-cases.
 
 ### Heimdall-Lite
 
@@ -93,30 +94,30 @@ As a single-page javascript app - you can run Heimdall-Lite from any web-server,
 Heimdall with Backend, or Heimdall Server runs the same front end as Heimdall-Lite, but is supported with a backend database to store persistent data overtime.
 
 ### Features
-| Features | Heimdall-Lite | Heimdall with Backend |
-| :----------------------------------------------------------- | :------------------------------------------------------: | :----------------------------------------------------------: |
-| Additional Installation Requirements    |      |     Postgres Server |
-| Overview Dashboard & Counts | :white_check_mark: | :white_check_mark: |
-| Deep Dive View of Security Control Results and Metadata | :white_check_mark: | :white_check_mark: |
-| 800-53 Partition and TreeMap View     | :white_check_mark: | :white_check_mark: |
-| Comparison View      | :white_check_mark: | :white_check_mark: |
-| Advanced Data / Filters for Reports and Viewing     | :white_check_mark: |  :white_check_mark: |
-| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) | :white_check_mark: | :white_check_mark: |
-| View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF) | :white_check_mark: | :white_check_mark: |
-| Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | :white_check_mark: | :white_check_mark: |
-| Authenticated REST API       |   | :white_check_mark: |
-| CRUD Capabilities            |   | :white_check_mark: |
-| Users & Roles & multi-team support    |   | :white_check_mark: |
-| Authentication & Authorization        | Hosting Webserver | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
+| Features                                                                       |   Heimdall-Lite    |                                    Heimdall with Backend                                    |
+| :----------------------------------------------------------------------------- | :----------------: | :-----------------------------------------------------------------------------------------: |
+| Additional Installation Requirements                                           |                    |                                       PostgreSQL Server                                       |
+| Overview Dashboard & Counts                                                    | :white_check_mark: |                                     :white_check_mark:                                      |
+| Deep Dive View of Security Control Results and Metadata                        | :white_check_mark: |                                     :white_check_mark:                                      |
+| 800-53 Partition and TreeMap View                                              | :white_check_mark: |                                     :white_check_mark:                                      |
+| Comparison View                                                                | :white_check_mark: |                                     :white_check_mark:                                      |
+| Advanced Data / Filters for Reports and Viewing                                | :white_check_mark: |                                     :white_check_mark:                                      |
+| Multiple Report Output<br />(DISA Checklist XML, CAT, XCCDF-Results, and more) | :white_check_mark: |                                     :white_check_mark:                                      |
+| View Multiple Guidance Formats (InSpec profile, Checklist, DISA & CIS XCCDF)   | :white_check_mark: |                                     :white_check_mark:                                      |
+| Automatic Conversion of [Various Security Formats](https://saf-cli.mitre.org/) | :white_check_mark: |                                     :white_check_mark:                                      |
+| Authenticated REST API                                                         |                    |                                     :white_check_mark:                                      |
+| CRUD Capabilities                                                              |                    |                                     :white_check_mark:                                      |
+| Users & Roles & multi-team support                                             |                    |                                     :white_check_mark:                                      |
+| Authentication & Authorization                                                 | Hosting Webserver  | Hosting Webserver<br />LDAP<br />OAuth Support for:<br /> GitHub, GitLab, Google, and Okta. |
 
 ### Use Cases
 
-| Heimdall-Lite | Heimdall with Backend  |
-| :------------------------------------------------------: | :------------------------------------------------------: |
-| Just-in-Time Use | Multiple Teams |
-| Minimal Footprint & Deployment Time  | Timeline and Report History |
-| Local or Disconnected Use | Centralized Deployment Model |
-| Minimal Authorization & Approval Time |  |
+|             Heimdall-Lite             |    Heimdall with Backend     |
+| :-----------------------------------: | :--------------------------: |
+|           Just-in-Time Use            |        Multiple Teams        |
+|  Minimal Footprint & Deployment Time  | Timeline and Report History  |
+|       Local or Disconnected Use       | Centralized Deployment Model |
+| Minimal Authorization & Approval Time |                              |
 
 ## Getting Started / Installation
 
@@ -158,6 +159,8 @@ If you would prefer to run the bleeding edge version of Heimdall-Lite, replace `
 
 Given that Heimdall requires at least a database service, we use Docker and Docker Compose to provide a simple deployment experience. This process will also deploy an NGINX webserver in front of Heimdall to handle TLS.
 
+Heimdall's frontend container image is distributed on [DockerHub](https://hub.docker.com/r/mitre/heimdall2), and on [Iron Bank](https://ironbank.dso.mil/repomap/details;registry1Path=mitre%252Fsaf%252Fheimdall2).
+
 #### Setup Docker Container (Clean Install)
 
 1. Install Docker
@@ -168,16 +171,40 @@ Given that Heimdall requires at least a database service, we use Docker and Dock
 
 4. By default Heimdall will generate self-signed certificates that will last for 7 days. For production use, place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively. For development use, you can use the default generated certificates which means you do not need to put any certificate files in the `./nginx/certs/` folder.
 
-*NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
+  *NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
-   - ```bash
-     ./setup-docker-env.sh
-     # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
-     docker-compose up
-     ```
+   ```bash
+   ./setup-docker-env.sh
+   # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
+   ```
 
-6. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.) 
+6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server).  Please convert any certificates into PEM files and place them in `./certs/` where they will be automatically ingested.  Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the `command` attribute underneath the `certs` service in the `docker-compose.yml` to run that script.
+  ```bash
+  # Below is an example of what may be in the ./certs directory, including any scripts or certificates.
+  # ./certs/
+  # ├── dodcerts.sh
+  # └── my_certificates.pem
+
+  # For the given example, the ./docker-compose.yml should look like the following:
+  services:
+    ...
+    certs:
+      ...
+      command: sh -c "sh /etc/pki/ca-trust/source/anchors/dodcerts.sh && update-ca-trust && tail -f /dev/null"
+      # NOTE: The `command` attribute only needs to know about scripts not any particular certificates.
+      ...
+    ...
+  ```
+  To make the `docker-compose.yml` aware of additional scripts, add `sh /etc/pki/ca-trust/source/anchors/NAME_OF_SCRIPT.sh && ` to the beginning of the section in quotes.
+  NOTE: The script should make sure to place the certs within `/etc/pki/ca-trust/source/anchors/` since it will be run from the container, not the host.
+
+7. Start Heimdall Server by running this command:
+  ```bash
+  docker-compose up
+  ```
+
+8. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.)
 
 #### Updating Docker Container
 
@@ -226,7 +253,7 @@ $ cf login -a api.fr.cloud.gov  --sso
 $ cf target -o sandbox-rename create-space heimdall2-rename
 ```
 
-5. Create a postgresql database
+5. Create a PostgreSQL database
 ```
 # Update manifest.yml file to rename application and database key name
 $ cf marketplace
@@ -239,45 +266,24 @@ $ cf push
 
 > Note: This is only for demonstration purposes, in order to run a production level federal/FISMA system. You will need to contact the [cloud.gov program](https://cloud.gov) and consult your organization's security team (for risk assessment and an Authority to Operate).
 
-## External Data Sources
+## External Data Sources (Interfaces)
 
-Heimdall currently supports AWS S3 for loading external HDF data. 
+Heimdall currently provides connectivity to the following services for importing and visualizing scans:
+  - AWS S3
+  - Splunk
+  - Tenable.SC
 
 ### AWS S3
 
-In order to allow Heimdall to connect to an AWS S3 bucket, we need to [add a Cross-Origin Resource Sharing policy](https://docs.aws.amazon.com/AmazonS3/latest/userguide/enabling-cors-examples.html) within the AWS Console. The following configuration is sufficient, however we need to change the allowed origin `AllowedOrigins` to the domain where Heimdall is deployed.
+For detail information on how to setup and connect to an `AWS S3` bucket see the [Heimdall Interface Connection - AWS S3 Wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections#aws-s3)
 
-```json
-[
-    {
-        "AllowedHeaders": [
-            "*"
-        ],
-        "AllowedMethods": [
-            "GET",
-            "HEAD"
-        ],
-        "AllowedOrigins": [
-            "https://heimdall.your.site.here"
-        ],
-        "ExposeHeaders": [],
-        "MaxAgeSeconds": 3000
-    }
-]
-```
+### Splunk
+
+For detail information on how to setup and connect to an `Splunk` instances (logical or virtual) see the [Heimdall Interface Connection - Splunk Wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections#splunk)
 
 ### Tenable.SC
 
-In order to allow Heimdall to connect to a Tenable.SC instance, the hosting services should be configured with an allowlist that includes the calling domain where Heimdall resides as a trusted domain to perform CORS requests.
-For information on how to enable [open access across domain boundaries](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing), please reference the [CORS Enabled W3C wiki](https://www.w3.org/wiki/CORS_Enabled).
-
-To temporarily disable CORS for local development, you can use a browser [extension](https://www.bannerbear.com/blog/what-is-a-cors-error-and-how-to-fix-it-3-ways/#solution-3-bypass-the-error-using-a-browser-extension) like CORS Unlock.
-
-It is also possible to start Google Chrome on Windows with CORS temporarily disabled by starting the browser with web security disabled.
-  - Create a short cut, in the "Type the location of the item:" text box enter the following command:
-```
-  "C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --user-data-dir="C:/ChromeDev" --disable-web-security --disable-features=IsolateOrigins,site-per-process 
-```
+For detail information on how to setup and connect to an `Tenable.SC` instance see the [Heimdall Interface Connection - Tenable.SC Wiki](https://github.com/mitre/heimdall2/wiki/Heimdall-Interface-Connections#tenablesc)
 
 
 ## API Usage
@@ -306,7 +312,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    - ```bash
      # grab nodesource for recent version of nodejs
-     sudo curl -sL https://deb.nodesource.com/setup_16.x -o /tmp/nodesource_setup.sh
+     sudo curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
      sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
@@ -314,14 +320,39 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      sudo apt install nano                        # recommended installation
      sudo npm install -g yarn
      ```
-     
+
+   **NOTES** 
+
+     - The installation scripts setup_XX.x are no longer supported and are not needed anymore, as the installation process is straightforward for any RPM and DEB distro.
+    
+     - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) nodesource for nodejs supported version and additional installation information
+  
    OSX:
    
    - ```bash
-     brew install postgresql node@16 git      
+     brew install postgresql node@18 git      
      brew install nano                        # recommended installation
      sudo npm install -g yarn
      ```
+
+   WINDOWS:
+    - Install Node.js via MSI Installer
+      - Download the node release 18.xx installer (msi) from the [nodejs site](https://nodejs.org/en/blog/release)
+      - Open and run (double-click) the .msi file, the installation process begins, follow the installation instructions
+      - Node.js offers you options to install tools for native modules, we recommend checking the Automatically install the necessary tools check box.
+      - Verify the Node and npm version
+      ```shell
+      node --version 
+      npm --version
+      ```
+
+    - Install Yarn via MSI Installer
+      - Download the Yarn installation file from [GitHub](https://github.com/yarnpkg/yarn/releases/)
+      - Open and run the installation file, follow the installation instructions
+      - Run the following command in the PowerShell to verify the installation:
+      ```shell
+      yarn --version
+      ```
 
 2. Clone this repository:
 
@@ -329,7 +360,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      git clone https://github.com/mitre/heimdall2
      ```
 
-3. Run the Postgres server:
+3. Run the PostgreSQL server:
 
    Ubuntu:
    
@@ -369,7 +400,31 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
       # Switch back to your original OS user
       exit
       ```   
-
+   WINDOWS:
+   - Start the postgres server base on the installation method
+     - Starting Postgres Server Using `net start`
+       ```sql
+       net start postgresql-[x32 or x64]-[version]
+       ```
+     - Starting Postgres Server Using `pg_ctl`
+       ```sql 
+       pg_ctl -D "C:\[path-to-postgres-installation]\PostgreSQL\[version]\data" start
+       ```
+     - Starting Postgres Server Using Services Manager
+       - Press the `win key + R` to launch the `Run` window.
+       - Type `services.msc` and hit the `OK` button to open the Services Manager:
+       - Search for `Postgresql-[x32 or x64]-[version]`, select the service, and hit the `Start/play` button to start
+   - Create the database user 
+     - Recommend using pgAdmin and follow instruction listed here 
+     - Open a postgres shell terminal (path to postgres executable directory must be set)
+       ```sql
+       # Start the terminal
+       psql -U postgres  
+       # Create the database user
+       CREATE USER <username> with encrypted password '<password>';
+       ALTER USER <username> CREATEDB;
+       \q
+       ```
    
 4. Install project dependencies:
 
@@ -378,13 +433,19 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      yarn install
      ```
 
-5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
+5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
 
-You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
+You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
 6. Create the database:
 
    - ```bash
+     # Windows
+     yarn backend sequelize-cli-windows db:create
+     yarn backend sequelize-cli-windows db:migrate
+     yarn backend sequelize-cli-windows db:seed:all
+
+     # All other OSs
      yarn backend sequelize-cli db:create
      yarn backend sequelize-cli db:migrate
      yarn backend sequelize-cli db:seed:all
@@ -400,7 +461,7 @@ This will start both the frontend and backend in development mode, meaning any c
 
 ### Debugging Heimdall Server
 
-If you are using Visual Studio Code, it is very simple to debug this application locally. First open up the Visual Studio Code workspace and ensure the [Node debuger Auto Attach](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_auto-attach) feature in Visual Studio Code is enabled. Next, open the integrated Visual Studio Code terminal and run:
+If you are using Visual Studio Code, it is very simple to debug this application locally. First open up the Visual Studio Code workspace and ensure the [Node debugger Auto Attach](https://code.visualstudio.com/docs/nodejs/nodejs-debugging#_auto-attach) feature in Visual Studio Code is enabled. Next, open the integrated Visual Studio Code terminal and run:
 
 ```
 yarn backend start:debug
@@ -430,12 +491,21 @@ To test your code to make sure everything still works:
 
     # Run Frontend Vue Tests
     yarn frontend test
-    # Run Backend Nest Tests
+    # Run Backend Nest Tests (see note)
     yarn backend test:ci-cov
+
+<span style="color:red">**NOTE:**</span> The `Backend Nest Tests` will remove (BULKDELETE) all entries in the configured PostgreSQL server for the following tables:
+ - EvaluationTags
+ - Evaluations
+ - Users
+ - GroupEvaluations
+ - Groups
+ - GroupUsers
+
 
 #### Run Cypress End to End Tests
 
-The application includes E2E frontend + Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). These perform automated checking that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
+The application includes an End-to-End (E2E) frontend and Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). The E2E tests performed is to validate  that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
 
     CYPRESS_TESTING=true yarn start:dev
     CYPRESS_BASE_URL=http://localhost:8080 yarn test:ui:open

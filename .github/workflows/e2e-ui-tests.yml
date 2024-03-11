@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     env:
       CYPRESS_TESTING: true
       NODE_ENV: test
@@ -34,12 +34,13 @@ jobs:
           SPLUNK_PASSWORD: Valid_password!
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "16.x"
+          node-version: "18"
+          check-latest: true
           cache: 'yarn'
 
       - name: Install project dependencies
@@ -57,17 +58,17 @@ jobs:
       - name: Build Heimdall
         run: yarn build
         env:
-          NODE_ENV: production
+          NODE_ENV: production # want to install dev deps like cypress but test against the prod build of Heimdall
 
       - name: Cypress run
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           start: yarn start, yarn run cypress-test mock-json, yarn run cypress-test mock-openid
           wait-on: 'http://127.0.0.1:3000, http://127.0.0.1:3001'
 
       - name: Upload test screenshots and videos
         if: failure()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-recording
           path: |

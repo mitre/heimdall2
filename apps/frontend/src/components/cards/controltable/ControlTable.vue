@@ -108,7 +108,7 @@
             text="Controls Viewed"
             sort="disabled"
             :viewed-header="true"
-            :number-of-viewed-controls="viewedControlIds.length"
+            :number-of-viewed-controls="numOfViewed"
             :number-of-all-controls="raw_items.length"
           />
         </template>
@@ -154,7 +154,7 @@ import {HeightsModule} from '@/store/heights';
 import {getControlRunTime} from '@/utilities/delta_util';
 import {control_unique_key} from '@/utilities/format_util';
 import {ContextualizedControl} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Ref} from 'vue-property-decorator';
@@ -206,6 +206,12 @@ export default class ControlTable extends Vue {
   // Used for viewed/unviewed controls.
   viewedControlIds: string[] = [];
   displayUnviewedControls = true;
+
+  get numOfViewed() {
+    return this.raw_items.filter((elem) =>
+      this.viewedControlIds.some((id) => elem.control.data.id === id)
+    ).length;
+  }
 
   toggleControlViewed(control: ContextualizedControl) {
     const alreadyViewed = this.viewedControlIds.indexOf(control.data.id);

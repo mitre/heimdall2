@@ -1,5 +1,5 @@
 import {ArgumentsHost, Catch, ExceptionFilter} from '@nestjs/common';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {ConfigService} from '../config/config.service';
 
 @Catch(Error)

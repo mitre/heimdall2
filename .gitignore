@@ -29,7 +29,6 @@ test/videos
 *.launch
 .settings/
 *.sublime-workspace
-.nvmrc
 .editorconfig
 
 # Editor - Vim
@@ -56,10 +55,8 @@ manifest.yml
 nginx/certs/ssl_certificate.crt
 nginx/certs/ssl_certificate_key.key
 
-# HTML Export Dependencies
-apps/frontend/public/static/export/bootstrap.min.css
-apps/frontend/public/static/export/bootstrap.min.js
-apps/frontend/public/static/export/jquery.min.js
+# Ignore certs
+certs/*.pem
 
 # Ignore yarn 2 new files
 .yarn/*

@@ -8,8 +8,8 @@
       :access-token.sync="accessToken"
       :secret-token.sync="secretToken"
       :region.sync="region"
-      @auth-basic="handle_basic"
-      @goto-mfa="handle_goto_mfa"
+      @auth-basic="handleBasic"
+      @goto-mfa="handleGotoMfa"
       @show-help="showHelp = true"
     />
 
@@ -20,8 +20,8 @@
     <AuthStepMFA
       :mfa-token.sync="mfaToken"
       :mfa-serial.sync="mfaSerial"
-      @auth-mfa="handle_proceed_mfa"
-      @exit-mfa="handle_cancel_mfa"
+      @auth-mfa="handleProceedMFA"
+      @exit-mfa="handleCancelMfa"
     />
 
     <v-stepper-step step="3"> Browse Bucket </v-stepper-step>
@@ -29,9 +29,9 @@
     <FileList
       :auth="assumedRole"
       :files="files"
-      @exit-list="handle_cancel_mfa"
-      @got-files="got_files"
-      @load-bucket="load_bucket"
+      @exit-list="handleExitList"
+      @got-files="gotFiles"
+      @load-bucket="loadBucket"
     />
     <v-overlay :opacity="50" absolute="absolute" :value="showHelp">
       <div class="text-center">
@@ -57,6 +57,9 @@
 </template>
 
 <script lang="ts">
+import {_Object, ListObjectsV2Command, S3Client} from '@aws-sdk/client-s3';
+import Vue from 'vue';
+import Component from 'vue-class-component';
 import AuthStepBasic from '@/components/global/upload_tabs/aws/AuthStepBasic.vue';
 import AuthStepMFA from '@/components/global/upload_tabs/aws/AuthStepMFA.vue';
 import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
@@ -65,15 +68,12 @@ import {SnackbarModule} from '@/store/snackbar';
 import {
   Auth,
   AUTH_DURATION,
-  get_session_token,
+  getSessionToken,
   MFAInfo,
-  transcribe_error
+  transcribeError
 } from '@/utilities/aws_util';
 import {LocalStorageVal} from '@/utilities/helper_util';
-import S3 from 'aws-sdk/clients/s3';
-import {AWSError} from 'aws-sdk/lib/error';
-import Vue from 'vue';
-import Component from 'vue-class-component';
+import {requireFieldRule} from '@/utilities/upload_util';
 
 /** The cached session info */
 const localSessionInformation = new LocalStorageVal<Auth | null>(
@@ -92,9 +92,8 @@ const localSessionInformation = new LocalStorageVal<Auth | null>(
   }
 })
 export default class S3Reader extends Vue {
-  /** Form required field rules. Maybe eventually expand to other stuff */
-  reqRule = (v: string | null | undefined) =>
-    (v || '').trim().length > 0 || 'Field is Required';
+  // Form required field rule
+  reqRule = requireFieldRule;
 
   /** Passed from step 1 to step 2 (MFA) if necessary */
   /** State of all globally relevant fields */
@@ -112,18 +111,18 @@ export default class S3Reader extends Vue {
   step = 1;
 
   /** Currently loaded file list from bucket */
-  files: S3.Object[] = [];
+  files: _Object[] = [];
 
   /**
    * Handle a basic login.
    * Gets a session token
    */
-  handle_basic() {
+  handleBasic() {
     // Attempt to assume role based on if we've determined 2fa necessary
-    get_session_token(
+    getSessionToken(
       this.accessToken,
       this.secretToken,
-      this.region,
+      this.region || 'us-east-1',
       AUTH_DURATION
     ).then(
       // Success of get session token - now need to determine if MFA necessary
@@ -134,16 +133,21 @@ export default class S3Reader extends Vue {
 
       // Failure of initial get session token: want to set error normally
       (failure) => {
-        this.handle_error(failure);
+        this.handleError(failure);
       }
     );
   }
 
   /** If the user tries to login by going to MFA, first check that the account is valid */
-  handle_goto_mfa() {
+  handleGotoMfa() {
     // Attempt to assume role based on if we've determined 2fa necessary
     // Don't need the duration to be very long
-    get_session_token(this.accessToken, this.secretToken, this.region, 10).then(
+    getSessionToken(
+      this.accessToken,
+      this.secretToken,
+      this.region || 'us-east-1',
+      10
+    ).then(
       // Success of get session token - now need to determine if MFA necessary
       () => {
         this.step = 2;
@@ -151,18 +155,18 @@ export default class S3Reader extends Vue {
 
       // Failure of initial get session token: want to set error normally
       (failure) => {
-        this.handle_error(failure);
+        this.handleError(failure);
       }
     );
   }
 
-  handle_cancel_mfa() {
+  handleCancelMfa() {
     this.step = 1;
     this.mfaToken = '';
     this.assumedRole = null; // Just in case
   }
 
-  handle_exit_list() {
+  handleExitList() {
     this.step = 1;
     this.mfaToken = '';
     this.assumedRole = null;
@@ -172,7 +176,7 @@ export default class S3Reader extends Vue {
   /** Handle an MFA login.
    * Determine whether further action is necessary
    */
-  handle_proceed_mfa() {
+  handleProceedMFA() {
     // Build our mfa params
     const mfa: MFAInfo = {
       SerialNumber: this.mfaSerial || null,
@@ -180,10 +184,10 @@ export default class S3Reader extends Vue {
     };
 
     // Attempt to assume role based on if we've determined 2fa necessary
-    get_session_token(
+    getSessionToken(
       this.accessToken,
       this.secretToken,
-      this.region,
+      this.region || 'us-east-1',
       AUTH_DURATION,
       mfa
     ).then(
@@ -193,7 +197,7 @@ export default class S3Reader extends Vue {
         this.step = 3;
       },
       (failure) => {
-        this.handle_error(failure);
+        this.handleError(failure);
       }
     );
   }
@@ -201,7 +205,7 @@ export default class S3Reader extends Vue {
   /** On mount, try to look up stored auth info */
   mounted() {
     // Load our session, if there is one
-    this.assumedRole = localSessionInformation.get_default(null);
+    this.assumedRole = localSessionInformation.getDefault(null);
     if (this.assumedRole) {
       this.step = 3;
     }
@@ -210,39 +214,41 @@ export default class S3Reader extends Vue {
   /** Attempt to load.
    * Basically just wraps fetch_files with error handling
    */
-  async load_bucket(name: string) {
-    const s3 = new S3({
-      ...this.assumedRole!.creds,
-      region: this.assumedRole!.region || 'us-east-1'
+  async loadBucket(name: string) {
+    const s3 = new S3Client({
+      credentials: this.assumedRole?.creds,
+      region: this.assumedRole?.region || 'us-east-1'
     });
-    await s3
-      .listObjectsV2({
-        Bucket: name,
-        MaxKeys: 100
-      })
-      .promise()
-      .then((success) => {
-        this.files = success.Contents || [];
-      })
-      .catch((failure) => this.handle_error(failure));
+    try {
+      const response = await s3.send(
+        new ListObjectsV2Command({
+          Bucket: name,
+          MaxKeys: 100
+        })
+      );
+      this.files = response.Contents || [];
+    } catch (failure) {
+      this.handleError(failure);
+    }
   }
 
   /** Save the current credentials to local storage */
-  save_creds() {
+  // CURRENTLY UNUSED CODE - no logout button yet to reset it
+  saveCreds() {
     localSessionInformation.set(this.assumedRole);
   }
 
   /** Callback to handle an AWS error.
    * Sets shown error.
    */
-  handle_error(error: AWSError): void {
-    const formattedError = transcribe_error(error);
+  handleError(error: {name: string; message: string}): void {
+    const formattedError = transcribeError(error);
     // Toast whatever error we got
     SnackbarModule.failure(formattedError);
   }
 
   /** Callback on got files */
-  got_files(files: Array<FileID>) {
+  gotFiles(files: Array<FileID>) {
     this.$emit('got-files', files);
   }
 }

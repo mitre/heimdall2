@@ -14,7 +14,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Don't accidentally commit sensitive data
+# Do not accidentally commit sensitive data
 # You can still commit these manually
 tests/hdf_data/raw_data/
 tests/hdf_data/inspec_tools_info
@@ -27,3 +27,8 @@ tests/hdf_data/inspec_tools_info
 *.njsproj
 *.sln
 *.sw?
+
+# HTML Export Stylesheet/Dependency
+public/static/export/template.html
+public/static/export/style.css
+public/static/export/tw-elements.min.js

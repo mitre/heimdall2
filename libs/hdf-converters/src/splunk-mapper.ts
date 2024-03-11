@@ -1,10 +1,15 @@
-import splunkjs, {Job} from '@mitre/splunk-sdk-no-env';
-import ProxyHTTP from '@mitre/splunk-sdk-no-env/lib/platform/client/jquery_http';
+import axios, {AxiosInstance, AxiosResponse} from 'axios';
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {Logger} from 'winston';
-import {SplunkConfig} from './converters-from-hdf/splunk/reverse-splunk-mapper';
+import {SplunkConfig} from '../types/splunk-config-types';
+import {SplunkReport} from '../types/splunk-report-types';
 import {createWinstonLogger} from './utils/global';
+import {
+  checkSplunkCredentials,
+  generateHostname,
+  handleSplunkErrorResponse
+} from './utils/splunk-tools';
 
 export type Hash<T> = {[key: string]: T};
 
@@ -30,7 +35,7 @@ const MAPPER_NAME = 'Splunk2HDF';
 let logger = createWinstonLogger('Splunk2HDF');
 
 // Groups items by using the provided key function
-export function group_by<T>(
+export function groupBy<T>(
   items: Array<T>,
   keyGetter: (v: T) => string
 ): Hash<Array<T>> {
@@ -53,10 +58,7 @@ export function group_by<T>(
 }
 
 // Maps a hash to a new hash, with the same keys but each value replaced with a new (mapped) value
-export function map_hash<T, G>(
-  old: Hash<T>,
-  mapFunction: (v: T) => G
-): Hash<G> {
+export function mapHash<T, G>(old: Hash<T>, mapFunction: (v: T) => G): Hash<G> {
   const result: Hash<G> = {};
   for (const key in old) {
     result[key] = mapFunction(old[key]);
@@ -64,13 +66,13 @@ export function map_hash<T, G>(
   return result;
 }
 
-export function consolidate_payloads(
-  payloads: GenericPayloadWithMetaData[]
+export function consolidatePayloads(
+  payloads: SplunkReport[]
 ): ExecJSON.Execution[] {
   // Group by exec id
-  const grouped = group_by(payloads, (pl) => pl.meta.guid);
+  const grouped = groupBy(payloads, (pl) => pl.meta.guid);
 
-  const built = map_hash(grouped, consolidateFilePayloads);
+  const built = mapHash(grouped, consolidateFilePayloads);
   return Object.values(built);
 }
 
@@ -83,9 +85,9 @@ export function replaceKeyValueDescriptions(
   return controls.map((control) => {
     if (control.descriptions && !Array.isArray(control.descriptions)) {
       const extractedDescriptions: ExecJSON.ControlDescription[] = [];
-      Object.entries(control.descriptions).forEach(([key, value]) => {
+      for (const [key, value] of Object.entries(control.descriptions)) {
         extractedDescriptions.push({label: key, data: value as string});
-      });
+      }
       control.descriptions = extractedDescriptions;
     }
     return control;
@@ -93,11 +95,11 @@ export function replaceKeyValueDescriptions(
 }
 
 function consolidateFilePayloads(
-  filePayloads: GenericPayloadWithMetaData[]
+  filePayloads: SplunkReport[]
 ): ExecJSON.Execution {
   // In the end we wish to produce a single evaluation EventPayload which in fact contains all data for the guid
   // Group by subtype
-  const subtypes = group_by(filePayloads, (event) => event.meta.subtype);
+  const subtypes = groupBy(filePayloads, (event) => event.meta.subtype);
   const execEvents = (subtypes['header'] ||
     []) as Partial<ExecJSON.Execution>[];
   const profileEvents = (subtypes['profile'] ||
@@ -123,7 +125,7 @@ function consolidateFilePayloads(
   exec.profiles?.push(...profileEvents);
 
   // Group controls, and then put them into the profiles
-  const shaGroupedControls = group_by(
+  const shaGroupedControls = groupBy(
     controlEvents,
     (ctrl) => ctrl.meta.profile_sha256
   );
@@ -151,46 +153,6 @@ function consolidateFilePayloads(
   return exec as unknown as ExecJSON.Execution;
 }
 
-export async function checkSplunkCredentials(
-  config: SplunkConfig,
-  webCompatibility: boolean
-): Promise<boolean> {
-  let service: splunkjs.Service;
-  if (webCompatibility) {
-    service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
-  } else {
-    service = new splunkjs.Service(config);
-  }
-  return new Promise((resolve, reject) => {
-    setTimeout(
-      () =>
-        reject(
-          new Error(
-            'Login timed out. Please check your CORS configuration or validate you have inputted the correct domain'
-          )
-        ),
-      5000
-    );
-    service.login((error, result) => {
-      try {
-        if (error && error.status === 401) {
-          if (error.status === 401) {
-            reject('Incorrect Username or Password');
-          } else if ('data' in error) {
-            reject(_.get(error, 'data.messages[0].text'));
-          }
-          reject(error);
-        } else if (result) {
-          resolve(result);
-        }
-        reject(new Error('Failed to Login'));
-      } catch (e) {
-        reject(e);
-      }
-    });
-  });
-}
-
 function unixTimeToDate(unixTime: string): Date {
   // Splunk only currently returns ints but this could be a decimal for more precision
   return new Date(parseFloat(unixTime) * 1000);
@@ -198,58 +160,140 @@ function unixTimeToDate(unixTime: string): Date {
 
 export class SplunkMapper {
   config: SplunkConfig;
-  service: splunkjs.Service;
-  webCompatibility: boolean;
+  axiosInstance: AxiosInstance;
+  hostname: string;
 
   constructor(
     config: SplunkConfig,
-    webCompatibility = false,
     logService?: Logger,
     loggingLevel?: string
   ) {
     this.config = config;
-    this.webCompatibility = webCompatibility;
+    this.axiosInstance = axios.create({params: {output_mode: 'json'}});
+    this.hostname = generateHostname(config);
     if (logService) {
       logger = logService;
     } else {
       logger = createWinstonLogger(MAPPER_NAME, loggingLevel || 'debug');
     }
-    logger.debug(`Initializing Splunk Client`);
-    if (this.webCompatibility) {
-      this.service = new splunkjs.Service(new ProxyHTTP.JQueryHttp(''), config);
-    } else {
-      this.service = new splunkjs.Service(config);
-    }
     logger.debug(`Initialized ${this.constructor.name} successfully`);
   }
 
-  async createJob(query: string): Promise<Job> {
+  async createJob(query: string): Promise<string> {
     logger.debug(`Creating job for query: ${query}`);
-    return new Promise((resolve, reject) => {
-      this.service
-        .jobs()
-        .create(
-          query,
-          {exec_mode: 'blocking'},
-          (error: any, createdJob: any) => {
-            if (error) {
-              reject(error);
-            } else {
-              resolve(createdJob);
-            }
-          }
+    // Post to {host}/services/search/jobs endpoint to queue search job for given query
+    let jobSID: AxiosResponse;
+    try {
+      jobSID = await this.axiosInstance.post(
+        `${this.hostname}/services/search/jobs`,
+        `exec_mode=blocking&search=${query}`
+      );
+    } catch (error) {
+      const errorCode = handleSplunkErrorResponse(error);
+      throw new Error(`Failed to create search job - ${errorCode}`);
+    }
+
+    // Return unique search ID (SID) assigned to that search job for future reference
+    if (_.has(jobSID, ['data', 'sid'])) {
+      return jobSID.data.sid;
+    } else {
+      throw new Error(
+        'Failed to create search job - Malformed search job creation response received'
+      );
+    }
+  }
+
+  async trackJob(job: string): Promise<void> {
+    // All documented potential error states for a search job
+    // Per https://docs.splunk.com/Documentation/Splunk/latest/RESTTUT/RESTsearches#Tips_on_accessing_searches
+    const badState = new Set([
+      'PAUSE',
+      'INTERNAL_CANCEL',
+      'USER_CANCEL',
+      'BAD_INPUT_CANCEL',
+      'QUIT',
+      'FAILED'
+    ]);
+    // Arbitrary time values for waiting (in ms), change as necessary
+    // Time to wait until killing search job
+    const searchJobTimeout = 120000;
+    // Time interval between checking on status of search job
+    const searchJobPing = 50;
+    let queryStatus: AxiosResponse;
+    let continuePing = true;
+
+    // Kill query after 2 minute of waiting
+    // Arbitrary time used, change as needed
+    const queryTimer = setTimeout(() => {
+      continuePing = false;
+      clearTimeout(queryTimer);
+      throw new Error('Search job timed out - Unable to retrieve query');
+    }, searchJobTimeout);
+
+    // Ping Splunk instance every 50 ms on status of search job
+    const awaitJob = setInterval(async () => {
+      try {
+        queryStatus = await this.axiosInstance.get(
+          `${this.hostname}/services/search/jobs/${job}`
         );
-    });
+      } catch (error) {
+        clearTimeout(queryTimer);
+        clearInterval(awaitJob);
+        throw new Error(
+          `Failed search job - ${handleSplunkErrorResponse(error)}`
+        );
+      }
+
+      // Check if response schema is malformed
+      if (_.has(queryStatus, 'data.entry[0].content')) {
+        if (queryStatus.data.entry.length !== 1) {
+          clearTimeout(queryTimer);
+          clearInterval(awaitJob);
+          throw new Error(
+            `Failed search job - Detected malformed entry field length ${queryStatus.data.entry.length}`
+          );
+        }
+
+        // If search job is complete, kill interval loop and exit
+        if (
+          queryStatus.data.entry[0].content.dispatchState === 'DONE' &&
+          queryStatus.data.entry[0].content.isDone
+        ) {
+          clearTimeout(queryTimer);
+          clearInterval(awaitJob);
+        } else if (
+          badState.has(queryStatus.data.entry[0].content.dispatchState)
+        ) {
+          // If search job returns a bad state result, kill interval loop and fail the query
+          clearTimeout(queryTimer);
+          clearInterval(awaitJob);
+          throw new Error(
+            `Failed search job - Detected dispatch state ${queryStatus.data.entry[0].content.dispatchState}`
+          );
+        }
+      } else {
+        clearTimeout(queryTimer);
+        clearInterval(awaitJob);
+        throw new Error(
+          'Failed search job - Malformed search job response received'
+        );
+      }
+
+      // Kill loop if search job times out
+      if (!continuePing) {
+        clearInterval(awaitJob);
+      }
+    }, searchJobPing);
   }
 
   parseSplunkResponse(
     query: string,
     results: {fields: string[]; rows: string[]}
-  ) {
+  ): SplunkReport[] {
     logger.info(`Got results for query: ${query}`);
 
     // Our data parsed as Key/Value pairs
-    const objects: Record<string, unknown>[] = [];
+    const objects: SplunkReport[] = [];
     // Find _raw field, this contains our data
     let rawDataIndex = results?.fields.findIndex(
       (field) => field.toLowerCase() === '_raw'
@@ -274,7 +318,7 @@ export class SplunkMapper {
 
     logger.debug(`Got field _indextime at index ${indexTimeIndex}`);
     logger.verbose(`Parsing data returned by Splunk and appending timestamps`);
-    results.rows.forEach((value) => {
+    for (const value of results.rows) {
       let object;
       try {
         object = JSON.parse(value[rawDataIndex]);
@@ -297,51 +341,67 @@ export class SplunkMapper {
       }
 
       objects.push(object);
-    });
+    }
     logger.debug('Successfully parsed and added timestamps');
     return objects;
   }
 
-  async queryData(query: string): Promise<any[]> {
+  async queryData(query: string): Promise<SplunkReport[]> {
+    let queryJob: AxiosResponse;
+
+    // Request session key for Axios instance
+    const authToken = await checkSplunkCredentials(this.config);
+    this.axiosInstance.defaults.headers.common['Authorization'] =
+      `Bearer ${authToken}`;
+
+    // Create new search job from given query
     const job = await this.createJob(query);
-    return new Promise((resolve, reject) => {
-      job.track(
-        {},
+
+    // Track status of search job
+    await this.trackJob(job);
+
+    // Ping Splunk for search job results
+    try {
+      // returnCount specifies the number of found results to return, if set to 0 returns all
+      // Per https://docs.splunk.com/Documentation/Splunk/9.0.5/RESTREF/RESTsearch#search.2Fv2.2Fjobs.2F.7Bsearch_id.7D.2Fresults
+      const returnCount = 0;
+
+      queryJob = await this.axiosInstance.get(
+        `${this.hostname}/services/search/v2/jobs/${job}/results`,
         {
-          done: () => {
-            logger.debug(`Getting results for query: ${query}`);
-            job.results({count: 100000}, (err, results) => {
-              if (err) {
-                reject(err);
-              } else {
-                try {
-                  resolve(this.parseSplunkResponse(query, results));
-                } catch (e) {
-                  reject(e);
-                }
-              }
-            });
-          }
+          params: {count: returnCount, output_mode: 'json_rows'}
         }
       );
-    });
+    } catch (error) {
+      throw new Error(
+        `Failed search job - ${handleSplunkErrorResponse(error)}`
+      );
+    }
+
+    // Return search job results
+    if (_.has(queryJob, ['data'])) {
+      return this.parseSplunkResponse(query, queryJob.data);
+    } else {
+      throw new Error(
+        'Failed search job - Malformed search job results response received'
+      );
+    }
   }
 
   async toHdf(guid: string): Promise<ExecJSON.Execution> {
-    logger.info(`Starting conversion of guid ${guid}`);
-    return checkSplunkCredentials(this.config, this.webCompatibility)
-      .then(async () => {
-        logger.info(`Credentials valid, querying data for ${guid}`);
-        const executionData = await this.queryData(
-          `search index="*" meta.guid="${guid}"`
-        );
-        logger.info(
-          `Data received, consolidating payloads for ${executionData.length} items`
-        );
-        return consolidate_payloads(executionData)[0];
-      })
-      .catch((error) => {
-        throw error;
-      });
+    logger.info(`Starting conversion of GUID ${guid}`);
+    // Preliminary check of credentials
+    // Not used for later logins
+    await checkSplunkCredentials(this.config);
+    logger.info(`Credentials valid, querying data for ${guid}`);
+
+    // Start search job for query
+    const executionData = await this.queryData(
+      `search index="*" meta.guid="${guid}"`
+    );
+    logger.info(
+      `Data received, consolidating payloads for ${executionData.length} items`
+    );
+    return consolidatePayloads(executionData)[0];
   }
 }

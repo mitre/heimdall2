@@ -1,15 +1,30 @@
 <template>
   <span>
-    <div
-      class="d-flex flex-row-reverse"
-      style="cursor: pointer"
-      @click="logout"
-    >
-      <v-btn icon @click="updateSearch">
-        <v-icon>mdi-refresh</v-icon>
-      </v-btn>
-      <span class="pt-2 pr-4">Sign Out</span>
-      <v-icon color="red" class="pr-2">mdi-logout</v-icon>
+    <div class="d-flex justify-space-between">
+      <v-form>
+        <v-text-field
+          v-model="index"
+          label="Index"
+          for="index_field"
+          :rules="[reqRule]"
+          data-cy="splunkindex"
+        />
+      </v-form>
+      <div class="d-flex">
+        <v-btn class="ml-5" icon style="cursor: pointer" @click="logout">
+          <v-icon b-tooltip.hover title="Return to login page" color="red"
+            >mdi-logout</v-icon
+          >
+        </v-btn>
+        <v-btn icon style="cursor: pointer" @click="updateSearch">
+          <v-icon
+            b-tooltip.hover
+            title="Request content from the server"
+            color="blue"
+            >mdi-refresh</v-icon
+          >
+        </v-btn>
+      </div>
     </div>
 
     <div class="d-flex flex-column">
@@ -22,7 +37,7 @@
         show-select
       >
         <template #[`item.actions`]="{item}">
-          <v-icon @click="load_event(item)"> mdi-plus-circle </v-icon>
+          <v-icon @click="loadEvent(item)"> mdi-plus-circle </v-icon>
         </template>
         <template #no-data>
           No data. Try relaxing your search conditions, or expanding the date
@@ -40,13 +55,14 @@
 <script lang="ts">
 import {InspecIntakeModule} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {FileMetaData, SplunkConfig} from '@mitre/hdf-converters';
-import {SplunkReport} from '@mitre/hdf-converters/src/converters-from-hdf/splunk/splunk-report-types';
+import {FileMetaData} from '@mitre/hdf-converters';
 import {SplunkMapper} from '@mitre/hdf-converters/src/splunk-mapper';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
+import {SplunkConfig} from '@mitre/hdf-converters/types/splunk-config-types';
+import {requireFieldRule} from '@/utilities/upload_util';
 
 @Component({})
 export default class FileList extends Vue {
@@ -76,6 +92,11 @@ export default class FileList extends Vue {
     }
   ];
 
+  index = '';
+
+  // Form required field rules
+  reqRule = requireFieldRule;
+
   @Watch('search')
   async onUpdateSearch() {
     // On first load we update the search field which triggers this function, instead of waiting this time we can just search right away
@@ -93,20 +114,30 @@ export default class FileList extends Vue {
 
   async updateSearch() {
     this.loading = true;
-    this.splunkConverter = new SplunkMapper(this.splunkConfig, true);
+    // Check if user has inputted an index
+    if (this.index === '') {
+      this.loading = false;
+      SnackbarModule.failure('Failed to login - A valid index is required');
+      return;
+    }
+    // Update index for search job if user changes targeted index; otherwise retains existing index
+    this.splunkConfig.index = this.index;
+    this.search = `search index="${this.index}" meta.subtype="header"`;
+    this.splunkConverter = new SplunkMapper(this.splunkConfig);
     const results = await this.splunkConverter.queryData(this.search);
     this.executions = [];
-    results.forEach((result: SplunkReport) => {
+    for (const result of results) {
       // Only get header objects
       if (_.get(result, 'meta.subtype').toLowerCase() === 'header') {
         this.executions.push(result.meta);
       }
-    });
+    }
     this.loading = false;
   }
 
   async mounted() {
     this.search = `search index="${this.splunkConfig.index}" meta.subtype="header"`;
+    this.index = this.splunkConfig.index;
   }
 
   async loadResults() {
@@ -143,3 +174,10 @@ export default class FileList extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.card-outter {
+  position: absolute;
+  bottom: 0;
+}
+</style>

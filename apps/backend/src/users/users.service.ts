@@ -11,6 +11,7 @@ import {FindOptions} from 'sequelize/types';
 import {v4} from 'uuid';
 import {AuthnService} from '../authn/authn.service';
 import {Action} from '../casl/casl-ability.factory';
+import {GroupsService} from '../groups/groups.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {DeleteUserDto} from './dto/delete-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
@@ -20,7 +21,8 @@ import {User} from './user.model';
 export class UsersService {
   constructor(
     @InjectModel(User)
-    private readonly userModel: typeof User
+    private readonly userModel: typeof User,
+    private readonly groupsService: GroupsService
   ) {}
 
   async adminFindAllUsers(): Promise<User[]> {
@@ -116,22 +118,18 @@ export class UsersService {
     deleteUserDto: DeleteUserDto,
     abac: Ability
   ): Promise<User> {
-    if (abac.cannot(Action.DeleteNoPassword, userToDelete)) {
-      try {
-        if (
-          !(await compare(
-            deleteUserDto.password || '',
-            userToDelete.encryptedPassword
-          ))
-        ) {
-          throw new ForbiddenException();
-        }
-      } catch {
-        throw new ForbiddenException(
-          'Password was incorrect, could not delete account'
-        );
-      }
+    if (
+      abac.cannot(Action.DeleteNoPassword, userToDelete) &&
+      !(await compare(
+        deleteUserDto.password || '',
+        userToDelete.encryptedPassword
+      ))
+    ) {
+      throw new ForbiddenException(
+        'Password was incorrect, could not delete account'
+      );
     }
+
     const adminCount = await this.userModel.count({where: {role: 'admin'}});
     // Do not allow the administrator to destroy the only
     // administrator account
@@ -140,6 +138,14 @@ export class UsersService {
         'Cannot destroy only administrator account, please promote another user to administrator first'
       );
     }
+    // Clean up groups owned by user
+    await Promise.all(
+      (await this.groupsService.findAll()).map(async (group) => {
+        if (group.users.some((user) => user.id === userToDelete.id)) {
+          await this.groupsService.ensureGroupHasOwner(group, userToDelete);
+        }
+      })
+    );
     await userToDelete.destroy();
     return userToDelete;
   }

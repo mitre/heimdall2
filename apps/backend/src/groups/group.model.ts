@@ -35,6 +35,11 @@ export class Group extends Model {
   @Column(DataType.BOOLEAN)
   public!: boolean;
 
+  @AllowNull(false)
+  @Default('')
+  @Column(DataType.TEXT)
+  desc!: string;
+
   @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)

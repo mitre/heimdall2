@@ -37,7 +37,7 @@
 import Cell, {XYScale} from '@/components/cards/treemap/Cell.vue';
 import {ColorHackModule} from '@/store/color_hack';
 import {Filter, FilteredDataModule, TreeMapState} from '@/store/data_filters';
-import {compare_arrays} from '@/utilities/helper_util';
+import {compareArrays} from '@/utilities/helper_util';
 import {
   build_nist_tree_map,
   is_leaf,
@@ -88,7 +88,7 @@ export default class Treemap extends Vue {
           if (is_parent(child.data)) {
             const ssA = child.data.nist_control.subSpecifiers;
             return (
-              compare_arrays(ssA, nextSpecifiers, (a, b) =>
+              compareArrays(ssA, nextSpecifiers, (a, b) =>
                 a.localeCompare(b)
               ) === 0
             );

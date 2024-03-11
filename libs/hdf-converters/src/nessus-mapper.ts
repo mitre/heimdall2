@@ -1,5 +1,5 @@
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -23,7 +23,12 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['iii', 0.3],
   ['0', 0.0]
 ]);
-const COMPLIANCE_PATH = 'cm:compliance-reference';
+const COMPLIANCE_PATH = 'compliance-reference';
+const COMPLIANCE_CHECK_NAME = 'compliance-check-name';
+const COMPLIANCE_INFO = 'compliance-info';
+const COMPLIANCE_SOLUTION = 'compliance-solution';
+const COMPLIANCE_RESULT = 'compliance-result';
+const COMPLIANCE_ACTUAL_VALUE = 'compliance-actual-value';
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
 const CCI_NIST_MAPPING = new CciNistMapping();
@@ -50,15 +55,15 @@ function getId(item: unknown): string {
   }
 }
 function getTitle(item: unknown): string {
-  if (_.has(item, 'cm:compliance-check-name')) {
-    return _.get(item, 'cm:compliance-check-name') as unknown as string;
+  if (_.has(item, COMPLIANCE_CHECK_NAME)) {
+    return _.get(item, COMPLIANCE_CHECK_NAME) as unknown as string;
   } else {
     return _.get(item, 'pluginName') as unknown as string;
   }
 }
 function getDesc(item: unknown): string {
-  if (_.has(item, 'cm:compliance-info')) {
-    return parseHtml(_.get(item, 'cm:compliance-info'));
+  if (_.has(item, COMPLIANCE_INFO)) {
+    return parseHtml(_.get(item, COMPLIANCE_INFO));
   } else {
     return parseHtml(formatDesc(item));
   }
@@ -97,8 +102,8 @@ function getImpact(item: unknown): number {
 }
 
 function getCheck(item: unknown): string {
-  if (_.has(item, 'cm:compliance-solution')) {
-    return parseHtml(_.get(item, 'cm:compliance-solution'));
+  if (_.has(item, COMPLIANCE_SOLUTION)) {
+    return parseHtml(_.get(item, COMPLIANCE_SOLUTION));
   } else {
     return '';
   }
@@ -147,7 +152,7 @@ function getStig(item: unknown): string {
   }
 }
 function getStatus(item: unknown): ExecJSON.ControlResultStatus {
-  const result: string = _.get(item, 'cm:compliance-result', '');
+  const result: string = _.get(item, COMPLIANCE_RESULT, '');
   switch (result) {
     case 'PASSED':
       return ExecJSON.ControlResultStatus.Passed;
@@ -328,7 +333,7 @@ export class NessusMapper extends BaseConverter {
                 status: {transformer: getStatus},
                 code_desc: {transformer: formatCodeDesc},
                 message: {
-                  path: ['plugin_output', 'cm:compliance-actual-value'],
+                  path: ['plugin_output', COMPLIANCE_ACTUAL_VALUE],
                   transformer: (value: unknown) => {
                     if (value === null || value === undefined) {
                       return value;

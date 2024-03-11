@@ -1,4 +1,5 @@
-var webpack = require('webpack');
+const webpack = require('webpack');
+const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
 // Lookup constants
 const fs = require('fs');
@@ -12,23 +13,14 @@ const changelog = parsed.changelog || '';
 const branch = parsed.branch || '';
 const issues = parsed.issues || '';
 
-// This grabs the js/css to allow for HTML export
-const files = {
-  [require.resolve('bootstrap/dist/css/bootstrap.min.css')]:
-    'public/static/export/bootstrap.min.css',
-  [require.resolve('bootstrap/dist/js/bootstrap.min.js')]:
-    'public/static/export/bootstrap.min.js',
-  [require.resolve('jquery/dist/jquery.min.js')]:
-    'public/static/export/jquery.min.js'
-};
-
-for (const file in files) {
-  fs.copyFile(file, files[file], (err) => {
-    if (err) {
-      throw err;
-    }
-  });
-}
+// tsconfig specification
+const path = require('path');
+const TSCONFIG_PATH = path.resolve(
+  __dirname,
+  process.env.NODE_ENV === 'production'
+    ? './tsconfig.build.json'
+    : './tsconfig.json'
+);
 
 module.exports = {
   lintOnSave: 'warning',
@@ -36,6 +28,7 @@ module.exports = {
   devServer: {
     // JWT_SECRET is a required secret for the backend. If it is sourced
     // then it is safe to assume the app is in server mode in development.
+    //
     // PORT is not required so use the default backend port value
     // is used here if JWT_SECRET is applied but PORT is undefined
     proxy: process.env.JWT_SECRET
@@ -44,6 +37,12 @@ module.exports = {
   },
   outputDir: '../../dist/frontend',
   configureWebpack: {
+    resolve: {
+      fallback: {
+        fs: false,
+        http2: false
+      }
+    },
     module: {
       rules: [
         {
@@ -61,15 +60,26 @@ module.exports = {
     devtool: 'source-map',
     plugins: [
       new webpack.DefinePlugin({
-        'process.env': {
-          PACKAGE_VERSION: `"${version}"`,
-          DESCRIPTION: `"${description}"`,
-          REPOSITORY: `"${repository}"`,
-          LICENSE: `"${license}"`,
-          CHANGELOG: `"${changelog}"`,
-          BRANCH: `"${branch}"`,
-          ISSUES: `"${issues}"`
-        }
+        'process.env.PACKAGE_VERSION': `"${version}"`,
+        'process.env.DESCRIPTION': `"${description}"`,
+        'process.env.REPOSITORY': `"${repository}"`,
+        'process.env.LICENSE': `"${license}"`,
+        'process.env.CHANGELOG': `"${changelog}"`,
+        'process.env.BRANCH': `"${branch}"`,
+        'process.env.ISSUES': `"${issues}"`
+      }),
+      new NodePolyfillPlugin({
+        includeAliases: [
+          'crypto',
+          'path',
+          'http',
+          'https',
+          'os',
+          'zlib',
+          'process',
+          'Buffer',
+          'stream'
+        ]
       })
     ]
   },
@@ -82,5 +92,16 @@ module.exports = {
       .use('vue-svg-inline-loader')
       .loader('vue-svg-inline-loader')
       .options();
+
+    // specify custom tsconfig.json file
+    // https://github.com/vuejs/vue-cli/issues/2421
+    config.module
+      .rule('ts')
+      .use('ts-loader')
+      .merge({options: {configFile: TSCONFIG_PATH}});
+    config.plugin('fork-ts-checker').tap((args) => {
+      args[0].typescript.configFile = TSCONFIG_PATH;
+      return args;
+    });
   }
 };

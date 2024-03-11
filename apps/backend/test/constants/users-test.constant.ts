@@ -1,3 +1,5 @@
+import {MongoAbility} from '@casl/ability';
+import {FindOptions} from 'sequelize';
 import {CreateUserDto} from '../../src/users/dto/create-user.dto';
 import {DeleteUserDto} from '../../src/users/dto/delete-user.dto';
 import {UpdateUserDto} from '../../src/users/dto/update-user.dto';
@@ -657,5 +659,54 @@ export const USER_DTO_WITHOUT_ORGANIZATION = new UserDto(
 export const USER_DTO_WITHOUT_TITLE = new UserDto(TEST_USER_WITHOUT_TITLE);
 
 export const USER_DTO_ARRAY: UserDto[] = [USER_ONE_DTO, USER_TWO_DTO];
+
+export const USERS_SERVICE_MOCK = {
+  async adminFindAllUsers(): Promise<User[]> {
+    return [];
+  },
+  async findAllUsers(): Promise<User[]> {
+    return [];
+  },
+  async count(): Promise<number> {
+    return 1;
+  },
+  async findById(_id: string): Promise<User> {
+    return new User();
+  },
+  async findByEmail(_email: string): Promise<User> {
+    return new User();
+  },
+  async create(_createUserDto: CreateUserDto): Promise<User> {
+    return new User();
+  },
+  async update(
+    _userToUpdate: User,
+    _updateUserDto: UpdateUserDto,
+    _abac: MongoAbility
+  ): Promise<User> {
+    return new User();
+  },
+  async updateLoginMetadata(_user: User): Promise<void> {
+    return;
+  },
+  async updateUserSecret(_user: User): Promise<void> {
+    return;
+  },
+  async remove(
+    _userToDelete: User,
+    _deleteUserDto: DeleteUserDto,
+    _abac: MongoAbility
+  ): Promise<User> {
+    return new User();
+  },
+  async findByPkBang(
+    _identifier: string | number | Buffer | undefined
+  ): Promise<User> {
+    return new User();
+  },
+  async findOneBang(_options: FindOptions | undefined): Promise<User> {
+    return new User();
+  }
+};
 
 /* eslint-enable @typescript-eslint/ban-ts-comment */

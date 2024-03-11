@@ -54,6 +54,30 @@ describe('xccdf_mapper', () => {
     });
   });
   describe('OpenSCAP', () => {
+    it('ubuntu1804', () => {
+      const mapper = new XCCDFResultsMapper(
+        fs.readFileSync(
+          'sample_jsons/xccdf_results_mapper/sample_input_report/xccdf-results-openscap-ComplianceAsCode-ubuntu1804.xml',
+          {encoding: 'utf-8'}
+        )
+      );
+
+      // fs.writeFileSync(
+      //   'sample_jsons/xccdf_results_mapper/xccdf-openscap-ComplianceAsCode-ubuntu1804-hdf.json',
+      //   JSON.stringify(mapper.toHdf(), null, 2)
+      // );
+
+      expect(omitVersions(mapper.toHdf())).toEqual(
+        omitVersions(
+          JSON.parse(
+            fs.readFileSync(
+              'sample_jsons/xccdf_results_mapper/xccdf-openscap-ComplianceAsCode-ubuntu1804-hdf.json',
+              {encoding: 'utf-8'}
+            )
+          )
+        )
+      );
+    });
     it('rhel7', () => {
       const mapper = new XCCDFResultsMapper(
         fs.readFileSync(

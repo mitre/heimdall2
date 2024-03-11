@@ -1,7 +1,7 @@
 /** For helper functions that don't belong anywhere else */
 
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 
 /** Compares arrays a and b, returning a number indicating their lexicographic ordering
  * with the same output semantics.
@@ -10,7 +10,7 @@ import _ from 'lodash';
  * if a is lexicographically before b, return < 0
  * if a is lexicographically after  b, return > 1
  */
-export function compare_arrays<T>(
+export function compareArrays<T>(
   a: Array<T>,
   b: Array<T>,
   comparator: (a: T, b: T) => number
@@ -64,7 +64,7 @@ export class LocalStorageVal<T> {
   }
 
   /** Wraps get, providing the provided default if necessary */
-  get_default(_default: T): T {
+  getDefault(_default: T): T {
     const v = this.get();
     if (v === null) {
       return _default;
@@ -111,7 +111,7 @@ export function getDescription(
 export type Hash<T> = {[key: string]: T};
 
 /** Converts a simple, single level json dict into uri params */
-export function to_uri_params(params: Hash<string | number | boolean>) {
+export function toURIParams(params: Hash<string | number | boolean>) {
   const esc = encodeURIComponent;
   return Object.keys(params)
     .map((k) => `${esc(k)}=${esc(params[k])}`)
@@ -119,7 +119,7 @@ export function to_uri_params(params: Hash<string | number | boolean>) {
 }
 
 /** Generate a basic authentication string for http requests */
-export function basic_auth(username: string, password: string): string {
+export function basicAuth(username: string, password: string): string {
   return 'Basic ' + Buffer.from(`${username}:${password}`).toString('base64');
 }
 

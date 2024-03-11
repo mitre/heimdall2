@@ -1,5 +1,5 @@
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -76,7 +76,7 @@ function deduplicateId(input: unknown[]): ExecJSON.Control[] {
   const controlId = input.map((element) => {
     return _.get(element, 'id');
   });
-  const dupId = _(controlId)
+  const dupId = _.chain(controlId)
     .groupBy()
     .pickBy((value) => value.length > 1)
     .keys()

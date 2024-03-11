@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"  elementFormDefault="qualified" attributeFormDefault="unqualified" version="2.1">
+    <xs:annotation>
+	    <xs:documentation>The following is a description of the elements found in the DISA STIG Viewer Checklist (CKL) file.</xs:documentation>
+		<xs:appinfo>
+		    <schema>Checklist</schema>
+			<version>2.5</version>
+			<date>2021-11-05 12:00:00 PM</date>
+		</xs:appinfo>
+    </xs:annotation>
+<!-->******************************************************************************************************</!-->
+<!-->***********************************************CHECKLIST**********************************************</!-->
+<!-->******************************************************************************************************</!-->  
+  
+    <!-->CHECKLIST is the root element of a Checklist file, it holds all data that is used by a DISA STIG Viewer Checklist.</!-->
+    <xs:element name="CHECKLIST">
+            <xs:complexType>
+                    <xs:sequence>
+                            <xs:element ref="ASSET"/>
+                            <xs:element ref="STIGS"/>
+                    </xs:sequence>
+            </xs:complexType>
+    </xs:element>
+<!-->******************************************************************************************************</!-->
+<!-->***********************************************ASSET**************************************************</!-->
+<!-->******************************************************************************************************</!-->
+
+    <!-->ASSET holds Checklist metadata.</!-->
+    <xs:element name="ASSET">
+            <xs:complexType>
+                    <xs:sequence>
+                            <xs:element ref="ROLE"/>
+                            <xs:element ref="ASSET_TYPE"/>
+                            <xs:element ref="MARKING" minOccurs="0"/>
+                            <xs:element ref="HOST_NAME"/>
+                            <xs:element ref="HOST_IP"/>
+                            <xs:element ref="HOST_MAC"/>
+                            <xs:element ref="HOST_GUID" minOccurs="0"/>
+                            <xs:element ref="HOST_FQDN"/>
+                            <xs:element ref="TARGET_COMMENT" minOccurs="0"/>
+                            <xs:element ref="TECH_AREA"/>
+                            <xs:element ref="TARGET_KEY"/>
+                            <xs:element ref="STIG_GUID" minOccurs="0"/>
+                            <xs:element ref="WEB_OR_DATABASE"/>
+                            <xs:element ref="WEB_DB_SITE"/>
+                            <xs:element ref="WEB_DB_INSTANCE"/>
+                    </xs:sequence>
+            </xs:complexType>
+    </xs:element>
+    <!-->ROLE represents the 'Role' radio button selection under a Checklist Target Data panel.</!-->
+    <xs:element name="ROLE">
+        <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="None"/>
+                    <xs:enumeration value="Workstation"/>
+                    <xs:enumeration value="Member Server"/>
+                    <xs:enumeration value="Domain Controller"/>
+                </xs:restriction>
+        </xs:simpleType>
+    </xs:element>   
+    <!-->ASSET_TYPE refers to the Computing/Non-Computing dropdown menu under a Checklist Target Data panel.</!-->
+    <xs:element name="ASSET_TYPE">
+        <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Computing"/>
+                    <xs:enumeration value="Non-Computing"/>
+                </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <!-- MARKING refers to the text entered in the 'Marking' text box under a Checklist Target Data panel. -->
+    <xs:element name="MARKING">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <!-->HOST_NAME refers to the text entered in the 'Host Name' text box under a Checklist Target Data panel.</!-->
+    <xs:element name="HOST_NAME">
+        <xs:simpleType>
+                <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <!-->HOST_IP refers to the text entered in the 'Host IP' text box under a Checklist Target Data panel.</!-->
+    <xs:element name="HOST_IP">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <!-->HOST_MAC refers to the text entered in the 'Host MAC' text box under a Checklist Target Data panel.</!-->
+    <xs:element name="HOST_MAC">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <!-->HOST_GUID is a deprecated element included for backwards compatibility.</!-->
+    <xs:element name="HOST_GUID">
+        <xs:simpleType>
+                <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <!-->HOST_FQDN refers to the text entered in the 'Fully Qualified Domain Name' text box under a Checklist Target Data panel.</!-->
+    <xs:element name="HOST_FQDN">
+        <xs:simpleType>
+                <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    
+    <xs:element name="TARGET_COMMENT">
+        <xs:simpleType>
+                <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <!-->TECH_AREA refers to the selection in the 'Technology Area' dropdown selection box.</!-->
+    <xs:element name="TECH_AREA">
+        <xs:simpleType>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value=""/>
+                    <xs:enumeration value="Application Review"/>
+                    <xs:enumeration value="Boundary Security"/>
+                    <xs:enumeration value="CDS Admin Review"/>
+                    <xs:enumeration value="CDS Technical Review"/>
+                    <xs:enumeration value="Database Review"/>
+                    <xs:enumeration value="Domain Name System (DNS)"/>
+                    <xs:enumeration value="Exchange Server"/>
+                    <xs:enumeration value="Host Based System Security (HBSS)"/>
+                    <xs:enumeration value="Internal Network"/>
+                    <xs:enumeration value="Mobility"/>
+                    <xs:enumeration value="Releasable Networks (REL)"/>
+					<!-->Previous versions of DISA STIG Viewer had a spelling error that needs to be supported.</!-->
+					<xs:enumeration value="Releaseable Networks (REL)"/>
+                    <xs:enumeration value="Traditional Security"/>
+                    <xs:enumeration value="UNIX OS"/>
+                    <xs:enumeration value="VVOIP Review"/>
+                    <xs:enumeration value="Web Review"/>
+                    <xs:enumeration value="Windows OS"/>
+                    <xs:enumeration value="Other Review"/>
+                </xs:restriction>
+        </xs:simpleType>
+    </xs:element>  
+	<!-->TARGET_KEY is not set by STIG Viewer GUI interaction.</!-->
+    <xs:element name="TARGET_KEY">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <!-->STIG_GUID is a new element included to address overlapping content from different STIGs .</!-->
+    <xs:element name="STIG_GUID">
+        <xs:simpleType>
+                <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+        <!-->WEB_OR_DATABASE represents the 'Web or Database STIG' checkbox under a Checklist Target Data panel.</!-->
+    <xs:element name="WEB_OR_DATABASE">
+        <xs:simpleType>
+                <xs:restriction base="xs:boolean"/>
+        </xs:simpleType>
+    </xs:element>
+    <!-->WEB_DB_SITE represents the text inputted into the 'Site' textbox that appears when the 'Web or Database STIG' checkbox under a Checklist Target Data panel is checked.</!-->
+    <xs:element name="WEB_DB_SITE">
+        <xs:simpleType>
+                <xs:restriction base="xs:string" />
+        </xs:simpleType>
+    </xs:element>
+    <!-->WEB_DB_INSTANCE represents the text inputted into the 'Instance' textbox that appears when the 'Web or Database STIG' checkbox under a Checklist Target Data panel is checked.</!-->
+    <xs:element name="WEB_DB_INSTANCE">
+        <xs:simpleType>
+                <xs:restriction base="xs:string" />
+        </xs:simpleType>
+    </xs:element>
+<!-->******************************************************************************************************</!-->
+<!-->***********************************************STIGS**************************************************</!-->
+<!-->******************************************************************************************************</!-->
+
+    <!-->STIGS holds a list of STIGs that are included in a given checklist</!-->
+    <xs:element name="STIGS">
+            <xs:complexType>
+                    <xs:sequence>
+                            <xs:element ref="iSTIG" maxOccurs="unbounded"/>
+                    </xs:sequence>
+            </xs:complexType>
+    </xs:element>
+    <!-->iSTIG holds the data of a STIG and related Checklist data for said STIG.</!-->
+    <xs:element name="iSTIG">
+            <xs:complexType>
+                    <xs:sequence>
+                            <xs:element ref="STIG_INFO"/>
+                            <xs:element ref="VULN" maxOccurs="unbounded"/>
+                    </xs:sequence>
+            </xs:complexType>
+    </xs:element>
+<!-->******************************************************************************************************</!-->
+<!-->***********************************************STIG_INFO**********************************************</!-->
+<!-->******************************************************************************************************</!-->
+
+    <!-->STIG_INFO holds metadata for a given STIG in a Checklist.</!-->
+    <xs:element name="STIG_INFO">
+            <xs:complexType>
+                    <xs:sequence>
+                            <xs:element ref="SI_DATA" maxOccurs="unbounded"/>
+                    </xs:sequence>
+            </xs:complexType>
+    </xs:element>
+    <!-->SI_DATA elements are the parent elements for SID_NAME SID_DATA pairs.</!-->
+    <xs:element name="SI_DATA">
+            <xs:complexType>
+                    <xs:sequence>
+                            <xs:element ref="SID_NAME"/>
+                            <xs:element ref="SID_DATA" minOccurs="0"/>
+                    </xs:sequence>
+            </xs:complexType>
+    </xs:element>
+    <!-->SID_NAME holds the name of a given STIG metadata field from a DISA STIG.<!-->
+    <xs:element name="SID_NAME">
+            <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                            <xs:enumeration value="classification"/>
+                            <xs:enumeration value="customname"/>
+                            <xs:enumeration value="description"/>
+                            <xs:enumeration value="filename"/>
+                            <xs:enumeration value="notice"/>
+                            <xs:enumeration value="releaseinfo"/>
+                            <xs:enumeration value="source"/>
+                            <xs:enumeration value="stigid"/>
+                            <xs:enumeration value="title"/>
+                            <xs:enumeration value="uuid"/>
+                            <xs:enumeration value="version"/>
+                    </xs:restriction>
+            </xs:simpleType>
+    </xs:element>
+    <!-->SID_DATA is the data corresponding to a field described by a SID_NAME element.</!-->
+    <xs:element name="SID_DATA" type="xs:string"/>
+<!-->******************************************************************************************************</!-->
+<!-->***********************************************VULN***************************************************</!-->
+<!-->******************************************************************************************************</!-->
+
+    <!-->VULN holds the data of a vulnerability, a combination of information derived from a DISA STIG Rule and Group.</!-->
+    <xs:element name="VULN">
+            <xs:complexType>
+                    <xs:sequence>
+                            <xs:element ref="STIG_DATA" maxOccurs="unbounded"/>
+                            <xs:element ref="STATUS"/>
+                            <xs:element ref="FINDING_DETAILS"/>
+                            <xs:element ref="COMMENTS"/>
+                            <xs:element ref="SEVERITY_OVERRIDE"/>
+                            <xs:element ref="SEVERITY_JUSTIFICATION"/>
+                    </xs:sequence>
+            </xs:complexType>
+    </xs:element>
+    <!-->STIG_DATA elements are the parent elements for VULN_ATTRIBUTE ATTRIBUTE_DATA pairs.</!-->
+    <xs:element name="STIG_DATA">
+            <xs:complexType>
+                    <xs:sequence>
+                            <xs:element ref="VULN_ATTRIBUTE"/>
+                            <xs:element ref="ATTRIBUTE_DATA"/>
+                    </xs:sequence>
+            </xs:complexType>
+    </xs:element>
+    <!-->VULN_ATTRIBUTE holds the name of a given field of a vulnerability from a DISA STIG.<!-->
+    <xs:element name="VULN_ATTRIBUTE">
+            <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                            <xs:enumeration value="CCI_REF"/>
+                            <xs:enumeration value="Check_Content"/>
+                            <xs:enumeration value="Check_Content_Ref"/>
+                            <xs:enumeration value="Class"/>
+                            <xs:enumeration value="Documentable"/>
+                            <xs:enumeration value="False_Negatives"/>
+                            <xs:enumeration value="False_Positives"/>
+                            <xs:enumeration value="Fix_Text"/>
+                            <xs:enumeration value="Group_Title"/>
+                            <xs:enumeration value="IA_Controls"/>
+                            <xs:enumeration value="Mitigation_Control"/>
+                            <xs:enumeration value="Mitigations"/>
+                            <xs:enumeration value="Potential_Impact"/>
+                            <xs:enumeration value="Responsibility"/>
+                            <xs:enumeration value="Rule_ID"/>
+                            <xs:enumeration value="Rule_Title"/>
+                            <xs:enumeration value="Rule_Ver"/>
+                            <xs:enumeration value="STIGRef"/>
+                            <xs:enumeration value="Security_Override_Guidance"/>
+                            <xs:enumeration value="Severity"/>
+                            <xs:enumeration value="Third_Party_Tools"/>
+                            <xs:enumeration value="Vuln_Discuss"/>
+                            <xs:enumeration value="Vuln_Num"/>
+							<xs:enumeration value="Weight"/>
+							<xs:enumeration value="TargetKey"/>
+							<xs:enumeration value="STIG_UUID"/>
+							<xs:enumeration value="LEGACY_ID"/>
+                    </xs:restriction>
+            </xs:simpleType>
+    </xs:element>
+    <!-->ATTRIBUTE_DATA is the data corresponding to a field described by a VULN_ATTRIBUTE element.</!-->
+    <xs:element name="ATTRIBUTE_DATA" type="xs:string"/>    
+    <!-->STATUS holds user inputted information for a given vulnerability's status.<!-->
+    <xs:element name="STATUS">
+            <xs:simpleType>
+                    <xs:restriction base="xs:string">
+                            <xs:enumeration value="NotAFinding"/>
+                            <xs:enumeration value="Open"/>
+                            <xs:enumeration value="Not_Applicable"/>
+                            <xs:enumeration value="Not_Reviewed"/>
+                    </xs:restriction>
+            </xs:simpleType>
+    </xs:element>        
+    <!-->FINDING_DETAILS holds user inputted information from a Checklist Finding Details text area on a per-vulnerability basis.</!-->
+    <xs:element name="FINDING_DETAILS">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+    <!-->COMMENTS holds user inputted information from a Checklist Comments text area on a per-vulnerability basis.</!-->
+    <xs:element name="COMMENTS">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>  
+    <!-->SEVERITY_OVERRIDE holds data on whether a Severity Override choice has been selected in a Checklist Severity Override dropdown menu.</!-->
+    <xs:element name="SEVERITY_OVERRIDE">
+        <xs:simpleType>
+            <xs:restriction base="xs:string">
+				<xs:enumeration value=""/>
+                <xs:enumeration value="low"/>
+                <xs:enumeration value="medium"/>
+                <xs:enumeration value="high"/>
+            </xs:restriction>
+        </xs:simpleType>
+    </xs:element>
+    <!-->SEVERITY_JUSTIFICATION holds the user inputted reasoning for a SEVERITY_OVERRIDE value being set.</!-->
+    <xs:element name="SEVERITY_JUSTIFICATION">
+        <xs:simpleType>
+            <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+    </xs:element>
+</xs:schema>

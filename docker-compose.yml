@@ -1,9 +1,13 @@
-version: '3.5'
-
 services:
   database:
     image: postgres:13
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
     volumes:
       - ./data:/var/lib/postgresql/data
     environment:
@@ -12,6 +16,19 @@ services:
       - PGDATA=/var/lib/postgresql/data/pgdata
     expose:
       - "5432"
+
+  certs:
+    image: registry.access.redhat.com/ubi8/ubi:latest
+    restart: unless-stopped
+    command: sh -c "sh /etc/pki/ca-trust/source/anchors/dodcerts.sh && update-ca-trust && tail -f /dev/null"
+    volumes:
+      - type: volume
+        source: cert_bundles
+        target: /etc/pki/ca-trust/extracted/
+      - type: bind
+        source: ./certs/
+        target: /etc/pki/ca-trust/source/anchors/
+
   server:
     image: mitre/heimdall2:release-latest
     restart: unless-stopped
@@ -22,17 +39,29 @@ services:
     env_file: .env
     ports:
       - "3000"
+    volumes:
+      - type: volume
+        source: cert_bundles
+        target: /etc/pki/ca-trust/extracted/
+        read_only: true
+        volume:
+          nocopy: true
     depends_on:
-      - "database"
+      database:
+        condition: service_healthy
+
   nginx:
     image: nginx:alpine
     environment:
       NGINX_HOST: ${NGINX_HOST}
     volumes:
-      - ./nginx/conf:/etc/nginx/templates
-      - ./nginx/certs:/etc/nginx/cert/
+      - ./nginx/conf/:/etc/nginx/templates/
+      - ./nginx/certs/:/etc/nginx/cert/
     ports:
       - "80:80"
       - "443:443"
     depends_on:
       - "server"
+
+volumes:
+  cert_bundles:

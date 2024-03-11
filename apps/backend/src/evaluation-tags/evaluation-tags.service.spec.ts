@@ -5,7 +5,11 @@ import {
   CREATE_EVALUATION_TAG_DTO_MISSING_VALUE
 } from '../../test/constants/evaluation-tags-test.constant';
 import {EVALUATION_1} from '../../test/constants/evaluations-test.constant';
-import {CREATE_USER_DTO_TEST_OBJ} from '../../test/constants/users-test.constant';
+import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
+import {
+  CREATE_USER_DTO_TEST_OBJ,
+  USERS_SERVICE_MOCK
+} from '../../test/constants/users-test.constant';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationDto} from '../evaluations/dto/evaluation.dto';
@@ -14,6 +18,7 @@ import {EvaluationsService} from '../evaluations/evaluations.service';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
+import {GroupsService} from '../groups/groups.service';
 import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {EvaluationTag} from './evaluation-tag.model';
@@ -43,7 +48,8 @@ describe('EvaluationTagsService', () => {
         DatabaseService,
         EvaluationTagsService,
         EvaluationsService,
-        UsersService
+        {provide: UsersService, useValue: USERS_SERVICE_MOCK},
+        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK}
       ]
     }).compile();
 

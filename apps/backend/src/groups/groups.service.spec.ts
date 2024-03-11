@@ -15,12 +15,12 @@ import {DatabaseService} from '../database/database.service';
 import {EvaluationTagDto} from '../evaluation-tags/dto/evaluation-tag.dto';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
 import {Evaluation} from '../evaluations/evaluation.model';
-import {EvaluationsModule} from '../evaluations/evaluations.module';
 import {EvaluationsService} from '../evaluations/evaluations.service';
 import {GroupEvaluationsModule} from '../group-evaluations/group-evaluations.module';
+import {GroupUser} from '../group-users/group-user.model';
 import {GroupUsersModule} from '../group-users/group-users.module';
 import {UserDto} from '../users/dto/user.dto';
-import {UsersModule} from '../users/users.module';
+import {User} from '../users/user.model';
 import {UsersService} from '../users/users.service';
 import {Group} from './group.model';
 import {GroupsService} from './groups.service';
@@ -35,11 +35,15 @@ describe('GroupsService', () => {
     const module = await Test.createTestingModule({
       imports: [
         DatabaseModule,
-        SequelizeModule.forFeature([Group, Evaluation]),
+        SequelizeModule.forFeature([
+          Group,
+          GroupUser,
+          Evaluation,
+          EvaluationTag,
+          User
+        ]),
         GroupEvaluationsModule,
-        GroupUsersModule,
-        EvaluationsModule,
-        UsersModule
+        GroupUsersModule
       ],
       providers: [
         GroupsService,

@@ -1,4 +1,6 @@
+import {GroupsModule} from '@/store/groups';
 import {IGroup} from '@heimdall/interfaces';
+import {intersectionBy} from 'lodash';
 import {Component, Vue} from 'vue-property-decorator';
 import {IVuetifyItems} from '../utilities/helper_util';
 
@@ -8,7 +10,8 @@ export default class EvaluationMixin extends Vue {
     if (!groups) {
       return [];
     }
-    return groups.map((group) => {
+
+    return intersectionBy(groups, GroupsModule.myGroups, 'id').map((group) => {
       return {
         text: group.name,
         value: group.id

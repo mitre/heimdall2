@@ -36,7 +36,6 @@
       <UpdateNotification />
       <slot name="main-content" />
     </v-main>
-
     <slot>
       <!-- The default slot -->
     </slot>

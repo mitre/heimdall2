@@ -7,7 +7,7 @@ import {JwtService} from '@nestjs/jwt';
 import {compare} from 'bcryptjs';
 import * as crypto from 'crypto';
 import jwt from 'jsonwebtoken';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import moment from 'moment';
 import ms from 'ms';
 import winston from 'winston';
@@ -21,6 +21,7 @@ import {UsersService} from '../users/users.service';
 
 @Injectable()
 export class AuthnService {
+  private readonly line = '_______________________________________________\n';
   public loggingTimeFormat = 'MMM-DD-YYYY HH:mm:ss Z';
   public logger = winston.createLogger({
     transports: [new winston.transports.Console()],
@@ -28,7 +29,10 @@ export class AuthnService {
       winston.format.timestamp({
         format: this.loggingTimeFormat
       }),
-      winston.format.printf((info) => `[${[info.timestamp]}] ${info.message}`)
+      winston.format.printf(
+        (info) =>
+          `${this.line}[${[info.timestamp]}] (Authn Service): ${info.message}`
+      )
     )
   });
 

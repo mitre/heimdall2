@@ -1,6 +1,6 @@
 import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from '../utils/global';
 
 function findingId(finding: unknown): string {

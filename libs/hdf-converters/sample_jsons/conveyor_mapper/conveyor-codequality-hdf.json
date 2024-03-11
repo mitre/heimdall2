@@ -1,0 +1,1310 @@
+{
+  "passthrough": {
+    "archive_ts": null,
+    "archived": false,
+    "classification": "TLP:C",
+    "error_count": 2,
+    "errors": {
+      "ac1dc5d77d017852c1bc258dd75eb37e803945f617774dc09805c6ef2069cec2.Stigma.v4_3_0_12.c48i1BYnALWl.e1": {
+        "archive_ts": null,
+        "created": "2023-08-28T12:24:17.494348Z",
+        "expiry_ts": "2023-08-31T12:24:17.494375Z",
+        "response": {
+          "message": "  File \"/var/lib/assemblyline/.local/lib/python3.9/site-packages/assemblyline_v4_service/common/base.py\", line 168, in handle_task\n    self.execute(request)\n  File \"/opt/al_service/stigma.py\", line 75, in execute\n    nvd_results = nvd_util.lookup(package_name, version)\n  File \"/opt/al_service/nvd_util.py\", line 29, in lookup\n    cves = nvdlib.searchCVE(cpeName = cpe, key=self.api_key)\n  File \"/usr/local/lib/python3.9/site-packages/nvdlib/cve.py\", line 156, in searchCVE\n    raw = __get('cve', headers, parameters, limit, verbose, delay)\n  File \"/usr/local/lib/python3.9/site-packages/nvdlib/get.py\", line 25, in __get\n    raw.raise_for_status()\n  File \"/var/lib/assemblyline/.local/lib/python3.9/site-packages/requests/models.py\", line 1021, in raise_for_status\n    raise HTTPError(http_error_msg, response=self)\nHTTPError: 404 Client Error:  for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%253A2.3%253Aa%253Anotepad-plus-plus%253Anotepad%255C%252B%255C%252B%253A8.4.3%253A%252A%253A%252A%253A%252A%253A%252A%253A%252A%253A%252A%253A%252A",
+          "service_debug_info": null,
+          "service_name": "Stigma",
+          "service_tool_version": null,
+          "service_version": "4.3.0.12",
+          "status": "FAIL_NONRECOVERABLE"
+        },
+        "sha256": "ac1dc5d77d017852c1bc258dd75eb37e803945f617774dc09805c6ef2069cec2",
+        "type": "EXCEPTION"
+      },
+      "e3be5b8ed0d6f2df9b4656d2d3cde60cc456c955a7d5e3d49bb43f801da3b5ac.Stigma.v4_3_0_12.c48i1BYnALWl.e1": {
+        "archive_ts": null,
+        "created": "2023-08-28T12:24:04.532907Z",
+        "expiry_ts": "2023-08-31T12:24:04.533136Z",
+        "response": {
+          "message": "  File \"/var/lib/assemblyline/.local/lib/python3.9/site-packages/assemblyline_v4_service/common/base.py\", line 168, in handle_task\n    self.execute(request)\n  File \"/opt/al_service/stigma.py\", line 75, in execute\n    nvd_results = nvd_util.lookup(package_name, version)\n  File \"/opt/al_service/nvd_util.py\", line 29, in lookup\n    cves = nvdlib.searchCVE(cpeName = cpe, key=self.api_key)\n  File \"/usr/local/lib/python3.9/site-packages/nvdlib/cve.py\", line 156, in searchCVE\n    raw = __get('cve', headers, parameters, limit, verbose, delay)\n  File \"/usr/local/lib/python3.9/site-packages/nvdlib/get.py\", line 25, in __get\n    raw.raise_for_status()\n  File \"/var/lib/assemblyline/.local/lib/python3.9/site-packages/requests/models.py\", line 1021, in raise_for_status\n    raise HTTPError(http_error_msg, response=self)\nHTTPError: 404 Client Error:  for url: https://services.nvd.nist.gov/rest/json/cves/2.0?cpeName=cpe%253A2.3%253Aa%253Aputty%253Aputty%253A0.74%253A%252A%253A%252A%253A%252A%253A%252A%253A%252A%253A%252A%253A%252A",
+          "service_debug_info": null,
+          "service_name": "Stigma",
+          "service_tool_version": null,
+          "service_version": "4.3.0.12",
+          "status": "FAIL_NONRECOVERABLE"
+        },
+        "sha256": "e3be5b8ed0d6f2df9b4656d2d3cde60cc456c955a7d5e3d49bb43f801da3b5ac",
+        "type": "EXCEPTION"
+      }
+    },
+    "expiry_ts": "2023-08-31T12:23:51.158629Z",
+    "file_count": 16,
+    "file_infos": {
+      "033ecf8f77772375c638c1874f881a2aa300aae7073c23280554edf007174602": {
+        "archive_ts": null,
+        "ascii": "CART..........................6..........Q..../l&.#......P.\".89.",
+        "classification": "TLP:C",
+        "entropy": 6.953992199511245,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902063600000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f7220838390e",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "d514623f6e21c38e727a59e93a3ef8ae",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.370391Z",
+          "last": "2023-08-28T12:23:52.145084Z"
+        },
+        "sha1": "5ffd1906ab5a548ea5f51330fb9861c7ad8268aa",
+        "sha256": "033ecf8f77772375c638c1874f881a2aa300aae7073c23280554edf007174602",
+        "size": 351,
+        "ssdeep": "6:1s323J6Wb0lfG0wO86/DyxtjITWlB2aALDBC4rU39bk1eeKPdm:1sG5Hb0Mz6/DMpITs2Rc4rs9bAZao",
+        "type": "document/stigma"
+      },
+      "03d3a4e7fd27f8cc617b226911a452ab725c42417da5880b928d35d1b1e0fbc6": {
+        "archive_ts": null,
+        "ascii": "CART..........................:..........Q..../l&.#......P.\".8\".",
+        "classification": "TLP:C",
+        "entropy": 6.996816997526528,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902063a00000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f72208382213",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "92996352475fdd839c43a2c869fd39e9",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.460515Z",
+          "last": "2023-08-28T12:23:52.151308Z"
+        },
+        "sha1": "a0e8945f72a90c330178cec75bd8457240c2ccd3",
+        "sha256": "03d3a4e7fd27f8cc617b226911a452ab725c42417da5880b928d35d1b1e0fbc6",
+        "size": 362,
+        "ssdeep": "6:1s32TJ6Wb5OPrBwZPXkwf+P0IK/UkeKtGv8XkyRSWXUf3SrTXVIDg+qmGDvi3s:1sGFHbqrBwZ/kwfwcUke3v8XZRlXU1qO",
+        "type": "document/hipcheck"
+      },
+      "1cf4c4e746fb314ade933773ed1eac339635f556593524ed53761d0a99486ba6": {
+        "archive_ts": null,
+        "ascii": "CART..........................M..........Q..../l&.#......P.\".8\".",
+        "classification": "TLP:C",
+        "entropy": 7.0845515723336945,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902064d00000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f72208382213",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "9d4c0262cc0f1b4f2363a1bf7ef65f20",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.873257Z",
+          "last": "2023-08-28T12:23:52.236901Z"
+        },
+        "sha1": "a7ded563989e42fc8aee658510f0263d1ae94d76",
+        "sha256": "1cf4c4e746fb314ade933773ed1eac339635f556593524ed53761d0a99486ba6",
+        "size": 401,
+        "ssdeep": "6:1s32R1oJ6Wb5O9dkuZP8E+ulECT3oL42IkpEgxd+n62sB5pHHy/ZEUUiw:1sGR1UHbiZEE+uKmytpEwEGbNHyxErv",
+        "type": "document/hipcheck"
+      },
+      "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f": {
+        "archive_ts": null,
+        "ascii": "X5O!P%@AP[4\\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$",
+        "classification": "TLP:C",
+        "entropy": 4.8723276870872425,
+        "expiry_ts": "2023-08-31T12:23:51.554047Z",
+        "from_archive": false,
+        "hex": "58354f2150254041505b345c505a58353428505e2937434329377d2445494341522d5354414e444152442d414e544956495255532d544553542d46494c452124",
+        "is_section_image": false,
+        "magic": "EICAR virus test files",
+        "md5": "44d88612fea8a8f36de82e1278abb02f",
+        "mime": "text/plain",
+        "seen": {
+          "count": 2,
+          "first": "2023-06-13T15:38:18.080870Z",
+          "last": "2023-08-28T12:23:51.588798Z"
+        },
+        "sha1": "3395856ce81f2b7382dee72602f798b642f14140",
+        "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+        "size": 68,
+        "ssdeep": "3:a+JraNvsgzsVqSwHq9:tJuOgzsko",
+        "type": "text/plain"
+      },
+      "3e6ea99456f8c133453fc6b4c002d6a0415ef07e0f4f075fb5f8fe98fb28129b": {
+        "archive_ts": null,
+        "ascii": "package com.fortify.samples.riches;....import com.opensymphony.x",
+        "classification": "TLP:C",
+        "entropy": 4.888784895909174,
+        "expiry_ts": "2023-08-31T12:23:51.554047Z",
+        "from_archive": false,
+        "hex": "7061636b61676520636f6d2e666f72746966792e73616d706c65732e7269636865733b0d0a0d0a696d706f727420636f6d2e6f70656e73796d70686f6e792e78",
+        "is_section_image": false,
+        "magic": "ASCII text, with CRLF line terminators",
+        "md5": "2eb04c29eb4524a22f9bab783666e9db",
+        "mime": "text/plain",
+        "seen": {
+          "count": 2,
+          "first": "2023-06-13T15:38:18.024002Z",
+          "last": "2023-08-28T12:23:51.577369Z"
+        },
+        "sha1": "c216cc3dfa3e7740bd919c39331c6dc13a424205",
+        "sha256": "3e6ea99456f8c133453fc6b4c002d6a0415ef07e0f4f075fb5f8fe98fb28129b",
+        "size": 2433,
+        "ssdeep": "48:c3dwaGaZAc/Q4lz8XolkNwsBagy/9C0c//aZyE:c3dwaGaZAc/Q4lIckkv/S//aZyE",
+        "type": "code/java"
+      },
+      "595f54e8ea1b2f44c698365520242300f6d2ab1afa69be52d25a9d02443c34cd": {
+        "archive_ts": null,
+        "ascii": "CART..........................I..........Q..../l&.#......P.\".89.",
+        "classification": "TLP:C",
+        "entropy": 7.120931749203795,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902064900000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f7220838390e",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "e91af67ccbd0b01ebe5f1cecd8a92180",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.757991Z",
+          "last": "2023-08-28T12:23:52.221424Z"
+        },
+        "sha1": "b265bf2357fa5a304e42beaed10d465edb3ae3fd",
+        "sha256": "595f54e8ea1b2f44c698365520242300f6d2ab1afa69be52d25a9d02443c34cd",
+        "size": 395,
+        "ssdeep": "6:1s32V/lQJ6Wb0lwl6l2hoYO9VyA6VQ4wC0HNTxbplYtwAkWPVm5dbWEYrzo8y:1sGVaHb0JIuVYwj7bLWwkPVmTW",
+        "type": "document/stigma"
+      },
+      "60586f9814358e1850b7e0cbe7f891a29f24233f853d00788f6ef8108e19692c": {
+        "archive_ts": null,
+        "ascii": "CART..........................4..........Q..../l&.#......P.\".8'.",
+        "classification": "TLP:C",
+        "entropy": 7.007954161095705,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902063400000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f72208382715",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "241cc7599f2ef7a1dfa1ea9c8106fe84",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.419985Z",
+          "last": "2023-08-28T12:23:52.161859Z"
+        },
+        "sha1": "1f52c6e019a8967759742779c348e5c0c65e94b7",
+        "sha256": "60586f9814358e1850b7e0cbe7f891a29f24233f853d00788f6ef8108e19692c",
+        "size": 369,
+        "ssdeep": "6:1s321J6WNMh4Da2aGB8gmvbvYw9ygjYgyNohrUHEfVBqwenQ:1sGDHNJkbicY2hrzBc",
+        "type": "document/moldy"
+      },
+      "60e5941e7c34e77decf4d079ae18b531d35326ae8bd26d1dbca7ce23de548634": {
+        "archive_ts": null,
+        "ascii": "CART..........................9..........Q..../l&.#......P.\".8'.",
+        "classification": "TLP:C",
+        "entropy": 7.037685313806377,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902063900000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f72208382715",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "4bc1497f4501fa3d9288d41fff56b282",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.551415Z",
+          "last": "2023-08-28T12:23:52.156469Z"
+        },
+        "sha1": "2885581e044357ae9b29cbd400105e04529eebff",
+        "sha256": "60e5941e7c34e77decf4d079ae18b531d35326ae8bd26d1dbca7ce23de548634",
+        "size": 375,
+        "ssdeep": "6:1s32X/oJ6WNMhCp8bqaGB81zhxHIHyQjTadQK4bC2ZanRcraoATzNj0piyxqt3e:1sGvUHNUi6DdQvadUC26Raao2JMieqE",
+        "type": "document/moldy"
+      },
+      "7b1bc90fafe2fb7405f69e22b9d748dbaf0162fc73e4d728d8d236387d13ce02": {
+        "archive_ts": null,
+        "ascii": "CART..........................G..........Q..../l&.#......P.\".8'.",
+        "classification": "TLP:C",
+        "entropy": 7.109617124347259,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902064700000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f72208382715",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "cc1f969ce802433f7129f02cc527769e",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.810937Z",
+          "last": "2023-08-28T12:23:52.232511Z"
+        },
+        "sha1": "9cd14397c2c4bcdc2c0f91371f5bc13d2e37d5e9",
+        "sha256": "7b1bc90fafe2fb7405f69e22b9d748dbaf0162fc73e4d728d8d236387d13ce02",
+        "size": 414,
+        "ssdeep": "6:1s32b1oJ6WNMh8SkGpaGB8ijgyHLDJ2B+C00DcsX6kW00vSCWUbfPl0sU4Of:1sGOHNevbwjcsX6kWTVPfuT4",
+        "type": "document/moldy"
+      },
+      "94361e37680f6297b0d7dea8d0dca7b05828f475484ff9219fec0eaf90c8763d": {
+        "archive_ts": null,
+        "ascii": "CART..........................?..........Q..../l&.#......P.\".8\".",
+        "classification": "TLP:C",
+        "entropy": 7.060510771222838,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902063f00000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f72208382213",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "1b9ca2d342ea958b1602ce71ca2b1569",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 10,
+          "first": "2023-05-22T19:06:32.780043Z",
+          "last": "2023-08-28T12:23:52.183605Z"
+        },
+        "sha1": "8ff187944f4a9d121b2175a7010b19dfb5d4c7d6",
+        "sha256": "94361e37680f6297b0d7dea8d0dca7b05828f475484ff9219fec0eaf90c8763d",
+        "size": 370,
+        "ssdeep": "6:1s32B/oJ6Wb5O8AOidwZP068ijBCITvhN3pB6x52RkCTKxpuTUEFegSlUENEij:1sGBcHb4/2Z8jiY+vBqpuwEFe3",
+        "type": "document/hipcheck"
+      },
+      "ac1dc5d77d017852c1bc258dd75eb37e803945f617774dc09805c6ef2069cec2": {
+        "archive_ts": null,
+        "ascii": "CART..........................;..........Q..../l&.#......P.\".89.",
+        "classification": "TLP:C",
+        "entropy": 6.9753691632359995,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902063b00000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f7220838390e",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "4a82ca4c25c0f1d6f958064bcf9f891c",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.504468Z",
+          "last": "2023-08-28T12:23:52.155007Z"
+        },
+        "sha1": "8f16611672203f8217b19a7d7367606173eb20de",
+        "sha256": "ac1dc5d77d017852c1bc258dd75eb37e803945f617774dc09805c6ef2069cec2",
+        "size": 359,
+        "ssdeep": "6:1s32/aJ6Wb0l6JpO9uAOc0mnAmopavMcU1OifaTI3OdhY6Lw9BsCrbv5F+:1sGaHb0cpIuAOpm3U1OuaN7Y+Wbv5",
+        "type": "document/stigma"
+      },
+      "ba07e9734ed231b9161333e434126e0feb8fd2b99f73b4ee079e1c79a2417742": {
+        "archive_ts": null,
+        "ascii": "# Document Information....SPDXVersion: SPDX-2.2..DataLicense: CC",
+        "classification": "TLP:C",
+        "entropy": 5.3573838904909765,
+        "expiry_ts": "2023-08-31T12:23:51.554047Z",
+        "from_archive": false,
+        "hex": "2320446f63756d656e7420496e666f726d6174696f6e0d0a0d0a5350445856657273696f6e3a20535044582d322e320d0a446174614c6963656e73653a204343",
+        "is_section_image": false,
+        "magic": "ASCII text, with CRLF line terminators",
+        "md5": "cbfa5b1317b4bc2d7d6d827163998290",
+        "mime": "text/plain",
+        "seen": {
+          "count": 4,
+          "first": "2023-06-13T15:38:18.130818Z",
+          "last": "2023-08-28T12:23:51.592921Z"
+        },
+        "sha1": "0f6b748a57b5c89e0957a9295a96303571585503",
+        "sha256": "ba07e9734ed231b9161333e434126e0feb8fd2b99f73b4ee079e1c79a2417742",
+        "size": 2255,
+        "ssdeep": "48:0d+hLge4Wh0YpIirKpWNqPduCjdvQwzQVzQSLg9eWbXM/iqtVxJduqCw1MtWMXMm:0Q05WaYpIiHNMduCjdvLz+zSgWbiiWV4",
+        "type": "text/plain"
+      },
+      "cb574b9a90ec19d2bbc5d4f575c435d1d5dd7579ed61b9715b8ad99031056755": {
+        "archive_ts": null,
+        "ascii": "CART..........................;..........Q..../l&.#......P.\".8\".",
+        "classification": "TLP:C",
+        "entropy": 6.995401522458136,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902063b00000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f72208382213",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "5b932f25799a512eda28af2e1910713b",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.708530Z",
+          "last": "2023-08-28T12:23:52.204183Z"
+        },
+        "sha1": "e17fcd4dfaae647e661e996cead117acbb29131b",
+        "sha256": "cb574b9a90ec19d2bbc5d4f575c435d1d5dd7579ed61b9715b8ad99031056755",
+        "size": 357,
+        "ssdeep": "6:1s32/aJ6Wb5OPhpH+wZf/vozT9+BPUR2LX2jZlAZTVg6T9NaA2EC0:1sGaHbabBZ3Y9+BPc1lmue9N+",
+        "type": "document/hipcheck"
+      },
+      "d32c446821e7fcd3640a9a378c2487085194a6353e3bf8baf27e5ef78b3e86bd": {
+        "archive_ts": null,
+        "ascii": "PK........5T.U................rbb_test_dir/PK..........hT<.QhD..",
+        "classification": "TLP:C",
+        "entropy": 7.359540401966278,
+        "expiry_ts": "2023-08-31T12:23:51.158629Z",
+        "from_archive": false,
+        "hex": "504b030414000000000035542e550000000000000000000000000d0000007262625f746573745f6469722f504b03040a0000000000ce8368543ccf5168440000",
+        "is_section_image": false,
+        "magic": "Zip archive data, at least v2.0 to extract",
+        "md5": "5a81ebeab6be0dcafa99377a37921906",
+        "mime": "application/zip",
+        "seen": {
+          "count": 3,
+          "first": "2023-06-13T15:38:17.396391Z",
+          "last": "2023-08-28T12:23:51.179882Z"
+        },
+        "sha1": "4dfd8e78983fdd6ba33753c0699033b4fad276a7",
+        "sha256": "d32c446821e7fcd3640a9a378c2487085194a6353e3bf8baf27e5ef78b3e86bd",
+        "size": 2181,
+        "ssdeep": "48:9xhse7jAIBhd57wsDwX5AFCIHTS1Av2to0js:bhscdBn58sD8AFCIHO1Auto0Y",
+        "type": "archive/zip"
+      },
+      "d97b7bcf488772501bc406a836f396a6d040831a625b962cc8f3d01d715cfc97": {
+        "archive_ts": null,
+        "ascii": "CART..........................5..........Q..../l&.#......P.\".8'.",
+        "classification": "TLP:C",
+        "entropy": 6.94062618982093,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902063500000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f72208382715",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "a156c251307aafd279394f92ade88b4a",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.649964Z",
+          "last": "2023-08-28T12:23:52.212731Z"
+        },
+        "sha1": "056ee642b17d73e342eca0dfc0f3b00b1c9fed52",
+        "sha256": "d97b7bcf488772501bc406a836f396a6d040831a625b962cc8f3d01d715cfc97",
+        "size": 363,
+        "ssdeep": "6:1s32RaJ6WNMhOLYgqaGB8WSnmYO2GS5OiZiLFTSVgcwTWCKeUnIkii:1sGAHNlnGZBOSYOViXz",
+        "type": "document/moldy"
+      },
+      "e3be5b8ed0d6f2df9b4656d2d3cde60cc456c955a7d5e3d49bb43f801da3b5ac": {
+        "archive_ts": null,
+        "ascii": "CART..........................7..........Q..../l&.#......P.\".89.",
+        "classification": "TLP:C",
+        "entropy": 6.982636745020746,
+        "expiry_ts": "2023-08-31T12:23:52.094512Z",
+        "from_archive": false,
+        "hex": "4341525401000000000000000000030104010509020603010401050902063700000000000000c2a4aa511c8a1aef2f6c26c12309c2c1d085dc50f7220838390e",
+        "is_section_image": false,
+        "magic": "custom: archive/cart",
+        "md5": "64dd87d1e93da198a939d523a846f867",
+        "mime": "application/octet-stream",
+        "seen": {
+          "count": 5,
+          "first": "2023-06-13T15:38:19.597928Z",
+          "last": "2023-08-28T12:23:52.193950Z"
+        },
+        "sha1": "cfff0ebe60556d1505951efae3a7a202d99653ff",
+        "sha256": "e3be5b8ed0d6f2df9b4656d2d3cde60cc456c955a7d5e3d49bb43f801da3b5ac",
+        "size": 352,
+        "ssdeep": "6:1s32GJ6Wb0lOqvaJwYOSKE1YxRBtkZ36mgJ+KbUHsR4Cyb3:1sGeHb0gq+xZuRHs3+sDHsR",
+        "type": "document/stigma"
+      }
+    },
+    "file_tree": {
+      "d32c446821e7fcd3640a9a378c2487085194a6353e3bf8baf27e5ef78b3e86bd": {
+        "children": {
+          "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f": {
+            "children": {},
+            "name": [
+              "rbb_test_dir/eicar-test-file"
+            ],
+            "score": 1000,
+            "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+            "size": 68,
+            "truncated": false,
+            "type": "text/plain"
+          },
+          "3e6ea99456f8c133453fc6b4c002d6a0415ef07e0f4f075fb5f8fe98fb28129b": {
+            "children": {},
+            "name": [
+              "rbb_test_dir/PerformTransfer.java"
+            ],
+            "score": 300,
+            "sha256": "3e6ea99456f8c133453fc6b4c002d6a0415ef07e0f4f075fb5f8fe98fb28129b",
+            "size": 2433,
+            "truncated": false,
+            "type": "code/java"
+          },
+          "ba07e9734ed231b9161333e434126e0feb8fd2b99f73b4ee079e1c79a2417742": {
+            "children": {
+              "033ecf8f77772375c638c1874f881a2aa300aae7073c23280554edf007174602": {
+                "children": {},
+                "name": [
+                  "Capa.stigma"
+                ],
+                "score": 0,
+                "sha256": "033ecf8f77772375c638c1874f881a2aa300aae7073c23280554edf007174602",
+                "size": 351,
+                "truncated": false,
+                "type": "document/stigma"
+              },
+              "03d3a4e7fd27f8cc617b226911a452ab725c42417da5880b928d35d1b1e0fbc6": {
+                "children": {},
+                "name": [
+                  "Capa.hipcheck"
+                ],
+                "score": 0,
+                "sha256": "03d3a4e7fd27f8cc617b226911a452ab725c42417da5880b928d35d1b1e0fbc6",
+                "size": 362,
+                "truncated": false,
+                "type": "document/hipcheck"
+              },
+              "1cf4c4e746fb314ade933773ed1eac339635f556593524ed53761d0a99486ba6": {
+                "children": {},
+                "name": [
+                  "Geographical-Adventures.hipcheck"
+                ],
+                "score": 100,
+                "sha256": "1cf4c4e746fb314ade933773ed1eac339635f556593524ed53761d0a99486ba6",
+                "size": 401,
+                "truncated": false,
+                "type": "document/hipcheck"
+              },
+              "595f54e8ea1b2f44c698365520242300f6d2ab1afa69be52d25a9d02443c34cd": {
+                "children": {},
+                "name": [
+                  "Geographical-Adventures.stigma"
+                ],
+                "score": 0,
+                "sha256": "595f54e8ea1b2f44c698365520242300f6d2ab1afa69be52d25a9d02443c34cd",
+                "size": 395,
+                "truncated": false,
+                "type": "document/stigma"
+              },
+              "60586f9814358e1850b7e0cbe7f891a29f24233f853d00788f6ef8108e19692c": {
+                "children": {},
+                "name": [
+                  "Capa.moldy"
+                ],
+                "score": 1000,
+                "sha256": "60586f9814358e1850b7e0cbe7f891a29f24233f853d00788f6ef8108e19692c",
+                "size": 369,
+                "truncated": false,
+                "type": "document/moldy"
+              },
+              "60e5941e7c34e77decf4d079ae18b531d35326ae8bd26d1dbca7ce23de548634": {
+                "children": {},
+                "name": [
+                  "Notepad++.moldy"
+                ],
+                "score": 0,
+                "sha256": "60e5941e7c34e77decf4d079ae18b531d35326ae8bd26d1dbca7ce23de548634",
+                "size": 375,
+                "truncated": false,
+                "type": "document/moldy"
+              },
+              "7b1bc90fafe2fb7405f69e22b9d748dbaf0162fc73e4d728d8d236387d13ce02": {
+                "children": {},
+                "name": [
+                  "Geographical-Adventures.moldy"
+                ],
+                "score": 0,
+                "sha256": "7b1bc90fafe2fb7405f69e22b9d748dbaf0162fc73e4d728d8d236387d13ce02",
+                "size": 414,
+                "truncated": false,
+                "type": "document/moldy"
+              },
+              "94361e37680f6297b0d7dea8d0dca7b05828f475484ff9219fec0eaf90c8763d": {
+                "children": {},
+                "name": [
+                  "Notepad++.hipcheck"
+                ],
+                "score": 100,
+                "sha256": "94361e37680f6297b0d7dea8d0dca7b05828f475484ff9219fec0eaf90c8763d",
+                "size": 370,
+                "truncated": false,
+                "type": "document/hipcheck"
+              },
+              "ac1dc5d77d017852c1bc258dd75eb37e803945f617774dc09805c6ef2069cec2": {
+                "children": {},
+                "name": [
+                  "Notepad++.stigma"
+                ],
+                "score": 0,
+                "sha256": "ac1dc5d77d017852c1bc258dd75eb37e803945f617774dc09805c6ef2069cec2",
+                "size": 359,
+                "truncated": false,
+                "type": "document/stigma"
+              },
+              "cb574b9a90ec19d2bbc5d4f575c435d1d5dd7579ed61b9715b8ad99031056755": {
+                "children": {},
+                "name": [
+                  "Putty.hipcheck"
+                ],
+                "score": 500,
+                "sha256": "cb574b9a90ec19d2bbc5d4f575c435d1d5dd7579ed61b9715b8ad99031056755",
+                "size": 357,
+                "truncated": false,
+                "type": "document/hipcheck"
+              },
+              "d97b7bcf488772501bc406a836f396a6d040831a625b962cc8f3d01d715cfc97": {
+                "children": {},
+                "name": [
+                  "Putty.moldy"
+                ],
+                "score": 0,
+                "sha256": "d97b7bcf488772501bc406a836f396a6d040831a625b962cc8f3d01d715cfc97",
+                "size": 363,
+                "truncated": false,
+                "type": "document/moldy"
+              },
+              "e3be5b8ed0d6f2df9b4656d2d3cde60cc456c955a7d5e3d49bb43f801da3b5ac": {
+                "children": {},
+                "name": [
+                  "Putty.stigma"
+                ],
+                "score": 0,
+                "sha256": "e3be5b8ed0d6f2df9b4656d2d3cde60cc456c955a7d5e3d49bb43f801da3b5ac",
+                "size": 352,
+                "truncated": false,
+                "type": "document/stigma"
+              }
+            },
+            "name": [
+              "rbb_test_dir/testbom.sbom"
+            ],
+            "score": 0,
+            "sha256": "ba07e9734ed231b9161333e434126e0feb8fd2b99f73b4ee079e1c79a2417742",
+            "size": 2255,
+            "truncated": false,
+            "type": "text/plain"
+          }
+        },
+        "name": [
+          "rbb_test_dir.zip"
+        ],
+        "score": 0,
+        "sha256": "d32c446821e7fcd3640a9a378c2487085194a6353e3bf8baf27e5ef78b3e86bd",
+        "size": 2181,
+        "truncated": false,
+        "type": "archive/zip"
+      }
+    },
+    "files": [
+      {
+        "name": "rbb_test_dir.zip",
+        "sha256": "d32c446821e7fcd3640a9a378c2487085194a6353e3bf8baf27e5ef78b3e86bd",
+        "size": 2181
+      }
+    ],
+    "from_archive": false,
+    "max_score": 1000,
+    "metadata": {},
+    "missing_error_keys": [],
+    "missing_file_keys": [],
+    "missing_result_keys": [],
+    "params": {
+      "auto_archive": false,
+      "classification": "TLP:C",
+      "deep_scan": false,
+      "delete_after_archive": false,
+      "description": "Inspection of file: submissions/rbb_test_dir.zip",
+      "generate_alert": false,
+      "groups": [
+        "USERS"
+      ],
+      "ignore_cache": false,
+      "ignore_dynamic_recursion_prevention": false,
+      "ignore_filtering": false,
+      "ignore_size": false,
+      "initial_data": null,
+      "malicious": false,
+      "max_extracted": 10000000,
+      "max_supplementary": 10000000,
+      "never_drop": false,
+      "priority": 1000,
+      "profile": false,
+      "psid": null,
+      "quota_item": true,
+      "service_spec": {},
+      "services": {
+        "excluded": [],
+        "rescan": [],
+        "resubmit": [],
+        "runtime_excluded": [],
+        "selected": [
+          "Antivirus",
+          "Static Analysis",
+          "Extraction"
+        ]
+      },
+      "submitter": "admin",
+      "ttl": 3,
+      "type": "USER"
+    },
+    "results": [
+      {
+        "archive_ts": null,
+        "classification": "TLP:C",
+        "created": "2023-08-28T12:23:51.603085Z",
+        "drop_file": true,
+        "expiry_ts": "2023-08-31T12:23:51.554047Z",
+        "from_archive": false,
+        "response": {
+          "extracted": [
+            {
+              "allow_dynamic_recursion": false,
+              "classification": "TLP:C",
+              "description": "Extracted using extract_zip_7zip",
+              "is_section_image": false,
+              "name": "rbb_test_dir/PerformTransfer.java",
+              "parent_relation": "EXTRACTED",
+              "sha256": "3e6ea99456f8c133453fc6b4c002d6a0415ef07e0f4f075fb5f8fe98fb28129b"
+            },
+            {
+              "allow_dynamic_recursion": false,
+              "classification": "TLP:C",
+              "description": "Extracted using extract_zip_7zip",
+              "is_section_image": false,
+              "name": "rbb_test_dir/eicar-test-file",
+              "parent_relation": "EXTRACTED",
+              "sha256": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f"
+            },
+            {
+              "allow_dynamic_recursion": false,
+              "classification": "TLP:C",
+              "description": "Extracted using extract_zip_7zip",
+              "is_section_image": false,
+              "name": "rbb_test_dir/testbom.sbom",
+              "parent_relation": "EXTRACTED",
+              "sha256": "ba07e9734ed231b9161333e434126e0feb8fd2b99f73b4ee079e1c79a2417742"
+            }
+          ],
+          "milestones": {
+            "service_completed": "2023-08-28T12:23:51.552593Z",
+            "service_started": "2023-08-28T12:23:51.320025Z"
+          },
+          "service_context": null,
+          "service_debug_info": null,
+          "service_name": "Extract",
+          "service_tool_version": null,
+          "service_version": "4.4.0.11",
+          "supplementary": [
+            {
+              "allow_dynamic_recursion": false,
+              "classification": "TLP:C",
+              "description": "Result Ontology from Extract",
+              "is_section_image": false,
+              "name": "extract_d32c446821e7fcd3640a9a378c2487085194a6353e3bf8baf27e5ef78b3e86bd.ontology",
+              "parent_relation": "EXTRACTED",
+              "sha256": "903d9969ca79a64a139241c12a59a20112159cb2475188139f27b11ed94c220f"
+            }
+          ]
+        },
+        "result": {
+          "score": 0,
+          "sections": [
+            {
+              "status": "passed",
+              "code_desc": "{\"auto_collapse\":false,\"body\":\"rbb_test_dir/PerformTransfer.java\\nrbb_test_dir/cd-test-file\\nrbb_test_dir/testbom.sbom\",\"body_format\":\"TEXT\",\"classification\":\"TLP:C\",\"depth\":0,\"heuristic\":{\"attack\":[],\"heur_id\":\"EXTRACT.1\",\"name\":\"Extracted from archive\",\"score\":0,\"signature\":[]},\"tags\":[{\"safelisted\":false,\"short_type\":\"extracted\",\"type\":\"file.name.extracted\",\"value\":\"rbb_test_dir/PerformTransfer.java\"},{\"safelisted\":false,\"short_type\":\"extracted\",\"type\":\"file.name.extracted\",\"value\":\"rbb_test_dir/eicar-test-file\"},{\"safelisted\":false,\"short_type\":\"extracted\",\"type\":\"file.name.extracted\",\"value\":\"rbb_test_dir/testbom.sbom\"}],\"title_text\":\"Successfully extracted 3 files\"}",
+              "start_time": "2023-08-28T12:23:51.320025Z",
+              "run_time": 232
+            }
+          ]
+        },
+        "sha256": "d32c446821e7fcd3640a9a378c2487085194a6353e3bf8baf27e5ef78b3e86bd",
+        "size": 2181,
+        "type": "archive/zip",
+        "filename": "rbb_test_dir.zip"
+      }
+    ],
+    "scan_key": null,
+    "sid": "HO3PJ4eYNojwpupMt0f5V",
+    "state": "completed",
+    "times": {
+      "completed": "2023-08-28T12:25:24.834217Z",
+      "submitted": "2023-08-28T12:23:51.215522Z"
+    },
+    "to_be_deleted": false,
+    "verdict": {
+      "malicious": [],
+      "non_malicious": []
+    }
+  },
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.8.1"
+  },
+  "version": "4.4.0.20",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "CodeQuality",
+      "sha256": "3f191ffde94c57e2889fd6599a87cc1e83b8612dda3ae44bfefeb4bfce134548",
+      "version": "4.3.0.0",
+      "title": "Inspection of file: submissions/rbb_test_dir.zip",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "id": "033ecf8f77772375c638c1874f881a2aa300aae7073c23280554edf007174602",
+          "title": "Capa.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:56.680186Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:56.679917Z",
+            "size": 351,
+            "type": "document/stigma",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:56.655590Z",
+              "run_time": 18
+            }
+          ]
+        },
+        {
+          "id": "03d3a4e7fd27f8cc617b226911a452ab725c42417da5880b928d35d1b1e0fbc6",
+          "title": "Capa.hipcheck",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:55.779286Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:55.778970Z",
+            "size": 362,
+            "type": "document/hipcheck",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:55.747943Z",
+              "run_time": 26
+            }
+          ]
+        },
+        {
+          "id": "1cf4c4e746fb314ade933773ed1eac339635f556593524ed53761d0a99486ba6",
+          "title": "Geographical-Adventures.hipcheck",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:56.418148Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:56.417867Z",
+            "size": 401,
+            "type": "document/hipcheck",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:56.396676Z",
+              "run_time": 16
+            }
+          ]
+        },
+        {
+          "id": "275a021bbfb6489e54d471899f7db9d1663fc695ec2fe2a2c4538aabf651fd0f",
+          "title": "rbb_test_dir/eicar-test-file",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:52.007226Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:52.006453Z",
+            "size": 68,
+            "type": "text/plain",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:51.981078Z",
+              "run_time": 19
+            }
+          ]
+        },
+        {
+          "id": "3e6ea99456f8c133453fc6b4c002d6a0415ef07e0f4f075fb5f8fe98fb28129b",
+          "title": "rbb_test_dir/PerformTransfer.java",
+          "desc": "",
+          "impact": 0.3,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:55.361379Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:55.360537Z",
+            "size": 2433,
+            "type": "code/java",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "body:Checkstyle version: 10.11.0\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:METADATA",
+              "start_time": "2023-08-28T12:23:52.786159Z",
+              "run_time": 1983
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:Severity: error\nCheckstyle rule: com.puppycrawl.tools.checkstyle.checks.blocks.EmptyCatchBlockCheck\nMessage: Empty catch block.\nLine number: 36\nColumn number: 39\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Checkstyle Finding",
+              "start_time": "2023-08-28T12:23:52.786159Z",
+              "run_time": 1983
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:Severity: error\nCheckstyle rule: com.puppycrawl.tools.checkstyle.checks.blocks.EmptyCatchBlockCheck\nMessage: Empty catch block.\nLine number: 48\nColumn number: 32\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Checkstyle Finding",
+              "start_time": "2023-08-28T12:23:52.786159Z",
+              "run_time": 1983
+            },
+            {
+              "status": "failed",
+              "code_desc": "body:Severity: error\nCheckstyle rule: com.puppycrawl.tools.checkstyle.checks.blocks.EmptyCatchBlockCheck\nMessage: Empty catch block.\nLine number: 56\nColumn number: 32\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Checkstyle Finding",
+              "start_time": "2023-08-28T12:23:52.786159Z",
+              "run_time": 1983
+            }
+          ]
+        },
+        {
+          "id": "595f54e8ea1b2f44c698365520242300f6d2ab1afa69be52d25a9d02443c34cd",
+          "title": "Geographical-Adventures.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:55.956405Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:55.956170Z",
+            "size": 395,
+            "type": "document/stigma",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:55.933819Z",
+              "run_time": 18
+            }
+          ]
+        },
+        {
+          "id": "60586f9814358e1850b7e0cbe7f891a29f24233f853d00788f6ef8108e19692c",
+          "title": "Capa.moldy",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:56.322440Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:56.322126Z",
+            "size": 369,
+            "type": "document/moldy",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:56.300084Z",
+              "run_time": 17
+            }
+          ]
+        },
+        {
+          "id": "60e5941e7c34e77decf4d079ae18b531d35326ae8bd26d1dbca7ce23de548634",
+          "title": "Notepad++.moldy",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:56.038159Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:56.037850Z",
+            "size": 375,
+            "type": "document/moldy",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:56.018392Z",
+              "run_time": 15
+            }
+          ]
+        },
+        {
+          "id": "7b1bc90fafe2fb7405f69e22b9d748dbaf0162fc73e4d728d8d236387d13ce02",
+          "title": "Geographical-Adventures.moldy",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:56.588454Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:56.588173Z",
+            "size": 414,
+            "type": "document/moldy",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:56.566639Z",
+              "run_time": 17
+            }
+          ]
+        },
+        {
+          "id": "94361e37680f6297b0d7dea8d0dca7b05828f475484ff9219fec0eaf90c8763d",
+          "title": "Notepad++.hipcheck",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:55.876806Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:55.876498Z",
+            "size": 370,
+            "type": "document/hipcheck",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:55.857348Z",
+              "run_time": 14
+            }
+          ]
+        },
+        {
+          "id": "ac1dc5d77d017852c1bc258dd75eb37e803945f617774dc09805c6ef2069cec2",
+          "title": "Notepad++.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:56.763845Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:56.763571Z",
+            "size": 359,
+            "type": "document/stigma",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:56.741797Z",
+              "run_time": 17
+            }
+          ]
+        },
+        {
+          "id": "ba07e9734ed231b9161333e434126e0feb8fd2b99f73b4ee079e1c79a2417742",
+          "title": "rbb_test_dir/testbom.sbom",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:52.709034Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:52.708601Z",
+            "size": 2255,
+            "type": "text/plain",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:52.688492Z",
+              "run_time": 15
+            }
+          ]
+        },
+        {
+          "id": "cb574b9a90ec19d2bbc5d4f575c435d1d5dd7579ed61b9715b8ad99031056755",
+          "title": "Putty.hipcheck",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:56.120810Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:56.120504Z",
+            "size": 357,
+            "type": "document/hipcheck",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:56.097017Z",
+              "run_time": 17
+            }
+          ]
+        },
+        {
+          "id": "d97b7bcf488772501bc406a836f396a6d040831a625b962cc8f3d01d715cfc97",
+          "title": "Putty.moldy",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:56.214374Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:56.214084Z",
+            "size": 363,
+            "type": "document/moldy",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:56.189269Z",
+              "run_time": 19
+            }
+          ]
+        },
+        {
+          "id": "e3be5b8ed0d6f2df9b4656d2d3cde60cc456c955a7d5e3d49bb43f801da3b5ac",
+          "title": "Putty.stigma",
+          "desc": "",
+          "impact": 0,
+          "refs": [],
+          "tags": {
+            "service_context": "",
+            "service_debug_info": "",
+            "service_tool_version": "",
+            "supplementary": [],
+            "created": "2023-08-28T12:23:56.504690Z",
+            "archive_ts": "",
+            "classification": "TLP:C",
+            "expiry_ts": "2023-08-31T12:23:56.504284Z",
+            "size": 352,
+            "type": "document/stigma",
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ],
+            "cci": [
+              "CCI-003173",
+              "CCI-001643"
+            ]
+          },
+          "source_location": {},
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "body:File Type Not Supported.\n      body_format:TEXT\n      classificaton:TLP:C\n      depth:0\n      title_text:Findings",
+              "start_time": "2023-08-28T12:23:56.483105Z",
+              "run_time": 16
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

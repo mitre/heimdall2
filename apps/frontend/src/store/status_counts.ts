@@ -10,7 +10,7 @@ import {
 } from '@/store/data_filters';
 import Store from '@/store/store';
 import {ControlStatus} from 'inspecjs';
-import LRUCache from 'lru-cache';
+import {LRUCache} from 'lru-cache';
 import {getModule, Module, VuexModule} from 'vuex-module-decorators';
 
 // The hash that we will generally be working with herein
@@ -78,9 +78,8 @@ export function calculateCompliance(filter: Filter) {
     StatusCountModule.countOf(filter, 'Not Reviewed');
   if (total === 0) {
     return 0;
-  } else {
-    return Math.round((100.0 * passed) / total);
   }
+  return (100 * passed) / total;
 }
 
 @Module({

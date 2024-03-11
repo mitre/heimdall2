@@ -1,5 +1,5 @@
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import * as _ from 'lodash';
 import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
 
 export function omitVersions(
@@ -8,7 +8,8 @@ export function omitVersions(
   return _.omit(input, [
     'version',
     'platform.release',
-    'profiles[0].sha256'
+    'profiles[0].sha256',
+    'profiles[0].version'
   ]) as unknown as Partial<ExecJSON.Execution> & {profiles: ExecJSON.Profile};
 }
 

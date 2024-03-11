@@ -7,6 +7,7 @@ import {
 import {SequelizeModule} from '@nestjs/sequelize';
 import {Test, TestingModule} from '@nestjs/testing';
 import {ValidationError} from 'sequelize';
+import {GROUPS_SERVICE_MOCK} from '../../test/constants/groups-test.constant';
 import {
   CREATE_ADMIN_DTO,
   CREATE_USER_DTO_TEST_OBJ,
@@ -30,6 +31,7 @@ import {Evaluation} from '../evaluations/evaluation.model';
 import {GroupEvaluation} from '../group-evaluations/group-evaluation.model';
 import {GroupUser} from '../group-users/group-user.model';
 import {Group} from '../groups/group.model';
+import {GroupsService} from '../groups/groups.service';
 import {UserDto} from './dto/user.dto';
 import {User} from './user.model';
 import {UsersController} from './users.controller';
@@ -61,7 +63,12 @@ describe('UsersController Unit Tests', () => {
           EvaluationTag
         ])
       ],
-      providers: [AuthzService, DatabaseService, UsersService]
+      providers: [
+        AuthzService,
+        DatabaseService,
+        UsersService,
+        {provide: GroupsService, useValue: GROUPS_SERVICE_MOCK}
+      ]
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);

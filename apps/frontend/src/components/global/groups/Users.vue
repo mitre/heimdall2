@@ -26,9 +26,9 @@
           :items="currentUsers"
           :items-per-page="5"
         >
-          <template #[`item.full-name`]="{item}"
-            >{{ item.firstName }} {{ item.lastName }}</template
-          >
+          <template #[`item.full-name`]="{item}">
+            {{ item.firstName }} {{ item.lastName }}
+          </template>
           <template #[`item.groupRole`]="{item}">
             <v-select
               v-if="editable"
@@ -62,12 +62,12 @@
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
 import {ISlimUser} from '@heimdall/interfaces';
-import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Emit, Prop, VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
 import {IVuetifyItems} from '@/utilities/helper_util';
 import {DataTableHeader} from 'vuetify';
+import Vue from 'vue';
 
 @Component({
   components: {
@@ -87,7 +87,13 @@ export default class Users extends Vue {
   @Prop({type: Boolean, required: false, default: true})
   readonly editable!: boolean;
 
-  editedUserID: string = '0';
+  @Prop({type: Boolean, required: false, default: false})
+  readonly create!: boolean;
+
+  @Prop({type: Boolean, required: false, default: false})
+  readonly admin!: boolean;
+
+  editedUserID: string = '0'; // Default to '0', as the id indices start at '1'
   usersToAdd: string[] = [];
 
   dialogDelete = false;
@@ -138,11 +144,6 @@ export default class Users extends Vue {
   onUpdateGroupUserRole(newRole: string) {
     let saveable = true;
     // If a role is being changed to member, check that there is at least 1 owner.
-    if (newRole === 'member') {
-      if (this.numberOfOwners() <= 1) {
-        saveable = false;
-      }
-    }
     const editedUser = this.getEditedUser();
     const userToUpdate = this.currentUsers.indexOf(editedUser);
     const updatedGroupUser: ISlimUser = {
@@ -150,6 +151,10 @@ export default class Users extends Vue {
       groupRole: newRole
     };
     this.currentUsers[userToUpdate] = updatedGroupUser;
+
+    if (this.numberOfOwners() < 1) {
+      saveable = false;
+    }
     return saveable;
   }
 
@@ -168,14 +173,22 @@ export default class Users extends Vue {
     this.editedUserID = '0';
   }
 
-  deleteUserConfirm(): void {
-    if (this.editedUserID !== '0') {
-      this.currentUsers.splice(
-        this.currentUsers.indexOf(this.getEditedUser()),
-        1
-      );
+  @Emit()
+  deleteUserConfirm(): boolean {
+    let saveable = true;
+    const userToDelete = this.currentUsers.indexOf(this.getEditedUser());
+    if (
+      this.currentUsers[userToDelete].groupRole === 'owner' &&
+      this.numberOfOwners() < 2
+    ) {
+      saveable = false;
     }
+    if (this.editedUserID !== '0') {
+      this.currentUsers.splice(userToDelete, 1);
+    }
+    this.onUpdateGroupUserRole('');
     this.closeActionDialog();
+    return saveable;
   }
 
   getEditedUser(): ISlimUser {
@@ -194,7 +207,7 @@ export default class Users extends Vue {
     for (const user of ServerModule.allUsers) {
       if (
         !currentUserIds.includes(user.id) &&
-        user.id !== ServerModule.userInfo.id
+        (user.id !== ServerModule.userInfo.id || this.admin || !this.create)
       ) {
         users.push({
           text: `${user.firstName || ''} ${user.lastName || ''} (${

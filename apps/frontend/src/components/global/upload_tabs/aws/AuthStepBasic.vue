@@ -40,7 +40,7 @@
         MFA Login
       </v-btn>
       <v-spacer />
-      <v-btn @click="$emit('show-help')">
+      <v-btn class="my-2" @click="$emit('show-help')">
         Help
         <v-icon class="ml-2"> mdi-help-circle </v-icon>
       </v-btn>
@@ -49,11 +49,12 @@
 </template>
 
 <script lang="ts">
-import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
-import {LocalStorageVal} from '@/utilities/helper_util';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import FileList from '@/components/global/upload_tabs/aws/FileList.vue';
+import {LocalStorageVal} from '@/utilities/helper_util';
+import {requireFieldRule} from '@/utilities/upload_util';
 
 /** Localstorage keys */
 const localAccessToken = new LocalStorageVal<string>('aws_s3_access_token');
@@ -80,9 +81,8 @@ export default class S3Reader extends Vue {
    */
   valid = false;
 
-  /** Form required field rules. Maybe eventually expand to other stuff */
-  reqRule = (v: string | null | undefined) =>
-    (v || '').trim().length > 0 || 'Field is Required';
+  // Form required field rule
+  reqRule = requireFieldRule;
 
   // Callback for change in access token
   change_access_token(token: string) {
@@ -104,9 +104,9 @@ export default class S3Reader extends Vue {
   /** On mount, try to look up stored auth info */
   mounted() {
     // Load our credentials
-    this.change_access_token(localAccessToken.get_default(''));
-    this.change_secret_token(localSecretToken.get_default(''));
-    this.change_region(localRegion.get_default(''));
+    this.change_access_token(localAccessToken.getDefault(''));
+    this.change_secret_token(localSecretToken.getDefault(''));
+    this.change_region(localRegion.getDefault(''));
   }
 }
 </script>
