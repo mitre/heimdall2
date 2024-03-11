@@ -6,7 +6,6 @@ import {
 } from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import * as _ from 'lodash';
 import moment from 'moment';
-import ms from 'ms';
 
 export type Attestation = {
   control_id: string;
@@ -49,9 +48,10 @@ export function advanceDate(
     case 'daily':
       date.add(1, 'day');
       break;
-    default:
+    default: {
       // a number followed by d/w/m/y, with or without spaces in between
-      const match = frequency.match(/(\d+(?:\.\d+)?)(\s*)([a-z])/);
+      const re = new RegExp("(\\d+(?:\\.\\d+)?)(\\s*)([a-z])");
+      const match = re.exec(frequency);
       
       if (!match){ throw new Error('Unknown date format: '+frequency+'. Please use a number followed by d/w/m/y to indicate days, weeks, months, or years.'); };
 
@@ -59,19 +59,20 @@ export function advanceDate(
       const unit = match[3];
       switch (unit) {
         case 'd':
-          date.add(match[1], 'days');
+          date.add(number, 'days');
           break;
         case 'w':
-          date.add(match[1], 'weeks');
+          date.add(number, 'weeks');
           break;
         case 'm':
-          date.add(match[1], 'months');
+          date.add(number, 'months');
           break;
         case 'y':
-          date.add(match[1], 'years');
+          date.add(number, 'years');
           break;
       }
       break;
+    }
   }
   return date;
 }

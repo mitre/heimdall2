@@ -98,7 +98,7 @@ describe('attestations', () => {
       )
     );
 
-    fs.writeFileSync('sample_jsons/attestations/rhel7-json-spreadsheet.json', JSON.stringify(output, null, 2))
+  //  fs.writeFileSync('sample_jsons/attestations/rhel7-json-spreadsheet.json', JSON.stringify(output, null, 2))
 
     expect(omitHDFTimes(omitVersions(output))).toEqual(
       omitHDFTimes(omitVersions(expected))
