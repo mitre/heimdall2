@@ -50,29 +50,26 @@ export function advanceDate(
       date.add(1, 'day');
       break;
     default:
-      const match = frequency.match(/(\d+(?:\.\d+)?)([a-z]+)/);
+      // a number followed by d/w/m/y, with or without spaces in between
+      const match = frequency.match(/(\d+(?:\.\d+)?)(\s*)([a-z])/);
       
-      // throw error if input doesn't match specified format of <x>d/wk/m/yr
-      if (!match){ throw new Error('Unknown date format: '+frequency); };
+      if (!match){ throw new Error('Unknown date format: '+frequency+'. Please use a number followed by d/w/m/y to indicate days, weeks, months, or years.'); };
 
-      const freq_num = match[1];
-      const unit = match[2];
-
-      switch (match[2]) {
+      const number = match[1];
+      const unit = match[3];
+      switch (unit) {
         case 'd':
-          date.add(freq_num , 'days');
+          date.add(match[1], 'days');
           break;
-        case 'wk':
-          date.add(freq_num, 'weeks');
+        case 'w':
+          date.add(match[1], 'weeks');
           break;
         case 'm':
-          date.add(freq_num, 'months');
+          date.add(match[1], 'months');
           break;
-        case 'yr':
-          date.add(freq_num, 'years');
+        case 'y':
+          date.add(match[1], 'years');
           break;
-        default:
-          throw new Error(`Unknown time unit: '${match[2]}'. Please use d/wk/m/yr to specify days, weeks, months, or years: `);
       }
       break;
   }
