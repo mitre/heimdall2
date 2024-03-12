@@ -50,14 +50,14 @@ export function advanceDate(
       break;
     default: {
       // a number followed by d/w/m/y, with or without spaces in between
-      const re = /(\d+(?:.\d+)?)(\s*)([a-zA-Z]+)/;
+      const re = /(\d+(?:.\d+)?)(\s*)([a-z]+)/;
       const match = re.exec(frequency);
 
       if (!match) {
         throw new Error(
           'Unknown date format: ' +
             frequency +
-            '. Please use a number followed by d/w/m/y to indicate days, weeks, months, or years.'
+            '. Please use a number followed by d/w/m/y to indicate days, weeks, months, or years, e.g. 1d/2w/3m/1y/custom.'
         );
       }
 
