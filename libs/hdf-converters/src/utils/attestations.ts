@@ -63,6 +63,7 @@ export function advanceDate(
 
       const number = match[1];
       const unit = match[3];
+      // add inputted amount of time
       switch (unit) {
         case 'd':
           date.add(number, 'days');
