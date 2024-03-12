@@ -30,7 +30,8 @@ const attestationArray: Attestation[] = [
   },
   {
     control_id: 'V-72083',
-    explanation: 'The operating system off-loads audit records onto a different system from the system being audited.',
+    explanation:
+      'The operating system off-loads audit records onto a different system from the system being audited.',
     frequency: '7w',
     status: ExecJSON.ControlResultStatus.Passed,
     updated: moment().format('YYYY[-]MM[-]DD'),
