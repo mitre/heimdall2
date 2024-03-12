@@ -7999,8 +7999,22 @@
               "start_time": "2019-11-04T16:17:15-05:00",
               "resource": "",
               "skip_message": "File '/etc/audisp/audisp-remote.conf' cannot be found. This check must be performed manually"
+            },
+            {
+              "code_desc": "Manually verified status provided through attestation",
+              "status": "passed",
+              "message": "Attestation:\nStatus: passed\nExplanation: The operating system off-loads audit records onto a different system from the system being audited.\n\nUpdated: 2024-03-12\nUpdated By: Bobby Smalls, Security\nFrequency: 7w",
+              "start_time": "2024-03-12T15:51:51.580Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-72083",
+            "explanation": "The operating system off-loads audit records onto a different system from the system being audited.",
+            "frequency": "7w",
+            "status": "passed",
+            "updated": "2024-03-12",
+            "updated_by": "Bobby Smalls, Security"
+          }
         },
         {
           "id": "V-72085",
@@ -8059,8 +8073,22 @@
               "start_time": "2019-11-04T16:17:15-05:00",
               "resource": "Parse Config File /etc/audisp/audisp-remote.conf",
               "skip_message": "Can't find file: /etc/audisp/audisp-remote.conf"
+            },
+            {
+              "code_desc": "Manually verified status provided through attestation",
+              "status": "passed",
+              "message": "Attestation:\nStatus: passed\nExplanation: The operating system the transfer of audit records.\n\nUpdated: 2024-03-12\nUpdated By: Billy Weiss, Security\nFrequency: 3m",
+              "start_time": "2024-03-12T15:51:51.581Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-72085",
+            "explanation": "The operating system the transfer of audit records.",
+            "frequency": "3m",
+            "status": "passed",
+            "updated": "2024-03-12",
+            "updated_by": "Billy Weiss, Security"
+          }
         },
         {
           "id": "V-72087",
@@ -8126,8 +8154,8 @@
             {
               "code_desc": "Manually verified status provided through attestation",
               "status": "passed",
-              "message": "Attestation:\nStatus: passed\nExplanation: Audit logs are automatically backed up and cleared as necessary\n\nUpdated: 2022-09-09\nUpdated By: Json Smith, Security\nFrequency: monthly",
-              "start_time": "2022-09-09T20:06:18.295Z"
+              "message": "Attestation:\nStatus: passed\nExplanation: Audit logs are automatically backed up and cleared as necessary\n\nUpdated: 2024-03-12\nUpdated By: Json Smith, Security\nFrequency: monthly",
+              "start_time": "2024-03-12T15:51:51.581Z"
             }
           ],
           "attestation_data": {
@@ -8135,7 +8163,7 @@
             "explanation": "Audit logs are automatically backed up and cleared as necessary",
             "frequency": "monthly",
             "status": "passed",
-            "updated": "2022-09-09",
+            "updated": "2024-03-12",
             "updated_by": "Json Smith, Security"
           }
         },
@@ -13932,8 +13960,22 @@
               "start_time": "2019-11-04T16:17:15-05:00",
               "resource": "",
               "skip_message": "This check must be preformed manually"
+            },
+            {
+              "code_desc": "Manually verified status provided through attestation",
+              "status": "passed",
+              "message": "Attestation:\nStatus: passed\nExplanation: The operating system the transfer of audit records.\n\nUpdated: 2024-03-12\nUpdated By: John Doe, Security\nFrequency: 2y",
+              "start_time": "2024-03-12T15:51:51.581Z"
             }
-          ]
+          ],
+          "attestation_data": {
+            "control_id": "V-72219",
+            "explanation": "The operating system the transfer of audit records.",
+            "frequency": "2y",
+            "status": "passed",
+            "updated": "2024-03-12",
+            "updated_by": "John Doe, Security"
+          }
         },
         {
           "id": "V-72221",
@@ -17705,7 +17747,7 @@
               "code_desc": "Manual verification status provided through attestation has expired",
               "status": "skipped",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: Audit records are enabled for this system.\n\nUpdated: 2022-01-02\nUpdated By: Alec Hardison, Security\nFrequency: 1d",
-              "start_time": "2022-09-09T20:06:18.336Z"
+              "start_time": "2024-03-12T15:51:51.624Z"
             }
           ],
           "attestation_data": {

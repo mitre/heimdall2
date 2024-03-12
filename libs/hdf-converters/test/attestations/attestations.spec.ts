@@ -27,6 +27,30 @@ const attestationArray: Attestation[] = [
     status: ExecJSON.ControlResultStatus.Passed,
     updated: '2022-01-02',
     updated_by: 'Alec Hardison, Security'
+  },
+  {
+    control_id: 'V-72083',
+    explanation: 'The operating system off-loads audit records onto a different system from the system being audited.',
+    frequency: '7w',
+    status: ExecJSON.ControlResultStatus.Passed,
+    updated: moment().format('YYYY[-]MM[-]DD'),
+    updated_by: 'Bobby Smalls, Security'
+  },
+  {
+    control_id: 'V-72085',
+    explanation: 'The operating system the transfer of audit records.',
+    frequency: '3m',
+    status: ExecJSON.ControlResultStatus.Passed,
+    updated: moment().format('YYYY[-]MM[-]DD'),
+    updated_by: 'Billy Weiss, Security'
+  },
+  {
+    control_id: 'V-72219',
+    explanation: 'The operating system the transfer of audit records.',
+    frequency: '2y',
+    status: ExecJSON.ControlResultStatus.Passed,
+    updated: moment().format('YYYY[-]MM[-]DD'),
+    updated_by: 'John Doe, Security'
   }
 ];
 
