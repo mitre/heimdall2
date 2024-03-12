@@ -50,7 +50,7 @@ export function advanceDate(
       break;
     default: {
       // a number followed by d/w/m/y, with or without spaces in between
-      const re = /(\d+(?:.\d+)?)(\s*)([a-z]+)/;
+      const re = /(\d{1,10}(?:.\d{0,10})?)(\s{0,10})([a-z])/;
       const match = re.exec(frequency);
 
       if (!match) {
