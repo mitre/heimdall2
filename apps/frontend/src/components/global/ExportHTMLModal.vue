@@ -66,8 +66,7 @@ import {Prop, Watch} from 'vue-property-decorator';
 import {Filter} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {SnackbarModule} from '../../store/snackbar';
-//import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
-import {FromHDFToHTMLMapper} from '../../../../../libs/hdf-converters/src/converters-from-hdf/html/reverse-html-mapper';
+import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
 import {SourcedContextualizedEvaluation} from '../../store/report_intake';
 
 // All selectable export types for an HTML export
@@ -203,7 +202,7 @@ export default class ExportHTMLModal extends Vue {
      */
     let filteredControls: string[] = [];
     // Both Status and Severity selection
-    if (status!.length > 0 && severity.length > 0) {
+    if (status.length > 0 && severity.length > 0) {
       data.contains.map((profile) => {
         profile.contains.map((result) => {
           if (
@@ -215,7 +214,7 @@ export default class ExportHTMLModal extends Vue {
         });
       });
       // Status selection
-    } else if (status!.length > 0) {
+    } else if (status.length > 0) {
       data.contains.map((profile) => {
         profile.contains.map((result) => {
           if (status?.includes(result.root.hdf.status)) {
