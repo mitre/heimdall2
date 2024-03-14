@@ -38,7 +38,7 @@
             <v-icon color="primary">mdi-information-variant-circle</v-icon>
           </v-col>
           <v-col>
-            Both Manager and Administrator Reports can be very data intensive,
+            Both Manager and Administrator Reports can be data intensive,
             does consuming computer memory resources, which can take longer for
             the browser to render the page.
           </v-col>
