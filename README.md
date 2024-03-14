@@ -430,7 +430,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    - ```bash
      cd heimdall2
-     yarn install
+     yarn install      # you may need to run yarn install --registry https://registry.npmjs.org
      ```
 
 5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
@@ -511,6 +511,8 @@ The application includes an End-to-End (E2E) frontend and Backend tests (built u
     CYPRESS_BASE_URL=http://localhost:8080 yarn test:ui:open
 
 The first command will start an instance of Heimdall Server and exposes additional routes required to allow the tests to run. The second will open the Cypress UI which will run the tests any time code changes are made.
+
+_NOTE: When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes._
 
 ### Creating a Release
 
