@@ -33,6 +33,16 @@
             <pre class="pt-5" v-text="description" />
           </v-col>
         </v-row>
+        <v-row>
+          <v-col cols="1">
+            <v-icon color="primary">mdi-information-variant-circle</v-icon>
+          </v-col>
+          <v-col>
+            Both Manager and Administrator Reports can be very data intensive,
+            does consuming computer memory resources, which can take longer for
+            the browser to render the page.
+          </v-col>
+        </v-row>
       </v-card-text>
       <v-divider />
       <v-card-actions>
@@ -56,7 +66,9 @@ import {Prop, Watch} from 'vue-property-decorator';
 import {Filter} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {SnackbarModule} from '../../store/snackbar';
-import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
+//import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
+import {FromHDFToHTMLMapper} from '../../../../../libs/hdf-converters/src/converters-from-hdf/html/reverse-html-mapper';
+import {SourcedContextualizedEvaluation} from '../../store/report_intake';
 
 // All selectable export types for an HTML export
 enum FileExportTypes {
@@ -119,7 +131,8 @@ export default class ExportHTMLModal extends Vue {
     }
 
     const files = [];
-    const filteredOn = this.filter.status;
+    const filteredStatus = this.filter.status!.toString();
+    const filteredSeverity = this.filter.severity!.toString();
 
     for (const fileId of this.filter.fromFile) {
       const file = InspecDataModule.allEvaluationFiles.find(
@@ -129,40 +142,11 @@ export default class ExportHTMLModal extends Vue {
       if (file) {
         const data = file.evaluation;
 
-        /**
-         * NOTE: The filterControls array is used to specify which
-         * controls are selected.
-         * If we use the approach of filtering the content from the data object
-         * (e.g.
-         *   data.data.profiles[0].controls =
-         *     data.data.profiles[0].controls.filter((control) => {
-         *       if (filteredControls.includes(control.id)) {
-         *         return filteredControls.includes(control.id);
-         *       }
-         *     });
-         * )
-         * the contextualize object does not get updated and the results
-         * in data_store get out of sync, there is when utilizing the
-         * ".contains" it returns ann results where the file.evaluations
-         * returns the filtered controls.
-         */
-        let filteredControls: string[] = [];
-        if (filteredOn!.length > 0) {
-          data.contains.map((profile) => {
-            profile.contains.map((result) => {
-              if (filteredOn?.includes(result.root.hdf.status)) {
-                filteredControls.push(result.data.id);
-              }
-            });
-          });
-        } else {
-          data.contains.map((profile) => {
-            profile.contains.map((result) => {
-              filteredControls.push(result.data.id);
-            });
-          });
-        }
-
+        const filteredControls = this.getFilterControlIds(
+          data,
+          filteredStatus,
+          filteredSeverity
+        );
         const fileName = file.filename;
         const fileID = file.uniqueId;
         files.push({data, fileName, fileID, filteredControls});
@@ -182,6 +166,81 @@ export default class ExportHTMLModal extends Vue {
     );
 
     this.closeModal();
+  }
+
+  /**
+   * Generate an array containing the control identification numbers
+   * (profiles.controls) selected. The Id is extracted for the
+   * profiles.controls.id, it can be CIS, STIG (V or SV), CWEID, WASCID,
+   * or any other control Id.
+   *
+   * Possible selection permutations are:
+   *   - Status (pass, failed, etc)
+   *   - Severity ( low, medium, etc)
+   *   - Combination of Status and Severity
+   */
+  getFilterControlIds(
+    data: SourcedContextualizedEvaluation,
+    status: string,
+    severity: string
+  ): string[] {
+    /**
+     * NOTE: The filterControls array is used to specify what controls
+     * are selected based on Status and Severity selection.
+     * If we use the approach of filtering the content from the data object
+     * (e.g.
+     *   data.data.profiles[0].controls =
+     *     data.data.profiles[0].controls.filter((control) => {
+     *       if (filteredControls.includes(control.id)) {
+     *         return filteredControls.includes(control.id);
+     *       }
+     *     });
+     * )
+     * the contextualize object does not get updated and the results
+     * in data_store get out of sync, there is, when utilizing the
+     * ".contains" it returns the results object (child of the controls object)
+     *  where the file.evaluations returns the filtered controls.
+     */
+    let filteredControls: string[] = [];
+    // Both Status and Severity selection
+    if (status!.length > 0 && severity.length > 0) {
+      data.contains.map((profile) => {
+        profile.contains.map((result) => {
+          if (
+            status?.includes(result.root.hdf.status) &&
+            severity?.includes(result.root.hdf.severity)
+          ) {
+            filteredControls.push(result.data.id);
+          }
+        });
+      });
+      // Status selection
+    } else if (status!.length > 0) {
+      data.contains.map((profile) => {
+        profile.contains.map((result) => {
+          if (status?.includes(result.root.hdf.status)) {
+            filteredControls.push(result.data.id);
+          }
+        });
+      });
+      // Severity selection
+    } else if (severity.length > 0) {
+      data.contains.map((profile) => {
+        profile.contains.map((result) => {
+          if (severity?.includes(result.root.hdf.severity)) {
+            filteredControls.push(result.data.id);
+          }
+        });
+      });
+      // No selection
+    } else {
+      data.contains.map((profile) => {
+        profile.contains.map((result) => {
+          filteredControls.push(result.data.id);
+        });
+      });
+    }
+    return filteredControls;
   }
 }
 </script>

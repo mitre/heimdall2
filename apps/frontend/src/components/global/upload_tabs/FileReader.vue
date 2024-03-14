@@ -103,9 +103,13 @@
                 <v-progress-circular
                   indeterminate
                   color="#ff5600"
-                  :size="80"
-                  :width="20"
-                />
+                  :size="120"
+                  :width="15"
+                >
+                  <template #default>
+                    <b>{{ percent }}% loaded</b>
+                  </template>
+                </v-progress-circular>
               </div>
             </div>
           </v-col>
@@ -140,7 +144,7 @@ interface VueFileAgentRecord {
 export default class FileReader extends mixins(ServerMixin) {
   fileRecords: Array<VueFileAgentRecord> = [];
   loading = false;
-
+  percent = 0;
   isActiveDialog = false;
 
   filesSelected() {
@@ -151,10 +155,14 @@ export default class FileReader extends mixins(ServerMixin) {
 
   /** Callback for our file reader */
   commit_files(files: File[]) {
+    const totalFiles = files.length;
+    let index = 1;
     Promise.all(
       files.map(async (file) => {
         try {
-          return await InspecIntakeModule.loadFile({file});
+          const fileId = await InspecIntakeModule.loadFile({file});
+          this.percent = Math.floor((index++ / totalFiles) * 100);
+          return fileId;
         } catch (err) {
           SnackbarModule.failure(String(err));
         }
@@ -174,6 +182,7 @@ export default class FileReader extends mixins(ServerMixin) {
       })
       .finally(() => {
         this.loading = false;
+        this.percent = 0;
       });
   }
 

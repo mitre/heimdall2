@@ -29,14 +29,14 @@ type InputData = {
   data: ContextualizedEvaluation | string;
   fileName: string;
   fileID: string;
-  filteredControls: string[];
+  filteredControls?: string[];
 };
 
 type ProcessedData = {
   data: ContextualizedEvaluation;
   fileName: string;
   fileID: string;
-  filteredControls: string[];
+  filteredControls?: string[];
 };
 
 // All selectable export types for an HTML export
@@ -206,15 +206,24 @@ export class FromHDFToHTMLMapper {
 
     // Pull out results from file
     const allResultLevels: ContextualizedControl[] = [];
-    file.data.contains.map((profile) => {
-      profile.contains.map((result) => {
-        file.filteredControls.forEach((element) => {
-          if (element === result.data.id) {
-            allResultLevels.push(result);
+    if (file.filteredControls === undefined) {
+      file.data.contains.map((profile) => {
+        profile.contains.map((result) => {
+          allResultLevels.push(result);
+        });
+      });
+    } else {
+      file.data.contains.flatMap((profile) => {
+        profile.contains.flatMap((result) => {
+          // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+          for (const element of file.filteredControls!) {
+            if (element === result.data.id) {
+              allResultLevels.push(result);
+            }
           }
         });
       });
-    });
+    }
 
     // Begin filling out outpuData object to pass into HTML template
     // Set high level generalized profile details
@@ -530,7 +539,6 @@ export class FromHDFToHTMLMapper {
       '//# sourceMappingURL=tw-elements.umd.min.js.map',
       ''
     );
-
     // Render template and return generated HTML file
     return Mustache.render(template, this.outputData);
   }
