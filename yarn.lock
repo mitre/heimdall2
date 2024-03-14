@@ -6117,9 +6117,9 @@ address@^1.1.2:
   integrity sha512-4B/qKCfeE/ODUaAUpSwfzazo5x29WD4r3vXiWsB7I2mSDAihwEqKO+g8GELZUQSSAo5e1XTYh3ZVfLyxBc12nA==
 
 adm-zip@^0.5.10:
-  version "0.5.10"
-  resolved "https://registry.npmjs.org/adm-zip/-/adm-zip-0.5.10.tgz#4a51d5ab544b1f5ce51e1b9043139b639afff45b"
-  integrity sha512-x0HvcHqVJNTPk/Bw8JbLWlWoo6Wwnsug0fnYYro1HBrjxZ3G7/AZk7Ahv8JwDe1uIcz8eBqvu86FuF1POiG7vQ==
+  version "0.5.11"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.11.tgz#02ca7aed2d17cc6283b6b7d835f68e73cc74544e"
+  integrity sha512-bSG/kcTQRVyCZ3aOWt3nu/KGIxkfSNi7MXzgKr/MHfKbqPakFESQvaujpUaAG8OQuSroxYMY5vLMpdE6+oND2Q==
 
 agent-base@6, agent-base@^6.0.2:
   version "6.0.2"
