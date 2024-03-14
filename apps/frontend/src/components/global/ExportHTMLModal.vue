@@ -39,7 +39,7 @@
           </v-col>
           <v-col>
             Both Manager and Administrator Reports can be data intensive,
-            does consuming computer memory resources, which can take longer for
+            which can take longer for the browser to render the page.
             the browser to render the page.
           </v-col>
         </v-row>
