@@ -430,7 +430,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    - ```bash
      cd heimdall2
-     yarn install
+     yarn install      # you may need to run yarn install --registry https://registry.npmjs.org
      ```
 
 5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
