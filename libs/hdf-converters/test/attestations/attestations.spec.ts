@@ -87,7 +87,7 @@ describe('attestations', () => {
 
     const output = addAttestationToHDF(inputData, attestationArray);
 
-    //    fs.writeFileSync('sample_jsons/attestations/rhel7-json-attestedjson.json', JSON.stringify(output, null, 2))
+    fs.writeFileSync('sample_jsons/attestations/rhel7-json-attestedjson.json', JSON.stringify(output, null, 2))
 
     const expected = JSON.parse(
       fs.readFileSync(
@@ -123,7 +123,7 @@ describe('attestations', () => {
       )
     );
 
-    //  fs.writeFileSync('sample_jsons/attestations/rhel7-json-spreadsheet.json', JSON.stringify(output, null, 2))
+    fs.writeFileSync('sample_jsons/attestations/rhel7-json-spreadsheet.json', JSON.stringify(output, null, 2))
 
     expect(omitHDFTimes(omitVersions(output))).toEqual(
       omitHDFTimes(omitVersions(expected))
@@ -138,14 +138,14 @@ describe('attestations', () => {
 
   it('Should parse input for custom number of days correctly', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), '2d').toISOString(true)
-    ).toEqual('2022-09-11T21:29:02.000+00:00');
+      advanceDate(moment.utc(1662758942000), '200d').toISOString(true)
+    ).toEqual('2023-03-28T21:29:02.000+00:00');
   });
 
   it('Should parse input for custom number of weeks correctly', () => {
     expect(
-      advanceDate(moment.utc(1662758942000), '3w').toISOString(true)
-    ).toEqual('2022-09-30T21:29:02.000+00:00');
+      advanceDate(moment.utc(1662758942000), '12w').toISOString(true)
+    ).toEqual('2022-12-02T21:29:02.000+00:00');
   });
 
   it('Should parse input for custom number of months correctly', () => {
@@ -159,4 +159,5 @@ describe('attestations', () => {
       advanceDate(moment.utc(1662758942000), '5y').toISOString(true)
     ).toEqual('2027-09-09T21:29:02.000+00:00');
   });
+
 });

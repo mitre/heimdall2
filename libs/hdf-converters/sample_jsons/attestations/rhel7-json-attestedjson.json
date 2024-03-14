@@ -8003,8 +8003,8 @@
             {
               "code_desc": "Manually verified status provided through attestation",
               "status": "passed",
-              "message": "Attestation:\nStatus: passed\nExplanation: The operating system off-loads audit records onto a different system from the system being audited.\n\nUpdated: 2024-03-12\nUpdated By: Bobby Smalls, Security\nFrequency: 7w",
-              "start_time": "2024-03-12T15:51:51.580Z"
+              "message": "Attestation:\nStatus: passed\nExplanation: The operating system off-loads audit records onto a different system from the system being audited.\n\nUpdated: 2024-03-14\nUpdated By: Bobby Smalls, Security\nFrequency: 7w",
+              "start_time": "2024-03-14T16:23:47.543Z"
             }
           ],
           "attestation_data": {
@@ -8012,7 +8012,7 @@
             "explanation": "The operating system off-loads audit records onto a different system from the system being audited.",
             "frequency": "7w",
             "status": "passed",
-            "updated": "2024-03-12",
+            "updated": "2024-03-14",
             "updated_by": "Bobby Smalls, Security"
           }
         },
@@ -8077,8 +8077,8 @@
             {
               "code_desc": "Manually verified status provided through attestation",
               "status": "passed",
-              "message": "Attestation:\nStatus: passed\nExplanation: The operating system the transfer of audit records.\n\nUpdated: 2024-03-12\nUpdated By: Billy Weiss, Security\nFrequency: 3m",
-              "start_time": "2024-03-12T15:51:51.581Z"
+              "message": "Attestation:\nStatus: passed\nExplanation: The operating system the transfer of audit records.\n\nUpdated: 2024-03-14\nUpdated By: Billy Weiss, Security\nFrequency: 3m",
+              "start_time": "2024-03-14T16:23:47.543Z"
             }
           ],
           "attestation_data": {
@@ -8086,7 +8086,7 @@
             "explanation": "The operating system the transfer of audit records.",
             "frequency": "3m",
             "status": "passed",
-            "updated": "2024-03-12",
+            "updated": "2024-03-14",
             "updated_by": "Billy Weiss, Security"
           }
         },
@@ -8154,8 +8154,8 @@
             {
               "code_desc": "Manually verified status provided through attestation",
               "status": "passed",
-              "message": "Attestation:\nStatus: passed\nExplanation: Audit logs are automatically backed up and cleared as necessary\n\nUpdated: 2024-03-12\nUpdated By: Json Smith, Security\nFrequency: monthly",
-              "start_time": "2024-03-12T15:51:51.581Z"
+              "message": "Attestation:\nStatus: passed\nExplanation: Audit logs are automatically backed up and cleared as necessary\n\nUpdated: 2024-03-14\nUpdated By: Json Smith, Security\nFrequency: monthly",
+              "start_time": "2024-03-14T16:23:47.543Z"
             }
           ],
           "attestation_data": {
@@ -8163,7 +8163,7 @@
             "explanation": "Audit logs are automatically backed up and cleared as necessary",
             "frequency": "monthly",
             "status": "passed",
-            "updated": "2024-03-12",
+            "updated": "2024-03-14",
             "updated_by": "Json Smith, Security"
           }
         },
@@ -13964,8 +13964,8 @@
             {
               "code_desc": "Manually verified status provided through attestation",
               "status": "passed",
-              "message": "Attestation:\nStatus: passed\nExplanation: The operating system the transfer of audit records.\n\nUpdated: 2024-03-12\nUpdated By: John Doe, Security\nFrequency: 2y",
-              "start_time": "2024-03-12T15:51:51.581Z"
+              "message": "Attestation:\nStatus: passed\nExplanation: The operating system the transfer of audit records.\n\nUpdated: 2024-03-14\nUpdated By: John Doe, Security\nFrequency: 2y",
+              "start_time": "2024-03-14T16:23:47.544Z"
             }
           ],
           "attestation_data": {
@@ -13973,7 +13973,7 @@
             "explanation": "The operating system the transfer of audit records.",
             "frequency": "2y",
             "status": "passed",
-            "updated": "2024-03-12",
+            "updated": "2024-03-14",
             "updated_by": "John Doe, Security"
           }
         },
@@ -17747,7 +17747,7 @@
               "code_desc": "Manual verification status provided through attestation has expired",
               "status": "skipped",
               "message": "Expired Attestation:\nExpired Status: passed\nExpired Explanation: Audit records are enabled for this system.\n\nUpdated: 2022-01-02\nUpdated By: Alec Hardison, Security\nFrequency: 1d",
-              "start_time": "2024-03-12T15:51:51.624Z"
+              "start_time": "2024-03-14T16:23:47.588Z"
             }
           ],
           "attestation_data": {
