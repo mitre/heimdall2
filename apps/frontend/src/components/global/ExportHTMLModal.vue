@@ -38,8 +38,8 @@
             <v-icon color="primary">mdi-information-variant-circle</v-icon>
           </v-col>
           <v-col>
-            Both Manager and Administrator Reports can be data intensive,
-            which can take longer for the browser to render the page.
+            Both Manager and Administrator Reports can be data intensive, which
+            can take longer for the browser to render the page.
           </v-col>
         </v-row>
       </v-card-text>
