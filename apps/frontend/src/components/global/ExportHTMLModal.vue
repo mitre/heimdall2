@@ -65,8 +65,7 @@ import {Prop, Watch} from 'vue-property-decorator';
 import {Filter} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {SnackbarModule} from '../../store/snackbar';
-//import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
-import {FromHDFToHTMLMapper} from '../../../../../libs/hdf-converters/src/converters-from-hdf/html/reverse-html-mapper';
+import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
 import {SourcedContextualizedEvaluation} from '../../store/report_intake';
 
 // All selectable export types for an HTML export
