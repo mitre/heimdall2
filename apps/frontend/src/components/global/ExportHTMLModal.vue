@@ -38,9 +38,8 @@
             <v-icon color="primary">mdi-information-variant-circle</v-icon>
           </v-col>
           <v-col>
-            Both Manager and Administrator Reports can be very data intensive,
-            does consuming computer memory resources, which can take longer for
-            the browser to render the page.
+            Both Manager and Administrator Reports can be data intensive, which
+            can take longer for the browser to render the page.
           </v-col>
         </v-row>
       </v-card-text>
@@ -66,7 +65,8 @@ import {Prop, Watch} from 'vue-property-decorator';
 import {Filter} from '../../store/data_filters';
 import {InspecDataModule} from '../../store/data_store';
 import {SnackbarModule} from '../../store/snackbar';
-import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
+//import {FromHDFToHTMLMapper} from '@mitre/hdf-converters';
+import {FromHDFToHTMLMapper} from '../../../../../libs/hdf-converters/src/converters-from-hdf/html/reverse-html-mapper';
 import {SourcedContextualizedEvaluation} from '../../store/report_intake';
 
 // All selectable export types for an HTML export
@@ -130,8 +130,8 @@ export default class ExportHTMLModal extends Vue {
     }
 
     const files = [];
-    const filteredStatus = this.filter.status!.toString();
-    const filteredSeverity = this.filter.severity!.toString();
+    const filteredStatus = this.filter.status!.toString() || '';
+    const filteredSeverity = this.filter.severity!.toString() || '';
 
     for (const fileId of this.filter.fromFile) {
       const file = InspecDataModule.allEvaluationFiles.find(
@@ -140,15 +140,19 @@ export default class ExportHTMLModal extends Vue {
 
       if (file) {
         const data = file.evaluation;
-
         const filteredControls = this.getFilterControlIds(
           data,
           filteredStatus,
           filteredSeverity
         );
-        const fileName = file.filename;
-        const fileID = file.uniqueId;
-        files.push({data, fileName, fileID, filteredControls});
+
+        // Only show files that have controls that meet
+        // the status/severity criteria, could be all files
+        if (filteredControls.length > 0) {
+          const fileName = file.filename;
+          const fileID = file.uniqueId;
+          files.push({data, fileName, fileID, filteredControls});
+        }
       }
     }
     // Generate and export HTML file
