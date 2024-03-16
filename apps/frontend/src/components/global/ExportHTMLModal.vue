@@ -128,6 +128,7 @@ export default class ExportHTMLModal extends Vue {
       return SnackbarModule.failure('No files have been loaded.');
     }
 
+    document.body.style.cursor = 'wait';
     const files = [];
     const filteredStatus = this.filter.status!.toString() || '';
     const filteredSeverity = this.filter.severity!.toString() || '';
@@ -167,6 +168,7 @@ export default class ExportHTMLModal extends Vue {
       )
     );
 
+    document.body.style.cursor = 'default';
     this.closeModal();
   }
 

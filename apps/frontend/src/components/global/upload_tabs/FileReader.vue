@@ -157,6 +157,7 @@ export default class FileReader extends mixins(ServerMixin) {
   commit_files(files: File[]) {
     const totalFiles = files.length;
     let index = 1;
+    document.body.style.cursor = 'wait';
     Promise.all(
       files.map(async (file) => {
         try {
@@ -165,6 +166,7 @@ export default class FileReader extends mixins(ServerMixin) {
           return fileId;
         } catch (err) {
           SnackbarModule.failure(String(err));
+          document.body.style.cursor = 'default';
         }
       })
     )
@@ -183,6 +185,7 @@ export default class FileReader extends mixins(ServerMixin) {
       .finally(() => {
         this.loading = false;
         this.percent = 0;
+        document.body.style.cursor = 'default';
       });
   }
 
