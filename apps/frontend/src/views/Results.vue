@@ -6,7 +6,7 @@
   >
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
-      <v-btn :disabled="!can_clear" @click="clear">
+      <v-btn :disabled="!canClear" @click="clear">
         <span class="d-none d-md-inline pr-2"> Clear </span>
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
@@ -20,37 +20,37 @@
             </v-btn>
           </template>
           <v-list class="py-0">
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportCaat :filter="all_filter" />
+            <v-list-item v-if="isResultView" class="px-0">
+              <ExportCaat :filter="allFilter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportNist :filter="all_filter" />
+            <v-list-item v-if="isResultView" class="px-0">
+              <ExportNist :filter="allFilter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportASFFModal :filter="all_filter" />
+            <v-list-item v-if="isResultView" class="px-0">
+              <ExportASFFModal :filter="allFilter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportCKLModal :filter="all_filter" />
+            <v-list-item v-if="isResultView" class="px-0">
+              <ExportCKLModal :filter="allFilter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportCSVModal :filter="all_filter" />
+            <v-list-item v-if="isResultView" class="px-0">
+              <ExportCSVModal :filter="allFilter" />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportHTMLModal
-                :filter="all_filter"
+                :filter="allFilter"
                 :file-type="current_route_name"
               />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportSplunkModal />
             </v-list-item>
             <v-list-item class="px-0">
               <ExportJson />
             </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
+            <v-list-item v-if="isResultView" class="px-0">
               <ExportXCCDFResults
-                :filter="all_filter"
-                :is-result-view="is_result_view"
+                :filter="allFilter"
+                :is-result-view="isResultView"
               />
             </v-list-item>
           </v-list>
@@ -92,7 +92,7 @@
         </v-container>
         <!-- Count Cards -->
         <StatusCardRow
-          :filter="all_filter"
+          :filter="allFilter"
           :current-status-filter="statusFilter"
           @show-errors="showErrors"
           @show-waived="showWaived"
@@ -105,7 +105,7 @@
             <v-card id="statusCounts" class="fill-height">
               <v-card-title class="justify-center">Status Counts</v-card-title>
               <v-card-actions class="justify-center">
-                <StatusChart v-model="statusFilter" :filter="all_filter" />
+                <StatusChart v-model="statusFilter" :filter="allFilter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -115,7 +115,7 @@
                 >Severity Counts</v-card-title
               >
               <v-card-actions class="justify-center">
-                <SeverityChart v-model="severityFilter" :filter="all_filter" />
+                <SeverityChart v-model="severityFilter" :filter="allFilter" />
               </v-card-actions>
             </v-card>
           </v-col>
@@ -125,7 +125,7 @@
                 >Compliance Level</v-card-title
               >
               <v-card-actions class="justify-center">
-                <ComplianceChart :filter="all_filter" />
+                <ComplianceChart :filter="allFilter" />
               </v-card-actions>
               <v-card-text style="text-align: center"
                 >[Passed/(Passed + Failed + Not Reviewed + Profile Error<span
@@ -158,10 +158,7 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <ControlTable
-                :filter="all_filter"
-                :show-impact="is_result_view"
-              />
+              <ControlTable :filter="allFilter" :show-impact="isResultView" />
             </v-card>
           </v-col>
         </v-row>
@@ -170,7 +167,7 @@
 
     <!-- Everything-is-filtered snackbar -->
     <v-snackbar
-      v-model="filterSnackbar"
+      v-model="enableResultSnackbar"
       class="mt-11"
       style="z-index: 2"
       :timeout="-1"
@@ -182,16 +179,18 @@
         <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
         filters and show all.
       </span>
-      <span v-else-if="no_files" class="subtitle-2">
+      <span v-else-if="noFiles" class="subtitle-2">
         No files are currently loaded. Press the <strong>LOAD</strong>
         <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
         some.
       </span>
       <span v-else class="subtitle-2">
         No files are currently enabled for viewing. Open the
-        <v-icon class="mx-1">mdi-menu</v-icon> sidebar menu, and ensure that the
-        file(s) you wish to view are
-        <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
+        <v-icon class="mx-1">mdi-arrow-right</v-icon> sidebar menu, and ensure
+        that the file(s) you wish to view are
+        <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked. If you would
+        like to load a file, press the <strong>LOAD</strong>
+        <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above.
       </span>
     </v-snackbar>
   </Base>
@@ -220,7 +219,7 @@ import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import {
   ExtendedControlStatus,
-  Filter,
+  ControlsFilter,
   FilteredDataModule,
   TreeMapState
 } from '@/store/data_filters';
@@ -232,7 +231,7 @@ import {
   SourcedContextualizedEvaluation,
   SourcedContextualizedProfile
 } from '@/store/report_intake';
-import {SearchModule} from '@/store/search';
+import {SearchEntry, SearchModule} from '@/store/search';
 import {ServerModule} from '@/store/server';
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/interfaces';
@@ -276,8 +275,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   treeFilters: TreeMapState = [];
   controlSelection: string | null = null;
 
-  /** Model for if all-filtered snackbar should be showing */
-  filterSnackbar = false;
+  /** Determines if snackbar should be enabled */
+  get enableResultSnackbar(): boolean {
+    return FilteredDataModule.controls(this.allFilter).length === 0;
+  }
 
   evalInfo:
     | SourcedContextualizedEvaluation
@@ -295,19 +296,19 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     SearchModule.updateSearch(term);
   }
 
-  get severityFilter(): Severity[] {
-    return SearchModule.severityFilter;
+  get severityFilter(): SearchEntry<Severity>[] {
+    return SearchModule.inFileSearchTerms.severityFilter;
   }
 
-  set severityFilter(severity: Severity[]) {
+  set severityFilter(severity: SearchEntry<Severity>[]) {
     SearchModule.setSeverity(severity);
   }
 
-  get statusFilter(): ExtendedControlStatus[] {
-    return SearchModule.statusFilter;
+  get statusFilter(): SearchEntry<ExtendedControlStatus>[] {
+    return SearchModule.inFileSearchTerms.statusFilter;
   }
 
-  set statusFilter(status: ExtendedControlStatus[]) {
+  set statusFilter(status: SearchEntry<ExtendedControlStatus>[]) {
     SearchModule.setStatusFilter(status);
   }
 
@@ -316,7 +317,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * Controlled by router.
    */
   get file_filter(): FileID[] {
-    if (this.is_result_view) {
+    if (this.isResultView) {
       return FilteredDataModule.selectedEvaluationIds;
     } else {
       return FilteredDataModule.selectedProfileIds;
@@ -329,8 +330,15 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     );
   }
 
-  get activeFiles(): SourcedContextualizedEvaluation[] {
-    return this.evaluationFiles;
+  get profiles(): SourcedContextualizedProfile[] {
+    return Array.from(FilteredDataModule.profiles(this.file_filter));
+  }
+
+  get activeFiles(): (
+    | SourcedContextualizedEvaluation
+    | SourcedContextualizedProfile
+  )[] {
+    return this.isResultView ? this.evaluationFiles : this.profiles;
   }
 
   getFile(fileID: FileID) {
@@ -344,50 +352,53 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   /**
    * Returns true if we're showing results
    */
-  get is_result_view(): boolean {
-    return this.current_route === 'results';
+  get isResultView(): boolean {
+    return this.currentRoute === 'results';
   }
 
   // Returns true if no files are uploaded
-  get no_files(): boolean {
+  get noFiles(): boolean {
     return InspecDataModule.allFiles.length === 0;
   }
 
   /**
-   * The filter for charts. Contains all of our filter stuff
+   * Subset of all filter terms specific for Results
    */
-  get all_filter(): Filter {
+  get allFilter(): ControlsFilter {
     return {
-      status: SearchModule.statusFilter,
-      severity: SearchModule.severityFilter,
+      status: SearchModule.inFileSearchTerms.statusFilter,
+      severity: SearchModule.inFileSearchTerms.severityFilter,
       fromFile: this.file_filter,
-      ids: SearchModule.controlIdSearchTerms,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      searchTerm: SearchModule.freeSearch || '',
-      codeSearchTerms: SearchModule.codeSearchTerms,
+      ids: SearchModule.inFileSearchTerms.controlId,
+      titleSearchTerms: SearchModule.inFileSearchTerms.title,
+      descriptionSearchTerms: SearchModule.inFileSearchTerms.description,
+      nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
+      codeSearchTerms: SearchModule.inFileSearchTerms.code,
       treeFilters: this.treeFilters,
       omit_overlayed_controls: true,
-      control_id: this.controlSelection || undefined
+      control_id: this.controlSelection || undefined,
+      filenameSearchTerms: SearchModule.fileMetadataSearchTerms.filename,
+      userGroupSearchTerms: SearchModule.fileMetadataSearchTerms.group,
+      evalTagSearchTerms: SearchModule.fileMetadataSearchTerms.evalTag,
+      keywordsSearchTerms: SearchModule.inFileSearchTerms.keywords
     };
   }
 
   /**
    * The filter for treemap. Omits its own stuff
    */
-  get treemap_full_filter(): Filter {
+  get treemap_full_filter(): ControlsFilter {
     return {
-      status: SearchModule.statusFilter || [],
-      severity: SearchModule.severityFilter,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      codeSearchTerms: SearchModule.codeSearchTerms,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      ids: SearchModule.controlIdSearchTerms,
+      status: SearchModule.inFileSearchTerms.statusFilter || [],
+      severity: SearchModule.inFileSearchTerms.severityFilter,
+      titleSearchTerms: SearchModule.inFileSearchTerms.title,
+      descriptionSearchTerms: SearchModule.inFileSearchTerms.description,
+      codeSearchTerms: SearchModule.inFileSearchTerms.code,
+      nistIdFilter: SearchModule.inFileSearchTerms.NISTIdFilter,
+      ids: SearchModule.inFileSearchTerms.controlId,
       fromFile: this.file_filter,
-      searchTerm: SearchModule.freeSearch,
-      omit_overlayed_controls: true
+      omit_overlayed_controls: true,
+      keywordsSearchTerms: SearchModule.inFileSearchTerms.keywords
     };
   }
 
@@ -396,7 +407,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   clear(clearSearchBar = false) {
     SearchModule.clear();
-    this.filterSnackbar = false;
     this.controlSelection = null;
     this.treeFilters = [];
     if (clearSearchBar) {
@@ -408,14 +418,14 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * Returns true if we can currently clear.
    * Essentially, just controls whether the button is available
    */
-  get can_clear(): boolean {
+  get canClear(): boolean {
     // Return if any params not null/empty
     let result: boolean;
     if (
-      SearchModule.severityFilter.length !== 0 ||
-      SearchModule.statusFilter.length !== 0 ||
-      SearchModule.controlIdSearchTerms.length !== 0 ||
-      SearchModule.codeSearchTerms.length !== 0 ||
+      SearchModule.inFileSearchTerms.severityFilter.length !== 0 ||
+      SearchModule.inFileSearchTerms.statusFilter.length !== 0 ||
+      SearchModule.inFileSearchTerms.controlId.length !== 0 ||
+      SearchModule.inFileSearchTerms.code.length !== 0 ||
       this.searchTerm ||
       this.treeFilters.length
     ) {
@@ -424,19 +434,12 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       result = false;
     }
 
-    // Logic to check: are any files actually visible?
-    if (FilteredDataModule.controls(this.all_filter).length === 0) {
-      this.filterSnackbar = true;
-    } else {
-      this.filterSnackbar = false;
-    }
-
     // Finally, return our result
     return result;
   }
 
   get waivedProfilesExist(): boolean {
-    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1;
+    return StatusCountModule.countOf(this.allFilter, 'Waived') >= 1;
   }
 
   /**
@@ -491,7 +494,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     SearchModule.addSearchFilter({
       field: 'status',
       value: status,
-      previousValues: this.statusFilter
+      negated: false // Defaulted as false
     });
   }
 
@@ -499,7 +502,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     SearchModule.removeSearchFilter({
       field: 'status',
       value: status,
-      previousValues: this.statusFilter
+      negated: false // Defaulted as false
     });
   }
 }
