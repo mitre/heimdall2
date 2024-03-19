@@ -33,25 +33,38 @@
                 <v-card-text v-if="file.selected">
                   <v-row>
                     <v-text-field
-                      v-model="file.hostfqdn"
-                      label="Host FQDN"
+                      v-model="file.marking"
+                      label="Marking"
+                      class="pr-2"
+                    />
+                    <v-text-field
+                      v-model="file.hostname"
+                      label="Host Name"
                       class="pr-2"
                     />
                     <v-text-field
                       v-model="file.hostip"
                       label="Host IP"
-                      class="pr-2"
                       :rules="[validateIpAddress]"
                       hint="###.###.###.###"
+                      class="pr-2"
                     />
                     <v-text-field
                       v-model="file.hostmac"
                       label="Host MAC"
-                      class="pr-2"
                       :rules="[validateMacAddress]"
                       hint="XX:XX:XX:XX:XX:XX"
+                      class="pr-2"
                     />
-                    <v-text-field v-model="file.hostname" label="Host Name" />
+                    <v-text-field
+                      v-model="file.hostfqdn"
+                      label="Host FQDN"
+                      class="pr-2"
+                    />
+                    <v-text-field
+                      v-model="file.targetcomment"
+                      label="Target Comments"
+                    />
                   </v-row>
                   <v-row>
                     <v-select
@@ -96,23 +109,44 @@
                     v-for="(profile, profileIndex) in file.profiles"
                     :key="profileIndex"
                   >
-                    <h2>{{ profile.name }}</h2>
-                    <v-text-field
-                      v-model="profile.version"
-                      label="Version"
-                      type="number"
-                    />
-                    <v-text-field
-                      v-model="profile.releasenumber"
-                      label="Release Number"
-                      type="number"
-                    />
-                    <v-text-field
-                      v-model="profile.releasedate"
-                      label="Release Date"
-                      :rules="[validateReleaseDate]"
-                      hint="DD MON YYYY"
-                    />
+                    <v-card>
+                      <v-card-title>{{ profile.extractedname }}</v-card-title>
+                      <v-card-text>
+                        <v-text-field
+                          v-model="profile.title"
+                          label="Name"
+                          :placeholder="profile.titleplaceholder"
+                        />
+                        <v-text-field
+                          v-model="profile.version"
+                          label="Version"
+                          type="number"
+                          :placeholder="profile.versionplaceholder"
+                        />
+                        <v-text-field
+                          v-model="profile.releasenumber"
+                          label="Release Number"
+                          type="number"
+                          :placeholder="profile.releasenumberplaceholder"
+                        />
+                        <label for="release-date-datepicker">
+                          Release Date
+                        </label>
+                        <v-date-picker
+                          id="release-date-datepicker"
+                          v-model="profile.releasedate"
+                          full-width
+                          landscape
+                        />
+                        <v-btn
+                          block
+                          text
+                          @click="clearDateSelection(index, profileIndex)"
+                        >
+                          Clear Date Selection
+                        </v-btn>
+                      </v-card-text>
+                    </v-card>
                   </div>
                 </v-card-text>
               </v-expand-transition>
@@ -147,23 +181,23 @@ import {
   cleanUpFilename,
   saveSingleOrMultipleFiles
 } from '@/utilities/export_util';
-import {ChecklistResults} from '@mitre/hdf-converters';
 import {
+  ChecklistResults,
   ChecklistVuln,
   ChecklistMetadata,
-  StigMetadata
-} from '@mitre/hdf-converters/src/ckl-mapper/checklist-jsonix-converter';
-import {
+  StigMetadata,
   Assettype,
   Role,
   Techarea
-} from '@mitre/hdf-converters/src/ckl-mapper/checklistJsonix';
+} from '@mitre/hdf-converters';
 import {ExecJSON} from 'inspecjs';
 import {Dependency} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
+import {DateTime} from 'luxon';
+import {coerce} from 'semver';
 
 type ExtendedEvaluationFile = (EvaluationFile | ProfileFile) &
   ChecklistMetadata & {
@@ -222,6 +256,17 @@ export default class ExportCKLModal extends Vue {
     this.selected = [];
   }
 
+  clearDateSelection(fileIndex: number, profileIndex: number) {
+    console.log(
+      JSON.stringify(
+        Object.keys(this.files[fileIndex].profiles[profileIndex]),
+        null,
+        2
+      )
+    );
+    this.files[fileIndex].profiles[profileIndex].releasedate = '';
+  }
+
   // Get our evaluation info for our export table
   evaluations(fileIds: string[]): ExtendedEvaluationFile[] {
     const files: ExtendedEvaluationFile[] = [];
@@ -232,6 +277,11 @@ export default class ExportCKLModal extends Vue {
       if (file) {
         files.push({
           ...file,
+          marking: _.get(
+            file,
+            'evaluation.data.passthrough.checklist.asset.marking',
+            _.get(file, 'evaluation.data.passthrough.metadata.marking', 'CUI')
+          ),
           hostname: _.get(
             file,
             'evaluation.data.passthrough.checklist.asset.hostname',
@@ -251,6 +301,15 @@ export default class ExportCKLModal extends Vue {
             file,
             'evaluation.data.passthrough.checklist.asset.hostip',
             _.get(file, 'evaluation.data.passthrough.metadata.hostip', '')
+          ),
+          targetcomment: _.get(
+            file,
+            'evaluation.data.passthrough.checklist.asset.targetcomment',
+            _.get(
+              file,
+              'evaluation.data.passthrough.metadata.targetcomment',
+              ''
+            )
           ),
           role: _.get(
             file,
@@ -321,7 +380,11 @@ export default class ExportCKLModal extends Vue {
   }
 
   profileStigs(file: EvaluationFile): StigMetadata[] {
-    const results: StigMetadata[] = [];
+    const results: (StigMetadata & {
+      titleplaceholder: string;
+      versionplaceholder: string;
+      releasenumberplaceholder: string;
+    })[] = [];
     const profileOrStigs: ExecJSON.Profile[] | ChecklistVuln[] = _.get(
       file,
       'evaluation.data.passthrough.checklist.stigs',
@@ -334,21 +397,41 @@ export default class ExportCKLModal extends Vue {
       }
       const [releasenumber, releasedate] = this.splitReleaseInfo(
         _.get(profileStig, 'header.releaseinfo', '')
-      ) as unknown[] as [number, string];
-      const version = _.get(
-        profileStig,
-        'version',
-        _.get(profileStig, 'header.version', '')
-      ) as unknown as number;
+      );
+      console.log(
+        `profilestigsections:\n${JSON.stringify(_.get(profileStig, 'version'), null, 2)}\n${JSON.stringify(_.get(profileStig, 'header.version'), null, 2)}`
+      );
+      const version = coerce(
+        _.get(profileStig, 'header.version', _.get(profileStig, 'version', ''))
+      );
+      console.log(`version:\n${JSON.stringify(version, null, 2)}`);
+      console.log(`releasenumber\n${JSON.stringify(releasenumber, null, 2)}`);
       results.push({
         name: _.get(
           profileStig,
           'header.title',
           _.get(profileStig, 'name', '')
         ),
-        version,
-        releasenumber,
-        releasedate
+        title: _.get(
+          profileStig,
+          'header.title',
+          _.get(profileStig, 'title', _.get(profileStig, 'name', ''))
+        ),
+        titleplaceholder: _.get(
+          profileStig,
+          'header.title',
+          _.get(profileStig, 'title', _.get(profileStig, 'name', ''))
+        ),
+        version: version?.major ?? 0,
+        versionplaceholder: (version?.major ?? 0).toString(),
+        releasenumber: parseInt(releasenumber, 10) || version?.minor || 0,
+        releasenumberplaceholder: (
+          parseInt(releasenumber, 10) ||
+          version?.minor ||
+          0
+        ).toString(),
+        releasedate:
+          DateTime.fromFormat(releasedate, 'dd LLL yyyy').toISODate() || ''
       });
     }
     return results;
@@ -370,15 +453,6 @@ export default class ExportCKLModal extends Vue {
     return macPattern.test(value) || 'Invalid MAC Address Format';
   }
 
-  validateReleaseDate(value: string): boolean | string {
-    if (!value) {
-      return true;
-    }
-    const releaseDatePattern =
-      /\d{2} (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{4}/;
-    return releaseDatePattern.test(value) || 'Invalid Date Format';
-  }
-
   toggleSelectFile(file: ExtendedEvaluationFile) {
     if (this.selected.includes(file)) {
       const selectedIndex = this.selected.indexOf(file);
@@ -390,10 +464,16 @@ export default class ExportCKLModal extends Vue {
   }
 
   addMetadataToPassthrough(file: ExtendedEvaluationFile) {
+    _.set(file, 'evaluation.data.passthrough.metadata.marking', file.marking);
     _.set(file, 'evaluation.data.passthrough.metadata.hostname', file.hostname);
     _.set(file, 'evaluation.data.passthrough.metadata.hostfqdn', file.hostfqdn);
     _.set(file, 'evaluation.data.passthrough.metadata.hostmac', file.hostmac);
     _.set(file, 'evaluation.data.passthrough.metadata.hostip', file.hostip);
+    _.set(
+      file,
+      'evaluation.data.passthrough.metadata.targetcomment',
+      file.targetcomment
+    );
     _.set(file, 'evaluation.data.passthrough.metadata.role', file.role);
     _.set(file, 'evaluation.data.passthrough.metadata.techarea', file.techarea);
     _.set(
@@ -418,11 +498,18 @@ export default class ExportCKLModal extends Vue {
     );
     const profileMetadata: StigMetadata[] = [];
     for (const profile of file.profiles) {
+      console.log(
+        `addingmetadata to passthrough - per profile additions\n${JSON.stringify(profile, null, 2)}`
+      );
+      const releasedate = DateTime.fromISO(profile.releasedate);
       profileMetadata.push({
         name: profile.name,
+        title: profile.title,
         version: profile.version,
         releasenumber: profile.releasenumber,
-        releasedate: profile.releasedate
+        releasedate: releasedate.isValid
+          ? releasedate.toFormat('dd LLL yyyy')
+          : ''
       });
     }
     _.set(

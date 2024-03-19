@@ -1,5 +1,4 @@
 import {ExecJSON} from 'inspecjs';
-import {ControlResultStatus} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 import _ from 'lodash';
 import {JsonixIntermediateConverter} from '../jsonix-intermediate-converter';
 import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
@@ -22,6 +21,7 @@ import {
   Vuln,
   Vulnattribute
 } from './checklistJsonix';
+import {coerce} from 'semver';
 
 export type ChecklistObject = {
   asset: ChecklistAsset;
@@ -101,10 +101,12 @@ export enum Severity {
 }
 
 export type ChecklistMetadata = {
+  marking: string;
   hostname: string;
   hostip: string;
   hostmac: string;
   hostfqdn: string;
+  targetcomment: string;
   role: Role;
   assettype: Assettype;
   techarea: Techarea;
@@ -116,6 +118,7 @@ export type ChecklistMetadata = {
 
 export type StigMetadata = {
   name: string;
+  title: string;
   releasenumber: number;
   version: number;
   releasedate: string;
@@ -124,10 +127,12 @@ export type StigMetadata = {
 export const EmptyChecklistObject: ChecklistObject = {
   asset: {
     assettype: Assettype.Computing,
+    marking: 'CUI',
     hostfqdn: null,
     hostip: null,
     hostmac: null,
     hostname: null,
+    targetcomment: null,
     role: Role.None,
     targetkey: null,
     techarea: Techarea.Empty,
@@ -198,10 +203,12 @@ export function updateChecklistWithMetadata(
     'passthrough.checklist'
   ) as unknown as ChecklistObject;
   checklist.asset.assettype = metadata.assettype;
+  checklist.asset.marking = metadata.marking;
   checklist.asset.hostfqdn = metadata.hostfqdn;
   checklist.asset.hostip = metadata.hostip;
   checklist.asset.hostname = metadata.hostname;
   checklist.asset.hostmac = metadata.hostmac;
+  checklist.asset.targetcomment = metadata.targetcomment;
   checklist.asset.role = metadata.role;
   checklist.asset.techarea = metadata.techarea;
   checklist.asset.webordatabase = metadata.webordatabase as unknown as boolean;
@@ -210,7 +217,11 @@ export function updateChecklistWithMetadata(
 
   for (const stig of checklist.stigs) {
     for (const profile of metadata.profiles) {
+      console.log(
+        `stig: ${JSON.stringify(stig, null, 2)}\nprofile: ${JSON.stringify(profile, null, 2)}`
+      );
       if (stig.header.title === profile.name) {
+        stig.header.title = profile.title || profile.name;
         stig.header.version = profile.version.toString();
         stig.header.releaseinfo = `Release: ${profile.releasenumber} Benchmark Date: ${profile.releasedate}`;
         for (const vuln of stig.vulns) {
@@ -262,8 +273,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       hostip: _.get(jsonixData, 'value.asset.hostip') as unknown as string,
       hostmac: _.get(jsonixData, 'value.asset.hostmac') as unknown as string,
       hostfqdn: _.get(jsonixData, 'value.asset.hostfqdn') as unknown as string,
-      marking: _.get(jsonixData, 'value.asset.marking'),
-      targetcomment: _.get(jsonixData, 'value.asset.targetcomment'),
+      marking: _.get(jsonixData, 'value.asset.marking') as unknown as string,
+      targetcomment: _.get(
+        jsonixData,
+        'value.asset.targetcomment'
+      ) as unknown as string,
       techarea: _.get(
         jsonixData,
         'value.asset.techarea'
@@ -546,21 +560,18 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   }
 
   getStatus(results: ExecJSON.ControlResult[], impact: number): StatusMapping {
-    const statuses: ControlResultStatus[] = results.map((result) => {
+    const statuses: ExecJSON.ControlResultStatus[] = results.map((result) => {
       return result.status;
-    }) as unknown as ControlResultStatus[];
+    }) as unknown as ExecJSON.ControlResultStatus[];
     if (impact === 0) {
       return StatusMapping.Not_Applicable;
-    } else if (statuses.includes(ControlResultStatus.Failed)) {
+    } else if (statuses.includes(ExecJSON.ControlResultStatus.Failed)) {
       return StatusMapping.Open;
-    } else if (statuses.includes(ControlResultStatus.Passed)) {
+    } else if (statuses.includes(ExecJSON.ControlResultStatus.Passed)) {
       return StatusMapping.NotAFinding;
     } else {
       return StatusMapping.Not_Reviewed;
     }
-    // } else if (statuses.includes(ControlResultStatus.Skipped)) {
-    //   return StatusMapping.Not_Reviewed;
-    // }
   }
 
   severityMap(impact: number): Severity {
@@ -651,14 +662,19 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     if (profile.maintainer) {
       hdfSpecificData['maintainer'] = profile.maintainer;
     }
+    if (profile.version) {
+      hdfSpecificData['version'] = profile.version;
+    }
 
     const hdfDataExist = Object.keys(hdfSpecificData).length !== 0;
     return hdfDataExist ? JSON.stringify({hdfSpecificData}) : '';
   }
 
   controlsToVulns(profile: ExecJSON.Profile, stigRef: string): ChecklistVuln[] {
+    console.log('in controls to vulns');
     const vulns: ChecklistVuln[] = [];
     for (const control of profile.controls) {
+      console.log(`on control ${control.id}`);
       const vuln: ChecklistVuln = {
         status: this.getStatus(control.results, control.impact),
         vulnNum: _.get(control, 'id', ''),
@@ -721,6 +737,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       };
       vulns.push(vuln);
     }
+    console.log('about to return controls to vulns');
     return vulns;
   }
 
@@ -759,22 +776,23 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       const profileMetadata = metadata?.profiles.find(
         (p) => p.name === profile.name
       );
+      const version = coerce(profile.version);
       const header: StigHeader = {
         version: _.get(
           profileMetadata,
           'version',
-          profile.version as string
-        ) as string,
+          version?.major ?? 0
+        ).toString(),
         classification: 'UNCLASSIFIED',
         customname: this.addHdfProfileSpecificData(profile),
         stigid: profile.name,
         description: profile.description as string,
         filename: '',
         releaseinfo: this.getReleaseInfo(
-          profileMetadata?.releasenumber,
+          profileMetadata?.releasenumber || version?.minor || 0,
           profileMetadata?.releasedate
         ),
-        title: profile.title ?? profile.name,
+        title: profileMetadata?.title || profile.title || profile.name,
         uuid: '',
         notice: profile.license as string,
         source: 'STIG.DOD.MIL'
@@ -782,7 +800,9 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       const stigRef = `${header.title} :: Version ${header.version}${
         header.releaseinfo ? ', ' + header.releaseinfo : ''
       }`;
+      console.log('pre controls to vulns');
       const vulns: ChecklistVuln[] = this.controlsToVulns(profile, stigRef);
+      console.log('post controls to vulns');
       stigs.push({header, vulns});
     }
     const checklistObject: ChecklistObject = {
