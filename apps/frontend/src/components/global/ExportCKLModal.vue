@@ -277,11 +277,12 @@ export default class ExportCKLModal extends Vue {
       if (file) {
         files.push({
           ...file,
-          marking: _.get(
-            file,
-            'evaluation.data.passthrough.checklist.asset.marking',
-            _.get(file, 'evaluation.data.passthrough.metadata.marking', 'CUI')
-          ),
+          marking:
+            _.get(
+              file,
+              'evaluation.data.passthrough.checklist.asset.marking'
+            ) ??
+            _.get(file, 'evaluation.data.passthrough.metadata.marking', 'CUI'),
           hostname: _.get(
             file,
             'evaluation.data.passthrough.checklist.asset.hostname',
