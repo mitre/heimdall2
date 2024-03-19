@@ -746,7 +746,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     releasedate: string | undefined
   ): string | undefined {
     if (releasenumber && releasedate) {
-      return `Release: ${releasenumber} Benchmark Date ${releasedate}`;
+      return `Release: ${releasenumber} Benchmark Date: ${releasedate}`;
     } else if (releasenumber) {
       return `Release: ${releasenumber}`;
     } else if (releasedate) {
@@ -776,6 +776,8 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       const profileMetadata = metadata?.profiles.find(
         (p) => p.name === profile.name
       );
+      console.log('hdf2intermediate, full passthrough');
+      console.log(JSON.stringify(_.get(hdf, 'passthrough'), null, 2));
       const version = coerce(profile.version);
       const header: StigHeader = {
         version: _.get(
@@ -786,7 +788,10 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         classification: 'UNCLASSIFIED',
         customname: this.addHdfProfileSpecificData(profile),
         stigid: profile.name,
-        description: profile.description as string,
+        description:
+          (profile.summary || '') +
+          (profile.summary && profile.description ? '\n' : '') +
+          (profile.description || ''),
         filename: '',
         releaseinfo: this.getReleaseInfo(
           profileMetadata?.releasenumber || version?.minor || 0,
@@ -794,7 +799,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         ),
         title: profileMetadata?.title || profile.title || profile.name,
         uuid: '',
-        notice: profile.license as string,
+        notice: profile.license || '',
         source: 'STIG.DOD.MIL'
       };
       const stigRef = `${header.title} :: Version ${header.version}${
@@ -818,15 +823,13 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         hostname: _.get(hdf, 'passthrough.metadata.hostname', ''),
         marking: _.get(hdf, 'passthrough.metadata.marking', 'CUI'),
         role: _.get(hdf, 'passthrough.metadata.role', Role.None),
-        targetcomment: _.get(hdf, 'passthrough.metadata.targetcomment'),
+        targetcomment: _.get(hdf, 'passthrough.metadata.targetcomment', ''),
         targetkey: '',
         techarea: _.get(hdf, 'passthrough.metadata.techarea', Techarea.Empty),
         webdbinstance: _.get(hdf, 'passthrough.metadata.webdbinstance', ''),
         webdbsite: _.get(hdf, 'passthrough.metadata.webdbsite', ''),
-        webordatabase: _.get(
-          hdf,
-          'passthrough.metadata.webordatabase'
-        ) as unknown as boolean
+        webordatabase:
+          _.get(hdf, 'passthrough.metadata.webordatabase') === 'true'
       },
       stigs: stigs
     };
