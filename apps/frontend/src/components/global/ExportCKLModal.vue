@@ -91,15 +91,13 @@
                       label="Web or Database"
                     />
                   </v-row>
-                  <v-row>
+                  <v-row v-if="file.webordatabase === 'true'">
                     <v-text-field
-                      v-if="file.webordatabase === 'true'"
                       v-model="file.webdbsite"
                       label="Web DB Site"
                       class="pr-2"
                     />
                     <v-text-field
-                      v-if="file.webordatabase === 'true'"
                       v-model="file.webdbinstance"
                       label="Web DB Instance"
                       class="pr-2"
