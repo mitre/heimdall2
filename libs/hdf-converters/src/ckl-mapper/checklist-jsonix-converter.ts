@@ -677,7 +677,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   controlsToVulns(
     profile: ExecJSON.Profile,
     stigRef: string,
-    metadata: ChecklistMetadata
+    metadata?: ChecklistMetadata
   ): ChecklistVuln[] {
     console.log('in controls to vulns');
     const vulns: ChecklistVuln[] = [];
@@ -686,9 +686,9 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       const vuln: ChecklistVuln = {
         status: this.getStatus(control.results, control.impact),
         vulnNum:
-          metadata.vulidmapping === 'id'
-            ? _.get(control, 'id', '')
-            : _.get(control.tags, 'gid', ''),
+          metadata?.vulidmapping === 'gid'
+            ? _.get(control.tags, 'gid', _.get(control, 'id'))
+            : _.get(control, 'id'),
         severity: this.severityMap(control.impact),
         groupTitle: _.get(control.tags, 'gtitle', _.get(control, 'id', '')),
         ruleId: _.get(control.tags, 'rid', _.get(control, 'id', '')),
@@ -775,10 +775,10 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
    */
   hdfToIntermediateObject(hdf: ExecJSON.Execution): ChecklistObject {
     const stigs: ChecklistStig[] = [];
-    const metadata: ChecklistMetadata = _.get(
+    const metadata: ChecklistMetadata | undefined = _.get(
       hdf,
       'passthrough.metadata'
-    ) as unknown as ChecklistMetadata;
+    ) as unknown as ChecklistMetadata | undefined;
     for (const profile of hdf.profiles) {
       // if profile is overlay or parent profile, skip
       if (profile.depends?.length) {

@@ -512,10 +512,6 @@ export class ChecklistMapper extends BaseConverter {
     }
   };
 
-  /**
-   *
-   * @param checklistObject -
-   */
   constructor(checklistObject: ChecklistObject, withRaw = false) {
     super(checklistObject);
     this.withRaw = withRaw;
