@@ -113,6 +113,7 @@ export type ChecklistMetadata = {
   webordatabase: string;
   webdbsite: string;
   webdbinstance: string;
+  vulidmapping: 'id' | 'gid';
   profiles: StigMetadata[];
 };
 
@@ -211,7 +212,9 @@ export function updateChecklistWithMetadata(
   checklist.asset.targetcomment = metadata.targetcomment;
   checklist.asset.role = metadata.role;
   checklist.asset.techarea = metadata.techarea;
-  checklist.asset.webordatabase = [true, 'true'].includes(metadata.webordatabase);
+  checklist.asset.webordatabase = [true, 'true'].includes(
+    metadata.webordatabase
+  );
   checklist.asset.webdbsite = metadata.webdbsite;
   checklist.asset.webdbinstance = metadata.webdbinstance;
 
@@ -286,7 +289,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         jsonixData,
         'value.asset.targetkey'
       ) as unknown as string,
-      webordatabase: [true, 'true'].includes(_.get(jsonixData, 'value.asset.webordatabase', false) as string | boolean),
+      webordatabase: [true, 'true'].includes(
+        _.get(jsonixData, 'value.asset.webordatabase', false) as
+          | string
+          | boolean
+      ),
       webdbsite: _.get(
         jsonixData,
         'value.asset.webdbsite'
@@ -667,14 +674,21 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     return hdfDataExist ? JSON.stringify({hdfSpecificData}) : '';
   }
 
-  controlsToVulns(profile: ExecJSON.Profile, stigRef: string): ChecklistVuln[] {
+  controlsToVulns(
+    profile: ExecJSON.Profile,
+    stigRef: string,
+    metadata: ChecklistMetadata
+  ): ChecklistVuln[] {
     console.log('in controls to vulns');
     const vulns: ChecklistVuln[] = [];
     for (const control of profile.controls) {
       console.log(`on control ${control.id}`);
       const vuln: ChecklistVuln = {
         status: this.getStatus(control.results, control.impact),
-        vulnNum: _.get(control, 'id', ''),
+        vulnNum:
+          metadata.vulidmapping === 'id'
+            ? _.get(control, 'id', '')
+            : _.get(control.tags, 'gid', ''),
         severity: this.severityMap(control.impact),
         groupTitle: _.get(control.tags, 'gtitle', _.get(control, 'id', '')),
         ruleId: _.get(control.tags, 'rid', _.get(control, 'id', '')),
@@ -803,7 +817,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         header.releaseinfo ? ', ' + header.releaseinfo : ''
       }`;
       console.log('pre controls to vulns');
-      const vulns: ChecklistVuln[] = this.controlsToVulns(profile, stigRef);
+      const vulns: ChecklistVuln[] = this.controlsToVulns(
+        profile,
+        stigRef,
+        metadata
+      );
       console.log('post controls to vulns');
       stigs.push({header, vulns});
     }
@@ -825,8 +843,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         techarea: _.get(hdf, 'passthrough.metadata.techarea', Techarea.Empty),
         webdbinstance: _.get(hdf, 'passthrough.metadata.webdbinstance', ''),
         webdbsite: _.get(hdf, 'passthrough.metadata.webdbsite', ''),
-        webordatabase:
-          [true, 'true'].includes(_.get(hdf, 'passthrough.metadata.webordatabase', false) as string | boolean)
+        webordatabase: [true, 'true'].includes(
+          _.get(hdf, 'passthrough.metadata.webordatabase', false) as
+            | string
+            | boolean
+        )
       },
       stigs: stigs
     };

@@ -103,49 +103,98 @@
                       class="pr-2"
                     />
                   </v-row>
-                  <div
-                    v-for="(profile, profileIndex) in file.profiles"
-                    :key="profileIndex"
-                  >
-                    <v-card>
-                      <v-card-title>{{ profile.extractedname }}</v-card-title>
+                  <v-row class="pb-2">
+                    <v-card flat min-width="100%">
+                      <v-card-title>Vul ID mapping</v-card-title>
+                      <v-card-subtitle
+                        >Can be either a control's id or the 'gid' field in its
+                        tags if they exist</v-card-subtitle
+                      >
                       <v-card-text>
-                        <v-text-field
-                          v-model="profile.title"
-                          label="Name"
-                          :placeholder="profile.titleplaceholder"
-                        />
-                        <v-text-field
-                          v-model="profile.version"
-                          label="Version"
-                          type="number"
-                          :placeholder="profile.versionplaceholder"
-                        />
-                        <v-text-field
-                          v-model="profile.releasenumber"
-                          label="Release Number"
-                          type="number"
-                          :placeholder="profile.releasenumberplaceholder"
-                        />
-                        <label for="release-date-datepicker">
-                          Release Date
-                        </label>
-                        <v-date-picker
-                          id="release-date-datepicker"
-                          v-model="profile.releasedate"
-                          full-width
-                          landscape
-                        />
-                        <v-btn
-                          block
-                          text
-                          @click="clearDateSelection(index, profileIndex)"
-                        >
-                          Clear Date Selection
-                        </v-btn>
+                        <v-item-group v-model="file.vulidmapping">
+                          <v-row class="justify-space-between">
+                            <v-item
+                              v-slot="{active, toggle}"
+                              value="id"
+                              class="flex-grow-1"
+                            >
+                              <v-card
+                                :color="active ? 'primary' : ''"
+                                @click="toggle"
+                              >
+                                <v-card-title>ID</v-card-title>
+                                <v-card-text
+                                  >Example of ID:
+                                  {{ file.idexample }}</v-card-text
+                                >
+                              </v-card>
+                            </v-item>
+                            <v-item
+                              v-slot="{active, toggle}"
+                              value="gid"
+                              class="flex-grow-1"
+                            >
+                              <v-card
+                                :color="active ? 'primary' : ''"
+                                @click="toggle"
+                              >
+                                <v-card-title>GID</v-card-title>
+                                <v-card-text
+                                  >Example of GID:
+                                  {{ file.gidexample }}</v-card-text
+                                >
+                              </v-card>
+                            </v-item>
+                          </v-row>
+                        </v-item-group>
                       </v-card-text>
                     </v-card>
-                  </div>
+                  </v-row>
+                  <v-row>
+                    <div
+                      v-for="(profile, profileIndex) in file.profiles"
+                      :key="profileIndex"
+                    >
+                      <v-card>
+                        <v-card-title>{{ profile.extractedname }}</v-card-title>
+                        <v-card-text>
+                          <v-text-field
+                            v-model="profile.title"
+                            label="Name"
+                            :placeholder="profile.titleplaceholder"
+                          />
+                          <v-text-field
+                            v-model="profile.version"
+                            label="Version"
+                            type="number"
+                            :placeholder="profile.versionplaceholder"
+                          />
+                          <v-text-field
+                            v-model="profile.releasenumber"
+                            label="Release Number"
+                            type="number"
+                            :placeholder="profile.releasenumberplaceholder"
+                          />
+                          <label for="release-date-datepicker">
+                            Release Date
+                          </label>
+                          <v-date-picker
+                            id="release-date-datepicker"
+                            v-model="profile.releasedate"
+                            full-width
+                            landscape
+                          />
+                          <v-btn
+                            block
+                            text
+                            @click="clearDateSelection(index, profileIndex)"
+                          >
+                            Clear Date Selection
+                          </v-btn>
+                        </v-card-text>
+                      </v-card>
+                    </div>
+                  </v-row>
                 </v-card-text>
               </v-expand-transition>
             </v-card>
@@ -200,6 +249,8 @@ import {coerce} from 'semver';
 type ExtendedEvaluationFile = (EvaluationFile | ProfileFile) &
   ChecklistMetadata & {
     selected: boolean;
+    idexample: string;
+    gidexample: string;
   };
 
 type FileData = {
@@ -275,6 +326,17 @@ export default class ExportCKLModal extends Vue {
       if (file) {
         files.push({
           ...file,
+          vulidmapping: 'id',
+          idexample: _.get(
+            file,
+            'evaluation.data.profiles[0].controls[0].id',
+            ''
+          ),
+          gidexample: _.get(
+            file,
+            'evaluation.data.profiles[0].controls[0].tags.gid',
+            ''
+          ),
           marking:
             _.get(
               file,
@@ -463,6 +525,11 @@ export default class ExportCKLModal extends Vue {
   }
 
   addMetadataToPassthrough(file: ExtendedEvaluationFile) {
+    _.set(
+      file,
+      'evaluation.data.passthrough.metadata.vulidmapping',
+      file.vulidmapping
+    );
     _.set(file, 'evaluation.data.passthrough.metadata.marking', file.marking);
     _.set(file, 'evaluation.data.passthrough.metadata.hostname', file.hostname);
     _.set(file, 'evaluation.data.passthrough.metadata.hostfqdn', file.hostfqdn);
