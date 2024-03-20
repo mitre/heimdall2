@@ -343,7 +343,7 @@ export default class ExportCKLModal extends Vue {
               'evaluation.data.passthrough.metadata.webordatabase',
               'false'
             )
-          ),
+          ).toString(),
           webdbsite: _.get(
             file,
             'evaluation.data.passthrough.checklist.asset.webdbsite',
@@ -486,7 +486,7 @@ export default class ExportCKLModal extends Vue {
       file,
       'evaluation.data.passthrough.metadata.webordatabase',
       file.webordatabase
-    ) as unknown as boolean;
+    );
     _.set(
       file,
       'evaluation.data.passthrough.metadata.webdbsite',

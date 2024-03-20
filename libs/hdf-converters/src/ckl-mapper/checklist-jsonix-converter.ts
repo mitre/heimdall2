@@ -211,7 +211,7 @@ export function updateChecklistWithMetadata(
   checklist.asset.targetcomment = metadata.targetcomment;
   checklist.asset.role = metadata.role;
   checklist.asset.techarea = metadata.techarea;
-  checklist.asset.webordatabase = metadata.webordatabase as unknown as boolean;
+  checklist.asset.webordatabase = [true, 'true'].includes(metadata.webordatabase);
   checklist.asset.webdbsite = metadata.webdbsite;
   checklist.asset.webdbinstance = metadata.webdbinstance;
 
@@ -286,10 +286,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         jsonixData,
         'value.asset.targetkey'
       ) as unknown as string,
-      webordatabase: _.get(
-        jsonixData,
-        'value.asset.webordatabase'
-      ) as unknown as boolean,
+      webordatabase: [true, 'true'].includes(_.get(jsonixData, 'value.asset.webordatabase', false) as string | boolean),
       webdbsite: _.get(
         jsonixData,
         'value.asset.webdbsite'
@@ -829,7 +826,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         webdbinstance: _.get(hdf, 'passthrough.metadata.webdbinstance', ''),
         webdbsite: _.get(hdf, 'passthrough.metadata.webdbsite', ''),
         webordatabase:
-          _.get(hdf, 'passthrough.metadata.webordatabase') === 'true'
+          [true, 'true'].includes(_.get(hdf, 'passthrough.metadata.webordatabase', false) as string | boolean)
       },
       stigs: stigs
     };
