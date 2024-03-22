@@ -17,7 +17,9 @@ import moment from 'moment';
 //   updated_by: string;
 // };
 // Convert from using enum type to enum values
-export type Attestation = Omit<AttestationData, 'status'> & {status: `${ControlAttestationStatus}`};
+export type Attestation = Omit<AttestationData, 'status'> & {
+  status: `${ControlAttestationStatus}`;
+};
 
 export function advanceDate(
   date: moment.Moment,
@@ -176,7 +178,8 @@ export async function parseXLSXAttestations(
       cellDates: true
     });
     const sheet = workbook.Sheets['attestations'];
-    const data: Record<string, Date|string>[] = XLSX.utils.sheet_to_json(sheet);
+    const data: Record<string, Date | string>[] =
+      XLSX.utils.sheet_to_json(sheet);
     const attestations: Attestation[] = data.map((attestation) => {
       const lowerAttestation = _.mapKeys(attestation, (_v, k) => {
         return k.toLowerCase().replace(/\s/g, '_');
@@ -205,14 +208,13 @@ function attestationCanBeAdded(
   if (attestation.control_id.toLowerCase() === control.id.toLowerCase()) {
     if (control.results[0].status === 'skipped') {
       return true;
-    }
-
-    else {
-      console.error('Invalid control selected: Control must have "skipped" status to be attested');
+    } else {
+      console.error(
+        'Invalid control selected: Control must have "skipped" status to be attested'
+      );
       return false;
     }
-  }
-  else {
+  } else {
     return false;
   }
 }
@@ -227,15 +229,15 @@ function getFirstPath(
     throw new Error(
       `Attestation is missing one of these paths: ${paths.join(', ')}`
     );
-  } 
+  }
   const stringOrDate = _.get(object, paths[index]);
   if (_.isString(stringOrDate)) {
     return stringOrDate;
   }
-   //return _.get(object, paths[index]);
-   // Do we care about time?
-   console.log("stringorDate: "+stringOrDate);
-   return `${stringOrDate.getFullYear()}-${String(stringOrDate.getMonth()+1).padStart(2, '0')}-${String(stringOrDate.getDate()).padStart(2, '0')}`;
+  //return _.get(object, paths[index]);
+  // Do we care about time?
+  console.log('stringorDate: ' + stringOrDate);
+  return `${stringOrDate.getFullYear()}-${String(stringOrDate.getMonth() + 1).padStart(2, '0')}-${String(stringOrDate.getDate()).padStart(2, '0')}`;
 }
 
 function hasPath(
