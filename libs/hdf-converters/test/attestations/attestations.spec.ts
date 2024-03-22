@@ -232,7 +232,7 @@ describe('addAttestationToHDF', () => {
   // Reset inputData and error console for each test
   beforeEach(() => {
     inputData = JSON.parse(
-      fs.readFileSync('sample_jsons/attestations/rhel8_sample.json', 'utf-8')
+      fs.readFileSync('sample_jsons/attestations/rhel8_sample_oneOfEachControlStatus.json', 'utf-8')
     ) as ExecJSON.Execution;
 
     console.error = jest.fn();
@@ -368,7 +368,7 @@ describe('addAttestationToHDF', () => {
 
 describe('parseXLSXAttestations', () => {
   const xlsxInputFile: Buffer = fs.readFileSync(
-    'sample_jsons/attestations/attestations.xlsx',
+    'sample_jsons/attestations/attestations_xlsxInputFormat.xlsx',
     null
   );
 
