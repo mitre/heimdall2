@@ -9,7 +9,6 @@ import {
   parseXLSXAttestations,
   convertAttestationToSegment
 } from '../../src/utils/attestations';
-import exp from 'constants';
 
 const validPassingAttestation_skippedControl: Attestation[] = [
   {
@@ -232,7 +231,10 @@ describe('addAttestationToHDF', () => {
   // Reset inputData and error console for each test
   beforeEach(() => {
     inputData = JSON.parse(
-      fs.readFileSync('sample_jsons/attestations/rhel8_sample_oneOfEachControlStatus.json', 'utf-8')
+      fs.readFileSync(
+        'sample_jsons/attestations/rhel8_sample_oneOfEachControlStatus.json',
+        'utf-8'
+      )
     ) as ExecJSON.Execution;
 
     console.error = jest.fn();
@@ -360,6 +362,17 @@ describe('addAttestationToHDF', () => {
 
   it('Should provide an error when an attestation cannot be found in the HDF file', () => {
     const output = addAttestationToHDF(inputData, missing_attestation);
+    // Check that the results array has no additional entries
+    expect(output.profiles[0].controls[0].results.length).toEqual(1);
+    expect(output.profiles[0].controls[1].results.length).toEqual(2);
+    expect(output.profiles[0].controls[2].results.length).toEqual(1);
+    expect(output.profiles[0].controls[3].results.length).toEqual(1);
+    // Check that there is no attestation_data added to the control
+    expect(output.profiles[0].controls[0].attestation_data).toBeUndefined();
+    expect(output.profiles[0].controls[1].attestation_data).toBeUndefined();
+    expect(output.profiles[0].controls[2].attestation_data).toBeUndefined();
+    expect(output.profiles[0].controls[3].attestation_data).toBeUndefined();
+
     expect(console.error).toHaveBeenCalledWith(
       'Control SV-111111 not found in HDF. Skipping attestation.'
     );
