@@ -230,7 +230,6 @@ function getFirstPath(
   if (_.isString(stringOrDate)) {
     return stringOrDate;
   }
-  console.log('stringorDate: ' + stringOrDate);
   return `${stringOrDate.getFullYear()}-${String(stringOrDate.getMonth() + 1).padStart(2, '0')}-${String(stringOrDate.getDate()).padStart(2, '0')}`;
 }
 
