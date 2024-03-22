@@ -8,14 +8,6 @@ import {
 import * as _ from 'lodash';
 import moment from 'moment';
 
-// export type Attestation = {
-//   control_id: string;
-//   explanation: string;
-//   frequency: string;
-//   status: 'passed' | 'failed';
-//   updated: string;
-//   updated_by: string;
-// };
 // Convert from using enum type to enum values
 export type Attestation = Omit<AttestationData, 'status'> & {
   status: `${ControlAttestationStatus}`;
@@ -143,17 +135,17 @@ export function convertAttestationToSegment(
   }
 }
 
-//
 export function addAttestationToHDF(
   hdf: ExecJSON.Execution,
   attestations: Attestation[]
 ): ExecJSON.Execution {
-  for (const profile of hdf.profiles) {
-    for (const control of profile.controls) {
-      for (const attestation of attestations) {
+  for (const attestation of attestations) {
+    let found_control = false;
+    for (const profile of hdf.profiles) {
+      for (const control of profile.controls) {
         if (attestationCanBeAdded(attestation, control)) {
+          found_control = true;
           if (['passed', 'failed'].includes(attestation.status)) {
-            // Attestation status is expecting type enum Status (failed, passed), however we just have a string status which can only be (failed or passed)
             control.attestation_data =
               attestation as unknown as AttestationData;
             control.results.push(convertAttestationToSegment(attestation));
@@ -165,11 +157,15 @@ export function addAttestationToHDF(
         }
       }
     }
+    if (!found_control) {
+      console.error(
+        `Control ${attestation.control_id} not found in HDF. Skipping attestation.`
+      );
+    }
   }
-
   return hdf;
 }
-// Why is this async?
+
 export async function parseXLSXAttestations(
   attestationXLSX: Uint8Array
 ): Promise<Attestation[]> {
@@ -234,8 +230,6 @@ function getFirstPath(
   if (_.isString(stringOrDate)) {
     return stringOrDate;
   }
-  //return _.get(object, paths[index]);
-  // Do we care about time?
   console.log('stringorDate: ' + stringOrDate);
   return `${stringOrDate.getFullYear()}-${String(stringOrDate.getMonth() + 1).padStart(2, '0')}-${String(stringOrDate.getDate()).padStart(2, '0')}`;
 }
