@@ -2816,9 +2816,9 @@
     webpack-node-externals "3.0.0"
 
 "@nestjs/common@^10.2.1":
-  version "10.3.4"
-  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-10.3.4.tgz#d02ea0e34a38809ad42223856c008e6329e37d81"
-  integrity sha512-HmehujZhUZjf9TN2o0TyzWYNwEgyRYqZZ5qIcF/mCgIUZ4olIKlazna0kGK56FGlCvviHWNKQM5eTuVeTstIgA==
+  version "10.3.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/common/-/common-10.3.5.tgz#32d5fb635f28fb3e15360c68c326a2c05f8b8c2e"
+  integrity sha512-XWxbDf2ey/jAyEa3/XpckgfzJZ9j3I05ZkEFx7cAlebFuVKeq5UDDb5Sq9O7hMmbH9xdQj3pYT19SSj01hKeug==
   dependencies:
     uid "2.0.2"
     iterare "1.2.1"
