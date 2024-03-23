@@ -2160,9 +2160,9 @@
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
 "@e965/xlsx@^0.20.0":
-  version "0.20.1"
-  resolved "https://registry.npmjs.org/@e965/xlsx/-/xlsx-0.20.1.tgz#7336393702d18a9f6f5a37c3384612daf4927b8f"
-  integrity sha512-zRv8NLB1H6aqQyZt3/gLjd0xkZsH+/WIRi4YHAw1koESNTPPmzXJbPqO2HMN7DZB1vnF1USKxQ9ZvS0S9Lqmbg==
+  version "0.20.2"
+  resolved "https://registry.yarnpkg.com/@e965/xlsx/-/xlsx-0.20.2.tgz#811f0cab04fa5867e6750bccb1fb181f9596e979"
+  integrity sha512-VtTND/9MDM4G3fgwo6sV0xOKM4rrragqWNUPPoSrUQ+lGRRaYYfcS/9UaqgkNLm9do3rJBEn59fZQ+BPeG2yyA==
 
 "@esbuild/aix-ppc64@0.19.12":
   version "0.19.12"
