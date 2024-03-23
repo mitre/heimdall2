@@ -34,7 +34,7 @@
 
     <v-col class="pa-0" :cols="1">
       <v-card tile flat class="fill-height">
-        <slot name="runTime" />
+        <slot name="threats" />
       </v-card>
     </v-col>
 

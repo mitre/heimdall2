@@ -10,7 +10,7 @@
         <v-divider />
         <slot name="tags" />
         <v-divider />
-        <slot name="runTime" />
+        <slot name="threats" />
         <v-divider />
         <slot name="viewed" />
       </v-card>

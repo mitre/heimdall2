@@ -44,7 +44,7 @@
           <ColumnHeader
             text="Status"
             :sort="sortStatus"
-            @input="set_sort('status', $event)"
+            @input="setSort('status', $event)"
           />
         </template>
 
@@ -52,7 +52,7 @@
           <ColumnHeader
             text="Result Set"
             :sort="sortSet"
-            @input="set_sort('set', $event)"
+            @input="setSort('set', $event)"
           />
         </template>
 
@@ -61,7 +61,7 @@
             <ColumnHeader
               text="ID"
               :sort="sortId"
-              @input="set_sort('id', $event)"
+              @input="setSort('id', $event)"
             />
             <v-tooltip bottom>
               <template #activator="{on, attrs}">
@@ -83,7 +83,7 @@
           <ColumnHeader
             :text="showImpact ? 'Impact' : 'Severity'"
             :sort="sortSeverity"
-            @input="set_sort('severity', $event)"
+            @input="setSort('severity', $event)"
           />
         </template>
 
@@ -95,11 +95,11 @@
           <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
         </template>
 
-        <template #runTime>
+        <template #threats>
           <ColumnHeader
-            text="Run Time"
-            :sort="sortRunTime"
-            @input="set_sort('runTime', $event)"
+            text="Related Threats"
+            :sort="sortThreats"
+            @input="setSort('threats', $event)"
           />
         </template>
 
@@ -151,7 +151,6 @@ import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSw
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {HeightsModule} from '@/store/heights';
-import {getControlRunTime} from '@/utilities/delta_util';
 import {control_unique_key} from '@/utilities/format_util';
 import {ContextualizedControl} from 'inspecjs';
 import * as _ from 'lodash';
@@ -201,7 +200,7 @@ export default class ControlTable extends Vue {
   sortStatus: Sort = 'none';
   sortSet: Sort = 'none';
   sortSeverity: Sort = 'none';
-  sortRunTime: Sort = 'none';
+  sortThreats: Sort = 'none';
 
   // Used for viewed/unviewed controls.
   viewedControlIds: string[] = [];
@@ -240,12 +239,12 @@ export default class ControlTable extends Vue {
   }
 
   /** Callback to handle setting a new sort */
-  set_sort(column: string, newSort: Sort) {
+  setSort(column: string, newSort: Sort) {
     this.sortId = 'none';
     this.sortSet = 'none';
     this.sortStatus = 'none';
     this.sortSeverity = 'none';
-    this.sortRunTime = 'none';
+    this.sortThreats = 'none';
     switch (column) {
       case 'id':
         this.sortId = newSort;
@@ -259,8 +258,8 @@ export default class ControlTable extends Vue {
       case 'severity':
         this.sortSeverity = newSort;
         break;
-      case 'runTime':
-        this.sortRunTime = newSort;
+      case 'threats':
+        this.sortThreats = newSort;
         break;
     }
   }
@@ -411,12 +410,18 @@ export default class ControlTable extends Vue {
         factor = -1;
       }
     } else if (
-      this.sortRunTime === 'ascending' ||
-      this.sortRunTime === 'descending'
+      this.sortThreats === 'ascending' ||
+      this.sortThreats === 'descending'
     ) {
       cmp = (a: ListElt, b: ListElt) =>
-        getControlRunTime(b.control) - getControlRunTime(a.control);
-      if (this.sortRunTime === 'ascending') {
+        (a.control.data.tags.threats ?? [])
+          .slice()
+          .sort()
+          .join('')
+          .localeCompare(
+            (b.control.data.tags.threats ?? []).slice().sort().join('')
+          );
+      if (this.sortThreats === 'ascending') {
         factor = -1;
       }
     } else {

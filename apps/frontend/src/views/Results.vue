@@ -24,6 +24,9 @@
               <ExportCaat :filter="all_filter" />
             </v-list-item>
             <v-list-item v-if="is_result_view" class="px-0">
+              <ExportControlSummary :filter="all_filter" />
+            </v-list-item>
+            <v-list-item v-if="is_result_view" class="px-0">
               <ExportNist :filter="all_filter" />
             </v-list-item>
             <v-list-item v-if="is_result_view" class="px-0">
@@ -209,6 +212,7 @@ import Treemap from '@/components/cards/treemap/Treemap.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import ExportASFFModal from '@/components/global/ExportASFFModal.vue';
 import ExportCaat from '@/components/global/ExportCaat.vue';
+import ExportControlSummary from '@/components/global/ExportControlSummary.vue';
 import ExportCKLModal from '@/components/global/ExportCKLModal.vue';
 import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
@@ -255,6 +259,7 @@ import {compare_times} from '../utilities/delta_util';
     ComplianceChart,
     ExportASFFModal,
     ExportCaat,
+    ExportControlSummary,
     ExportCSVModal,
     ExportNist,
     ExportJson,

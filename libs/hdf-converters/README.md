@@ -28,6 +28,7 @@ OHDF Converters supplies several methods to convert various types of security to
 21. [**veracode-mapper**] - Veracode Scan Results XML file
 22. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
 23. [**zap-mapper**] - OWASP ZAP results JSON
+24. summaries
 
 ### NOTICE
 
