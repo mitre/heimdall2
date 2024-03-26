@@ -47,6 +47,7 @@ export function advanceDate(
       break;
     default: {
       // a number followed by d/w/m/y, with or without spaces in between
+      // 10 character limit on number of digits and characters to prevent security issues with regex
       const re = /(\d{1,10}(?:.\d{0,10})?)(\s{0,10})([a-z])/;
       const match = re.exec(frequency);
 
