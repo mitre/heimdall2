@@ -9,6 +9,7 @@ import {
   parseXLSXAttestations,
   convertAttestationToSegment
 } from '../../src/utils/attestations';
+import yaml from 'yaml';
 
 const validPassingAttestation_skippedControl: Attestation[] = [
   {
@@ -110,6 +111,24 @@ const attestation_XLSXDate: Attestation[] = [
     updated_by: 'John Doe'
   }
 ];
+const attestations_yaml: Attestation[] = [
+  {
+    control_id: 'SV-230223',
+    explanation: 'This control passes according to this attestation',
+    frequency: '0d',
+    status: 'passed',
+    updated: '2024-03-26T15:20:05.181Z',
+    updated_by: 'Attestation Tester'
+  },
+  {
+    control_id: 'SV-230328',
+    explanation: 'Control passes according to attestation',
+    frequency: '1d',
+    status: 'passed',
+    updated: '2024-03-26T15:22:03.690Z',
+    updated_by: 'Attestation Tester'
+  }
+];
 
 describe('advanceDate', () => {
   it('Should return a date two weeks from now when given "fortnightly" as an input', () => {
@@ -174,9 +193,7 @@ describe('convertAttestationToSegment', () => {
     const segment_unexpired_pass = convertAttestationToSegment(
       validPassingAttestation_skippedControl[0]
     );
-    expect(segment_unexpired_pass.status).toEqual(
-      'passed'
-    );
+    expect(segment_unexpired_pass.status).toEqual('passed');
     expect(segment_unexpired_pass.message).toEqual(
       createAttestationMessage(validPassingAttestation_skippedControl[0], false)
     );
@@ -201,9 +218,7 @@ describe('convertAttestationToSegment', () => {
     const segment_unexpired_fail = convertAttestationToSegment(
       validFailingAttestation_skippedControl[0]
     );
-    expect(segment_unexpired_fail.status).toEqual(
-      'failed'
-    );
+    expect(segment_unexpired_fail.status).toEqual('failed');
     expect(segment_unexpired_fail.message).toEqual(
       createAttestationMessage(validFailingAttestation_skippedControl[0], false)
     );
@@ -289,9 +304,7 @@ describe('addAttestationToHDF', () => {
     // Check that the results array has one additional entry
     expect(output.profiles[0].controls[2].results.length).toEqual(2);
     // Check that the status of the new result is passing
-    expect(output.profiles[0].controls[2].results[1].status).toEqual(
-      'passed'
-    );
+    expect(output.profiles[0].controls[2].results[1].status).toEqual('passed');
     // Check that the attestation data added to the control is the attestation passed into the function
     expect(output.profiles[0].controls[2].attestation_data).toEqual(
       validPassingAttestation_skippedControl[0]
@@ -351,9 +364,7 @@ describe('addAttestationToHDF', () => {
     // Check that the results array has two additional entries, this part doesn't overwrite
     expect(output.profiles[0].controls[2].results.length).toEqual(3);
     // Check that the status of the new result is passing
-    expect(output.profiles[0].controls[2].results[2].status).toEqual(
-      'passed'
-    );
+    expect(output.profiles[0].controls[2].results[2].status).toEqual('passed');
     // attestation_data is overwritten by most recently added attestation
     expect(output.profiles[0].controls[2].attestation_data).toEqual(
       validPassingAttestation_skippedControl[0]
@@ -410,5 +421,19 @@ describe('parseXLSXAttestations', () => {
     const attestations_date = await parseXLSXAttestations(xlsxInputFile);
 
     expect(attestations_date[8]).toEqual(attestation_XLSXDate[0]);
+  });
+});
+
+describe('parseXLSXAttestations', () => {
+  const yamlInputFile = fs.readFileSync(
+    'sample_jsons/attestations/attestations_yamlFormat.yaml',
+    'utf8'
+  );
+
+  const parsed_attestations_yaml: Attestation[] = [];
+
+  it('Should successfully parse YAML attestations', () => {
+    parsed_attestations_yaml.push(...yaml.parse(yamlInputFile));
+    expect(parsed_attestations_yaml).toEqual(attestations_yaml);
   });
 });
