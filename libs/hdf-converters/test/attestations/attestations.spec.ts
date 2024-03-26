@@ -15,7 +15,7 @@ const validPassingAttestation_skippedControl: Attestation[] = [
     control_id: 'SV-230223',
     explanation: 'This control passes according to this attestation',
     frequency: '1d',
-    status: ExecJSON.ControlResultStatus.Passed,
+    status: 'passed',
     updated: '3000-01-01',
     updated_by: 'John Doe'
   }
@@ -25,7 +25,7 @@ const expiredPassingAttestation_skippedControl: Attestation[] = [
     control_id: 'SV-230223',
     explanation: 'This control passes according to this attestation',
     frequency: '1d',
-    status: ExecJSON.ControlResultStatus.Passed,
+    status: 'passed',
     updated: '1999-01-01',
     updated_by: 'John Doe'
   }
@@ -35,7 +35,7 @@ const validFailingAttestation_skippedControl: Attestation[] = [
     control_id: 'SV-230223',
     explanation: 'This control fails according to this attestation',
     frequency: '1d',
-    status: ExecJSON.ControlResultStatus.Failed,
+    status: 'failed',
     updated: '3000-01-01',
     updated_by: 'John Doe'
   }
@@ -45,7 +45,7 @@ const expiredFailingAttestation_skippedControl: Attestation[] = [
     control_id: 'SV-230223',
     explanation: 'This control fails according to this attestation',
     frequency: '1d',
-    status: ExecJSON.ControlResultStatus.Failed,
+    status: 'failed',
     updated: '1999-01-01',
     updated_by: 'John Doe'
   }
@@ -55,7 +55,7 @@ const validPassingAttestation_passingControl: Attestation[] = [
     control_id: 'SV-230221',
     explanation: 'This control passes according to this attestation',
     frequency: '1d',
-    status: ExecJSON.ControlResultStatus.Passed,
+    status: 'passed',
     updated: '3000-01-01',
     updated_by: 'John Doe'
   }
@@ -65,7 +65,7 @@ const expiredPassingAttestation_passingControl: Attestation[] = [
     control_id: 'SV-230221',
     explanation: 'This control passes according to this attestation',
     frequency: '1d',
-    status: ExecJSON.ControlResultStatus.Passed,
+    status: 'passed',
     updated: '1999-01-01',
     updated_by: 'John Doe'
   }
@@ -75,7 +75,7 @@ const validPassingAttestation_failingControl: Attestation[] = [
     control_id: 'SV-230222',
     explanation: 'This control passes according to this attestation',
     frequency: '1d',
-    status: ExecJSON.ControlResultStatus.Passed,
+    status: 'passed',
     updated: '3000-01-01',
     updated_by: 'John Doe'
   }
@@ -85,7 +85,7 @@ const expiredPassingAttestation_failingControl: Attestation[] = [
     control_id: 'SV-230222',
     explanation: 'This control passes according to this attestation',
     frequency: '1d',
-    status: ExecJSON.ControlResultStatus.Passed,
+    status: 'passed',
     updated: '1999-01-01',
     updated_by: 'John Doe'
   }
@@ -95,7 +95,7 @@ const missing_attestation: Attestation[] = [
     control_id: 'SV-111111',
     explanation: 'This control passes according to this attestation',
     frequency: '1d',
-    status: ExecJSON.ControlResultStatus.Passed,
+    status: 'passed',
     updated: '3000-01-01',
     updated_by: 'John Doe'
   }
@@ -105,7 +105,7 @@ const attestation_XLSXDate: Attestation[] = [
     control_id: 'V-73166',
     explanation: 'This control passes according to this attestation',
     frequency: '153d',
-    status: ExecJSON.ControlResultStatus.Passed,
+    status: 'passed',
     updated: '2024-03-21T22:17:52.761Z',
     updated_by: 'John Doe'
   }
@@ -175,7 +175,7 @@ describe('convertAttestationToSegment', () => {
       validPassingAttestation_skippedControl[0]
     );
     expect(segment_unexpired_pass.status).toEqual(
-      ExecJSON.ControlResultStatus.Passed
+      'passed'
     );
     expect(segment_unexpired_pass.message).toEqual(
       createAttestationMessage(validPassingAttestation_skippedControl[0], false)
@@ -202,7 +202,7 @@ describe('convertAttestationToSegment', () => {
       validFailingAttestation_skippedControl[0]
     );
     expect(segment_unexpired_fail.status).toEqual(
-      ExecJSON.ControlResultStatus.Failed
+      'failed'
     );
     expect(segment_unexpired_fail.message).toEqual(
       createAttestationMessage(validFailingAttestation_skippedControl[0], false)
@@ -290,7 +290,7 @@ describe('addAttestationToHDF', () => {
     expect(output.profiles[0].controls[2].results.length).toEqual(2);
     // Check that the status of the new result is passing
     expect(output.profiles[0].controls[2].results[1].status).toEqual(
-      ExecJSON.ControlResultStatus.Passed
+      'passed'
     );
     // Check that the attestation data added to the control is the attestation passed into the function
     expect(output.profiles[0].controls[2].attestation_data).toEqual(
@@ -352,7 +352,7 @@ describe('addAttestationToHDF', () => {
     expect(output.profiles[0].controls[2].results.length).toEqual(3);
     // Check that the status of the new result is passing
     expect(output.profiles[0].controls[2].results[2].status).toEqual(
-      ExecJSON.ControlResultStatus.Passed
+      'passed'
     );
     // attestation_data is overwritten by most recently added attestation
     expect(output.profiles[0].controls[2].attestation_data).toEqual(
