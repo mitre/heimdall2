@@ -107,8 +107,15 @@
                     <v-card flat min-width="100%">
                       <v-card-title>Vul ID mapping</v-card-title>
                       <v-card-subtitle
-                        >Can be either a control's id or the 'gid' field in its
-                        tags if they exist</v-card-subtitle
+                        >This is what appears in the 'Vul ID' section for each
+                        control. By default, the Vul ID is set to the Control ID
+                        value as understood in the OHDF schema. If desired, this
+                        can be changed to reflect the GID of the control, i.e.
+                        the Group ID, which may exist in the Control's tags. If
+                        the ID is the same as the GID or the GID does not appear
+                        in the tags, the examples listed here may be the same.
+                        You can select either field in that
+                        case.</v-card-subtitle
                       >
                       <v-card-text>
                         <v-item-group v-model="file.vulidmapping">
@@ -119,7 +126,9 @@
                               class="flex-grow-1"
                             >
                               <v-card
-                                :color="active ? 'primary' : ''"
+                                :color="
+                                  active ? 'mitrePrimaryBlue darken-4' : ''
+                                "
                                 @click="toggle"
                               >
                                 <v-card-title>ID</v-card-title>
@@ -135,7 +144,9 @@
                               class="flex-grow-1"
                             >
                               <v-card
-                                :color="active ? 'primary' : ''"
+                                :color="
+                                  active ? 'mitrePrimaryBlue darken-4' : ''
+                                "
                                 @click="toggle"
                               >
                                 <v-card-title>GID</v-card-title>
@@ -306,13 +317,6 @@ export default class ExportCKLModal extends Vue {
   }
 
   clearDateSelection(fileIndex: number, profileIndex: number) {
-    console.log(
-      JSON.stringify(
-        Object.keys(this.files[fileIndex].profiles[profileIndex]),
-        null,
-        2
-      )
-    );
     this.files[fileIndex].profiles[profileIndex].releasedate = '';
   }
 
@@ -459,14 +463,9 @@ export default class ExportCKLModal extends Vue {
       const [releasenumber, releasedate] = this.splitReleaseInfo(
         _.get(profileStig, 'header.releaseinfo', '')
       );
-      console.log(
-        `profilestigsections:\n${JSON.stringify(_.get(profileStig, 'version'), null, 2)}\n${JSON.stringify(_.get(profileStig, 'header.version'), null, 2)}`
-      );
       const version = coerce(
         _.get(profileStig, 'header.version', _.get(profileStig, 'version', ''))
       );
-      console.log(`version:\n${JSON.stringify(version, null, 2)}`);
-      console.log(`releasenumber\n${JSON.stringify(releasenumber, null, 2)}`);
       results.push({
         name: _.get(
           profileStig,
@@ -564,9 +563,6 @@ export default class ExportCKLModal extends Vue {
     );
     const profileMetadata: StigMetadata[] = [];
     for (const profile of file.profiles) {
-      console.log(
-        `addingmetadata to passthrough - per profile additions\n${JSON.stringify(profile, null, 2)}`
-      );
       const releasedate = DateTime.fromISO(profile.releasedate);
       profileMetadata.push({
         name: profile.name,
