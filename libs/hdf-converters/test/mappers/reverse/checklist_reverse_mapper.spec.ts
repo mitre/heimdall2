@@ -84,3 +84,28 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
     );
   });
 });
+
+describe('Small RHEL8 HDF file', () => {
+  it('can be successfully converted from HDF to Checklist', () => {
+    const mapper = new ChecklistResults(
+      JSON.parse(
+        fs.readFileSync('sample_jsons/attestations/rhel8_sample_oneOfEachControlStatus.json', {
+          encoding: 'utf-8'
+        })
+      )
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/converted-rhel8_sample_oneOfEachControlStatus.ckl',
+    //   mapper.toCkl()
+    // );
+
+    expect(omitCklVersion(mapper.toCkl())).toEqual(
+      omitCklVersion(
+        fs.readFileSync('sample_jsons/checklist_mapper/converted-rhel8_sample_oneOfEachControlStatus.ckl', {
+          encoding: 'utf-8'
+        })
+      )
+    );
+  });
+});

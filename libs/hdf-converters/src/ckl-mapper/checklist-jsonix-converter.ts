@@ -220,9 +220,9 @@ export function updateChecklistWithMetadata(
 
   for (const stig of checklist.stigs) {
     for (const profile of metadata.profiles) {
-      console.log(
-        `stig: ${JSON.stringify(stig, null, 2)}\nprofile: ${JSON.stringify(profile, null, 2)}`
-      );
+      // console.log(
+      //   `stig: ${JSON.stringify(stig, null, 2)}\nprofile: ${JSON.stringify(profile, null, 2)}`
+      // );
       if (stig.header.title === profile.name) {
         stig.header.title = profile.title || profile.name;
         stig.header.version = profile.version.toString();
@@ -682,38 +682,23 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     console.log('in controls to vulns');
     const vulns: ChecklistVuln[] = [];
     for (const control of profile.controls) {
-      console.log(`on control ${control.id}`);
+      // console.log(`on control ${control.id}`);
+      let defaultId = _.get(control, 'id', '');
       const vuln: ChecklistVuln = {
         status: this.getStatus(control.results, control.impact),
         vulnNum:
           metadata?.vulidmapping === 'gid'
-            ? _.get(control.tags, 'gid', _.get(control, 'id'))
-            : _.get(control, 'id'),
+            ? _.get(control.tags, 'gid', defaultId)
+            : defaultId,
         severity: this.severityMap(control.impact),
-        groupTitle: _.get(control.tags, 'gtitle', _.get(control, 'id', '')),
-        ruleId: _.get(control.tags, 'rid', _.get(control, 'id', '')),
-        ruleVer: _.get(control.tags, 'stig_id', _.get(control, 'id', '')),
+        groupTitle: _.get(control.tags, 'gtitle', defaultId),
+        ruleId: _.get(control.tags, 'rid', defaultId),
+        ruleVer: _.get(control.tags, 'stig_id', defaultId),
         ruleTitle: control.title ?? '',
         vulnDiscuss: control.desc ?? '',
         iaControls: _.get(control.tags, 'IA_Controls', ''),
-        checkContent:
-          _.get(
-            control.tags,
-            'check',
-            getDescription(
-              control.descriptions as ExecJSON.ControlDescription[],
-              'check'
-            ) as string
-          ) ?? '',
-        fixText:
-          _.get(
-            control.tags,
-            'fix',
-            getDescription(
-              control.descriptions as ExecJSON.ControlDescription[],
-              'fix'
-            ) as string
-          ) ?? '',
+        checkContent: _.get(control.tags, 'check') ?? getDescription(control.descriptions as ExecJSON.ControlDescription[], 'check') as string ?? '',
+        fixText: _.get(control.tags, 'fix') ?? getDescription(control.descriptions as ExecJSON.ControlDescription[], 'fix') as string ?? '',
         falsePositives: _.get(control.tags, 'False_Positives', ''),
         falseNegatives: _.get(control.tags, 'False_Negatives', ''),
         documentable: 'false',
@@ -734,11 +719,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         targetKey: '',
         stigUuid: '',
         legacyId: _.get(control.tags, 'Legacy_ID'),
-        cciRef: _.get(
-          control.tags,
-          'cci',
-          this.matchNistToCcis(_.get(control.tags, 'nist'))
-        ),
+        cciRef: _.get(control.tags, 'cci') ?? this.matchNistToCcis(_.get(control.tags, 'nist')),
         comments: this.getComments(
           control.descriptions as ExecJSON.ControlDescription[]
         ),
@@ -788,7 +769,6 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         (p) => p.name === profile.name
       );
       console.log('hdf2intermediate, full passthrough');
-      console.log(JSON.stringify(_.get(hdf, 'passthrough'), null, 2));
       const version = coerce(profile.version);
       const header: StigHeader = {
         version: _.get(
