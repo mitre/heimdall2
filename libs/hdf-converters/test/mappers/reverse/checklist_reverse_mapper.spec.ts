@@ -109,7 +109,7 @@ describe('Small RHEL8 HDF file', () => {
       'utf-8'
     );
 
-    const converted = mapper.toCkl()
+    const converted = mapper.toCkl();
 
     expect(converted).toEqual(
       expected.replace(/2\.10\.1/gi, hdfConvertersVersion)
