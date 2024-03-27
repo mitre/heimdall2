@@ -247,18 +247,15 @@ function getHdfSpecificDataAttribute(
   attribute: string,
   input: string
 ): {[key: string]: any}[] | string | undefined {
-  console.log(attribute);
   let data;
   if (
     !input ||
     !isJsonString(input) ||
     !_.isObject((data = JSON.parse(input)).hdfSpecificData)
   ) {
-    console.log('early return');
     return undefined;
   }
 
-  console.log(data.hdfSpecificData[attribute]);
   return data.hdfSpecificData[attribute] || undefined;
 }
 
@@ -282,20 +279,15 @@ export class ChecklistResults extends ChecklistJsonixConverter {
     super(jsonixMapping);
     this.data = data;
     if (typeof data === 'string') {
-      console.log('data is string');
       this.jsonixData = super.toJsonix(data);
       this.checklistObject = super.toIntermediateObject(this.jsonixData);
     } else if (containsChecklist(data)) {
-      console.log('hdf contains intermediate');
       this.checklistObject = getChecklistObjectFromHdf(data);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     } else {
-      console.log('hdf creates intermediate');
       // CREATE Intermediate Object from HDF
       this.checklistObject = super.hdfToIntermediateObject(data);
-      console.log('intermediate object created');
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
-      console.log('jsonix data created');
     }
     this.withRaw = withRaw;
   }
@@ -305,7 +297,6 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   }
 
   toCkl(): string {
-    console.log(`jsonixdata: ${JSON.stringify(this.jsonixData, null, 2)}`);
     return xmlFormat(
       `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
         this.jsonixData
@@ -368,12 +359,6 @@ export class ChecklistMapper extends BaseConverter {
         version: {
           path: 'header',
           transformer: (input) => {
-            console.log('in version transformer');
-            console.log(JSON.stringify(input, null, 2));
-            console.log(
-              getHdfSpecificDataAttribute('version', input.customname)
-            );
-            console.log(input.version);
             const ret =
               getHdfSpecificDataAttribute('version', input.customname) ||
               input.version;
