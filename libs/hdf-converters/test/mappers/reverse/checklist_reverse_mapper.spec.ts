@@ -1,6 +1,7 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {omitCklVersion} from '../../utils';
+import {version as hdfConvertersVersion} from '../../../package.json';
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
@@ -103,15 +104,15 @@ describe('Small RHEL8 HDF file', () => {
     //   mapper.toCkl()
     // );
 
-    expect(omitCklVersion(mapper.toCkl())).toEqual(
-      omitCklVersion(
-        fs.readFileSync(
-          'sample_jsons/checklist_mapper/converted-rhel8_sample_oneOfEachControlStatus.ckl',
-          {
-            encoding: 'utf-8'
-          }
-        )
-      )
+    const expected = fs.readFileSync(
+      'sample_jsons/checklist_mapper/converted-rhel8_sample_oneOfEachControlStatus.ckl',
+      'utf-8'
+    );
+
+    const converted = mapper.toCkl()
+
+    expect(converted).toEqual(
+      expected.replace(/2\.10\.1/gi, hdfConvertersVersion)
     );
   });
 });
