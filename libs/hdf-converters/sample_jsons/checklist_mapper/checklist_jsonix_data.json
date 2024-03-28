@@ -12,6 +12,7 @@
       "TYPE_NAME": "mapping.ASSET",
       "role": "None",
       "assettype": "Computing",
+      "marking": "CUI",
       "hostname": "",
       "hostip": "",
       "hostmac": "",
