@@ -122,18 +122,18 @@
                     <v-select
                       v-model="file.webordatabase"
                       :items="['true', 'false']"
-                      label="Web or Database"
+                      label="Web or Database STIG"
                     />
                   </v-row>
                   <v-row v-if="file.webordatabase === 'true'">
                     <v-text-field
                       v-model="file.webdbsite"
-                      label="Web DB Site"
+                      label="Web or Database Site"
                       class="pr-2"
                     />
                     <v-text-field
                       v-model="file.webdbinstance"
-                      label="Web DB Instance"
+                      label="Web or Database Instance"
                       class="pr-2"
                     />
                   </v-row>
@@ -461,7 +461,6 @@ export default class ExportCKLModal extends Vue {
       titleplaceholder: string;
       versionplaceholder: string;
       releasenumberplaceholder: string;
-      showCalendar: boolean;
     })[] = [];
     const profileOrStigs: ExecJSON.Profile[] | ChecklistVuln[] = _.get(
       file,
@@ -585,7 +584,8 @@ export default class ExportCKLModal extends Vue {
         releasenumber: profile.releasenumber,
         releasedate: releasedate.isValid
           ? releasedate.toFormat('dd LLL yyyy')
-          : ''
+          : '',
+        showCalendar: false
       });
     }
     _.set(

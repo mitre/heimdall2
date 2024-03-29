@@ -123,6 +123,7 @@ export type StigMetadata = {
   releasenumber: number;
   version: number;
   releasedate: string;
+  showCalendar: boolean;
 };
 
 export const EmptyChecklistObject: ChecklistObject = {
