@@ -86,6 +86,40 @@
                       class="pr-2"
                     />
                     <v-select
+                      v-model="file.vulidmapping"
+                      :items="['id', 'gid']"
+                      label="Vul ID Mapping"
+                      class="pr-2"
+                    >
+                      <v-tooltip slot="append" color="#332E2E" bottom>
+                        <template #activator="{on}">
+                          <v-icon color="primary" v-on="on"
+                            >mdi-information-variant-circle</v-icon
+                          >
+                        </template>
+                        <span
+                          >This is what appears in the 'Vul ID' section for
+                          each<br />
+                          control. By default, the Vul ID is set to the Control
+                          ID<br />
+                          value as understood in the OHDF schema. If desired,
+                          this<br />
+                          can be changed to reflect the GID of the control,
+                          i.e.<br />
+                          the Group ID, which may exist in the Control's tags.
+                          If<br />
+                          the ID is the same as the GID or the GID does not
+                          appear<br />
+                          in the tags, the examples listed here may be the
+                          same.<br />
+                          You can select either field in that case. For this
+                          file:<br />
+                          Example Control ID: {{ file.idexample }}<br />
+                          Example GID: {{ file.gidexample }}<br />
+                        </span>
+                      </v-tooltip>
+                    </v-select>
+                    <v-select
                       v-model="file.webordatabase"
                       :items="['true', 'false']"
                       label="Web or Database"
@@ -103,109 +137,81 @@
                       class="pr-2"
                     />
                   </v-row>
-                  <v-row class="pb-2">
-                    <v-card flat min-width="100%">
-                      <v-card-title>Vul ID mapping</v-card-title>
-                      <v-card-subtitle
-                        >This is what appears in the 'Vul ID' section for each
-                        control. By default, the Vul ID is set to the Control ID
-                        value as understood in the OHDF schema. If desired, this
-                        can be changed to reflect the GID of the control, i.e.
-                        the Group ID, which may exist in the Control's tags. If
-                        the ID is the same as the GID or the GID does not appear
-                        in the tags, the examples listed here may be the same.
-                        You can select either field in that
-                        case.</v-card-subtitle
+                  <div
+                    v-for="(profile, profileIndex) in file.profiles"
+                    :key="profileIndex"
+                  >
+                    <v-row>
+                      <v-text-field
+                        v-model="profile.title"
+                        label="Name"
+                        :placeholder="profile.titleplaceholder"
+                        class="pr-2"
+                      />
+                      <v-text-field
+                        v-model="profile.version"
+                        label="Version"
+                        type="number"
+                        :placeholder="profile.versionplaceholder"
+                        class="pr-2"
+                      />
+                      <v-text-field
+                        v-model="profile.releasenumber"
+                        label="Release Number"
+                        type="number"
+                        :placeholder="profile.releasenumberplaceholder"
+                        class="pr-2"
+                      />
+                      <v-menu
+                        ref="profile.showCalendar"
+                        v-model="profile.showCalendar"
+                        :close-on-content-click="false"
+                        transition="scale-transition"
+                        offset-y
+                        min-width="auto"
                       >
-                      <v-card-text>
-                        <v-item-group v-model="file.vulidmapping">
-                          <v-row class="justify-space-between">
-                            <v-item
-                              v-slot="{active, toggle}"
-                              value="id"
-                              class="flex-grow-1"
-                            >
-                              <v-card
-                                :color="
-                                  active ? 'mitrePrimaryBlue darken-4' : ''
-                                "
-                                @click="toggle"
-                              >
-                                <v-card-title>ID</v-card-title>
-                                <v-card-text
-                                  >Example of ID:
-                                  {{ file.idexample }}</v-card-text
-                                >
-                              </v-card>
-                            </v-item>
-                            <v-item
-                              v-slot="{active, toggle}"
-                              value="gid"
-                              class="flex-grow-1"
-                            >
-                              <v-card
-                                :color="
-                                  active ? 'mitrePrimaryBlue darken-4' : ''
-                                "
-                                @click="toggle"
-                              >
-                                <v-card-title>GID</v-card-title>
-                                <v-card-text
-                                  >Example of GID:
-                                  {{ file.gidexample }}</v-card-text
-                                >
-                              </v-card>
-                            </v-item>
-                          </v-row>
-                        </v-item-group>
-                      </v-card-text>
-                    </v-card>
-                  </v-row>
-                  <v-row>
-                    <div
-                      v-for="(profile, profileIndex) in file.profiles"
-                      :key="profileIndex"
-                    >
-                      <v-card>
-                        <v-card-title>{{ profile.extractedname }}</v-card-title>
-                        <v-card-text>
+                        <template #activator="{on, attrs}">
                           <v-text-field
-                            v-model="profile.title"
-                            label="Name"
-                            :placeholder="profile.titleplaceholder"
-                          />
-                          <v-text-field
-                            v-model="profile.version"
-                            label="Version"
-                            type="number"
-                            :placeholder="profile.versionplaceholder"
-                          />
-                          <v-text-field
-                            v-model="profile.releasenumber"
-                            label="Release Number"
-                            type="number"
-                            :placeholder="profile.releasenumberplaceholder"
-                          />
-                          <label for="release-date-datepicker">
-                            Release Date
-                          </label>
-                          <v-date-picker
-                            id="release-date-datepicker"
                             v-model="profile.releasedate"
-                            full-width
-                            landscape
+                            label="Release Date"
+                            prepend-inner-icon="mdi-calendar"
+                            class="pr-2"
+                            readonly
+                            v-bind="attrs"
+                            v-on="on"
                           />
+                        </template>
+                        <v-date-picker
+                          id="release-date-datepicker"
+                          v-model="profile.releasedate"
+                          no-title
+                          scrollable
+                        >
+                          <v-spacer />
                           <v-btn
-                            block
                             text
+                            color="primary"
+                            @click="
+                              setDateSelection(
+                                index,
+                                profileIndex,
+                                profile.releasedate
+                              )
+                            "
+                          >
+                            Save
+                          </v-btn>
+                          <v-btn
+                            text
+                            color="primary"
                             @click="clearDateSelection(index, profileIndex)"
                           >
-                            Clear Date Selection
+                            Clear
                           </v-btn>
-                        </v-card-text>
-                      </v-card>
-                    </div>
-                  </v-row>
+                        </v-date-picker>
+                      </v-menu>
+                    </v-row>
+                  </div>
                 </v-card-text>
               </v-expand-transition>
             </v-card>
@@ -316,8 +322,14 @@ export default class ExportCKLModal extends Vue {
     this.selected = [];
   }
 
+  setDateSelection(fileIndex: number, profileIndex: number, date: string) {
+    this.files[fileIndex].profiles[profileIndex].releasedate = date;
+    this.files[fileIndex].profiles[profileIndex].showCalendar = false;
+  }
+
   clearDateSelection(fileIndex: number, profileIndex: number) {
     this.files[fileIndex].profiles[profileIndex].releasedate = '';
+    this.files[fileIndex].profiles[profileIndex].showCalendar = false;
   }
 
   // Get our evaluation info for our export table
@@ -449,6 +461,7 @@ export default class ExportCKLModal extends Vue {
       titleplaceholder: string;
       versionplaceholder: string;
       releasenumberplaceholder: string;
+      showCalendar: boolean;
     })[] = [];
     const profileOrStigs: ExecJSON.Profile[] | ChecklistVuln[] = _.get(
       file,
@@ -491,7 +504,8 @@ export default class ExportCKLModal extends Vue {
           0
         ).toString(),
         releasedate:
-          DateTime.fromFormat(releasedate, 'dd LLL yyyy').toISODate() || ''
+          DateTime.fromFormat(releasedate, 'dd LLL yyyy').toISODate() || '',
+        showCalendar: false
       });
     }
     return results;
