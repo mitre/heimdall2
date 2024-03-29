@@ -793,7 +793,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           (profile.description || ''),
         filename: '',
         releaseinfo: this.getReleaseInfo(
-          profileMetadata?.releasenumber || version?.minor || 0,
+          profileMetadata?.releasenumber ?? (version?.minor || 0),
           profileMetadata?.releasedate
         ),
         title: profileMetadata?.title || profile.title || profile.name,
