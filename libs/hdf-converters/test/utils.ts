@@ -1,7 +1,5 @@
 import {ExecJSON} from 'inspecjs';
-import xmlFormat from 'xml-formatter';
-import {XmlParserCommentNode} from 'xml-parser-xo';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
 import {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 
@@ -74,15 +72,4 @@ export function omitHDFTimes(
       };
     })
   };
-}
-
-export function omitCklVersion(input: string): string {
-  return xmlFormat(input, {
-    lineSeparator: '\n',
-    collapseContent: true,
-    indentation: '\t',
-    filter: (node) =>
-      node.type === 'Comment' &&
-      (node as XmlParserCommentNode).content.startsWith('Heimdall Version')
-  });
 }
