@@ -58,33 +58,32 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
   });
 });
 
-// WIP - Need to identify why there are changes in the finding details
-// describe('non_checklist_converted_hdf_to_checklist', () => {
-//   it('Successfully converts HDF to Checklist', () => {
-//     const mapper = new ChecklistResults(
-//       JSON.parse(
-//         fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3.json', {
-//           encoding: 'utf-8'
-//         })
-//       )
-//     );
+describe('non_checklist_converted_hdf_to_checklist', () => {
+  it('Successfully converts HDF to Checklist', () => {
+    const mapper = new ChecklistResults(
+      JSON.parse(
+        fs.readFileSync('sample_jsons/nessus_mapper/nessus-hdf-10.0.0.3.json', {
+          encoding: 'utf-8'
+        })
+      )
+    );
 
-//     // fs.writeFileSync(
-//     //   'sample_jsons/checklist_mapper/converted-nessus-test.ckl',
-//     //   mapper.toCkl()
-//     // );
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/converted-nessus-test.ckl',
+    //   mapper.toCkl()
+    // );
 
-//     const expected = fs.readFileSync(
-//       'sample_jsons/checklist_mapper/converted-nessus-test.ckl',
-//       'utf-8'
-//     );
-//     const converted = mapper.toCkl();
+    const expected = fs.readFileSync(
+      'sample_jsons/checklist_mapper/converted-nessus-test.ckl',
+      'utf-8'
+    );
+    const converted = mapper.toCkl();
 
-//     expect(converted).toEqual(
-//       expected.replace(/2\.10\.1/gi, hdfConvertersVersion)
-//     );
-//   });
-// });
+    expect(converted).toEqual(
+      expected.replace(/Heimdall Version :: 2\.10\.1/gi, `Heimdall Version :: ${hdfConvertersVersion}`)
+    );
+  });
+});
 
 describe('Small RHEL8 HDF file', () => {
   it('can be successfully converted from HDF to Checklist', () => {
