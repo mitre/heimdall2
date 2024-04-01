@@ -123,7 +123,10 @@ export class CciNistTwoWayMapper {
       for (const reference of item.references.reference) {
         // first try the pattern as is
         const regexPattern = new RegExp(`^${pattern}`);
-        if (RegExp(regexPattern).exec(reference['@_index'])) {
+        if (
+          RegExp(regexPattern).exec(reference['@_index']) &&
+          item.type === 'technical'
+        ) {
           matchingIds.push(item['@_id']);
           break;
         }
