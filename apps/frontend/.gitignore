@@ -1,3 +1,4 @@
+# common ignore file for directories
 .cache
 .DS_Store
 node_modules

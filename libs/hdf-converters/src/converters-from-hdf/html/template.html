@@ -110,28 +110,8 @@
       {{/showResultSets}}
     </nav>
 
-    <!-- Profile info card -->
-    <div class="px-4 py-6" id="profileInfo">
-      <div
-        class="min-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
-      >
-        <h5 class="mb-2 text-xl font-bold">Profile Info</h5>
-        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-          <!-- Generate an info report for every profile -->
-          {{#files}}
-          <div class="mx-2 my-2 break-words">
-            <div><strong>Filename:</strong> {{filename}}</div>
-            <div><strong>Tool Version:</strong> {{toolVersion}}</div>
-            <div><strong>Platform:</strong> {{platform}}</div>
-            <div><strong>Duration:</strong> {{duration}}</div>
-          </div>
-          {{/files}}
-        </div>
-      </div>
-    </div>
-
     <!-- Profile status card -->
-    <div class="px-4 pb-6">
+    <div class="px-4 py-6">
       <div
         class="min-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
       >
@@ -213,6 +193,26 @@
               [Passed/(Passed + Failed + Not Reviewed + Profile Error) * 100]
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profile info card -->
+    <div class="px-4 pb-6" id="profileInfo">
+      <div
+        class="min-w-full rounded-xl border border-gray-300 bg-gray-100 px-4 py-2 print:border-black print:bg-white"
+      >
+        <h5 class="mb-2 text-xl font-bold">Profile Info</h5>
+        <div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+          <!-- Generate an info report for every profile -->
+          {{#files}}
+          <div class="mx-2 my-2 break-words">
+            <div><strong>Filename:</strong> {{filename}}</div>
+            <div><strong>Tool Version:</strong> {{toolVersion}}</div>
+            <div><strong>Platform:</strong> {{platform}}</div>
+            <div><strong>Duration:</strong> {{duration}}</div>
+          </div>
+          {{/files}}
         </div>
       </div>
     </div>

@@ -8,12 +8,12 @@ jobs:
   build-deploy:
     runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: setup node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18.18"
+          node-version: "18"
           check-latest: true
           registry-url: 'https://registry.npmjs.org'
           cache: 'yarn'
@@ -43,10 +43,11 @@ jobs:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       # Setup .npmrc file to publish to GitHub Packages
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         if: always()
         with:
-          node-version: 18
+          node-version: "18"
+          check-latest: true
           registry-url: 'https://npm.pkg.github.com'
           cache: 'yarn'
 

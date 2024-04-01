@@ -1,0 +1,1409 @@
+{
+    "platform": {
+        "name": "redhat",
+        "release": "8.9",
+        "target_id": "da39a3ee-5e6b-5b0d-b255-bfef95601890"
+    },
+    "profiles": [
+        {
+            "name": "redhat-enterprise-linux-8-stig-baseline",
+            "version": "1.13.0",
+            "sha256": "db37f8871f884c6ce89168537007893de24ddcdedb215302ad310b686cbc934c",
+            "title": "redhat-enterprise-linux-8-stig-baseline",
+            "maintainer": "MITRE SAF Team",
+            "summary": "This Security Technical Implementation Guide is published as a tool to improve the security of Department of Defense (DoD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via email to the following address: disa.stig_spt@mail.mil.",
+            "license": "Apache-2.0",
+            "copyright": "MITRE",
+            "supports": [
+                {
+                    "platform-name": "centos",
+                    "release": "8.*"
+                },
+                {
+                    "platform-name": "redhat",
+                    "release": "8.*"
+                }
+            ],
+            "attributes": [
+                {
+                    "name": "sudoers_config_files",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/etc/sudoers",
+                            "/etc/sudoers.d/*"
+                        ]
+                    }
+                },
+                {
+                    "name": "passwordless_admins",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "sshd_config_values",
+                    "options": {
+                        "type": "Hash",
+                        "value": {
+                            "GSSAPIAuthentication": "no",
+                            "ClientAliveInterval": "600"
+                        }
+                    }
+                },
+                {
+                    "name": "alternate_mfa_method",
+                    "options": {
+                        "type": "String",
+                        "value": ""
+                    }
+                },
+                {
+                    "name": "sssd_conf_files",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/etc/sssd/sssd.conf",
+                            "/etc/sssd/conf.d/*.conf"
+                        ]
+                    }
+                },
+                {
+                    "name": "piv_driver",
+                    "options": {
+                        "type": "String",
+                        "value": "PIV-II"
+                    }
+                },
+                {
+                    "name": "ssh_host_key_dirs",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/etc/ssh/",
+                            "/home/"
+                        ]
+                    }
+                },
+                {
+                    "name": "ssh_pub_key_mode",
+                    "options": {
+                        "type": "String",
+                        "value": "0644"
+                    }
+                },
+                {
+                    "name": "ssh_private_key_mode",
+                    "options": {
+                        "type": "String",
+                        "value": "0640"
+                    }
+                },
+                {
+                    "name": "audit_conf_mode",
+                    "options": {
+                        "type": "String",
+                        "value": "0640"
+                    }
+                },
+                {
+                    "name": "audit_tool_mode",
+                    "options": {
+                        "type": "String",
+                        "value": "0755"
+                    }
+                },
+                {
+                    "name": "home_dir_mode",
+                    "options": {
+                        "type": "String",
+                        "value": "0750"
+                    }
+                },
+                {
+                    "name": "initialization_file_mode",
+                    "options": {
+                        "type": "String",
+                        "value": "0740"
+                    }
+                },
+                {
+                    "name": "alert_method",
+                    "options": {
+                        "type": "String",
+                        "value": "email"
+                    }
+                },
+                {
+                    "name": "peripherals_package",
+                    "options": {
+                        "type": "String",
+                        "value": "usbguard"
+                    }
+                },
+                {
+                    "name": "peripherals_service",
+                    "options": {
+                        "type": "String",
+                        "value": "usbguard"
+                    }
+                },
+                {
+                    "name": "allow_container_openssh_server",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "maxclassrepeat",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 4
+                    }
+                },
+                {
+                    "name": "maxrepeat",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 3
+                    }
+                },
+                {
+                    "name": "minclass",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 4
+                    }
+                },
+                {
+                    "name": "difok",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 8
+                    }
+                },
+                {
+                    "name": "pass_min_days",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 1
+                    }
+                },
+                {
+                    "name": "pass_max_days",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 60
+                    }
+                },
+                {
+                    "name": "seperate_filesystem_exempt",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "disable_slow_controls",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "disconnected_system",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "use_fips",
+                    "options": {
+                        "type": "Boolean",
+                        "value": true
+                    }
+                },
+                {
+                    "name": "data_at_rest_exempt",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "min_reuse_generations",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 5
+                    }
+                },
+                {
+                    "name": "min_retry",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 3
+                    }
+                },
+                {
+                    "name": "pass_min_len",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 15
+                    }
+                },
+                {
+                    "name": "faillock_tally",
+                    "options": {
+                        "type": "String",
+                        "value": "faillog_t"
+                    }
+                },
+                {
+                    "name": "network_router",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "sysctl_conf_files",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/etc/sysctl.d/*.conf",
+                            "/run/sysctl.d/*.conf",
+                            "/usr/local/lib/sysctl.d/*.conf",
+                            "/usr/lib/sysctl.d/*.conf",
+                            "/lib/sysctl.d/*.conf",
+                            "/etc/sysctl.conf"
+                        ]
+                    }
+                },
+                {
+                    "name": "kernel_dump_expected_value",
+                    "options": {
+                        "type": "String",
+                        "value": "|/bin/false"
+                    }
+                },
+                {
+                    "name": "core_dump_expected_value",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 0
+                    }
+                },
+                {
+                    "name": "concurrent_sessions_permitted",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 10
+                    }
+                },
+                {
+                    "name": "kernel_config_files",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/etc/sysctl.d/*.conf",
+                            "/run/sysctl.d/*.conf",
+                            "/usr/local/lib/sysctl.d/*.conf",
+                            "/usr/lib/sysctl.d/*.conf",
+                            "/lib/sysctl.d/*.conf",
+                            "/etc/sysctl.conf"
+                        ]
+                    }
+                },
+                {
+                    "name": "grub_uefi_main_cfg",
+                    "options": {
+                        "type": "String",
+                        "value": "/boot/efi/EFI/redhat/grub.cfg"
+                    }
+                },
+                {
+                    "name": "grub_uefi_user_boot_files",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/boot/efi/EFI/redhat/user.cfg"
+                        ]
+                    }
+                },
+                {
+                    "name": "exempt_home_users",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "root"
+                        ]
+                    }
+                },
+                {
+                    "name": "non_interactive_shells",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/sbin/nologin",
+                            "/sbin/halt",
+                            "/sbin/shutdown",
+                            "/bin/false",
+                            "/bin/sync",
+                            "/bin/true"
+                        ]
+                    }
+                },
+                {
+                    "name": "user_accounts",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "vagrant"
+                        ]
+                    }
+                },
+                {
+                    "name": "grub_main_cfg",
+                    "options": {
+                        "type": "String",
+                        "value": "/boot/grub2/grub.cfg"
+                    }
+                },
+                {
+                    "name": "unapproved_ssl_tls_versions",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "-VERS-DTLS0.9",
+                            "-VERS-SSL3.0",
+                            "-VERS-TLS1.0",
+                            "-VERS-TLS1.1",
+                            "-VERS-DTLS1.0"
+                        ]
+                    }
+                },
+                {
+                    "name": "grub_user_boot_files",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/boot/grub2/user.cfg"
+                        ]
+                    }
+                },
+                {
+                    "name": "ipv4_enabled",
+                    "options": {
+                        "type": "Boolean",
+                        "value": true
+                    }
+                },
+                {
+                    "name": "unsuccessful_attempts",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 3
+                    }
+                },
+                {
+                    "name": "central_account_management",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "ipv6_enabled",
+                    "options": {
+                        "type": "Boolean",
+                        "value": true
+                    }
+                },
+                {
+                    "name": "camera_installed",
+                    "options": {
+                        "type": "Boolean",
+                        "value": true
+                    }
+                },
+                {
+                    "name": "bluetooth_installed",
+                    "options": {
+                        "type": "Boolean",
+                        "value": true
+                    }
+                },
+                {
+                    "name": "known_system_accounts",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "adm",
+                            "bin",
+                            "chrony",
+                            "daemon",
+                            "dbus",
+                            "halt",
+                            "lp",
+                            "mail",
+                            "nobody",
+                            "ntp",
+                            "operator",
+                            "polkitd",
+                            "postfix",
+                            "root",
+                            "shutdown",
+                            "sshd",
+                            "sssd",
+                            "sync",
+                            "systemd-bus-proxy",
+                            "systemd-network"
+                        ]
+                    }
+                },
+                {
+                    "name": "smart_card_enabled",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "file_integrity_tool",
+                    "options": {
+                        "type": "String",
+                        "value": "aide"
+                    }
+                },
+                {
+                    "name": "authoritative_timeserver",
+                    "options": {
+                        "type": "String",
+                        "value": "0.us.pool.ntp.mil"
+                    }
+                },
+                {
+                    "name": "non_removable_media_fs",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/",
+                            "/tmp",
+                            "none",
+                            "/home",
+                            "/tmpfs"
+                        ]
+                    }
+                },
+                {
+                    "name": "private_key_files",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "openssh_server_required_algorithms",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "hmac-sha2-512",
+                            "hmac-sha2-256",
+                            "hmac-sha2-512-etm@openssh.com",
+                            "hmac-sha2-256-etm@openssh.com"
+                        ]
+                    }
+                },
+                {
+                    "name": "root_ca_file",
+                    "options": {
+                        "type": "String",
+                        "value": "/etc/sssd/pki/sssd_auth_ca_db.pem"
+                    }
+                },
+                {
+                    "name": "system_inactivity_timeout",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 900
+                    }
+                },
+                {
+                    "name": "days_of_inactivity",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 35
+                    }
+                },
+                {
+                    "name": "temporary_accounts",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "temporary_account_max_days",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 3
+                    }
+                },
+                {
+                    "name": "banner_message_text_cli",
+                    "options": {
+                        "type": "String",
+                        "value": "You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only. By using this IS (which includes any device attached to this IS), you consent to the following conditions: -The USG routinely intercepts and monitors communications on this IS for purposes including, but not limited to, penetration testing, COMSEC monitoring, network operations and defense, personnel misconduct (PM), law enforcement (LE), and counterintelligence (CI) investigations. -At any time, the USG may inspect and seize data stored on this IS. -Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose. -This IS includes security measures (e.g., authentication and access controls) to protect USG interests--not for your personal benefit or privacy. -Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI investigative searching or monitoring of the content of privileged communications, or work product, related to personal representation or services by attorneys, psychotherapists, or clergy, and their assistants. Such communications and work product are private and confidential. See User Agreement for details."
+                    }
+                },
+                {
+                    "name": "banner_message_text_ral",
+                    "options": {
+                        "type": "String",
+                        "value": "You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only. By using this IS (which includes any device attached to this IS), you consent to the following conditions: -The USG routinely intercepts and monitors communications on this IS for purposes including, but not limited to, penetration testing, COMSEC monitoring, network operations and defense, personnel misconduct (PM), law enforcement (LE), and counterintelligence (CI) investigations. -At any time, the USG may inspect and seize data stored on this IS. -Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose. -This IS includes security measures (e.g., authentication and access controls) to protect USG interests--not for your personal benefit or privacy. -Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI investigative searching or monitoring of the content of privileged communications, or work product, related to personal representation or services by attorneys, psychotherapists, or clergy, and their assistants. Such communications and work product are private and confidential. See User Agreement for details."
+                    }
+                },
+                {
+                    "name": "banner_message_text_gui",
+                    "options": {
+                        "type": "String",
+                        "value": "You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only. By using this IS (which includes any device attached to this IS), you consent to the following conditions: -The USG routinely intercepts and monitors communications on this IS for purposes including, but not limited to, penetration testing, COMSEC monitoring, network operations and defense, personnel misconduct (PM), law enforcement (LE), and counterintelligence (CI) investigations. -At any time, the USG may inspect and seize data stored on this IS. -Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose. -This IS includes security measures (e.g., authentication and access controls) to protect USG interests--not for your personal benefit or privacy. -Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI investigative searching or monitoring of the content of privileged communications, or work product, related to personal representation or services by attorneys, psychotherapists, or clergy, and their assistants. Such communications and work product are private and confidential. See User Agreement for details."
+                    }
+                },
+                {
+                    "name": "maxlogins_limit",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 10
+                    }
+                },
+                {
+                    "name": "fail_interval",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 900
+                    }
+                },
+                {
+                    "name": "lockout_time",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 0
+                    }
+                },
+                {
+                    "name": "system_activity_timeout",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 900
+                    }
+                },
+                {
+                    "name": "log_directory",
+                    "options": {
+                        "type": "String",
+                        "value": "/var/log/faillock"
+                    }
+                },
+                {
+                    "name": "sshd_client_alive_count_max",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 1
+                    }
+                },
+                {
+                    "name": "linux_threat_prevention_package",
+                    "options": {
+                        "type": "String",
+                        "value": "mcafeetp"
+                    }
+                },
+                {
+                    "name": "linux_threat_prevention_service",
+                    "options": {
+                        "type": "String",
+                        "value": "mfetpd"
+                    }
+                },
+                {
+                    "name": "remove_xorg_x11_server_packages",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "xorg-x11-server-common",
+                            "xorg-x11-server-Xorg",
+                            "xorg-x11-server-utils",
+                            "xorg-x11-server-Xwayland"
+                        ]
+                    }
+                },
+                {
+                    "name": "gui_required",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "disk_error_action",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "SYSLOG",
+                            "SINGLE",
+                            "HALT"
+                        ]
+                    }
+                },
+                {
+                    "name": "disk_full_action",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "SYSLOG",
+                            "SINGLE",
+                            "HALT"
+                        ]
+                    }
+                },
+                {
+                    "name": "permit_root_login",
+                    "options": {
+                        "type": "String",
+                        "value": "no"
+                    }
+                },
+                {
+                    "name": "permissions_for_shells",
+                    "options": {
+                        "type": "Hash",
+                        "value": {
+                            "default_umask": "077",
+                            "bashrc_umask": "077",
+                            "cshrc_umask": "077",
+                            "profile_umask": "077"
+                        }
+                    }
+                },
+                {
+                    "name": "permissions_for_libs",
+                    "options": {
+                        "type": "String",
+                        "value": "0755"
+                    }
+                },
+                {
+                    "name": "system_libraries",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/lib",
+                            "/lib64",
+                            "/usr/lib",
+                            "/usr/lib64"
+                        ]
+                    }
+                },
+                {
+                    "name": "system_command_dirs",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/bin",
+                            "/sbin",
+                            "/usr/bin",
+                            "/usr/sbin",
+                            "/usr/local/bin",
+                            "/usr/local/sbin"
+                        ]
+                    }
+                },
+                {
+                    "name": "required_system_accounts",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "root"
+                        ]
+                    }
+                },
+                {
+                    "name": "var_log_messages_group",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "root"
+                        ]
+                    }
+                },
+                {
+                    "name": "sssd_certificate_verification",
+                    "options": {
+                        "type": "String",
+                        "value": "ocsp_dgst=sha1"
+                    }
+                },
+                {
+                    "name": "sssd_conf_path",
+                    "options": {
+                        "type": "String",
+                        "value": "/etc/sssd/sssd.conf"
+                    }
+                },
+                {
+                    "name": "var_log_audit_group",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "root"
+                        ]
+                    }
+                },
+                {
+                    "name": "use_fapolicyd",
+                    "options": {
+                        "type": "Boolean",
+                        "value": true
+                    }
+                },
+                {
+                    "name": "pam_auth_files",
+                    "options": {
+                        "type": "Hash",
+                        "value": {
+                            "system-auth": "/etc/pam.d/system-auth",
+                            "password-auth": "/etc/pam.d/password-auth",
+                            "smartcard-auth": "/etc/pam.d/smartcard-auth"
+                        }
+                    }
+                },
+                {
+                    "name": "security_faillock_conf",
+                    "options": {
+                        "type": "String",
+                        "value": "/etc/security/faillock.conf"
+                    }
+                },
+                {
+                    "name": "external_firewall",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "firewalld_properties",
+                    "options": {
+                        "type": "Hash",
+                        "value": {
+                            "default_zone": "public",
+                            "ports": [],
+                            "protocols": [],
+                            "services": [
+                                "cockpit",
+                                "dhcpv6-client",
+                                "ssh"
+                            ]
+                        }
+                    }
+                },
+                {
+                    "name": "mount_tmp_options",
+                    "options": {
+                        "type": "Hash",
+                        "value": {
+                            "nodev": false,
+                            "nosuid": false,
+                            "noexec": false
+                        }
+                    }
+                },
+                {
+                    "name": "skip_password_privilege_escalation",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "skip_endpoint_security_tool",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "non_default_tally_dir",
+                    "options": {
+                        "type": "String",
+                        "value": "/var/log/faillock"
+                    }
+                },
+                {
+                    "name": "users_allowed_blank_passwords",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "mail_package",
+                    "options": {
+                        "type": "String",
+                        "value": "mailx"
+                    }
+                },
+                {
+                    "name": "rpm_gpg_file",
+                    "options": {
+                        "type": "String",
+                        "value": "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+                    }
+                },
+                {
+                    "name": "rpm_gpg_keys",
+                    "options": {
+                        "type": "Hash",
+                        "value": {
+                            "release key 2": "567E 347A D004 4ADE 55BA  8A5F 199E 2F91 FD43 1D51",
+                            "auxiliary key": "6A6A A7C9 7C88 90AE C6AE  BFE2 F76F 66C3 D408 2792"
+                        }
+                    }
+                },
+                {
+                    "name": "administrator_users",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "root"
+                        ]
+                    }
+                },
+                {
+                    "name": "allowed_admin_selinux_roles",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "sysadm_u",
+                            "staff_u"
+                        ]
+                    }
+                },
+                {
+                    "name": "allowed_non_admin_selinux_roles",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "user_u"
+                        ]
+                    }
+                },
+                {
+                    "name": "stop_idle_session_sec",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 900
+                    }
+                },
+                {
+                    "name": "sha_crypt_min_rounds",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 5000
+                    }
+                },
+                {
+                    "name": "sha_crypt_max_rounds",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 5000
+                    }
+                },
+                {
+                    "name": "login_prompt_delay",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 4
+                    }
+                },
+                {
+                    "name": "logging_conf_files",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "/etc/rsyslog.conf",
+                            "/etc/rsyslog.d/*.conf"
+                        ]
+                    }
+                },
+                {
+                    "name": "alternative_logging",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "alternative_logging_method",
+                    "options": {
+                        "type": "String",
+                        "value": ""
+                    }
+                },
+                {
+                    "name": "expected_backlog_limit",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 8192
+                    }
+                },
+                {
+                    "name": "audit_storage_threshold",
+                    "options": {
+                        "type": "Numeric",
+                        "value": 25
+                    }
+                },
+                {
+                    "name": "autofs_required",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "usb_storage_required",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "tftp_required",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "ftp_required",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "promiscuous_mode_required",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "gssproxy_required",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "iprutils_required",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "tuned_required",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "kerberos_required",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "alternate_firewall_tool",
+                    "options": {
+                        "type": "String",
+                        "value": ""
+                    }
+                },
+                {
+                    "name": "wifi_hardware",
+                    "options": {
+                        "type": "Boolean",
+                        "value": true
+                    }
+                },
+                {
+                    "name": "system_is_workstation",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "audit_rule_keynames",
+                    "options": {
+                        "type": "Hash",
+                        "value": {
+                            "execve": "execpriv",
+                            "/etc/shadow": "identity",
+                            "/etc/security/opasswd": "identity",
+                            "/etc/passwd": "identity",
+                            "/etc/gshadow": "identity",
+                            "/etc/group": "identity",
+                            "/etc/sudoers": "identity",
+                            "/etc/sudoers.d": "identity",
+                            "/usr/bin/su": "privileged-priv_change",
+                            "setxattr": "perm_mod",
+                            "fsetxattr": "perm_mod",
+                            "lsetxattr": "perm_mod",
+                            "removexattr": "perm_mod",
+                            "fremovexattr": "perm_mod",
+                            "lremovexattr": "perm_mod",
+                            "/usr/bin/chage": "privileged-chage",
+                            "/usr/bin/chcon": "perm_mod",
+                            "/usr/bin/ssh-agent": "privileged-ssh",
+                            "/usr/bin/passwd": "privileged-passwd",
+                            "/usr/bin/mount": "privileged-mount",
+                            "/usr/bin/umount": "privileged-mount",
+                            "mount": "privileged-mount",
+                            "/usr/sbin/unix_update": "privileged-unix-update",
+                            "/usr/sbin/postdrop": "privileged-unix-update",
+                            "/usr/sbin/postqueue": "privileged-unix-update",
+                            "/usr/sbin/semanage": "privileged-unix-update",
+                            "/usr/sbin/setfiles": "privileged-unix-update",
+                            "/usr/sbin/userhelper": "privileged-unix-update",
+                            "/usr/sbin/setsebool": "privileged-unix-update",
+                            "/usr/sbin/unix_chkpwd": "privileged-unix-update",
+                            "/usr/libexec/openssh/ssh-keysign": "privileged-ssh",
+                            "/usr/bin/setfacl": "perm_mod",
+                            "/usr/sbin/pam_timestamp_check": "privileged-pam_timestamp_check",
+                            "/usr/bin/newgrp": "priv_cmd",
+                            "init_module": "module_chng",
+                            "finit_module": "module_chng",
+                            "rename": "delete",
+                            "unlink": "delete",
+                            "rmdir": "delete",
+                            "renameat": "delete",
+                            "unlinkat": "delete",
+                            "/usr/bin/gpasswd": "privileged-gpasswd",
+                            "delete_module": "module_chng",
+                            "/usr/bin/crontab": "privileged-crontab",
+                            "/usr/bin/chsh": "priv_cmd",
+                            "truncate": "perm_access",
+                            "ftruncate": "perm_access",
+                            "creat": "perm_access",
+                            "open": "perm_access",
+                            "openat": "perm_access",
+                            "open_by_handle_at": "perm_access",
+                            "chown": "perm_mod",
+                            "fchown": "perm_mod",
+                            "fchownat": "perm_mod",
+                            "lchown": "perm_mod",
+                            "chmod": "perm_mod",
+                            "fchmod": "perm_mod",
+                            "fchmodat": "perm_mod",
+                            "/usr/bin/sudo": "priv_cmd",
+                            "/usr/sbin/usermod": "privileged-usermod",
+                            "/usr/bin/chacl": "perm_mod",
+                            "/usr/bin/kmod": "modules",
+                            "/var/log/faillock": "logins",
+                            "/var/log/lastlog": "logins"
+                        }
+                    }
+                },
+                {
+                    "name": "audit_rule_keynames_overrides",
+                    "options": {
+                        "type": "Hash",
+                        "value": {}
+                    }
+                }
+            ],
+            "groups": [
+                {
+                    "id": "controls/SV-230221.rb",
+                    "controls": [
+                        "SV-230221"
+                    ]
+                },
+                {
+                    "id": "controls/SV-230222.rb",
+                    "controls": [
+                        "SV-230222"
+                    ]
+                },
+                {
+                    "id": "controls/SV-230223.rb",
+                    "controls": [
+                        "SV-230223"
+                    ]
+                },
+                {
+                    "id": "controls/SV-230328.rb",
+                    "controls": [
+                        "SV-230328"
+                    ]
+                }
+            ],
+            "controls": [
+                {
+                    "id": "SV-230221",
+                    "title": "RHEL 8 must be a vendor-supported release.",
+                    "desc": "An operating system release is considered \"supported\" if the vendor continues to provide security patches for the product. With an unsupported release, it will not be possible to resolve security issues discovered in the system software.\n\n  Red Hat offers the Extended Update Support (EUS) add-on to a Red Hat Enterprise Linux subscription, for a fee, for those customers who wish to standardize on a specific minor release for an extended period. The RHEL 8 minor releases eligible for EUS are 8.1, 8.2, 8.4, 8.6, and 8.8. Each RHEL 8 EUS stream is available for 24 months from the availability of the minor release. RHEL 8.10 will be the final minor release overall. For more details on the Red Hat Enterprise Linux Life Cycle  visit https://access.redhat.com/support/policy/updates/errata/.\n\n  Note: The life-cycle time spans and dates are subject to adjustment.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "An operating system release is considered \"supported\" if the vendor continues to provide security patches for the product. With an unsupported release, it will not be possible to resolve security issues discovered in the system software.\n\n  Red Hat offers the Extended Update Support (EUS) add-on to a Red Hat Enterprise Linux subscription, for a fee, for those customers who wish to standardize on a specific minor release for an extended period. The RHEL 8 minor releases eligible for EUS are 8.1, 8.2, 8.4, 8.6, and 8.8. Each RHEL 8 EUS stream is available for 24 months from the availability of the minor release. RHEL 8.10 will be the final minor release overall. For more details on the Red Hat Enterprise Linux Life Cycle  visit https://access.redhat.com/support/policy/updates/errata/.\n\n  Note: The life-cycle time spans and dates are subject to adjustment."
+                        },
+                        {
+                            "label": "check",
+                            "data": "Verify the version of the operating system is vendor supported.\n\nNote: The lifecycle time spans and dates are subject to adjustment.\n\nCheck the version of the operating system with the following command:\n\n$ sudo cat /etc/redhat-release\n\nRed Hat Enterprise Linux Server release 8.6 (Ootpa)\n\nCurrent End of Extended Update Support for RHEL 8.1 is 30 November 2021.\n\nCurrent End of Extended Update Support for RHEL 8.2 is 30 April 2022.\n\nCurrent End of Extended Update Support for RHEL 8.4 is 31 May 2023.\n\nCurrent End of Maintenance Support for RHEL 8.5 is 31 May 2022.\n\nCurrent End of Extended Update Support for RHEL 8.6 is 31 May 2024.\n\nCurrent End of Maintenance Support for RHEL 8.7 is 31 May 2023.\n\nCurrent End of Extended Update Support for RHEL 8.8 is 31 May 2025.\n\nCurrent End of Maintenance Support for RHEL 8.9 is 31 May 2024.\n\nCurrent End of Maintenance Support for RHEL 8.10 is 31 May 2029.\n\nIf the release is not supported by the vendor, this is a finding."
+                        },
+                        {
+                            "label": "fix",
+                            "data": "Upgrade to a supported version of RHEL 8."
+                        }
+                    ],
+                    "impact": 0.7,
+                    "refs": [],
+                    "tags": {
+                        "severity": "high",
+                        "gtitle": "SRG-OS-000480-GPOS-00227",
+                        "gid": "V-230221",
+                        "rid": "SV-230221r858734_rule",
+                        "stig_id": "RHEL-08-010000",
+                        "fix_id": "F-32865r567410_fix",
+                        "cci": [
+                            "CCI-000366"
+                        ],
+                        "nist": [
+                            "CM-6 b"
+                        ],
+                        "host": null,
+                        "container": null
+                    },
+                    "code": "control 'SV-230221' do\n  title 'RHEL 8 must be a vendor-supported release.'\n  desc 'An operating system release is considered \"supported\" if the vendor continues to provide security patches for the product. With an unsupported release, it will not be possible to resolve security issues discovered in the system software.\n\n  Red Hat offers the Extended Update Support (EUS) add-on to a Red Hat Enterprise Linux subscription, for a fee, for those customers who wish to standardize on a specific minor release for an extended period. The RHEL 8 minor releases eligible for EUS are 8.1, 8.2, 8.4, 8.6, and 8.8. Each RHEL 8 EUS stream is available for 24 months from the availability of the minor release. RHEL 8.10 will be the final minor release overall. For more details on the Red Hat Enterprise Linux Life Cycle  visit https://access.redhat.com/support/policy/updates/errata/.\n\n  Note: The life-cycle time spans and dates are subject to adjustment.'\n  desc 'check', 'Verify the version of the operating system is vendor supported.\n\nNote: The lifecycle time spans and dates are subject to adjustment.\n\nCheck the version of the operating system with the following command:\n\n$ sudo cat /etc/redhat-release\n\nRed Hat Enterprise Linux Server release 8.6 (Ootpa)\n\nCurrent End of Extended Update Support for RHEL 8.1 is 30 November 2021.\n\nCurrent End of Extended Update Support for RHEL 8.2 is 30 April 2022.\n\nCurrent End of Extended Update Support for RHEL 8.4 is 31 May 2023.\n\nCurrent End of Maintenance Support for RHEL 8.5 is 31 May 2022.\n\nCurrent End of Extended Update Support for RHEL 8.6 is 31 May 2024.\n\nCurrent End of Maintenance Support for RHEL 8.7 is 31 May 2023.\n\nCurrent End of Extended Update Support for RHEL 8.8 is 31 May 2025.\n\nCurrent End of Maintenance Support for RHEL 8.9 is 31 May 2024.\n\nCurrent End of Maintenance Support for RHEL 8.10 is 31 May 2029.\n\nIf the release is not supported by the vendor, this is a finding.'\n  desc 'fix', 'Upgrade to a supported version of RHEL 8.'\n  impact 0.7\n  tag severity: 'high'\n  tag gtitle: 'SRG-OS-000480-GPOS-00227'\n  tag gid: 'V-230221'\n  tag rid: 'SV-230221r858734_rule'\n  tag stig_id: 'RHEL-08-010000'\n  tag fix_id: 'F-32865r567410_fix'\n  tag cci: ['CCI-000366']\n  tag nist: ['CM-6 b']\n  tag 'host'\n  tag 'container'\n\n  release = os.release\n\n  EOMS_DATE = {\n    /^8\\.1/ => '30 November 2021',\n    /^8\\.2/ => '30 April 2022',\n    /^8\\.3/ => '30 April 2021',\n    /^8\\.4/ => '31 May 2023',\n    /^8\\.5/ => '31 May 2022',\n    /^8\\.6/ => '31 May 2024',\n    /^8\\.7/ => '31 May 2023',\n    /^8\\.8/ => '31 May 2025',\n    /^8\\.9/ => '31 May 2024',\n    /^8\\.10/ => '31 May 2029'\n  }.find { |k, _v| k.match(release) }&.last\n\n  describe \"The release \\\"#{release}\\\" is still be within the support window\" do\n    it \"ending on #{EOMS_DATE}\" do\n      expect(Date.today).to be <= Date.parse(EOMS_DATE)\n    end\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "redhat-enterprise-linux-8-stig-baseline-main/controls/SV-230221.rb"
+                    },
+                    "waiver_data": {},
+                    "results": [
+                        {
+                            "status": "passed",
+                            "code_desc": "The release \"8.9\" is still be within the support window ending on 31 May 2024",
+                            "run_time": 0.000225661,
+                            "start_time": "2024-03-18T17:10:44+00:00",
+                            "resource_class": "Object",
+                            "resource_params": "[]",
+                            "resource_id": "The release \"8.9\" is still be within the support window"
+                        }
+                    ]
+                },
+                {
+                    "id": "SV-230222",
+                    "title": "RHEL 8 vendor packaged system security patches and updates must be installed and up to date.",
+                    "desc": "Timely patching is critical for maintaining the operational\n    availability, confidentiality, and integrity of information technology (IT)\n    systems. However, failure to keep operating system and application software\n    patched is a common mistake made by IT professionals. New patches are released\n    daily, and it is often difficult for even experienced System Administrators to\n    keep abreast of all the new patches. When new weaknesses in an operating system\n    exist, patches are usually made available by the vendor to resolve the\n    problems. If the most recent security patches and updates are not installed,\n    unauthorized users may take advantage of weaknesses in the unpatched software.\n    The lack of prompt attention to patching could result in a system compromise.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Timely patching is critical for maintaining the operational\n    availability, confidentiality, and integrity of information technology (IT)\n    systems. However, failure to keep operating system and application software\n    patched is a common mistake made by IT professionals. New patches are released\n    daily, and it is often difficult for even experienced System Administrators to\n    keep abreast of all the new patches. When new weaknesses in an operating system\n    exist, patches are usually made available by the vendor to resolve the\n    problems. If the most recent security patches and updates are not installed,\n    unauthorized users may take advantage of weaknesses in the unpatched software.\n    The lack of prompt attention to patching could result in a system compromise."
+                        },
+                        {
+                            "label": "check",
+                            "data": "Verify the operating system security patches and updates are installed and\n    up to date. Updates are required to be applied with a frequency determined by\n    the site or Program Management Office (PMO).\n\n    Obtain the list of available package security updates from Red Hat. The URL\n    for updates is https://rhn.redhat.com/errata/. It is important to note that\n    updates provided by Red Hat may not be present on the system if the underlying\n    packages are not installed.\n\n    Check that the available package security updates have been installed on\n    the system with the following command:\n\n        $ sudo yum history list | more\n\n        Loaded plugins: langpacks, product-id, subscription-manager\n        ID | Command line | Date and time | Action(s) | Altered\n\n    -------------------------------------------------------------------------------\n        70 | install aide | 2020-03-05 10:58 | Install | 1\n        69 | update -y | 2020-03-04 14:34 | Update | 18 EE\n        68 | install vlc | 2020-02-21 17:12 | Install | 21\n        67 | update -y | 2020-02-21 17:04 | Update | 7 EE\n\n    If package updates have not been performed on the system within the\n    timeframe the site/program documentation requires, this is a finding.\n\n    Typical update frequency may be overridden by Information Assurance\n    Vulnerability Alert (IAVA) notifications from CYBERCOM.\n\n    If the operating system is in non-compliance with the Information Assurance\n    Vulnerability Management (IAVM) process, this is a finding."
+                        },
+                        {
+                            "label": "fix",
+                            "data": "Install the operating system patches or updated packages\n    available from Red Hat within 30 days or sooner as local policy dictates."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "severity": "medium",
+                        "gtitle": "SRG-OS-000480-GPOS-00227",
+                        "gid": "V-230222",
+                        "rid": "SV-230222r627750_rule",
+                        "stig_id": "RHEL-08-010010",
+                        "fix_id": "F-32866r567413_fix",
+                        "cci": [
+                            "CCI-000366"
+                        ],
+                        "nist": [
+                            "CM-6 b"
+                        ],
+                        "host": null,
+                        "container": null
+                    },
+                    "code": "control 'SV-230222' do\n  title 'RHEL 8 vendor packaged system security patches and updates must be installed and up to date.'\n  desc 'Timely patching is critical for maintaining the operational\n    availability, confidentiality, and integrity of information technology (IT)\n    systems. However, failure to keep operating system and application software\n    patched is a common mistake made by IT professionals. New patches are released\n    daily, and it is often difficult for even experienced System Administrators to\n    keep abreast of all the new patches. When new weaknesses in an operating system\n    exist, patches are usually made available by the vendor to resolve the\n    problems. If the most recent security patches and updates are not installed,\n    unauthorized users may take advantage of weaknesses in the unpatched software.\n    The lack of prompt attention to patching could result in a system compromise.'\n  desc 'check', 'Verify the operating system security patches and updates are installed and\n    up to date. Updates are required to be applied with a frequency determined by\n    the site or Program Management Office (PMO).\n\n    Obtain the list of available package security updates from Red Hat. The URL\n    for updates is https://rhn.redhat.com/errata/. It is important to note that\n    updates provided by Red Hat may not be present on the system if the underlying\n    packages are not installed.\n\n    Check that the available package security updates have been installed on\n    the system with the following command:\n\n        $ sudo yum history list | more\n\n        Loaded plugins: langpacks, product-id, subscription-manager\n        ID | Command line | Date and time | Action(s) | Altered\n\n    -------------------------------------------------------------------------------\n        70 | install aide | 2020-03-05 10:58 | Install | 1\n        69 | update -y | 2020-03-04 14:34 | Update | 18 EE\n        68 | install vlc | 2020-02-21 17:12 | Install | 21\n        67 | update -y | 2020-02-21 17:04 | Update | 7 EE\n\n    If package updates have not been performed on the system within the\n    timeframe the site/program documentation requires, this is a finding.\n\n    Typical update frequency may be overridden by Information Assurance\n    Vulnerability Alert (IAVA) notifications from CYBERCOM.\n\n    If the operating system is in non-compliance with the Information Assurance\n    Vulnerability Management (IAVM) process, this is a finding.'\n  desc 'fix', 'Install the operating system patches or updated packages\n    available from Red Hat within 30 days or sooner as local policy dictates.'\n  impact 0.5\n  tag severity: 'medium'\n  tag gtitle: 'SRG-OS-000480-GPOS-00227'\n  tag gid: 'V-230222'\n  tag rid: 'SV-230222r627750_rule'\n  tag stig_id: 'RHEL-08-010010'\n  tag fix_id: 'F-32866r567413_fix'\n  tag cci: ['CCI-000366']\n  tag nist: ['CM-6 b']\n  tag 'host'\n  tag 'container'\n\n  only_if(\"This control takes a long time to execute so it has been disabled through 'slow_controls'\") {\n    !input('disable_slow_controls')\n  }\n\n  if input('disconnected_system')\n    describe 'The system is set to a `disconnected` state and you must validate the state of the system packages manually' do\n      skip 'The system is set to a `disconnected` state and you must validate the state of the system packages manually'\n    end\n  else\n    updates = linux_update.updates\n    package_names = updates.map { |h| h['name'] }\n\n    describe.one do\n      describe 'List of out-of-date packages' do\n        subject { package_names }\n        it { should be_empty }\n      end\n      updates.each do |update|\n        describe package(update['name']) do\n          its('version') { should eq update['version'] }\n        end\n      end\n    end\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "redhat-enterprise-linux-8-stig-baseline-main/controls/SV-230222.rb"
+                    },
+                    "waiver_data": {},
+                    "results": [
+                        {
+                            "status": "failed",
+                            "code_desc": "List of out-of-date packages is expected to be empty",
+                            "run_time": 0.000256759,
+                            "start_time": "2024-03-18T17:10:44+00:00",
+                            "message": "expected `[\"libsemanage\"].empty?` to be truthy, got false",
+                            "exception": "RSpec::Core::MultipleExceptionError",
+                            "resource_class": "Object",
+                            "resource_params": "[]",
+                            "resource_id": "List of out-of-date packages"
+                        },
+                        {
+                            "status": "failed",
+                            "code_desc": "System Package libsemanage version is expected to eq \"2.9-9.el8_6\"",
+                            "run_time": 0.000493211,
+                            "start_time": "2024-03-18T17:10:44+00:00",
+                            "message": "\nexpected: \"2.9-9.el8_6\"\n     got: \"2.9-9.el8\"\n\n(compared using ==)\n",
+                            "exception": "RSpec::Core::MultipleExceptionError",
+                            "resource_class": "package",
+                            "resource_params": "[\"libsemanage\"]",
+                            "resource_id": "libsemanage"
+                        }
+                    ]
+                },
+                {
+                    "id": "SV-230223",
+                    "title": "RHEL 8 must implement NIST FIPS-validated cryptography for the following: To provision digital signatures, to generate cryptographic hashes, and to protect data requiring data-at-rest protections in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, and standards.",
+                    "desc": "Use of weak or untested encryption algorithms undermines the purposes of using encryption to protect data. The operating system must implement cryptographic modules adhering to the higher standards approved by the federal government since this provides assurance they have been tested and validated.\n\nRHEL 8 utilizes GRUB 2 as the default bootloader. Note that GRUB 2 command-line parameters are defined in the \"kernelopts\" variable of the /boot/grub2/grubenv file for all kernel boot entries. The command \"fips-mode-setup\" modifies the \"kernelopts\" variable, which in turn updates all kernel boot entries.\n\nThe fips=1 kernel option needs to be added to the kernel command line during system installation so that key generation is done with FIPS-approved algorithms and continuous monitoring tests in place. Users must also ensure the system has plenty of entropy during the installation process by moving the mouse around, or if no mouse is available, ensuring that many keystrokes are typed. The recommended amount of keystrokes is 256 and more. Less than 256 keystrokes may generate a nonunique key.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Use of weak or untested encryption algorithms undermines the purposes of using encryption to protect data. The operating system must implement cryptographic modules adhering to the higher standards approved by the federal government since this provides assurance they have been tested and validated.\n\nRHEL 8 utilizes GRUB 2 as the default bootloader. Note that GRUB 2 command-line parameters are defined in the \"kernelopts\" variable of the /boot/grub2/grubenv file for all kernel boot entries. The command \"fips-mode-setup\" modifies the \"kernelopts\" variable, which in turn updates all kernel boot entries.\n\nThe fips=1 kernel option needs to be added to the kernel command line during system installation so that key generation is done with FIPS-approved algorithms and continuous monitoring tests in place. Users must also ensure the system has plenty of entropy during the installation process by moving the mouse around, or if no mouse is available, ensuring that many keystrokes are typed. The recommended amount of keystrokes is 256 and more. Less than 256 keystrokes may generate a nonunique key."
+                        },
+                        {
+                            "label": "check",
+                            "data": "Verify the operating system implements DOD-approved encryption to protect the confidentiality of remote access sessions.\n\nCheck to see if FIPS mode is enabled with the following command:\n\n     $ fips-mode-setup --check\n     FIPS mode is enabled\n\nIf FIPS mode is \"enabled\", check to see if the kernel boot parameter is configured for FIPS mode with the following command:\n\n     $ sudo grub2-editenv list | grep fips\n     kernelopts=root=/dev/mapper/rhel-root ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet fips=1 boot=UUID=8d171156-cd61-421c-ba41-1c021ac29e82\n\nIf the kernel boot parameter is configured to use FIPS mode, check to see if the system is in FIPS mode with the following command:\n\n     $ sudo cat /proc/sys/crypto/fips_enabled\n     1\n\nIf FIPS mode is not \"on\", the kernel boot parameter is not configured for FIPS mode, or the system does not have a value of \"1\" for \"fips_enabled\" in \"/proc/sys/crypto\", this is a finding."
+                        },
+                        {
+                            "label": "fix",
+                            "data": "Configure the operating system to implement DOD-approved encryption by following the steps below:\n\nTo enable strict FIPS compliance, the fips=1 kernel option needs to be added to the kernel boot parameters during system installation so key generation is done with FIPS-approved algorithms and continuous monitoring tests in place.\n\nEnable FIPS mode after installation (not strict FIPS-compliant) with the following command:\n\n     $ sudo fips-mode-setup --enable\n\nReboot the system for the changes to take effect."
+                        }
+                    ],
+                    "impact": 0.0,
+                    "refs": [],
+                    "tags": {
+                        "severity": "high",
+                        "gtitle": "SRG-OS-000033-GPOS-00014",
+                        "satisfies": [
+                            "SRG-OS-000033-GPOS-00014",
+                            "SRG-OS-000125-GPOS-00065",
+                            "SRG-OS-000396-GPOS-00176",
+                            "SRG-OS-000423-GPOS-00187",
+                            "SRG-OS-000478-GPOS-00223"
+                        ],
+                        "gid": "V-230223",
+                        "rid": "SV-230223r928585_rule",
+                        "stig_id": "RHEL-08-010020",
+                        "fix_id": "F-32867r928584_fix",
+                        "cci": [
+                            "CCI-000068"
+                        ],
+                        "nist": [
+                            "AC-17 (2)"
+                        ],
+                        "host": null
+                    },
+                    "code": "control 'SV-230223' do\n  title 'RHEL 8 must implement NIST FIPS-validated cryptography for the following: To provision digital signatures, to generate cryptographic hashes, and to protect data requiring data-at-rest protections in accordance with applicable federal laws, Executive Orders, directives, policies, regulations, and standards.'\n  desc 'Use of weak or untested encryption algorithms undermines the purposes of using encryption to protect data. The operating system must implement cryptographic modules adhering to the higher standards approved by the federal government since this provides assurance they have been tested and validated.\n\nRHEL 8 utilizes GRUB 2 as the default bootloader. Note that GRUB 2 command-line parameters are defined in the \"kernelopts\" variable of the /boot/grub2/grubenv file for all kernel boot entries. The command \"fips-mode-setup\" modifies the \"kernelopts\" variable, which in turn updates all kernel boot entries.\n\nThe fips=1 kernel option needs to be added to the kernel command line during system installation so that key generation is done with FIPS-approved algorithms and continuous monitoring tests in place. Users must also ensure the system has plenty of entropy during the installation process by moving the mouse around, or if no mouse is available, ensuring that many keystrokes are typed. The recommended amount of keystrokes is 256 and more. Less than 256 keystrokes may generate a nonunique key.'\n  desc 'check', 'Verify the operating system implements DOD-approved encryption to protect the confidentiality of remote access sessions.\n\nCheck to see if FIPS mode is enabled with the following command:\n\n     $ fips-mode-setup --check\n     FIPS mode is enabled\n\nIf FIPS mode is \"enabled\", check to see if the kernel boot parameter is configured for FIPS mode with the following command:\n\n     $ sudo grub2-editenv list | grep fips\n     kernelopts=root=/dev/mapper/rhel-root ro crashkernel=auto resume=/dev/mapper/rhel-swap rd.lvm.lv=rhel/root rd.lvm.lv=rhel/swap rhgb quiet fips=1 boot=UUID=8d171156-cd61-421c-ba41-1c021ac29e82\n\nIf the kernel boot parameter is configured to use FIPS mode, check to see if the system is in FIPS mode with the following command:\n\n     $ sudo cat /proc/sys/crypto/fips_enabled\n     1\n\nIf FIPS mode is not \"on\", the kernel boot parameter is not configured for FIPS mode, or the system does not have a value of \"1\" for \"fips_enabled\" in \"/proc/sys/crypto\", this is a finding.'\n  desc 'fix', 'Configure the operating system to implement DOD-approved encryption by following the steps below:\n\nTo enable strict FIPS compliance, the fips=1 kernel option needs to be added to the kernel boot parameters during system installation so key generation is done with FIPS-approved algorithms and continuous monitoring tests in place.\n\nEnable FIPS mode after installation (not strict FIPS-compliant) with the following command:\n\n     $ sudo fips-mode-setup --enable\n\nReboot the system for the changes to take effect.'\n  impact 0.7\n  tag severity: 'high'\n  tag gtitle: 'SRG-OS-000033-GPOS-00014'\n  tag satisfies: ['SRG-OS-000033-GPOS-00014', 'SRG-OS-000125-GPOS-00065', 'SRG-OS-000396-GPOS-00176', 'SRG-OS-000423-GPOS-00187', 'SRG-OS-000478-GPOS-00223']\n  tag gid: 'V-230223'\n  tag rid: 'SV-230223r928585_rule'\n  tag stig_id: 'RHEL-08-010020'\n  tag fix_id: 'F-32867r928584_fix'\n  tag cci: ['CCI-000068']\n  tag nist: ['AC-17 (2)']\n  tag 'host'\n\n  if virtualization.system.eql?('docker')\n    impact 0.0\n    describe 'Control not applicable in a container' do\n      skip 'The host OS controls the FIPS mode settings. The host OS should also be scanned with the applicable OS validation profile.'\n    end\n  elsif input('use_fips') == false\n    impact 0.0\n    describe 'This control is Not Applicable as FIPS is not required for this system' do\n      skip 'This control is Not Applicable as FIPS is not required for this system'\n    end\n  else\n    describe command('fips-mode-setup --check') do\n      its('stdout.strip') { should match(/FIPS mode is enabled/) }\n    end\n\n    grub_config = command('grub2-editenv - list').stdout\n\n    describe parse_config(grub_config) do\n      its('kernelopts') { should match(/fips=1/) }\n    end\n\n    describe file('/proc/sys/crypto/fips_enabled') do\n      its('content.strip') { should cmp '1' }\n    end\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "redhat-enterprise-linux-8-stig-baseline-main/controls/SV-230223.rb"
+                    },
+                    "waiver_data": {},
+                    "results": [
+                        {
+                            "status": "skipped",
+                            "code_desc": "Control not applicable in a container",
+                            "run_time": 9.427e-06,
+                            "start_time": "2024-03-18T17:10:44+00:00",
+                            "resource": "",
+                            "skip_message": "The host OS controls the FIPS mode settings. The host OS should also be scanned with the applicable OS validation profile.",
+                            "resource_class": "Object",
+                            "resource_params": "[]",
+                            "resource_id": "Control not applicable in a container"
+                        }
+                    ]
+                },
+                {
+                    "id": "SV-230328",
+                    "title": "A separate RHEL 8 filesystem must be used for user home directories\n(such as /home or an equivalent).",
+                    "desc": "The use of separate file systems for different paths can protect the\nsystem from failures resulting from a file system becoming full or failing.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "The use of separate file systems for different paths can protect the\nsystem from failures resulting from a file system becoming full or failing."
+                        },
+                        {
+                            "label": "check",
+                            "data": "Verify that a separate file system has been created for non-privileged local interactive user home directories.\n\n  Check the home directory assignment for all non-privileged users, users with a User Identifier (UID) greater than 1000, on the system with the following command:\n\n     $ sudo awk -F: '($3>=1000)&&($7 !~ /nologin/){print $1,$3,$6}' /etc/passwd\n\n     doej 1001 /home/doej\n     publicj 1002 /home/publicj\n     smithj 1003 /home/smithj\n\nThe output of the command will give the directory/partition that contains the home directories for the non-privileged users on the system (in this example, \"/home\") and users’ shell. All accounts with a valid shell (such as /bin/bash) are considered interactive users.\n\nCheck that a file system/partition has been created for the nonprivileged interactive users with the following command:\n\nNote: The partition of \"/home\" is used in the example.\n\n     $ sudo grep /home /etc/fstab\n\n     /dev/mapper/...   /home   xfs   defaults,noexec,nosuid,nodev 0 0\n\nIf a separate entry for the file system/partition containing the nonprivileged interactive user home directories does not exist, this is a finding."
+                        },
+                        {
+                            "label": "fix",
+                            "data": "Migrate the \"/home\" directory onto a separate file system."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "severity": "medium",
+                        "gtitle": "SRG-OS-000480-GPOS-00227",
+                        "gid": "V-230328",
+                        "rid": "SV-230328r902723_rule",
+                        "stig_id": "RHEL-08-010800",
+                        "fix_id": "F-32972r902722_fix",
+                        "cci": [
+                            "CCI-000366"
+                        ],
+                        "nist": [
+                            "CM-6 b"
+                        ],
+                        "host": null
+                    },
+                    "code": "control 'SV-230328' do\n  title 'A separate RHEL 8 filesystem must be used for user home directories\n(such as /home or an equivalent).'\n  desc 'The use of separate file systems for different paths can protect the\nsystem from failures resulting from a file system becoming full or failing.'\n  desc 'check', %q(Verify that a separate file system has been created for non-privileged local interactive user home directories.\n\n  Check the home directory assignment for all non-privileged users, users with a User Identifier (UID) greater than 1000, on the system with the following command:\n\n     $ sudo awk -F: '($3>=1000)&&($7 !~ /nologin/){print $1,$3,$6}' /etc/passwd\n\n     doej 1001 /home/doej\n     publicj 1002 /home/publicj\n     smithj 1003 /home/smithj\n\nThe output of the command will give the directory/partition that contains the home directories for the non-privileged users on the system (in this example, \"/home\") and users’ shell. All accounts with a valid shell (such as /bin/bash) are considered interactive users.\n\nCheck that a file system/partition has been created for the nonprivileged interactive users with the following command:\n\nNote: The partition of \"/home\" is used in the example.\n\n     $ sudo grep /home /etc/fstab\n\n     /dev/mapper/...   /home   xfs   defaults,noexec,nosuid,nodev 0 0\n\nIf a separate entry for the file system/partition containing the nonprivileged interactive user home directories does not exist, this is a finding.)\n  desc 'fix', 'Migrate the \"/home\" directory onto a separate file system.'\n  impact 0.5\n  tag severity: 'medium'\n  tag gtitle: 'SRG-OS-000480-GPOS-00227'\n  tag gid: 'V-230328'\n  tag rid: 'SV-230328r902723_rule'\n  tag stig_id: 'RHEL-08-010800'\n  tag fix_id: 'F-32972r902722_fix'\n  tag cci: ['CCI-000366']\n  tag nist: ['CM-6 b']\n  tag 'host'\n\n  only_if('This requirement is Not Applicable inside a container, the containers host manages the containers filesystems') {\n    !virtualization.system.eql?('docker')\n  }\n\n  ignore_shells = input('non_interactive_shells').join('|')\n  homes = users.where { uid >= 1000 && !shell.match(ignore_shells) }.homes\n  root_device = etc_fstab.where { mount_point == '/' }.device_name\n\n  if input('seperate_filesystem_exempt')\n    impact 0.0\n    describe 'This system is not required to have sperate filesystems for each mount point' do\n      skip 'The system is managing filesystems and space via other mechanisms; this requirement is Not Applicable'\n    end\n  else\n    homes.each do |home|\n      pn_parent = Pathname.new(home).parent.to_s\n      home_device = etc_fstab.where { mount_point == pn_parent }.device_name\n\n      describe \"The '#{pn_parent}' mount point\" do\n        subject { home_device }\n\n        it 'is not on the same partition as the root partition' do\n          is_expected.not_to equal(root_device)\n        end\n\n        it 'has its own partition' do\n          is_expected.not_to be_empty\n        end\n      end\n    end\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "redhat-enterprise-linux-8-stig-baseline-main/controls/SV-230328.rb"
+                    },
+                    "waiver_data": {},
+                    "results": [
+                        {
+                            "status": "skipped",
+                            "code_desc": "No-op",
+                            "run_time": 4.689e-06,
+                            "start_time": "2024-03-18T17:10:44+00:00",
+                            "resource": "No-op",
+                            "skip_message": "Skipped control due to only_if condition: This requirement is Not Applicable inside a container, the containers host manages the containers filesystems",
+                            "resource_class": "noop",
+                            "resource_params": "[]",
+                            "resource_id": "No-op"
+                        }
+                    ]
+                }
+            ],
+            "status": "loaded",
+            "status_message": ""
+        }
+    ],
+    "statistics": {
+        "duration": 0.00533058
+    },
+    "version": "5.22.40"
+}

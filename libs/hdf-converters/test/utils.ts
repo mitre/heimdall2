@@ -1,16 +1,22 @@
 import {ExecJSON} from 'inspecjs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
+import {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
 
 export function omitVersions(
-  input: ExecJSON.Execution
-): Partial<ExecJSON.Execution> & {profiles: ExecJSON.Profile} {
-  return _.omit(input, [
-    'version',
-    'platform.release',
-    'profiles[0].sha256',
-    'profiles[0].version'
-  ]) as unknown as Partial<ExecJSON.Execution> & {profiles: ExecJSON.Profile};
+  input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+    profiles?: Partial<ExecJSONProfile>[];
+  }
+): Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+  profiles?: Partial<ExecJSONProfile>[];
+} {
+  const output = _.omit(input, ['version', 'platform.release']);
+
+  output.profiles = _.map(output.profiles, (profile) => {
+    return _.omit(profile, ['sha256', 'version']);
+  });
+
+  return output;
 }
 
 // Profile information title contains a changing value
@@ -42,14 +48,16 @@ export function omitASFFVersions(
 }
 
 export function omitHDFTimes(
-  input: Partial<ExecJSON.Execution> & {profiles: ExecJSON.Profile[]}
+  input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
+    profiles?: Partial<ExecJSONProfile>[];
+  }
 ) {
   return {
     ...input,
-    profiles: input.profiles.map((profile) => {
+    profiles: input.profiles?.map((profile) => {
       return {
         ...profile,
-        controls: profile.controls.map((control) => {
+        controls: profile.controls?.map((control) => {
           return {
             ...control,
             attestation_data: _.omit(control.attestation_data, 'updated'),

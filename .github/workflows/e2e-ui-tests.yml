@@ -34,12 +34,12 @@ jobs:
           SPLUNK_PASSWORD: Valid_password!
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: "18.18"
+          node-version: "18"
           check-latest: true
           cache: 'yarn'
 
@@ -61,14 +61,14 @@ jobs:
           NODE_ENV: production # want to install dev deps like cypress but test against the prod build of Heimdall
 
       - name: Cypress run
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           start: yarn start, yarn run cypress-test mock-json, yarn run cypress-test mock-openid
           wait-on: 'http://127.0.0.1:3000, http://127.0.0.1:3001'
 
       - name: Upload test screenshots and videos
         if: failure()
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-recording
           path: |
