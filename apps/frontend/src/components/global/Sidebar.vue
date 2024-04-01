@@ -11,7 +11,6 @@
       />
     </div>
 
-
     <!-- Due to how the vuetify components work, one drawer is permanent to always be appended to the side and the other will be the temporary that can be pulled out -->
     <v-navigation-drawer
       :clipped="$vuetify.breakpoint.lgAndUp"
@@ -46,7 +45,7 @@
     >
       <div v-if="isUtilityDrawerShown">
         <v-expansion-panels v-model="active_path" default>
-        <!-- <v-expansion-panels :value="active_path" default> -->
+          <!-- <v-expansion-panels :value="active_path" default> -->
           <DropdownContent
             header-text="Results"
             :files="visible_evaluation_files"
@@ -193,11 +192,11 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
-    console.log(`this.currentRoute: ${this.currentRoute}`)
-    console.log(`views.Checklist: ${(this.currentRoute === views.Checklist)}`)
-    console.log(`views.Profile: ${(this.currentRoute === views.Profile)}`)
-    console.log(`views.Result: ${(this.currentRoute === views.Result)}`)
-    console.log(`views.Compare: ${(this.currentRoute === views.Compare)}`)
+    console.log(`this.currentRoute: ${this.currentRoute}`);
+    console.log(`views.Checklist: ${this.currentRoute === views.Checklist}`);
+    console.log(`views.Profile: ${this.currentRoute === views.Profile}`);
+    console.log(`views.Result: ${this.currentRoute === views.Result}`);
+    console.log(`views.Compare: ${this.currentRoute === views.Compare}`);
 
     if (this.currentRoute === views.Checklist) {
       return 2;

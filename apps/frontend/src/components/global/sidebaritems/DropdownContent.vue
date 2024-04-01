@@ -1,5 +1,5 @@
 <template>
-  <v-expansion-panel expand v-model="activePath">
+  <v-expansion-panel v-model="activePath" expand>
     <v-expansion-panel-header :title="headerText">
       {{ headerText }}
     </v-expansion-panel-header>
@@ -127,7 +127,7 @@ export default class DropdownContent extends Vue {
   @Prop({default: false, type: Boolean, required: false})
   readonly anySelected!: boolean;
 
-  @Prop({ default: 0, type: Number, required: true })
+  @Prop({default: 0, type: Number, required: true})
   readonly activePath!: number;
 
   showFilteredOutFiles = false;

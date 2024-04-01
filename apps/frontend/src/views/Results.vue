@@ -279,6 +279,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
   get enableResultSnackbar(): boolean {
     return FilteredDataModule.controls(this.allFilter).length === 0;
   }
+
   gotStatus: boolean = false;
   gotSeverity: boolean = false;
 
