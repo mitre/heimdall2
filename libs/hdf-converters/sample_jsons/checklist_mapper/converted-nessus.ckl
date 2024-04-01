@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Heimdall Version :: 2.10.1-->
+<!--Heimdall Version :: 2.10.2-->
 <CHECKLIST>
 	<ASSET>
 		<ROLE>None</ROLE>
@@ -9,8 +9,10 @@
 		<HOST_IP></HOST_IP>
 		<HOST_MAC></HOST_MAC>
 		<HOST_FQDN></HOST_FQDN>
+		<TARGET_COMMENT></TARGET_COMMENT>
 		<TECH_AREA></TECH_AREA>
 		<TARGET_KEY></TARGET_KEY>
+		<WEB_OR_DATABASE>false</WEB_OR_DATABASE>
 		<WEB_DB_SITE></WEB_DB_SITE>
 		<WEB_DB_INSTANCE></WEB_DB_INSTANCE>
 	</ASSET>
@@ -19,6 +21,7 @@
 			<STIG_INFO>
 				<SI_DATA>
 					<SID_NAME>version</SID_NAME>
+					<SID_DATA>0</SID_DATA>
 				</SI_DATA>
 				<SI_DATA>
 					<SID_NAME>classification</SID_NAME>
@@ -33,6 +36,7 @@
 				</SI_DATA>
 				<SI_DATA>
 					<SID_NAME>description</SID_NAME>
+					<SID_DATA>Nessus Basic Network Scan</SID_DATA>
 				</SI_DATA>
 				<SI_DATA>
 					<SID_NAME>filename</SID_NAME>
@@ -146,7 +150,7 @@
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -270,7 +274,7 @@ Following application CPE's matched on the remote system :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -427,7 +431,7 @@ Following application CPE's matched on the remote system :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -582,7 +586,7 @@ Scan duration : 388 sec</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -699,7 +703,7 @@ Please note the following :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -828,7 +832,7 @@ Protocol : LOCAL</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -941,7 +945,7 @@ Protocol : LOCAL</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -1062,7 +1066,7 @@ for all planned checks.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -1182,7 +1186,7 @@ Please see https://docs.tenable.com/nessus/Content/SettingsAdvanced.htm#Custom f
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -1311,7 +1315,7 @@ remote host :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -1435,7 +1439,7 @@ remote host :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -1556,7 +1560,7 @@ Note that both support programs require vendor contracts.  Premier Support provi
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -1678,7 +1682,7 @@ Notes:
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -1811,7 +1815,7 @@ Notes:
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -1923,7 +1927,7 @@ Confidence level : 100</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -2041,7 +2045,7 @@ www.example.com[192.0.32.10]</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -2155,7 +2159,7 @@ Different web servers may be hosted on name-based virtual hosts. :: MESSAGE The 
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -2284,7 +2288,7 @@ The Common Name in the certificate is :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -2420,7 +2424,7 @@ certificate authority :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -2555,7 +2559,7 @@ certificate authority :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -2673,7 +2677,7 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -2806,7 +2810,7 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -2919,7 +2923,7 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -3035,7 +3039,7 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -3149,7 +3153,7 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -3263,7 +3267,7 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -3378,7 +3382,7 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -3966,7 +3970,7 @@ root       17363  0.0  0.0  11496  3288 ?        R    14:56   0:00 /bin/ps auxww
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -4490,7 +4494,7 @@ Groups       : sssd</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -4602,7 +4606,7 @@ Groups       : sssd</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -6975,7 +6979,7 @@ Groups       : sssd</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -7086,7 +7090,7 @@ Groups       : sssd</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -7198,7 +7202,7 @@ Groups       : sssd</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -7321,7 +7325,7 @@ Runtime : 1.93133 seconds</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -7477,7 +7481,7 @@ The fields above are :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -7588,7 +7592,7 @@ The fields above are :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -7699,7 +7703,7 @@ The fields above are :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -7867,7 +7871,7 @@ The fields above are :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -8073,7 +8077,7 @@ MIIDrjCCApagAwIBAgICURkwDQYJKoZIhvcNAQELBQAwgZ0xHDAaBgNVBAoME05lc3N1cyBVc2VycyBV
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -8212,7 +8216,7 @@ MIIDrjCCApagAwIBAgICURkwDQYJKoZIhvcNAQELBQAwgZ0xHDAaBgNVBAoME05lc3N1cyBVc2VycyBV
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -8370,7 +8374,7 @@ Response Body :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -8483,7 +8487,7 @@ Response Body :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -8599,7 +8603,7 @@ Strict-Transport-Security: max-age=31536000</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -8712,7 +8716,7 @@ NessusWWW</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -8827,7 +8831,7 @@ This plugin attempts to discover mDNS used by hosts residing on the same network
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -8940,7 +8944,7 @@ failed :: TEST Nessus was able to identify the remote service by its banner or b
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -9051,7 +9055,7 @@ failed :: TEST Nessus was able to identify the remote service by its banner or b
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -9162,7 +9166,7 @@ failed :: TEST Nessus was able to identify the remote service by its banner or b
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -9330,7 +9334,7 @@ failed :: TEST By sending a DUMP request to the portmapper, it was possible to e
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -9443,7 +9447,7 @@ The portmapper allows someone to get the port number of each RPC service running
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>
@@ -9556,7 +9560,7 @@ The portmapper allows someone to get the port number of each RPC service running
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>STIGRef</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version </ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>Nessus Basic Network Scan :: Version 0</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>TargetKey</VULN_ATTRIBUTE>

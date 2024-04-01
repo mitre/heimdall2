@@ -69,12 +69,12 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
     );
 
     // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/converted-nessus-test.ckl',
+    //   'sample_jsons/checklist_mapper/converted-nessus.ckl',
     //   mapper.toCkl()
     // );
 
     const expected = fs.readFileSync(
-      'sample_jsons/checklist_mapper/converted-nessus-test.ckl',
+      'sample_jsons/checklist_mapper/converted-nessus.ckl',
       'utf-8'
     );
     const converted = mapper.toCkl();
