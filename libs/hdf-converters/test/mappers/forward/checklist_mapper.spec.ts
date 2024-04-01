@@ -1,6 +1,5 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
-import * as checklistMapping from '../../../src/ckl-mapper/jsonixMapping';
 import {omitVersions} from '../../utils';
 
 describe('checklist_mapper_single_stig', () => {
@@ -96,11 +95,11 @@ describe('checklist_jsonix', () => {
       )
     );
 
-    const results = mapper.toJsonix(checklistMapping.jsonixMapping);
+    const results = mapper.getJsonix();
 
     // fs.writeFileSync(
     //   'sample_jsons/checklist_mapper/checklist_jsonix_data.json',
-    //   JSON.stringify(mapper.toJsonix(checklistMapping.jsonixMapping), null, 2)
+    //   JSON.stringify(mapper.getJsonix(), null, 2)
     // );
 
     expect(results).toEqual(
@@ -123,7 +122,7 @@ describe('checklist_intermediate_object', () => {
       )
     );
 
-    const jsonixData = mapper.toJsonix(checklistMapping.jsonixMapping);
+    const jsonixData = mapper.getJsonix();
 
     const results = mapper.toIntermediateObject(jsonixData);
 

@@ -89,6 +89,7 @@
     "sass": "~1.32.6",
     "sass-loader": "^14.0.0",
     "search-query-parser": "^1.5.5",
+    "semver": "^7.6.0",
     "uuid": "^9.0.0",
     "vue": "~2.7.16",
     "vue-apexcharts": "^1.5.1",
