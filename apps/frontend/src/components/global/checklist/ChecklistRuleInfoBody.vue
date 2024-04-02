@@ -43,14 +43,14 @@
           >MISC Data:
         </span>
         <!-- Rule IA Controls -->
-        <div v-if="selectedRule.iacontrols" class="my-3 d-flex flex-column">
+        <div v-if="selectedRule.iaControls" class="my-3 d-flex flex-column">
           <span>IA Controls:</span>
-          <span>{{ selectedRule.iacontrols }}</span>
+          <span>{{ selectedRule.iaControls }}</span>
         </div>
         <!-- Rule False Positives -->
-        <div v-if="selectedRule.falsepositives" class="my-3 d-flex flex-column">
+        <div v-if="selectedRule.falsePositives" class="my-3 d-flex flex-column">
           <span>False Positives:</span>
-          <span>{{ selectedRule.falsepositives }}</span>
+          <span>{{ selectedRule.falsePositives }}</span>
         </div>
         <!-- Rule Mitigations -->
         <div v-if="selectedRule.mitigations" class="my-3 d-flex flex-column">
@@ -59,27 +59,27 @@
         </div>
         <!-- Rule Potential Impact -->
         <div
-          v-if="selectedRule.potentialimpact"
+          v-if="selectedRule.potentialImpact"
           class="my-3 d-flex flex-column"
         >
           <span>Potential Impact:</span>
-          <span>{{ selectedRule.potentialimpact }}</span>
+          <span>{{ selectedRule.potentialImpact }}</span>
         </div>
         <!-- Rule Third Party Tools -->
         <div
-          v-if="selectedRule.thirdpartytools"
+          v-if="selectedRule.thirdPartyTools"
           class="my-3 d-flex flex-column"
         >
           <span>Third Party Tools:</span>
-          <span>{{ selectedRule.thirdpartytools }}</span>
+          <span>{{ selectedRule.thirdPartyTools }}</span>
         </div>
         <!-- Rule Mitigation Control -->
         <div
-          v-if="selectedRule.mitigationcontrol"
+          v-if="selectedRule.mitigationControl"
           class="my-3 d-flex flex-column"
         >
           <span>Mitigation Control:</span>
-          <span>{{ selectedRule.mitigationcontrol }}</span>
+          <span>{{ selectedRule.mitigationControl }}</span>
         </div>
         <!-- Severity Override -->
         <div
@@ -137,12 +137,12 @@ export default class ChecklistRuleInfoBody extends Vue {
 
   miscDataPresent() {
     return (
-      this.selectedRule.iacontrols ||
-      this.selectedRule.falsepositives ||
+      this.selectedRule.iaControls ||
+      this.selectedRule.falsePositives ||
       this.selectedRule.mitigations ||
-      this.selectedRule.potentialimpact ||
-      this.selectedRule.thirdpartytools ||
-      this.selectedRule.mitigationcontrol ||
+      this.selectedRule.potentialImpact ||
+      this.selectedRule.thirdPartyTools ||
+      this.selectedRule.mitigationControl ||
       this.selectedRule.severityoverride ||
       this.selectedRule.severityjustification
     );

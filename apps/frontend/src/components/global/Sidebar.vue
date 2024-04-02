@@ -192,12 +192,6 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
-    console.log(`this.currentRoute: ${this.currentRoute}`);
-    console.log(`views.Checklist: ${this.currentRoute === views.Checklist}`);
-    console.log(`views.Profile: ${this.currentRoute === views.Profile}`);
-    console.log(`views.Result: ${this.currentRoute === views.Result}`);
-    console.log(`views.Compare: ${this.currentRoute === views.Compare}`);
-
     if (this.currentRoute === views.Checklist) {
       return 2;
     } else if (this.currentRoute === views.Profile) {
