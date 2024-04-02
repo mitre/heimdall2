@@ -1,8 +1,8 @@
 name: Push Heimdall Server to Docker Hub on every merge to master and tag as latest
 
 on:
-  push:
-    branches: [master]
+  pull_request:
+      branches: [master]
 
 jobs:
   docker:
@@ -24,6 +24,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true
+          push: false
           platforms: 'linux/amd64'
-          tags: mitre/heimdall2:latest
+          tags: mitre/heimdall2:2.10.3-test
