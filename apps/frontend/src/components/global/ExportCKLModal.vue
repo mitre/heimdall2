@@ -237,7 +237,7 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {Filter} from '@/store/data_filters';
+import {ChecklistFilter, ControlsFilter, Filter} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';

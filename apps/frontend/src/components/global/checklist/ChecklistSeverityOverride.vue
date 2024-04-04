@@ -27,7 +27,7 @@
 </template>
 
 <script lang="ts">
-import {ChecklistVuln, ChecklistSeverity} from '@mitre/hdf-converters';
+import {ChecklistVuln, Severity} from '@mitre/hdf-converters';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 
 @Component
@@ -35,7 +35,7 @@ export default class ChecklistSeverityOverride extends Vue {
   @Prop({type: Object, required: true}) readonly selectedRule!: ChecklistVuln;
   @Prop({type: Boolean, required: true}) sheet!: boolean;
   @Prop({type: String, required: true})
-  severityoverrideSelection!: ChecklistSeverity;
+  severityoverrideSelection!: Severity;
 
   newJustification = this.selectedRule.severityjustification
     ? this.selectedRule.severityjustification

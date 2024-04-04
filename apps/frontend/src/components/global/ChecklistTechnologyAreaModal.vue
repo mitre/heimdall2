@@ -30,6 +30,7 @@ import Modal from '@/components/global/Modal.vue';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {FileID} from '@/store/report_intake';
+import { Techarea } from '@mitre/hdf-converters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -60,7 +61,7 @@ export default class ChecklistTechnologyAreaModal extends Vue {
   }
 
   clearSelection() {
-    this.selectedChecklistAsset.techarea = '';
+    this.selectedChecklistAsset.techarea = Techarea.Empty;
   }
 
   techAreaLabels: string[] = [

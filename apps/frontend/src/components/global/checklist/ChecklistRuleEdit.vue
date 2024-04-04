@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts">
-import {ChecklistVuln, ChecklistSeverity} from '@mitre/hdf-converters';
+import {ChecklistVuln, Severity} from '@mitre/hdf-converters';
 import {ControlStatus} from 'inspecjs';
 import _ from 'lodash';
 import {Component, Prop, Vue} from 'vue-property-decorator';
@@ -74,26 +74,26 @@ export default class ChecklistRuleInfoBody extends Vue {
     {name: 'Not Reviewed', value: 'Not Reviewed'}
   ];
 
-  severityoverrideItems: {name: string; value: ChecklistSeverity}[] = [
-    {name: 'High', value: ChecklistSeverity.High},
-    {name: 'Medium', value: ChecklistSeverity.Medium},
-    {name: 'Low', value: ChecklistSeverity.Low}
+  severityoverrideItems: {name: string; value: Severity}[] = [
+    {name: 'High', value: Severity.High},
+    {name: 'Medium', value: Severity.Medium},
+    {name: 'Low', value: Severity.Low}
     // The default severity will be added to this array
     // Example if severity is low: {name: 'Low (Default)', value: 'low'}
   ];
 
-  checkPossibleOverrides(severity: ChecklistSeverity) {
+  checkPossibleOverrides(severity: Severity) {
     const newArr = this.severityoverrideItems.filter(
       (item) => item.value !== severity
     );
     // Check if it is not an empty rule
     if (
-      this.selectedRule.severity !== ChecklistSeverity.Empty &&
-      this.selectedRule.severityoverride != ChecklistSeverity.Empty
+      this.selectedRule.severity !== Severity.Empty &&
+      this.selectedRule.severityoverride != Severity.Empty
     ) {
       newArr.push({
         name: `${_.capitalize(this.selectedRule.severity)} (Default)`,
-        value: this.selectedRule.severity as ChecklistSeverity
+        value: this.selectedRule.severity as Severity
       });
     }
     return newArr;

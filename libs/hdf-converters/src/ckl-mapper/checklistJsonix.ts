@@ -55,7 +55,7 @@ export type Stigdata = {
   comments?: null | string;
   findingdetails?: null | string;
   severityjustification?: null | string;
-  severityoverride?: Severityoverride;
+  severityoverride?: Severity;
   status?: Status;
   stigdata?: StigdatumElement[];
   sidata?: Sidata[];
@@ -102,6 +102,7 @@ export type Asset = {
 };
 
 export enum Assettype {
+  DefaultValue = '',
   Computing = 'Computing',
   NonComputing = 'Non-Computing'
 }
@@ -167,12 +168,12 @@ export type Vuln = {
   comments: null | string;
   findingdetails: null | string;
   severityjustification: null | string;
-  severityoverride: Severityoverride;
+  severityoverride: Severity;
   status: Status;
   stigdata: StigdatumElement[];
 };
 
-export enum Severityoverride {
+export enum Severity {
   Empty = '',
   High = 'high',
   Low = 'low',

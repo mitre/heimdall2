@@ -137,7 +137,7 @@ import ExportCaat from '@/components/global/ExportCaat.vue';
 import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
-import {ChecklistVuln, ChecklistSeverity} from '@mitre/hdf-converters';
+import {ChecklistVuln, Severity} from '@mitre/hdf-converters';
 import {InspecDataModule} from '@/store/data_store';
 import _ from 'lodash';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
@@ -181,7 +181,7 @@ export default class Checklist extends RouteMixin {
   /** State variable to track severity override */
   severityoverrideSelection = this.selectedRule.severityoverride ?? '';
 
-  setSeverityOverrideSelection(value: ChecklistSeverity) {
+  setSeverityOverrideSelection(value: Severity) {
     this.severityoverrideSelection = value;
   }
 

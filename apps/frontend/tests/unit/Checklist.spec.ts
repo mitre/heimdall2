@@ -78,9 +78,9 @@ describe('Datatable', () => {
           allRules: Array<ChecklistVuln>;
         }
       ).allRules
-        .map((item: ChecklistVuln) => item.ruleid)
+        .map((item: ChecklistVuln) => item.ruleId)
         .sort()
-    ).toEqual(rules.map((item: ChecklistVuln) => item.ruleid).sort());
+    ).toEqual(rules.map((item: ChecklistVuln) => item.ruleId).sort());
   });
 
   it('displays correct number of rules with loaded checklist and filter', async () => {
