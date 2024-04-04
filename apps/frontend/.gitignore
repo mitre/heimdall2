@@ -6,7 +6,7 @@ node_modules
 dist/**
 mitre-heimdall-lite*.tgz
 
-# local env files
+# local environment files
 .env.local
 .env.*.local
 
