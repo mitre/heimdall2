@@ -237,7 +237,7 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {ChecklistFilter, ControlsFilter, Filter} from '@/store/data_filters';
+import {ChecklistFilter, ControlsFilter} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
@@ -299,7 +299,7 @@ export default class ExportCKLModal extends Vue {
   }
 
   @Watch('filter')
-  onFilterChange(newFilter: Filter) {
+  onFilterChange(newFilter: ControlsFilter | ChecklistFilter) {
     this.files = this.evaluations(newFilter.fromFile);
   }
 
@@ -335,9 +335,10 @@ export default class ExportCKLModal extends Vue {
   }
 
   // Get our evaluation info for our export table
-  evaluations(fileIds: string[]): ExtendedEvaluationFile[] {
+  evaluations(fileIds: string | string[]): ExtendedEvaluationFile[] {
     const files: ExtendedEvaluationFile[] = [];
-    for (const fileId of fileIds) {
+  const ids = Array.isArray(fileIds) ? fileIds : [fileIds];
+    for (const fileId of ids) {
       const file = InspecDataModule.allFiles.find(
         (f) => f.uniqueId === fileId
       ) as EvaluationFile;
