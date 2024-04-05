@@ -337,7 +337,7 @@ export default class ExportCKLModal extends Vue {
   // Get our evaluation info for our export table
   evaluations(fileIds: string | string[]): ExtendedEvaluationFile[] {
     const files: ExtendedEvaluationFile[] = [];
-  const ids = Array.isArray(fileIds) ? fileIds : [fileIds];
+    const ids = Array.isArray(fileIds) ? fileIds : [fileIds];
     for (const fileId of ids) {
       const file = InspecDataModule.allFiles.find(
         (f) => f.uniqueId === fileId
