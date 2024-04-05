@@ -20,7 +20,7 @@ yarn-error.log*
 tests/hdf_data/raw_data/
 tests/hdf_data/inspec_tools_info
 
-# Editor directories and files
+# Code Editor directories and files
 .idea
 .vscode
 *.suo
