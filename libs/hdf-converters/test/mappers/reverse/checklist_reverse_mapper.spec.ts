@@ -53,7 +53,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     const converted = mapper.toCkl();
 
     expect(converted).toEqual(
-      expected.replace(/2\.10\.1/gi, hdfConvertersVersion)
+      expected.replace(/2\.10\.2/gi, hdfConvertersVersion)
     );
   });
 });
@@ -81,7 +81,7 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
 
     expect(converted).toEqual(
       expected.replace(
-        /Heimdall Version :: 2\.10\.1/gi,
+        /Heimdall Version :: 2\.10\.2/gi,
         `Heimdall Version :: ${hdfConvertersVersion}`
       )
     );
