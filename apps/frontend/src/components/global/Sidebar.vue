@@ -45,7 +45,6 @@
     >
       <div v-if="isUtilityDrawerShown">
         <v-expansion-panels v-model="active_path" default>
-          <!-- <v-expansion-panels :value="active_path" default> -->
           <DropdownContent
             header-text="Results"
             :files="visible_evaluation_files"
@@ -130,11 +129,10 @@ import {ServerModule} from '../../store/server';
 import {EvaluationModule} from '@/store/evaluations';
 import ChecklistTargetDataModal from '@/components/global/ChecklistTargetDataModal.vue';
 import ChecklistTechnologyAreaModal from '@/components/global/ChecklistTechnologyAreaModal.vue';
-import {AppInfoModule} from '@/store/app_info';
+import {AppInfoModule, views} from '@/store/app_info';
 import QuickFilters from './sidebaritems/QuickFilters.vue';
 import DropdownFilters from './sidebaritems/DropdownFilters.vue';
 import SelectedFilterTable from './sidebaritems/SelectedFilterTable.vue';
-import {views} from '@/store/app_info';
 
 @Component({
   components: {

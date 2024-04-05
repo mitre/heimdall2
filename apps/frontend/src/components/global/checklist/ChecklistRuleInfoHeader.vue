@@ -58,7 +58,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 @Component
 export default class ChecklistRuleInfoHeader extends Vue {
   @Prop({type: Object, required: true}) readonly selectedRule!: ChecklistVuln;
-  @Prop({type: Boolean, required: true}) readonly shortIdEnabled!: Boolean;
+  @Prop({type: Boolean, required: true}) readonly shortIdEnabled!: boolean;
 
   shortRuleId(ruleId: string) {
     return this.shortIdEnabled ? ruleId.split('r')[0] || ruleId : ruleId;
@@ -73,6 +73,4 @@ export default class ChecklistRuleInfoHeader extends Vue {
 </script>
 
 <style scoped>
-.full-width {
-}
 </style>

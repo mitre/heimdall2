@@ -222,18 +222,15 @@ export default class StatusCardRow extends Vue {
         (statusFilter) =>
           statusFilter.value.toLowerCase() == card.value &&
           statusFilter.negated === false
-      )
-    ) {
-      return card.color;
-    } else if (
-      !this.negatedStatuses.some(
+      ) ||
+      (!this.negatedStatuses.some(
         (statusFilter) => statusFilter === card.value
       ) &&
-      this.filter.status?.some(
-        (statusFilter) =>
-          statusFilter.value.toLowerCase() !== card.value &&
-          statusFilter.negated === true
-      )
+        this.filter.status?.some(
+          (statusFilter) =>
+            statusFilter.value.toLowerCase() !== card.value &&
+            statusFilter.negated === true
+        ))
     ) {
       return card.color;
     }

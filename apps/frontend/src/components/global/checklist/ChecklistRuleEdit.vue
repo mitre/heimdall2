@@ -61,7 +61,7 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 @Component
 export default class ChecklistRuleInfoBody extends Vue {
   @Prop({type: Object, required: true}) selectedRule!: ChecklistVuln;
-  @Prop({type: Boolean, required: true}) sheet!: Boolean;
+  @Prop({type: Boolean, required: true}) sheet!: boolean;
 
   newOverride = this.selectedRule.severityoverride
     ? this.selectedRule.severityoverride
