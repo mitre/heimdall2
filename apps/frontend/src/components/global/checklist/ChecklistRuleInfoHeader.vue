@@ -72,5 +72,4 @@ export default class ChecklistRuleInfoHeader extends Vue {
 }
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
