@@ -36,7 +36,7 @@ jobs:
       - name: Get Docker SHA
         shell: bash
         id: get-docker-sha
-        run: echo "DOCKER_SHA=$(docker manifest inspect --verbose docker.io/mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} | jq -r '.Descriptor.digest')" >> $GITHUB_ENV
+        run: echo "DOCKER_SHA=$(docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} | cut -d '@' -f 2" >> $GITHUB_ENV
       - name: Sophos Factory pipeline
         uses: sophos/factory-run-pipeline@v2
         with:
