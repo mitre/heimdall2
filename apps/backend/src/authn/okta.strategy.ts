@@ -5,6 +5,11 @@ import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
 interface OktaProfile {
+  id: string;
+  displayName: string;
+  name: {familyName: string; givenName: string};
+  emails: [{value: string}];
+  _raw: string;
   _json: {
     given_name: string;
     family_name: string;
@@ -35,24 +40,26 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         }/oauth2/default/v1/userinfo`,
         clientID: configService.get('OKTA_CLIENTID') || 'disabled',
         clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
-        callbackURL:
-          `${configService.get('EXTERNAL_URL')}/authn/okta/callback` ||
-          'disabled',
+        callbackURL: `${configService.get('EXTERNAL_URL')}/authn/okta/callback`,
         scope: 'openid email profile',
-        passReqToCallback: true
       },
-      (
-        _req: Request,
-        _token: string,
-        _tokenSecret: string,
-        profile: OktaProfile,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      async function (
+        _issuer: string,
+        uiProfile: OktaProfile,
+        _idProfile: object,
+        _context: object,
+        _idToken: string,
+        _accessToken: string,
+        _refreshToken: string,
+        _params: object,
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
-      ) => {
-        const userData = profile._json;
-        const {given_name, family_name, email, email_verified} = userData;
+      ) {
+        const userData = uiProfile._json;
+        const {given_name, family_name, email, email_verified} =
+          userData;
         if (email_verified) {
-          const user = this.authnService.validateOrCreateUser(
+          const user = await authnService.validateOrCreateUser(
             email,
             given_name,
             family_name,

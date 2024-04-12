@@ -89,7 +89,7 @@ export default class Login extends Vue {
   checkForAuthenticationError() {
     if (this.$cookies.get('authenticationError')) {
       SnackbarModule.failure(
-        `Sorry, an problem occurred while signing you in. The reason given was: ${this.$cookies.get(
+        `Sorry, a problem occurred while signing you in. The reason given was: ${this.$cookies.get(
           'authenticationError'
         )}`
       );
