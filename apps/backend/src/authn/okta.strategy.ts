@@ -41,7 +41,7 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         clientID: configService.get('OKTA_CLIENTID') || 'disabled',
         clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
         callbackURL: `${configService.get('EXTERNAL_URL')}/authn/okta/callback`,
-        scope: 'openid email profile',
+        scope: 'openid email profile'
       },
       async function (
         _issuer: string,
@@ -56,8 +56,7 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         done: any
       ) {
         const userData = uiProfile._json;
-        const {given_name, family_name, email, email_verified} =
-          userData;
+        const {given_name, family_name, email, email_verified} = userData;
         if (email_verified) {
           const user = await authnService.validateOrCreateUser(
             email,
