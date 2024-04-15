@@ -176,7 +176,7 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
    ```bash
    ./setup-docker-env.sh
-   # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
+   # If you would like to further configure your Heimdall docker instance, edit the .env file located in the root directory generated after running the previous line
    ```
 
 6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server).  Please convert any certificates into PEM files and place them in `./certs/` where they will be automatically ingested.  Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the `command` attribute underneath the `certs` service in the `docker-compose.yml` to run that script.
@@ -436,6 +436,8 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
 
 You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
+
+Note: the .env file in the root repository is for the dockerized instance of the Heimdall application.
 
 6. Create the database:
 
