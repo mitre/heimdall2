@@ -43,6 +43,7 @@ export class OidcStrategy extends PassportStrategy(Strategy, 'oidc') {
         //changed from 4-arity function to 9-arity, because 'profile' in 4-arity was not providing required data
         //by changing to 9-arity we can access the data we need from the 'uiProfile' parameter
         //the lack of needed data in 4-arity function may be a bug
+        // NOTE: Some variables are not used in this function, but they are required to be present in the function signature. These are indicated with an underscore prefix.
         _issuer: string,
         uiProfile: OIDCProfile,
         _idProfile: object,
