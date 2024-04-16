@@ -5,6 +5,7 @@ export enum INPUT_TYPES {
   BURP = 'burp',
   CHECKLIST = 'checklist',
   CONVEYOR = 'conveyor',
+  DEPENDENCY_TRACK = 'dependencyTrack',
   FORTIFY = 'fortify',
   GOSEC = 'gosec',
   IONCHANNEL = 'ionchannel',
@@ -58,6 +59,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
 
   [INPUT_TYPES.BURP]: [],
   [INPUT_TYPES.CHECKLIST]: [],
+  [INPUT_TYPES.DEPENDENCY_TRACK]: ['version', 'meta', 'project', 'findings'],
   [INPUT_TYPES.NESSUS]: [],
   [INPUT_TYPES.PRISMA]: [],
   [INPUT_TYPES.DB_PROTECT]: [],

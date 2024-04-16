@@ -11,6 +11,7 @@ import {
   BurpSuiteMapper,
   ChecklistResults,
   ConveyorResults as ConveyorResultsMapper,
+  DependencyTrackMapper,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -271,6 +272,8 @@ export class InspecIntake extends VuexModule {
         return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
         return new GoSecMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.DEPENDENCY_TRACK:
+        return new DependencyTrackMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
