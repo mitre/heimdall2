@@ -45,6 +45,7 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
       },
       async function (
         // Like in oidc.strategy.ts, we changed the arity of the function to 9 to access the data we need from 'uiProfile' due to updates in the passport-openidconnect library which otherwise caused failures in the authentication process
+        // NOTE: Some variables are not used in this function, but they are required to be present in the function signature. These are indicated with an underscore prefix.
         _issuer: string,
         uiProfile: OktaProfile,
         _idProfile: object,
