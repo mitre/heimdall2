@@ -175,7 +175,11 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
    ```bash
+   # For Linux or Mac
    ./setup-docker-env.sh
+   
+   # For Windows
+   ./setup-docker-env.bat
    # If you would like to further configure your Heimdall docker instance, edit the .env file located in the root directory generated after running the previous line
    ```
 
@@ -437,7 +441,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
 You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
-Note: the .env file in the root repository is for the dockerized instance of the Heimdall application.
+__NOTE: The .env file in the root repository is for the dockerized instance of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory.__
 
 6. Create the database:
 
