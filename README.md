@@ -441,7 +441,8 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
 You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
-__NOTE: The .env file in the root repository is for the dockerized instance of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory.__
+> [!NOTE]
+> The .env file in the root repository is for the dockerized instance of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory.
 
 6. Create the database:
 
@@ -518,7 +519,8 @@ The application includes an End-to-End (E2E) frontend and Backend tests (built u
 
 The first command will start an instance of Heimdall Server and exposes additional routes required to allow the tests to run. The second will open the Cypress UI which will run the tests any time code changes are made.
 
-_NOTE: When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes._
+> [!NOTE] 
+> When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes.
 
 ### Creating a Release
 
