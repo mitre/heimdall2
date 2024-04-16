@@ -442,7 +442,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
 > [!NOTE]
-> The .env file in the root repository is for the dockerized instance of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory.
+> The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory.
 
 6. Create the database:
 
