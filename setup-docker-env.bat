@@ -10,7 +10,6 @@ IF EXIST .env (
 )
 
 
-
 REM Set the PostgreSQL db password
 FINDSTR /C:"DATABASE_PASSWORD" .env > Nul
 IF !ERRORLEVEL! EQU 1 (
@@ -24,14 +23,14 @@ REM Set the JWT expire time
 SET jwtexpiretime=1d
 FINDSTR /C:"JWT_EXPIRE_TIME" .env > Nul
 IF !ERRORLEVEL! EQU 1 (
-  ECHO "JWT_EXPIRE_TIME" was not found within the .env file, generating secret..."
+  ECHO "JWT_EXPIRE_TIME" was not found within the .env file, generating secret...
   CALL :SET_JWT_EXPIRE_TIME
 )
 
 REM Generate the JWT SECRET (password)
 FINDSTR /C:"JWT_SECRET" .env > Nul
 IF !ERRORLEVEL! EQU 1 (
-  ECHO "JWT_SECRET" was not found within the .env file, generating secret..."
+  ECHO "JWT_SECRET" was not found within the .env file, generating secret...
   FOR /F "tokens=* USEBACKQ" %%F IN (`openssl rand -hex 64`) DO (
     ECHO JWT_SECRET=%%F >> .env
   )
@@ -42,7 +41,6 @@ REM Enable API keys
 FINDSTR /C:"API_KEY_SECRET" .env > Nul
 IF !ERRORLEVEL! EQU 1 (
   SET /P enableapikeys="API_KEY_SECRET was not found within the .env file. Enable API keys [Y/n]: "
-  ECHO HERE enableapikeys is !enableapikeys!
   IF /I "!enableapikeys!" EQU "Y" (
     FOR /F "tokens=* USEBACKQ" %%F IN (`openssl rand -hex 33`) DO (
       ECHO API_KEY_SECRET=%%F >> .env
@@ -65,7 +63,7 @@ IF EXIST ./nginx/certs/ssl_certificate.crt (
 	ECHO Be sure your production environment is configured to work with your self-signed certificate.
 	ECHO
 	ECHO "Generating certificate (Expires in 7 days)..."
-  openssl req -newkey rsa:4096 -x509 -sha256 -days 7 -nodes -out nginx/certs/ssl_certificate.crt -keyout nginx/certs/ssl_certificate_key.key -subj "/C=US/ST=SelfSigned/L=SelfSigned/O=SelfSigned/OU=SelfSigned
+  openssl req -newkey rsa:4096 -x509 -sha256 -days 7 -nodes -out nginx/certs/ssl_certificate.crt -keyout nginx/certs/ssl_certificate_key.key -subj "/C=US/ST=SelfSigned/L=SelfSigned/O=SelfSigned/OU=SelfSigned"
   ECHO Certificates were generated 
 )
 
@@ -74,7 +72,7 @@ REM Exit the batch process
 EXIT /B !ERRORLEVEL!
 
 REM ------------------------------------------------------------------------------------------
-REM Supporting function - Note: we use the function input function outside the IF %ERRORLEVEL%
+REM Supporting function - Note: we use the input function outside the IF %ERRORLEVEL%
 REM because the SET /P does not work as expected inside the IF %ERRORLEVEL% block
 
 :SET_JWT_EXPIRE_TIME
