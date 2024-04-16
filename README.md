@@ -175,9 +175,15 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
    ```bash
+   # For Linux or Mac
    ./setup-docker-env.sh
-   # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
+   
+   # For Windows
+   ./setup-docker-env.bat
    ```
+
+> [!TIP]
+> If you would like to further configure your Docker-based Heimdall deployment, edit the .env file located in the root directory generated after running the `setup-docker-env.sh` or `setup-docker-env.bat` scripts
 
 6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server).  Please convert any certificates into PEM files and place them in `./certs/` where they will be automatically ingested.  Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the `command` attribute underneath the `certs` service in the `docker-compose.yml` to run that script.
   ```bash
@@ -437,6 +443,9 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
 You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
+> [!NOTE]
+> The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory.
+
 6. Create the database:
 
    - ```bash
@@ -512,7 +521,8 @@ The application includes an End-to-End (E2E) frontend and Backend tests (built u
 
 The first command will start an instance of Heimdall Server and exposes additional routes required to allow the tests to run. The second will open the Cypress UI which will run the tests any time code changes are made.
 
-_NOTE: When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes._
+> [!NOTE] 
+> When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes.
 
 ### Creating a Release
 
