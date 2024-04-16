@@ -181,6 +181,7 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
    # For Windows
    ./setup-docker-env.bat
    ```
+   
    > [!TIP]
    > If you would like to further configure your Docker-based Heimdall deployment, edit the .env file located in the root directory generated after running the `setup-docker-env.sh` or `setup-docker-env.bat` scripts
 
