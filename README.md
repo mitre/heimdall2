@@ -181,9 +181,9 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
    # For Windows
    ./setup-docker-env.bat
    ```
-   
-   > [!TIP]
-   > If you would like to further configure your Docker-based Heimdall deployment, edit the .env file located in the root directory generated after running the `setup-docker-env.sh` or `setup-docker-env.bat` scripts
+
+> [!TIP]
+> If you would like to further configure your Docker-based Heimdall deployment, edit the .env file located in the root directory generated after running the `setup-docker-env.sh` or `setup-docker-env.bat` scripts
 
 6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server).  Please convert any certificates into PEM files and place them in `./certs/` where they will be automatically ingested.  Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the `command` attribute underneath the `certs` service in the `docker-compose.yml` to run that script.
   ```bash
