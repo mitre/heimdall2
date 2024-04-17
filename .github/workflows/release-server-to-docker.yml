@@ -25,7 +25,7 @@ jobs:
         id: format-tag
         with:
           pattern: 'v'
-          string: '${{ github.event.release.tag_name }}'
+          string: '${{ github.event.release.tag_name || github.event.inputs.version}}'
           replace-with: ''
           flags: 'g'
       - name: Checkout the Heimdall Repository
@@ -37,7 +37,7 @@ jobs:
           context: .
           push: true
           platforms: 'linux/amd64'
-          tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced || github.event.inputs.version }}
+          tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced }}
       - name: Get Docker SHA
         shell: bash
         id: get-docker-sha
