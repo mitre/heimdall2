@@ -37,7 +37,7 @@ jobs:
           context: .
           push: true
           platforms: 'linux/amd64'
-          tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced }}
+          tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced || github.event.inputs.version }}
       - name: Get Docker SHA
         shell: bash
         id: get-docker-sha
