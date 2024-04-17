@@ -1,3 +1,40 @@
+v2.10.5
+
+Package.json Fix @DMedina6 (#5727)
+Update okta.strategy.ts to work with passport-openidconnect 0.1.1 @em-c-rod (#5725)
+Fix Ironbank Deployment Pipeline Error @DMedina6 (#5707)
+Fix hdf converter test @em-c-rod (#5706)
+
+## Dependency Updates
+
+- Bump @aws-sdk/client-s3 from 3.554.0 to 3.556.0 @dependabot (#5737)
+- Bump @aws-sdk/client-config-service from 3.555.0 to 3.556.0 @dependabot (#5735)
+- Bump core-js from 3.36.1 to 3.37.0 @dependabot (#5736)
+- Bump sass-loader from 14.2.0 to 14.2.1 @dependabot (#5734)
+- Bump sequelize from 6.37.2 to 6.37.3 @dependabot (#5730)
+- Bump eslint-plugin-cypress from 2.15.1 to 2.15.2 @dependabot (#5728)
+- Bump eslint-plugin-vue from 9.24.1 to 9.25.0 @dependabot (#5729)
+- Bump cypress from 13.7.2 to 13.7.3 @dependabot (#5720)
+- Bump @aws-sdk/client-config-service from 3.554.0 to 3.555.0 @dependabot (#5726)
+- Bump @aws-sdk/client-s3 from 3.550.0 to 3.554.0 @dependabot (#5724)
+- Bump sass-loader from 14.1.1 to 14.2.0 @dependabot (#5723)
+- Bump @aws-sdk/client-config-service from 3.552.0 to 3.554.0 @dependabot (#5721)
+- Bump @aws-sdk/client-config-service from 3.549.0 to 3.552.0 @dependabot (#5714)
+- Bump @types/node from 20.12.5 to 20.12.7 @dependabot (#5718)
+- Bump @aws-sdk/client-sts from 3.549.0 to 3.552.0 @dependabot (#5716)
+- Bump vue-cookies from 1.8.3 to 1.8.4 @dependabot (#5715)
+- Bump typedoc from 0.25.12 to 0.25.13 @dependabot (#5712)
+- Bump eslint-plugin-vue from 9.24.0 to 9.24.1 @dependabot (#5711)
+- Bump @aws-sdk/client-s3 from 3.549.0 to 3.550.0 @dependabot (#5710)
+- Bump @types/node from 20.12.4 to 20.12.5 @dependabot (#5709)
+- Bump diff2html from 3.4.47 to 3.4.48 @dependabot (#5708)
+- Bump pg from 8.11.3 to 8.11.5 @dependabot (#5698)
+- Bump cypress from 13.7.1 to 13.7.2 @dependabot (#5697)
+- Bump @types/node from 20.11.30 to 20.12.4 @dependabot (#5701)
+- Bump @aws-sdk/client-s3 from 3.540.0 to 3.549.0 @dependabot (#5703)
+- Bump tsx from 4.7.1 to 4.7.2 @dependabot (#5704)
+- Bump @aws-sdk/client-config-service from 3.540.0 to 3.549.0 @dependabot (#5705)
+
 v2.10.4
 
 Hotfix for yarn.lock file mismatch
