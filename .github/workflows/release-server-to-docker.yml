@@ -3,6 +3,11 @@ name: Push Heimdall Server to Docker Hub on every release and tag as release-lat
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'     
+        required: true
 
 jobs:
   docker:
