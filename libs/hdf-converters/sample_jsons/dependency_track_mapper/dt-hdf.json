@@ -19,10 +19,10 @@
       "controls": [
         {
           "tags": {
-            "cweId": [
+            "cweIds": [
               400
             ],
-            "cweName": [
+            "cweNames": [
               "Uncontrolled Resource Consumption ('Resource Exhaustion')"
             ],
             "nist": [
@@ -38,15 +38,15 @@
             "vulnerabilityUuid": "115b80bb-46c4-41d1-9f10-8a175d4abb46",
             "vulnerabilitySource": "NPM",
             "vulnerabilityVulnId": "533",
-            "vulnerabilitySeverityRank": "3",
-            "vulnerabilyCweId": "400",
-            "vulnerabilyCweName": "Uncontrolled Resource Consumption ('Resource Exhaustion')",
+            "vulnerabilitySeverityRank": 3,
+            "vulnerabilityCweId": 400,
+            "vulnerabilityCweName": "Uncontrolled Resource Consumption ('Resource Exhaustion')",
             "analysisState": "NOT_SET",
             "analysisIsSuppressed": ""
           },
           "refs": [],
           "source_location": {},
-          "title": "pkg:npm/timespan@2.3.0 - Regular Expression Denial of Service}",
+          "title": "pkg:npm/timespan@2.3.0 - Regular Expression Denial of Service",
           "id": "ca4f2da9-0fad-4a13-92d7-f627f3168a56:b815b581-fec1-4374-a871-68862a8f8d52:115b80bb-46c4-41d1-9f10-8a175d4abb46",
           "desc": "Affected versions of `timespan`...",
           "descriptions": [
@@ -70,10 +70,10 @@
         },
         {
           "tags": {
-            "cweId": [
+            "cweIds": [
               400
             ],
-            "cweName": [
+            "cweNames": [
               "Uncontrolled Resource Consumption ('Resource Exhaustion')"
             ],
             "nist": [
@@ -89,15 +89,15 @@
             "vulnerabilityUuid": "701a3953-666b-4b7a-96ca-e1e6a3e1def3",
             "vulnerabilitySource": "NPM",
             "vulnerabilityVulnId": "48",
-            "vulnerabilitySeverityRank": "3",
-            "vulnerabilyCweId": "400",
-            "vulnerabilyCweName": "Uncontrolled Resource Consumption ('Resource Exhaustion')",
+            "vulnerabilitySeverityRank": 3,
+            "vulnerabilityCweId": 400,
+            "vulnerabilityCweName": "Uncontrolled Resource Consumption ('Resource Exhaustion')",
             "analysisState": "",
             "analysisIsSuppressed": ""
           },
           "refs": [],
           "source_location": {},
-          "title": "pkg:npm/uglify-js@2.4.24 - Regular Expression Denial of Service}",
+          "title": "pkg:npm/uglify-js@2.4.24 - Regular Expression Denial of Service",
           "id": "ca4f2da9-0fad-4a13-92d7-f627f3168a56:979f87f5-eaf5-4095-9d38-cde17bf9228e:701a3953-666b-4b7a-96ca-e1e6a3e1def3",
           "desc": "Versions of `uglify-js` prior to...",
           "descriptions": [
@@ -120,7 +120,7 @@
           ]
         }
       ],
-      "sha256": "e6c68b265b5c3e8e54d658fcbe64bf5a7aee33981776a2ed848407498b2a5d2f"
+      "sha256": "0670e87941739b6cabbaaf97533c9b46421ce41facddfcf2e62f6c4cb1d76304"
     }
   ],
   "passthrough": {}

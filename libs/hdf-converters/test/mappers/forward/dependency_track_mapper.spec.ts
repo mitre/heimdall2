@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {DependencyTrackMapper} from '../../../src/dependency-track-mapper'; 
+import {DependencyTrackMapper} from '../../../src/dependency-track-mapper';
 import {omitVersions} from '../../utils';
 
 describe('dependency_track_mapper', () => {
@@ -19,12 +19,9 @@ describe('dependency_track_mapper', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/dependency_track_mapper/dt-hdf.json',
-            {
-              encoding: 'utf-8'
-            }
-          )
+          fs.readFileSync('sample_jsons/dependency_track_mapper/dt-hdf.json', {
+            encoding: 'utf-8'
+          })
         )
       )
     );
