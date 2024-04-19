@@ -10,8 +10,8 @@
     {
       "name": "ca4f2da9-0fad-4a13-92d7-f627f3168a56",
       "version": "1.0",
-      "title": "",
-      "summary": "",
+      "title": "Acme Example",
+      "summary": "A sample application",
       "supports": [],
       "attributes": [],
       "groups": [],
@@ -120,7 +120,7 @@
           ]
         }
       ],
-      "sha256": "0670e87941739b6cabbaaf97533c9b46421ce41facddfcf2e62f6c4cb1d76304"
+      "sha256": "f49c9166fb8ef5e6e529d489c7fd5bfa8f945d6ac74238d6c9721e72e360ab6f"
     }
   ],
   "passthrough": {
