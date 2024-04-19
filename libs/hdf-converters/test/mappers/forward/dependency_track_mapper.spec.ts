@@ -19,9 +19,12 @@ describe('dependency_track_mapper', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/dependency_track_mapper/hdf-default.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/dependency_track_mapper/hdf-default.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );
@@ -75,9 +78,12 @@ describe('dependency_track_mapper_optional_attributes', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/dependency_track_mapper/hdf-optional-attributes.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/dependency_track_mapper/hdf-optional-attributes.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );
@@ -101,9 +107,12 @@ describe('dependency_track_mapper_no_vulnerabilities', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/dependency_track_mapper/hdf-no-vulnerabilities.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/dependency_track_mapper/hdf-no-vulnerabilities.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );
