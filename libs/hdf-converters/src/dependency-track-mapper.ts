@@ -76,8 +76,8 @@ export class DependencyTrackMapper extends BaseConverter {
       {
         name: {path: 'project.uuid'},
         version: {path: 'project.version'},
-        title: {path: 'project.title'},
-        summary: {path: 'project.summary'},
+        title: {path: 'project.name'},
+        summary: {path: 'project.description'},
         supports: [],
         attributes: [],
         groups: [],
