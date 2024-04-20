@@ -4340,9 +4340,9 @@
     "@types/ms" "*"
 
 "@types/diff@^5.0.0":
-  version "5.0.9"
-  resolved "https://registry.npmjs.org/@types/diff/-/diff-5.0.9.tgz#31977962175079c2048315febeb8fd5f520192c6"
-  integrity sha512-RWVEhh/zGXpAVF/ZChwNnv7r4rvqzJ7lYNSmZSVTxjV0PBLf6Qu7RNg+SUtkpzxmiNkjCx0Xn2tPp7FIkshJwQ==
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/@types/diff/-/diff-5.2.0.tgz#244ba764c195ba15c100e8810486f49b44a647a9"
+  integrity sha512-pjJH+02ukgJRW0mViDUA1cdC+wzSgRu0e4cPuogPLAw0i66y62iMP0ZlXoJAmoXrKRZnF3pMDwyKZsgNVlMX4A==
 
 "@types/duplexify@*":
   version "3.6.4"
