@@ -107,6 +107,11 @@ export class DependencyTrackMapper extends BaseConverter {
               vulnerabilityUuid: {path: 'vulnerability.uuid'},
               vulnerabilitySource: {path: 'vulnerability.source'},
               vulnerabilityVulnId: {path: 'vulnerability.vulnId'},
+              vulnerabilityAliases: {
+                path: 'vulnerability.aliases',
+                transformer: (aliases: Array<object>): string =>
+                  JSON.stringify(aliases, null, 2)
+              },
               vulnerabilitySeverityRank: {path: 'vulnerability.severityRank'},
               // Schema is deprecating these attributes: cweId, cweName
               vulnerabilityCweId: {path: 'vulnerability.cweId'},
@@ -132,6 +137,11 @@ export class DependencyTrackMapper extends BaseConverter {
             impact: {
               path: 'vulnerability.severity',
               transformer: impactMapping(IMPACT_MAPPING)
+            },
+            code: {
+              path: 'vulnerability',
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
             },
             results: [
               {
