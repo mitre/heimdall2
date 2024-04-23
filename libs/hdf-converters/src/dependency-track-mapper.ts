@@ -23,7 +23,8 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
   ['medium', 0.5],
   ['low', 0.3],
-  ['unassigned', 0]
+  ['info', 0],
+  ['unassigned', 0.5]
 ]);
 const CWE_NIST_MAPPING = new CweNistMapping();
 
