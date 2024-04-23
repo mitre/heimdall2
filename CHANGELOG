@@ -1,3 +1,15 @@
+v2.10.6
+
+## Dependency Updates
+
+- Bump apexcharts from 3.48.0 to 3.49.0 @dependabot (#5748)
+- Bump @nestjs/common from 10.3.7 to 10.3.8 @dependabot (#5743)
+- Bump @nestjs/platform-express from 10.3.7 to 10.3.8 @dependabot (#5744)
+- Bump @nestjs/core from 10.3.7 to 10.3.8 @dependabot (#5745)
+- Bump @nestjs/testing from 10.3.7 to 10.3.8 @dependabot (#5747)
+- Bump @types/diff from 5.0.9 to 5.2.0 @dependabot (#5742)
+- Bump cypress from 13.7.3 to 13.8.0 @dependabot (#5741)
+
 v2.10.5
 
 Package.json Fix @DMedina6 (#5727)
