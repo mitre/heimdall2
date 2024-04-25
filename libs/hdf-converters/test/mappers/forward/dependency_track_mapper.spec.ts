@@ -118,3 +118,32 @@ describe('dependency_track_mapper_no_vulnerabilities', () => {
     );
   });
 });
+
+describe('dependency_track_mapper_with_attributions', () => {
+  it('Successfully converts Dependency Track targeted at a local/cloned repository data with the attribution field', () => {
+    const mapper = new DependencyTrackMapper(
+      fs.readFileSync(
+        'sample_jsons/dependency_track_mapper/sample_input_report/fpf-with-attributions.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/dependency_track_mapper/hdf-with-attributions.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/dependency_track_mapper/hdf-with-attributions.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+  });
+});

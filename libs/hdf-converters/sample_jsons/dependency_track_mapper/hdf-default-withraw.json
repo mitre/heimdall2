@@ -33,14 +33,32 @@
             ],
             "componentUuid": "b815b581-fec1-4374-a871-68862a8f8d52",
             "componentName": "timespan",
+            "componentGroup": "",
             "componentVersion": "2.3.0",
             "componentLatestVersion": "3.2.0",
+            "componentPurl": "pkg:npm/timespan@2.3.0",
+            "componentCpe": "",
+            "componentProject": "",
             "vulnerabilityUuid": "115b80bb-46c4-41d1-9f10-8a175d4abb46",
             "vulnerabilitySource": "NPM",
             "vulnerabilityVulnId": "533",
+            "vulnerabilityTitle": "Regular Expression Denial of Service",
+            "vulnerabilitySubtitle": "timespan",
+            "vulnerabilityAliases": "\"\"",
+            "vulnerabilityCvssV2BaseScore": "",
+            "vulnerabilityCvssV3BaseScore": "",
+            "vulnerabilityOwaspLikelihoodScore": "",
+            "vulnerabilityOwaspTechnicalImpactScore": "",
+            "vulnerabilityOwaspBusinessImpactScore": "",
             "vulnerabilitySeverityRank": 3,
+            "vulnerabilityEpssScore": "",
+            "vulnerabilityEpssPercentile": "",
             "vulnerabilityCweId": 400,
             "vulnerabilityCweName": "Uncontrolled Resource Consumption ('Resource Exhaustion')",
+            "attributionAnalyzerIdentity": "",
+            "attributionAttributedOn": "",
+            "attributionAlternateIdentifier": "",
+            "attributionReferenceUrl": "",
             "analysisState": "NOT_SET",
             "analysisIsSuppressed": ""
           },
@@ -60,6 +78,7 @@
             }
           ],
           "impact": 0.3,
+          "code": "{\n  \"uuid\": \"115b80bb-46c4-41d1-9f10-8a175d4abb46\",\n  \"source\": \"NPM\",\n  \"vulnId\": \"533\",\n  \"title\": \"Regular Expression Denial of Service\",\n  \"subtitle\": \"timespan\",\n  \"severity\": \"LOW\",\n  \"severityRank\": 3,\n  \"cweId\": 400,\n  \"cweName\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\",\n  \"cwes\": [\n    {\n      \"cweId\": 400,\n      \"name\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\"\n    }\n  ],\n  \"description\": \"Affected versions of `timespan`...\",\n  \"recommendation\": \"No direct patch is available...\"\n}",
           "results": [
             {
               "status": "failed",
@@ -84,14 +103,32 @@
             ],
             "componentUuid": "979f87f5-eaf5-4095-9d38-cde17bf9228e",
             "componentName": "uglify-js",
+            "componentGroup": "",
             "componentVersion": "2.4.24",
             "componentLatestVersion": "",
+            "componentPurl": "pkg:npm/uglify-js@2.4.24",
+            "componentCpe": "",
+            "componentProject": "",
             "vulnerabilityUuid": "701a3953-666b-4b7a-96ca-e1e6a3e1def3",
             "vulnerabilitySource": "NPM",
             "vulnerabilityVulnId": "48",
+            "vulnerabilityTitle": "Regular Expression Denial of Service",
+            "vulnerabilitySubtitle": "uglify-js",
+            "vulnerabilityAliases": "[\n  {\n    \"cveId\": \"CVE-2022-2053\",\n    \"ghsaId\": \"GHSA-95rf-557x-44g5\"\n  }\n]",
+            "vulnerabilityCvssV2BaseScore": "",
+            "vulnerabilityCvssV3BaseScore": "",
+            "vulnerabilityOwaspLikelihoodScore": "",
+            "vulnerabilityOwaspTechnicalImpactScore": "",
+            "vulnerabilityOwaspBusinessImpactScore": "",
             "vulnerabilitySeverityRank": 3,
+            "vulnerabilityEpssScore": "",
+            "vulnerabilityEpssPercentile": "",
             "vulnerabilityCweId": 400,
             "vulnerabilityCweName": "Uncontrolled Resource Consumption ('Resource Exhaustion')",
+            "attributionAnalyzerIdentity": "",
+            "attributionAttributedOn": "",
+            "attributionAlternateIdentifier": "",
+            "attributionReferenceUrl": "",
             "analysisState": "",
             "analysisIsSuppressed": ""
           },
@@ -111,6 +148,7 @@
             }
           ],
           "impact": 0.3,
+          "code": "{\n  \"uuid\": \"701a3953-666b-4b7a-96ca-e1e6a3e1def3\",\n  \"source\": \"NPM\",\n  \"vulnId\": \"48\",\n  \"aliases\": [\n    {\n      \"cveId\": \"CVE-2022-2053\",\n      \"ghsaId\": \"GHSA-95rf-557x-44g5\"\n    }\n  ],\n  \"title\": \"Regular Expression Denial of Service\",\n  \"subtitle\": \"uglify-js\",\n  \"severity\": \"LOW\",\n  \"severityRank\": 3,\n  \"cweId\": 400,\n  \"cweName\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\",\n  \"cwes\": [\n    {\n      \"cweId\": 400,\n      \"name\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\"\n    }\n  ],\n  \"description\": \"Versions of `uglify-js` prior to...\",\n  \"recommendation\": \"Update to version 2.6.0 or later.\"\n}",
           "results": [
             {
               "status": "failed",
@@ -120,7 +158,7 @@
           ]
         }
       ],
-      "sha256": "f49c9166fb8ef5e6e529d489c7fd5bfa8f945d6ac74238d6c9721e72e360ab6f"
+      "sha256": "d8c1c3c9e113380c2fa795bb35e37634ce251fc0825ffa50d0c886fb8452021e"
     }
   ],
   "passthrough": {
