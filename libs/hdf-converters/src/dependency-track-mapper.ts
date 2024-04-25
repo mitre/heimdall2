@@ -102,20 +102,53 @@ export class DependencyTrackMapper extends BaseConverter {
               },
               componentUuid: {path: 'component.uuid'},
               componentName: {path: 'component.name'},
+              componentGroup: {path: 'component.group'},
               componentVersion: {path: 'component.version'},
               componentLatestVersion: {path: 'component.latestVersion'},
+              componentPurl: {path: 'component.purl'},
+              componentCpe: {path: 'component.cpe'},
+              componentProject: {path: 'component.project'},
               vulnerabilityUuid: {path: 'vulnerability.uuid'},
               vulnerabilitySource: {path: 'vulnerability.source'},
               vulnerabilityVulnId: {path: 'vulnerability.vulnId'},
+              vulnerabilityTitle: {path: 'vulnerability.title'},
+              vulnerabilitySubtitle: {path: 'vulnerability.subtitle'},
               vulnerabilityAliases: {
                 path: 'vulnerability.aliases',
                 transformer: (aliases: Array<object>): string =>
                   JSON.stringify(aliases, null, 2)
               },
+              vulnerabilityCvssV2BaseScore: {
+                path: 'vulnerability.cvssV2BaseScore'
+              },
+              vulnerabilityCvssV3BaseScore: {
+                path: 'vulnerability.cvssV3BaseScore'
+              },
+              vulnerabilityOwaspLikelihoodScore: {
+                path: 'vulnerability.owaspLikelihoodScore'
+              },
+              vulnerabilityOwaspTechnicalImpactScore: {
+                path: 'vulnerability.owaspTechnicalImpactScore'
+              },
+              vulnerabilityOwaspBusinessImpactScore: {
+                path: 'vulnerability.owaspBusinessImpactScore'
+              },
               vulnerabilitySeverityRank: {path: 'vulnerability.severityRank'},
+              vulnerabilityEpssScore: {path: 'vulnerability.epssScore'},
+              vulnerabilityEpssPercentile: {
+                path: 'vulnerability.epssPercentile'
+              },
               // Schema is deprecating these attributes: cweId, cweName
               vulnerabilityCweId: {path: 'vulnerability.cweId'},
               vulnerabilityCweName: {path: 'vulnerability.cweName'},
+              attributionAnalyzerIdentity: {
+                path: 'attribution.analyzerIdentity'
+              },
+              attributionAttributedOn: {path: 'attribution.attributedOn'},
+              attributionAlternateIdentifier: {
+                path: 'attribution.alternateIdentifier'
+              },
+              attributionReferenceUrl: {path: 'attribution.referenceUrl'},
               analysisState: {path: 'analysis.state'},
               analysisIsSuppressed: {path: 'analysis.isSuppressed'}
             },
