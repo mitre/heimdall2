@@ -147,3 +147,32 @@ describe('dependency_track_mapper_with_attributions', () => {
     );
   });
 });
+
+describe('dependency_track_mapper_info_vulnerability', () => {
+  it('Successfully converts Dependency Track targeted at a local/cloned repository data with an info level vulnerability', () => {
+    const mapper = new DependencyTrackMapper(
+      fs.readFileSync(
+        'sample_jsons/dependency_track_mapper/sample_input_report/fpf-info-vulnerability.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/dependency_track_mapper/hdf-info-vulnerability.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/dependency_track_mapper/hdf-info-vulnerability.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+  });
+});
