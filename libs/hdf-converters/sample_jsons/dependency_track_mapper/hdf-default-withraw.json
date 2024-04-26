@@ -78,7 +78,7 @@
             }
           ],
           "impact": 0.3,
-          "code": "{\n  \"uuid\": \"115b80bb-46c4-41d1-9f10-8a175d4abb46\",\n  \"source\": \"NPM\",\n  \"vulnId\": \"533\",\n  \"title\": \"Regular Expression Denial of Service\",\n  \"subtitle\": \"timespan\",\n  \"severity\": \"LOW\",\n  \"severityRank\": 3,\n  \"cweId\": 400,\n  \"cweName\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\",\n  \"cwes\": [\n    {\n      \"cweId\": 400,\n      \"name\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\"\n    }\n  ],\n  \"description\": \"Affected versions of `timespan`...\",\n  \"recommendation\": \"No direct patch is available...\"\n}",
+          "code": "{\n  \"component\": {\n    \"uuid\": \"b815b581-fec1-4374-a871-68862a8f8d52\",\n    \"name\": \"timespan\",\n    \"version\": \"2.3.0\",\n    \"purl\": \"pkg:npm/timespan@2.3.0\",\n    \"latestVersion\": \"3.2.0\"\n  },\n  \"vulnerability\": {\n    \"uuid\": \"115b80bb-46c4-41d1-9f10-8a175d4abb46\",\n    \"source\": \"NPM\",\n    \"vulnId\": \"533\",\n    \"title\": \"Regular Expression Denial of Service\",\n    \"subtitle\": \"timespan\",\n    \"severity\": \"LOW\",\n    \"severityRank\": 3,\n    \"cweId\": 400,\n    \"cweName\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\",\n    \"cwes\": [\n      {\n        \"cweId\": 400,\n        \"name\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\"\n      }\n    ],\n    \"description\": \"Affected versions of `timespan`...\",\n    \"recommendation\": \"No direct patch is available...\"\n  },\n  \"analysis\": {\n    \"state\": \"NOT_SET\",\n    \"isSuppressed\": false\n  },\n  \"matrix\": \"ca4f2da9-0fad-4a13-92d7-f627f3168a56:b815b581-fec1-4374-a871-68862a8f8d52:115b80bb-46c4-41d1-9f10-8a175d4abb46\"\n}",
           "results": [
             {
               "status": "failed",
@@ -148,7 +148,7 @@
             }
           ],
           "impact": 0.3,
-          "code": "{\n  \"uuid\": \"701a3953-666b-4b7a-96ca-e1e6a3e1def3\",\n  \"source\": \"NPM\",\n  \"vulnId\": \"48\",\n  \"aliases\": [\n    {\n      \"cveId\": \"CVE-2022-2053\",\n      \"ghsaId\": \"GHSA-95rf-557x-44g5\"\n    }\n  ],\n  \"title\": \"Regular Expression Denial of Service\",\n  \"subtitle\": \"uglify-js\",\n  \"severity\": \"LOW\",\n  \"severityRank\": 3,\n  \"cweId\": 400,\n  \"cweName\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\",\n  \"cwes\": [\n    {\n      \"cweId\": 400,\n      \"name\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\"\n    }\n  ],\n  \"description\": \"Versions of `uglify-js` prior to...\",\n  \"recommendation\": \"Update to version 2.6.0 or later.\"\n}",
+          "code": "{\n  \"component\": {\n    \"uuid\": \"979f87f5-eaf5-4095-9d38-cde17bf9228e\",\n    \"name\": \"uglify-js\",\n    \"version\": \"2.4.24\",\n    \"purl\": \"pkg:npm/uglify-js@2.4.24\"\n  },\n  \"vulnerability\": {\n    \"uuid\": \"701a3953-666b-4b7a-96ca-e1e6a3e1def3\",\n    \"source\": \"NPM\",\n    \"vulnId\": \"48\",\n    \"aliases\": [\n      {\n        \"cveId\": \"CVE-2022-2053\",\n        \"ghsaId\": \"GHSA-95rf-557x-44g5\"\n      }\n    ],\n    \"title\": \"Regular Expression Denial of Service\",\n    \"subtitle\": \"uglify-js\",\n    \"severity\": \"LOW\",\n    \"severityRank\": 3,\n    \"cweId\": 400,\n    \"cweName\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\",\n    \"cwes\": [\n      {\n        \"cweId\": 400,\n        \"name\": \"Uncontrolled Resource Consumption ('Resource Exhaustion')\"\n      }\n    ],\n    \"description\": \"Versions of `uglify-js` prior to...\",\n    \"recommendation\": \"Update to version 2.6.0 or later.\"\n  },\n  \"analysis\": {\n    \"isSuppressed\": false\n  },\n  \"matrix\": \"ca4f2da9-0fad-4a13-92d7-f627f3168a56:979f87f5-eaf5-4095-9d38-cde17bf9228e:701a3953-666b-4b7a-96ca-e1e6a3e1def3\"\n}",
           "results": [
             {
               "status": "failed",
@@ -158,7 +158,7 @@
           ]
         }
       ],
-      "sha256": "d8c1c3c9e113380c2fa795bb35e37634ce251fc0825ffa50d0c886fb8452021e"
+      "sha256": "5bbda4b1d386b05957e95e2701d9cf675ecec96aa07ca3e043edd565794c8277"
     }
   ],
   "passthrough": {
