@@ -9159,9 +9159,9 @@ dot-prop@^5.1.0:
     is-obj "^2.0.0"
 
 dotenv-cli@^7.0.0:
-  version "7.4.1"
-  resolved "https://registry.npmjs.org/dotenv-cli/-/dotenv-cli-7.4.1.tgz#be3895878775c257e9864e5e57ff801d7492dcf8"
-  integrity sha512-fE1aywjRrWGxV3miaiUr3d2zC/VAiuzEGghi+QzgIA9fEf/M5hLMaRSXb4IxbUAwGmaLi0IozdZddnVU96acag==
+  version "7.4.2"
+  resolved "https://registry.yarnpkg.com/dotenv-cli/-/dotenv-cli-7.4.2.tgz#c158a818de08e1fbc51d310f628cbace9075b734"
+  integrity sha512-SbUj8l61zIbzyhIbg0FwPJq6+wjbzdn9oEtozQpZ6kW2ihCcapKVZj49oCT3oPM+mgQm+itgvUQcG5szxVrZTA==
   dependencies:
     cross-spawn "^7.0.3"
     dotenv "^16.3.0"
