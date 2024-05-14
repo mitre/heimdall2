@@ -1,7 +1,7 @@
 const webpack = require('webpack');
 const NodePolyfillPlugin = require('node-polyfill-webpack-plugin');
 
-// Lookup constants
+// lookup constants
 const fs = require('fs');
 const packageJson = fs.readFileSync('./package.json');
 const parsed = JSON.parse(packageJson);
