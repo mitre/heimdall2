@@ -1,7 +1,7 @@
 {
   "environments": {
     "review": {
-      "addons": ["heroku-postgresql:mini"]
+      "addons": ["heroku-postgresql:essential-0"]
     }
   }
 }
