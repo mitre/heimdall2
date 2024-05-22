@@ -1,3 +1,27 @@
+v2.10.8
+
+- Use latest splunk image on the hdf converters tests workflow @Amndeep7 (#5835)
+- Updated Heroku PostgreSQL @georgedias (#5804)
+
+## Dependency Updates
+
+- Bump tsx from 4.10.4 to 4.10.5 @dependabot (#5839)
+- Bump ts-jest from 29.1.2 to 29.1.3 @dependabot (#5846)
+- Bump axios from 1.6.8 to 1.7.2 @dependabot (#5845)
+- Bump oauth2-mock-server from 7.1.1 to 7.1.2 @dependabot (#5843)
+- Bump fast-xml-parser from 4.3.6 to 4.4.0 @dependabot (#5840)
+- Bump @types/lodash from 4.17.1 to 4.17.4 @dependabot (#5837)
+- Bump tsx from 4.10.3 to 4.10.4 @dependabot (#5836)
+- Bump @aws-sdk/client-config-service from 3.576.0 to 3.577.0 @dependabot (#5828)
+- Bump core-js from 3.37.0 to 3.37.1 @dependabot (#5823)
+- Bump tsx from 4.10.2 to 4.10.3 @dependabot (#5833)
+- Bump rexml from 3.2.5 to 3.2.8 in /libs/inspecjs @dependabot (#5832)
+- Bump @aws-sdk/client-s3 from 3.576.0 to 3.577.0 @dependabot (#5829)
+- Bump sinon from 17.0.2 to 18.0.0 @dependabot (#5827)
+- Bump @aws-sdk/client-config-service from 3.575.0 to 3.576.0 @dependabot (#5826)
+- Bump @types/node from 20.12.11 to 20.12.12 @dependabot (#5824)
+- Bump @aws-sdk/client-s3 from 3.575.0 to 3.576.0 @dependabot (#5822)
+
 v2.10.7
 
 ## Dependency Updates
