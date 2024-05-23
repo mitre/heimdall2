@@ -258,7 +258,6 @@
         </v-btn>
       </v-card-actions>
     </v-card>
-    <!-- </v-container> -->
   </v-dialog>
 </template>
 
@@ -313,7 +312,7 @@ export default class ExportCKLModal extends Vue {
   showingModal = false;
   formatProfileTitle = false;
   updatingProfileTitle = false;
-  originalProfileTitle = new Map<Number, string>();
+  originalProfileTitle = new Map<number, string>();
   roles = Object.values(Role);
   types = Object.values(Assettype);
   techareas = Object.values(Techarea);
