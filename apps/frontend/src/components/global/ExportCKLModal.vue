@@ -312,6 +312,7 @@ export default class ExportCKLModal extends Vue {
 
   showingModal = false;
   formatProfileTitle = false;
+  updatingProfileTitle = false;
   originalProfileTitle = new Map<Number, string>();
   roles = Object.values(Role);
   types = Object.values(Assettype);
@@ -560,16 +561,17 @@ export default class ExportCKLModal extends Vue {
 
     // Find if we need to format the name
     let index = 0;
-    const searchArray = ['stig-baseline', 'cis-baseline', 'srg-baseline'];
-    for (let i = 0; i < searchArray.length; i++) {
-      if (name.indexOf(searchArray[i]) > 0) {
-        index = name.indexOf(searchArray[i]);
+    const baselineArray = ['stig-baseline', 'cis-baseline', 'srg-baseline'];
+    for (const baseline of baselineArray) {
+      if (name.indexOf(baseline) > 0) {
+        index = name.indexOf(baseline);
         break;
       }
     }
 
     // We need to format the name
     if (index > 0) {
+      this.updatingProfileTitle = true;
       const originalTitleIndex = fileIndex + profileIndex;
       // Preserver the old name
       if (!this.originalProfileTitle.has(originalTitleIndex)) {
@@ -577,7 +579,7 @@ export default class ExportCKLModal extends Vue {
       }
       // Get the name value up to the index, replace dashes with spaces
       newName = name.substring(0, index).split('-').join(' ');
-      // Convert the letter of the name into uppercase
+      // Convert the first letter of each word into uppercase
       newName = newName.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word) {
         return word.toUpperCase();
       });
@@ -586,6 +588,7 @@ export default class ExportCKLModal extends Vue {
 
     // Update the file title for the profile being processed
     this.files[fileIndex].profiles[profileIndex].title = newName;
+
     return newName;
   }
 
