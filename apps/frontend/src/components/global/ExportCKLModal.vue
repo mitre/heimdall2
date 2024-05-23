@@ -12,7 +12,9 @@
     <v-card>
       <v-row no-gutters>
         <v-col cols="10">
-          <v-card-title class="headline"> Export as DISA Checklist </v-card-title>
+          <v-card-title class="headline">
+            Export as DISA Checklist
+          </v-card-title>
         </v-col>
         <v-col cols="2">
           <v-checkbox

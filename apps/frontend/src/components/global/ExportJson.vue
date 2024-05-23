@@ -3,7 +3,7 @@
     <template #activator="{on}">
       <IconLinkItem
         key="export_json"
-        text="Export as HDF JSON"
+        text="Export as OHDF JSON"
         icon="mdi-code-json"
         @click="export_json()"
         v-on="on"
