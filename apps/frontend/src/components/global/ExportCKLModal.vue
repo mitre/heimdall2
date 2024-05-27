@@ -311,7 +311,6 @@ export default class ExportCKLModal extends Vue {
 
   showingModal = false;
   formatProfileTitle = false;
-  updatingProfileTitle = false;
   originalProfileTitle = new Map<number, string>();
   roles = Object.values(Role);
   types = Object.values(Assettype);
@@ -570,9 +569,8 @@ export default class ExportCKLModal extends Vue {
 
     // We need to format the name
     if (index > 0) {
-      this.updatingProfileTitle = true;
       const originalTitleIndex = fileIndex + profileIndex;
-      // Preserver the old name
+      // Preserve the old name
       if (!this.originalProfileTitle.has(originalTitleIndex)) {
         this.originalProfileTitle.set(originalTitleIndex, name);
       }
