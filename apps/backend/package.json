@@ -15,7 +15,7 @@
     "build": "nest build",
     "lint": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --fix",
     "lint:ci": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --max-warnings 0",
-    "sequelize-cli-windows": "node --experimental-loader ts-node/esm node_modules/sequelize-cli/lib/sequelize",
+    "sequelize-cli-windows": "tsx node_modules/sequelize-cli/lib/sequelize",
     "sequelize-cli": "tsx node_modules/.bin/sequelize",
     "start": "node dist/src/main",
     "start:debug": "nest start --debug --watch",
