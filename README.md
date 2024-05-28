@@ -366,7 +366,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      git clone https://github.com/mitre/heimdall2
      ```
 
-3. Run the PostgreSQL server:
+3. Setup the PostgreSQL server:
 
    Ubuntu:
    
@@ -436,17 +436,17 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    - ```bash
      cd heimdall2
-     yarn install      # you may need to run yarn install --registry https://registry.npmjs.org
+     yarn install  # you may need to run yarn install --registry https://registry.npmjs.org
      ```
 
-5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
+5. Edit or generate the database environment configuration file (apps/backend/.env) using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set the DATABASE_USERNAME and DATABASE_PASSWORD variables with values used in step 3.
 
-You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
+You can also edit, if exists, the apps/backend/.env file using a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
 > [!NOTE]
-> The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory.
+> The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory for the database configurations.
 
-6. Create the database:
+6. Create and seed the database:
 
    - ```bash
      # Windows
