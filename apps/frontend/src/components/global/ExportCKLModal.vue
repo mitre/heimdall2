@@ -19,6 +19,8 @@
         <v-col cols="2">
           <v-checkbox
             v-model="formatProfileTitle"
+            v-b-tooltip.hover
+            title="Attempts to format the profile title into a proper CKL title name"
             class="mx-2"
             label="Format Profile Title"
           />
@@ -559,6 +561,7 @@ export default class ExportCKLModal extends Vue {
 
     // Find if we need to format the name
     let index = 0;
+    // Only format for UCs where the name ends with values contained in the baselineArray
     const baselineArray = ['stig-baseline', 'cis-baseline', 'srg-baseline'];
     for (const baseline of baselineArray) {
       if (name.indexOf(baseline) > 0) {
