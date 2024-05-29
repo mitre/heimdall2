@@ -1,3 +1,19 @@
+v2.10.9
+
+- Add option to normalize export ckl profile name @georgedias (#5852)
+- Sequelize fix for Windows dev configuration @georgedias (#5851)
+
+## Dependency Updates
+
+- Bump ts-jest from 29.1.3 to 29.1.4 @dependabot (#5859)
+- Bump @aws-sdk/client-s3 from 3.582.0 to 3.583.0 @dependabot (#5854)
+- Bump cypress from 13.9.0 to 13.10.0 @dependabot (#5844)
+- Bump tsx from 4.10.5 to 4.11.0 @dependabot (#5855)
+- Bump @aws-sdk/client-config-service from 3.582.0 to 3.583.0 @dependabot (#5853)
+- Bump @aws-sdk/client-s3 from 3.577.0 to 3.582.0 @dependabot (#5849)
+- Bump @aws-sdk/client-config-service from 3.577.0 to 3.582.0 @dependabot (#5850)
+- Bump @aws-sdk/client-sts from 3.577.0 to 3.582.0 @dependabot (#5848)
+
 v2.10.8
 
 - Use latest splunk image on the hdf converters tests workflow @Amndeep7 (#5835)
