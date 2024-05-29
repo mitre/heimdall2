@@ -3,14 +3,30 @@
     <template #activator="{on}">
       <LinkItem
         key="export_ckl"
-        text="Export as Checklist"
+        text="Export as DISA Checklist"
         icon="mdi-check-all"
         @click="showModal"
         v-on="on"
       />
     </template>
     <v-card>
-      <v-card-title class="headline"> Export as Checklist </v-card-title>
+      <v-row no-gutters>
+        <v-col cols="10">
+          <v-card-title class="headline">
+            Export as DISA Checklist
+          </v-card-title>
+        </v-col>
+        <v-col cols="2">
+          <v-checkbox
+            v-model="formatProfileTitle"
+            v-b-tooltip.hover
+            title="Attempts to format the profile title into a proper CKL title name"
+            class="mx-2"
+            label="Format Profile Title"
+          />
+        </v-col>
+      </v-row>
+
       <v-card-text>
         <v-row>
           <v-col v-for="(file, index) in files" :key="index" cols="12">
@@ -143,8 +159,20 @@
                   >
                     <v-row>
                       <v-text-field
-                        v-model="profile.title"
+                        v-if="formatProfileTitle"
                         label="Name"
+                        :value="
+                          setProperName(profile.title, index, profileIndex)
+                        "
+                        :placeholder="profile.titleplaceholder"
+                        class="pr-2"
+                      />
+                      <v-text-field
+                        v-else
+                        label="Name"
+                        :value="
+                          resetProfileName(profile.title, index, profileIndex)
+                        "
                         :placeholder="profile.titleplaceholder"
                         class="pr-2"
                       />
@@ -284,6 +312,8 @@ export default class ExportCKLModal extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
   showingModal = false;
+  formatProfileTitle = false;
+  originalProfileTitle = new Map<number, string>();
   roles = Object.values(Role);
   types = Object.values(Assettype);
   techareas = Object.values(Techarea);
@@ -524,6 +554,52 @@ export default class ExportCKLModal extends Vue {
     }
     const macPattern = /^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$/;
     return macPattern.test(value) || 'Invalid MAC Address Format';
+  }
+
+  setProperName(name: string, fileIndex: number, profileIndex: number): string {
+    let newName = name;
+
+    // Find if we need to format the name
+    let index = 0;
+    // Only format for UCs where the name ends with values contained in the baselineArray
+    const baselineArray = ['stig-baseline', 'cis-baseline', 'srg-baseline'];
+    for (const baseline of baselineArray) {
+      if (name.indexOf(baseline) > 0) {
+        index = name.indexOf(baseline);
+        break;
+      }
+    }
+
+    // We need to format the name
+    if (index > 0) {
+      const originalTitleIndex = fileIndex + profileIndex;
+      // Preserve the old name
+      if (!this.originalProfileTitle.has(originalTitleIndex)) {
+        this.originalProfileTitle.set(originalTitleIndex, name);
+      }
+      // Get the name value up to the index, replace dashes with spaces
+      newName = name.substring(0, index).split('-').join(' ');
+      // Convert the first letter of each word into uppercase
+      newName = newName.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word) {
+        return word.toUpperCase();
+      });
+      newName = newName + 'Security Technical Implementation Guide';
+    }
+
+    // Update the file title for the profile being processed
+    this.files[fileIndex].profiles[profileIndex].title = newName;
+
+    return newName;
+  }
+
+  resetProfileName(name: string, fileIndex: number, profileIndex: number) {
+    let newName = name;
+    const index = fileIndex + profileIndex;
+    if (this.originalProfileTitle.has(index)) {
+      newName = this.originalProfileTitle.get(index)!;
+      this.files[fileIndex].profiles[profileIndex].title = newName;
+    }
+    return newName;
   }
 
   toggleSelectFile(file: ExtendedEvaluationFile) {
