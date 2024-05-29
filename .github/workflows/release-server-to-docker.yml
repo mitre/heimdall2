@@ -1,18 +1,37 @@
 name: Push Heimdall Server to Docker Hub on every release and tag as release-latest and version
-
+# -----------------------------------------------------------------------------
+# During a normal release process the tag_name value is retrieved from the 
+# event variables (see github docs - learn-github-actions/variables)
+#
+# If the workflow is triggered namually the version is an input that must
+# be provided
+#
+# The tag_name or version varable is used to label the heimdall version being
+# released (on DockerHub and Sophos)
+#
+# The workflow_dispatch event allows for the workflow to be triggered namually
+# by placing a "Run Workflow" on the workflow action panel. This provides the
+# workflow to be invoked without having to do a release - the version value
+# must be provided.
+#
+# Action is automatically trigger when: someone releases - publish Heimdall
+#    Action is manually triggered when: someone invokes the action manually
+# -----------------------------------------------------------------------------
 on:
   release:
     types: [published]
   workflow_dispatch:
     inputs:
       version:
-        description: 'Version'     
+        description: 'Version - semantic format with a v prefix (e.g., v2.15.10)'     
         required: true
 
 jobs:
   docker:
     runs-on: ubuntu-22.04
     steps:
+      # This step allows the Docker CLI plugin buildx to provide extended build
+      # capabilities - build multi-platform images.
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to DockerHub
@@ -20,12 +39,15 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Run string replace # remove the v from the version number before using it in the docker tag
+      # This step removes the V or v from the version number before using it in
+      # the docker tag. The tag_name is used during a normal release, the
+      # version is the provided input when triggered namually
+      - name: Run string replace 
         uses: frabert/replace-string-action@v2
         id: format-tag
         with:
-          pattern: 'v'
-          string: '${{ github.event.release.tag_name || github.event.inputs.version}}'
+          pattern: 'v|V'
+          string: '${{ github.event.release.tag_name || github.event.inputs.version }}'
           replace-with: ''
           flags: 'g'
       - name: Checkout the Heimdall Repository
@@ -42,6 +64,8 @@ jobs:
         shell: bash
         id: get-docker-sha
         run: echo "DOCKER_SHA=$(docker pull mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} | cut -d '@' -f 2)" >> $GITHUB_ENV
+      # This step runs Sophos Factory pipelines right from GitHub Actions,
+      # enabling the pipeline to execute as a result of the Heimdall release. 
       - name: Sophos Factory pipeline
         uses: sophos/factory-run-pipeline@v2
         with:
