@@ -576,7 +576,14 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     }
   }
 
-  severityMap(impact: number): Severity {
+  severityMap(impact: number, severityTag: string): Severity {
+    severityTag = severityTag.toLowerCase();
+    if (
+      severityTag != '' &&
+      (Object.values(Severity) as string[]).includes(severityTag)
+    ) {
+      return severityTag as Severity;
+    }
     if (impact < 0.4) {
       return Severity.Low;
     } else if (impact < 0.7) {
@@ -686,7 +693,10 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           metadata?.vulidmapping === 'gid'
             ? _.get(control.tags, 'gid', defaultId)
             : defaultId,
-        severity: this.severityMap(control.impact),
+        severity: this.severityMap(
+          control.impact,
+          _.get(control.tags, 'severity')
+        ),
         groupTitle: _.get(control.tags, 'gtitle', defaultId),
         ruleId: _.get(control.tags, 'rid', defaultId),
         ruleVer: _.get(control.tags, 'stig_id', defaultId),
