@@ -579,7 +579,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   severityMap(impact: number, severityTag: string): Severity {
     severityTag = severityTag.toLowerCase();
     if (
-      severityTag != '' &&
+      severityTag != Severity.Empty &&
       (Object.values(Severity) as string[]).includes(severityTag)
     ) {
       return severityTag as Severity;
@@ -695,7 +695,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
             : defaultId,
         severity: this.severityMap(
           control.impact,
-          _.get(control.tags, 'severity')
+          _.get(control.tags, 'severity', Severity.Empty)
         ),
         groupTitle: _.get(control.tags, 'gtitle', defaultId),
         ruleId: _.get(control.tags, 'rid', defaultId),
