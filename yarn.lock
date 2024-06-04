@@ -5719,9 +5719,9 @@ address@^1.1.2:
   integrity sha512-4B/qKCfeE/ODUaAUpSwfzazo5x29WD4r3vXiWsB7I2mSDAihwEqKO+g8GELZUQSSAo5e1XTYh3ZVfLyxBc12nA==
 
 adm-zip@^0.5.10:
-  version "0.5.12"
-  resolved "https://registry.npmjs.org/adm-zip/-/adm-zip-0.5.12.tgz#87786328e91d54b37358d8a50f954c4cd73ba60b"
-  integrity sha512-6TVU49mK6KZb4qG6xWaaM4C7sA/sgUMLy/JYMOzkcp3BvVLpW0fXDFQiIzAuxFCt/2+xD7fNIiPFAoLZPhVNLQ==
+  version "0.5.13"
+  resolved "https://registry.yarnpkg.com/adm-zip/-/adm-zip-0.5.13.tgz#e2fbd87d0bb75603ccfdcb03a57a57c4831d9758"
+  integrity sha512-4U51tTl9J8UVEcuKGr6zRzY95tWoAa9l+ureGBNmsfleszjZblm5NyEEL/ZQxkhi86co5mZhSvL2T7gkZ6feYQ==
 
 agent-base@6, agent-base@^6.0.2:
   version "6.0.2"
