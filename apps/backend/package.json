@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.10.0",
+  "version": "2.10.9",
   "description": "",
   "license": "Apache-2.0",
   "author": "",
@@ -15,7 +15,7 @@
     "build": "nest build",
     "lint": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --fix",
     "lint:ci": "eslint \"{src,migrations,seeders,test}/**/*.ts\" --max-warnings 0",
-    "sequelize-cli-windows": "node --experimental-loader ts-node/esm node_modules/sequelize-cli/lib/sequelize",
+    "sequelize-cli-windows": "tsx node_modules/sequelize-cli/lib/sequelize",
     "sequelize-cli": "tsx node_modules/.bin/sequelize",
     "start": "node dist/src/main",
     "start:debug": "nest start --debug --watch",
@@ -116,7 +116,7 @@
     "@types/mock-fs": "^4.10.0",
     "jest": "^29.0.0",
     "mock-fs": "^5.0.0",
-    "supertest": "^6.0.0",
+    "supertest": "^7.0.0",
     "ts-jest": "^29.1.0"
   }
 }

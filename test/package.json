@@ -1,6 +1,6 @@
 {
   "name": "@heimdall/cypress-tests",
-  "version": "2.10.2",
+  "version": "2.10.9",
   "private": true,
   "description": "",
   "scripts": {
@@ -10,11 +10,11 @@
     "mock-openid": "node support/server/oidc-server.js"
   },
   "devDependencies": {
-    "cypress": "13.7.1"
+    "cypress": "13.10.0"
   },
   "dependencies": {
     "cypress-wait-until": "^1.7.1",
-    "eslint-plugin-cypress": "^2.11.2",
+    "eslint-plugin-cypress": "^3.0.0",
     "json-server": "^0.17.0",
     "oauth2-mock-server": "^7.0.0"
   }

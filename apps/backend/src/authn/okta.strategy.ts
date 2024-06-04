@@ -5,6 +5,11 @@ import {ConfigService} from '../config/config.service';
 import {AuthnService} from './authn.service';
 
 interface OktaProfile {
+  id: string;
+  displayName: string;
+  name: {familyName: string; givenName: string};
+  emails: [{value: string}];
+  _raw: string;
   _json: {
     given_name: string;
     family_name: string;
@@ -35,24 +40,27 @@ export class OktaStrategy extends PassportStrategy(Strategy, 'okta') {
         }/oauth2/default/v1/userinfo`,
         clientID: configService.get('OKTA_CLIENTID') || 'disabled',
         clientSecret: configService.get('OKTA_CLIENTSECRET') || 'disabled',
-        callbackURL:
-          `${configService.get('EXTERNAL_URL')}/authn/okta/callback` ||
-          'disabled',
-        scope: 'openid email profile',
-        passReqToCallback: true
+        callbackURL: `${configService.get('EXTERNAL_URL')}/authn/okta/callback`,
+        scope: 'openid email profile'
       },
-      (
-        _req: Request,
-        _token: string,
-        _tokenSecret: string,
-        profile: OktaProfile,
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      async function (
+        // Like in oidc.strategy.ts, we changed the arity of the function to 9 to access the data we need from 'uiProfile' due to updates in the passport-openidconnect library which otherwise caused failures in the authentication process
+        // NOTE: Some variables are not used in this function, but they are required to be present in the function signature. These are indicated with an underscore prefix.
+        _issuer: string,
+        uiProfile: OktaProfile,
+        _idProfile: object,
+        _context: object,
+        _idToken: string,
+        _accessToken: string,
+        _refreshToken: string,
+        _params: object,
+        //eslint-disable-next-line @typescript-eslint/no-explicit-any
         done: any
-      ) => {
-        const userData = profile._json;
+      ) {
+        const userData = uiProfile._json;
         const {given_name, family_name, email, email_verified} = userData;
         if (email_verified) {
-          const user = this.authnService.validateOrCreateUser(
+          const user = await authnService.validateOrCreateUser(
             email,
             given_name,
             family_name,
