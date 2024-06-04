@@ -14,7 +14,7 @@ if ! grep -qF "DATABASE_PASSWORD" .env; then
 fi
 
 if ! grep -qF "JWT_EXPIRE_TIME" .env; then
-  	read -p 'Enter JWT_EXPIRE_TIME ex. 1d or 25m: ' expire
+	read -p 'Enter JWT_EXPIRE_TIME ex. 1d or 25m: ' expire
 	echo "JWT_EXPIRE_TIME=$expire" >> .env
 fi
 

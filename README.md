@@ -171,16 +171,46 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
 
 4. By default Heimdall will generate self-signed certificates that will last for 7 days. For production use, place your certificate files in `./nginx/certs/` with the names `ssl_certificate.crt` and `ssl_certificate_key.key` respectively. For development use, you can use the default generated certificates which means you do not need to put any certificate files in the `./nginx/certs/` folder.
 
-*NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
+  *NGINX Configuration Note: You can configure NGINX settings by changing values in the `nginx/conf/default.conf` file.*
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
-   - ```bash
-     ./setup-docker-env.sh
-     # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
-     docker-compose up
-     ```
+   ```bash
+   # For Linux or Mac
+   ./setup-docker-env.sh
+   
+   # For Windows
+   ./setup-docker-env.bat
+   ```
 
-6. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.) 
+> [!TIP]
+> If you would like to further configure your Docker-based Heimdall deployment, edit the .env file located in the root directory generated after running the `setup-docker-env.sh` or `setup-docker-env.bat` scripts
+
+6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server).  Please convert any certificates into PEM files and place them in `./certs/` where they will be automatically ingested.  Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the `command` attribute underneath the `certs` service in the `docker-compose.yml` to run that script.
+  ```bash
+  # Below is an example of what may be in the ./certs directory, including any scripts or certificates.
+  # ./certs/
+  # ├── dodcerts.sh
+  # └── my_certificates.pem
+
+  # For the given example, the ./docker-compose.yml should look like the following:
+  services:
+    ...
+    certs:
+      ...
+      command: sh -c "sh /etc/pki/ca-trust/source/anchors/dodcerts.sh && update-ca-trust && tail -f /dev/null"
+      # NOTE: The `command` attribute only needs to know about scripts not any particular certificates.
+      ...
+    ...
+  ```
+  To make the `docker-compose.yml` aware of additional scripts, add `sh /etc/pki/ca-trust/source/anchors/NAME_OF_SCRIPT.sh && ` to the beginning of the section in quotes.
+  NOTE: The script should make sure to place the certs within `/etc/pki/ca-trust/source/anchors/` since it will be run from the container, not the host.
+
+7. Start Heimdall Server by running this command:
+  ```bash
+  docker-compose up
+  ```
+
+8. Navigate to [`https://127.0.0.1`](http://127.0.0.1). You should see the application's login page. (Note that if you used the option to generate your own self-signed certs, you will get warnings about them from your browser.)
 
 #### Updating Docker Container
 
@@ -336,7 +366,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      git clone https://github.com/mitre/heimdall2
      ```
 
-3. Run the PostgreSQL server:
+3. Setup the PostgreSQL server:
 
    Ubuntu:
    
@@ -406,14 +436,17 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    - ```bash
      cd heimdall2
-     yarn install
+     yarn install  # you may need to run yarn install --registry https://registry.npmjs.org
      ```
 
-5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
+5. Edit or generate the database environment configuration file (apps/backend/.env) using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set the DATABASE_USERNAME and DATABASE_PASSWORD variables with values used in step 3.
 
-You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
+You can also edit, if exists, the apps/backend/.env file using a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
-6. Create the database:
+> [!NOTE]
+> The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory for the database configurations.
+
+6. Create and seed the database:
 
    - ```bash
      # Windows
@@ -481,12 +514,15 @@ To test your code to make sure everything still works:
 
 #### Run Cypress End to End Tests
 
-The application includes an End-to-End (E2E) frontend + Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). The E2E tests performed is to validate  that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
+The application includes an End-to-End (E2E) frontend and Backend tests (built using the [cypress.io](https://www.cypress.io/) framework). The E2E tests performed is to validate  that Heimdall Server is running as intended. In order to run these tests, a running instance of the application is required.
 
     CYPRESS_TESTING=true yarn start:dev
     CYPRESS_BASE_URL=http://localhost:8080 yarn test:ui:open
 
 The first command will start an instance of Heimdall Server and exposes additional routes required to allow the tests to run. The second will open the Cypress UI which will run the tests any time code changes are made.
+
+> [!NOTE] 
+> When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes.
 
 ### Creating a Release
 

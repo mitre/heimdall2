@@ -1,6 +1,6 @@
 {
   "name": "@mitre/hdf-converters",
-  "version": "2.9.4",
+  "version": "2.10.8",
   "license": "Apache-2.0",
   "description": "Converter util library used to transform various scan results into HDF format",
   "files": [
@@ -21,15 +21,15 @@
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest",
-    "csv2json": "ts-node data/converters/csv2json.ts",
-    "xml2json": "ts-node data/converters/xml2json.ts"
+    "csv2json": "tsx data/converters/csv2json.ts",
+    "xml2json": "tsx data/converters/xml2json.ts"
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",
     "@e965/xlsx": "^0.20.0",
     "@mdi/js": "^7.0.96",
     "@mitre/jsonix": "^3.0.7",
-    "@smithy/node-http-handler": "^2.1.9",
+    "@smithy/node-http-handler": "^3.0.0",
     "@types/csv2json": "^1.4.2",
     "@types/ms": "^0.7.31",
     "@types/mustache": "^4.1.2",
@@ -42,16 +42,19 @@
     "fast-xml-parser": "^4.2.0",
     "html-entities": "^2.3.2",
     "htmlparser2": "^9.1.0",
-    "inspecjs": "^2.8.1",
+    "inspecjs": "^2.10.8",
     "lodash": "^4.17.21",
     "moment": "^2.29.1",
     "ms": "^2.1.3",
     "mustache": "^4.2.0",
     "papaparse": "^5.3.1",
     "run-script-os": "^1.1.6",
+    "semver": "^7.6.0",
     "tailwindcss": "^3.3.3",
     "tw-elements": "^1.0.0-beta2",
     "winston": "^3.6.0",
+    "xml-formatter": "^3.6.2",
+    "xml-parser-xo": "^4.1.1",
     "xml2js": "^0.6.0",
     "yaml": "^2.1.1"
   },
@@ -62,7 +65,7 @@
     "jest": "^27.0.6",
     "quicktype": "^15.0.260",
     "ts-jest": "^29.1.0",
-    "ts-node": "^10.0.0",
+    "tsx": "^4.7.1",
     "typedoc": "^0.25.0"
   },
   "jest": {

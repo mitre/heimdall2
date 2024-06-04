@@ -29,12 +29,14 @@ type InputData = {
   data: ContextualizedEvaluation | string;
   fileName: string;
   fileID: string;
+  filteredControls?: string[];
 };
 
 type ProcessedData = {
   data: ContextualizedEvaluation;
   fileName: string;
   fileID: string;
+  filteredControls?: string[];
 };
 
 // All selectable export types for an HTML export
@@ -174,7 +176,12 @@ export class FromHDFToHTMLMapper {
       }
 
       this.addFiledata(
-        {data: file.data, fileName: file.fileName, fileID: file.fileID},
+        {
+          data: file.data,
+          fileName: file.fileName,
+          fileID: file.fileID,
+          filteredControls: file.filteredControls
+        },
         exportType
       );
     }
@@ -199,11 +206,24 @@ export class FromHDFToHTMLMapper {
 
     // Pull out results from file
     const allResultLevels: ContextualizedControl[] = [];
-    file.data.contains.map((profile) => {
-      profile.contains.map((result) => {
-        allResultLevels.push(result);
+    if (file.filteredControls === undefined) {
+      file.data.contains.map((profile) => {
+        profile.contains.map((result) => {
+          allResultLevels.push(result);
+        });
       });
-    });
+    } else {
+      file.data.contains.flatMap((profile) => {
+        profile.contains.flatMap((result) => {
+          // eslint-disable-next-line  @typescript-eslint/no-non-null-assertion
+          for (const element of file.filteredControls!) {
+            if (element === result.data.id) {
+              allResultLevels.push(result);
+            }
+          }
+        });
+      });
+    }
 
     // Begin filling out outpuData object to pass into HTML template
     // Set high level generalized profile details
@@ -310,7 +330,7 @@ export class FromHDFToHTMLMapper {
     };
 
     // Calculate & set compliance level and color from result statuses
-    // Set default complaince level and color
+    // Set default compliance level and color
     this.outputData.compliance.level = '0.00%';
     this.outputData.compliance.color = 'low';
 
@@ -324,7 +344,9 @@ export class FromHDFToHTMLMapper {
           100
       );
       // Set compliance level
-      this.outputData.compliance.level = complianceLevel;
+      this.outputData.compliance.level = complianceLevel.includes('NaN')
+        ? '0.00%'
+        : complianceLevel;
       // Determine color of compliance level
       // High compliance is green, medium is yellow, low is red
       this.outputData.compliance.color = translateCompliance(complianceLevel);
@@ -495,7 +517,7 @@ export class FromHDFToHTMLMapper {
     return text;
   }
 
-  // Prompt HTML generation from data pulled from file during constructor intialization
+  // Prompt HTML generation from data pulled from file during constructor initialization
   // Requires path to prompt location of needed files relative to function call location
   async toHTML(path: string): Promise<string> {
     // Pull export template + styles and create outputData object containing data to fill template with
@@ -517,7 +539,6 @@ export class FromHDFToHTMLMapper {
       '//# sourceMappingURL=tw-elements.umd.min.js.map',
       ''
     );
-
     // Render template and return generated HTML file
     return Mustache.render(template, this.outputData);
   }

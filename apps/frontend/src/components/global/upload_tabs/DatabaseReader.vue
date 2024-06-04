@@ -61,7 +61,7 @@
             <br />
             <b>NOTE:</b>
             To clear the search fields, either click the clear icon (X) or
-            deleted any value(s) and press the enter (return) key.
+            delete any value(s) and press the enter (return) key.
           </v-card-text>
           <v-card-actions>
             <v-spacer />

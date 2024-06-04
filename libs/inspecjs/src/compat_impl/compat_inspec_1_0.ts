@@ -232,6 +232,16 @@ export class ExecControl extends HDFControl10 implements HDFControl {
   // I didn't make this one static because, frankly, it was annoying and unnecessary
   // Just do it last
   private compute_status(): ControlStatus {
+    if (
+      this.attested &&
+      this.attestationStatus &&
+      !['failed', 'passed'].includes(this.attestationStatus)
+    ) {
+      throw new Error(
+        `Attestation for control ${this.wraps.id} exists with invalid status: ${this.attestationStatus}`
+      );
+    }
+
     if (!this.status_list || this.status_list.includes('error')) {
       return profileError;
     } else if (this.waived || this.wraps.impact === 0) {
@@ -243,16 +253,6 @@ export class ExecControl extends HDFControl10 implements HDFControl {
       return 'Failed';
     } else if (this.status_list.includes('passed')) {
       return 'Passed';
-    } else if (this.attested) {
-      if (this.attestationStatus === 'failed') {
-        return 'Failed';
-      } else if (this.attestationStatus === 'passed') {
-        return 'Passed';
-      } else {
-        throw new Error(
-          `Attestation for control ${this.wraps.id} exists with invalid status: ${this.attestationStatus}`
-        );
-      }
     } else if (this.status_list.includes('skipped')) {
       return 'Not Reviewed';
     } else {

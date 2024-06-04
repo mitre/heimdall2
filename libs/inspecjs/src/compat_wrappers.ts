@@ -109,12 +109,14 @@ export interface HDFControl {
    */
   parsedNistRevision: NistRevision | null;
 
-  /** Get the start time of this control's run, as determiend by the time of the first test.
+  /**
+   * Get the start time of this control's run, as determined by the time of the first test.
    * If no tests were run, (it is a profile-json or has no tests) returns undefined
    */
   start_time?: string;
 
-  /** Get the results of this control's control segments  as a list.
+  /**
+   * Get the results of this control's control segments  as a list.
    * If no tests were run, (this is a profile-json) returns undefined.
    * Can be empty in the rare case that no control segments exist/were run.
    */

@@ -55,6 +55,9 @@ manifest.yml
 nginx/certs/ssl_certificate.crt
 nginx/certs/ssl_certificate_key.key
 
+# Ignore certs
+certs/*.pem
+
 # Ignore yarn 2 new files
 .yarn/*
 !.yarn/patches
