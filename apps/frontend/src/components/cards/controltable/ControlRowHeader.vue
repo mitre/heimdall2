@@ -206,14 +206,10 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
 
   impact_arrow_count(impact: number): number {
-    if (impact < 0.1)
-      return 0;
-    if (impact < 0.4)
-      return 1;
-    if (impact < 0.7)
-      return 2;
-    if (impact < 0.9)
-      return 3;
+    if (impact < 0.1) return 0;
+    if (impact < 0.4) return 1;
+    if (impact < 0.7) return 2;
+    if (impact < 0.9) return 3;
     return 4;
   }
 
