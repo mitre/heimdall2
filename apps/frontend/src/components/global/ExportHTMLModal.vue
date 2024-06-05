@@ -161,7 +161,13 @@ export default class ExportHTMLModal extends Vue {
     );
 
     saveAs(
-      new Blob([s2ab(body)], {type: 'application/octet-stream'}),
+      new Blob(
+        [
+          new Uint8Array([0xef, 0xbb, 0xbf]), // Insert UTF-8 BOM
+          body
+        ],
+        {type: 'text/html;charset=utf-8'}
+      ),
       `${this.exportType}_Report_${new Date().toString()}.html`.replace(
         /[ :]/g,
         '_'
