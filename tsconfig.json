@@ -11,7 +11,7 @@
     "esModuleInterop": true,
     "noImplicitAny": true,
     "resolveJsonModule": true,
-    "useUnknownInCatchVariables": false
+    "useUnknownInCatchVariables": true
   },
   "include": [
     "types/**/*.d.ts"
