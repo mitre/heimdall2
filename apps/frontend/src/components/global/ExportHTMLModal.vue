@@ -57,7 +57,6 @@
 
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
-import {s2ab} from '@/utilities/export_util';
 import {saveAs} from 'file-saver';
 import Vue from 'vue';
 import Component from 'vue-class-component';
