@@ -165,6 +165,7 @@ abstract class HDFControl10 implements HDFControl {
     raw: ResultControl_1_0 | ProfileControl_1_0
   ): Severity {
     if (
+      // use severity tag if it exists
       ['none', 'low', 'medium', 'high', 'critical'].includes(
         raw.tags['severity']
       )
@@ -172,6 +173,7 @@ abstract class HDFControl10 implements HDFControl {
       return raw.tags['severity'];
     }
 
+    // otherwise, compute severity with impact
     if (raw.impact < 0.1) {
       return 'none';
     } else if (raw.impact < 0.4) {

@@ -579,11 +579,14 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   severityMap(impact: number, severityTag: string): Severity {
     severityTag = severityTag.toLowerCase();
     if (
+      // test if this control has a valid severity tag
       severityTag !== Severity.Empty &&
       (Object.values(Severity) as string[]).includes(severityTag)
     ) {
       return severityTag as Severity;
     }
+
+    // otherwise, compute severity based on impact
     if (impact < 0.4) {
       return Severity.Low;
     } else if (impact < 0.7) {
