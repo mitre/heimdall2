@@ -253,7 +253,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     }
 
     return Array.from(detailsMap, ([name, value]) => ({name, value})).filter(
-      (v) => v.value
+      (v) => v.value !== undefined
     );
   }
 

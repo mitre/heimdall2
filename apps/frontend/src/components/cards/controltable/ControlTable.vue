@@ -166,9 +166,9 @@ interface ListElt {
 
   filename: string;
 
-  // Computed values for status and severity "value", for sorting
+  // Computed values for status and impact, for sorting
   status_val: number;
-  severity_val: number;
+  impact_val: number;
 
   control: ContextualizedControl;
 }
@@ -361,9 +361,7 @@ export default class ControlTable extends Vue {
           'Profile Error',
           'Failed'
         ].indexOf(d.root.hdf.status),
-        severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
-          d.root.hdf.severity
-        ),
+        impact_val: d.root.data.impact,
         filename: _.get(
           d,
           'sourcedFrom.sourcedFrom.from_file.filename'
@@ -401,7 +399,7 @@ export default class ControlTable extends Vue {
       this.sortSeverity === 'ascending' ||
       this.sortSeverity === 'descending'
     ) {
-      cmp = (a: ListElt, b: ListElt) => a.severity_val - b.severity_val;
+      cmp = (a: ListElt, b: ListElt) => a.impact_val - b.impact_val;
       if (this.sortSeverity === 'ascending') {
         factor = -1;
       }

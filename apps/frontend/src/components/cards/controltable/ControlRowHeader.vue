@@ -43,7 +43,7 @@
       <v-card-text class="pa-2">
         <div v-if="showImpact">
           <CircleRating
-            :filled-count="severity_arrow_count(control.hdf.severity)"
+            :filled-count="impact_arrow_count(control.data.impact)"
             :total-count="4"
           />
           <v-divider class="mx-1" />
@@ -203,6 +203,18 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         extension.data.code !== this.control.data.code &&
         extension.data.code !== ''
     );
+  }
+
+  impact_arrow_count(impact: number): number {
+    if (impact < 0.1)
+      return 0;
+    if (impact < 0.4)
+      return 1;
+    if (impact < 0.7)
+      return 2;
+    if (impact < 0.9)
+      return 3;
+    return 4;
   }
 
   severity_arrow_count(severity: string): number {

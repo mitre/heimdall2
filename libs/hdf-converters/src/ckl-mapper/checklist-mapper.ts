@@ -406,6 +406,7 @@ export class ChecklistMapper extends BaseConverter {
                 path: 'cciRef',
                 transformer: nistTag
               },
+              severity: {path: 'severity'},
               weight: {path: 'weight'},
               // following transform takes the available attributes found in a checklist vuln and if available will add to the tags.
               // first element is the label name as it will appear in UI while the second is the ChecklistObject keyname

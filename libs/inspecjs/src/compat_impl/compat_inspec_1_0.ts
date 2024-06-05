@@ -164,6 +164,10 @@ abstract class HDFControl10 implements HDFControl {
   private static compute_severity(
     raw: ResultControl_1_0 | ProfileControl_1_0
   ): Severity {
+    if (['none', 'low', 'medium', 'high', 'critical'].includes(raw.tags['severity'])) {
+      return raw.tags['severity'];
+    }
+
     if (raw.impact < 0.1) {
       return 'none';
     } else if (raw.impact < 0.4) {
