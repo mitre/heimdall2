@@ -17,8 +17,9 @@ import {
   EmptyChecklistObject,
   updateChecklistWithMetadata
 } from './checklist-jsonix-converter';
-import {Checklist} from './checklistJsonix';
+import {Checklist, Asset} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
+import {isIP, isFQDN, isMACAddress} from 'validator';
 
 enum ImpactMapping {
   high = 0.7,
@@ -230,6 +231,31 @@ export function getChecklistObjectFromHdf(
   return _.get(hdf, 'passthrough.checklist', EmptyChecklistObject);
 }
 
+export function validateChecklistMetadata(
+  metadata: Pick<Asset, 'hostip' | 'hostfqdn' | 'hostmac'>
+): {isError: boolean; message: string; invalid: string[]} {
+  const errors: string[] = [];
+  const invalid: string[] = [];
+
+  // STIG Viewer can autofill the FQDN as the local IP address
+  if (
+    metadata.hostfqdn &&
+    !(isFQDN(metadata.hostfqdn) || isIP(metadata.hostfqdn))
+  ) {
+    errors.push(`Invalid host FQDN: ${metadata.hostfqdn}`);
+    invalid.push('hostfqdn');
+  }
+  if (metadata.hostip && !isIP(metadata.hostip)) {
+    errors.push(`Invalid host IP address: ${metadata.hostip}`);
+    invalid.push('hostip');
+  }
+  if (metadata.hostmac && !isMACAddress(metadata.hostmac)) {
+    errors.push(`Invalid host MAC address: ${metadata.hostmac}`);
+    invalid.push('hostmac');
+  }
+  return {isError: errors.length > 0, message: errors.join('\n'), invalid};
+}
+
 // baseconverter makes it difficult to assign an array to attributes using just path+transformer in this case because i think it gets instantly redirected along the 'isString' pathway due to the path pointing at a stringified json blob
 // consequently we have to use the arraytransformer, but that doesn't run if we provide a path at the top level of the object for the same reason as specified above, so we have to put the 'hdfSpecificData' object into the subobject 'data'
 // which we can then extract here
@@ -278,15 +304,23 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   constructor(data: string | ExecJSON.Execution, withRaw = false) {
     super(jsonixMapping);
     this.data = data;
+    const throwIfInvalid = (metadata: Asset) => {
+      const result = validateChecklistMetadata(metadata);
+      if (result.isError) throw new Error(result.message);
+    };
+
     if (typeof data === 'string') {
       this.jsonixData = super.toJsonix(data);
       this.checklistObject = super.toIntermediateObject(this.jsonixData);
+      throwIfInvalid(this.checklistObject.asset);
     } else if (containsChecklist(data)) {
       this.checklistObject = getChecklistObjectFromHdf(data);
+      throwIfInvalid(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     } else {
       // CREATE Intermediate Object from HDF
       this.checklistObject = super.hdfToIntermediateObject(data);
+      throwIfInvalid(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     }
     this.withRaw = withRaw;

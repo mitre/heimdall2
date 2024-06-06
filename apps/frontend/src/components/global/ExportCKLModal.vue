@@ -61,21 +61,41 @@
                     <v-text-field
                       v-model="file.hostip"
                       label="Host IP"
-                      :rules="[validateIpAddress]"
+                      :error-messages="
+                        validateFormat(
+                          $v.files.$each[index].hostip,
+                          'IP Address'
+                        )
+                      "
                       hint="###.###.###.###"
                       class="pr-2"
+                      @input="$v.files.$each[index].hostip.$touch()"
+                      @blur="$v.files.$each[index].hostip.$touch()"
                     />
                     <v-text-field
                       v-model="file.hostmac"
                       label="Host MAC"
-                      :rules="[validateMacAddress]"
+                      :error-messages="
+                        validateFormat(
+                          $v.files.$each[index].hostmac,
+                          'MAC Address'
+                        )
+                      "
                       hint="XX:XX:XX:XX:XX:XX"
                       class="pr-2"
+                      @input="$v.files.$each[index].hostmac.$touch()"
+                      @blur="$v.files.$each[index].hostmac.$touch()"
                     />
                     <v-text-field
                       v-model="file.hostfqdn"
                       label="Host FQDN"
+                      :error-messages="
+                        validateFormat($v.files.$each[index].hostfqdn, 'FQDN')
+                      "
+                      hint="[hostname].[domain].[tld]"
                       class="pr-2"
+                      @input="$v.files.$each[index].hostfqdn.$touch()"
+                      @blur="$v.files.$each[index].hostfqdn.$touch()"
                     />
                     <v-text-field
                       v-model="file.targetcomment"
@@ -253,7 +273,7 @@
         <v-btn
           color="primary"
           text
-          :disabled="!selected.length"
+          :disabled="!selected.length || $v.$invalid"
           @click="exportCKL"
         >
           Export
@@ -280,7 +300,8 @@ import {
   StigMetadata,
   Assettype,
   Role,
-  Techarea
+  Techarea,
+  validateChecklistMetadata
 } from '@mitre/hdf-converters';
 import {ExecJSON} from 'inspecjs';
 import {Dependency} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
@@ -290,6 +311,9 @@ import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
 import {DateTime} from 'luxon';
 import {coerce} from 'semver';
+import {validationMixin} from 'vuelidate';
+import {or, CustomRule} from 'vuelidate/lib/validators';
+import ValidationProperties from 'vue/types/vue';
 
 type ExtendedEvaluationFile = (EvaluationFile | ProfileFile) &
   ChecklistMetadata & {
@@ -303,9 +327,29 @@ type FileData = {
   data: string;
 };
 
+const isNotSelected: CustomRule = (_, file) => !file.selected;
+function validateField(prop: string): CustomRule {
+  return (_, file: ExtendedEvaluationFile) =>
+    !validateChecklistMetadata(file).invalid.includes(prop);
+}
+
 @Component({
-  components: {
-    LinkItem
+  mixins: [validationMixin],
+  components: {LinkItem},
+  validations: {
+    files: {
+      $each: {
+        hostip: {
+          ipAddress: or(validateField('hostip'), isNotSelected)
+        },
+        hostmac: {
+          macAddress: or(validateField('hostmac'), isNotSelected)
+        },
+        hostfqdn: {
+          fqdn: or(validateField('hostfqdn'), isNotSelected)
+        }
+      }
+    }
   }
 })
 export default class ExportCKLModal extends Vue {
@@ -540,20 +584,15 @@ export default class ExportCKLModal extends Vue {
     return results;
   }
 
-  validateIpAddress(value: string): boolean | string {
-    if (!value) {
-      return true;
+  validateFormat(field: typeof ValidationProperties, name: string): string[] {
+    const errors: string[] = [];
+    const dirty = _.get(field, '$dirty');
+    const invalid = _.get(field, '$invalid');
+    if (!dirty) {
+      return [];
     }
-    const ipPattern = /^(\d{1,3}\.){3}\d{1,3}$/;
-    return ipPattern.test(value) || 'Invalid IP Address Format';
-  }
-
-  validateMacAddress(value: string): boolean | string {
-    if (!value) {
-      return true;
-    }
-    const macPattern = /^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$/;
-    return macPattern.test(value) || 'Invalid MAC Address Format';
+    invalid && errors.push(`Invalid ${name} Format`);
+    return errors;
   }
 
   setProperName(name: string, fileIndex: number, profileIndex: number): string {
@@ -679,6 +718,11 @@ export default class ExportCKLModal extends Vue {
     for (const selected of this.selected) {
       this.addMetadataToPassthrough(selected);
       if ('evaluation' in selected) {
+        const result = validateChecklistMetadata(selected);
+        if (result.isError) {
+          SnackbarModule.failure(result.message);
+          return;
+        }
         const data = new ChecklistResults(selected.evaluation.data).toCkl();
         const filename = `${cleanUpFilename(selected.filename)}.ckl`;
         fileData.push({
