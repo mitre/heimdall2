@@ -8,7 +8,7 @@ const files = {
   [require.resolve(
     '@mitre/hdf-converters/src/converters-from-hdf/html/template.html'
   )]: 'public/static/export/template.html',
-  [require.resolve('tw-elements/dist/js/tw-elements.umd.min.js')]:
+  [require.resolve('tw-elements/js/tw-elements.umd.min.js')]:
     'public/static/export/tw-elements.min.js'
 };
 for (const file in files) {
