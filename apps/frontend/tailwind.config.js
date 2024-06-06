@@ -22,10 +22,10 @@ for (const file in files) {
 module.exports = {
   content: [
     './public/static/export/template.html',
-    './node_modules/tw-elements/dist/js/**/*.js'
+    './node_modules/tw-elements/js/**/*.js'
   ],
   theme: {
     extend: {}
   },
-  plugins: [require('tw-elements/dist/plugin.cjs')]
+  plugins: [require('tw-elements/plugin.cjs')]
 };
