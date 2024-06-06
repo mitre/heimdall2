@@ -41,7 +41,7 @@ import {EvaluationModule} from '@/store/evaluations';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import * as _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -142,7 +142,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
           `/${this.current_route}/${loadedDatabaseIds}`
         );
       })
-      .catch((error) => {
+      .catch((error: AxiosResponse) => {
         SnackbarModule.failure(error.response.data.message);
       })
       .finally(() => {
