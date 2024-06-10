@@ -7,7 +7,7 @@ import {
   mdiEqualBox,
   mdiMinusCircle
 } from '@mdi/js';
-import axios from 'axios';
+import * as fs from 'fs';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -24,6 +24,8 @@ import {
   IResultSeverity,
   IResultStatus
 } from './html-types';
+import path from 'path';
+import axios from 'axios';
 
 type InputData = {
   data: ContextualizedEvaluation | string;
@@ -517,28 +519,59 @@ export class FromHDFToHTMLMapper {
     return text;
   }
 
-  // Prompt HTML generation from data pulled from file during constructor initialization
-  // Requires path to prompt location of needed files relative to function call location
-  async toHTML(path: string): Promise<string> {
+  /** Prompt HTML generation from data pulled from file during constructor initialization
+  @param dependencyDir Optional path for if template dependencies are stored on server **/
+  async toHTML(dependencyDir?: string): Promise<string> {
     // Pull export template + styles and create outputData object containing data to fill template with
-    const templateRequest = axios.get<string>(`${path}template.html`);
-    const tailwindStylesRequest = axios.get<string>(`${path}style.css`);
-    const tailwindElementsRequest = axios.get<string>(
-      `${path}tw-elements.min.js`
-    );
-    const responses = await axios.all([
-      templateRequest,
-      tailwindStylesRequest,
-      tailwindElementsRequest
-    ]);
 
-    const template = responses[0].data;
-    this.outputData.tailwindStyles = responses[1].data;
-    // Remove source map reference in TW Elements library
-    this.outputData.tailwindElements = responses[2].data.replace(
-      '//# sourceMappingURL=tw-elements.umd.min.js.map',
-      ''
-    );
+    let template: string;
+    if (dependencyDir) {
+      const templateRequest = axios.get<string>(
+        `${dependencyDir}template.html`
+      );
+      const tailwindStylesRequest = axios.get<string>(
+        `${dependencyDir}style.css`
+      );
+      const tailwindElementsRequest = axios.get<string>(
+        `${dependencyDir}tw-elements.min.js`
+      );
+      const responses = await axios.all([
+        templateRequest,
+        tailwindStylesRequest,
+        tailwindElementsRequest
+      ]);
+
+      template = responses[0].data;
+      this.outputData.tailwindStyles = responses[1].data;
+      // Remove source map reference in TW Elements library
+      this.outputData.tailwindElements = responses[2].data.replace(
+        '//# sourceMappingURL=tw-elements.umd.min.js.map',
+        ''
+      );
+    } else if (!('readFileSync' in fs)) {
+      throw new Error(
+        'Cannot access server files from client. Please specify path to template files within the <project-root>/public/ folder'
+      );
+    } else {
+      template = fs
+        .readFileSync(
+          path.join(__dirname, '../../../../templates/html/template.html')
+        )
+        .toString();
+      require.resolve('tw-elements/dist/js/tw-elements.umd.min.js');
+      this.outputData.tailwindStyles = fs
+        .readFileSync(
+          path.join(__dirname, '../../../../templates/html/style.css')
+        )
+        .toString();
+      this.outputData.tailwindElements = fs
+        .readFileSync(
+          require.resolve('tw-elements/dist/js/tw-elements.umd.min.js')
+        )
+        .toString()
+        .replace('//# sourceMappingURL=tw-elements.umd.min.js.map', '');
+    }
+
     // Render template and return generated HTML file
     return Mustache.render(template, this.outputData);
   }
