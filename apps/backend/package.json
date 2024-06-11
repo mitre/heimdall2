@@ -107,7 +107,7 @@
     "sequelize-typescript": "^2.0.0",
     "ts-loader": "^9.1.0",
     "tsx": "^4.7.1",
-    "uuid": "^9.0.0",
+    "uuid": "^10.0.0",
     "winston": "^3.3.3"
   },
   "devDependencies": {
