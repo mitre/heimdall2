@@ -7,7 +7,7 @@ import {
   mdiEqualBox,
   mdiMinusCircle
 } from '@mdi/js';
-import * as fs from 'fs';
+import fs from 'fs';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -42,7 +42,7 @@ type ProcessedData = {
 };
 
 // All selectable export types for an HTML export
-enum FileExportTypes {
+export enum FileExportTypes {
   Executive = 'Executive',
   Manager = 'Manager',
   Administrator = 'Administrator'
@@ -555,18 +555,21 @@ export class FromHDFToHTMLMapper {
     } else {
       template = fs
         .readFileSync(
-          path.join(__dirname, '../../../../templates/html/template.html')
+          path.join(__dirname, '../../../templates/html/template.html'),
+          'utf8'
         )
         .toString();
       require.resolve('tw-elements/dist/js/tw-elements.umd.min.js');
       this.outputData.tailwindStyles = fs
         .readFileSync(
-          path.join(__dirname, '../../../../templates/html/style.css')
+          path.join(__dirname, '../../../templates/html/style.css'),
+          'utf8'
         )
         .toString();
       this.outputData.tailwindElements = fs
         .readFileSync(
-          require.resolve('tw-elements/dist/js/tw-elements.umd.min.js')
+          require.resolve('tw-elements/dist/js/tw-elements.umd.min.js'),
+          'utf8'
         )
         .toString()
         .replace('//# sourceMappingURL=tw-elements.umd.min.js.map', '');
