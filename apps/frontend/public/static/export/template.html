@@ -38,12 +38,12 @@
       </button>
       <!-- Result sets dropdown menu -->
       {{#showResultSets}}
-      <div class="inline-block" data-te-dropdown-ref>
+      <div class="inline-block" data-twe-dropdown-ref>
         <!-- Button def -->
         <button
           type="button"
           class="inline-flex px-3 py-2 text-sm"
-          data-te-dropdown-toggle-ref
+          data-twe-dropdown-toggle-ref
           href="#resultSetsList"
           role="button"
           aria-controls="resultSetsList"
@@ -67,9 +67,9 @@
         </button>
         <!-- Menu def -->
         <div
-          class="z-10 mt-2 hidden grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 [&[data-te-dropdown-show]]:grid"
+          class="z-10 mt-2 hidden grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 [&[data-twe-dropdown-show]]:grid"
           id="resultSetsList"
-          data-te-dropdown-menu-ref
+          data-twe-dropdown-menu-ref
           aria-labelledby="resultSetsList"
         >
           <!-- Generate links for every result set -->
@@ -77,7 +77,7 @@
           <div
             class="block w-56 break-words border border-gray-300 bg-white px-4 py-3 text-sm shadow-lg"
           >
-            <a href="#{{fileID}}" data-te-dropdown-item-ref>{{filename}}</a>
+            <a href="#{{fileID}}" data-twe-dropdown-item-ref>{{filename}}</a>
           </div>
           {{/resultSets}}
         </div>
@@ -86,8 +86,8 @@
       <button
         class="px-3 py-2 text-sm"
         type="button"
-        data-te-collapse-init
-        data-te-target=".multi-collapse-outer"
+        data-twe-collapse-init
+        data-twe-target=".multi-collapse-outer"
         aria-expanded="true"
         aria-controls="result-accordion-body"
       >
@@ -97,8 +97,8 @@
       <button
         class="px-3 py-2 text-sm"
         type="button"
-        data-te-collapse-init
-        data-te-target=".multi-collapse-inner"
+        data-twe-collapse-init
+        data-twe-target=".multi-collapse-inner"
         aria-expanded="true"
         aria-controls="result-accordion-body"
       >
@@ -232,16 +232,16 @@
         <div class="mb-0">
           <!-- Button def -->
           <button
-            class="group flex w-full items-center rounded-t-xl bg-white px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+            class="group flex w-full items-center rounded-t-xl bg-white px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-twe-collapse-collapsed])]:bg-blue-200 [&:not([data-twe-collapse-collapsed])]:text-blue-900 [&:not([data-twe-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
             type="button"
-            data-te-collapse-init
-            data-te-target="#collapseable-{{fileID}}"
+            data-twe-collapse-init
+            data-twe-target="#collapseable-{{fileID}}"
             aria-expanded="true"
             aria-controls="collapseable-{{fileID}}"
           >
             {{filename}}
             <span
-              class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+              class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-twe-collapse-collapsed]]:mr-0 group-[[data-twe-collapse-collapsed]]:rotate-0 group-[[data-twe-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -268,8 +268,8 @@
         <div
           id="collapseable-{{fileID}}"
           class="multi-collapse-outer my-4"
-          data-te-collapse-item
-          data-te-collapse-show
+          data-twe-collapse-item
+          data-twe-collapse-show
         >
           <!-- Result header -->
           <div class="mx-4 rounded-t-xl border border-gray-300 bg-gray-100">
@@ -308,10 +308,10 @@
             <div class="mb-0">
               <!-- Button def -->
               <button
-                class="bg-blue group flex w-full items-center rounded-t-xl px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-te-collapse-collapsed])]:bg-blue-200 [&:not([data-te-collapse-collapsed])]:text-blue-900 [&:not([data-te-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
+                class="bg-blue group flex w-full items-center rounded-t-xl px-5 py-4 text-left text-base text-black transition [overflow-anchor:none] hover:z-[2] focus:z-[3] focus:outline-none [&:not([data-twe-collapse-collapsed])]:bg-blue-200 [&:not([data-twe-collapse-collapsed])]:text-blue-900 [&:not([data-twe-collapse-collapsed])]:[box-shadow:inset_0_-1px_0_rgba(229,231,235)]"
                 type="button"
-                data-te-collapse-init
-                data-te-target="#result-accordion-body-{{resultID}}"
+                data-twe-collapse-init
+                data-twe-target="#result-accordion-body-{{resultID}}"
                 aria-expanded="true"
                 aria-controls="result-accordion-body-{{resultID}}"
               >
@@ -380,7 +380,7 @@
                 </div>
 
                 <span
-                  class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-te-collapse-collapsed]]:mr-0 group-[[data-te-collapse-collapsed]]:rotate-0 group-[[data-te-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
+                  class="-mr-1 ml-auto h-5 w-5 shrink-0 rotate-[-180deg] fill-[#336dec] transition-transform duration-200 ease-in-out group-[[data-twe-collapse-collapsed]]:mr-0 group-[[data-twe-collapse-collapsed]]:rotate-0 group-[[data-twe-collapse-collapsed]]:fill-[#212529] motion-reduce:transition-none"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -406,8 +406,8 @@
             <div
               class="multi-collapse-inner px-5 py-4"
               id="result-accordion-body-{{resultID}}"
-              data-te-collapse-item
-              data-te-collapse-show
+              data-twe-collapse-item
+              data-twe-collapse-show
               aria-labelledby="result-accordion-header-{{resultID}}"
             >
               <!-- Result description -->
