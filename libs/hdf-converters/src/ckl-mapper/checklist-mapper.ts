@@ -285,6 +285,11 @@ function getHdfSpecificDataAttribute(
   return data.hdfSpecificData[attribute] || undefined;
 }
 
+function throwIfInvalidMetadata(metadata: Asset) {
+  const result = validateChecklistMetadata(metadata);
+  if (result.isError) throw new Error(result.message);
+}
+
 /**
  * ChecklistResults is a wrapper for ChecklistMapper using the intakeType
  *  default returns a single hdf object without any modifications
@@ -304,23 +309,19 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   constructor(data: string | ExecJSON.Execution, withRaw = false) {
     super(jsonixMapping);
     this.data = data;
-    const throwIfInvalid = (metadata: Asset) => {
-      const result = validateChecklistMetadata(metadata);
-      if (result.isError) throw new Error(result.message);
-    };
 
     if (typeof data === 'string') {
       this.jsonixData = super.toJsonix(data);
       this.checklistObject = super.toIntermediateObject(this.jsonixData);
-      throwIfInvalid(this.checklistObject.asset);
+      throwIfInvalidMetadata(this.checklistObject.asset);
     } else if (containsChecklist(data)) {
       this.checklistObject = getChecklistObjectFromHdf(data);
-      throwIfInvalid(this.checklistObject.asset);
+      throwIfInvalidMetadata(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     } else {
       // CREATE Intermediate Object from HDF
       this.checklistObject = super.hdfToIntermediateObject(data);
-      throwIfInvalid(this.checklistObject.asset);
+      throwIfInvalidMetadata(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     }
     this.withRaw = withRaw;
