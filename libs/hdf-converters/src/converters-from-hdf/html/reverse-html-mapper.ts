@@ -554,17 +554,11 @@ export class FromHDFToHTMLMapper {
       );
     } else {
       template = fs
-        .readFileSync(
-          path.join(__dirname, './template.html'),
-          'utf8'
-        )
+        .readFileSync(path.join(__dirname, 'template.html'), 'utf8')
         .toString();
       require.resolve('tw-elements/dist/js/tw-elements.umd.min.js');
       this.outputData.tailwindStyles = fs
-        .readFileSync(
-          path.join(__dirname, './style.css'),
-          'utf8'
-        )
+        .readFileSync(path.join(__dirname, 'style.css'), 'utf8')
         .toString();
       this.outputData.tailwindElements = fs
         .readFileSync(

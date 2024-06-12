@@ -3,4 +3,3 @@ converted_jsons
 lib
 mitre-hdf-converters-v*.tgz
 sample_jsons/*/output_report/*.xml
-src/converters-from-hdf/html/style.css
