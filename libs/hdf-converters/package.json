@@ -16,7 +16,7 @@
     "postpack:darwin:linux": "mv package.json.orig package.json",
     "postpack:win32": "move package.json.orig package.json",
     "build": "yarn build:tailwind && run-script-os",
-    "build:tailwind": "tailwindcss -i ./tailwind.css -o ./lib/templates/html/style.css --minify",
+    "build:tailwind": "tailwindcss -i ./tailwind.css -o ./src/converters-from-hdf/html/style.css --minify",
     "build:darwin:linux": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
     "build:win32": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && xcopy data lib",
     "lint": "eslint \"**/*.ts\" --fix",
