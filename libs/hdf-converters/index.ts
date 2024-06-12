@@ -8,6 +8,7 @@ export * from './src/converters-from-hdf/asff/reverse-asff-mapper';
 export * from './src/converters-from-hdf/caat/reverse-caat-mapper';
 export * from './src/converters-from-hdf/html/reverse-html-mapper';
 export * from './src/converters-from-hdf/splunk/reverse-splunk-mapper';
+export * from './src/converters-from-hdf/summaries/control-summary';
 export * from './src/converters-from-hdf/xccdf/reverse-xccdf-mapper';
 export * from './src/conveyor-mapper';
 export * from './src/dbprotect-mapper';
