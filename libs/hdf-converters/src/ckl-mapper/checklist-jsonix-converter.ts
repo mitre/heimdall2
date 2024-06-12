@@ -577,7 +577,6 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   }
 
   severityMap(impact: number, severityTag: string): Severity {
-    severityTag = severityTag.toLowerCase();
     if (
       // test if this control has a valid severity tag
       severityTag !== Severity.Empty &&
