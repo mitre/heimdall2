@@ -47,7 +47,24 @@
             :total-count="4"
           />
           <v-divider class="mx-1" />
-          {{ (control.hdf.severity || 'none').toUpperCase() }}
+          <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
+            <template #activator="{on}">
+              <span style="cursor: pointer" v-on="on"
+                >{{ (control.hdf.severity || 'none').toUpperCase() }}
+                <v-icon class="ml-2">mdi-alert</v-icon>
+              </span>
+            </template>
+            <!-- Severity override tag only comes from checklist files, so there should always be a severity tag -->
+            <span
+              >Severity has been overridden from
+              {{ control.data.tags['severity'] ?? 'Unknown' }} to
+              {{ control.data.tags['severityoverride'] }} <br />Justification:
+              {{ control.data.tags['severityjustification'] }}</span
+            >
+          </v-tooltip>
+          <span v-else>{{
+            (control.hdf.severity || 'none').toUpperCase()
+          }}</span>
         </div>
         <div v-else>
           <CircleRating
