@@ -164,14 +164,15 @@ abstract class HDFControl10 implements HDFControl {
   private static compute_severity(
     raw: ResultControl_1_0 | ProfileControl_1_0
   ): Severity {
-    if (
-      // use severity tag if it exists
-      ['none', 'low', 'medium', 'high', 'critical'].includes(
-        raw.tags['severity']
-      )
-    ) {
+    const severities = ['none', 'low', 'medium', 'high', 'critical'];
+
+    // use severityoverride tag if it exists
+    if (severities.includes(raw.tags['severityoverride']))
+      return raw.tags['severityoverride'];
+
+    // use severity tag if it exists
+    if (severities.includes(raw.tags['severity']))
       return raw.tags['severity'];
-    }
 
     // otherwise, compute severity with impact
     if (raw.impact < 0.1) {

@@ -202,7 +202,23 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     detailsMap.set('Caveat', this.control.hdf.descriptions.caveat);
     detailsMap.set('Desc', this.control.data.desc);
     detailsMap.set('Rationale', this.control.hdf.descriptions.rationale);
-    detailsMap.set('Severity', this.control.root.hdf.severity);
+    // default to showing severity tag, otherwise show the computed severity (based of impact or severityoverride)
+    detailsMap.set(
+      'Severity',
+      _.get(
+        this.control.root.data.tags,
+        'severity',
+        this.control.root.hdf.severity
+      )
+    );
+    detailsMap.set(
+      'Severity Override',
+      _.get(this.control.root.data.tags, 'severityoverride')
+    );
+    detailsMap.set(
+      'Severity Override Justification',
+      _.get(this.control.root.data.tags, 'severityjustification')
+    );
     detailsMap.set('Impact', this.control.data.impact);
     detailsMap.set('NIST Controls', this.control.hdf.rawNistTags.join(', '));
     detailsMap.set('CCI Controls', this.cciControlString);
@@ -219,7 +235,10 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     const sparseControl = _.omit(this.control, [
       'data.tags.nist',
       'data.tags.cci',
-      'data.tags.cwe'
+      'data.tags.cwe',
+      'data.tags.severity',
+      'data.tags.severityoverride',
+      'data.tags.severityjustification'
     ]);
 
     // Convert all tags to Details

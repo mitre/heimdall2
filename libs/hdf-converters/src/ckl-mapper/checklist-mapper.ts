@@ -83,7 +83,8 @@ function transformImpact(vuln: ChecklistVuln): number {
   if (vuln.status === 'Not Applicable') return 0.0;
   let impact =
     ImpactMapping[
-      findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping
+      // probably fine because there is no "impact" within the checklist world. impact -> Severity is what is worrying
+      findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping // is this the thing that I am supposed to deal with??
     ];
   if (isJsonString(vuln.thirdPartyTools)) {
     const hdfExistingData = JSON.parse(vuln.thirdPartyTools);
@@ -422,7 +423,12 @@ export class ChecklistMapper extends BaseConverter {
                   ['Responsibility', 'responsibility'],
                   ['STIGRef', 'stigRef'],
                   ['Security_Override_Guidance', 'securityOverrideGuidance'],
-                  ['Severity_Justification', 'severityJustification']
+
+                  // these two tags are specifically loaded in the details view,
+                  // so, their name will use the property name incase
+                  // other converters use this tag
+                  ['severityoverride', 'severityoverride'],
+                  ['severityjustification', 'severityjustification']
                 ];
                 const fullTags: Record<string, unknown> = {};
                 for (const [key, path] of tags) {

@@ -746,8 +746,12 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           control.descriptions as ExecJSON.ControlDescription[]
         ),
         findingdetails: this.getFindingDetails(control.results) ?? '',
-        severityjustification: '',
-        severityoverride: Severityoverride.Empty
+        severityjustification: _.get(control.tags, 'severityjustification', ''),
+        severityoverride: _.get(
+          control.tags,
+          'severityoverride',
+          Severityoverride.Empty
+        )
       };
       vulns.push(vuln);
     }
