@@ -7,6 +7,7 @@
     <v-icon :disabled="!allow_sort" class="pa-0" @click="toggle_sort">
       {{ icon }}
     </v-icon>
+    <slot />
   </div>
 </template>
 

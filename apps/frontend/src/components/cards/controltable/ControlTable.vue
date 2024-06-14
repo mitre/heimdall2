@@ -81,10 +81,13 @@
 
         <template #severity>
           <ColumnHeader
-            :text="showImpact ? 'Impact' : 'Severity'"
-            :sort="sortSeverity"
-            @input="set_sort('severity', $event)"
-          />
+            :text="'Impact'"
+            :sort="sortImpact"
+            @input="set_sort('impact', $event)"
+          >
+            <v-divider class="mx-1" />
+            (Severity)
+          </ColumnHeader>
         </template>
 
         <template #title>
@@ -128,7 +131,6 @@
           :style="controlRowPinOffset"
           :control="item.control"
           :expanded="expanded.includes(item.key)"
-          :show-impact="showImpact"
           :viewed-controls="viewedControlIds"
           @toggle="toggle(item.key)"
           @control-viewed="toggleControlViewed"
@@ -184,7 +186,6 @@ interface ListElt {
 export default class ControlTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
-  @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
 
   // Whether to allow multiple expansions
   singleExpand = true;
@@ -200,7 +201,7 @@ export default class ControlTable extends Vue {
   sortId: Sort = 'none';
   sortStatus: Sort = 'none';
   sortSet: Sort = 'none';
-  sortSeverity: Sort = 'none';
+  sortImpact: Sort = 'none';
   sortRunTime: Sort = 'none';
 
   // Used for viewed/unviewed controls.
@@ -244,7 +245,7 @@ export default class ControlTable extends Vue {
     this.sortId = 'none';
     this.sortSet = 'none';
     this.sortStatus = 'none';
-    this.sortSeverity = 'none';
+    this.sortImpact = 'none';
     this.sortRunTime = 'none';
     switch (column) {
       case 'id':
@@ -256,8 +257,8 @@ export default class ControlTable extends Vue {
       case 'set':
         this.sortSet = newSort;
         break;
-      case 'severity':
-        this.sortSeverity = newSort;
+      case 'impact':
+        this.sortImpact = newSort;
         break;
       case 'runTime':
         this.sortRunTime = newSort;
@@ -396,11 +397,11 @@ export default class ControlTable extends Vue {
         factor = -1;
       }
     } else if (
-      this.sortSeverity === 'ascending' ||
-      this.sortSeverity === 'descending'
+      this.sortImpact === 'ascending' ||
+      this.sortImpact === 'descending'
     ) {
       cmp = (a: ListElt, b: ListElt) => a.impact_val - b.impact_val;
-      if (this.sortSeverity === 'ascending') {
+      if (this.sortImpact === 'ascending') {
         factor = -1;
       }
     } else if (this.sortSet === 'ascending' || this.sortSet === 'descending') {

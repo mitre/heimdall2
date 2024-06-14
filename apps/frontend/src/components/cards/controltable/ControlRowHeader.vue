@@ -41,40 +41,29 @@
 
     <template #severity>
       <v-card-text class="pa-2">
-        <div v-if="showImpact">
-          <CircleRating
-            :filled-count="impact_arrow_count(control.data.impact)"
-            :total-count="4"
-          />
-          <v-divider class="mx-1" />
-          <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
-            <template #activator="{on}">
-              <span style="cursor: pointer" v-on="on"
-                >{{ (control.hdf.severity || 'none').toUpperCase() }}
-                <v-icon class="ml-2">mdi-alert</v-icon>
-              </span>
-            </template>
-            <!-- Severity override tag only comes from checklist files, so there should always be a severity tag -->
-            <span
-              >Severity has been overridden from
-              {{ control.data.tags['severity'] ?? 'Unknown' }} to
-              {{ control.data.tags['severityoverride'] }} <br />Justification:
-              {{ control.data.tags['severityjustification'] }}</span
-            >
-          </v-tooltip>
-          <span v-else>{{
-            (control.hdf.severity || 'none').toUpperCase()
-          }}</span>
-        </div>
-        <div v-else>
-          <CircleRating
-            :filled-count="severity_arrow_count(control.data.tags.severity)"
-            :total-count="4"
-          />
-          <br />
-          <v-divider class="mx-1" />
-          {{ (control.data.tags.severity || 'none').toUpperCase() }}
-        </div>
+        <CircleRating
+          :filled-count="impact_arrow_count(control.data.impact)"
+          :total-count="4"
+        />
+        <v-divider class="mx-1" />
+        <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
+          <template #activator="{on}">
+            <span style="cursor: pointer" v-on="on"
+              >({{ (control.hdf.severity || 'none').toUpperCase() }}
+              <v-icon size="16">mdi-alert</v-icon>)
+            </span>
+          </template>
+          <!-- Severity override tag only comes from checklist files, so there should always be a severity tag -->
+          <span
+            >Severity has been overridden from
+            {{ control.data.tags['severity'] ?? 'Unknown' }} to
+            {{ control.data.tags['severityoverride'] }} <br />Justification:
+            {{ control.data.tags['severityjustification'] }}</span
+          >
+        </v-tooltip>
+        <span v-else
+          >({{ (control.hdf.severity || 'none').toUpperCase() }})</span
+        >
       </v-card-text>
     </template>
 
@@ -180,7 +169,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   readonly viewedControls!: string[];
 
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
-  @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
   get runTime(): string {
     return `${_.truncate(getControlRunTime(this.control).toString(), {
@@ -228,21 +216,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     if (impact < 0.7) return 2;
     if (impact < 0.9) return 3;
     return 4;
-  }
-
-  severity_arrow_count(severity: string): number {
-    switch (severity) {
-      case 'low':
-        return 1;
-      case 'medium':
-        return 2;
-      case 'high':
-        return 3;
-      case 'critical':
-        return 4;
-      default:
-        return 0;
-    }
   }
 
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
