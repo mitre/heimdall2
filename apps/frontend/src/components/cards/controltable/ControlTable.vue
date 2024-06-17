@@ -101,7 +101,9 @@
                   >mdi-information-outline</v-icon
                 >
               </template>
-              <span>Control severity (NONE, LOW, MEDIUM, HIGH, or CRITICAL)</span>
+              <span
+                >Control severity (NONE, LOW, MEDIUM, HIGH, or CRITICAL)</span
+              >
             </v-tooltip>
           </v-row>
         </template>
