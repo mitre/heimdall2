@@ -84,19 +84,53 @@
         </template>
 
         <template #severity>
-          <ColumnHeader
-            :text="'Severity'"
-            :sort="sortSeverity"
-            @input="set_sort('severity', $event)"
-          />
+          <v-row class="pa-3">
+            <ColumnHeader
+              :text="'Severity'"
+              :sort="sortSeverity"
+              @input="set_sort('severity', $event)"
+            />
+            <v-tooltip bottom>
+              <template #activator="{on, attrs}">
+                <v-icon
+                  class="ml-0"
+                  small
+                  style="cursor: pointer"
+                  v-bind="attrs"
+                  v-on="on"
+                  >mdi-information-outline</v-icon
+                >
+              </template>
+              <span>Control severity (NONE, LOW, MEDIUM, HIGH, or CRITICAL)</span>
+            </v-tooltip>
+          </v-row>
         </template>
 
         <template #impact>
-          <ColumnHeader
-            :text="'Impact'"
-            :sort="sortImpact"
-            @input="set_sort('impact', $event)"
-          />
+          <v-row class="pa-3">
+            <ColumnHeader
+              :text="'Impact'"
+              :sort="sortImpact"
+              @input="set_sort('impact', $event)"
+            />
+            <v-tooltip bottom>
+              <template #activator="{on, attrs}">
+                <v-icon
+                  class="ml-0"
+                  small
+                  style="cursor: pointer"
+                  v-bind="attrs"
+                  v-on="on"
+                  >mdi-information-outline</v-icon
+                >
+              </template>
+              <span
+                >Control impact normailzed to range from 0 to 10 <br />0-1: No
+                impact <br />1-4: Low impact <br />4-7: Medium impact <br />7-9:
+                High impact <br />9-10: Critical impact
+              </span>
+            </v-tooltip>
+          </v-row>
         </template>
 
         <template #tags>
