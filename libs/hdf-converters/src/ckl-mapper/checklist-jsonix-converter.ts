@@ -580,14 +580,14 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     // test if this control has a valid severity tag
     // and map it to a checklist severity level
     switch (severityTag) {
-        case 'none':
-        case 'low': 
-            return Severity.Low
-        case 'medium':
-            return Severity.Medium
-        case 'high':
-        case 'critical':
-            return Severity.High
+      case 'none':
+      case 'low':
+        return Severity.Low;
+      case 'medium':
+        return Severity.Medium;
+      case 'high':
+      case 'critical':
+        return Severity.High;
     }
 
     // if no valid severity tag, compute severity based on impact
