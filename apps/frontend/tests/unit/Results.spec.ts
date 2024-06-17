@@ -52,8 +52,7 @@ describe('Datatable', () => {
         $router
       },
       propsData: {
-        filter: (wrapper.vm as Vue & {all_filter: Filter}).all_filter,
-        showImpact: true
+        filter: (wrapper.vm as Vue & {all_filter: Filter}).all_filter
       }
     });
     const expected =

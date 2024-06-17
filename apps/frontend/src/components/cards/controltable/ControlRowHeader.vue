@@ -56,9 +56,9 @@
           <!-- Severity override tag only comes from checklist files, so there should always be a severity tag -->
           <span
             >Severity has been overridden from
-            {{ control.data.tags['severity'] ?? 'Unknown' }} to
+            {{ 'severity' in control.data.tags ? control.data.tags['severity'] : 'UNKNOWN' }} to
             {{ control.data.tags['severityoverride'] }} <br />Justification:
-            {{ control.data.tags['severityjustification'] }}</span
+            {{ 'severityjustification' in control.data.tags ? control.data.tags['severityjustification'] : 'UNKNOWN JUSTIFICATION' }}</span
           >
         </v-tooltip>
         <span v-else
