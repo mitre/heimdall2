@@ -158,9 +158,7 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <ControlTable
-                :filter="all_filter"
-              />
+              <ControlTable :filter="all_filter" />
             </v-card>
           </v-col>
         </v-row>
