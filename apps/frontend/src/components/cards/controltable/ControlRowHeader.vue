@@ -53,7 +53,7 @@
           <template #activator="{on}">
             <span v-on="on">
               <v-chip active-class="NONE" outlined :color="severity_color">
-                <v-icon size="16">mdi-delta</v-icon>
+                <v-icon size="16" class="mr-1">mdi-delta</v-icon>
                 {{ (control.hdf.severity || 'none').toUpperCase() }}
               </v-chip>
             </span>
