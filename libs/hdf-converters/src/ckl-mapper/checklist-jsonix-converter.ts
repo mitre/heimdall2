@@ -577,15 +577,20 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   }
 
   severityMap(impact: number, severityTag: string): Severity {
-    if (
-      // test if this control has a valid severity tag
-      severityTag !== Severity.Empty &&
-      (Object.values(Severity) as string[]).includes(severityTag)
-    ) {
-      return severityTag as Severity;
+    // test if this control has a valid severity tag
+    // and map it to a checklist severity level
+    switch (severityTag) {
+        case 'none':
+        case 'low': 
+            return Severity.Low
+        case 'medium':
+            return Severity.Medium
+        case 'high':
+        case 'critical':
+            return Severity.High
     }
 
-    // otherwise, compute severity based on impact
+    // if no valid severity tag, compute severity based on impact
     if (impact < 0.4) {
       return Severity.Low;
     } else if (impact < 0.7) {
