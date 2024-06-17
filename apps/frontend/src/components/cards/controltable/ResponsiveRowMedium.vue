@@ -7,6 +7,8 @@
         <slot name="set" />
         <v-divider />
         <slot name="severity" />
+        <v-divider />
+        <slot name="impact" />
       </v-card>
     </v-col>
 

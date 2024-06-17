@@ -79,19 +79,24 @@
           </v-row>
         </template>
 
+        <template #title>
+          <ColumnHeader text="Title" sort="disabled" />
+        </template>
+
         <template #severity>
+          <ColumnHeader
+            :text="'Severity'"
+            :sort="sortSeverity"
+            @input="set_sort('severity', $event)"
+          />
+        </template>
+
+        <template #impact>
           <ColumnHeader
             :text="'Impact'"
             :sort="sortImpact"
             @input="set_sort('impact', $event)"
-          >
-            <v-divider class="mx-1" />
-            (Severity)
-          </ColumnHeader>
-        </template>
-
-        <template #title>
-          <ColumnHeader text="Title" sort="disabled" />
+          />
         </template>
 
         <template #tags>
@@ -171,6 +176,7 @@ interface ListElt {
   // Computed values for status and impact, for sorting
   status_val: number;
   impact_val: number;
+  severity_val: number;
 
   control: ContextualizedControl;
 }
@@ -202,6 +208,7 @@ export default class ControlTable extends Vue {
   sortStatus: Sort = 'none';
   sortSet: Sort = 'none';
   sortImpact: Sort = 'none';
+  sortSeverity: Sort = 'none';
   sortRunTime: Sort = 'none';
 
   // Used for viewed/unviewed controls.
@@ -246,6 +253,7 @@ export default class ControlTable extends Vue {
     this.sortSet = 'none';
     this.sortStatus = 'none';
     this.sortImpact = 'none';
+    this.sortSeverity = 'none';
     this.sortRunTime = 'none';
     switch (column) {
       case 'id':
@@ -259,6 +267,9 @@ export default class ControlTable extends Vue {
         break;
       case 'impact':
         this.sortImpact = newSort;
+        break;
+      case 'severity':
+        this.sortSeverity = newSort;
         break;
       case 'runTime':
         this.sortRunTime = newSort;
@@ -363,6 +374,9 @@ export default class ControlTable extends Vue {
           'Failed'
         ].indexOf(d.root.hdf.status),
         impact_val: d.root.data.impact,
+        severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
+          d.root.hdf.severity
+        ),
         filename: _.get(
           d,
           'sourcedFrom.sourcedFrom.from_file.filename'
@@ -402,6 +416,14 @@ export default class ControlTable extends Vue {
     ) {
       cmp = (a: ListElt, b: ListElt) => a.impact_val - b.impact_val;
       if (this.sortImpact === 'ascending') {
+        factor = -1;
+      }
+    } else if (
+      this.sortSeverity === 'ascending' ||
+      this.sortSeverity === 'descending'
+    ) {
+      cmp = (a: ListElt, b: ListElt) => a.severity_val - b.severity_val;
+      if (this.sortSeverity === 'ascending') {
         factor = -1;
       }
     } else if (this.sortSet === 'ascending' || this.sortSet === 'descending') {

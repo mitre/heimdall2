@@ -15,6 +15,9 @@
           <template #severity>
             <slot name="severity" />
           </template>
+          <template #impact>
+            <slot name="impact" />
+          </template>
           <template #title>
             <slot name="title" />
           </template>
@@ -42,6 +45,9 @@
           <template #severity>
             <slot name="severity" />
           </template>
+          <template #impact>
+            <slot name="impact" />
+          </template>
           <template #title>
             <slot name="title" />
           </template>
@@ -68,6 +74,9 @@
           </template>
           <template #severity>
             <slot name="severity" />
+          </template>
+          <template #impact>
+            <slot name="impact" />
           </template>
           <template #title>
             <slot name="title" />

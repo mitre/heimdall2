@@ -39,18 +39,23 @@
       </v-row>
     </template>
 
+    <template #impact>
+      <v-card-text class="pa-2">
+        <v-chip active-class="NONE" outlined :color="impact_color">
+          {{ control.data.impact * 10 }}
+        </v-chip>
+      </v-card-text>
+    </template>
+
     <template #severity>
       <v-card-text class="pa-2">
-        <CircleRating
-          :filled-count="impact_arrow_count(control.data.impact)"
-          :total-count="4"
-        />
-        <v-divider class="mx-1" />
         <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
           <template #activator="{on}">
-            <span style="cursor: pointer" v-on="on"
-              >({{ (control.hdf.severity || 'none').toUpperCase() }}
-              <v-icon size="16">mdi-alert</v-icon>)
+            <span v-on="on">
+              <v-chip active-class="NONE" outlined :color="severity_color">
+                <v-icon size="16">mdi-delta</v-icon>
+                {{ (control.hdf.severity || 'none').toUpperCase() }}
+              </v-chip>
             </span>
           </template>
           <!-- Severity override tag only comes from checklist files, so there should always be a severity tag -->
@@ -69,9 +74,11 @@
             }}</span
           >
         </v-tooltip>
-        <span v-else
-          >({{ (control.hdf.severity || 'none').toUpperCase() }})</span
-        >
+        <span v-else>
+          <v-chip active-class="NONE" outlined :color="severity_color">
+            {{ (control.hdf.severity || 'none').toUpperCase() }}
+          </v-chip>
+        </span>
       </v-card-text>
     </template>
 
@@ -147,7 +154,6 @@
 
 <script lang="ts">
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import CircleRating from '@/components/generic/CircleRating.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {getControlRunTime} from '@/utilities/delta_util';
@@ -165,8 +171,7 @@ interface Tag {
 
 @Component({
   components: {
-    ResponsiveRowSwitch,
-    CircleRating
+    ResponsiveRowSwitch
   }
 })
 export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
@@ -202,6 +207,18 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
   }
 
+  get impact_color(): string {
+    if (this.control.data.impact < 0.1) return 'severityNone';
+    else if (this.control.data.impact < 0.4) return 'severityLow';
+    else if (this.control.data.impact < 0.7) return 'severityMedium';
+    else if (this.control.data.impact < 0.9) return 'severityHigh';
+    return 'severityCritical';
+  }
+
+  get severity_color(): string {
+    return `severity${_.startCase(this.control.hdf.severity)}`;
+  }
+
   get wasViewed(): boolean {
     return this.viewedControls.indexOf(this.control.data.id) !== -1;
   }
@@ -216,14 +233,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         extension.data.code !== this.control.data.code &&
         extension.data.code !== ''
     );
-  }
-
-  impact_arrow_count(impact: number): number {
-    if (impact < 0.1) return 0;
-    if (impact < 0.4) return 1;
-    if (impact < 0.7) return 2;
-    if (impact < 0.9) return 3;
-    return 4;
   }
 
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml

@@ -160,7 +160,6 @@
             <v-card elevation="2">
               <ControlTable
                 :filter="all_filter"
-                :show-impact="is_result_view"
               />
             </v-card>
           </v-col>
