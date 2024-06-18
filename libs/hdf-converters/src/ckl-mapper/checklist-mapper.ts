@@ -15,11 +15,14 @@ import {
   ChecklistObject,
   ChecklistVuln,
   EmptyChecklistObject,
-  updateChecklistWithMetadata
+  updateChecklistWithMetadata,
+  StigMetadata
 } from './checklist-jsonix-converter';
-import {Checklist, Asset} from './checklistJsonix';
+import {Checklist, Asset, Techarea, Role, Assettype} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
-import {isIP, isFQDN, isMACAddress} from 'validator';
+import {isIP, isFQDN, isMACAddress, isDate} from 'validator';
+import {Result} from '../utils/result';
+import * as Revalidator from 'revalidator';
 
 enum ImpactMapping {
   high = 0.7,
@@ -231,29 +234,88 @@ export function getChecklistObjectFromHdf(
   return _.get(hdf, 'passthrough.checklist', EmptyChecklistObject);
 }
 
-export function validateChecklistMetadata(
-  metadata: Pick<Asset, 'hostip' | 'hostfqdn' | 'hostmac'>
-): {isError: boolean; message: string; invalid: string[]} {
-  const errors: string[] = [];
-  const invalid: string[] = [];
+const checklistMetadataSchema: Revalidator.JSONSchema<Asset> = {
+  properties: {
+    hostfqdn: {
+      type: 'string',
+      // STIG Viewer can autofill the FQDN as the local IP address
+      conform: (fqdn: string) => !fqdn || isFQDN(fqdn) || isIP(fqdn),
+      message: 'Host FQDN'
+    },
+    hostip: {
+      type: 'string',
+      conform: (ip: string) => !ip || isIP(ip),
+      message: 'Host IP'
+    },
+    hostmac: {
+      type: 'string',
+      conform: (mac: string) => !mac || isMACAddress(mac),
+      message: 'Host MAC'
+    },
+    role: {
+      type: 'string',
+      enum: Object.values(Role),
+      message: 'Role'
+    },
+    assettype: {
+      type: 'string',
+      enum: Object.values(Assettype),
+      message: 'Asset Type'
+    },
+    techarea: {
+      type: 'string',
+      enum: Object.values(Techarea),
+      message: 'Tech Area'
+    },
+    webordatabase: {
+      type: 'boolean',
+      message: 'Web or Database STIG'
+    }
+  }
+};
 
-  // STIG Viewer can autofill the FQDN as the local IP address
-  if (
-    metadata.hostfqdn &&
-    !(isFQDN(metadata.hostfqdn) || isIP(metadata.hostfqdn))
-  ) {
-    errors.push(`Invalid host FQDN: ${metadata.hostfqdn}`);
-    invalid.push('hostfqdn');
+const profileMetadataSchema: Revalidator.JSONSchema<StigMetadata> = {
+  properties: {
+    version: {
+      type: 'integer',
+      minimum: 0,
+      message: 'Version must be a positive integer'
+    },
+    releasenumber: {
+      type: 'integer',
+      minimum: 0,
+      message: 'Release number must be a positive integer'
+    },
+    releasedate: {
+      type: 'string',
+      conform: (date: string) => !date || isDate(date),
+      message: 'Release date must be a valid date'
+    }
   }
-  if (metadata.hostip && !isIP(metadata.hostip)) {
-    errors.push(`Invalid host IP address: ${metadata.hostip}`);
-    invalid.push('hostip');
-  }
-  if (metadata.hostmac && !isMACAddress(metadata.hostmac)) {
-    errors.push(`Invalid host MAC address: ${metadata.hostmac}`);
-    invalid.push('hostmac');
-  }
-  return {isError: errors.length > 0, message: errors.join('\n'), invalid};
+};
+
+export function validateChecklistMetadata(
+  metadata: Asset
+): Result<true, {invalid: string[]; message: string}> {
+  const errors = Revalidator.validate(metadata, checklistMetadataSchema).errors;
+
+  if (errors.length === 0) return {ok: true, value: true};
+  const message = `Invalid fields: ${errors.map((e) => `${e.message} (${_.get(metadata, e.property)})`).join(', ')}`;
+  return {ok: false, error: {invalid: errors.map((e) => e.property), message}};
+}
+
+export function validateProfileMetadata(
+  metadata: StigMetadata
+): Result<true, {invalid: string[]; message: string}> {
+  const errors = Revalidator.validate(
+    metadata,
+    {...profileMetadataSchema},
+    {cast: true}
+  ).errors;
+
+  if (errors.length === 0) return {ok: true, value: true};
+  const message = `Invalid profile fields: ${errors.map((e) => `${e.message} (${_.get(metadata, e.property)})`).join(', ')}`;
+  return {ok: false, error: {invalid: errors.map((e) => e.property), message}};
 }
 
 // baseconverter makes it difficult to assign an array to attributes using just path+transformer in this case because i think it gets instantly redirected along the 'isString' pathway due to the path pointing at a stringified json blob
@@ -287,7 +349,7 @@ function getHdfSpecificDataAttribute(
 
 function throwIfInvalidMetadata(metadata: Asset) {
   const result = validateChecklistMetadata(metadata);
-  if (result.isError) throw new Error(result.message);
+  if (!result.ok) throw new Error(result.error.message);
 }
 
 /**

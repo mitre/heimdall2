@@ -22,6 +22,7 @@ import {
   Vulnattribute
 } from './checklistJsonix';
 import {coerce} from 'semver';
+import {validateProfileMetadata} from './checklist-mapper';
 
 export type ChecklistObject = {
   asset: ChecklistAsset;
@@ -31,7 +32,7 @@ export type ChecklistObject = {
 
 type ChecklistAsset = Asset;
 
-type ChecklistStig = {
+export type ChecklistStig = {
   header: StigHeader;
   vulns: ChecklistVuln[];
 };
@@ -777,6 +778,13 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       const profileMetadata = metadata?.profiles.find(
         (p) => p.name === profile.name
       );
+      if (profileMetadata) {
+        const results = validateProfileMetadata(profileMetadata);
+        if (!results.ok) {
+          throw new Error(results.error.message);
+        }
+      }
+
       const version = coerce(profile.version);
       const header: StigHeader = {
         version: _.get(

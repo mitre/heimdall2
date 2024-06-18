@@ -70,7 +70,6 @@
                       hint="###.###.###.###"
                       class="pr-2"
                       @input="$v.files.$each[index].hostip.$touch()"
-                      @blur="$v.files.$each[index].hostip.$touch()"
                     />
                     <v-text-field
                       v-model="file.hostmac"
@@ -84,7 +83,6 @@
                       hint="XX:XX:XX:XX:XX:XX"
                       class="pr-2"
                       @input="$v.files.$each[index].hostmac.$touch()"
-                      @blur="$v.files.$each[index].hostmac.$touch()"
                     />
                     <v-text-field
                       v-model="file.hostfqdn"
@@ -95,7 +93,6 @@
                       hint="[hostname].[domain].[tld]"
                       class="pr-2"
                       @input="$v.files.$each[index].hostfqdn.$touch()"
-                      @blur="$v.files.$each[index].hostfqdn.$touch()"
                     />
                     <v-text-field
                       v-model="file.targetcomment"
@@ -301,7 +298,8 @@ import {
   Assettype,
   Role,
   Techarea,
-  validateChecklistMetadata
+  validateChecklistMetadata,
+  validateProfileMetadata
 } from '@mitre/hdf-converters';
 import {ExecJSON} from 'inspecjs';
 import {Dependency} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
@@ -329,8 +327,14 @@ type FileData = {
 
 const isNotSelected: CustomRule = (_, file) => !file.selected;
 function validateField(prop: string): CustomRule {
-  return (_, file: ExtendedEvaluationFile) =>
-    !validateChecklistMetadata(file).invalid.includes(prop);
+  return (_, file: ExtendedEvaluationFile) => {
+    let results = validateChecklistMetadata({
+      ...file,
+      targetkey: null,
+      webordatabase: file.webordatabase === 'true'
+    });
+    return results.ok || !results.error.invalid.includes(prop);
+  };
 }
 
 @Component({
@@ -585,14 +589,12 @@ export default class ExportCKLModal extends Vue {
   }
 
   validateFormat(field: typeof ValidationProperties, name: string): string[] {
-    const errors: string[] = [];
     const dirty = _.get(field, '$dirty');
     const invalid = _.get(field, '$invalid');
-    if (!dirty) {
+    if (!dirty || !invalid) {
       return [];
     }
-    invalid && errors.push(`Invalid ${name} Format`);
-    return errors;
+    return [`Invalid ${name} Format`];
   }
 
   setProperName(name: string, fileIndex: number, profileIndex: number): string {
@@ -718,11 +720,34 @@ export default class ExportCKLModal extends Vue {
     for (const selected of this.selected) {
       this.addMetadataToPassthrough(selected);
       if ('evaluation' in selected) {
-        const result = validateChecklistMetadata(selected);
-        if (result.isError) {
-          SnackbarModule.failure(result.message);
+        // validate checklist metadata
+        const result = validateChecklistMetadata({
+          ...selected,
+          targetkey: null,
+          webordatabase: selected.webordatabase === 'true'
+        });
+        let errorMessages = [];
+        let isInvalid = false;
+        if (!result.ok) {
+          errorMessages.push(result.error.message);
+          isInvalid = true;
+        }
+
+        // validate metadata in each profile
+        for (const profile of selected.profiles) {
+          const result = validateProfileMetadata(profile);
+          if (!result.ok) {
+            isInvalid = true;
+            errorMessages.push(result.error.message);
+          }
+        }
+
+        // display error message upon any invalid inputs
+        if (isInvalid) {
+          SnackbarModule.failure(errorMessages.join('\n'));
           return;
         }
+
         const data = new ChecklistResults(selected.evaluation.data).toCkl();
         const filename = `${cleanUpFilename(selected.filename)}.ckl`;
         fileData.push({
