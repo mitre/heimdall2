@@ -127,8 +127,8 @@
                 >
               </template>
               <span
-                >Control impact normailzed to range from 0 to 10 <br />0-1: No
-                impact <br />1-4: Low impact <br />4-7: Medium impact <br />7-9:
+                >Control impact normailzed to range from 0 to 10 <br />0: No
+                impact <br />1-3: Low impact <br />4-6: Medium impact <br />7-8:
                 High impact <br />9-10: Critical impact
               </span>
             </v-tooltip>
