@@ -312,6 +312,7 @@ import {coerce} from 'semver';
 import {validationMixin} from 'vuelidate';
 import {or, CustomRule} from 'vuelidate/lib/validators';
 import ValidationProperties from 'vue/types/vue';
+import {Result} from '@mitre/hdf-converters/src/utils/result';
 
 type ExtendedEvaluationFile = (EvaluationFile | ProfileFile) &
   ChecklistMetadata & {
@@ -720,31 +721,12 @@ export default class ExportCKLModal extends Vue {
     for (const selected of this.selected) {
       this.addMetadataToPassthrough(selected);
       if ('evaluation' in selected) {
-        // validate checklist metadata
-        const result = validateChecklistMetadata({
-          ...selected,
-          targetkey: null,
-          webordatabase: selected.webordatabase === 'true'
-        });
-        let errorMessages = [];
-        let isInvalid = false;
+        // validate checklist metadata input from user
+        const result = this.validateInputMetadata(selected);
+
+        // display error message upon any invalid user inputs
         if (!result.ok) {
-          errorMessages.push(result.error.message);
-          isInvalid = true;
-        }
-
-        // validate metadata in each profile
-        for (const profile of selected.profiles) {
-          const result = validateProfileMetadata(profile);
-          if (!result.ok) {
-            isInvalid = true;
-            errorMessages.push(result.error.message);
-          }
-        }
-
-        // display error message upon any invalid inputs
-        if (isInvalid) {
-          SnackbarModule.failure(errorMessages.join('\n'));
+          SnackbarModule.failure(result.error);
           return;
         }
 
@@ -758,6 +740,32 @@ export default class ExportCKLModal extends Vue {
     }
     saveSingleOrMultipleFiles(fileData, 'ckl');
     this.closeModal();
+  }
+
+  validateInputMetadata(selected: ChecklistMetadata): Result<true, string> {
+    const result = validateChecklistMetadata({
+      ...selected,
+      targetkey: null,
+      webordatabase: selected.webordatabase === 'true'
+    });
+    let errorMessages = [];
+    let isInvalid = false;
+    if (!result.ok) {
+      errorMessages.push(result.error.message);
+      isInvalid = true;
+    }
+
+    // validate metadata in each profile in this checklist
+    for (const profile of selected.profiles) {
+      const result = validateProfileMetadata(profile);
+      if (!result.ok) {
+        isInvalid = true;
+        errorMessages.push(result.error.message);
+      }
+    }
+
+    if (!isInvalid) return {ok: true, value: true};
+    return {ok: false, error: errorMessages.join('\n')};
   }
 }
 </script>

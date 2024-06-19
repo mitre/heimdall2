@@ -236,6 +236,15 @@ export function updateChecklistWithMetadata(
   return checklist;
 }
 
+function throwIfInvalidProfileMetadata(profileMetadata?: StigMetadata) {
+  if (profileMetadata) {
+    const results = validateProfileMetadata(profileMetadata);
+    if (!results.ok) {
+      throw new Error(results.error.message);
+    }
+  }
+}
+
 /**
  * Checklist jsonix converter
  */
@@ -778,12 +787,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       const profileMetadata = metadata?.profiles.find(
         (p) => p.name === profile.name
       );
-      if (profileMetadata) {
-        const results = validateProfileMetadata(profileMetadata);
-        if (!results.ok) {
-          throw new Error(results.error.message);
-        }
-      }
+      throwIfInvalidProfileMetadata(profileMetadata);
 
       const version = coerce(profile.version);
       const header: StigHeader = {
