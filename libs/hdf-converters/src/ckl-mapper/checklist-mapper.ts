@@ -300,7 +300,11 @@ export function validateChecklistMetadata(
   const errors = Revalidator.validate(metadata, checklistMetadataSchema).errors;
 
   if (errors.length === 0) return {ok: true, value: true};
-  const message = `Invalid fields: ${errors.map((e) => `${e.message} (${_.get(metadata, e.property)})`).join(', ')}`;
+  // formats errors as: invalidField (invalidValue), otherInvalidField (otherValue), ...
+  const invalidFields = errors.map(
+    (e) => `${e.message} (${_.get(metadata, e.property)})`
+  );
+  const message = `Invalid checklist metadata fields: ${invalidFields.join(', ')}`;
   return {ok: false, error: {invalid: errors.map((e) => e.property), message}};
 }
 
@@ -314,7 +318,11 @@ export function validateProfileMetadata(
   ).errors;
 
   if (errors.length === 0) return {ok: true, value: true};
-  const message = `Invalid profile fields: ${errors.map((e) => `${e.message} (${_.get(metadata, e.property)})`).join(', ')}`;
+  // formats errors as: invalidField (invalidValue), otherInvalidField (otherValue), ...
+  const invalidFields = errors.map(
+    (e) => `${e.message} (${_.get(metadata, e.property)})`
+  );
+  const message = `Invalid checklist profile metadata fields: ${invalidFields.join(', ')}`;
   return {ok: false, error: {invalid: errors.map((e) => e.property), message}};
 }
 
