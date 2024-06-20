@@ -26,6 +26,8 @@ import {
 } from './html-types';
 import path from 'path';
 import axios from 'axios';
+import myHtml from './template.html';
+import myCss from './style.css';
 
 type InputData = {
   data: ContextualizedEvaluation | string;
@@ -570,6 +572,7 @@ export class FromHDFToHTMLMapper {
     }
 
     // Render template and return generated HTML file
-    return Mustache.render(template, this.outputData);
+    //return Mustache.render(template, this.outputData);
+    return myHtml + myCss + " this came from here";
   }
 }

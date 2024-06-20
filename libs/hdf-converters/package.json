@@ -6,19 +6,19 @@
   "files": [
     "lib"
   ],
-  "main": "src/index.ts",
+  "main": "index.ts",
   "publishConfig": {
-    "main": "lib/index.js"
+    "main": "lib/bundle.js"
   },
   "scripts": {
     "prepack": "yarn build && node prepack.js",
     "postpack": "run-script-os",
     "postpack:darwin:linux": "mv package.json.orig package.json",
     "postpack:win32": "move package.json.orig package.json",
-    "build": "yarn build:tailwind && run-script-os",
-    "build:tailwind": "tailwindcss -i ./tailwind.css -o ./lib/src/converters-from-hdf/html/style.css --minify",
-    "build:darwin:linux": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
-    "build:win32": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && xcopy data lib",
+    "build": "yarn build:tailwind && webpack --config ./webpack.config.js --mode production && run-script-os",
+    "build:tailwind": "tailwindcss -i ./tailwind.css -o ./src/converters-from-hdf/html/style.css --minify",
+    "build:darwin:linux": "cp -R ./data ./lib",
+    "build:win32": "xcopy data lib",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest",
@@ -65,9 +65,13 @@
     "@types/node": "^20.1.0",
     "jest": "^27.0.6",
     "quicktype": "^15.0.260",
+    "raw-loader": "^4.0.2",
     "ts-jest": "^29.1.0",
+    "ts-loader": "^9.5.1",
     "tsx": "^4.7.1",
-    "typedoc": "^0.25.0"
+    "typedoc": "^0.25.0",
+    "webpack": "^5.92.0",
+    "webpack-cli": "^5.1.4"
   },
   "jest": {
     "moduleNameMapper": {
