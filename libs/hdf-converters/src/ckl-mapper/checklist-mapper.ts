@@ -83,17 +83,14 @@ function transformImpact(vuln: ChecklistVuln): number {
   if (vuln.status === 'Not Applicable') return 0.0;
   let impact =
     ImpactMapping[
-      // probably fine because there is no "impact" within the checklist world. impact -> Severity is what is worrying
-      findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping // is this the thing that I am supposed to deal with??
+      findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping
     ];
   const hdfExistingData = parseJson(vuln.thirdPartyTools)
   if (hdfExistingData.ok) {
     impact = _.get(
       hdfExistingData.value,
       'hdfSpecificData.impact',
-      ImpactMapping[
-        findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping
-      ]
+      impact
     );
   }
   if (!impact)
@@ -105,6 +102,33 @@ function transformImpact(vuln: ChecklistVuln): number {
       }`
     );
   return impact;
+}
+
+/**
+ * Transformer function that checks if severity is defined
+ * in the third party tools section. Otherwise, use the checklist
+ * defined severity/severity override
+ * @param vuln - checklist vulnerability object
+ * @returns severity - string none, low, medium, high, critical
+ */
+function transformSeverity(vuln: ChecklistVuln): string {
+  let severity = findSeverity(vuln);
+  const hdfExistingData = parseJson(vuln.thirdPartyTools)
+
+  if (hdfExistingData.ok) {
+    severity =  _.get(
+      hdfExistingData.value,
+      'hdfSpecificData.severity',
+      severity
+    );
+  }
+  if (!['none', 'low', 'medium', 'high', 'critical'].includes(severity))
+    throw new Error(
+      `Severity "${severity}" does not match none, low, medium, high, or critical, please check severity for ${
+        vuln.vulnNum
+      }`
+    );
+  return severity;
 }
 
 /**
@@ -403,7 +427,9 @@ export class ChecklistMapper extends BaseConverter {
                 path: 'cciRef',
                 transformer: nistTag
               },
-              severity: {path: 'severity'},
+              severity: {
+                transformer: transformSeverity
+              },
               weight: {path: 'weight'},
               // following transform takes the available attributes found in a checklist vuln and if available will add to the tags.
               // first element is the label name as it will appear in UI while the second is the ChecklistObject keyname
