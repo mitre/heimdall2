@@ -580,13 +580,15 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     // test if this control has a valid severity tag
     // and map it to a checklist severity level
     switch (severityTag) {
-      case 'none':
+      case 'none': 
+      // if none, it will be added to Checklist's thirdPartyTools section
       case 'low':
         return Severity.Low;
       case 'medium':
         return Severity.Medium;
       case 'high':
       case 'critical':
+        // if critical, it will be added to Checklist's thirdPartyTools section
         return Severity.High;
     }
 
@@ -649,10 +651,43 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   addHdfControlSpecificData(control: ExecJSON.Control): string {
     const hdfSpecificData: Record<string, unknown> = {};
-    const checklistImpactNumbers = [0.7, 0.5, 0.3, 0]; // what is going on here
-    if (!checklistImpactNumbers.includes(control.impact)) {
-      hdfSpecificData['impact'] = control.impact;
+
+    const severity = _.get(control.tags, 'severity');
+    const severityOverride = _.get(control.tags, 'severityOverride');
+    const computedSeverity = severityOverride ? severityOverride : severity;
+    const impact = control.impact;
+
+    // if computed severity and impact are different 
+    // impact must be denoted in the control specific data
+    let computedImpact: number; 
+    switch (computedSeverity) {
+      case 'none': 
+        computedImpact = 0.0;
+        break;
+      case 'low': 
+        computedImpact = 0.3;
+        break;
+      case 'medium': 
+        computedImpact = 0.5;
+        break;
+      case 'high': 
+        computedImpact = 0.7;
+        break;
+      default: // 'critical'
+        computedImpact = 0.9;
+        break;
     }
+
+    // if severity or severity override don't fit into low, medium, high
+    // denote them in the control specific data 
+    if (computedImpact != impact) 
+      hdfSpecificData['impact'] = control.impact;
+
+    if (severity === 'none' || severity === 'critical')
+      hdfSpecificData['severity'] = severity;
+    if (severityOverride === 'none' || severity === 'critical')
+      hdfSpecificData['severityOverride'] = severityOverride;
+
     if (control.code?.startsWith('control')) {
       hdfSpecificData['code'] = control.code;
     }
