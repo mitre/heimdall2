@@ -649,7 +649,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   addHdfControlSpecificData(control: ExecJSON.Control): string {
     const hdfSpecificData: Record<string, unknown> = {};
-    const checklistImpactNumbers = [0.7, 0.5, 0.3, 0];
+    const checklistImpactNumbers = [0.7, 0.5, 0.3, 0]; // what is going on here
     if (!checklistImpactNumbers.includes(control.impact)) {
       hdfSpecificData['impact'] = control.impact;
     }

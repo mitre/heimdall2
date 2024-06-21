@@ -19,6 +19,7 @@ import {
 } from './checklist-jsonix-converter';
 import {Checklist} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
+import { Result } from '../utils/result';
 
 enum ImpactMapping {
   high = 0.7,
@@ -64,13 +65,12 @@ function findSeverity(vuln: ChecklistVuln): string {
   return vuln.severity;
 }
 
-function isJsonString(str: string): boolean {
+function parseJson(str: string): Result<any, Error> {
   try {
-    JSON.parse(str);
+    return {ok: true, value: JSON.parse(str)};
   } catch (e) {
-    return false;
+    return {ok: false, error: e};
   }
-  return true;
 }
 
 /**
@@ -86,10 +86,10 @@ function transformImpact(vuln: ChecklistVuln): number {
       // probably fine because there is no "impact" within the checklist world. impact -> Severity is what is worrying
       findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping // is this the thing that I am supposed to deal with??
     ];
-  if (isJsonString(vuln.thirdPartyTools)) {
-    const hdfExistingData = JSON.parse(vuln.thirdPartyTools);
+  const hdfExistingData = parseJson(vuln.thirdPartyTools)
+  if (hdfExistingData.ok) {
     impact = _.get(
-      hdfExistingData,
+      hdfExistingData.value,
       'hdfSpecificData.impact',
       ImpactMapping[
         findSeverity(vuln).toLowerCase() as keyof typeof ImpactMapping
@@ -248,16 +248,12 @@ function getHdfSpecificDataAttribute(
   attribute: string,
   input: string
 ): {[key: string]: any}[] | string | undefined {
-  let data;
-  if (
-    !input ||
-    !isJsonString(input) ||
-    !_.isObject((data = JSON.parse(input)).hdfSpecificData)
-  ) {
+  let data = parseJson(input);
+  if (!data.ok)
     return undefined;
-  }
-
-  return data.hdfSpecificData[attribute] || undefined;
+  if (!_.isObject(data.value.hdfSpecificData))
+    return undefined;
+  return data.value.hdfSpecificData[attribute] || undefined;
 }
 
 /**
@@ -466,9 +462,9 @@ export class ChecklistMapper extends BaseConverter {
             },
             code: {
               transformer: (vulnerability: ChecklistVuln): string => {
-                if (isJsonString(vulnerability.thirdPartyTools)) {
-                  return JSON.parse(vulnerability.thirdPartyTools)
-                    .hdfSpecificData?.code;
+                const data = parseJson(vulnerability.thirdPartyTools);
+                if (data.ok) {
+                  return data.value.hdfSpecificData?.code;
                 }
                 return JSON.stringify(vulnerability, null, 2);
               }
