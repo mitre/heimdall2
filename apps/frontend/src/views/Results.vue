@@ -99,6 +99,11 @@
           @add-filter="addStatusSearch"
           @remove-filter="removeStatusFilter"
         />
+        <InfoCardRow
+          :filter="all_filter"
+          @show-severity-overrides="showSeverityOverrides"
+          @add-filter="addStatusSearch"
+        />
         <!-- Compliance Cards -->
         <v-row id="complianceCards" justify="space-around">
           <v-col xs="4">
@@ -201,6 +206,7 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 import ProfileData from '@/components/cards/ProfileData.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
+import InfoCardRow from '@/components/cards/InfoCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import Treemap from '@/components/cards/treemap/Treemap.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
@@ -245,6 +251,7 @@ import {compare_times} from '../utilities/delta_util';
   components: {
     Base,
     StatusCardRow,
+    InfoCardRow,
     Treemap,
     ControlTable,
     StatusChart,
@@ -488,6 +495,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   showWaived() {
     this.searchTerm = 'status:"Waived"';
+  }
+
+  showSeverityOverrides() {
+    this.searchTerm = 'tags:"severityoverride"';
   }
 
   addStatusSearch(status: ExtendedControlStatus) {
