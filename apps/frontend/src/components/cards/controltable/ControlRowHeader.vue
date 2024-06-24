@@ -41,44 +41,43 @@
 
     <template #impact>
       <v-card-text class="pa-2">
-        <v-chip active-class="NONE" outlined :color="impact_color">
-          {{ control.data.impact * 10 }}
-        </v-chip>
-      </v-card-text>
-    </template>
-
-    <template #severity>
-      <v-card-text class="pa-2">
-        <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
+        <v-tooltip bottom>
           <template #activator="{on}">
             <span v-on="on">
-              <v-chip active-class="NONE" outlined :color="severity_color">
-                <v-icon size="16" class="mr-1">mdi-delta</v-icon>
-                {{ (control.hdf.severity || 'none').toUpperCase() }}
+              <v-chip active-class="NONE" outlined :color="impact_color">
+                <v-icon
+                  v-if="'severityoverride' in control.data.tags"
+                  size="16"
+                  class="mr-1"
+                  >mdi-delta</v-icon
+                >
+                {{ Math.floor(control.data.impact * 10) }}
               </v-chip>
             </span>
           </template>
-          <!-- Severity override tag only comes from checklist files, so there should always be a severity tag -->
           <span
-            >Severity has been overridden from
-            {{
-              'severity' in control.data.tags
-                ? control.data.tags['severity']
-                : 'UNKNOWN'
-            }}
-            to {{ control.data.tags['severityoverride'] }} <br />Justification:
-            {{
-              'severityjustification' in control.data.tags
-                ? control.data.tags['severityjustification']
-                : 'UNKNOWN JUSTIFICATION'
-            }}</span
-          >
+            >Raw Impact: {{ control.data.impact }}
+            <span v-if="'severityoverride' in control.data.tags">
+              <br />Impact level differs from severity level<v-icon
+                size="16"
+                class="ml-1"
+                >mdi-delta</v-icon
+              >
+              <br />
+              Severity level:
+              {{
+                'severity' in control.data.tags
+                  ? control.data.tags['severity']
+                  : 'UNKNOWN'
+              }}
+              <br />
+              Impact level: {{ control.data.tags['severityoverride'] }} <br />
+              <span v-if="'severityjustification' in control.data.tags">
+                Justification:{{ control.data.tags['severityjustification'] }}
+              </span>
+            </span>
+          </span>
         </v-tooltip>
-        <span v-else>
-          <v-chip active-class="NONE" outlined :color="severity_color">
-            {{ (control.hdf.severity || 'none').toUpperCase() }}
-          </v-chip>
-        </span>
       </v-card-text>
     </template>
 
