@@ -104,7 +104,7 @@ function parseJson(str: string): Result<any, Error> {
 
 /**
  * Transformer function that checks if the status is 'Not Applicable' returning a 0.
- * Otherwise, maps severity to ImpactMapping
+ * Otherwise, maps computed severity to ImpactMapping
  * @param vuln - checklist vulnerability object
  * @returns impact - number 
  */
@@ -133,7 +133,7 @@ function transformImpact(vuln: ChecklistVuln): number {
 }
 
 /**
- * Transformer function to find the computed severity of the given vuln
+ * Function to find the computed severity of the given vuln
  * with order of prescedence as: 
  * thirdPartyTools.hdfSpecificData.severityoverride, severityoverride, 
  * thidPartyTools.hdfSpecificData.severity, severity
@@ -511,8 +511,7 @@ export class ChecklistMapper extends BaseConverter {
               }
             ],
             impact: {
-              transformer: (vulnerability: ChecklistVuln): number =>
-                transformImpact(vulnerability)
+              transformer: transformImpact 
             },
             code: {
               transformer: (vulnerability: ChecklistVuln): string => {
