@@ -19,7 +19,7 @@ import {
 } from './checklist-jsonix-converter';
 import {Checklist} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
-import { Result } from '../utils/result';
+import {Result} from '../utils/result';
 
 enum ImpactMapping {
   high = 0.7,
@@ -54,18 +54,18 @@ function nistTag(input: string): string[] {
 
 /**
  * Inner function to find the severity of the vuln
- * Does not account for severity override, so this should 
+ * Does not account for severity override, so this should
  * not be taken as the final severity value
- * Uses thirdPartyTools.hdfExistingData.severity first, 
- * then falls back to checklist severity tag 
+ * Uses thirdPartyTools.hdfExistingData.severity first,
+ * then falls back to checklist severity tag
  * @param vuln - checklist vulnerability object
  * @returns - severity
  */
 function findSeverity(vuln: ChecklistVuln): string {
   let severity = vuln.severity;
-  const hdfExistingData = parseJson(vuln.thirdPartyTools)
+  const hdfExistingData = parseJson(vuln.thirdPartyTools);
   if (hdfExistingData.ok) {
-    severity =  _.get(
+    severity = _.get(
       hdfExistingData.value,
       'hdfSpecificData.severity',
       severity
@@ -76,16 +76,16 @@ function findSeverity(vuln: ChecklistVuln): string {
 
 /**
  * Inner function to find the severityoverride of the vuln
- * Uses thirdPartyTools.hdfExistingData.severityoverride first, 
- * then falls back to checklist severityoverride tag 
+ * Uses thirdPartyTools.hdfExistingData.severityoverride first,
+ * then falls back to checklist severityoverride tag
  * @param vuln - checklist vulnerability object
  * @returns - severityoverride
  */
 function findSeverityOverride(vuln: ChecklistVuln): string {
   let severityOverride = vuln.severityoverride;
-  const hdfExistingData = parseJson(vuln.thirdPartyTools)
+  const hdfExistingData = parseJson(vuln.thirdPartyTools);
   if (hdfExistingData.ok) {
-    severityOverride =  _.get(
+    severityOverride = _.get(
       hdfExistingData.value,
       'hdfSpecificData.severityoverride',
       severityOverride
@@ -106,22 +106,15 @@ function parseJson(str: string): Result<any, Error> {
  * Transformer function that checks if the status is 'Not Applicable' returning a 0.
  * Otherwise, maps computed severity to ImpactMapping
  * @param vuln - checklist vulnerability object
- * @returns impact - number 
+ * @returns impact - number
  */
 function transformImpact(vuln: ChecklistVuln): number {
   if (vuln.status === 'Not Applicable') return 0.0;
-  let severity = computeSeverity(vuln);
-  let impact =
-    ImpactMapping[
-      severity as keyof typeof ImpactMapping
-    ];
-  const hdfExistingData = parseJson(vuln.thirdPartyTools)
+  const severity = computeSeverity(vuln);
+  let impact = ImpactMapping[severity as keyof typeof ImpactMapping];
+  const hdfExistingData = parseJson(vuln.thirdPartyTools);
   if (hdfExistingData.ok) {
-    impact = _.get(
-      hdfExistingData.value,
-      'hdfSpecificData.impact',
-      impact
-    );
+    impact = _.get(hdfExistingData.value, 'hdfSpecificData.impact', impact);
   }
   if (!impact)
     throw new Error(
@@ -134,17 +127,17 @@ function transformImpact(vuln: ChecklistVuln): number {
 
 /**
  * Function to find the computed severity of the given vuln
- * with order of prescedence as: 
- * thirdPartyTools.hdfSpecificData.severityoverride, severityoverride, 
+ * with order of prescedence as:
+ * thirdPartyTools.hdfSpecificData.severityoverride, severityoverride,
  * thidPartyTools.hdfSpecificData.severity, severity
  * @param vuln - checklist vulnerability object
  * @returns severity - string none, low, medium, high, critical
  */
 function computeSeverity(vuln: ChecklistVuln): string {
-  let severity = findSeverity(vuln);
-  let severityOverride = findSeverityOverride(vuln);
+  const severity = findSeverity(vuln);
+  const severityOverride = findSeverityOverride(vuln);
 
-  let computed = severityOverride ? severityOverride : severity;
+  const computed = severityOverride ? severityOverride : severity;
   if (!['none', 'low', 'medium', 'high', 'critical'].includes(computed))
     throw new Error(
       `Severity "${computed}" does not match none, low, medium, high, or critical, please check severity for ${
@@ -295,11 +288,9 @@ function getHdfSpecificDataAttribute(
   attribute: string,
   input: string
 ): {[key: string]: any}[] | string | undefined {
-  let data = parseJson(input);
-  if (!data.ok)
-    return undefined;
-  if (!_.isObject(data.value.hdfSpecificData))
-    return undefined;
+  const data = parseJson(input);
+  if (!data.ok) return undefined;
+  if (!_.isObject(data.value.hdfSpecificData)) return undefined;
   return data.value.hdfSpecificData[attribute] || undefined;
 }
 
@@ -451,7 +442,7 @@ export class ChecklistMapper extends BaseConverter {
                 transformer: nistTag
               },
               severity: {
-                transformer: findSeverity,
+                transformer: findSeverity
               },
               weight: {path: 'weight'},
               // following transform takes the available attributes found in a checklist vuln and if available will add to the tags.
@@ -481,9 +472,9 @@ export class ChecklistMapper extends BaseConverter {
                   }
                 }
 
-                // another special case that does 
+                // another special case that does
                 // not follow above naming conventions
-                let severityOverride = findSeverityOverride(input);
+                const severityOverride = findSeverityOverride(input);
                 if (severityOverride) {
                   fullTags['severityoverride'] = severityOverride;
                 }
@@ -511,7 +502,7 @@ export class ChecklistMapper extends BaseConverter {
               }
             ],
             impact: {
-              transformer: transformImpact 
+              transformer: transformImpact
             },
             code: {
               transformer: (vulnerability: ChecklistVuln): string => {

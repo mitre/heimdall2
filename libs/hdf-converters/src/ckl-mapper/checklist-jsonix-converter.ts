@@ -580,7 +580,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     // test if this control has a valid severity tag
     // and map it to a checklist severity level
     switch (severityTag) {
-      case 'none': 
+      case 'none':
       // if none, it will be added to Checklist's thirdPartyTools section
       case 'low':
         return Severity.Low;
@@ -657,20 +657,20 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     const computedSeverity = severityOverride ? severityOverride : severity;
     const impact = control.impact;
 
-    // if computed severity and impact are different 
+    // if computed severity and impact are different
     // impact must be denoted in the control specific data
-    let computedImpact: number; 
+    let computedImpact: number;
     switch (computedSeverity) {
-      case 'none': 
+      case 'none':
         computedImpact = 0.0;
         break;
-      case 'low': 
+      case 'low':
         computedImpact = 0.3;
         break;
-      case 'medium': 
+      case 'medium':
         computedImpact = 0.5;
         break;
-      case 'high': 
+      case 'high':
         computedImpact = 0.7;
         break;
       default: // 'critical'
@@ -679,9 +679,8 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     }
 
     // if severity or severity override don't fit into low, medium, high
-    // denote them in the control specific data 
-    if (computedImpact != impact) 
-      hdfSpecificData['impact'] = control.impact;
+    // denote them in the control specific data
+    if (computedImpact != impact) hdfSpecificData['impact'] = control.impact;
 
     if (severity === 'none' || severity === 'critical')
       hdfSpecificData['severity'] = severity;
