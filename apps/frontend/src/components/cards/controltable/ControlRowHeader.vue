@@ -81,6 +81,14 @@
       </v-card-text>
     </template>
 
+    <template #severity>
+      <v-card-text class="pa-2">
+        <v-chip active-class="NONE" outlined :color="severity_color">
+          {{ (control.hdf.severity || 'none').toUpperCase() }}
+        </v-chip>
+      </v-card-text>
+    </template>
+
     <!-- eslint-disable vue/no-v-html -->
     <template #title>
       <div class="pa-2 title" v-html="sanitize_html(control.data.title)" />
