@@ -39,51 +39,35 @@
       </v-row>
     </template>
 
-    <template #impact>
+    <template #severity>
       <v-card-text class="pa-2">
-        <v-tooltip bottom>
+        <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
           <template #activator="{on}">
             <span v-on="on">
-              <v-chip active-class="NONE" outlined :color="impact_color">
-                <v-icon
-                  v-if="'severityoverride' in control.data.tags"
-                  size="16"
-                  class="mr-1"
-                  >mdi-delta</v-icon
-                >
-                {{ Math.floor(control.data.impact * 10) }}
+              <v-chip active-class="NONE" outlined :color="severity_color">
+                <v-icon size="16" class="mr-1">mdi-delta</v-icon>
+                {{ (control.hdf.severity || 'none').toUpperCase() }}
               </v-chip>
             </span>
           </template>
-          <span
-            >Raw Impact: {{ control.data.impact }}
-            <span v-if="'severityoverride' in control.data.tags">
-              <br />Impact level differs from severity level<v-icon
-                size="16"
-                class="ml-1"
-                >mdi-delta</v-icon
-              >
-              <br />
-              Severity level:
+          <span>
+            <span>
+              Severity has been overridden from
               {{
                 'severity' in control.data.tags
                   ? control.data.tags['severity']
                   : 'UNKNOWN'
               }}
+              to {{ control.data.tags['severityoverride'] }}
               <br />
-              Impact level: {{ control.data.tags['severityoverride'] }} <br />
               <span v-if="'severityjustification' in control.data.tags">
-                Justification:{{ control.data.tags['severityjustification'] }}
+                Justification: {{ control.data.tags['severityjustification'] }}
               </span>
+              <span v-else> No justification provided </span>
             </span>
           </span>
         </v-tooltip>
-      </v-card-text>
-    </template>
-
-    <template #severity>
-      <v-card-text class="pa-2">
-        <v-chip active-class="NONE" outlined :color="severity_color">
+        <v-chip v-else active-class="NONE" outlined :color="severity_color">
           {{ (control.hdf.severity || 'none').toUpperCase() }}
         </v-chip>
       </v-card-text>
