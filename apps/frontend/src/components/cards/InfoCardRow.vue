@@ -1,9 +1,6 @@
 <template>
-  <v-row >
-    <v-col
-      v-if="severityOverrideProps.number"
-      cols="12"
-    >
+  <v-row>
+    <v-col v-if="severityOverrideProps.number" cols="12">
       <v-card
         :color="severityOverrideProps.color"
         class="d-flex flex-no-wrap justify-space-between"
@@ -11,7 +8,9 @@
       >
         <div>
           <v-card-title>
-            <v-icon class="pr-3" large>mdi-{{ severityOverrideProps.icon }}</v-icon>
+            <v-icon class="pr-3" large
+              >mdi-{{ severityOverrideProps.icon }}</v-icon
+            >
             <span class="title">{{
               `${severityOverrideProps.title}: ${severityOverrideProps.number}`
             }}</span>
