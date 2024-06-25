@@ -62,14 +62,6 @@ abstract class HDFControl10 implements HDFControl {
     this.parsedNistTags = tmp[0];
     this.parsedNistRevision = tmp[1];
     this.severity = HDFControl10.compute_severity(this.wraps);
-
-    // if severity and impact differ, indicate it with a severity override tag
-    const severityoverride = HDFControl10.compute_severity_override(
-      this.wraps,
-      this.severity
-    );
-    if (severityoverride)
-      this.wraps.tags['severityoverride'] = severityoverride;
   }
 
   // Abstracts - implemented more specifically below
@@ -174,6 +166,10 @@ abstract class HDFControl10 implements HDFControl {
   ): Severity {
     const severities = ['none', 'low', 'medium', 'high', 'critical'];
 
+    // use severity override tag if it exists
+    if (severities.includes(raw.tags['severityoverride'])) 
+      return raw.tags['severityoverride'];
+
     // use severity tag if it exists
     if (severities.includes(raw.tags['severity'])) return raw.tags['severity'];
 
@@ -189,25 +185,6 @@ abstract class HDFControl10 implements HDFControl {
     } else {
       return 'critical';
     }
-  }
-
-  private static compute_severity_override(
-    raw: ResultControl_1_0 | ProfileControl_1_0,
-    severity: Severity
-  ): Severity | null {
-    if (raw.impact < 0.1) {
-      if (severity !== 'none') return 'none';
-    } else if (raw.impact < 0.4) {
-      if (severity !== 'low') return 'low';
-    } else if (raw.impact < 0.7) {
-      if (severity !== 'medium') return 'medium';
-    } else if (raw.impact < 0.9) {
-      if (severity !== 'high') return 'high';
-    } else {
-      // impact is critical
-      if (severity !== 'critical') return 'critical';
-    }
-    return null;
   }
 }
 
