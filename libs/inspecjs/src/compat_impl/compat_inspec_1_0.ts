@@ -167,7 +167,7 @@ abstract class HDFControl10 implements HDFControl {
     const severities = ['none', 'low', 'medium', 'high', 'critical'];
 
     // use severity override tag if it exists
-    if (severities.includes(raw.tags['severityoverride'])) 
+    if (severities.includes(raw.tags['severityoverride']))
       return raw.tags['severityoverride'];
 
     // use severity tag if it exists

@@ -657,8 +657,8 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     const computedSeverity = severityOverride ? severityOverride : severity;
     const impact = control.impact;
 
-    // if computed severity and impact are different
-    // impact must be denoted in the control specific data
+    // if the checklist's impact would not be computed correctly on 
+    // ckl2hdf, include it explicitly in hdfSpecifidData
     let computedImpact: number;
     switch (computedSeverity) {
       case 'none':
@@ -678,10 +678,17 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         break;
     }
 
+    // if the checklist's impact would not be computed correctly
+    // note: if impact is 0, then status N/A would guarantee impact is 0
+    if (computedSeverity) {
+      // make sure there is a severity or severity override tag
+      if (computedImpact != impact && impact != 0.0) {
+        hdfSpecificData['impact'] = control.impact;
+      }
+    }
+
     // if severity or severity override don't fit into low, medium, high
     // denote them in the control specific data
-    if (computedImpact != impact) hdfSpecificData['impact'] = control.impact;
-
     if (severity === 'none' || severity === 'critical')
       hdfSpecificData['severity'] = severity;
     if (severityOverride === 'none' || severity === 'critical')
