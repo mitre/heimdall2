@@ -195,15 +195,7 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   get status_color(): string {
     // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
-    return `status${this.control.root.hdf.status.replace(' ', '')}`;
-  }
-
-  get impact_color(): string {
-    if (this.control.data.impact < 0.1) return 'severityNone';
-    else if (this.control.data.impact < 0.4) return 'severityLow';
-    else if (this.control.data.impact < 0.7) return 'severityMedium';
-    else if (this.control.data.impact < 0.9) return 'severityHigh';
-    return 'severityCritical';
+    return `status${this.control.root.hdf.status.replace(' ', '')}`
   }
 
   get severity_color(): string {

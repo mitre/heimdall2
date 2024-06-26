@@ -91,14 +91,6 @@
           />
         </template>
 
-        <template #impact>
-          <ColumnHeader
-            :text="'Impact'"
-            :sort="sortImpact"
-            @input="set_sort('impact', $event)"
-          />
-        </template>
-
         <template #tags>
           <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
         </template>
@@ -173,9 +165,8 @@ interface ListElt {
 
   filename: string;
 
-  // Computed values for status and impact, for sorting
+  // Computed values for status and severity, for sorting
   status_val: number;
-  impact_val: number;
   severity_val: number;
 
   control: ContextualizedControl;
@@ -207,7 +198,6 @@ export default class ControlTable extends Vue {
   sortId: Sort = 'none';
   sortStatus: Sort = 'none';
   sortSet: Sort = 'none';
-  sortImpact: Sort = 'none';
   sortSeverity: Sort = 'none';
   sortRunTime: Sort = 'none';
 
@@ -252,7 +242,6 @@ export default class ControlTable extends Vue {
     this.sortId = 'none';
     this.sortSet = 'none';
     this.sortStatus = 'none';
-    this.sortImpact = 'none';
     this.sortSeverity = 'none';
     this.sortRunTime = 'none';
     switch (column) {
@@ -264,9 +253,6 @@ export default class ControlTable extends Vue {
         break;
       case 'set':
         this.sortSet = newSort;
-        break;
-      case 'impact':
-        this.sortImpact = newSort;
         break;
       case 'severity':
         this.sortSeverity = newSort;
@@ -373,7 +359,6 @@ export default class ControlTable extends Vue {
           'Profile Error',
           'Failed'
         ].indexOf(d.root.hdf.status),
-        impact_val: d.root.data.impact,
         severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
           d.root.hdf.severity
         ),
@@ -408,14 +393,6 @@ export default class ControlTable extends Vue {
     ) {
       cmp = (a: ListElt, b: ListElt) => a.status_val - b.status_val;
       if (this.sortStatus === 'ascending') {
-        factor = -1;
-      }
-    } else if (
-      this.sortImpact === 'ascending' ||
-      this.sortImpact === 'descending'
-    ) {
-      cmp = (a: ListElt, b: ListElt) => a.impact_val - b.impact_val;
-      if (this.sortImpact === 'ascending') {
         factor = -1;
       }
     } else if (
