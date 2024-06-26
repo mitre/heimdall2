@@ -19,7 +19,10 @@
         </div>
         <v-card-actions>
           <v-btn
-            :disabled="filter.tagFilter && filter.tagFilter.indexOf('severityoverride') !== -1"
+            :disabled="
+              filter.tagFilter &&
+              filter.tagFilter.indexOf('severityoverride') !== -1
+            "
             @click="$emit('show-severity-overrides')"
             >Filter to Severity Overrides</v-btn
           >
