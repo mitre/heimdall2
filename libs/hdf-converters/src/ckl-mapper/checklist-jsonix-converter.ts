@@ -652,12 +652,13 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   addHdfControlSpecificData(control: ExecJSON.Control): string {
     const hdfSpecificData: Record<string, unknown> = {};
 
+    const impact = control.impact;
     const severity = _.get(control.tags, 'severity');
     const severityOverride = _.get(control.tags, 'severityOverride');
-    const computedSeverity = severityOverride ? severityOverride : severity;
-    const impact = control.impact;
+    let computedSeverity = severity;
+    if (severityOverride) computedSeverity = severityOverride;
 
-    // if the checklist's impact would not be computed correctly on 
+    // if the checklist's impact would not be computed correctly on
     // ckl2hdf, include it explicitly in hdfSpecifidData
     let computedImpact: number;
     switch (computedSeverity) {
