@@ -188,7 +188,7 @@ If the installed version of RHEL 9 is not supported, this is a finding.</ATTRIBU
 				<FINDING_DETAILS></FINDING_DETAILS>
 				<COMMENTS></COMMENTS>
 				<SEVERITY_OVERRIDE>medium</SEVERITY_OVERRIDE>
-				<SEVERITY_JUSTIFICATION>both N/A and overidden</SEVERITY_JUSTIFICATION>
+				<SEVERITY_JUSTIFICATION>Testing both N/A and overidden</SEVERITY_JUSTIFICATION>
 			</VULN>
 			<VULN>
 				<STIG_DATA>
@@ -326,7 +326,7 @@ $ sudo dnf update</ATTRIBUTE_DATA>
 				<FINDING_DETAILS></FINDING_DETAILS>
 				<COMMENTS></COMMENTS>
 				<SEVERITY_OVERRIDE>low</SEVERITY_OVERRIDE>
-				<SEVERITY_JUSTIFICATION>Overidden</SEVERITY_JUSTIFICATION>
+				<SEVERITY_JUSTIFICATION>Example of overridden severity</SEVERITY_JUSTIFICATION>
 			</VULN>
 			<VULN>
 				<STIG_DATA>
@@ -433,7 +433,12 @@ By using this IS (which includes any device attached to this IS), you consent to
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "impact": 1.0,
+    "severity": "critical"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -503,11 +508,11 @@ By using this IS (which includes any device attached to this IS), you consent to
 					<VULN_ATTRIBUTE>CCI_REF</VULN_ATTRIBUTE>
 					<ATTRIBUTE_DATA>CCI-001388</ATTRIBUTE_DATA>
 				</STIG_DATA>
-				<STATUS>Not_Applicable</STATUS>
+				<STATUS>Open</STATUS>
 				<FINDING_DETAILS></FINDING_DETAILS>
 				<COMMENTS></COMMENTS>
-				<SEVERITY_OVERRIDE></SEVERITY_OVERRIDE>
-				<SEVERITY_JUSTIFICATION></SEVERITY_JUSTIFICATION>
+				<SEVERITY_OVERRIDE>high</SEVERITY_OVERRIDE>
+				<SEVERITY_JUSTIFICATION>Example high justification</SEVERITY_JUSTIFICATION>
 			</VULN>
 		</iSTIG>
 	</STIGS>

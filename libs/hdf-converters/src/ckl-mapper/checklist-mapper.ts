@@ -509,8 +509,8 @@ export class ChecklistMapper extends BaseConverter {
             code: {
               transformer: (vulnerability: ChecklistVuln): string => {
                 const data = parseJson(vulnerability.thirdPartyTools);
-                if (data.ok) {
-                  return data.value.hdfSpecificData?.code;
+                if (data.ok && data.value.hdfSpecificData.code) {
+                  return data.value.hdfSpecificData.code;
                 }
                 return JSON.stringify(vulnerability, null, 2);
               }
