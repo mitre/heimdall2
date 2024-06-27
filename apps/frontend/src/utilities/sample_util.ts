@@ -21,6 +21,7 @@ const rhel8ChecklistPath = '/static/samples/rhel_8_checklist.ckl';
 const threeStigChecklistPath = '/static/samples/three_stig_checklist.ckl';
 const ubuntuProfile = '/static/samples/ubuntu_profile.json';
 const veracodeExecJson = '/static/samples/veracode.xml';
+const smallChecklistOverrides = '/static/samples/small_ckl_overrides.ckl';
 
 import axios from 'axios';
 
@@ -111,5 +112,9 @@ export const samples: Sample[] = [
   {
     filename: 'Veracode Exec JSON',
     path: veracodeExecJson
+  },
+  {
+    filename: 'Small Checklist With Severity Overrides',
+    path: smallChecklistOverrides
   }
 ];

@@ -61,14 +61,14 @@ describe('checklist_mapper_with_severity_overrides', () => {
   it('Successfully converts Checklists with severity overrides', () => {
     const mapper = new ChecklistResults(
       fs.readFileSync(
-        'sample_jsons/checklist_mapper/sample_input_report/RHEL9_overrides.ckl',
+        'sample_jsons/checklist_mapper/sample_input_report/small_ckl_overrides.ckl',
         {encoding: 'utf-8'}
       ),
       true
     );
 
     // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/checklist-RHEL9_overrides_hdf.json',
+    //   'sample_jsons/checklist_mapper/small_overrides_hdf.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
@@ -76,7 +76,7 @@ describe('checklist_mapper_with_severity_overrides', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync(
-            'sample_jsons/checklist_mapper/checklist-RHEL9_overrides_hdf.json',
+            'sample_jsons/checklist_mapper/small_overrides_hdf.json',
             {encoding: 'utf-8'}
           )
         )
