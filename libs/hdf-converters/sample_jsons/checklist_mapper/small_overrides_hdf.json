@@ -153,9 +153,343 @@
               "start_time": ""
             }
           ]
+        },
+        {
+          "tags": {
+            "gtitle": "SRG-OS-000191-GPOS-00080",
+            "rid": "SV-257780r939261_rule",
+            "gid": "V-257780",
+            "stig_id": "RHEL-09-211025",
+            "cci": [
+              "CCI-001233"
+            ],
+            "nist": [
+              "SI-2 (2)"
+            ],
+            "severity": "medium",
+            "weight": "10.0",
+            "STIGRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "RHEL 9 must implement the Endpoint Security for Linux Threat Prevention tool.",
+          "id": "V-257780",
+          "desc": "Without the use of automated mechanisms to scan for security flaws on a continuous and/or periodic basis, the operating system or other system components may remain vulnerable to the exploits presented by undetected software flaws.\n\nTo support this requirement, the operating system may have an integrated solution incorporating continuous scanning using ESS and periodic scanning using other tools, as specified in the requirement.",
+          "descriptions": [
+            {
+              "data": "Verify that RHEL 9 has implemented the Endpoint Security for Linux Threat Prevention tool.\n\nCheck that the following package has been installed:\n\n$ sudo rpm -qa | grep -i mcafeetp\n\nIf the \"mcafeetp\" package is not installed, this is a finding.\n\nVerify that the daemon is running:\n\n$ sudo ps -ef | grep -i mfetpd\n\nIf the daemon is not running, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Install and enable the latest McAfee ENSLTP package.",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.5,
+          "code": "{\n  \"status\": \"Failed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-257780\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000191-GPOS-00080\",\n  \"ruleId\": \"SV-257780r939261_rule\",\n  \"ruleVer\": \"RHEL-09-211025\",\n  \"ruleTitle\": \"RHEL 9 must implement the Endpoint Security for Linux Threat Prevention tool.\",\n  \"vulnDiscuss\": \"Without the use of automated mechanisms to scan for security flaws on a continuous and/or periodic basis, the operating system or other system components may remain vulnerable to the exploits presented by undetected software flaws.\\n\\nTo support this requirement, the operating system may have an integrated solution incorporating continuous scanning using ESS and periodic scanning using other tools, as specified in the requirement.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify that RHEL 9 has implemented the Endpoint Security for Linux Threat Prevention tool.\\n\\nCheck that the following package has been installed:\\n\\n$ sudo rpm -qa | grep -i mcafeetp\\n\\nIf the \\\"mcafeetp\\\" package is not installed, this is a finding.\\n\\nVerify that the daemon is running:\\n\\n$ sudo ps -ef | grep -i mfetpd\\n\\nIf the daemon is not running, this is a finding.\",\n  \"fixText\": \"Install and enable the latest McAfee ENSLTP package.\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024\",\n  \"targetKey\": \"5551\",\n  \"stigUuid\": \"4f55ab46-138a-4554-952f-4bf8523b04ec\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001233\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "gtitle": "SRG-OS-000480-GPOS-00227",
+            "rid": "SV-257781r925330_rule",
+            "gid": "V-257781",
+            "stig_id": "RHEL-09-211030",
+            "cci": [
+              "CCI-000366"
+            ],
+            "nist": [
+              "CM-6 b"
+            ],
+            "severity": "medium",
+            "weight": "10.0",
+            "STIGRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The graphical display manager must not be the default target on RHEL 9 unless approved.",
+          "id": "V-257781",
+          "desc": "Unnecessary service packages must not be installed to decrease the attack surface of the system. Graphical display managers have a long history of security vulnerabilities and must not be used, unless approved and documented.",
+          "descriptions": [
+            {
+              "data": "Verify that RHEL 9 is configured to boot to the command line:\n\n$ systemctl get-default\n\nmulti-user.target\n\nIf the system default target is not set to \"multi-user.target\" and the information system security officer (ISSO) lacks a documented requirement for a graphical user interface, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Document the requirement for a graphical user interface with the ISSO or set the default target to multi-user with the following command:\n\n$ sudo systemctl set-default multi-user.target",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.5,
+          "code": "{\n  \"status\": \"Failed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-257781\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000480-GPOS-00227\",\n  \"ruleId\": \"SV-257781r925330_rule\",\n  \"ruleVer\": \"RHEL-09-211030\",\n  \"ruleTitle\": \"The graphical display manager must not be the default target on RHEL 9 unless approved.\",\n  \"vulnDiscuss\": \"Unnecessary service packages must not be installed to decrease the attack surface of the system. Graphical display managers have a long history of security vulnerabilities and must not be used, unless approved and documented.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify that RHEL 9 is configured to boot to the command line:\\n\\n$ systemctl get-default\\n\\nmulti-user.target\\n\\nIf the system default target is not set to \\\"multi-user.target\\\" and the information system security officer (ISSO) lacks a documented requirement for a graphical user interface, this is a finding.\",\n  \"fixText\": \"Document the requirement for a graphical user interface with the ISSO or set the default target to multi-user with the following command:\\n\\n$ sudo systemctl set-default multi-user.target\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024\",\n  \"targetKey\": \"5551\",\n  \"stigUuid\": \"4f55ab46-138a-4554-952f-4bf8523b04ec\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000366\"\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "gtitle": "SRG-OS-000480-GPOS-00227",
+            "rid": "SV-257782r942961_rule",
+            "gid": "V-257782",
+            "stig_id": "RHEL-09-211035",
+            "cci": [
+              "CCI-000366"
+            ],
+            "nist": [
+              "CM-6 b"
+            ],
+            "severity": "low",
+            "weight": "10.0",
+            "STIGRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "RHEL 9 must enable the hardware random number generator entropy gatherer service.",
+          "id": "V-257782",
+          "desc": "The most important characteristic of a random number generator is its randomness, namely its ability to deliver random numbers that are impossible to predict. Entropy in computer security is associated with the unpredictability of a source of randomness. The random source with high entropy tends to achieve a uniform distribution of random values. Random number generators are one of the most important building blocks of cryptosystems.  \n\nThe rngd service feeds random data from hardware device to kernel random device. Quality (nonpredictable) random number generation is important for several security functions (i.e., ciphers).",
+          "descriptions": [
+            {
+              "data": "Note: For RHEL 9 systems running with kernel FIPS mode enabled as specified by RHEL-09-671010, this requirement is Not Applicable.\n\nVerify that RHEL 9 has enabled the hardware random number generator entropy gatherer service with the following command:\n\n$ systemctl is-active rngd\n\nactive\n\nIf the \"rngd\" service is not active, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Install the rng-tools package with the following command:\n\n$ sudo dnf install rng-tools\n\nThen enable the rngd service run the following command:\n\n$ sudo systemctl enable --now rngd",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.3,
+          "code": "{\n  \"status\": \"Passed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-257782\",\n  \"severity\": \"low\",\n  \"groupTitle\": \"SRG-OS-000480-GPOS-00227\",\n  \"ruleId\": \"SV-257782r942961_rule\",\n  \"ruleVer\": \"RHEL-09-211035\",\n  \"ruleTitle\": \"RHEL 9 must enable the hardware random number generator entropy gatherer service.\",\n  \"vulnDiscuss\": \"The most important characteristic of a random number generator is its randomness, namely its ability to deliver random numbers that are impossible to predict. Entropy in computer security is associated with the unpredictability of a source of randomness. The random source with high entropy tends to achieve a uniform distribution of random values. Random number generators are one of the most important building blocks of cryptosystems.  \\n\\nThe rngd service feeds random data from hardware device to kernel random device. Quality (nonpredictable) random number generation is important for several security functions (i.e., ciphers).\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Note: For RHEL 9 systems running with kernel FIPS mode enabled as specified by RHEL-09-671010, this requirement is Not Applicable.\\n\\nVerify that RHEL 9 has enabled the hardware random number generator entropy gatherer service with the following command:\\n\\n$ systemctl is-active rngd\\n\\nactive\\n\\nIf the \\\"rngd\\\" service is not active, this is a finding.\",\n  \"fixText\": \"Install the rng-tools package with the following command:\\n\\n$ sudo dnf install rng-tools\\n\\nThen enable the rngd service run the following command:\\n\\n$ sudo systemctl enable --now rngd\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024\",\n  \"targetKey\": \"5551\",\n  \"stigUuid\": \"4f55ab46-138a-4554-952f-4bf8523b04ec\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000366\"\n}",
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "gtitle": "SRG-OS-000269-GPOS-00103",
+            "rid": "SV-257783r925336_rule",
+            "gid": "V-257783",
+            "stig_id": "RHEL-09-211040",
+            "cci": [
+              "CCI-001665"
+            ],
+            "nist": [
+              "SC-24"
+            ],
+            "severity": "medium",
+            "weight": "10.0",
+            "STIGRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "RHEL 9 systemd-journald service must be enabled.",
+          "id": "V-257783",
+          "desc": "In the event of a system failure, RHEL 9 must preserve any information necessary to determine cause of failure and any information necessary to return to operations with least disruption to system processes.",
+          "descriptions": [
+            {
+              "data": "Verify that \"systemd-journald\" is active with the following command:\n\n$ systemctl is-active systemd-journald\n\nactive\n\nIf the systemd-journald service is not active, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "To enable the systemd-journald service, run the following command:\n\n$ sudo systemctl enable --now systemd-journald",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.5,
+          "code": "{\n  \"status\": \"Passed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-257783\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000269-GPOS-00103\",\n  \"ruleId\": \"SV-257783r925336_rule\",\n  \"ruleVer\": \"RHEL-09-211040\",\n  \"ruleTitle\": \"RHEL 9 systemd-journald service must be enabled.\",\n  \"vulnDiscuss\": \"In the event of a system failure, RHEL 9 must preserve any information necessary to determine cause of failure and any information necessary to return to operations with least disruption to system processes.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify that \\\"systemd-journald\\\" is active with the following command:\\n\\n$ systemctl is-active systemd-journald\\n\\nactive\\n\\nIf the systemd-journald service is not active, this is a finding.\",\n  \"fixText\": \"To enable the systemd-journald service, run the following command:\\n\\n$ sudo systemctl enable --now systemd-journald\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024\",\n  \"targetKey\": \"5551\",\n  \"stigUuid\": \"4f55ab46-138a-4554-952f-4bf8523b04ec\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-001665\"\n}",
+          "results": [
+            {
+              "status": "passed",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "gtitle": "SRG-OS-000324-GPOS-00125",
+            "rid": "SV-257784r925339_rule",
+            "gid": "V-257784",
+            "stig_id": "RHEL-09-211045",
+            "cci": [
+              "CCI-000366",
+              "CCI-002235"
+            ],
+            "nist": [
+              "CM-6 b",
+              "AC-6 (10)"
+            ],
+            "severity": "high",
+            "weight": "10.0",
+            "STIGRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The systemd Ctrl-Alt-Delete burst key sequence in RHEL 9 must be disabled.",
+          "id": "V-257784",
+          "desc": "A locally logged-on user who presses Ctrl-Alt-Delete when at the console can reboot the system. If accidentally pressed, as could happen in the case of a mixed OS environment, this can create the risk of short-term loss of availability of systems due to unintentional reboot. In a graphical user environment, risk of unintentional reboot from the Ctrl-Alt-Delete sequence is reduced because the user will be prompted before any action is taken.\n\nSatisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227",
+          "descriptions": [
+            {
+              "data": "Verify RHEL 9 is configured to not reboot the system when Ctrl-Alt-Delete is pressed seven times within two seconds with the following command:\n\n$ grep -i ctrl /etc/systemd/system.conf\n\nCtrlAltDelBurstAction=none\n\nIf the \"CtrlAltDelBurstAction\" is not set to \"none\", commented out, or is missing, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Configure the system to disable the CtrlAltDelBurstAction by added or modifying the following line in the \"/etc/systemd/system.conf\" configuration file:\n\nCtrlAltDelBurstAction=none\n\nReload the daemon for this change to take effect.\n\n$ sudo systemctl daemon-reload",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.7,
+          "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-257784\",\n  \"severity\": \"high\",\n  \"groupTitle\": \"SRG-OS-000324-GPOS-00125\",\n  \"ruleId\": \"SV-257784r925339_rule\",\n  \"ruleVer\": \"RHEL-09-211045\",\n  \"ruleTitle\": \"The systemd Ctrl-Alt-Delete burst key sequence in RHEL 9 must be disabled.\",\n  \"vulnDiscuss\": \"A locally logged-on user who presses Ctrl-Alt-Delete when at the console can reboot the system. If accidentally pressed, as could happen in the case of a mixed OS environment, this can create the risk of short-term loss of availability of systems due to unintentional reboot. In a graphical user environment, risk of unintentional reboot from the Ctrl-Alt-Delete sequence is reduced because the user will be prompted before any action is taken.\\n\\nSatisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify RHEL 9 is configured to not reboot the system when Ctrl-Alt-Delete is pressed seven times within two seconds with the following command:\\n\\n$ grep -i ctrl /etc/systemd/system.conf\\n\\nCtrlAltDelBurstAction=none\\n\\nIf the \\\"CtrlAltDelBurstAction\\\" is not set to \\\"none\\\", commented out, or is missing, this is a finding.\",\n  \"fixText\": \"Configure the system to disable the CtrlAltDelBurstAction by added or modifying the following line in the \\\"/etc/systemd/system.conf\\\" configuration file:\\n\\nCtrlAltDelBurstAction=none\\n\\nReload the daemon for this change to take effect.\\n\\n$ sudo systemctl daemon-reload\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024\",\n  \"targetKey\": \"5551\",\n  \"stigUuid\": \"4f55ab46-138a-4554-952f-4bf8523b04ec\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000366; CCI-002235\"\n}",
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "gtitle": "SRG-OS-000324-GPOS-00125",
+            "rid": "SV-257785r925342_rule",
+            "gid": "V-257785",
+            "stig_id": "RHEL-09-211050",
+            "cci": [
+              "CCI-000366",
+              "CCI-002235"
+            ],
+            "nist": [
+              "CM-6 b",
+              "AC-6 (10)"
+            ],
+            "severity": "high",
+            "weight": "10.0",
+            "STIGRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "The x86 Ctrl-Alt-Delete key sequence must be disabled on RHEL 9.",
+          "id": "V-257785",
+          "desc": "A locally logged-on user who presses Ctrl-Alt-Delete when at the console can reboot the system. If accidentally pressed, as could happen in the case of a mixed OS environment, this can create the risk of short-term loss of availability of systems due to unintentional reboot. In a graphical user environment, risk of unintentional reboot from the Ctrl-Alt-Delete sequence is reduced because the user will be prompted before any action is taken.\n\nSatisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227",
+          "descriptions": [
+            {
+              "data": "Verify RHEL 9 is not configured to reboot the system when Ctrl-Alt-Delete is pressed with the following command:\n\n$ sudo systemctl status ctrl-alt-del.target\n\nctrl-alt-del.target\nLoaded: masked (Reason: Unit ctrl-alt-del.target is masked.)\nActive: inactive (dead)\n\nIf the \"ctrl-alt-del.target\" is loaded and not masked, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Configure RHEL 9 to disable the ctrl-alt-del.target with the following command:\n\n$ sudo systemctl disable --now ctrl-alt-del.target\n$ sudo systemctl mask --now ctrl-alt-del.target",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.7,
+          "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-257785\",\n  \"severity\": \"high\",\n  \"groupTitle\": \"SRG-OS-000324-GPOS-00125\",\n  \"ruleId\": \"SV-257785r925342_rule\",\n  \"ruleVer\": \"RHEL-09-211050\",\n  \"ruleTitle\": \"The x86 Ctrl-Alt-Delete key sequence must be disabled on RHEL 9.\",\n  \"vulnDiscuss\": \"A locally logged-on user who presses Ctrl-Alt-Delete when at the console can reboot the system. If accidentally pressed, as could happen in the case of a mixed OS environment, this can create the risk of short-term loss of availability of systems due to unintentional reboot. In a graphical user environment, risk of unintentional reboot from the Ctrl-Alt-Delete sequence is reduced because the user will be prompted before any action is taken.\\n\\nSatisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify RHEL 9 is not configured to reboot the system when Ctrl-Alt-Delete is pressed with the following command:\\n\\n$ sudo systemctl status ctrl-alt-del.target\\n\\nctrl-alt-del.target\\nLoaded: masked (Reason: Unit ctrl-alt-del.target is masked.)\\nActive: inactive (dead)\\n\\nIf the \\\"ctrl-alt-del.target\\\" is loaded and not masked, this is a finding.\",\n  \"fixText\": \"Configure RHEL 9 to disable the ctrl-alt-del.target with the following command:\\n\\n$ sudo systemctl disable --now ctrl-alt-del.target\\n$ sudo systemctl mask --now ctrl-alt-del.target\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024\",\n  \"targetKey\": \"5551\",\n  \"stigUuid\": \"4f55ab46-138a-4554-952f-4bf8523b04ec\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000366; CCI-002235\"\n}",
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "gtitle": "SRG-OS-000324-GPOS-00125",
+            "rid": "SV-257786r943026_rule",
+            "gid": "V-257786",
+            "stig_id": "RHEL-09-211055",
+            "cci": [
+              "CCI-000366",
+              "CCI-002235"
+            ],
+            "nist": [
+              "CM-6 b",
+              "AC-6 (10)"
+            ],
+            "severity": "medium",
+            "weight": "10.0",
+            "STIGRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "RHEL 9 debug-shell systemd service must be disabled.",
+          "id": "V-257786",
+          "desc": "The debug-shell requires no authentication and provides root privileges to anyone who has physical access to the machine. While this feature is disabled by default, masking it adds an additional layer of assurance that it will not be enabled via a dependency in systemd. This also prevents attackers with physical access from trivially bypassing security on the machine through valid troubleshooting configurations and gaining root access when the system is rebooted.\n\nSatisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227",
+          "descriptions": [
+            {
+              "data": "Verify RHEL 9 is configured to mask the debug-shell systemd service with the following command:\n\n$ sudo systemctl status debug-shell.service\n\ndebug-shell.service\nLoaded: masked (Reason: Unit debug-shell.service is masked.)\nActive: inactive (dead)\n\nIf the \"debug-shell.service\" is loaded and not masked, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Configure RHEL 9 to mask the debug-shell systemd service with the following command:\n\n$ sudo systemctl disable --now debug-shell.service\n$ sudo systemctl mask --now debug-shell.service",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.5,
+          "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-257786\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000324-GPOS-00125\",\n  \"ruleId\": \"SV-257786r943026_rule\",\n  \"ruleVer\": \"RHEL-09-211055\",\n  \"ruleTitle\": \"RHEL 9 debug-shell systemd service must be disabled.\",\n  \"vulnDiscuss\": \"The debug-shell requires no authentication and provides root privileges to anyone who has physical access to the machine. While this feature is disabled by default, masking it adds an additional layer of assurance that it will not be enabled via a dependency in systemd. This also prevents attackers with physical access from trivially bypassing security on the machine through valid troubleshooting configurations and gaining root access when the system is rebooted.\\n\\nSatisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify RHEL 9 is configured to mask the debug-shell systemd service with the following command:\\n\\n$ sudo systemctl status debug-shell.service\\n\\ndebug-shell.service\\nLoaded: masked (Reason: Unit debug-shell.service is masked.)\\nActive: inactive (dead)\\n\\nIf the \\\"debug-shell.service\\\" is loaded and not masked, this is a finding.\",\n  \"fixText\": \"Configure RHEL 9 to mask the debug-shell systemd service with the following command:\\n\\n$ sudo systemctl disable --now debug-shell.service\\n$ sudo systemctl mask --now debug-shell.service\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024\",\n  \"targetKey\": \"5551\",\n  \"stigUuid\": \"4f55ab46-138a-4554-952f-4bf8523b04ec\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000366; CCI-002235\"\n}",
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "gtitle": "SRG-OS-000080-GPOS-00048",
+            "rid": "SV-257787r925348_rule",
+            "gid": "V-257787",
+            "stig_id": "RHEL-09-212010",
+            "cci": [
+              "CCI-000213"
+            ],
+            "nist": [
+              "AC-3"
+            ],
+            "severity": "medium",
+            "weight": "10.0",
+            "STIGRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "RHEL 9 must require a boot loader superuser password.",
+          "id": "V-257787",
+          "desc": "To mitigate the risk of unauthorized access to sensitive information by entities that have been issued certificates by DOD-approved PKIs, all DOD systems (e.g., web servers and web portals) must be properly configured to incorporate access control methods that do not rely solely on the possession of a certificate for access. Successful authentication must not automatically give an entity access to an asset or security boundary. Authorization procedures and controls must be implemented to ensure each authenticated entity also has a validated and current authorization. Authorization is the process of determining whether an entity, once authenticated, is permitted to access a specific asset. Information systems use access control policies and enforcement mechanisms to implement this requirement.\n\nPassword protection on the boot loader configuration ensures users with physical access cannot trivially alter important bootloader settings. These include which kernel to use, and whether to enter single-user mode.",
+          "descriptions": [
+            {
+              "data": "Verify the boot loader superuser password has been set and run the following command:\n\n$ sudo grep \"superusers\" /etc/grub2.cfg \n\npassword_pbkdf2  superusers-account   ${GRUB2_PASSWORD}  \n\nTo verify the boot loader superuser account password has been set, and the password encrypted, run the following command:\n\n$ sudo cat /boot/grub2/user.cfg \n\nGRUB2_PASSWORD=grub.pbkdf2.sha512.10000.C4E08AC72FBFF7E837FD267BFAD7AEB3D42DDC\n2C99F2A94DD5E2E75C2DC331B719FE55D9411745F82D1B6CFD9E927D61925F9BBDD1CFAA0080E0\n916F7AB46E0D.1302284FCCC52CD73BA3671C6C12C26FF50BA873293B24EE2A96EE3B57963E6D7\n0C83964B473EC8F93B07FE749AA6710269E904A9B08A6BBACB00A2D242AD828 \n\nIf a \"GRUB2_PASSWORD\" is not set, this is a finding.",
+              "label": "check"
+            },
+            {
+              "data": "Configure RHEL 9 to require a grub bootloader password for the grub superuser account.\n\nGenerate an encrypted grub2 password for the grub superuser account with the following command:\n\n$ sudo grub2-setpassword\nEnter password:\nConfirm password:",
+              "label": "fix"
+            }
+          ],
+          "impact": 0.5,
+          "code": "{\n  \"status\": \"Not Reviewed\",\n  \"findingdetails\": \"\",\n  \"comments\": \"\",\n  \"severityoverride\": \"\",\n  \"severityjustification\": \"\",\n  \"vulnNum\": \"V-257787\",\n  \"severity\": \"medium\",\n  \"groupTitle\": \"SRG-OS-000080-GPOS-00048\",\n  \"ruleId\": \"SV-257787r925348_rule\",\n  \"ruleVer\": \"RHEL-09-212010\",\n  \"ruleTitle\": \"RHEL 9 must require a boot loader superuser password.\",\n  \"vulnDiscuss\": \"To mitigate the risk of unauthorized access to sensitive information by entities that have been issued certificates by DOD-approved PKIs, all DOD systems (e.g., web servers and web portals) must be properly configured to incorporate access control methods that do not rely solely on the possession of a certificate for access. Successful authentication must not automatically give an entity access to an asset or security boundary. Authorization procedures and controls must be implemented to ensure each authenticated entity also has a validated and current authorization. Authorization is the process of determining whether an entity, once authenticated, is permitted to access a specific asset. Information systems use access control policies and enforcement mechanisms to implement this requirement.\\n\\nPassword protection on the boot loader configuration ensures users with physical access cannot trivially alter important bootloader settings. These include which kernel to use, and whether to enter single-user mode.\",\n  \"iaControls\": \"\",\n  \"checkContent\": \"Verify the boot loader superuser password has been set and run the following command:\\n\\n$ sudo grep \\\"superusers\\\" /etc/grub2.cfg \\n\\npassword_pbkdf2  superusers-account   ${GRUB2_PASSWORD}  \\n\\nTo verify the boot loader superuser account password has been set, and the password encrypted, run the following command:\\n\\n$ sudo cat /boot/grub2/user.cfg \\n\\nGRUB2_PASSWORD=grub.pbkdf2.sha512.10000.C4E08AC72FBFF7E837FD267BFAD7AEB3D42DDC\\n2C99F2A94DD5E2E75C2DC331B719FE55D9411745F82D1B6CFD9E927D61925F9BBDD1CFAA0080E0\\n916F7AB46E0D.1302284FCCC52CD73BA3671C6C12C26FF50BA873293B24EE2A96EE3B57963E6D7\\n0C83964B473EC8F93B07FE749AA6710269E904A9B08A6BBACB00A2D242AD828 \\n\\nIf a \\\"GRUB2_PASSWORD\\\" is not set, this is a finding.\",\n  \"fixText\": \"Configure RHEL 9 to require a grub bootloader password for the grub superuser account.\\n\\nGenerate an encrypted grub2 password for the grub superuser account with the following command:\\n\\n$ sudo grub2-setpassword\\nEnter password:\\nConfirm password:\",\n  \"falsePositives\": \"\",\n  \"falseNegatives\": \"\",\n  \"documentable\": \"false\",\n  \"mitigations\": \"\",\n  \"potentialImpact\": \"\",\n  \"thirdPartyTools\": \"\",\n  \"mitigationControl\": \"\",\n  \"responsibility\": \"\",\n  \"securityOverrideGuidance\": \"\",\n  \"checkContentRef\": \"M\",\n  \"weight\": \"10.0\",\n  \"class\": \"Unclass\",\n  \"stigRef\": \"Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024\",\n  \"targetKey\": \"5551\",\n  \"stigUuid\": \"4f55ab46-138a-4554-952f-4bf8523b04ec\",\n  \"legacyId\": \"; \",\n  \"cciRef\": \"CCI-000213\"\n}",
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "",
+              "start_time": ""
+            }
+          ]
         }
       ],
-      "sha256": "d1031b0668c47e35a3840ba84bf9d89f1522c3dcd3a8ab27da031f1abbccb922"
+      "sha256": "cd0150021884813f964483b2e543dd6458e106d0c6fa125852991525a9c1e0f8"
     }
   ],
   "passthrough": {
@@ -292,6 +626,278 @@
               "stigUuid": "",
               "legacyId": "; ",
               "cciRef": "CCI-000048; CCI-001384; CCI-001385; CCI-001386; CCI-001387; CCI-001388"
+            },
+            {
+              "status": "Failed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-257780",
+              "severity": "medium",
+              "groupTitle": "SRG-OS-000191-GPOS-00080",
+              "ruleId": "SV-257780r939261_rule",
+              "ruleVer": "RHEL-09-211025",
+              "ruleTitle": "RHEL 9 must implement the Endpoint Security for Linux Threat Prevention tool.",
+              "vulnDiscuss": "Without the use of automated mechanisms to scan for security flaws on a continuous and/or periodic basis, the operating system or other system components may remain vulnerable to the exploits presented by undetected software flaws.\n\nTo support this requirement, the operating system may have an integrated solution incorporating continuous scanning using ESS and periodic scanning using other tools, as specified in the requirement.",
+              "iaControls": "",
+              "checkContent": "Verify that RHEL 9 has implemented the Endpoint Security for Linux Threat Prevention tool.\n\nCheck that the following package has been installed:\n\n$ sudo rpm -qa | grep -i mcafeetp\n\nIf the \"mcafeetp\" package is not installed, this is a finding.\n\nVerify that the daemon is running:\n\n$ sudo ps -ef | grep -i mfetpd\n\nIf the daemon is not running, this is a finding.",
+              "fixText": "Install and enable the latest McAfee ENSLTP package.",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024",
+              "targetKey": "5551",
+              "stigUuid": "4f55ab46-138a-4554-952f-4bf8523b04ec",
+              "legacyId": "; ",
+              "cciRef": "CCI-001233"
+            },
+            {
+              "status": "Failed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-257781",
+              "severity": "medium",
+              "groupTitle": "SRG-OS-000480-GPOS-00227",
+              "ruleId": "SV-257781r925330_rule",
+              "ruleVer": "RHEL-09-211030",
+              "ruleTitle": "The graphical display manager must not be the default target on RHEL 9 unless approved.",
+              "vulnDiscuss": "Unnecessary service packages must not be installed to decrease the attack surface of the system. Graphical display managers have a long history of security vulnerabilities and must not be used, unless approved and documented.",
+              "iaControls": "",
+              "checkContent": "Verify that RHEL 9 is configured to boot to the command line:\n\n$ systemctl get-default\n\nmulti-user.target\n\nIf the system default target is not set to \"multi-user.target\" and the information system security officer (ISSO) lacks a documented requirement for a graphical user interface, this is a finding.",
+              "fixText": "Document the requirement for a graphical user interface with the ISSO or set the default target to multi-user with the following command:\n\n$ sudo systemctl set-default multi-user.target",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024",
+              "targetKey": "5551",
+              "stigUuid": "4f55ab46-138a-4554-952f-4bf8523b04ec",
+              "legacyId": "; ",
+              "cciRef": "CCI-000366"
+            },
+            {
+              "status": "Passed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-257782",
+              "severity": "low",
+              "groupTitle": "SRG-OS-000480-GPOS-00227",
+              "ruleId": "SV-257782r942961_rule",
+              "ruleVer": "RHEL-09-211035",
+              "ruleTitle": "RHEL 9 must enable the hardware random number generator entropy gatherer service.",
+              "vulnDiscuss": "The most important characteristic of a random number generator is its randomness, namely its ability to deliver random numbers that are impossible to predict. Entropy in computer security is associated with the unpredictability of a source of randomness. The random source with high entropy tends to achieve a uniform distribution of random values. Random number generators are one of the most important building blocks of cryptosystems.  \n\nThe rngd service feeds random data from hardware device to kernel random device. Quality (nonpredictable) random number generation is important for several security functions (i.e., ciphers).",
+              "iaControls": "",
+              "checkContent": "Note: For RHEL 9 systems running with kernel FIPS mode enabled as specified by RHEL-09-671010, this requirement is Not Applicable.\n\nVerify that RHEL 9 has enabled the hardware random number generator entropy gatherer service with the following command:\n\n$ systemctl is-active rngd\n\nactive\n\nIf the \"rngd\" service is not active, this is a finding.",
+              "fixText": "Install the rng-tools package with the following command:\n\n$ sudo dnf install rng-tools\n\nThen enable the rngd service run the following command:\n\n$ sudo systemctl enable --now rngd",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024",
+              "targetKey": "5551",
+              "stigUuid": "4f55ab46-138a-4554-952f-4bf8523b04ec",
+              "legacyId": "; ",
+              "cciRef": "CCI-000366"
+            },
+            {
+              "status": "Passed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-257783",
+              "severity": "medium",
+              "groupTitle": "SRG-OS-000269-GPOS-00103",
+              "ruleId": "SV-257783r925336_rule",
+              "ruleVer": "RHEL-09-211040",
+              "ruleTitle": "RHEL 9 systemd-journald service must be enabled.",
+              "vulnDiscuss": "In the event of a system failure, RHEL 9 must preserve any information necessary to determine cause of failure and any information necessary to return to operations with least disruption to system processes.",
+              "iaControls": "",
+              "checkContent": "Verify that \"systemd-journald\" is active with the following command:\n\n$ systemctl is-active systemd-journald\n\nactive\n\nIf the systemd-journald service is not active, this is a finding.",
+              "fixText": "To enable the systemd-journald service, run the following command:\n\n$ sudo systemctl enable --now systemd-journald",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024",
+              "targetKey": "5551",
+              "stigUuid": "4f55ab46-138a-4554-952f-4bf8523b04ec",
+              "legacyId": "; ",
+              "cciRef": "CCI-001665"
+            },
+            {
+              "status": "Not Reviewed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-257784",
+              "severity": "high",
+              "groupTitle": "SRG-OS-000324-GPOS-00125",
+              "ruleId": "SV-257784r925339_rule",
+              "ruleVer": "RHEL-09-211045",
+              "ruleTitle": "The systemd Ctrl-Alt-Delete burst key sequence in RHEL 9 must be disabled.",
+              "vulnDiscuss": "A locally logged-on user who presses Ctrl-Alt-Delete when at the console can reboot the system. If accidentally pressed, as could happen in the case of a mixed OS environment, this can create the risk of short-term loss of availability of systems due to unintentional reboot. In a graphical user environment, risk of unintentional reboot from the Ctrl-Alt-Delete sequence is reduced because the user will be prompted before any action is taken.\n\nSatisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227",
+              "iaControls": "",
+              "checkContent": "Verify RHEL 9 is configured to not reboot the system when Ctrl-Alt-Delete is pressed seven times within two seconds with the following command:\n\n$ grep -i ctrl /etc/systemd/system.conf\n\nCtrlAltDelBurstAction=none\n\nIf the \"CtrlAltDelBurstAction\" is not set to \"none\", commented out, or is missing, this is a finding.",
+              "fixText": "Configure the system to disable the CtrlAltDelBurstAction by added or modifying the following line in the \"/etc/systemd/system.conf\" configuration file:\n\nCtrlAltDelBurstAction=none\n\nReload the daemon for this change to take effect.\n\n$ sudo systemctl daemon-reload",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024",
+              "targetKey": "5551",
+              "stigUuid": "4f55ab46-138a-4554-952f-4bf8523b04ec",
+              "legacyId": "; ",
+              "cciRef": "CCI-000366; CCI-002235"
+            },
+            {
+              "status": "Not Reviewed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-257785",
+              "severity": "high",
+              "groupTitle": "SRG-OS-000324-GPOS-00125",
+              "ruleId": "SV-257785r925342_rule",
+              "ruleVer": "RHEL-09-211050",
+              "ruleTitle": "The x86 Ctrl-Alt-Delete key sequence must be disabled on RHEL 9.",
+              "vulnDiscuss": "A locally logged-on user who presses Ctrl-Alt-Delete when at the console can reboot the system. If accidentally pressed, as could happen in the case of a mixed OS environment, this can create the risk of short-term loss of availability of systems due to unintentional reboot. In a graphical user environment, risk of unintentional reboot from the Ctrl-Alt-Delete sequence is reduced because the user will be prompted before any action is taken.\n\nSatisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227",
+              "iaControls": "",
+              "checkContent": "Verify RHEL 9 is not configured to reboot the system when Ctrl-Alt-Delete is pressed with the following command:\n\n$ sudo systemctl status ctrl-alt-del.target\n\nctrl-alt-del.target\nLoaded: masked (Reason: Unit ctrl-alt-del.target is masked.)\nActive: inactive (dead)\n\nIf the \"ctrl-alt-del.target\" is loaded and not masked, this is a finding.",
+              "fixText": "Configure RHEL 9 to disable the ctrl-alt-del.target with the following command:\n\n$ sudo systemctl disable --now ctrl-alt-del.target\n$ sudo systemctl mask --now ctrl-alt-del.target",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024",
+              "targetKey": "5551",
+              "stigUuid": "4f55ab46-138a-4554-952f-4bf8523b04ec",
+              "legacyId": "; ",
+              "cciRef": "CCI-000366; CCI-002235"
+            },
+            {
+              "status": "Not Reviewed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-257786",
+              "severity": "medium",
+              "groupTitle": "SRG-OS-000324-GPOS-00125",
+              "ruleId": "SV-257786r943026_rule",
+              "ruleVer": "RHEL-09-211055",
+              "ruleTitle": "RHEL 9 debug-shell systemd service must be disabled.",
+              "vulnDiscuss": "The debug-shell requires no authentication and provides root privileges to anyone who has physical access to the machine. While this feature is disabled by default, masking it adds an additional layer of assurance that it will not be enabled via a dependency in systemd. This also prevents attackers with physical access from trivially bypassing security on the machine through valid troubleshooting configurations and gaining root access when the system is rebooted.\n\nSatisfies: SRG-OS-000324-GPOS-00125, SRG-OS-000480-GPOS-00227",
+              "iaControls": "",
+              "checkContent": "Verify RHEL 9 is configured to mask the debug-shell systemd service with the following command:\n\n$ sudo systemctl status debug-shell.service\n\ndebug-shell.service\nLoaded: masked (Reason: Unit debug-shell.service is masked.)\nActive: inactive (dead)\n\nIf the \"debug-shell.service\" is loaded and not masked, this is a finding.",
+              "fixText": "Configure RHEL 9 to mask the debug-shell systemd service with the following command:\n\n$ sudo systemctl disable --now debug-shell.service\n$ sudo systemctl mask --now debug-shell.service",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024",
+              "targetKey": "5551",
+              "stigUuid": "4f55ab46-138a-4554-952f-4bf8523b04ec",
+              "legacyId": "; ",
+              "cciRef": "CCI-000366; CCI-002235"
+            },
+            {
+              "status": "Not Reviewed",
+              "findingdetails": "",
+              "comments": "",
+              "severityoverride": "",
+              "severityjustification": "",
+              "vulnNum": "V-257787",
+              "severity": "medium",
+              "groupTitle": "SRG-OS-000080-GPOS-00048",
+              "ruleId": "SV-257787r925348_rule",
+              "ruleVer": "RHEL-09-212010",
+              "ruleTitle": "RHEL 9 must require a boot loader superuser password.",
+              "vulnDiscuss": "To mitigate the risk of unauthorized access to sensitive information by entities that have been issued certificates by DOD-approved PKIs, all DOD systems (e.g., web servers and web portals) must be properly configured to incorporate access control methods that do not rely solely on the possession of a certificate for access. Successful authentication must not automatically give an entity access to an asset or security boundary. Authorization procedures and controls must be implemented to ensure each authenticated entity also has a validated and current authorization. Authorization is the process of determining whether an entity, once authenticated, is permitted to access a specific asset. Information systems use access control policies and enforcement mechanisms to implement this requirement.\n\nPassword protection on the boot loader configuration ensures users with physical access cannot trivially alter important bootloader settings. These include which kernel to use, and whether to enter single-user mode.",
+              "iaControls": "",
+              "checkContent": "Verify the boot loader superuser password has been set and run the following command:\n\n$ sudo grep \"superusers\" /etc/grub2.cfg \n\npassword_pbkdf2  superusers-account   ${GRUB2_PASSWORD}  \n\nTo verify the boot loader superuser account password has been set, and the password encrypted, run the following command:\n\n$ sudo cat /boot/grub2/user.cfg \n\nGRUB2_PASSWORD=grub.pbkdf2.sha512.10000.C4E08AC72FBFF7E837FD267BFAD7AEB3D42DDC\n2C99F2A94DD5E2E75C2DC331B719FE55D9411745F82D1B6CFD9E927D61925F9BBDD1CFAA0080E0\n916F7AB46E0D.1302284FCCC52CD73BA3671C6C12C26FF50BA873293B24EE2A96EE3B57963E6D7\n0C83964B473EC8F93B07FE749AA6710269E904A9B08A6BBACB00A2D242AD828 \n\nIf a \"GRUB2_PASSWORD\" is not set, this is a finding.",
+              "fixText": "Configure RHEL 9 to require a grub bootloader password for the grub superuser account.\n\nGenerate an encrypted grub2 password for the grub superuser account with the following command:\n\n$ sudo grub2-setpassword\nEnter password:\nConfirm password:",
+              "falsePositives": "",
+              "falseNegatives": "",
+              "documentable": "false",
+              "mitigations": "",
+              "potentialImpact": "",
+              "thirdPartyTools": "",
+              "mitigationControl": "",
+              "responsibility": "",
+              "securityOverrideGuidance": "",
+              "checkContentRef": "M",
+              "weight": "10.0",
+              "class": "Unclass",
+              "stigRef": "Red Hat Enterprise Linux 9 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 24 Apr 2024",
+              "targetKey": "5551",
+              "stigUuid": "4f55ab46-138a-4554-952f-4bf8523b04ec",
+              "legacyId": "; ",
+              "cciRef": "CCI-000213"
             }
           ]
         }
