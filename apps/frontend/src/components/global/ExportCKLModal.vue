@@ -193,6 +193,7 @@
                       <v-text-field
                         v-model="profile.version"
                         label="Version"
+                        type="number"
                         :placeholder="profile.versionplaceholder"
                         class="pr-2"
                         @keydown="(event) => preventNonNumeric(event)"

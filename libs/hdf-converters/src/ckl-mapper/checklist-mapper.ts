@@ -16,10 +16,10 @@ import {
   ChecklistVuln,
   EmptyChecklistObject,
   updateChecklistWithMetadata,
-  StigMetadata
+  StigMetadata,
+  ChecklistMetadata
 } from './checklist-jsonix-converter';
 import {Checklist, Asset, Techarea, Role, Assettype} from './checklistJsonix';
-import {ChecklistMetadata} from './checklist-jsonix-converter';
 import {jsonixMapping} from './jsonixMapping';
 import {isIP, isFQDN, isMACAddress, isDate} from 'validator';
 import {Result} from '../utils/result';
