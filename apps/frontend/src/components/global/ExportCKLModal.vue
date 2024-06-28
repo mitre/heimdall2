@@ -69,7 +69,6 @@
                       "
                       hint="###.###.###.###"
                       class="pr-2"
-                      @input="$v.files.$each[index].hostip.$touch()"
                     />
                     <v-text-field
                       v-model="file.hostmac"
@@ -197,6 +196,7 @@
                         type="number"
                         :placeholder="profile.versionplaceholder"
                         class="pr-2"
+                        @keydown="(event) => preventNonNumeric(event)"
                       />
                       <v-text-field
                         v-model="profile.releasenumber"
@@ -204,6 +204,7 @@
                         type="number"
                         :placeholder="profile.releasenumberplaceholder"
                         class="pr-2"
+                        @keydown="(event) => preventNonNumeric(event)"
                       />
                       <v-menu
                         ref="profile.showCalendar"
@@ -768,6 +769,19 @@ export default class ExportCKLModal extends Vue {
 
     if (!isInvalid) return {ok: true, value: true};
     return {ok: false, error: errorMessages.join('\n')};
+  }
+
+  preventNonNumeric(event: KeyboardEvent) {
+    const charCode = event.key.charCodeAt(0); // gets ascii code of entered key
+    // prevent these keys from being entered into the number field
+    if (
+      charCode === 43 || // +
+      charCode === 45 || // -
+      charCode === 46 || // .
+      charCode === 69 || // E
+      charCode === 101 // e
+    )
+      event.preventDefault();
   }
 }
 </script>
