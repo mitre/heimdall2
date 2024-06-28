@@ -90,4 +90,27 @@ describe('Datatable', () => {
         .sort()
     );
   });
+
+  it('it can properly filter overridden results', async () => {
+    removeAllFiles();
+    loadSample('Small Profile With Severity Overrides');
+    controlTableWrapper = shallowMount(ControlTable, {
+      vuetify,
+      mocks: {
+        $router
+      },
+      propsData: {
+        filter: {...(wrapper.vm as Vue & {all_filter: Filter}).all_filter, tagFilter: ['severityoverride']}
+      }
+    });
+
+    expect(
+      (
+        controlTableWrapper.vm as Vue & {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          items: Array<any>;
+        }
+      ).items.length
+    ).toBe(3); // the file loaded includes 3 controls with severity override tags
+  });
 });
