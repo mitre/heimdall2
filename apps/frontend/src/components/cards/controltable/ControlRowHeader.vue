@@ -55,11 +55,10 @@
           <span>
             <span>
               Severity has been overridden from
-              {{
-                'severity' in control.data.tags
-                  ? control.data.tags['severity']
-                  : 'UNKNOWN'
-              }}
+              <span v-if="'severity' in control.data.tags">
+                {{ control.data.tags['severity'] }}
+              </span>
+              <span v-else> Unknown </span>
               to {{ control.data.tags['severityoverride'] }}
               <br />
               <span v-if="'severityjustification' in control.data.tags">
