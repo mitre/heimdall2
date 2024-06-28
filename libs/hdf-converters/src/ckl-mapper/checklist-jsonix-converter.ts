@@ -579,7 +579,8 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   severityMap(impact: number, severityTag: string): Severity {
     // test if this control has a valid severity tag
     // and map it to a checklist severity level
-    switch (severityTag) {
+    // note: some mappers can produce non-lowercase severity tags
+    switch (severityTag.toLowerCase()) {
       case 'none':
       // if none, it will be added to Checklist's thirdPartyTools section
       case 'low':
@@ -661,7 +662,9 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     // if the checklist's impact would not be computed correctly on
     // ckl2hdf, include it explicitly in hdfSpecifidData
     let computedImpact: number;
-    switch (computedSeverity) {
+
+    // note: some mappers can produce non-lowercase severity tags
+    switch (computedSeverity.toLowerCase()) {
       case 'none':
         computedImpact = 0.0;
         break;
@@ -680,12 +683,13 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     }
 
     // if the checklist's impact would not be computed correctly
-    // note: if impact is 0, then status N/A would guarantee impact is 0
-    if (computedSeverity) {
-      // make sure there is a severity or severity override tag
-      if (computedImpact != impact && impact != 0.0) {
-        hdfSpecificData['impact'] = control.impact;
-      }
+    // make sure that it is denoted in third party tools
+    if (
+      computedImpact !== undefined &&
+      computedImpact !== impact &&
+      impact !== 0.0
+    ) {
+      hdfSpecificData['impact'] = control.impact;
     }
 
     // if severity or severity override don't fit into low, medium, high
@@ -793,7 +797,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           control.descriptions as ExecJSON.ControlDescription[]
         ),
         findingdetails: this.getFindingDetails(control.results) ?? '',
-        severityjustification: _.get(control.tags, 'severityjustification', ''),
+        severityjustification: _.get(
+          control.tags,
+          'severityjustification',
+          Severityoverride.Empty
+        ),
         severityoverride: _.get(
           control.tags,
           'severityoverride',
