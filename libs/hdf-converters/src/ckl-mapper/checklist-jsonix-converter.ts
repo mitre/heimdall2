@@ -661,10 +661,10 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
     // if the checklist's impact would not be computed correctly on
     // ckl2hdf, include it explicitly in hdfSpecifidData
-    let computedImpact: number;
+    let computedImpact: number | null;
 
     // note: some mappers can produce non-lowercase severity tags
-    switch (computedSeverity.toLowerCase()) {
+    switch (computedSeverity?.toLowerCase()) {
       case 'none':
         computedImpact = 0.0;
         break;
@@ -677,15 +677,17 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       case 'high':
         computedImpact = 0.7;
         break;
-      default: // 'critical'
+      case 'critical':
         computedImpact = 0.9;
         break;
+      default:
+        computedImpact = null;
     }
 
     // if the checklist's impact would not be computed correctly
     // make sure that it is denoted in third party tools
     if (
-      computedImpact !== undefined &&
+      computedImpact !== null &&
       computedImpact !== impact &&
       impact !== 0.0
     ) {
