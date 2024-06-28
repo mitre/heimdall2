@@ -82,7 +82,6 @@
                       "
                       hint="XX:XX:XX:XX:XX:XX"
                       class="pr-2"
-                      @input="$v.files.$each[index].hostmac.$touch()"
                     />
                     <v-text-field
                       v-model="file.hostfqdn"
@@ -92,7 +91,6 @@
                       "
                       hint="[hostname].[domain].[tld]"
                       class="pr-2"
-                      @input="$v.files.$each[index].hostfqdn.$touch()"
                     />
                     <v-text-field
                       v-model="file.targetcomment"
@@ -589,13 +587,17 @@ export default class ExportCKLModal extends Vue {
     return results;
   }
 
+  /**
+   * Checks the input field and generates a formatted error message if necessary
+   *
+   * @param field the validation state of the input field
+   * @param name name of the field that will show up in error message
+   */
   validateFormat(field: typeof ValidationProperties, name: string): string[] {
-    const dirty = _.get(field, '$dirty');
-    const invalid = _.get(field, '$invalid');
-    if (!dirty || !invalid) {
-      return [];
+    if (_.get(field, '$invalid')) {
+      return [`Invalid ${name} Format`];
     }
-    return [`Invalid ${name} Format`];
+    return [];
   }
 
   setProperName(name: string, fileIndex: number, profileIndex: number): string {
