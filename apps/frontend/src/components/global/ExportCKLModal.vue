@@ -193,7 +193,6 @@
                       <v-text-field
                         v-model="profile.version"
                         label="Version"
-                        type="number"
                         :placeholder="profile.versionplaceholder"
                         class="pr-2"
                         @keydown="(event) => preventNonNumeric(event)"
@@ -297,8 +296,7 @@ import {
   Assettype,
   Role,
   Techarea,
-  validateChecklistMetadata,
-  validateProfileMetadata
+  validateChecklistMetadata
 } from '@mitre/hdf-converters';
 import {ExecJSON} from 'inspecjs';
 import {Dependency} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
@@ -328,11 +326,7 @@ type FileData = {
 const isNotSelected: CustomRule = (_, file) => !file.selected;
 function validateField(prop: string): CustomRule {
   return (_, file: ExtendedEvaluationFile) => {
-    let results = validateChecklistMetadata({
-      ...file,
-      targetkey: null,
-      webordatabase: file.webordatabase === 'true'
-    });
+    let results = validateChecklistMetadata(file);
     return results.ok || !results.error.invalid.includes(prop);
   };
 }
@@ -745,30 +739,10 @@ export default class ExportCKLModal extends Vue {
     this.closeModal();
   }
 
-  validateInputMetadata(selected: ChecklistMetadata): Result<true, string> {
-    const result = validateChecklistMetadata({
-      ...selected,
-      targetkey: null,
-      webordatabase: selected.webordatabase === 'true'
-    });
-    let errorMessages = [];
-    let isInvalid = false;
-    if (!result.ok) {
-      errorMessages.push(result.error.message);
-      isInvalid = true;
-    }
-
-    // validate metadata in each profile in this checklist
-    for (const profile of selected.profiles) {
-      const result = validateProfileMetadata(profile);
-      if (!result.ok) {
-        isInvalid = true;
-        errorMessages.push(result.error.message);
-      }
-    }
-
-    if (!isInvalid) return {ok: true, value: true};
-    return {ok: false, error: errorMessages.join('\n')};
+  validateInputMetadata(metadata: ChecklistMetadata): Result<true, string> {
+    const result = validateChecklistMetadata(metadata);
+    if (result.ok) return {ok: true, value: true};
+    return {ok: false, error: result.error.message};
   }
 
   preventNonNumeric(event: KeyboardEvent) {

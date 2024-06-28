@@ -22,7 +22,7 @@ import {
   Vulnattribute
 } from './checklistJsonix';
 import {coerce} from 'semver';
-import {validateProfileMetadata} from './checklist-mapper';
+import {validateChecklistProfileMetadata} from './checklist-mapper';
 
 export type ChecklistObject = {
   asset: ChecklistAsset;
@@ -238,7 +238,7 @@ export function updateChecklistWithMetadata(
 
 function throwIfInvalidProfileMetadata(profileMetadata?: StigMetadata) {
   if (profileMetadata) {
-    const results = validateProfileMetadata(profileMetadata);
+    const results = validateChecklistProfileMetadata(profileMetadata);
     if (!results.ok) {
       throw new Error(results.error.message);
     }

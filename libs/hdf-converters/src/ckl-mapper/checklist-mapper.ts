@@ -19,6 +19,7 @@ import {
   StigMetadata
 } from './checklist-jsonix-converter';
 import {Checklist, Asset, Techarea, Role, Assettype} from './checklistJsonix';
+import {ChecklistMetadata} from './checklist-jsonix-converter';
 import {jsonixMapping} from './jsonixMapping';
 import {isIP, isFQDN, isMACAddress, isDate} from 'validator';
 import {Result} from '../utils/result';
@@ -279,12 +280,12 @@ const profileMetadataSchema: Revalidator.JSONSchema<StigMetadata> = {
     version: {
       type: 'integer',
       minimum: 0,
-      message: 'Version must be a positive integer'
+      message: 'Version must be a non-negative integer'
     },
     releasenumber: {
       type: 'integer',
       minimum: 0,
-      message: 'Release number must be a positive integer'
+      message: 'Release number must be a non-negative integer'
     },
     releasedate: {
       type: 'string',
@@ -295,20 +296,49 @@ const profileMetadataSchema: Revalidator.JSONSchema<StigMetadata> = {
 };
 
 export function validateChecklistMetadata(
-  metadata: Asset
+  metadata: ChecklistMetadata
 ): Result<true, {invalid: string[]; message: string}> {
-  const errors = Revalidator.validate(metadata, checklistMetadataSchema).errors;
+  let invalid: string[] = [];
+  const messages: string[] = [];
+  const assetResult = validateChecklistAssetMetadata({
+    ...metadata,
+    webordatabase: metadata.webdbinstance === 'true',
+    targetkey: null
+  });
+  if (!assetResult.ok) {
+    invalid = invalid.concat(assetResult.error.invalid);
+    messages.push(assetResult.error.message);
+  }
+
+  for (const profile of metadata.profiles) {
+    const profileResult = validateChecklistProfileMetadata(profile);
+    if (!profileResult.ok) {
+      invalid = invalid.concat(profileResult.error.invalid);
+      messages.push(`Profile ${profile.name}: ${profileResult.error.message}`);
+    }
+  }
+
+  if (invalid.length === 0) return {ok: true, value: true};
+
+  const message = messages.join(',');
+  return {ok: false, error: {invalid, message}};
+}
+
+export function validateChecklistAssetMetadata(
+  asset: Asset
+): Result<true, {invalid: string[]; message: string}> {
+  const errors = Revalidator.validate(asset, checklistMetadataSchema).errors;
 
   if (errors.length === 0) return {ok: true, value: true};
   // formats errors as: invalidField (invalidValue), otherInvalidField (otherValue), ...
   const invalidFields = errors.map(
-    (e) => `${e.message} (${_.get(metadata, e.property)})`
+    (e) => `${e.message} (${_.get(asset, e.property)})`
   );
   const message = `Invalid checklist metadata fields: ${invalidFields.join(', ')}`;
   return {ok: false, error: {invalid: errors.map((e) => e.property), message}};
 }
 
-export function validateProfileMetadata(
+export function validateChecklistProfileMetadata(
   metadata: StigMetadata
 ): Result<true, {invalid: string[]; message: string}> {
   const errors = Revalidator.validate(
@@ -356,7 +386,7 @@ function getHdfSpecificDataAttribute(
 }
 
 function throwIfInvalidMetadata(metadata: Asset) {
-  const result = validateChecklistMetadata(metadata);
+  const result = validateChecklistAssetMetadata(metadata);
   if (!result.ok) throw new Error(result.error.message);
 }
 
