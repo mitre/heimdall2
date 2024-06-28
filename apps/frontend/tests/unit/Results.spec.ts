@@ -100,7 +100,10 @@ describe('Datatable', () => {
         $router
       },
       propsData: {
-        filter: {...(wrapper.vm as Vue & {all_filter: Filter}).all_filter, tagFilter: ['severityoverride']}
+        filter: {
+          ...(wrapper.vm as Vue & {all_filter: Filter}).all_filter,
+          tagFilter: ['severityoverride']
+        }
       }
     });
 
