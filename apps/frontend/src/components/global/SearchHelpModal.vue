@@ -36,6 +36,9 @@
           <li class="pb-1">
             <h3>Inputs: <code>input:disable_slow_controls</code></h3>
           </li>
+          <li class="pb-1">
+            <h3>Tags: <code>tags:severityoverride</code></h3>
+          </li>
         </ul>
         <br />
         <h2>Joining Queries</h2>
