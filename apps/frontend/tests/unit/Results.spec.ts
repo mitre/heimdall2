@@ -91,7 +91,7 @@ describe('Datatable', () => {
     );
   });
 
-  it('it can properly filter overridden results', async () => {
+  it('it can properly filter overridden results', () => {
     removeAllFiles();
     loadSample('Small Profile With Severity Overrides');
     controlTableWrapper = shallowMount(ControlTable, {
