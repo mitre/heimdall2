@@ -1,3 +1,35 @@
+v2.10.10
+
+- Revert "Bump tw-elements from 1.1.0 to 2.0.0" @charleshu-8 (#5894)
+
+## Dependency Updates
+
+- Bump tw-elements from 1.1.0 to 2.0.0 @dependabot (#5602)
+- Bump tailwindcss from 3.4.3 to 3.4.4 @dependabot (#5893)
+- Bump @aws-sdk/client-s3 from 3.590.0 to 3.591.0 @dependabot (#5892)
+- Bump @types/node from 20.14.1 to 20.14.2 @dependabot (#5891)
+- Bump prettier from 3.3.0 to 3.3.1 @dependabot (#5890)
+- Bump @nestjs/platform-express from 10.3.8 to 10.3.9 @dependabot (#5878)
+- Bump pg from 8.11.5 to 8.12.0 @dependabot (#5886)
+- Bump cypress from 13.10.0 to 13.11.0 @dependabot (#5885)
+- Bump @aws-sdk/client-s3 from 3.588.0 to 3.590.0 @dependabot (#5888)
+- Bump @aws-sdk/client-config-service from 3.588.0 to 3.590.0 @dependabot (#5884)
+- Bump @nestjs/core from 10.3.8 to 10.3.9 @dependabot (#5876)
+- Bump express-rate-limit from 7.2.0 to 7.3.0 @dependabot (#5882)
+- Bump yaml from 2.4.2 to 2.4.3 @dependabot (#5881)
+- Bump prettier from 3.2.5 to 3.3.0 @dependabot (#5875)
+- Bump tsx from 4.11.0 to 4.11.2 @dependabot (#5877)
+- Bump @types/node from 20.13.0 to 20.14.1 @dependabot (#5873)
+- Bump @nestjs/common from 10.3.8 to 10.3.9 @dependabot (#5880)
+- Bump @nestjs/testing from 10.3.8 to 10.3.9 @dependabot (#5874)
+- Bump @types/node from 20.12.13 to 20.13.0 @dependabot (#5871)
+- Bump @aws-sdk/client-config-service from 3.583.0 to 3.588.0 @dependabot (#5870)
+- Bump @aws-sdk/client-s3 from 3.587.0 to 3.588.0 @dependabot (#5867)
+- Bump @aws-sdk/client-s3 from 3.583.0 to 3.587.0 @dependabot (#5863)
+- Bump @aws-sdk/client-sts from 3.583.0 to 3.587.0 @dependabot (#5862)
+- Bump eslint-plugin-cypress from 3.2.0 to 3.3.0 @dependabot (#5861)
+- Bump @types/node from 20.12.12 to 20.12.13 @dependabot (#5860)
+
 v2.10.9
 
 - Add option to normalize export ckl profile name @georgedias (#5852)
