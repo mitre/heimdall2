@@ -21,7 +21,7 @@ import {
 } from './checklist-jsonix-converter';
 import {Checklist, Asset, Techarea, Role, Assettype} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
-import {isIP, isFQDN, isMACAddress, isDate} from 'validator';
+import {isIP, isFQDN, isMACAddress} from 'validator';
 import {Result} from '../utils/result';
 import * as Revalidator from 'revalidator';
 
@@ -289,7 +289,7 @@ const profileMetadataSchema: Revalidator.JSONSchema<StigMetadata> = {
     },
     releasedate: {
       type: 'string',
-      conform: (date: string) => !date || isDate(date),
+      conform: (date: string) => !date || !Number.isNaN(Date.parse(date)),
       message: 'Release date must be a valid date'
     }
   }
