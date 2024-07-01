@@ -320,7 +320,7 @@ export function validateChecklistMetadata(
 
   if (invalid.length === 0) return {ok: true, value: true};
 
-  const message = messages.join(',');
+  const message = messages.join(', ');
   return {ok: false, error: {invalid, message}};
 }
 
