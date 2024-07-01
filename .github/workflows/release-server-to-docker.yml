@@ -3,6 +3,11 @@ name: Push Heimdall Server to Docker Hub on every release and tag as release-lat
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version'     
+        required: true
 
 jobs:
   docker:
@@ -20,7 +25,7 @@ jobs:
         id: format-tag
         with:
           pattern: 'v'
-          string: '${{ github.event.release.tag_name }}'
+          string: '${{ github.event.release.tag_name || github.event.inputs.version}}'
           replace-with: ''
           flags: 'g'
       - name: Checkout the Heimdall Repository
@@ -36,7 +41,7 @@ jobs:
       - name: Get Docker SHA
         shell: bash
         id: get-docker-sha
-        run: echo "DOCKER_SHA=$(docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} | cut -d '@' -f 2" >> $GITHUB_ENV
+        run: echo "DOCKER_SHA=$(docker pull mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} | cut -d '@' -f 2)" >> $GITHUB_ENV
       - name: Sophos Factory pipeline
         uses: sophos/factory-run-pipeline@v2
         with:
