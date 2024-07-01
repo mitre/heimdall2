@@ -18,9 +18,12 @@ module.exports = {
             exclude: /node_modules/
         },
         {
-            test: /\.(html|css)$/,
-            type: 'asset/source',
-            exclude: /node_modules/,
+            test: /\.html$/i,
+            loader: "html-loader",
+        },
+        {
+            test: /\.css$/i,
+            type: 'asset/resource'            
         }
       ],
     },

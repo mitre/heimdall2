@@ -26,8 +26,9 @@ import {
 } from './html-types';
 import path from 'path';
 import axios from 'axios';
-import myHtml from './template.html';
-import myCss from './style.css';
+//import myHtml from './template.html';
+const myHtml = require('./template.html')
+//import myCss from './style.css';
 
 type InputData = {
   data: ContextualizedEvaluation | string;
@@ -573,6 +574,6 @@ export class FromHDFToHTMLMapper {
 
     // Render template and return generated HTML file
     //return Mustache.render(template, this.outputData);
-    return myHtml + myCss + " this came from here";
+    return myHtml + " this came from here";
   }
 }
