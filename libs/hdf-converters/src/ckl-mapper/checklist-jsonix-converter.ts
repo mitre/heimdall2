@@ -654,10 +654,18 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     const hdfSpecificData: Record<string, unknown> = {};
 
     const impact = control.impact;
-    const severity = _.get(control.tags, 'severity');
-    const severityOverride = _.get(control.tags, 'severityOverride');
-    let computedSeverity = severity;
-    if (severityOverride) computedSeverity = severityOverride;
+    const severityTag = _.get(control.tags, 'severity', null);
+    const severityOverrideTag = _.get(control.tags, 'severityOverride', null);
+    let computedSeverity = severityTag;
+    if (severityOverrideTag) computedSeverity = severityOverrideTag;
+
+    // if severity or severity override don't fit into low, medium, high
+    // denote them in the control specific data
+    if (severityTag === 'none' || severityTag === 'critical')
+      hdfSpecificData['severity'] = severityTag;
+
+    if (severityOverrideTag === 'none' || severityOverrideTag === 'critical')
+      hdfSpecificData['severityOverride'] = severityOverrideTag;
 
     // if the checklist's impact would not be computed correctly on
     // ckl2hdf, include it explicitly in hdfSpecifidData
@@ -684,22 +692,25 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         computedImpact = null;
     }
 
-    // if the checklist's impact would not be computed correctly
-    // make sure that it is denoted in third party tools
+    // if impact does not align with what would be computed from the checklist
+    // stored it in the hdfSpecificData
+    // also, if it needs to be represented with none or critical, it has
+    // to be stored in the hdfSpecificData
     if (
-      computedImpact !== null &&
-      computedImpact !== impact &&
+      ((computedImpact !== null && computedImpact !== impact) ||
+        impact < 0.1 ||
+        impact >= 0.9) &&
       impact !== 0.0
     ) {
       hdfSpecificData['impact'] = control.impact;
+      // if there is no severity tag, severity is aligned to impact
+      // this must be represented in hdfSpecificData when impact
+      // maps to severity none or critical
+      if (severityTag === null) {
+        if (impact < 0.1) hdfSpecificData['severity'] = 'none';
+        else if (impact >= 0.9) hdfSpecificData['severity'] = 'critical';
+      }
     }
-
-    // if severity or severity override don't fit into low, medium, high
-    // denote them in the control specific data
-    if (severity === 'none' || severity === 'critical')
-      hdfSpecificData['severity'] = severity;
-    if (severityOverride === 'none' || severity === 'critical')
-      hdfSpecificData['severityOverride'] = severityOverride;
 
     if (control.code?.startsWith('control')) {
       hdfSpecificData['code'] = control.code;

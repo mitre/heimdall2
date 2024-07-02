@@ -149,8 +149,8 @@ command:
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
 					<ATTRIBUTE_DATA>{
   "hdfSpecificData": {
-    "impact": 0.3,
-    "severity": "critical"
+    "severity": "critical",
+    "impact": 0.3
   }
 }</ATTRIBUTE_DATA>
 				</STIG_DATA>
@@ -351,7 +351,7 @@ command:
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Severity</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA>medium</ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>high</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Group_Title</VULN_ATTRIBUTE>
@@ -409,7 +409,12 @@ graphical user logon.</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "impact": 0.95,
+    "severity": "critical"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -528,8 +533,8 @@ via a graphical user logon.</ATTRIBUTE_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
 					<ATTRIBUTE_DATA>{
   "hdfSpecificData": {
-    "impact": 0.5,
-    "severity": "none"
+    "severity": "none",
+    "impact": 0.5
   }
 }</ATTRIBUTE_DATA>
 				</STIG_DATA>
