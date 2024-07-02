@@ -665,12 +665,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     if (severityOverrideTag === 'none' || severityOverrideTag === 'critical')
       hdfSpecificData['severityOverride'] = severityOverrideTag;
 
-
     // if impact does not align with what would be computed from the checklist
     // store it in the hdfSpecificData
     // also, if it needs to be represented with none or critical, it has
     // to be stored in the hdfSpecificData
-    let computedImpact = this.computeImpact(severityTag, severityOverrideTag);
+    const computedImpact = this.computeImpact(severityTag, severityOverrideTag);
     if (
       ((computedImpact !== null && computedImpact !== impact) ||
         impact < 0.1 ||
@@ -700,7 +699,10 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   }
 
   // computes what the impact would be based on the given tags
-  computeImpact(severityTag: string, severityOverrideTag: string): number | null {
+  computeImpact(
+    severityTag: string,
+    severityOverrideTag: string
+  ): number | null {
     let computedSeverity = severityTag;
     if (severityOverrideTag) computedSeverity = severityOverrideTag;
 
@@ -715,7 +717,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       case 'high':
         return 0.7;
       case 'critical':
-        return 9.9
+        return 9.9;
       default:
         return null;
     }
