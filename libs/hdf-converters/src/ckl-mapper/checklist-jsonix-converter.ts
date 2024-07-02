@@ -11,7 +11,7 @@ import {
   LocalPartEnum,
   Name,
   Role,
-  Severityoverride,
+  Severity,
   Sidata,
   Sidname,
   Status,
@@ -29,7 +29,7 @@ export type ChecklistObject = {
   jsonixData?: Checklist;
 };
 
-type ChecklistAsset = Asset;
+export type ChecklistAsset = Asset;
 
 type ChecklistStig = {
   header: StigHeader;
@@ -86,18 +86,11 @@ export type ChecklistVuln = Omit<Vuln, 'stigdata' | 'status'> & {
 };
 
 // Status mapping for going to and from checklist
-enum StatusMapping {
+export enum StatusMapping {
   NotAFinding = 'Passed',
   Open = 'Failed',
   Not_Applicable = 'Not Applicable',
   Not_Reviewed = 'Not Reviewed'
-}
-
-export enum Severity {
-  Empty = '',
-  High = 'high',
-  Low = 'low',
-  Medium = 'medium'
 }
 
 export type ChecklistMetadata = {
@@ -186,7 +179,7 @@ export const EmptyChecklistObject: ChecklistObject = {
           comments: null,
           findingdetails: null,
           severityjustification: null,
-          severityoverride: Severityoverride.Empty
+          severityoverride: Severity.Empty
         }
       ]
     }
@@ -735,7 +728,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         ),
         findingdetails: this.getFindingDetails(control.results) ?? '',
         severityjustification: '',
-        severityoverride: Severityoverride.Empty
+        severityoverride: Severity.Empty
       };
       vulns.push(vuln);
     }
