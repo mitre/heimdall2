@@ -10,10 +10,10 @@ import axios from 'axios';
 import Vue from 'vue';
 import {
   Action,
-  getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
+  getModule
 } from 'vuex-module-decorators';
 import {GroupsModule} from './groups';
 

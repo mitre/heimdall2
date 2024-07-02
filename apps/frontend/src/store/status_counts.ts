@@ -11,7 +11,7 @@ import {
 import Store from '@/store/store';
 import {ControlStatus} from 'inspecjs';
 import {LRUCache} from 'lru-cache';
-import {getModule, Module, VuexModule} from 'vuex-module-decorators';
+import {Module, VuexModule, getModule} from 'vuex-module-decorators';
 
 // The hash that we will generally be working with herein
 export type ControlStatusHash = {

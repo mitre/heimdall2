@@ -1,7 +1,7 @@
 export {
+  ExecJSONMINControl as Control,
   Convert,
   ExecJsonmin as Execution,
-  ExecJSONMINControl as Control,
   StatisticBlock,
   StatisticHash,
   Statistics

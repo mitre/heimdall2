@@ -11,10 +11,10 @@ import axios from 'axios';
 import * as _ from 'lodash';
 import {
   Action,
-  getModule,
   Module,
   Mutation,
-  VuexModule
+  VuexModule,
+  getModule
 } from 'vuex-module-decorators';
 import {InspecDataModule} from './data_store';
 import {

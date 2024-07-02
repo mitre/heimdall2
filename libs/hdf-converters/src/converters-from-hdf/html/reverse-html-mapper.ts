@@ -11,8 +11,8 @@ import axios from 'axios';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
-  convertFileContextual,
   HDFControlSegment,
+  convertFileContextual,
   isContextualizedEvaluation
 } from 'inspecjs';
 import * as _ from 'lodash';
