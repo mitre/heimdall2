@@ -14,15 +14,15 @@
       </v-card>
     </v-col>
 
-    <v-col class="pa-0" :cols="1">
-      <v-card tile flat class="fill-height">
-        <slot name="severity" />
-      </v-card>
-    </v-col>
-
     <v-col class="pa-0" :cols="3">
       <v-card tile flat class="fill-height">
         <slot name="title" />
+      </v-card>
+    </v-col>
+
+    <v-col class="pa-0" :cols="1">
+      <v-card tile flat class="fill-height">
+        <slot name="severity" />
       </v-card>
     </v-col>
 

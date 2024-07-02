@@ -576,7 +576,24 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     }
   }
 
-  severityMap(impact: number): Severity {
+  severityMap(impact: number, severityTag: string): Severity {
+    // test if this control has a valid severity tag
+    // and map it to a checklist severity level
+    // note: some mappers can produce non-lowercase severity tags
+    switch (severityTag.toLowerCase()) {
+      case 'none':
+      // if none, it will be added to Checklist's thirdPartyTools section
+      case 'low':
+        return Severity.Low;
+      case 'medium':
+        return Severity.Medium;
+      case 'high':
+      case 'critical':
+        // if critical, it will be added to Checklist's thirdPartyTools section
+        return Severity.High;
+    }
+
+    // if no valid severity tag, compute severity based on impact
     if (impact < 0.4) {
       return Severity.Low;
     } else if (impact < 0.7) {
@@ -635,10 +652,55 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   addHdfControlSpecificData(control: ExecJSON.Control): string {
     const hdfSpecificData: Record<string, unknown> = {};
-    const checklistImpactNumbers = [0.7, 0.5, 0.3, 0];
-    if (!checklistImpactNumbers.includes(control.impact)) {
+
+    const impact = control.impact;
+    const severity = _.get(control.tags, 'severity');
+    const severityOverride = _.get(control.tags, 'severityOverride');
+    let computedSeverity = severity;
+    if (severityOverride) computedSeverity = severityOverride;
+
+    // if the checklist's impact would not be computed correctly on
+    // ckl2hdf, include it explicitly in hdfSpecifidData
+    let computedImpact: number | null;
+
+    // note: some mappers can produce non-lowercase severity tags
+    switch (computedSeverity?.toLowerCase()) {
+      case 'none':
+        computedImpact = 0.0;
+        break;
+      case 'low':
+        computedImpact = 0.3;
+        break;
+      case 'medium':
+        computedImpact = 0.5;
+        break;
+      case 'high':
+        computedImpact = 0.7;
+        break;
+      case 'critical':
+        computedImpact = 0.9;
+        break;
+      default:
+        computedImpact = null;
+    }
+
+    // if the checklist's impact would not be computed correctly
+    // make sure that it is denoted in third party tools
+    if (
+      computedImpact !== null &&
+      computedImpact !== impact &&
+      impact !== 0.0
+    ) {
       hdfSpecificData['impact'] = control.impact;
     }
+
+    // if severity or severity override don't fit into low, medium, high
+    // denote them in the control specific data
+    if (severity === 'none' || severity === 'critical')
+      hdfSpecificData['severity'] = severity;
+    if (severityOverride === 'none' || severity === 'critical')
+      hdfSpecificData['severityOverride'] = severityOverride;
+
     if (control.code?.startsWith('control')) {
       hdfSpecificData['code'] = control.code;
     }
@@ -686,7 +748,10 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           metadata?.vulidmapping === 'gid'
             ? _.get(control.tags, 'gid', defaultId)
             : defaultId,
-        severity: this.severityMap(control.impact),
+        severity: this.severityMap(
+          control.impact,
+          _.get(control.tags, 'severity', Severity.Empty)
+        ),
         groupTitle: _.get(control.tags, 'gtitle', defaultId),
         ruleId: _.get(control.tags, 'rid', defaultId),
         ruleVer: _.get(control.tags, 'stig_id', defaultId),
@@ -734,8 +799,16 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           control.descriptions as ExecJSON.ControlDescription[]
         ),
         findingdetails: this.getFindingDetails(control.results) ?? '',
-        severityjustification: '',
-        severityoverride: Severityoverride.Empty
+        severityjustification: _.get(
+          control.tags,
+          'severityjustification',
+          Severityoverride.Empty
+        ),
+        severityoverride: _.get(
+          control.tags,
+          'severityoverride',
+          Severityoverride.Empty
+        )
       };
       vulns.push(vuln);
     }

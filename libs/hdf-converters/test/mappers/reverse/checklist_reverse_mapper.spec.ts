@@ -117,3 +117,33 @@ describe('Small RHEL8 HDF file', () => {
     );
   });
 });
+
+describe('Small RHEL 7 with severity and severity override tags', () => {
+  it('can be successfully converted from HDF to Checklist', () => {
+    const mapper = new ChecklistResults(
+      JSON.parse(
+        fs.readFileSync(
+          'sample_jsons/checklist_mapper/sample_input_report/RHEL7_overrides_hdf.json',
+          {
+            encoding: 'utf-8'
+          }
+        )
+      )
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/converted-rhel7_overrides.ckl',
+    //   mapper.toCkl()
+    // );
+
+    const expected = fs.readFileSync(
+      'sample_jsons/checklist_mapper/converted-rhel7_overrides.ckl',
+      'utf-8'
+    );
+    const converted = mapper.toCkl();
+
+    expect(converted).toEqual(
+      expected.replace(/2\.10\.8/gi, hdfConvertersVersion)
+    );
+  });
+});

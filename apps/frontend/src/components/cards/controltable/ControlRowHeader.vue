@@ -41,23 +41,36 @@
 
     <template #severity>
       <v-card-text class="pa-2">
-        <div v-if="showImpact">
-          <CircleRating
-            :filled-count="severity_arrow_count(control.hdf.severity)"
-            :total-count="4"
-          />
-          <v-divider class="mx-1" />
+        <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
+          <template #activator="{on}">
+            <span v-on="on">
+              <v-chip active-class="NONE" outlined :color="severity_color">
+                <v-icon size="16" class="mr-1" data-cy="severityOverride"
+                  >mdi-delta</v-icon
+                >
+                {{ (control.hdf.severity || 'none').toUpperCase() }}
+              </v-chip>
+            </span>
+          </template>
+          <span>
+            <span>
+              Severity has been overridden from
+              <span v-if="'severity' in control.data.tags">
+                {{ control.data.tags['severity'] }}
+              </span>
+              <span v-else> Unknown </span>
+              to {{ control.data.tags['severityoverride'] }}
+              <br />
+              <span v-if="'severityjustification' in control.data.tags">
+                Justification: {{ control.data.tags['severityjustification'] }}
+              </span>
+              <span v-else> No justification provided </span>
+            </span>
+          </span>
+        </v-tooltip>
+        <v-chip v-else active-class="NONE" outlined :color="severity_color">
           {{ (control.hdf.severity || 'none').toUpperCase() }}
-        </div>
-        <div v-else>
-          <CircleRating
-            :filled-count="severity_arrow_count(control.data.tags.severity)"
-            :total-count="4"
-          />
-          <br />
-          <v-divider class="mx-1" />
-          {{ (control.data.tags.severity || 'none').toUpperCase() }}
-        </div>
+        </v-chip>
       </v-card-text>
     </template>
 
@@ -133,7 +146,6 @@
 
 <script lang="ts">
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
-import CircleRating from '@/components/generic/CircleRating.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
 import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {getControlRunTime} from '@/utilities/delta_util';
@@ -151,8 +163,7 @@ interface Tag {
 
 @Component({
   components: {
-    ResponsiveRowSwitch,
-    CircleRating
+    ResponsiveRowSwitch
   }
 })
 export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
@@ -163,7 +174,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   readonly viewedControls!: string[];
 
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
-  @Prop({type: Boolean, default: false}) readonly showImpact!: boolean;
 
   get runTime(): string {
     return `${_.truncate(getControlRunTime(this.control).toString(), {
@@ -189,6 +199,10 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
   }
 
+  get severity_color(): string {
+    return `severity${_.startCase(this.control.hdf.severity)}`;
+  }
+
   get wasViewed(): boolean {
     return this.viewedControls.indexOf(this.control.data.id) !== -1;
   }
@@ -203,21 +217,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         extension.data.code !== this.control.data.code &&
         extension.data.code !== ''
     );
-  }
-
-  severity_arrow_count(severity: string): number {
-    switch (severity) {
-      case 'low':
-        return 1;
-      case 'medium':
-        return 2;
-      case 'high':
-        return 3;
-      case 'critical':
-        return 4;
-      default:
-        return 0;
-    }
   }
 
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml

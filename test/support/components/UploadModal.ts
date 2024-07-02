@@ -14,6 +14,7 @@ export default class UploadModal {
   }
 
   loadFile(domElement: string, name: string): void {
+    cy.get('[data-cy=fileSearchField]').type(name);
     cy.get(`#${domElement}`).within(() => {
       cy.contains(name).click({force: true});
     });

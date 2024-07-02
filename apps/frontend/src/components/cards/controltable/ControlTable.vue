@@ -79,16 +79,16 @@
           </v-row>
         </template>
 
+        <template #title>
+          <ColumnHeader text="Title" sort="disabled" />
+        </template>
+
         <template #severity>
           <ColumnHeader
-            :text="showImpact ? 'Impact' : 'Severity'"
+            :text="'Severity'"
             :sort="sortSeverity"
             @input="set_sort('severity', $event)"
           />
-        </template>
-
-        <template #title>
-          <ColumnHeader text="Title" sort="disabled" />
         </template>
 
         <template #tags>
@@ -128,7 +128,6 @@
           :style="controlRowPinOffset"
           :control="item.control"
           :expanded="expanded.includes(item.key)"
-          :show-impact="showImpact"
           :viewed-controls="viewedControlIds"
           @toggle="toggle(item.key)"
           @control-viewed="toggleControlViewed"
@@ -166,7 +165,7 @@ interface ListElt {
 
   filename: string;
 
-  // Computed values for status and severity "value", for sorting
+  // Computed values for status and severity, for sorting
   status_val: number;
   severity_val: number;
 
@@ -184,7 +183,6 @@ interface ListElt {
 export default class ControlTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
-  @Prop({type: Boolean, required: true}) readonly showImpact!: boolean;
 
   // Whether to allow multiple expansions
   singleExpand = true;

@@ -74,6 +74,7 @@ class Search extends VuexModule implements ISearchState {
   statusFilter: ExtendedControlStatus[] = [];
   severityFilter: Severity[] = [];
   titleSearchTerms: string[] = [];
+  tagFilter: string[] = [];
 
   /** Update the current search */
   @Action
@@ -99,7 +100,8 @@ class Search extends VuexModule implements ISearchState {
         'desc',
         'description',
         'code',
-        'input'
+        'input',
+        'tags'
       ]
     };
     const searchResult = parse(this.searchTerm, options);
@@ -133,6 +135,9 @@ class Search extends VuexModule implements ISearchState {
           case 'code':
             this.addCodeFilter(lowercaseAll(include));
             break;
+          case 'tags':
+            this.addTagFilter(lowercaseAll(include));
+            break;
           case 'text':
             if (typeof include === 'string') {
               this.setFreesearch(include);
@@ -159,6 +164,7 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_NIST');
     this.context.commit('CLEAR_DESCRIPTION');
     this.context.commit('CLEAR_CODE');
+    this.context.commit('CLEAR_TAG');
     this.context.commit('CLEAR_FREESEARCH');
   }
 
@@ -423,6 +429,25 @@ class Search extends VuexModule implements ISearchState {
   @Mutation
   CLEAR_CODE() {
     this.codeSearchTerms = [];
+  }
+
+  // Tag filtering
+
+  /** Adds code to filter */
+  @Action
+  addTagFilter(tag: string | string[]) {
+    this.context.commit('ADD_TAG', tag);
+  }
+
+  @Mutation
+  ADD_TAG(tag: string | string[]) {
+    this.tagFilter = this.tagFilter.concat(tag);
+  }
+
+  /** Clears all code filters */
+  @Mutation
+  CLEAR_TAG() {
+    this.tagFilter = [];
   }
 
   // Freetext search
