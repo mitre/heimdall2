@@ -656,8 +656,6 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     const impact = control.impact;
     const severityTag = _.get(control.tags, 'severity', null);
     const severityOverrideTag = _.get(control.tags, 'severityOverride', null);
-    let computedSeverity = severityTag;
-    if (severityOverrideTag) computedSeverity = severityOverrideTag;
 
     // if severity or severity override don't fit into low, medium, high
     // denote them in the control specific data
@@ -667,35 +665,12 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     if (severityOverrideTag === 'none' || severityOverrideTag === 'critical')
       hdfSpecificData['severityOverride'] = severityOverrideTag;
 
-    // if the checklist's impact would not be computed correctly on
-    // ckl2hdf, include it explicitly in hdfSpecifidData
-    let computedImpact: number | null;
-
-    // note: some mappers can produce non-lowercase severity tags
-    switch (computedSeverity?.toLowerCase()) {
-      case 'none':
-        computedImpact = 0.0;
-        break;
-      case 'low':
-        computedImpact = 0.3;
-        break;
-      case 'medium':
-        computedImpact = 0.5;
-        break;
-      case 'high':
-        computedImpact = 0.7;
-        break;
-      case 'critical':
-        computedImpact = 0.9;
-        break;
-      default:
-        computedImpact = null;
-    }
 
     // if impact does not align with what would be computed from the checklist
-    // stored it in the hdfSpecificData
+    // store it in the hdfSpecificData
     // also, if it needs to be represented with none or critical, it has
     // to be stored in the hdfSpecificData
+    let computedImpact = this.computeImpact(severityTag, severityOverrideTag);
     if (
       ((computedImpact !== null && computedImpact !== impact) ||
         impact < 0.1 ||
@@ -703,13 +678,14 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       impact !== 0.0
     ) {
       hdfSpecificData['impact'] = control.impact;
-      // if there is no severity tag, severity is aligned to impact
-      // this must be represented in hdfSpecificData when impact
-      // maps to severity none or critical
-      if (severityTag === null) {
-        if (impact < 0.1) hdfSpecificData['severity'] = 'none';
-        else if (impact >= 0.9) hdfSpecificData['severity'] = 'critical';
-      }
+    }
+
+    // if there is no severity tag, severity is aligned to impact
+    // this must be represented in hdfSpecificData when impact needs to
+    // map to severity none or critical
+    if (severityTag === null) {
+      if (impact < 0.1) hdfSpecificData['severity'] = 'none';
+      else if (impact >= 0.9) hdfSpecificData['severity'] = 'critical';
     }
 
     if (control.code?.startsWith('control')) {
@@ -721,6 +697,28 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     return hdfDataExist
       ? JSON.stringify({hdfSpecificData: hdfSpecificData}, null, 2)
       : '';
+  }
+
+  // computes what the impact would be based on the given tags
+  computeImpact(severityTag: string, severityOverrideTag: string): number | null {
+    let computedSeverity = severityTag;
+    if (severityOverrideTag) computedSeverity = severityOverrideTag;
+
+    // note: some mappers can produce non-lowercase severity tags
+    switch (computedSeverity?.toLowerCase()) {
+      case 'none':
+        return 0.0;
+      case 'low':
+        return 0.3;
+      case 'medium':
+        return 0.5;
+      case 'high':
+        return 0.7;
+      case 'critical':
+        return 9.9
+      default:
+        return null;
+    }
   }
 
   addHdfProfileSpecificData(profile: ExecJSON.Profile): string {
