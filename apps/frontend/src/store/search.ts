@@ -1,5 +1,5 @@
 import Store from '@/store/store';
-import {Severity} from 'inspecjs';
+import {Severity, severities} from 'inspecjs';
 import {parse} from 'search-query-parser';
 import {
   Action,
@@ -39,8 +39,6 @@ export const statusTypes = [
   'Waived'
 ];
 
-export const severityTypes = ['none', 'low', 'medium', 'high', 'critical'];
-
 export function lowercaseAll(input: string | string[]): string | string[] {
   if (typeof input === 'string') {
     return input.toLowerCase();
@@ -52,7 +50,7 @@ export function lowercaseAll(input: string | string[]): string | string[] {
 }
 
 export function valueToSeverity(severity: string): Severity {
-  if (severityTypes.includes(severity.toLowerCase())) {
+  if ((severities as readonly string[]).includes(severity.toLowerCase())) {
     return severity as Severity;
   } else {
     return 'none';

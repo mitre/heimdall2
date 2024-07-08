@@ -3,11 +3,17 @@
 // Export types
 export {
   ControlStatus,
+  controlStatuses,
   HDFControl,
   HDFControlSegment,
   hdfWrapControl,
+  LowercasedControlStatus,
+  lowercasedControlStatuses,
   SegmentStatus,
-  Severity
+  severities,
+  Severity,
+  titleCasedSeverities,
+  TitleCasedSeverity
 } from './compat_wrappers';
 // Export Conversion functions
 export * from './context';

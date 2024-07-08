@@ -152,7 +152,7 @@ import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {HeightsModule} from '@/store/heights';
 import {getControlRunTime} from '@/utilities/delta_util';
 import {control_unique_key} from '@/utilities/format_util';
-import {ContextualizedControl} from 'inspecjs';
+import {ContextualizedControl, severities} from 'inspecjs';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -359,9 +359,7 @@ export default class ControlTable extends Vue {
           'Profile Error',
           'Failed'
         ].indexOf(d.root.hdf.status),
-        severity_val: ['none', 'low', 'medium', 'high', 'critical'].indexOf(
-          d.root.hdf.severity
-        ),
+        severity_val: severities.indexOf(d.root.hdf.severity),
         filename: _.get(
           d,
           'sourcedFrom.sourcedFrom.from_file.filename'

@@ -1,4 +1,4 @@
-import {ExecJSON} from 'inspecjs';
+import {ExecJSON, severities} from 'inspecjs';
 import _ from 'lodash';
 import xmlFormat from 'xml-formatter';
 import {version as HeimdallToolsVersion} from '../../package.json';
@@ -140,7 +140,7 @@ function computeSeverity(vuln: ChecklistVuln): string {
   let computed = severity;
   if (severityOverride) computed = severityOverride;
 
-  if (!['none', 'low', 'medium', 'high', 'critical'].includes(computed))
+  if (!(severities as readonly string[]).includes(computed))
     throw new Error(
       `Severity "${computed}" does not match none, low, medium, high, or critical, please check severity for ${
         vuln.vulnNum

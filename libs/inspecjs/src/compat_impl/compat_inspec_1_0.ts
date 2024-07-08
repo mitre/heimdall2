@@ -7,7 +7,8 @@ import {
   HDFControl,
   HDFControlSegment,
   SegmentStatus,
-  Severity
+  Severity,
+  severities
 } from '../compat_wrappers';
 import {
   ControlResult as ControlResult_1_0,
@@ -164,8 +165,6 @@ abstract class HDFControl10 implements HDFControl {
   private static compute_severity(
     raw: ResultControl_1_0 | ProfileControl_1_0
   ): Severity {
-    const severities = ['none', 'low', 'medium', 'high', 'critical'];
-
     // use severity override tag if it exists
     if (severities.includes(raw.tags['severityoverride']?.toLowerCase()))
       return raw.tags['severityoverride'];
