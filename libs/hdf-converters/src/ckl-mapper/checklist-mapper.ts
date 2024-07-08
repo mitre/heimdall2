@@ -95,6 +95,30 @@ function findSeverityOverride(vuln: ChecklistVuln): string {
 }
 
 /**
+ * Function to find the computed severity of the given vuln
+ * with order of prescedence as:
+ * thirdPartyTools.hdfSpecificData.severityoverride, severityoverride,
+ * thidPartyTools.hdfSpecificData.severity, severity
+ * @param vuln - checklist vulnerability object
+ * @returns severity - string none, low, medium, high, critical
+ */
+function computeSeverity(vuln: ChecklistVuln): string {
+  const severity = findSeverity(vuln);
+  const severityOverride = findSeverityOverride(vuln);
+
+  let computed = severity;
+  if (severityOverride) computed = severityOverride;
+
+  if (!(severities as readonly string[]).includes(computed))
+    throw new Error(
+      `Severity "${computed}" does not match none, low, medium, high, or critical, please check severity for ${
+        vuln.vulnNum
+      }`
+    );
+  return computed;
+}
+
+/**
  * Transformer function that checks if the status is 'Not Applicable' returning a 0.
  * Otherwise, maps computed severity to ImpactMapping
  * @param vuln - checklist vulnerability object
@@ -120,30 +144,6 @@ function transformImpact(vuln: ChecklistVuln): number {
       }`
     );
   return impact;
-}
-
-/**
- * Function to find the computed severity of the given vuln
- * with order of prescedence as:
- * thirdPartyTools.hdfSpecificData.severityoverride, severityoverride,
- * thidPartyTools.hdfSpecificData.severity, severity
- * @param vuln - checklist vulnerability object
- * @returns severity - string none, low, medium, high, critical
- */
-function computeSeverity(vuln: ChecklistVuln): string {
-  const severity = findSeverity(vuln);
-  const severityOverride = findSeverityOverride(vuln);
-
-  let computed = severity;
-  if (severityOverride) computed = severityOverride;
-
-  if (!(severities as readonly string[]).includes(computed))
-    throw new Error(
-      `Severity "${computed}" does not match none, low, medium, high, or critical, please check severity for ${
-        vuln.vulnNum
-      }`
-    );
-  return computed;
 }
 
 /**
