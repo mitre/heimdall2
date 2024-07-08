@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
-import {version as hdfConvertersVersion} from '../../../package.json';
+import {replaceCKLVersion} from '../../utils';
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
@@ -24,9 +24,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     );
     const converted = mapper.toCkl();
 
-    expect(converted).toEqual(
-      expected.replace(/2\.10\.1/gi, hdfConvertersVersion)
-    );
+    expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
 
@@ -52,9 +50,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     );
     const converted = mapper.toCkl();
 
-    expect(converted).toEqual(
-      expected.replace(/2\.10\.2/gi, hdfConvertersVersion)
-    );
+    expect(converted).toEqual(replaceCKLVersion(converted));
   });
 });
 
@@ -79,12 +75,7 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
     );
     const converted = mapper.toCkl();
 
-    expect(converted).toEqual(
-      expected.replace(
-        /Heimdall Version :: 2\.10\.2/gi,
-        `Heimdall Version :: ${hdfConvertersVersion}`
-      )
-    );
+    expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
 
@@ -112,9 +103,7 @@ describe('Small RHEL8 HDF file', () => {
     );
     const converted = mapper.toCkl();
 
-    expect(converted).toEqual(
-      expected.replace(/2\.10\.1/gi, hdfConvertersVersion)
-    );
+    expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
 
@@ -142,8 +131,6 @@ describe('Small RHEL 7 with severity and severity override tags', () => {
     );
     const converted = mapper.toCkl();
 
-    expect(converted).toEqual(
-      expected.replace(/2\.10\.8/gi, hdfConvertersVersion)
-    );
+    expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
