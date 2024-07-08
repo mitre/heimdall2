@@ -576,11 +576,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     }
   }
 
-  severityMap(impact: number, severityTag: string): Severity {
+  severityMap(impact: number, severityTag: string | null): Severity {
     // test if this control has a valid severity tag
     // and map it to a checklist severity level
     // note: some mappers can produce non-lowercase severity tags
-    switch (severityTag.toLowerCase()) {
+    switch (severityTag?.toLowerCase()) {
       case 'none':
       // if none, it will be added to Checklist's thirdPartyTools section
       case 'low':
