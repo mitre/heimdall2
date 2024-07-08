@@ -19,7 +19,7 @@ import {
 } from './checklist-jsonix-converter';
 import {Checklist} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
-import {Result} from '../utils/result';
+import {parseJson} from '../utils/parseJson';
 
 enum ImpactMapping {
   high = 0.7,
@@ -62,14 +62,14 @@ function nistTag(input: string): string[] {
  * @returns - severity
  */
 function findSeverity(vuln: ChecklistVuln): string {
-  let severity = vuln.severity;
+  let severity: string = vuln.severity;
   const hdfExistingData = parseJson(vuln.thirdPartyTools);
   if (hdfExistingData.ok) {
     severity = _.get(
       hdfExistingData.value,
       'hdfSpecificData.severity',
       severity
-    );
+    ) as string;
   }
   return severity;
 }
@@ -82,24 +82,16 @@ function findSeverity(vuln: ChecklistVuln): string {
  * @returns - severityoverride
  */
 function findSeverityOverride(vuln: ChecklistVuln): string {
-  let severityOverride = vuln.severityoverride;
+  let severityOverride: string = vuln.severityoverride;
   const hdfExistingData = parseJson(vuln.thirdPartyTools);
   if (hdfExistingData.ok) {
     severityOverride = _.get(
       hdfExistingData.value,
       'hdfSpecificData.severityoverride',
       severityOverride
-    );
+    ) as string;
   }
   return severityOverride;
-}
-
-function parseJson(str: string): Result<any, Error> {
-  try {
-    return {ok: true, value: JSON.parse(str)};
-  } catch (e) {
-    return {ok: false, error: e};
-  }
 }
 
 /**
@@ -111,10 +103,15 @@ function parseJson(str: string): Result<any, Error> {
 function transformImpact(vuln: ChecklistVuln): number {
   if (vuln.status === 'Not Applicable') return 0.0;
   const severity = computeSeverity(vuln);
-  let impact = ImpactMapping[severity as keyof typeof ImpactMapping];
+  let impact: number = ImpactMapping[severity as keyof typeof ImpactMapping];
   const hdfExistingData = parseJson(vuln.thirdPartyTools);
   if (hdfExistingData.ok) {
-    impact = _.get(hdfExistingData.value, 'hdfSpecificData.impact', impact);
+    const maybeImpact = _.get(
+      hdfExistingData.value,
+      'hdfSpecificData.impact',
+      impact
+    );
+    if (typeof maybeImpact === 'number') impact = maybeImpact;
   }
   if (!impact)
     throw new Error(
@@ -293,7 +290,7 @@ function getHdfSpecificDataAttribute(
   const data = parseJson(input);
   if (!data.ok) return undefined;
   if (!_.isObject(data.value.hdfSpecificData)) return undefined;
-  return data.value.hdfSpecificData[attribute] || undefined;
+  return _.get(data.value.hdfSpecificData, attribute);
 }
 
 /**
@@ -509,8 +506,8 @@ export class ChecklistMapper extends BaseConverter {
             code: {
               transformer: (vulnerability: ChecklistVuln): string => {
                 const data = parseJson(vulnerability.thirdPartyTools);
-                if (data.ok && data.value.hdfSpecificData.code) {
-                  return data.value.hdfSpecificData.code;
+                if (data.ok && _.has(data.value.hdfSpecificData, 'code')) {
+                  return _.get(data.value.hdfSpecificData.code, 'code');
                 }
                 return JSON.stringify(vulnerability, null, 2);
               }
