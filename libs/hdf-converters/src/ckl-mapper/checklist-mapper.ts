@@ -96,7 +96,7 @@ function findSeverityOverride(vuln: ChecklistVuln): string {
 
 /**
  * Function to find the computed severity of the given vuln
- * with order of prescedence as:
+ * with order of precedence as:
  * thirdPartyTools.hdfSpecificData.severityoverride, severityoverride,
  * thidPartyTools.hdfSpecificData.severity, severity
  * @param vuln - checklist vulnerability object
