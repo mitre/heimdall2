@@ -45,9 +45,9 @@
           <template #activator="{on}">
             <span v-on="on">
               <v-chip outlined :color="severity_color">
-                <v-icon size="16" class="mr-1" data-cy="severityOverride"
-                  >mdi-delta</v-icon
-                >
+                <v-icon size="16" class="mr-1" data-cy="severityOverride">
+                  mdi-delta
+                </v-icon>
                 {{ (control.hdf.severity || 'none').toUpperCase() }}
               </v-chip>
             </span>
@@ -95,11 +95,7 @@
       <v-chip-group column>
         <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
           <template #activator="{on}">
-            <v-chip
-              :href="tag.url"
-              target="_blank"
-              v-on="on"
-            >
+            <v-chip :href="tag.url" target="_blank" v-on="on">
               {{ tag.label }}
             </v-chip>
           </template>
@@ -121,8 +117,8 @@
     <template #runTime>
       <v-card-text class="pa-2 title font-weight-bold">{{
         runTime
-      }}</v-card-text></template
-    >
+      }}</v-card-text>
+    </template>
 
     <template #viewed>
       <v-container class="py-0 my-0 fill-height">

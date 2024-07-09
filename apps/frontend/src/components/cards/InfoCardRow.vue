@@ -8,9 +8,9 @@
       >
         <div>
           <v-card-title>
-            <v-icon class="pr-3" large
-              >mdi-{{ severityOverrideProps.icon }}</v-icon
-            >
+            <v-icon class="pr-3" large>
+              mdi-{{ severityOverrideProps.icon }}
+            </v-icon>
             <span class="title">{{
               `${severityOverrideProps.title}: ${severityOverrideProps.number}`
             }}</span>
@@ -24,8 +24,9 @@
               filter.tagFilter.indexOf('severityoverride') !== -1
             "
             @click="$emit('show-severity-overrides')"
-            >Filter to Severity Overrides</v-btn
           >
+            Filter to Severity Overrides
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>

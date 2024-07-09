@@ -33,10 +33,10 @@
                   </span>
                 </div>
                 <span v-if="caveat">Caveat: {{ caveat }}<br /></span>
-                <span v-if="justification"
-                  >Justification: {{ justification }}<br
-                /></span>
-
+                <span v-if="justification">
+                  Justification: {{ justification }}
+                  <br />
+                </span>
                 <span v-if="rationale">Rationale: {{ rationale }}<br /></span>
                 <span v-if="comments">Comments: {{ comments }}<br /></span>
                 <v-divider />

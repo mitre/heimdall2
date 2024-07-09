@@ -50,15 +50,15 @@
         <br />
         <h3>
           <code>
-            status:"Failed,Not reviewed" severity:High title:"Ensure IAM"</code
-          >
+            status:"Failed,Not reviewed" severity:High title:"Ensure IAM"
+          </code>
         </h3>
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <v-btn color="primary" text @click="$emit('close-modal')"
-          >Close Window</v-btn
-        >
+        <v-btn color="primary" text @click="$emit('close-modal')">
+          Close Window
+        </v-btn>
       </v-card-actions>
     </v-card>
   </Modal>
