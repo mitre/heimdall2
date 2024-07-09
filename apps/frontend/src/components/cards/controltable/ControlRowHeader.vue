@@ -44,7 +44,7 @@
         <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
           <template #activator="{on}">
             <span v-on="on">
-              <v-chip active-class="NONE" outlined :color="severity_color">
+              <v-chip outlined :color="severity_color">
                 <v-icon size="16" class="mr-1" data-cy="severityOverride"
                   >mdi-delta</v-icon
                 >
@@ -68,7 +68,7 @@
             </span>
           </span>
         </v-tooltip>
-        <v-chip v-else active-class="NONE" outlined :color="severity_color">
+        <v-chip v-else outlined :color="severity_color">
           {{ (control.hdf.severity || 'none').toUpperCase() }}
         </v-chip>
       </v-card-text>
@@ -92,13 +92,12 @@
       </v-card-text>
     </template>
     <template #tags>
-      <v-chip-group column active-class="NONE">
+      <v-chip-group column>
         <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
           <template #activator="{on}">
             <v-chip
               :href="tag.url"
               target="_blank"
-              active-class="NONE"
               v-on="on"
             >
               {{ tag.label }}
@@ -107,10 +106,10 @@
           <span>{{ tag.description }}</span>
         </v-tooltip>
       </v-chip-group>
-      <v-chip-group column active-class="NONE">
+      <v-chip-group column>
         <v-tooltip v-for="(tag, i) in cciTags" :key="'cci-chip' + i" bottom>
           <template #activator="{on}">
-            <v-chip style="cursor: help" active-class="NONE" v-on="on">
+            <v-chip style="cursor: help" v-on="on">
               {{ tag.label }}
             </v-chip>
           </template>
