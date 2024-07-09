@@ -50,7 +50,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     );
     const converted = mapper.toCkl();
 
-    expect(converted).toEqual(replaceCKLVersion(converted));
+    expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
 
