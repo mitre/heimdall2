@@ -1,4 +1,4 @@
-import {ExecJSON} from 'inspecjs';
+import {ExecJSON, severities} from 'inspecjs';
 import _ from 'lodash';
 import {JsonixIntermediateConverter} from '../jsonix-intermediate-converter';
 import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
@@ -22,6 +22,7 @@ import {
   Vulnattribute
 } from './checklistJsonix';
 import {coerce} from 'semver';
+import {impactMapping} from '../base-converter';
 
 export type ChecklistObject = {
   asset: ChecklistAsset;
@@ -92,6 +93,14 @@ enum StatusMapping {
   Not_Applicable = 'Not Applicable',
   Not_Reviewed = 'Not Reviewed'
 }
+
+const IMPACT_MAPPING: Map<string, number> = new Map([
+  ['critical', 0.9],
+  ['high', 0.7],
+  ['medium', 0.5],
+  ['low', 0.3],
+  ['none', 0.0]
+]);
 
 export enum Severity {
   Empty = '',
@@ -655,7 +664,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
     const impact = control.impact;
     const severityTag = _.get(control.tags, 'severity', null);
-    const severityOverrideTag = _.get(control.tags, 'severityOverride', null);
+    const severityOverrideTag = _.get(control.tags, 'severityoverride', null);
 
     // if severity or severity override don't fit into low, medium, high
     // denote them in the control specific data
@@ -663,7 +672,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       hdfSpecificData['severity'] = severityTag;
 
     if (severityOverrideTag === 'none' || severityOverrideTag === 'critical')
-      hdfSpecificData['severityOverride'] = severityOverrideTag;
+      hdfSpecificData['severityoverride'] = severityOverrideTag;
 
     // if impact does not align with what would be computed from the checklist
     // store it in the hdfSpecificData
@@ -700,27 +709,18 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   // computes what the impact would be based on the given tags
   computeImpact(
-    severityTag: string,
-    severityOverrideTag: string
+    severityTag: string | null,
+    severityOverrideTag: string | null
   ): number | null {
     let computedSeverity = severityTag;
     if (severityOverrideTag) computedSeverity = severityOverrideTag;
-
-    // note: some mappers can produce non-lowercase severity tags
-    switch (computedSeverity?.toLowerCase()) {
-      case 'none':
-        return 0.0;
-      case 'low':
-        return 0.3;
-      case 'medium':
-        return 0.5;
-      case 'high':
-        return 0.7;
-      case 'critical':
-        return 9.9;
-      default:
-        return null;
-    }
+    computedSeverity = computedSeverity?.toLowerCase() ?? null;
+    if (
+      computedSeverity &&
+      (severities as readonly string[]).includes(computedSeverity)
+    )
+      return impactMapping(IMPACT_MAPPING)(computedSeverity);
+    return null;
   }
 
   addHdfProfileSpecificData(profile: ExecJSON.Profile): string {
