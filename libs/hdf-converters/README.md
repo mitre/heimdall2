@@ -13,21 +13,22 @@ OHDF Converters supplies several methods to convert various types of security to
 6.  [**conveyor-mapper**] - Conveyor JSON file
 7.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
 8.  [**fortify-mapper**] - Fortify results FVDL file
-9.  [**ionchannel-mapper**] - SBOM data from Ion Channel
-10. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
-11. [**nessus-mapper**] - Nessus XML results file
-12. [**netsparker-mapper**] - Netsparker XML results file
-13. [**nikto-mapper**] - Nikto results JSON file
-14. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
-15. [**sarif-mapper**] - SARIF JSON file
-16. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
-17. [**snyk-mapper**] - Snyk results JSON file
-18. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
-19. [**splunk-mapper**] - Splunk instance
-20. [**twistlock-mapper**] - Twistlock CLI output file
-21. [**veracode-mapper**] - Veracode Scan Results XML file
-22. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
-23. [**zap-mapper**] - OWASP ZAP results JSON
+9.  [**gosec-mapper**] - gosec results JSON file
+10. [**ionchannel-mapper**] - SBOM data from Ion Channel
+11. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
+12. [**nessus-mapper**] - Nessus XML results file
+13. [**netsparker-mapper**] - Netsparker XML results file
+14. [**nikto-mapper**] - Nikto results JSON file
+15. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
+16. [**sarif-mapper**] - SARIF JSON file
+17. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
+18. [**snyk-mapper**] - Snyk results JSON file
+19. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
+20. [**splunk-mapper**] - Splunk instance
+21. [**twistlock-mapper**] - Twistlock CLI output file
+22. [**veracode-mapper**] - Veracode Scan Results XML file
+23. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+24. [**zap-mapper**] - OWASP ZAP results JSON
 
 ### NOTICE
 

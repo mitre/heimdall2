@@ -22,11 +22,29 @@ function nistTag(input: Record<string, unknown>): string[] {
   return CWE_NIST_MAPPING.nistFilter(cwe, DEFAULT_NIST_TAG);
 }
 
+// Check `nosec` and `suppressions` fields which denote whether the gosec rule violation should be suppressed/skipped
+function formatStatus(input: Record<string, unknown>): string {
+  return `${_.get(input, 'nosec')}` === 'false' &&
+    `${_.get(input, 'suppressions')}` === 'null'
+    ? ExecJSON.ControlResultStatus.Failed
+    : ExecJSON.ControlResultStatus.Skipped;
+}
+
+// If a gosec rule violation is suppressed, forward the given justification
+function formatSkipMessage(input: Record<string, unknown>): string {
+  return `${_.get(input, 'suppressions')}` !== 'null'
+    ? `${_.get(input, 'suppressions[0].justification')}`
+    : '';
+}
+
+// Report gosec rule violation and violation location
+function formatCodeDesc(input: Record<string, unknown>): string {
+  return `Rule ${_.get(input, 'rule_id')} violation detected at:\nFile: ${_.get(input, 'file')}\nLine: ${_.get(input, 'line')}\nColumn: ${_.get(input, 'column')}`;
+}
+
+// Report confidence of violation and specific offending code
 function formatMessage(input: Record<string, unknown>): string {
-  return `${_.get(input, 'file')}, line:${_.get(input, 'line')}, column:${_.get(
-    input,
-    'column'
-  )}`;
+  return `${_.get(input, 'confidence')} confidence of rule violation at:\n${_.get(input, 'code')}`;
 }
 
 export class GoSecMapper extends BaseConverter {
@@ -44,8 +62,8 @@ export class GoSecMapper extends BaseConverter {
     statistics: {},
     profiles: [
       {
-        name: 'Gosec scanner',
-        title: 'gosec',
+        name: 'gosec Scan',
+        title: 'gosec Scan',
         version: {path: 'GosecVersion'},
         supports: [],
         attributes: [],
@@ -60,10 +78,7 @@ export class GoSecMapper extends BaseConverter {
                 path: 'cwe',
                 transformer: nistTag
               },
-              cwe: {path: 'cwe'},
-              nosec: {path: 'nosec'},
-              suppressions: {path: 'suppressions'},
-              confidence: {path: 'confidence'}
+              cwe: {path: 'cwe'}
             },
             refs: [],
             source_location: {},
@@ -76,8 +91,9 @@ export class GoSecMapper extends BaseConverter {
             },
             results: [
               {
-                status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: {path: 'code'},
+                status: {transformer: formatStatus},
+                skip_message: {transformer: formatSkipMessage},
+                code_desc: {transformer: formatCodeDesc},
                 message: {transformer: formatMessage},
                 start_time: ''
               }
@@ -92,9 +108,10 @@ export class GoSecMapper extends BaseConverter {
         return {
           auxiliary_data: [
             {
-              name: 'Gosec',
+              name: 'gosec',
               data: {
-                'Golang errors': _.get(data, 'Golang errors')
+                'Golang errors': _.get(data, 'Golang errors'),
+                Stats: _.get(data, 'Stats')
               }
             }
           ],
