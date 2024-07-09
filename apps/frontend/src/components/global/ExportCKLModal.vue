@@ -124,7 +124,7 @@
                       label="Vul ID Mapping"
                       class="pr-2"
                     >
-                      <v-tooltip slot="append" color="#332E2E" bottom>
+                      <v-tooltip slot="prepend-inner" color="#332E2E" bottom>
                         <template #activator="{on}">
                           <v-icon color="primary" v-on="on"
                             >mdi-information-variant-circle</v-icon
