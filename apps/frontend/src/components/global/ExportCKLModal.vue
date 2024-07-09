@@ -64,7 +64,7 @@
                       :error-messages="
                         validateFormat(
                           $v.files.$each[index].hostip,
-                          'IP Address'
+                          '###.###.###.###'
                         )
                       "
                       hint="###.###.###.###"
@@ -76,7 +76,7 @@
                       :error-messages="
                         validateFormat(
                           $v.files.$each[index].hostmac,
-                          'MAC Address'
+                          'XX:XX:XX:XX:XX:XX'
                         )
                       "
                       hint="XX:XX:XX:XX:XX:XX"
@@ -86,7 +86,10 @@
                       v-model="file.hostfqdn"
                       label="Host FQDN"
                       :error-messages="
-                        validateFormat($v.files.$each[index].hostfqdn, 'FQDN')
+                        validateFormat(
+                          $v.files.$each[index].hostfqdn,
+                          '[hostname].[domain].[tld]'
+                        )
                       "
                       hint="[hostname].[domain].[tld]"
                       class="pr-2"
@@ -589,9 +592,9 @@ export default class ExportCKLModal extends Vue {
    * @param field the validation state of the input field
    * @param name name of the field that will show up in error message
    */
-  validateFormat(field: typeof ValidationProperties, name: string): string[] {
+  validateFormat(field: typeof ValidationProperties, hint: string): string[] {
     if (_.get(field, '$invalid')) {
-      return [`Invalid ${name} Format`];
+      return [hint];
     }
     return [];
   }
