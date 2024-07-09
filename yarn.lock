@@ -20877,9 +20877,9 @@ xml-name-validator@^4.0.0:
   integrity sha512-ICP2e+jsHvAj2E2lIHxa5tjXRlKDJo4IdvPvCXbXQGdzSfmSpNVyIKMvoZHjDY9DP0zV17iI85o90vRFXNccRw==
 
 xml-parser-xo@^4.1.0, xml-parser-xo@^4.1.1:
-  version "4.1.1"
-  resolved "https://registry.yarnpkg.com/xml-parser-xo/-/xml-parser-xo-4.1.1.tgz#7434d990f442e06ed96286c813c02e921f14fc50"
-  integrity sha512-Ggf2y90+Y6e9IK5hoPuembVHJ03PhDSdhldEmgzbihzu9k0XBo0sfcFxaSi4W1PlUSSI1ok+MJ0JCXUn+U4Ilw==
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/xml-parser-xo/-/xml-parser-xo-4.1.2.tgz#076936f2a395901bf5120a79f2006978cb3746be"
+  integrity sha512-Z/DRB0ZAKj5vAQg++XsfQQKfT73Vfj5n5lKIVXobBDQEva6NHWUTxOA6OohJmEcpoy8AEqBmSGkXXAnFwt5qAA==
 
 xml2js@^0.5.0:
   version "0.5.0"
