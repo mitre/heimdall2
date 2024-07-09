@@ -341,11 +341,9 @@ export function validateChecklistAssetMetadata(
 export function validateChecklistProfileMetadata(
   metadata: StigMetadata
 ): Result<true, {invalid: string[]; message: string}> {
-  const errors = Revalidator.validate(
-    metadata,
-    {...profileMetadataSchema},
-    {cast: true}
-  ).errors;
+  const errors = Revalidator.validate(metadata, {
+    ...profileMetadataSchema
+  }).errors;
 
   if (errors.length === 0) return {ok: true, value: true};
   // formats errors as: invalidField (invalidValue), otherInvalidField (otherValue), ...

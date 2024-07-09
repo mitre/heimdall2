@@ -194,20 +194,18 @@
                         class="pr-2"
                       />
                       <v-text-field
-                        v-model="profile.version"
+                        v-model.number="profile.version"
                         label="Version"
                         type="number"
                         :placeholder="profile.versionplaceholder"
                         class="pr-2"
-                        @keydown="(event) => preventNonNumeric(event)"
                       />
                       <v-text-field
-                        v-model="profile.releasenumber"
+                        v-model.number="profile.releasenumber"
                         label="Release Number"
                         type="number"
                         :placeholder="profile.releasenumberplaceholder"
                         class="pr-2"
-                        @keydown="(event) => preventNonNumeric(event)"
                       />
                       <v-menu
                         ref="profile.showCalendar"
@@ -747,19 +745,6 @@ export default class ExportCKLModal extends Vue {
     const result = validateChecklistMetadata(metadata);
     if (result.ok) return {ok: true, value: true};
     return {ok: false, error: result.error.message};
-  }
-
-  preventNonNumeric(event: KeyboardEvent) {
-    const charCode = event.key.charCodeAt(0); // gets ascii code of entered key
-    // prevent these keys from being entered into the number field
-    if (
-      charCode === 43 || // +
-      charCode === 45 || // -
-      charCode === 46 || // .
-      charCode === 69 || // E
-      charCode === 101 // e
-    )
-      event.preventDefault();
   }
 }
 </script>
