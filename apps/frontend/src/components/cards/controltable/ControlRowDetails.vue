@@ -202,7 +202,7 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     detailsMap.set('Caveat', this.control.hdf.descriptions.caveat);
     detailsMap.set('Desc', this.control.data.desc);
     detailsMap.set('Rationale', this.control.hdf.descriptions.rationale);
-    // default to showing severity tag, otherwise show the computed severity (based of impact or severityoverride)
+    // default to showing severity tag, otherwise show the computed severity (based on impact or severityoverride)
     detailsMap.set(
       'Severity',
       _.get(
