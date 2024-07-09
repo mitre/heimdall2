@@ -1,10 +1,10 @@
 import fs from 'fs';
-import {GoSecMapper} from '../../../src/gosec-mapper';
+import {GosecMapper} from '../../../src/gosec-mapper';
 import {omitVersions} from '../../utils';
 
 describe('gosec_mapper_grype', () => {
   it('Successfully converts Grype gosec reports', () => {
-    const mapper = new GoSecMapper(
+    const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Grype_gosec_results.json',
         {encoding: 'utf-8'}
@@ -28,7 +28,7 @@ describe('gosec_mapper_grype', () => {
   });
 
   it('Successfully converts withRaw flagged Grype gosec reports', () => {
-    const mapper = new GoSecMapper(
+    const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Grype_gosec_results.json',
         {encoding: 'utf-8'}
@@ -58,7 +58,7 @@ describe('gosec_mapper_grype', () => {
 
 describe('gosec_mapper_go_ethereum_unsuppressed', () => {
   it('Successfully converts unsuppressed Go Ethereum gosec reports', () => {
-    const mapper = new GoSecMapper(
+    const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_unsuppressed.json',
         {encoding: 'utf-8'}
@@ -85,7 +85,7 @@ describe('gosec_mapper_go_ethereum_unsuppressed', () => {
   });
 
   it('Successfully converts withRaw flagged unsuppressed Go Ethereum gosec reports', () => {
-    const mapper = new GoSecMapper(
+    const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_unsuppressed.json',
         {encoding: 'utf-8'}
@@ -115,7 +115,7 @@ describe('gosec_mapper_go_ethereum_unsuppressed', () => {
 
 describe('gosec_mapper_go_ethereum_suppressed', () => {
   it('Successfully converts suppressed Go Ethereum gosec reports', () => {
-    const mapper = new GoSecMapper(
+    const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_suppressed.json',
         {encoding: 'utf-8'}
@@ -142,7 +142,7 @@ describe('gosec_mapper_go_ethereum_suppressed', () => {
   });
 
   it('Successfully converts withRaw flagged suppressed Go Ethereum gosec reports', () => {
-    const mapper = new GoSecMapper(
+    const mapper = new GosecMapper(
       fs.readFileSync(
         'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_suppressed.json',
         {encoding: 'utf-8'}

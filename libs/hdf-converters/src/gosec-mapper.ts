@@ -47,7 +47,7 @@ function formatMessage(input: Record<string, unknown>): string {
   return `${_.get(input, 'confidence')} confidence of rule violation at:\n${_.get(input, 'code')}`;
 }
 
-export class GoSecMapper extends BaseConverter {
+export class GosecMapper extends BaseConverter {
   withRaw: boolean;
 
   mappings: MappedTransform<
