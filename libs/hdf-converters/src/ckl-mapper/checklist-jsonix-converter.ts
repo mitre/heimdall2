@@ -680,7 +680,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     // to be stored in the hdfSpecificData
     const computedImpact = this.computeImpact(severityTag, severityOverrideTag);
     if (
-      ((computedImpact !== null && computedImpact !== impact) ||
+      ((computedImpact !== undefined && computedImpact !== impact) ||
         impact < 0.1 ||
         impact >= 0.9) &&
       impact !== 0.0
@@ -711,16 +711,11 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
   computeImpact(
     severityTag: string | null,
     severityOverrideTag: string | null
-  ): number | null {
+  ): number | undefined {
     let computedSeverity = severityTag;
     if (severityOverrideTag) computedSeverity = severityOverrideTag;
     computedSeverity = computedSeverity?.toLowerCase() ?? null;
-    if (
-      computedSeverity &&
-      (severities as readonly string[]).includes(computedSeverity)
-    )
-      return impactMapping(IMPACT_MAPPING)(computedSeverity);
-    return null;
+    if (computedSeverity) return IMPACT_MAPPING.get(computedSeverity);
   }
 
   addHdfProfileSpecificData(profile: ExecJSON.Profile): string {
