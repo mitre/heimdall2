@@ -1,4 +1,4 @@
-import {ExecJSON, severities} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {JsonixIntermediateConverter} from '../jsonix-intermediate-converter';
 import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
@@ -22,7 +22,6 @@ import {
   Vulnattribute
 } from './checklistJsonix';
 import {coerce} from 'semver';
-import {impactMapping} from '../base-converter';
 
 export type ChecklistObject = {
   asset: ChecklistAsset;
