@@ -83,7 +83,7 @@
         <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
           <template #activator="{on}">
             <v-chip
-              :href="tag.url"
+              :href="`${tag.url}#active-release-version`"
               target="_blank"
               active-class="NONE"
               v-on="on"
