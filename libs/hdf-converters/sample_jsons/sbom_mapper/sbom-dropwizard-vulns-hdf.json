@@ -1,0 +1,59 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.10.8",
+    "target_id": null
+  },
+  "version": "2.10.8",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "application/602de70a-7107-4ac8-9ad2-3c1c816892a7",
+      "title": "test 9",
+      "version": "SNAPSHOT",
+      "maintainer": "",
+      "summary": null,
+      "description": "This is the project I want to use to generate data to understand the schema a bit better",
+      "license": "",
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "key": "id",
+          "tags": {},
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": null,
+          "id": "",
+          "desc": null,
+          "impact": 0,
+          "code": null,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": null,
+              "run_time": null,
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "d92e5bec82fc3b42cb960062a1cfb4deac989f7d92db2436e0fb97ab0649c212"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "",
+        "data": {}
+      }
+    ]
+  }
+}

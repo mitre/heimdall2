@@ -1,0 +1,59 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.10.8",
+    "target_id": null
+  },
+  "version": "2.10.8",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "application/@mitre/saf@1.4.7",
+      "title": "@mitre/saf",
+      "version": "1.4.7",
+      "maintainer": "The MITRE Security Automation Framework",
+      "summary": null,
+      "description": "The MITRE Security Automation Framework (SAF) Command Line Interface (CLI) brings together applications, techniques, libraries, and tools developed by MITRE and the security community to streamline security automation for systems and DevOps pipelines.",
+      "license": "Apache-2.0",
+      "copyright": null,
+      "copyright_email": null,
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "key": "id",
+          "tags": {},
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": null,
+          "id": "",
+          "desc": null,
+          "impact": 0,
+          "code": null,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": null,
+              "run_time": null,
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "fa498e2635fd0213c89c495b1cc1da6c86eb1f8e9ee55f10da6c5fdc6e3e3463"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "",
+        "data": {}
+      }
+    ]
+  }
+}
