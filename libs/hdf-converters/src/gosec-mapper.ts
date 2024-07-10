@@ -32,9 +32,24 @@ function formatStatus(input: Record<string, unknown>): string {
 
 // If a gosec rule violation is suppressed, forward the given justification
 function formatSkipMessage(input: Record<string, unknown>): string {
-  return `${_.get(input, 'suppressions')}` !== 'null'
-    ? `${_.get(input, 'suppressions[0].justification')}`
-    : '';
+  const suppressions = _.get(input, 'suppressions');
+
+  // If test is not skipped
+  if (`${suppressions}` === 'null') {
+    return 'N/A';
+  }
+  // If test is skipped
+  let skipMessage = '';
+  if (Array.isArray(suppressions)) {
+    suppressions.map((suppression) => {
+      // If a justification is given, report; otherwise, report that none is given
+      skipMessage = skipMessage.concat(
+        `${suppression.justification ? suppression.justification : 'No reason provided'} (${suppression.kind}) `
+      );
+    });
+  }
+
+  return skipMessage.trim();
 }
 
 // Report gosec rule violation and violation location

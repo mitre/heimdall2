@@ -34,35 +34,35 @@
           "results": [
             {
               "status": "failed",
-              "skip_message": "",
+              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\internal\\file\\tar.go\nLine: 83\nColumn: 14",
               "message": "HIGH confidence of rule violation at:\n82: \t\tcase tar.TypeReg:\n83: \t\t\tf, err := os.OpenFile(target, os.O_CREATE|os.O_RDWR, os.FileMode(header.Mode))\n84: \t\t\tif err != nil {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "",
+              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\grype\\presenter\\template\\presenter.go\nLine: 52\nColumn: 27",
               "message": "HIGH confidence of rule violation at:\n51: \n52: \ttemplateContents, err := os.ReadFile(expandedPathToTemplateFile)\n53: \tif err != nil {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "",
+              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\grype\\pkg\\syft_sbom_provider.go\nLine: 96\nColumn: 12",
               "message": "HIGH confidence of rule violation at:\n95: func isPossibleSBOM(userInput string) bool {\n96: \tf, err := os.Open(userInput)\n97: \tif err != nil {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "",
+              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\grype\\pkg\\syft_sbom_provider.go\nLine: 87\nColumn: 15",
               "message": "HIGH confidence of rule violation at:\n86: \n87: \tsbom, err := os.Open(expandedPath)\n88: \tif err != nil {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "",
+              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\cmd\\report_writer.go\nLine: 19\nColumn: 22",
               "message": "HIGH confidence of rule violation at:\n18: \tdefault:\n19: \t\treportFile, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)\n20: \n",
               "start_time": ""
@@ -89,7 +89,7 @@
           "results": [
             {
               "status": "failed",
-              "skip_message": "",
+              "skip_message": "N/A",
               "code_desc": "Rule G302 violation detected at:\nFile: C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\cmd\\report_writer.go\nLine: 19\nColumn: 22",
               "message": "HIGH confidence of rule violation at:\n18: \tdefault:\n19: \t\treportFile, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)\n20: \n",
               "start_time": ""
@@ -116,7 +116,7 @@
           "results": [
             {
               "status": "failed",
-              "skip_message": "",
+              "skip_message": "N/A",
               "code_desc": "Rule G301 violation detected at:\nFile: C:\\Users\\AGILLUM\\OneDrive - The MITRE Corporation\\Documents\\Code\\grype-0.34.4\\internal\\file\\tar.go\nLine: 77\nColumn: 15",
               "message": "HIGH confidence of rule violation at:\n76: \t\t\tif _, err := os.Stat(target); err != nil {\n77: \t\t\t\tif err := os.MkdirAll(target, 0755); err != nil {\n78: \t\t\t\t\treturn fmt.Errorf(\"failed to mkdir (%s): %w\", target, err)\n",
               "start_time": ""
@@ -124,7 +124,7 @@
           ]
         }
       ],
-      "sha256": "f32894c089bb1994c0c0a75032a02e46724631bbb0c1bd61aefbd26e3ad7507e"
+      "sha256": "a6012052657380bab7a50dcb2e5452c19b0d02bd29212c07cbf57d9cadb8204d"
     }
   ],
   "passthrough": {

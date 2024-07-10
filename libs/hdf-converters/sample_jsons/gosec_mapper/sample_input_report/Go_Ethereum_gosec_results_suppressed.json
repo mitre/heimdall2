@@ -107,7 +107,7 @@
             "rule_id": "G304",
             "details": "Potential file inclusion via variable",
             "file": "C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go",
-            "code": "101: func openFreezerFileTruncated(filename string) (*os.File, error) {\n102: \treturn os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)\n103: }\n",
+            "code": "101: func openFreezerFileTruncated(filename string) (*os.File, error) {\n102: \treturn os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644) // #nosec G302\n103: }\n",
             "line": "102",
             "column": "9",
             "nosec": false,
@@ -123,7 +123,7 @@
             "rule_id": "G304",
             "details": "Potential file inclusion via variable",
             "file": "C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go",
-            "code": "96: func openFreezerFileForReadOnly(filename string) (*os.File, error) {\n97: \treturn os.OpenFile(filename, os.O_RDONLY, 0644)\n98: }\n",
+            "code": "96: func openFreezerFileForReadOnly(filename string) (*os.File, error) {\n97: \treturn os.OpenFile(filename, os.O_RDONLY, 0644) // #nosec G302\n98: }\n",
             "line": "97",
             "column": "9",
             "nosec": false,
@@ -191,7 +191,12 @@
             "line": "162",
             "column": "15",
             "nosec": false,
-            "suppressions": null
+            "suppressions": [
+                {
+                    "kind": "external",
+                    "justification": "Globally suppressed."
+                }
+            ]
         },
         {
             "severity": "MEDIUM",
@@ -207,7 +212,12 @@
             "line": "142",
             "column": "22",
             "nosec": false,
-            "suppressions": null
+            "suppressions": [
+                {
+                    "kind": "external",
+                    "justification": "Globally suppressed."
+                }
+            ]
         },
         {
             "severity": "MEDIUM",
@@ -223,7 +233,12 @@
             "line": "86",
             "column": "12",
             "nosec": false,
-            "suppressions": null
+            "suppressions": [
+                {
+                    "kind": "external",
+                    "justification": "Globally suppressed."
+                }
+            ]
         },
         {
             "severity": "MEDIUM",
@@ -235,11 +250,20 @@
             "rule_id": "G302",
             "details": "Expect file permissions to be 0600 or less",
             "file": "C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go",
-            "code": "101: func openFreezerFileTruncated(filename string) (*os.File, error) {\n102: \treturn os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644)\n103: }\n",
+            "code": "101: func openFreezerFileTruncated(filename string) (*os.File, error) {\n102: \treturn os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644) // #nosec G302\n103: }\n",
             "line": "102",
             "column": "9",
             "nosec": false,
-            "suppressions": null
+            "suppressions": [
+                {
+                    "kind": "inSource",
+                    "justification": ""
+                },
+                {
+                    "kind": "external",
+                    "justification": "Globally suppressed."
+                }
+            ]
         },
         {
             "severity": "MEDIUM",
@@ -251,11 +275,20 @@
             "rule_id": "G302",
             "details": "Expect file permissions to be 0600 or less",
             "file": "C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go",
-            "code": "96: func openFreezerFileForReadOnly(filename string) (*os.File, error) {\n97: \treturn os.OpenFile(filename, os.O_RDONLY, 0644)\n98: }\n",
+            "code": "96: func openFreezerFileForReadOnly(filename string) (*os.File, error) {\n97: \treturn os.OpenFile(filename, os.O_RDONLY, 0644) // #nosec G302\n98: }\n",
             "line": "97",
             "column": "9",
             "nosec": false,
-            "suppressions": null
+            "suppressions": [
+                {
+                    "kind": "inSource",
+                    "justification": ""
+                },
+                {
+                    "kind": "external",
+                    "justification": "Globally suppressed."
+                }
+            ]
         },
         {
             "severity": "MEDIUM",
@@ -271,7 +304,12 @@
             "line": "84",
             "column": "15",
             "nosec": false,
-            "suppressions": null
+            "suppressions": [
+                {
+                    "kind": "external",
+                    "justification": "Globally suppressed."
+                }
+            ]
         },
         {
             "severity": "MEDIUM",
@@ -287,12 +325,7 @@
             "line": "133",
             "column": "12",
             "nosec": false,
-            "suppressions": [
-                {
-                    "kind": "external",
-                    "justification": "Globally suppressed."
-                }
-            ]
+            "suppressions": null
         },
         {
             "severity": "MEDIUM",
@@ -308,12 +341,7 @@
             "line": "99",
             "column": "12",
             "nosec": false,
-            "suppressions": [
-                {
-                    "kind": "external",
-                    "justification": "Globally suppressed."
-                }
-            ]
+            "suppressions": null
         },
         {
             "severity": "LOW",
@@ -2677,11 +2705,16 @@
             "rule_id": "G104",
             "details": "Errors unhandled.",
             "file": "C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\blockchain.go",
-            "code": "1523: \t\t\t// Flush an entire trie and restart the counters\n1524: \t\t\tbc.triedb.Commit(header.Root, true)\n1525: \t\t\tbc.lastWrite = chosen\n",
+            "code": "1523: \t\t\t// Flush an entire trie and restart the counters\n1524: \t\t\tbc.triedb.Commit(header.Root, true) // #nosec G104\n1525: \t\t\tbc.lastWrite = chosen\n",
             "line": "1524",
             "column": "4",
             "nosec": false,
-            "suppressions": null
+            "suppressions": [
+                {
+                    "kind": "inSource",
+                    "justification": ""
+                }
+            ]
         },
         {
             "severity": "LOW",
@@ -2751,14 +2784,14 @@
             "rule_id": "G104",
             "details": "Errors unhandled.",
             "file": "C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\blockchain.go",
-            "code": "457: \t\t} else {\n458: \t\t\tbc.SetHead(compat.RewindToBlock) // #nosec G104\n459: \t\t}\n",
+            "code": "457: \t\t} else {\n458: \t\t\tbc.SetHead(compat.RewindToBlock) // #nosec G104 -- False positive\n459: \t\t}\n",
             "line": "458",
             "column": "4",
             "nosec": false,
             "suppressions": [
                 {
                     "kind": "inSource",
-                    "justification": ""
+                    "justification": "False positive"
                 }
             ]
         },
@@ -2808,8 +2841,8 @@
     "Stats": {
         "files": 156,
         "lines": 46219,
-        "nosec": 5,
-        "found": 166
+        "nosec": 8,
+        "found": 161
     },
     "GosecVersion": "dev"
 }
