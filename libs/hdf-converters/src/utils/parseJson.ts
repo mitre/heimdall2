@@ -1,12 +1,12 @@
 import {Result} from './result';
 
-type JSONValue = 
- | string
- | number
- | boolean
- | null
- | JSONValue[]
- | {[key: string]: JSONValue}
+export type JSONValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JSONValue[]
+  | {[key: string]: JSONValue};
 
 export function parseJson(str: string): Result<JSONValue, Error> {
   try {

@@ -50,7 +50,7 @@ export function lowercaseAll(input: string | string[]): string | string[] {
 }
 
 export function valueToSeverity(severity: string): Severity {
-  if (severities.find(severity => severity === severity.toLowerCase())) {
+  if (severities.find((severity) => severity === severity.toLowerCase())) {
     return severity as Severity;
   } else {
     return 'none';
