@@ -83,7 +83,7 @@
     "mustache": "^4.2.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "prismjs": "^1.29.0",
-    "rimraf": "^5.0.0",
+    "rimraf": "^6.0.0",
     "roboto-fontface": "*",
     "sanitize-html": "~2.13.0",
     "sass": "~1.32.6",
