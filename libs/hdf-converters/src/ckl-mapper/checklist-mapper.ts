@@ -109,7 +109,7 @@ function computeSeverity(vuln: ChecklistVuln): string {
   let computed = severity;
   if (severityOverride) computed = severityOverride;
 
-  if (!severities.find(severity => severity === computed))
+  if (!severities.find((severity) => severity === computed))
     throw new Error(
       `Severity "${computed}" does not match none, low, medium, high, or critical, please check severity for ${
         vuln.vulnNum
@@ -289,8 +289,9 @@ function getHdfSpecificDataAttribute(
 ): {[key: string]: any}[] | string | undefined {
   const data = parseJson(input);
   if (!data.ok) return undefined;
-  if (!_.isObject(data.value.hdfSpecificData)) return undefined;
-  return _.get(data.value.hdfSpecificData, attribute);
+  const hdfSpecificData = _.get(data.value, 'hdfSpecificData');
+  if (!_.isObject(hdfSpecificData)) return undefined;
+  return _.get(hdfSpecificData, attribute);
 }
 
 /**
@@ -506,8 +507,12 @@ export class ChecklistMapper extends BaseConverter {
             code: {
               transformer: (vulnerability: ChecklistVuln): string => {
                 const data = parseJson(vulnerability.thirdPartyTools);
-                if (data.ok && _.has(data.value.hdfSpecificData, 'code')) {
-                  return _.get(data.value.hdfSpecificData.code, 'code');
+                if (data.ok) {
+                  const code = _.get(
+                    data.value,
+                    'hdfSpecificData.code'
+                  ) as unknown as string;
+                  if (code) return code;
                 }
                 return JSON.stringify(vulnerability, null, 2);
               }
