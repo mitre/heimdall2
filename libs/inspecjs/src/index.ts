@@ -1,6 +1,6 @@
 // Our foreign package API.
 
-// Export types
+// Export types and helper functions
 export {
   ControlStatus,
   controlStatuses,
@@ -13,7 +13,8 @@ export {
   severities,
   Severity,
   titleCasedSeverities,
-  TitleCasedSeverity
+  TitleCasedSeverity,
+  convertImpactToSeverity
 } from './compat_wrappers';
 // Export Conversion functions
 export * from './context';

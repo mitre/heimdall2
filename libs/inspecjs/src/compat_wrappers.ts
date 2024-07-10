@@ -75,6 +75,20 @@ export type SegmentStatus =
   | 'error'
   | 'no_status';
 
+export function convertImpactToSeverity(impact: number): Severity {
+  if (impact < 0.1) {
+    return 'none';
+  } else if (impact < 0.4) {
+    return 'low';
+  } else if (impact < 0.7) {
+    return 'medium';
+  } else if (impact < 0.9) {
+    return 'high';
+  } else {
+    return 'critical';
+  }
+}
+
 /**
  * This interface acts as a polyfill on controls for our HDF "guaranteed" derived types, to provide a stable
  * method for acessing their properties across different schemas.

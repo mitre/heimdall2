@@ -8,6 +8,7 @@ import {
   HDFControlSegment,
   SegmentStatus,
   Severity,
+  convertImpactToSeverity,
   severities
 } from '../compat_wrappers';
 import {
@@ -174,17 +175,7 @@ abstract class HDFControl10 implements HDFControl {
       return raw.tags['severity'];
 
     // otherwise, compute severity with impact
-    if (raw.impact < 0.1) {
-      return 'none';
-    } else if (raw.impact < 0.4) {
-      return 'low';
-    } else if (raw.impact < 0.7) {
-      return 'medium';
-    } else if (raw.impact < 0.9) {
-      return 'high';
-    } else {
-      return 'critical';
-    }
+    return convertImpactToSeverity(raw.impact);
   }
 }
 
