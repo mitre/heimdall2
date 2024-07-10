@@ -17,7 +17,7 @@ import {
   EmptyChecklistObject,
   updateChecklistWithMetadata
 } from './checklist-jsonix-converter';
-import {Checklist, Asset} from './checklistJsonix';
+import {Checklist} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
 import {throwIfInvalidAssetMetadata} from './checklist-metadata-utils';
 
