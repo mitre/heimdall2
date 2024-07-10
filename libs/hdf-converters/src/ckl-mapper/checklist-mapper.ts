@@ -109,7 +109,7 @@ function computeSeverity(vuln: ChecklistVuln): string {
   let computed = severity;
   if (severityOverride) computed = severityOverride;
 
-  if (!(severities as readonly string[]).includes(computed))
+  if (!severities.find(severity => severity === computed))
     throw new Error(
       `Severity "${computed}" does not match none, low, medium, high, or critical, please check severity for ${
         vuln.vulnNum
