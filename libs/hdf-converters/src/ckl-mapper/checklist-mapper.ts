@@ -161,6 +161,7 @@ function parseFindingDetails(input: unknown[]): ExecJSON.ControlResult[] {
       {
         status: findings[0].status,
         code_desc: findings[0].code_desc,
+        message: findings[0].message,
         start_time: ''
       }
     ];
@@ -446,11 +447,6 @@ export class ChecklistMapper extends BaseConverter {
               {
                 data: {path: 'fixText'},
                 label: 'fix'
-              },
-              {
-                arrayTransformer: parseComments,
-                data: {path: 'comments'},
-                label: 'comments'
               }
             ],
             impact: {
@@ -474,6 +470,7 @@ export class ChecklistMapper extends BaseConverter {
                   transformer: getStatus
                 },
                 code_desc: {path: 'findingdetails'},
+                message: {path: 'comments'},
                 start_time: ''
               }
             ]
