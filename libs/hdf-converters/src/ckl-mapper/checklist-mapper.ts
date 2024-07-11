@@ -19,6 +19,7 @@ import {
 } from './checklist-jsonix-converter';
 import {Checklist} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
+import {throwIfInvalidAssetMetadata} from './checklist-metadata-utils';
 import {parseJson} from '../utils/parseJson';
 
 enum ImpactMapping {
@@ -313,15 +314,19 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   constructor(data: string | ExecJSON.Execution, withRaw = false) {
     super(jsonixMapping);
     this.data = data;
+
     if (typeof data === 'string') {
       this.jsonixData = super.toJsonix(data);
       this.checklistObject = super.toIntermediateObject(this.jsonixData);
+      throwIfInvalidAssetMetadata(this.checklistObject.asset);
     } else if (containsChecklist(data)) {
       this.checklistObject = getChecklistObjectFromHdf(data);
+      throwIfInvalidAssetMetadata(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     } else {
       // CREATE Intermediate Object from HDF
       this.checklistObject = super.hdfToIntermediateObject(data);
+      throwIfInvalidAssetMetadata(this.checklistObject.asset);
       this.jsonixData = super.fromIntermediateObject(this.checklistObject);
     }
     this.withRaw = withRaw;

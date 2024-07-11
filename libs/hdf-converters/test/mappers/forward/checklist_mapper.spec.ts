@@ -1,6 +1,7 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {omitVersions} from '../../utils';
+import {InvalidChecklistMetadataException} from '../../../src/ckl-mapper/checklist-metadata-utils';
 
 describe('checklist_mapper_single_stig', () => {
   it('Successfully converts Checklists', () => {
@@ -166,6 +167,19 @@ describe('checklist_intermediate_object', () => {
           {encoding: 'utf-8'}
         )
       )
+    );
+  });
+});
+
+describe('checklist_with_invalid_metadata', () => {
+  // ensures that checklist metadata is being validated
+  it('Throws InvalidChecklistFormatException when trying to convert checklist with invalid metadata', () => {
+    const fileContents = fs.readFileSync(
+      'sample_jsons/checklist_mapper/sample_input_report/invalid_metadata.ckl',
+      {encoding: 'utf-8'}
+    );
+    expect(() => new ChecklistResults(fileContents)).toThrowError(
+      InvalidChecklistMetadataException
     );
   });
 });

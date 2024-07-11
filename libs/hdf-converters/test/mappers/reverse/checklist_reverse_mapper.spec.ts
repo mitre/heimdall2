@@ -1,6 +1,7 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {replaceCKLVersion} from '../../utils';
+import {InvalidChecklistMetadataException} from '../../../src/ckl-mapper/checklist-metadata-utils';
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
@@ -132,5 +133,35 @@ describe('Small RHEL 7 with severity and severity override tags', () => {
     const converted = mapper.toCkl();
 
     expect(converted).toEqual(replaceCKLVersion(expected));
+  });
+});
+
+describe('hdf_profile_with_invalid_metadata', () => {
+  it('Throws InvalidChecklistFormatException when trying to convert to checklist with invalid metadata', () => {
+    // ensures that checklist metadata is being validated
+    const fileContents = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/checklist_mapper/sample_input_report/invalid_metadata.json',
+        {encoding: 'utf-8'}
+      )
+    );
+    expect(() => new ChecklistResults(fileContents)).toThrowError(
+      InvalidChecklistMetadataException
+    );
+  });
+});
+
+describe('hdf_profile_with_invalid_metadata', () => {
+  it('Throws InvalidChecklistFormatException when trying to convert to checklist with invalid metadata', () => {
+    // ensures that checklist metadata is being validated
+    const fileContents = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/checklist_mapper/sample_input_report/invalid_metadata.json',
+        {encoding: 'utf-8'}
+      )
+    );
+    expect(() => new ChecklistResults(fileContents)).toThrowError(
+      InvalidChecklistMetadataException
+    );
   });
 });
