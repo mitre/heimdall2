@@ -1,6 +1,7 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {version as hdfConvertersVersion} from '../../../package.json';
+import {InvalidChecklistMetadataException} from '../../../src/ckl-mapper/checklist-metadata-utils';
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
@@ -114,6 +115,21 @@ describe('Small RHEL8 HDF file', () => {
 
     expect(converted).toEqual(
       expected.replace(/2\.10\.1/gi, hdfConvertersVersion)
+    );
+  });
+});
+
+describe('hdf_profile_with_invalid_metadata', () => {
+  it('Throws InvalidChecklistFormatException when trying to convert to checklist with invalid metadata', () => {
+    // ensures that checklist metadata is being validated
+    const fileContents = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/checklist_mapper/sample_input_report/invalid_metadata.json',
+        {encoding: 'utf-8'}
+      )
+    );
+    expect(() => new ChecklistResults(fileContents)).toThrowError(
+      InvalidChecklistMetadataException
     );
   });
 });
