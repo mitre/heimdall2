@@ -33,8 +33,9 @@
       text-anchor="middle"
       :x="x + width / 2"
       :y="y + height / 2"
-      >{{ node.data.title }}</text
     >
+      {{ node.data.title }}
+    </text>
   </g>
 </template>
 

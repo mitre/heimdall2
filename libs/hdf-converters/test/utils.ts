@@ -2,6 +2,7 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {IFindingASFF} from '../src/converters-from-hdf/asff/asff-types';
 import {ExecJSONProfile} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
+import {version as hdfConvertersVersion} from '../package.json';
 
 export function omitVersions(
   input: Omit<Partial<ExecJSON.Execution>, 'profiles'> & {
@@ -72,4 +73,22 @@ export function omitHDFTimes(
       };
     })
   };
+}
+
+// replaces the version in the checklist file with the
+// actual hdf-converters version
+export function replaceCKLVersion(input: string): string {
+  return input.replace(
+    /(?<=<!--Heimdall Version :: )\S+(?=-->)/,
+    hdfConvertersVersion
+  );
+}
+
+// replaces the version in the checklist file with the
+// actual hdf-converters version
+export function replaceXCCDFVersion(input: string): string {
+  return input.replace(
+    /(?<=<version>)\S+(?=<\/version>)/,
+    hdfConvertersVersion
+  );
 }
