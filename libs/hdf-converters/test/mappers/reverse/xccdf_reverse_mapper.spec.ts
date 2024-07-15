@@ -1,6 +1,6 @@
 import fs from 'fs';
 import {FromHDFToXCCDFMapper} from '../../../index';
-import {version as hdfConvertersVersion} from '../../../package.json';
+import {replaceXCCDFVersion} from '../../utils';
 
 describe('XCCDF Results Reverse Mapper', () => {
   it('Successfully converts RHEL7 HDF into XCCDF-Results', () => {
@@ -30,9 +30,7 @@ describe('XCCDF Results Reverse Mapper', () => {
       'utf-8'
     );
 
-    expect(converted).toEqual(
-      expected.replace(/2\.6\.24/gi, hdfConvertersVersion)
-    );
+    expect(converted).toEqual(replaceXCCDFVersion(expected));
   });
 
   it('Successfully converts a 3 layer overlay HDF into XCCDF-Results', () => {
@@ -62,8 +60,6 @@ describe('XCCDF Results Reverse Mapper', () => {
       'utf-8'
     );
 
-    expect(converted).toEqual(
-      expected.replace(/2\.6\.24/gi, hdfConvertersVersion)
-    );
+    expect(converted).toEqual(replaceXCCDFVersion(expected));
   });
 });

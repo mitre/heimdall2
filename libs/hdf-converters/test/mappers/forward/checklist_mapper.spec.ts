@@ -58,6 +58,34 @@ describe('checklist_mapper_single_stig_with_raw', () => {
   });
 });
 
+describe('checklist_mapper_with_severity_overrides', () => {
+  it('Successfully converts Checklists with severity overrides', () => {
+    const mapper = new ChecklistResults(
+      fs.readFileSync(
+        'sample_jsons/checklist_mapper/sample_input_report/small_ckl_overrides.ckl',
+        {encoding: 'utf-8'}
+      ),
+      true
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/small_overrides_hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/checklist_mapper/small_overrides_hdf.json',
+            {encoding: 'utf-8'}
+          )
+        )
+      )
+    );
+  });
+});
+
 describe('checklist_mapper_multi_stig_wrapper', () => {
   it('Successfully converts Checklists', () => {
     const mapper = new ChecklistResults(
