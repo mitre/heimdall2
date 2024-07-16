@@ -5,8 +5,9 @@
       v-if="classification"
       :style="classificationStyle"
       class="classification-footer"
-      >{{ classification }}</span
     >
+      {{ classification }}
+    </span>
     <!-- Router view. Typically a "subclass" of Base -->
     <router-view :key="$route.fullPath" :class="classification ? 'pt-5' : ''" />
     <!-- Footer -->

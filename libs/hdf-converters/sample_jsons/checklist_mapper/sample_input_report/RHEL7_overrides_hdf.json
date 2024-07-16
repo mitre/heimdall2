@@ -1,0 +1,289 @@
+{
+    "platform": {
+        "name": "centos",
+        "release": "7.6.1810"
+    },
+    "profiles": [
+        {
+            "attributes": [],
+            "controls": [
+                {
+                    "code": "not important",
+                    "desc": "Discretionary access control is weakened if a user or group has access permissions to system files and directories greater than the default.",
+                    "descriptions": [
+                        {
+                            "data": "Discretionary access control is weakened if a user or group has access permissions to system files and directories greater than the default.",
+                            "label": "default"
+                        },
+                        {
+                            "data": "Verify the file permissions, ownership, and group membership of\nsystem files and commands match the vendor values.\n\nCheck the file permissions, ownership, and group membership of system files and\ncommands with the following command:\n\n# rpm -Va | grep '^.M'\n\nIf there is any output from the command indicating that the ownership or group\nof a system file or command, or a system file, has permissions less restrictive\nthan the default, this is a finding.",
+                            "label": "check"
+                        },
+                        {
+                            "data": "Run the following command to determine which package owns the\nfile:\n\n# rpm -qf <filename>\n\nReset the permissions of files within a package with the following command:\n\n#rpm --setperms <packagename>\n\nReset the user and group ownership of files within a package with the following\ncommand:\n\n#rpm --setugids <packagename>",
+                            "label": "fix"
+                        }
+                    ],
+                    "id": "V-71849",
+                    "impact": 0.3,
+                    "refs": [],
+                    "results": [
+                        {
+                            "code_desc": "not important",
+                            "message": "not important",
+                            "run_time": 0.00056624,
+                            "start_time": "2019-11-04T16:17:07-05:00",
+                            "status": "failed"
+                        }
+                    ],
+                    "source_location": {
+                        "line": 16,
+                        "ref": "inspec-profile-disa_stig-el7-master/controls/V-71849.rb"
+                    },
+                    "tags": {
+                        "gtitle": "SRG-OS-000257-GPOS-00098",
+                        "satisfies": [
+                            "SRG-OS-000257-GPOS-00098",
+                            "SRG-OS-000278-GPOS-00108"
+                        ],
+                        "gid": "V-71849",
+                        "rid": "SV-86473r2_rule",
+                        "stig_id": "RHEL-07-010010",
+                        "cci": [
+                            "CCI-001494",
+                            "CCI-001496"
+                        ],
+                        "documentable": false,
+                        "nist": [
+                            "AU-9",
+                            "AU-9 (3)",
+                            "Rev_4"
+                        ],
+                        "subsystems": [
+                            "permissions",
+                            "package",
+                            "rpm"
+                        ],
+                        "fix_id": "F-78201r3_fix",
+                        "severity": "critical"
+                    },
+                    "title": "The file permissions, ownership, and group membership of system files and commands must match the vendor values."
+                },
+                {
+                    "code": "not important",
+                    "desc": "not important",
+                    "descriptions": [
+                        {
+                            "data": "not important",
+                            "label": "default"
+                        },
+                        {
+                            "data": "Verify the cryptographic hash of system files and commands\nmatch the vendor values.\n\nCheck the cryptographic hash of system files and commands with the following\ncommand:\n\nNote: System configuration files (indicated by a \"c\" in the second column)\nare expected to change over time. Unusual modifications should be investigated\nthrough the system audit log.\n\n# rpm -Va | grep '^..5'\n\nIf there is any output from the command for system binaries, this is a finding.",
+                            "label": "check"
+                        },
+                        {
+                            "data": "Run the following command to determine which package owns the\nfile:\n\n# rpm -qf <filename>\n\nThe package can be reinstalled from a yum repository using the command:\n\n# sudo yum reinstall <packagename>\n\nAlternatively, the package can be reinstalled from trusted media using the\ncommand:\n\n# sudo rpm -Uvh <packagename>",
+                            "label": "fix"
+                        }
+                    ],
+                    "id": "V-71855",
+                    "impact": 0.7,
+                    "refs": [],
+                    "results": [
+                        {
+                            "code_desc": "[] should all be in",
+                            "run_time": 0.000103517,
+                            "start_time": "2019-11-04T16:17:07-05:00",
+                            "status": "skipped"
+                        }
+                    ],
+                    "source_location": {
+                        "line": 15,
+                        "ref": "inspec-profile-disa_stig-el7-master/controls/V-71855.rb"
+                    },
+                    "tags": {
+                        "gtitle": "SRG-OS-000480-GPOS-00227",
+                        "gid": "V-71855",
+                        "rid": "SV-86479r2_rule",
+                        "stig_id": "RHEL-07-010020",
+                        "cci": [
+                            "CCI-000663"
+                        ],
+                        "documentable": false,
+                        "nist": [
+                            "SA-7",
+                            "Rev_4"
+                        ],
+                        "subsystems": [
+                            "rpm",
+                            "package"
+                        ],
+                        "fix_id": "F-78207r1_fix",
+                        "severity": "low",
+                        "severityoverride": "medium",
+                        "severityjustification": "This system is not important"
+                    },
+                    "title": "The cryptographic hash of system files and commands must match vendor\nvalues."
+                },
+                {
+                    "code": "not important",
+                    "desc": "not important",
+                    "descriptions": [
+                        {
+                            "data": "not important",
+                            "label": "default"
+                        },
+                        {
+                            "data": "not important",
+                            "label": "check"
+                        },
+                        {
+                            "data": "not important",
+                            "label": "fix"
+                        }
+                    ],
+                    "id": "V-71859",
+                    "impact": 0.95,
+                    "refs": [],
+                    "results": [
+                        {
+                            "code_desc": "Command: `dconf read /org/gnome/login-screen/banner-message-enable` stdout.strip should cmp == \"true\"",
+                            "message": "\nexpected: \"true\"\n     got: \"\"\n\n(compared using `cmp` matcher)\n",
+                            "run_time": 0.017205426,
+                            "start_time": "2019-11-04T16:17:07-05:00",
+                            "status": "failed"
+                        }
+                    ],
+                    "source_location": {
+                        "line": 14,
+                        "ref": "inspec-profile-disa_stig-el7-master/controls/V-71859.rb"
+                    },
+                    "tags": {
+                        "gtitle": "SRG-OS-000023-GPOS-00006",
+                        "satisfies": [
+                            "SRG-OS-000023-GPOS-00006",
+                            "SRG-OS-000024-GPOS-00007",
+                            "SRG-OS-000228-GPOS-00088"
+                        ],
+                        "gid": "V-71859",
+                        "rid": "SV-86483r3_rule",
+                        "stig_id": "RHEL-07-010030",
+                        "cci": [
+                            "CCI-000048"
+                        ],
+                        "documentable": false,
+                        "nist": [
+                            "AC-8 a",
+                            "Rev_4"
+                        ],
+                        "subsystem": [
+                            "gdm"
+                        ],
+                        "fix_id": "F-78211r4_fix"
+                    },
+                    "title": "The operating system must display the Standard Mandatory DoD Notice\nand Consent Banner before granting local or remote access to the system via a\ngraphical user logon."
+                },
+                {
+                    "code": "not important",
+                    "desc": "not important",
+                    "descriptions": [
+                        {
+                            "data": "not important",
+                            "label": "default"
+                        },
+                        {
+                            "data": "not important",
+                            "label": "check"
+                        },
+                        {
+                            "data": "not important",
+                            "label": "fix"
+                        }
+                    ],
+                    "id": "V-71861",
+                    "impact": 0.5,
+                    "refs": [],
+                    "results": [
+                        {
+                            "code_desc": "If no files specify the banner text then this is a finding should equal false",
+                            "message": "\nexpected false\n     got true\n",
+                            "run_time": 0.001565842,
+                            "start_time": "2019-11-04T16:17:07-05:00",
+                            "status": "failed"
+                        }
+                    ],
+                    "source_location": {
+                        "line": 29,
+                        "ref": "inspec-profile-disa_stig-el7-master/controls/V-71861.rb"
+                    },
+                    "tags": {
+                        "gtitle": "SRG-OS-000023-GPOS-00006",
+                        "satisfies": [
+                            "SRG-OS-000023-GPOS-00006",
+                            "SRG-OS-000024-GPOS-00007",
+                            "SRG-OS-000228-GPOS-00088"
+                        ],
+                        "gid": "V-71861",
+                        "rid": "SV-86485r3_rule",
+                        "stig_id": "RHEL-07-010040",
+                        "cci": [
+                            "CCI-000048"
+                        ],
+                        "documentable": false,
+                        "nist": [
+                            "AC-8 a",
+                            "Rev_4"
+                        ],
+                        "subsystems": [
+                            "gdm"
+                        ],
+                        "fix_id": "F-78213r5_fix",
+                        "severity": "none"
+                    },
+                    "title": "The operating system must display the approved Standard Mandatory DoD\nNotice and Consent Banner before granting local or remote access to the system\nvia a graphical user logon."
+                }
+            ],
+            "copyright": "SIMP Team",
+            "copyright_email": "simp-dev@googlegroups.com",
+            "groups": [
+                {
+                    "controls": [
+                        "V-71849"
+                    ],
+                    "id": "controls/V-71849.rb"
+                },
+                {
+                    "controls": [
+                        "V-71855"
+                    ],
+                    "id": "controls/V-71855.rb"
+                },
+                {
+                    "controls": [
+                        "V-71859"
+                    ],
+                    "id": "controls/V-71859.rb"
+                },
+                {
+                    "controls": [
+                        "V-71861"
+                    ],
+                    "id": "controls/V-71861.rb"
+                }
+            ],
+            "license": "Apache-2.0",
+            "maintainer": "SIMP Team",
+            "name": "disa_stig-el7",
+            "sha256": "d4ecb3e201285a383a4aa6af8d9028e8311cb1975af2b380f098a21c895246ff",
+            "status": "loaded",
+            "summary": "The `disa_stig-el7` inspec profile helps scan your system aginst the DISA RHEL7 STIG",
+            "supports": [],
+            "title": "DISA RedHat Enterprise Linux 7 STIG - v1r4",
+            "version": "0.2.0"
+        }
+    ],
+    "statistics": {
+        "duration": 10.681128104
+    },
+    "version": "4.16.0"
+}
