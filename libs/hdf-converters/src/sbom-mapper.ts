@@ -8,18 +8,19 @@ function formatName(input: Record<string, unknown>): string {
 }
 
 function formatTitle(input: Record<string, unknown>): string {
-  return `${_.get(input, 'group') ? `${_.get(input, 'group')}/` : ''}${_.get(input, 'name')}`;
+  const group = _.get(input, 'group') ? `${_.get(input, 'group')}/` : '';
+  return `${group}${_.get(input, 'name')}`;
 }
 
 function formatLicense(input: Record<string, unknown>): string {
-    let message = '';
-    let licenses = _.get(input, 'licenses');
-    if (Array.isArray(licenses)) {
-        licenses.map((license) => {
-            message = message.concat(`${license.license.id} `);
-        })
-    }
-    return message.trim();
+  let message = '';
+  let licenses = _.get(input, 'licenses');
+  if (Array.isArray(licenses)) {
+    licenses.map((license) => {
+      message = message.concat(`${license.license.id} `);
+    });
+  }
+  return message.trim();
 }
 
 export class SbomMapper extends BaseConverter {
