@@ -3,3 +3,5 @@ converted_jsons
 lib
 mitre-hdf-converters-v*.tgz
 sample_jsons/*/output_report/*.xml
+*.css
+*.js.txt
