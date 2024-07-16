@@ -15,10 +15,10 @@
       "summary": null,
       "description": "The MITRE Security Automation Framework (SAF) Command Line Interface (CLI) brings together applications, techniques, libraries, and tools developed by MITRE and the security community to streamline security automation for systems and DevOps pipelines.",
       "license": "Apache-2.0",
-      "copyright": null,
-      "copyright_email": null,
       "supports": [],
       "attributes": [],
+      "copyright": null,
+      "copyright_email": null,
       "depends": [],
       "groups": [],
       "status": "loaded",
@@ -45,7 +45,7 @@
           ]
         }
       ],
-      "sha256": "fa498e2635fd0213c89c495b1cc1da6c86eb1f8e9ee55f10da6c5fdc6e3e3463"
+      "sha256": "73c2aaa2337b354d7fdb7126fe606d7434728cc838b6779fb3e6952d8082d138"
     }
   ],
   "passthrough": {

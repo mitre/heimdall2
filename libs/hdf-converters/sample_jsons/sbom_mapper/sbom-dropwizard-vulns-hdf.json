@@ -15,10 +15,10 @@
       "summary": null,
       "description": "This is the project I want to use to generate data to understand the schema a bit better",
       "license": "",
-      "copyright": null,
-      "copyright_email": null,
       "supports": [],
       "attributes": [],
+      "copyright": null,
+      "copyright_email": null,
       "depends": [],
       "groups": [],
       "status": "loaded",
@@ -45,7 +45,7 @@
           ]
         }
       ],
-      "sha256": "d92e5bec82fc3b42cb960062a1cfb4deac989f7d92db2436e0fb97ab0649c212"
+      "sha256": "78430bb03191e135a55ada12974182bcb8bddc0fd6e07dc2f872211a13f42cff"
     }
   ],
   "passthrough": {

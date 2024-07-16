@@ -48,6 +48,8 @@ export class SbomMapper extends BaseConverter {
         license: {path: 'metadata.component', transformer: formatLicense},
         supports: [], //Insert data
         attributes: [], //Insert data
+        copyright: null, //Insert data
+        copyright_email: null, //Insert data
         depends: [], //Insert data
         groups: [], //Insert data
         status: 'loaded',
