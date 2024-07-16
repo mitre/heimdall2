@@ -17,10 +17,10 @@ function formatLicense(input: Record<string, unknown>): string {
   const licenses = _.get(input, 'licenses');
   if (Array.isArray(licenses)) {
     licenses.map((license) => {
-      message = message.concat(`${license.license.id} `);
+      message = message.concat(`${license.license.id}, `);
     });
   }
-  return message.trim();
+  return message.slice(0, -2);
 }
 
 export class SbomMapper extends BaseConverter {
