@@ -14,7 +14,7 @@ function formatTitle(input: Record<string, unknown>): string {
 
 function formatLicense(input: Record<string, unknown>): string {
   let message = '';
-  let licenses = _.get(input, 'licenses');
+  const licenses = _.get(input, 'licenses');
   if (Array.isArray(licenses)) {
     licenses.map((license) => {
       message = message.concat(`${license.license.id} `);
