@@ -23,7 +23,8 @@ export class MsftConfigMapper extends BaseConverter {
 
   constructor(futSecureScore: string, futProfiles: string) {
     super(JSON.parse(futSecureScore));
-    this.profiles = JSON.parse(futProfiles) as SecureScoreControlProfile[];
+    this.profiles = JSON.parse(futProfiles)
+      .value as SecureScoreControlProfile[];
   }
 
   private getImpact(userImpact: string): number {
