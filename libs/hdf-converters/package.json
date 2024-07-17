@@ -71,6 +71,7 @@
     "@types/lodash": "^4.14.161",
     "@types/node": "^20.1.0",
     "jest": "^27.0.6",
+    "jest-transform-stub": "^2.0.0",
     "quicktype": "^15.0.260",
     "rollup": "^4.18.1",
     "rollup-plugin-string": "^3.0.0",
@@ -87,7 +88,8 @@
     "rootDir": ".",
     "testTimeout": 10000000,
     "transform": {
-      "^.+\\.ts$": "ts-jest"
+      "^.+\\.ts$": "ts-jest",
+      "\\.(html|css|js\\.txt)$": "jest-transform-stub"
     }
   }
 }
