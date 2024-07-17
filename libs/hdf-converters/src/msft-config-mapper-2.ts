@@ -81,12 +81,15 @@ export class MsftConfigMapper extends BaseConverter {
             impact: {
               transformer: (d: ControlScore) => {
                 // return controlCategory from the profile document where its id matches the controlName
-                const highMaxScore = Math.max(
-                  ...this.profiles
-                    .filter((p) => p.id === d.controlName)
-                    .map((p) => p.maxScore || 0)
-                );
+                const knownMaxScores = this.profiles
+                  .filter((p) => p.id === d.controlName)
+                  .map((p) => p.maxScore || 0);
 
+                if (knownMaxScores.length === 0) {
+                  return 0.5;
+                }
+
+                const highMaxScore = Math.max(...knownMaxScores);
                 return highMaxScore / 10.0;
               }
             },
@@ -106,14 +109,18 @@ export class MsftConfigMapper extends BaseConverter {
               {
                 status: {
                   transformer: (d: ControlScore) => {
-                    const highMaxScore = Math.max(
-                      ...this.profiles
-                        .filter((p) => p.id === d.controlName)
-                        .map((p) => p.maxScore || 0)
-                    );
-                    if (d.score === undefined) {
+                    const knownMaxScores = this.profiles
+                      .filter((p) => p.id === d.controlName)
+                      .map((p) => p.maxScore || 0);
+
+                    const highMaxScore = Math.max(...knownMaxScores);
+
+                    if (knownMaxScores.length === 0) {
+                      // no Profile found matching the controlName
+                      return ExecJSON.ControlResultStatus.Failed;
+                    } else if (d.score === undefined) {
                       return ExecJSON.ControlResultStatus.Error;
-                    } else if (d.score == highMaxScore) {
+                    } else if (d.score === highMaxScore) {
                       return ExecJSON.ControlResultStatus.Passed;
                     } else {
                       return ExecJSON.ControlResultStatus.Failed;
