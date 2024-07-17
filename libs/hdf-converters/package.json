@@ -26,8 +26,11 @@
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",
+    "@azure/identity": "^4.3.0",
     "@e965/xlsx": "^0.20.0",
     "@mdi/js": "^7.0.96",
+    "@microsoft/microsoft-graph-client": "^3.0.7",
+    "@microsoft/microsoft-graph-types": "^2.40.0",
     "@mitre/jsonix": "^3.0.7",
     "@smithy/node-http-handler": "^3.0.0",
     "@types/csv2json": "^1.4.2",
@@ -59,7 +62,7 @@
     "yaml": "^2.1.1"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.0",
+    "@types/jest": "^29.0.0",
     "@types/lodash": "^4.14.161",
     "@types/node": "^20.1.0",
     "jest": "^27.0.6",
