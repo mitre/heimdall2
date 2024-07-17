@@ -6,7 +6,7 @@
   "files": [
     "lib"
   ],
-  "types": "lib/index.d.ts",
+  "types": "lib/hdf-converters/index.d.ts",
   "main": "lib/bundle.js",
   "publishConfig": {
     "main": "lib/bundle.js"
