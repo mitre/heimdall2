@@ -25,7 +25,7 @@
     "prepack": "vue-cli-service build --dest dist && cp ../../README.md README.md && cp package.json package.json.orig && cat package.json.orig | jq '.dependencies = (.dependencies | with_entries(select(.key | contains(\"express\"))))' > package.json",
     "postpack": "mv package.json.orig package.json && rm README.md",
     "start:dev": "yarn workspace @mitre/hdf-converters build && vue-cli-service serve",
-    "test": "jest"
+    "test": "yarn workspace @mitre/hdf-converters build && jest"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.425.0",

@@ -10,7 +10,6 @@ module.exports = {
     '.*\\.(vue)$': 'vue-jest',
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.svg$': '<rootDir>/tests/util/svgTransform.js',
-    '\\.(html|css|js\\.txt)$': 'jest-transform-stub'
   },
   moduleDirectories: ['node_modules', 'src'],
   moduleNameMapper: {
@@ -18,6 +17,7 @@ module.exports = {
     '^@[/](.+)': '<rootDir>/src/$1',
     '^.+\\.(css)$': '<rootDir>/tests/util/cssTransform.js',
     '^axios$': 'axios/dist/node/axios.cjs',
-    '^csv-stringify/sync$': 'csv-stringify/dist/cjs/sync.cjs'
+    '^csv-stringify/sync$': 'csv-stringify/dist/cjs/sync.cjs',
+    //'@mitre/hdf-converters(.*)$': '<rootDir>/../../libs/hdf-converters/src$1'
   }
 };
