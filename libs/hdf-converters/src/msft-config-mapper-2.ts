@@ -116,7 +116,11 @@ export class MsftConfigMapper extends BaseConverter {
             results: [
               {
                 status: {
-                  transformer: (d: ControlScore) => {
+                  transformer: (d: ControlScore | any) => {
+                    if (d.scoreInPercentage === 100) {
+                      return ExecJSON.ControlResultStatus.Passed;
+                    }
+
                     const knownMaxScores = this.profiles
                       .filter((p) => p.id === d.controlName)
                       .map((p) => p.maxScore || 0);
