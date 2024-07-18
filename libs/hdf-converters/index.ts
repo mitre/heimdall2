@@ -39,4 +39,4 @@ export * from './src/utils/fingerprinting';
 export * from './src/veracode-mapper';
 export * from './src/xccdf-results-mapper';
 export * from './src/zap-mapper';
-export * from './src/msft-config-mapper-2';
+export * from './src/msft-config-mapper';

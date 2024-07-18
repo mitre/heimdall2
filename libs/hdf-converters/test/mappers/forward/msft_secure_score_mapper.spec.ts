@@ -1,5 +1,5 @@
 import fs from 'fs';
-import {MsftConfigMapper} from '../../../src/msft-config-mapper-2';
+import {MsftConfigMapper} from '../../../src/msft-config-mapper';
 import {omitVersions} from '../../utils';
 
 describe('msft_secure_score_mapper', () => {
