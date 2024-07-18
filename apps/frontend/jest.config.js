@@ -9,7 +9,8 @@ module.exports = {
   transform: {
     '.*\\.(vue)$': 'vue-jest',
     '^.+\\.tsx?$': 'ts-jest',
-    '^.+\\.svg$': '<rootDir>/tests/util/svgTransform.js'
+    '^.+\\.svg$': '<rootDir>/tests/util/svgTransform.js',
+    '\\.(html|css|js\\.txt)$': 'jest-transform-stub'
   },
   moduleDirectories: ['node_modules', 'src'],
   moduleNameMapper: {
