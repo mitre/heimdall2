@@ -40,6 +40,17 @@ context('Results', () => {
       // Scroll controls into view
       cy.scrollTo('bottom');
     });
+
+    it('it displays severity override indicators when present', () => {
+      // Load sample with severity overrides
+      uploadModal.loadSample('Small Profile With Severity Overrides');
+      // Open profile info
+      resultsPage.openProfileInfo();
+      // Scroll controls into view
+      cy.scrollTo('bottom');
+      // Make results data is correct
+      resultsPageVerifier.severityOverridesCorrect();
+    });
   });
 
   describe('User Modal', () => {

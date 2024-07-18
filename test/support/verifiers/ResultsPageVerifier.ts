@@ -37,4 +37,11 @@ export default class ResultsPageVerifier {
       expect(card[0].innerText).to.be.oneOf(correctCards);
     });
   }
+
+  severityOverridesCorrect() {
+    const overrideCount = 3;
+    cy.get('[data-cy=severityOverride]').then((result) => {
+      expect(result.length).to.equal(overrideCount);
+    });
+  }
 }

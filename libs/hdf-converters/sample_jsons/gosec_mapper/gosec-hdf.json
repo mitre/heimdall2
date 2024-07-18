@@ -1,19 +1,9 @@
 {
-  "passthrough": {
-    "auxiliary_data": [
-      {
-        "name": "Gosec",
-        "data": {
-          "Golang errors": {}
-        }
-      }
-    ]
-  },
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.32"
+    "release": "2.10.8"
   },
-  "version": "2.6.32",
+  "version": "2.10.8",
   "statistics": {},
   "profiles": [
     {
@@ -27,16 +17,13 @@
       "controls": [
         {
           "tags": {
-            "nist": [
-              "SI-10"
-            ],
+            "nist": ["SI-10"],
             "cwe": {
               "id": "22",
               "url": "https://cwe.mitre.org/data/definitions/22.html"
             },
             "nosec": "",
             "suppressions": "",
-            "severity": "MEDIUM",
             "confidence": "HIGH"
           },
           "refs": [],
@@ -80,17 +67,13 @@
         },
         {
           "tags": {
-            "nist": [
-              "SI-2",
-              "RA-5"
-            ],
+            "nist": ["SI-2", "RA-5"],
             "cwe": {
               "id": "276",
               "url": "https://cwe.mitre.org/data/definitions/276.html"
             },
             "nosec": "",
             "suppressions": "",
-            "severity": "MEDIUM",
             "confidence": "HIGH"
           },
           "refs": [],
@@ -110,17 +93,13 @@
         },
         {
           "tags": {
-            "nist": [
-              "SI-2",
-              "RA-5"
-            ],
+            "nist": ["SI-2", "RA-5"],
             "cwe": {
               "id": "276",
               "url": "https://cwe.mitre.org/data/definitions/276.html"
             },
             "nosec": "",
             "suppressions": "",
-            "severity": "MEDIUM",
             "confidence": "HIGH"
           },
           "refs": [],
@@ -139,7 +118,17 @@
           ]
         }
       ],
-      "sha256": "b849a262dbb19f2c8f950a75c551aa50b97c76967cd092d6ac5585cabe3fbbc4"
+      "sha256": "9109339ee9544698a40d378e6389f61273596593fa61f3aef97aa1a1cf58261c"
     }
-  ]
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "Gosec",
+        "data": {
+          "Golang errors": {}
+        }
+      }
+    ]
+  }
 }

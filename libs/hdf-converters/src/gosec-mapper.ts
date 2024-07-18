@@ -1,11 +1,21 @@
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {
+  BaseConverter,
+  ILookupPath,
+  impactMapping,
+  MappedTransform
+} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
+const IMPACT_MAPPING: Map<string, number> = new Map([
+  ['high', 0.7],
+  ['medium', 0.5],
+  ['low', 0.3]
+]);
 
 function nistTag(input: Record<string, unknown>): string[] {
   const cwe = [`${_.get(input, 'id')}`];
@@ -26,21 +36,6 @@ export class GoSecMapper extends BaseConverter {
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
   > = {
-    passthrough: {
-      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
-        return {
-          auxiliary_data: [
-            {
-              name: 'Gosec',
-              data: {
-                'Golang errors': _.get(data, 'Golang errors')
-              }
-            }
-          ],
-          ...(this.withRaw && {raw: data})
-        };
-      }
-    },
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion
@@ -68,7 +63,6 @@ export class GoSecMapper extends BaseConverter {
               cwe: {path: 'cwe'},
               nosec: {path: 'nosec'},
               suppressions: {path: 'suppressions'},
-              severity: {path: 'severity'},
               confidence: {path: 'confidence'}
             },
             refs: [],
@@ -76,7 +70,10 @@ export class GoSecMapper extends BaseConverter {
             title: {path: 'details'},
             id: {path: 'rule_id'},
             desc: '',
-            impact: 0.5,
+            impact: {
+              path: 'severity',
+              transformer: impactMapping(IMPACT_MAPPING)
+            },
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,
@@ -89,7 +86,22 @@ export class GoSecMapper extends BaseConverter {
         ],
         sha256: ''
       }
-    ]
+    ],
+    passthrough: {
+      transformer: (data: Record<string, unknown>): Record<string, unknown> => {
+        return {
+          auxiliary_data: [
+            {
+              name: 'Gosec',
+              data: {
+                'Golang errors': _.get(data, 'Golang errors')
+              }
+            }
+          ],
+          ...(this.withRaw && {raw: data})
+        };
+      }
+    }
   };
   constructor(gosecJson: string, withRaw = false) {
     super(JSON.parse(gosecJson));
