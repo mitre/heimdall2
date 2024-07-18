@@ -102,6 +102,14 @@ export class MsftConfigMapper extends BaseConverter {
                     .filter((p) => p.id === d.controlName)
                     .map((p) => p.controlCategory);
                 }
+              },
+              threats: {
+                transformer: (d: ControlScore) => {
+                  // return threats from the profile document where its id matches the controlName
+                  return this.profiles
+                    .filter((p) => p.id === d.controlName)
+                    .map((p) => p.threats);
+                }
               }
             },
             source_location: {},
