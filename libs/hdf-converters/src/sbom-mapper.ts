@@ -82,7 +82,9 @@ export class SbomMapper extends BaseConverter {
     passthrough: {
       transformer: (data: Record<string, any>): Record<string, unknown> => {
         return {
-          auxiliary_data: [{name: '', data: _.omit([])}], //Insert service name and mapped fields to be removed
+          auxiliary_data: [
+            {name: 'SBOM', data: _.omit(data, ['metadata', 'components'])}
+          ],
           ...(this.withRaw && {raw: data})
         };
       }
