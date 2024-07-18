@@ -4,7 +4,6 @@ import {
   SecureScoreControlProfile
 } from '@microsoft/microsoft-graph-types';
 import {ExecJSON} from 'inspecjs';
-import * as _ from 'lodash';
 
 import {version as HeimdallToolsVersion} from '../package.json';
 
@@ -18,20 +17,6 @@ export class MsftConfigMapper extends BaseConverter {
 
     super(rawParams.secureScore);
     this.profiles = rawParams.profiles.value as SecureScoreControlProfile[];
-  }
-
-  private getImpact(userImpact: string): number {
-    const normalized = userImpact.toLowerCase();
-    if (normalized.search('high') !== -1) {
-      return 1.0;
-    } else if (
-      normalized.search('moderate') !== -1 ||
-      normalized.search('medium') !== -1
-    ) {
-      return 0.5;
-    } else {
-      return 0.0;
-    }
   }
 
   mappings: MappedTransform<
