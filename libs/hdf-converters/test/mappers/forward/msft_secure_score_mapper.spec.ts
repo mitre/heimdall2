@@ -25,10 +25,12 @@ describe('msft_secure_score_mapper', () => {
       })
     );
 
+    /* tslint:disable */
     // fs.writeFileSync(
     //   'sample_jsons/msft_secure_score_mapper/burpsuite-hdf.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
+    /* tslint:enable */
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
