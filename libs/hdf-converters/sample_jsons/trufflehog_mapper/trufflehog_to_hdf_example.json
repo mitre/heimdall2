@@ -1,0 +1,101 @@
+{
+    platform: {                      
+      "name": "Heimdall Tools",                          
+      "release": "2.10.10"
+     }
+    version                          //required field
+    statistics: {                    //required field
+      duration
+     }
+    profiles: [                      //required field
+      0: {
+        "name": "trufflehog - git", //source name
+        version
+        sha256                     //required field
+        "title": "trufflehog - git", //source name
+        "maintainer": 
+        summary
+        license
+        copyright
+        copyright_email
+        supports                   //required field - should I hardcode what platforms are currently supported?
+        attributes                 //required field
+        groups                     //required field
+        controls: [                //required field
+          0: {
+            "id": "2_Plain",  //detectortype + decoderName
+            "title": "AWS_Plain", //detectorName + decoderName
+            "desc": "Found {detectorName} secret using {decoderName} decoder",
+            "descriptions": 
+            "impact": 0.5,              //required field
+            "refs": null,                 //required field
+            "tags":{
+                "cci": [
+                    "CCI-004069",
+                    "CCI-000202",
+                    "CCI-000203",
+                    "CCI-002367"
+                ],
+                "nist": [
+                    "IA-5(7)"
+                ],
+                "severity": "medium"
+            }                 //required field
+            code
+            source_location      //required field
+            results: [           //required field
+              0: {
+                "status": "fail",
+                "code_desc": {
+                    "SourceMetadata": {
+                        "Data": {
+                            "Git": {
+                                "commit": "0416560b1330d8ac42045813251d85c688717eaf",
+                                "file": "new_key",
+                                "email": "counter \u003chello@trufflesec.com\u003e",
+                                "repository": "https://github.com/trufflesecurity/test_keys",
+                                "timestamp": "2023-10-19 02:56:37 +0000",
+                                "line": 2
+                            }
+                          }
+                        }
+                },  //SourceMetadata as a block 
+                "message": {
+                        "SourceID": 1,
+                                "SourceType": 16,
+                                "SourceName": "trufflehog - git",
+                                "DetectorType": 2,
+                                "DetectorName": "AWS",
+                                "DecoderName": "PLAIN",
+                                "Verified": true,
+                                "Raw": "AKIAQYLPMN5HHHFPZAM2",
+                                "RawV2": "AKIAQYLPMN5HHHFPZAM21tUm636uS1yOEcfP5pvfqJ/ml36mF7AkyHsEU0IU",
+                                "Redacted": "AKIAQYLPMN5HHHFPZAM2",
+                                "ExtraData": {
+                                    "account": "052310077262",
+                                    "arn": "arn:aws:iam::052310077262:user/canarytokens.com@@c20nnjzlioibnaxvt392i9ope",
+                                    "is_canary": "true",
+                                    "message": "This is an AWS canary token generated at canarytokens.org, and was not set off; learn more here: https://trufflesecurity.com/canaries",
+                                    "resource_type": "Access key"
+                                },
+                                "StructuredData": null
+                            } //SourceID to StructuredData 
+                run_time
+                start_time     //required field
+              }
+            ]
+          }
+        ]
+        status
+      }
+    ]
+    passthrough: {
+      auxiliary_data: [
+        0: {
+          name
+          data
+        }
+      ]
+      raw
+    }
+  }

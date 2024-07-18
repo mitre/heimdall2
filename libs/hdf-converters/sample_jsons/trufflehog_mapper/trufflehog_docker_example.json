@@ -1,0 +1,634 @@
+Found unverified result 🐷🔑❓
+Detector Type: Aiven
+Decoder Type: PLAIN
+Raw result: DGnfccMNNzzU0tLSKE2V+OSvmiuYXZFOkwDmvD2e7saa/X99iCLxOBoAF7W3ljfewGABZ1ucpw2d7733XusTTzxxE33+xCNNlfjED3vcqELON2WGr0+WCS03cXtaTmy6qbutppUkyHAnNO+tl/xgAUc9DLmmxWnacAeB/hDdANK3I/cjSCAIebi3d0QokKfRZHcrvZ01D9XtW72DhqjX3mBtUC5ZwGGqaFqcws5LL7109dGjR9+WN4DiPx7DHXLc0HE5Wt7es/m21WCob4PiTOimTjiJJwM46gPg2PiCE2ee/Wc/+9lvyB5vkvY4SSNO12+uxFkgT7LB7vZ6uptq9678DQ3JThsYggkAppgvCg7OJQs4WkUn
+File: /usr/local/go/misc/trace/trace_viewer_full.html
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: 7307b307f4f0dde421900f8e5126fadac1e13aed
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/testdata/mod/rsc.io_breaker_v2.0.0.txt
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: c589d0c9f0d81640c518354c7bcae77d99820aa3
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: 7307b307f4f0dde421900f8e5126fadac1e13aed
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/testdata/mod/rsc.io_breaker_v2.0.0+incompatible.txt
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: 4930550ba2e22f87187498acfd78348b15f4e7a8
+Version: 1
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/govmomi.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: 13f4951698adc0fa9c1dda3e275d489a24201161
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/juju.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PivotalTracker
+Decoder Type: PLAIN
+Raw result: 3fd3c1944c59d9742e1cd333672181cd
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PivotalTracker
+Decoder Type: PLAIN
+Raw result: 3fd3c1944c59d9742e1cd333672181cd
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: 346938d642f2ec3594ed81d874461961cd0faa76
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: CloudflareApiToken
+Decoder Type: PLAIN
+Raw result: 7fb22c8cba7ecaf98e4082d22d65800cf45e042a
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Verification issue: lookup dummy.faketld: no such host
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://My%20User:My%20Pass@dummy.faketld
+File: /usr/local/go/src/net/http/client_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Verification issue: lookup dummy.faketld: no such host
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://user:password@dummy.faketld
+File: /usr/local/go/src/net/http/client_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Verification issue: lookup dummy.faketld: no such host
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://user:password@dummy.faketld
+File: /usr/local/go/src/net/http/client_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Verification issue: lookup [REDACTED].faketld: no such host
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://user:password@password.faketld
+File: /usr/local/go/src/net/http/client_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: 346938d642f2ec3594ed81d874461961cd0faa76
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
+Version: 1
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Verification issue: lookup dummy.faketld: no such host
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://user:password@dummy.faketld
+File: /usr/local/go/src/net/http/client_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Verification issue: lookup dummy.faketld: no such host
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://user:password@dummy.faketld
+File: /usr/local/go/src/net/http/client_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Verification issue: lookup [REDACTED].faketld: no such host
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://user:password@password.faketld
+File: /usr/local/go/src/net/http/client_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: CloudflareApiToken
+Decoder Type: PLAIN
+Raw result: 7fb22c8cba7ecaf98e4082d22d65800cf45e042a
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: BASE64
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+MIIBOgIBAAJBAN17PWsVQPBrHYdPFtycVQ/0CFyAQYwdVXaefhVURYUkHojwL82T
+HRfLJCWuYVgHMRCcg+EqWzhPSEWgu+MmdekCAwEAAQJBALjQYNTdXF4CFBbXwUz/
+yt9QFDYT9B5WT/12jeGAe653gtYS6OOi/+eAkGmzg1GlRnw6fOfn+HYNFDORST7z
+4j0CIQDn2xz9hVWQEu9ee3vecNT3f60huDGTNoRhtqgweQGX0wIhAPSLj1VcRZEz
+nKpbtU22+PbIMSJ+e80fmY9LIPx5N4HTAiAthGSimMR9bloz0EY3GyuUEyqoDgMd
+hXxjuno2WesoJQIgemilbcALXpxsLmZLgcQ2KSmaVr7jb5ECx9R+hYKTw1sCIG4s
+T+E0J8wlH24pgwQHzy7Ko2qLwn1b5PW8ecrlvP1g
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/handshake_server_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: PLAIN
+Raw result: -----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLYX5CB04fSeQ6tF1aY/PuoAoGCCqGSM49
+AwEHoUQDQgAEPR3tU2Fta9ktY+6P9G0cWO+0kETA6SFs38GecTyudlHz6xvCdz8q
+EKTcWGekdmdDPsHloRNtsiCa697B2O9IFA==
+-----END EC PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/testdata/example-key.pem
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: PLAIN
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+MIICXQIBAAKBgQC6b6qGvc+/n/LvXJRgeG/oE/LRlm/N2TJuIjfOQfnKXSms4Sfa
+YaLugcsQx980WJWG6T0Z5lwnc2DIjXgC9B2kmAmjGXBpPCViZiqrIiPFe4U4Ty4J
+czKnvT6brcqEB+YPOv93xZ1BhQCKtpvusKQ/LUxM5kI+u1HI3UhU9AyORwIDAQAB
+AoGAEJZ03q4uuMb7b26WSQsOMeDsftdatT747LGgs3pNRkMJvTb/O7/qJjxoG+Mc
+qeSj0TAZXp+PXXc3ikCECAc+R8rVMfWdmp903XgO/qYtmZGCorxAHEmR80SrfMXv
+PJnznLQWc8U9nphQErR+tTESg7xWEzmFcPKwnZd1xg8ERYkCQQDTGtrFczlB2b/Z
+9TjNMqUlMnTLIk/a/rPE2fLLmAYhK5sHnJdvDURaH2mF4nso0EGtENnTsh6LATnY
+dkrxXGm9AkEA4hXHG2q3MnhgK1Z5hjv+Fnqd+8bcbII9WW4flFs15EKoMgS1w/PJ
+zbsySaSy5IVS8XeShmT9+3lrleed4sy+UwJBAJOOAbxhfXP5r4+5R6ql66jES75w
+jUCVJzJA5ORJrn8g64u2eGK28z/LFQbv9wXgCwfc72R468BdawFSLa/m2EECQGbZ
+rWiFla26IVXV0xcD98VWJsTBZMlgPnSOqoMdM1kSEd4fUmlAYI/dFzV1XYSkOmVr
+FhdZnklmpVDeu27P4c0CQQCuCOup0FlJSBpWY1TTfun/KMBkBatMz0VMA3d7FKIU
+csPezl677Yjo8u1r/KzeI6zLg87Z8E6r6ZWNc9wBSZK6
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/handshake_server_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: PLAIN
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+MIICXAIBAAKBgQCxoeCUW5KJxNPxMp+KmCxKLc1Zv9Ny+4CFqcUXVUYH69L3mQ7v
+IWrJ9GBfcaA7BPQqUlWxWM+OCEQZH1EZNIuqRMNQVuIGCbz5UQ8w6tS0gcgdeGX7
+J7jgCQ4RK3F/PuCM38QBLaHx988qG8NMc6VKErBjctCXFHQt14lerd5KpQIDAQAB
+AoGAYrf6Hbk+mT5AI33k2Jt1kcweodBP7UkExkPxeuQzRVe0KVJw0EkcFhywKpr1
+V5eLMrILWcJnpyHE5slWwtFHBG6a5fLaNtsBBtcAIfqTQ0Vfj5c6SzVaJv0Z5rOd
+7gQF6isy3t3w9IF3We9wXQKzT6q5ypPGdm6fciKQ8RnzREkCQQDZwppKATqQ41/R
+vhSj90fFifrGE6aVKC1hgSpxGQa4oIdsYYHwMzyhBmWW9Xv/R+fPyr8ZwPxp2c12
+33QwOLPLAkEA0NNUb+z4ebVVHyvSwF5jhfJxigim+s49KuzJ1+A2RaSApGyBZiwS
+rWvWkB471POAKUYt5ykIWVZ83zcceQiNTwJBAMJUFQZX5GDqWFc/zwGoKkeR49Yi
+MTXIvf7Wmv6E++eFcnT461FlGAUHRV+bQQXGsItR/opIG7mGogIkVXa3E1MCQARX
+AAA7eoZ9AEHflUeuLn9QJI/r0hyQQLEtrpwv6rDT1GCWaLII5HJ6NUFVf4TTcqxo
+6vdM4QGKTJoO+SaCyP0CQFdpcxSAuzpFcKv0IlJ8XzS/cy+mweCMwyJ1PFEc4FX6
+wg/HcAJWY60xZTJDFN+Qfx8ZQvBEin6c2/h+zZi5IVY=
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/crypto/x509/x509_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: PLAIN
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+MIIBOgIBAAJBALKZD0nEffqM1ACuak0bijtqE2QrI/KLADv7l3kK3ppMyCuLKoF0
+fd7Ai2KW5ToIwzFofvJcS/STa6HA5gQenRUCAwEAAQJBAIq9amn00aS0h/CrjXqu
+/ThglAXJmZhOMPVn4eiu7/ROixi9sex436MaVeMqSNf7Ex9a8fRNfWss7Sqd9eWu
+RTUCIQDasvGASLqmjeffBNLTXV2A5g4t+kLVCpsEIZAycV5GswIhANEPLmax0ME/
+EO+ZJ79TJKN5yiGBRsv5yvx5UiHxajEXAiAhAol5N4EUyq6I9w1rYdhPMGpLfk7A
+IU2snfRJ6Nq2CQIgFrPsWRCkV+gOYcajD17rEqmuLrdIRexpg8N1DOSXoJ8CIGlS
+tAboUGBxTDq3ZroNism3DaMIbKPyYrAqhKov1h5V
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/crypto/x509/x509_test_import.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: BASE64
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+MIIBOgIBAAJBAN17PWsVQPBrHYdPFtycVQ/0CFyAQYwdVXaefhVURYUkHojwL82T
+HRfLJCWuYVgHMRCcg+EqWzhPSEWgu+MmdekCAwEAAQJBALjQYNTdXF4CFBbXwUz/
+yt9QFDYT9B5WT/12jeGAe653gtYS6OOi/+eAkGmzg1GlRnw6fOfn+HYNFDORST7z
+4j0CIQDn2xz9hVWQEu9ee3vecNT3f60huDGTNoRhtqgweQGX0wIhAPSLj1VcRZEz
+nKpbtU22+PbIMSJ+e80fmY9LIPx5N4HTAiAthGSimMR9bloz0EY3GyuUEyqoDgMd
+hXxjuno2WesoJQIgemilbcALXpxsLmZLgcQ2KSmaVr7jb5ECx9R+hYKTw1sCIG4s
+T+E0J8wlH24pgwQHzy7Ko2qLwn1b5PW8ecrlvP1g
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/handshake_server_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: BASE64
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+Proc-Type: 4,ENCRYPTED
+DEK-Info: DES-EDE3-CBC,80C7C7A09690757A
+
+eQp5ZkH6CyHBz7BZfUPxyLCCmftsBJ7HlqGb8Ld21cSwnzWZ4/SIlhyrUtsfw7VR
+2TTwA+odo9ex7GdxOTaH8oZFumIRoiEjHsk8U7Bhntp+ekkPP79xunnN7hb7hkhr
+yGDQZgA7s2cQHQ71v3gwT2BACAft26jCjbM1wgNzBnJ8M0Rzn68YWqaPtdBu8qb/
+zVR5JB1mnqvTSbFsfF5yMc6o2WQ9jJCl6KypnMl+BpL+dlvdjYVK4l9lYsB1Hs3d
++zDBbWxos818zzhS8/y6eIfiSG27cqrbhURbmgiSfDXjncK4m/pLcQ7mmBL6mFOr
+3Pj4jepzgOiFRL6MKE//h62fZvI1ErYr8VunHEykgKNhChDvb1RO6LEfqKBu+Ivw
+TB6fBhW3TCLMnVPYVoYwA+fHNTmZZm8BEonlIMfI+KktjWUg4Oia+NI6vKcPpFox
+hSnlGgCtvfEaq5/H4kHJp95eOpnFsLviw2seHNkz/LxJMRP1X428+DpYW/QD/0JU
+tJSuC/q9FUHL6RI3u/Asrv8pCb4+D7i1jW/AMIdJTtycOGsbPxQA7yHMWujHmeb1
+BTiHcL3s3KrJu1vDVrshvxfnz71KTeNnZH8UbOqT5i7fPGyXtY1XJddcbI/Q6tXf
+wHFsZc20TzSdsVLBtwksUacpbDogcEVMctnNrB8FIrB3vZEv9Q0Z1VeY7nmTpF+6
+a+z2P7acL7j6A6Pr3+q8P9CPiPC7zFonVzuVPyB8GchGR2hytyiOVpuD9+k8hcuw
+ZWAaUoVtWIQ52aKS0p19G99hhb+IVANC4akkdHV4SP8i7MVNZhfUmg==
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/encoding/pem/pem_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: PLAIN
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+MIIBOgIBAAJBAN17PWsVQPBrHYdPFtycVQ/0CFyAQYwdVXaefhVURYUkHojwL82T
+HRfLJCWuYVgHMRCcg+EqWzhPSEWgu+MmdekCAwEAAQJBALjQYNTdXF4CFBbXwUz/
+yt9QFDYT9B5WT/12jeGAe653gtYS6OOi/+eAkGmzg1GlRnw6fOfn+HYNFDORST7z
+4j0CIQDn2xz9hVWQEu9ee3vecNT3f60huDGTNoRhtqgweQGX0wIhAPSLj1VcRZEz
+nKpbtU22+PbIMSJ+e80fmY9LIPx5N4HTAiAthGSimMR9bloz0EY3GyuUEyqoDgMd
+hXxjuno2WesoJQIgemilbcALXpxsLmZLgcQ2KSmaVr7jb5ECx9R+hYKTw1sCIG4s
+T+E0J8wlH24pgwQHzy7Ko2qLwn1b5PW8ecrlvP1g
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/handshake_client_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: c589d0c9f0d81640c518354c7bcae77d99820aa3
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: a98ad7ee00ec53921f08832bc06ecf7fd600e6a1
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: c589d0c9f0d81640c518354c7bcae77d99820aa3
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: Github
+Decoder Type: PLAIN
+Raw result: bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d
+Rotation_guide: https://howtorotate.com/docs/tutorials/github/
+Version: 1
+File: /usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: BASE64
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+MIICXgIBAAKBgQDuLnQAI3mDgey3VBzWnB2L39JUU4txjeVE6myuDqkM/uGlfjb9
+SjY1bIw4iA5sBBZzHi3z0h1YV8QPuxEbi4nW91IJm2gsvvZhIrCHS3l6afab4pZB
+l2+XsDulrKBxKKtD1rGxlG4LjncdabFn9gvLZad2bSysqz/qTAUStTvqJQIDAQAB
+AoGAGRzwwir7XvBOAy5tM/uV6e+Zf6anZzus1s1Y1ClbjbE6HXbnWWF/wbZGOpet
+3Zm4vD6MXc7jpTLryzTQIvVdfQbRc6+MUVeLKwZatTXtdZrhu+Jk7hx0nTPy8Jcb
+uJqFk541aEw+mMogY/xEcfbWd6IOkp+4xqjlFLBEDytgbIECQQDvH/E6nk+hgN4H
+qzzVtxxr397vWrjrIgPbJpQvBsafG7b0dA4AFjwVbFLmQcj2PprIMmPcQrooz8vp
+jy4SHEg1AkEA/v13/5M47K9vCxmb8QeD/asydfsgS5TeuNi8DoUBEmiSJwma7FXY
+fFUtxuvL7XvjwjN5B30pNEbc6Iuyt7y4MQJBAIt21su4b3sjXNueLKH85Q+phy2U
+fQtuUE9txblTu14q3N7gHRZB4ZMhFYyDy8CKrN2cPg/Fvyt0Xlp/DoCzjA0CQQDU
+y2ptGsuSmgUtWj3NM9xuwYPm+Z/F84K6+ARYiZ6PYj013sovGKUFfYAqVXVlxtIX
+qyUBnu3X9ps8ZfjLZO7BAkEAlT4R5Yl6cGhaJQYZHOde3JEMhNRcVFMO8dJDaFeo
+f9Oeos0UUothgiDktdQHxdNEwLjQf7lJJBzV+5OtwswCWA==
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/net/http/internal/testcert.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: PLAIN
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+MIICXgIBAAKBgQDScVtBC45ayNsa16NylbPXnc6XOJkzhtWMn2Niu43DmfZHLq5h
+AB9+Gpok4icKaZxV7ayImCWzIf1pGHq8qKhsFshRddRTUAF3np5sDOW3QuhsuXHu
+lkQzLfQuoiL0TrOYvdi90bOliWQVGdGurAS1ZhsYF/fOc7bnRLnoIJYfZQIDAQAB
+AoGBAMst7OgpKyFV6c3JwyI/jWqxDySL3caU+RuTTBaodKAUx2ZEmNJIlx9eudLA
+kucHvoxsM/eRxlxkhdFxdBcwU6J+zqooTnhu/FE3jhrT1lPrbhfGhyKnUrB0KKMM
+VY3IQZyiehpxaeXAwoAou6TbWoTpl9t8ImAqAMY8hlULCUqlAkEA+9+Ry5FSYK/m
+542LujIcCaIGoG1/Te6Sxr3hsPagKC2rH20rDLqXwEedSFOpSS0vpzlPAzy/6Rbb
+PHTJUhNdwwJBANXkA+TkMdbJI5do9/mn//U0LfrCR9NkcoYohxfKz8JuhgRQxzF2
+6jpo3q7CdTuuRixLWVfeJzcrAyNrVcBq87cCQFkTCtOMNC7fZnCTPUv+9q1tcJyB
+vNjJu3yvoEZeIeuzouX9TJE21/33FaeDdsXbRhQEj23cqR38qFHsF1qAYNMCQQDP
+QXLEiJoClkR2orAmqjPLVhR3t2oB3INcnEjLNSq8LHyQEfXyaFfu4U9l5+fRPL2i
+jiC0k/9L5dHUsF0XZothAkEA23ddgRs+Id/HxtojqqUT27B8MT/IGNrYsp4DvS/c
+qgkeluku4GjxRlDMBuXk94xOBEinUs+p/hwP1Alll80Tpg==
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/net/smtp/smtp_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: PLAIN
+Raw result: -----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLYX5CB04fSeQ6tF1aY/PuoAoGCCqGSM49
+AwEHoUQDQgAEPR3tU2Fta9ktY+6P9G0cWO+0kETA6SFs38GecTyudlHz6xvCdz8q
+EKTcWGekdmdDPsHloRNtsiCa697B2O9IFA==
+-----END EC PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/example_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: PLAIN
+Raw result: -----BEGIN EC PRIVATE KEY-----
+MHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLYX5CB04fSeQ6tF1aY/PuoAoGCCqGSM49
+AwEHoUQDQgAEPR3tU2Fta9ktY+6P9G0cWO+0kETA6SFs38GecTyudlHz6xvCdz8q
+EKTcWGekdmdDPsHloRNtsiCa697B2O9IFA==
+-----END EC PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/example_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: BASE64
+Raw result: -----BEGIN EC PRIVATE KEY-----
+MIHcAgEBBEIBkJN9X4IqZIguiEVKMqeBUP5xtRsEv4HJEtOpOGLELwO53SD78Ew8
+k+wLWoqizS3NpQyMtrU8JFdWfj+C57UNkOugBwYFK4EEACOhgYkDgYYABACVjJF1
+FMBexFe01MNvja5oHt1vzobhfm6ySD6B5U7ixohLZNz1MLvT/2XMW/TdtWo+PtAd
+3kfDdq0Z9kUsjLzYHQFMH3CQRnZIi4+DzEpcj0B22uCJ7B0rxE4wdihBsmKo+1vx
++U56jb0JuK7qixgnTy5w/hOWusPTQBbNZU6sER7m8Q==
+-----END EC PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/handshake_server_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: BASE64
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+MIIBOwIBAAJBANLJhPHhITqQbPklG3ibCVxwGMRfp/v4XqhfdQHdcVfHap6NQ5Wo
+k/4xIA+ui35/MmNartNuC+BdZ1tMuVCPFZcCAwEAAQJAEJ2N+zsR0Xn8/Q6twa4G
+6OB1M1WO+k+ztnX/1SvNeWu8D6GImtupLTYgjZcHufykj09jiHmjHx8u8ZZB/o1N
+MQIhAPW+eyZo7ay3lMz1V01WVjNKK9QSn1MJlb06h/LuYv9FAiEA25WPedKgVyCW
+SmUwbPw8fnTcpqDWE3yTO3vKcebqMSsCIBF3UmVue8YU3jybC3NxuXq3wNm34R8T
+xVLHwDXh/6NJAiEAl2oHGGLz64BuAfjKrqwz7qMYr9HCLIe/YsoWq/olzScCIQDi
+D2lWusoe2/nEqfDVVWGWlyJ7yOmqaVm/iNUN9B2N2g==
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/tls_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: BASE64
+Raw result: -----BEGIN EC PRIVATE KEY-----
+MIHcAgEBBEIBrsoKp0oqcv6/JovJJDoDVSGWdirrkgCWxrprGlzB9o0X8fV675X0
+NwuBenXFfeZvVcwluO7/Q9wkYoPd/t3jGImgBwYFK4EEACOhgYkDgYYABAFj36bL
+06h5JRGUNB1X/Hwuw64uKW2GGJLVPPhoYMcg/ALWaW+d/t+DmV5xikwKssuFq4Bz
+VQldyCXTXGgu7OC0AQCC/Y/+ODK3NFKlRi+AsG3VQDSV4tgHLqZBBus0S6pPcg1q
+kohxS/xfFg/TEwRSSws+roJr4JFKpO2t3/be5OdqmQ==
+-----END EC PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/tls_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: PrivateKey
+Decoder Type: PLAIN
+Raw result: -----BEGIN RSA PRIVATE KEY-----
+MIICXQIBAAKBgQC6b6qGvc+/n/LvXJRgeG/oE/LRlm/N2TJuIjfOQfnKXSms4Sfa
+YaLugcsQx980WJWG6T0Z5lwnc2DIjXgC9B2kmAmjGXBpPCViZiqrIiPFe4U4Ty4J
+czKnvT6brcqEB+YPOv93xZ1BhQCKtpvusKQ/LUxM5kI+u1HI3UhU9AyORwIDAQAB
+AoGAEJZ03q4uuMb7b26WSQsOMeDsftdatT747LGgs3pNRkMJvTb/O7/qJjxoG+Mc
+qeSj0TAZXp+PXXc3ikCECAc+R8rVMfWdmp903XgO/qYtmZGCorxAHEmR80SrfMXv
+PJnznLQWc8U9nphQErR+tTESg7xWEzmFcPKwnZd1xg8ERYkCQQDTGtrFczlB2b/Z
+9TjNMqUlMnTLIk/a/rPE2fLLmAYhK5sHnJdvDURaH2mF4nso0EGtENnTsh6LATnY
+dkrxXGm9AkEA4hXHG2q3MnhgK1Z5hjv+Fnqd+8bcbII9WW4flFs15EKoMgS1w/PJ
+zbsySaSy5IVS8XeShmT9+3lrleed4sy+UwJBAJOOAbxhfXP5r4+5R6ql66jES75w
+jUCVJzJA5ORJrn8g64u2eGK28z/LFQbv9wXgCwfc72R468BdawFSLa/m2EECQGbZ
+rWiFla26IVXV0xcD98VWJsTBZMlgPnSOqoMdM1kSEd4fUmlAYI/dFzV1XYSkOmVr
+FhdZnklmpVDeu27P4c0CQQCuCOup0FlJSBpWY1TTfun/KMBkBatMz0VMA3d7FKIU
+csPezl677Yjo8u1r/KzeI6zLg87Z8E6r6ZWNc9wBSZK6
+-----END RSA PRIVATE KEY-----
+File: /usr/local/go/src/crypto/tls/handshake_server_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://user:password@google.com
+File: /usr/local/go/src/net/url/url_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://j%40ne:password@google.com
+File: /usr/local/go/src/net/url/url_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://jane:p%40ssword@google.com
+File: /usr/local/go/src/net/url/url_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://jane:p%40ssword@google.com
+File: /usr/local/go/src/net/url/url_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://j%40ne:password@google.com?q=@go
+File: /usr/local/go/src/net/url/url_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://j%40ne:password@google.com?q=@go
+File: /usr/local/go/src/net/url/url_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://%3Fam:pa%3Fsword@google.com
+File: /usr/local/go/src/net/url/url_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://user:password@google.com
+File: /usr/local/go/src/net/url/url_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+
+Found unverified result 🐷🔑❓
+Detector Type: URI
+Decoder Type: PLAIN
+Raw result: http://j%40ne:password@google.com
+File: /usr/local/go/src/net/url/url_test.go
+Image: golang
+Layer: sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597
+Tag: 1.12-alpine
+

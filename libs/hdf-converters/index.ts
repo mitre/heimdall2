@@ -32,6 +32,7 @@ export * from './src/scoutsuite-mapper';
 export * from './src/snyk-mapper';
 export * from './src/sonarqube-mapper';
 export * from './src/splunk-mapper';
+export * from './src/trufflehog-mapper';
 export * from './src/twistlock-mapper';
 export * from './src/utils/attestations';
 export * from './src/utils/compliance';
