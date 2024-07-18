@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf ../../dist/frontend",
-    "build": "yarn workspace @mitre/hdf-converters build && vue-cli-service build",
+    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "lint:ci": "vue-cli-service lint --no-fix  --maxWarnings 0",
     "make:component": "vue-cli-service make:component",

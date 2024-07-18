@@ -35,6 +35,7 @@
     "@rollup/plugin-json": "^6.1.0",
     "@smithy/node-http-handler": "^3.0.0",
     "@types/csv2json": "^1.4.2",
+    "@types/lodash": "^4.14.161",
     "@types/ms": "^0.7.31",
     "@types/mustache": "^4.1.2",
     "@types/papaparse": "^5.3.2",
@@ -72,7 +73,6 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.0",
-    "@types/lodash": "^4.14.161",
     "@types/node": "^20.1.0",
     "jest": "^27.0.6",
     "jest-transform-stub": "^2.0.0",
