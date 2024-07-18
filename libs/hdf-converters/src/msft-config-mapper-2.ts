@@ -21,10 +21,11 @@ import {
 export class MsftConfigMapper extends BaseConverter {
   profiles: SecureScoreControlProfile[];
 
-  constructor(futSecureScore: string, futProfiles: string) {
-    super(JSON.parse(futSecureScore));
-    this.profiles = JSON.parse(futProfiles)
-      .value as SecureScoreControlProfile[];
+  constructor(secureScore_and_profiles_combined: string) {
+    const rawParams = JSON.parse(secureScore_and_profiles_combined);
+
+    super(rawParams.secureScore);
+    this.profiles = rawParams.profiles.value as SecureScoreControlProfile[];
   }
 
   private getImpact(userImpact: string): number {

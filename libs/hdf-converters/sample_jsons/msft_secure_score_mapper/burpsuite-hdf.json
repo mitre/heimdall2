@@ -9,7 +9,7 @@
     {
       "name": "Microsoft Secure Score",
       "version": "",
-      "title": "Azure Secure Score report: TenantID: ba10574a-1b21-4b0b-9908-522a71d28a1c",
+      "title": "Azure Secure Score report: TenantID: 12345678-1234-1234-1234-1234567890abcd",
       "summary": "NAME",
       "supports": [],
       "attributes": [],
@@ -31,7 +31,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -50,7 +50,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -75,7 +75,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -102,7 +102,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -127,7 +127,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -154,7 +154,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -177,7 +177,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -200,7 +200,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -223,7 +223,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -246,7 +246,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -269,7 +269,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -292,7 +292,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -311,7 +311,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -338,7 +338,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -364,7 +364,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -390,7 +390,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -415,7 +415,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -434,7 +434,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -460,7 +460,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -486,7 +486,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -512,7 +512,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -531,7 +531,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -550,7 +550,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -569,7 +569,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -592,7 +592,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -611,7 +611,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -634,7 +634,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -653,7 +653,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -672,7 +672,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -695,7 +695,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -718,7 +718,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -741,7 +741,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -764,7 +764,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -787,7 +787,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -810,7 +810,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -833,7 +833,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -852,7 +852,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -875,7 +875,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -898,7 +898,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -921,7 +921,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -944,7 +944,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -963,7 +963,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -986,7 +986,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1009,7 +1009,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1032,7 +1032,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1055,7 +1055,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1078,7 +1078,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1097,7 +1097,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1116,7 +1116,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1135,7 +1135,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1154,7 +1154,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1173,7 +1173,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1192,7 +1192,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1211,7 +1211,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1237,7 +1237,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1256,7 +1256,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1283,7 +1283,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1309,7 +1309,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1335,7 +1335,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1354,7 +1354,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1373,7 +1373,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1399,7 +1399,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1418,7 +1418,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1445,7 +1445,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1464,7 +1464,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1483,7 +1483,7 @@
             {
               "status": "passed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1502,7 +1502,7 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         },
@@ -1521,12 +1521,12 @@
             {
               "status": "failed",
               "code_desc": "",
-              "start_time": "2024-07-15T00:00:00Z"
+              "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         }
       ],
-      "sha256": "dfb5e72c30edfdf0e7f23608d4cb121b514659d18f228f36ce896052112d71d6"
+      "sha256": "847c6354a64c245513fb0ba79ba5d9c84b2763dc75018df98b748c4a11fbbe93"
     }
   ],
   "passthrough": {}
