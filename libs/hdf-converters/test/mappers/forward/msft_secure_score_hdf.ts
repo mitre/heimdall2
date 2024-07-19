@@ -2,7 +2,7 @@ import fs from 'fs';
 import {MsftSecureScoreMapper} from '../../../src/msft-secure-score-mapper';
 import {omitVersions} from '../../utils';
 
-describe('msft_secure_score_mapper', () => {
+describe('msft_secure_score_hdf', () => {
   it('Successfully converts Microsoft Secure Score reports', () => {
     const mapper = new MsftSecureScoreMapper(
       JSON.stringify({
@@ -25,12 +25,10 @@ describe('msft_secure_score_mapper', () => {
       })
     );
 
-    /* tslint:disable */
     // fs.writeFileSync(
     //   'sample_jsons/msft_secure_score_mapper/secure_score-hdf.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
-    /* tslint:enable */
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
