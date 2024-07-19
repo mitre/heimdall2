@@ -19,6 +19,10 @@ export class MsftSecureScoreMapper extends BaseConverter {
     this.profiles = rawParams.profiles.value as SecureScoreControlProfile[];
   }
 
+  private getProfiles(controlName: string): SecureScoreControlProfile[] {
+    return this.profiles.filter((p) => p.id === controlName);
+  }
+
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
     ILookupPath
@@ -50,8 +54,17 @@ export class MsftSecureScoreMapper extends BaseConverter {
                 `${d.controlCategory}:${d.controlName}`
             },
             title: {
-              transformer: (d: ControlScore) =>
-                `${d.controlCategory || ''}:${d.controlName || ''}`
+              transformer: (d: ControlScore) => {
+                const titles = this.getProfiles(d.controlName || '')
+                  .filter((p) => p.title !== undefined)
+                  .map((p) => p.title);
+
+                if (titles.length > 0) {
+                  return titles.join('... ');
+                } else {
+                  return `${d.controlCategory || ''}:${d.controlName || ''}`;
+                }
+              }
             },
             desc: {
               transformer: (d: ControlScore) => d.description || ''
@@ -59,9 +72,9 @@ export class MsftSecureScoreMapper extends BaseConverter {
             impact: {
               transformer: (d: ControlScore) => {
                 // return controlCategory from the profile document where its id matches the controlName
-                const knownMaxScores = this.profiles
-                  .filter((p) => p.id === d.controlName)
-                  .map((p) => p.maxScore || 0);
+                const knownMaxScores = this.getProfiles(
+                  d.controlName || ''
+                ).map((p) => p.maxScore || 0);
 
                 if (knownMaxScores.length === 0) {
                   return 0.5;
@@ -76,32 +89,71 @@ export class MsftSecureScoreMapper extends BaseConverter {
               group: {
                 transformer: (d: ControlScore) => {
                   // return controlCategory from the profile document where its id matches the controlName
-                  return this.profiles
-                    .filter((p) => p.id === d.controlName)
-                    .map((p) => p.controlCategory);
+                  return this.getProfiles(d.controlName || '').map(
+                    (p) => p.controlCategory
+                  );
+                }
+              },
+              tiers: {
+                transformer: (d: ControlScore) => {
+                  // return tiers from the profile document where its id matches the controlName
+                  return this.getProfiles(d.controlName || '').map(
+                    (p) => p.tier
+                  );
                 }
               },
               threats: {
                 transformer: (d: ControlScore) => {
-                  // return threats from the profile document where its id matches the controlName
-                  return this.profiles
-                    .filter((p) => p.id === d.controlName)
-                    .map((p) => p.threats);
+                  // return unique threats from the profile document where its id matches the controlName
+                  const uniqs: Set<string> = new Set();
+                  this.getProfiles(d.controlName || '').forEach((p) =>
+                    p.threats?.forEach((threat) => uniqs.add(threat))
+                  );
+                  return [...uniqs];
+                }
+              },
+              services: {
+                transformer: (d: ControlScore) => {
+                  // return thrserviceeats from the profile document where its id matches the controlName
+                  return this.getProfiles(d.controlName || '').map(
+                    (p) => p.service
+                  );
+                }
+              },
+              userImpacts: {
+                transformer: (d: ControlScore) => {
+                  // return userImpacts from the profile document where its id matches the controlName
+                  return this.getProfiles(d.controlName || '')
+                    .filter((p) => p.userImpact !== undefined)
+                    .map((p) => p.userImpact);
                 }
               }
             },
             source_location: {},
+            code: {
+              transformer: (
+                d: ControlScore & {implementationStatus: string}
+              ) => {
+                const profiles = this.getProfiles(d.controlName || '');
+
+                if (profiles?.length === 0) {
+                  return d.implementationStatus;
+                }
+              }
+            },
             results: [
               {
                 status: {
-                  transformer: (d: ControlScore | any) => {
+                  transformer: (
+                    d: ControlScore & {scoreInPercentage: number}
+                  ) => {
                     if (d.scoreInPercentage === 100) {
                       return ExecJSON.ControlResultStatus.Passed;
                     }
 
-                    const knownMaxScores = this.profiles
-                      .filter((p) => p.id === d.controlName)
-                      .map((p) => p.maxScore || 0);
+                    const knownMaxScores = this.getProfiles(
+                      d.controlName || ''
+                    ).map((p) => p.maxScore || 0);
 
                     const highMaxScore = Math.max(...knownMaxScores);
 
@@ -117,7 +169,19 @@ export class MsftSecureScoreMapper extends BaseConverter {
                     }
                   }
                 },
-                code_desc: '',
+                code_desc: {
+                  transformer: (
+                    d: ControlScore & {implementationStatus: string}
+                  ) => {
+                    const remediations = this.getProfiles(d.controlName || '')
+                      .filter((p) => p.remediation !== undefined)
+                      .map((p) => p.remediation);
+
+                    if (remediations.length > 0) {
+                      return remediations.join('\n\n');
+                    }
+                  }
+                },
                 start_time: {transformer: () => this.data.createdDateTime}
               }
             ]
@@ -126,6 +190,13 @@ export class MsftSecureScoreMapper extends BaseConverter {
         sha256: ''
       }
     ],
-    passthrough: {}
+    passthrough: {
+      profiles: {
+        value: {
+          tramsformer: () => this.profiles
+        }
+      },
+      secureScore: this.data
+    }
   };
 }
