@@ -27,7 +27,7 @@ describe('msft_secure_score_mapper', () => {
 
     /* tslint:disable */
     // fs.writeFileSync(
-    //   'sample_jsons/msft_secure_score_mapper/burpsuite-hdf.json',
+    //   'sample_jsons/msft_secure_score_mapper/secure_score-hdf.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
     /* tslint:enable */
@@ -36,7 +36,7 @@ describe('msft_secure_score_mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync(
-            'sample_jsons/msft_secure_score_mapper/burpsuite-hdf.json',
+            'sample_jsons/msft_secure_score_mapper/secure_score-hdf.json',
             {
               encoding: 'utf-8'
             }
