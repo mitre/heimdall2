@@ -9,7 +9,7 @@ import {version as HeimdallToolsVersion} from '../package.json';
 
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 
-export class MsftConfigMapper extends BaseConverter {
+export class MsftSecureScoreMapper extends BaseConverter {
   profiles: SecureScoreControlProfile[];
 
   constructor(secureScore_and_profiles_combined: string) {

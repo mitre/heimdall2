@@ -1,10 +1,10 @@
 import fs from 'fs';
-import {MsftConfigMapper} from '../../../src/msft-config-mapper';
+import {MsftSecureScoreMapper} from '../../../src/msft-secure-score-mapper';
 import {omitVersions} from '../../utils';
 
 describe('msft_secure_score_mapper', () => {
   it('Successfully converts Microsoft Secure Score reports', () => {
-    const mapper = new MsftConfigMapper(
+    const mapper = new MsftSecureScoreMapper(
       JSON.stringify({
         secureScore: JSON.parse(
           fs.readFileSync(
