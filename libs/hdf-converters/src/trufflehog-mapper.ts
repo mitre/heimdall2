@@ -41,10 +41,11 @@ export class TrufflehogMapper extends BaseConverter {
         status: 'loaded',      
         controls: [
           {
+            path:'wrapper',
             key: 'id',
             tags: {
                 nist: 'IA-5(7)',
-                cci
+                cci: []
             },             
             descriptions: [],     
             refs: [],             
@@ -61,7 +62,7 @@ export class TrufflehogMapper extends BaseConverter {
             },               
             desc: {
                 transformer: (data: Record<string, unknown>): string => {
-                    return 'Found ' + _.get(data, 'DetectorName') + ' secret using ' + _.get(data, 'DecoderName') + 'decoder'
+                    return 'Found ' + _.get(data, 'DetectorName') + ' secret using ' + _.get(data, 'DecoderName') + ' decoder'
                 }
             },           
             impact: 0,            
@@ -72,7 +73,7 @@ export class TrufflehogMapper extends BaseConverter {
                 code_desc: '',                                
                 message: {
                     transformer: (data: Record<string, unknown>): string => {
-                        return _.omit(data, 'SourceMetadata');
+                        return `${JSON.stringify(_.omit(data, 'SourceMetadata'))}`;
                     }
                 },                                
                 run_time: null,                               
@@ -94,7 +95,7 @@ export class TrufflehogMapper extends BaseConverter {
     }
   };
   constructor(exportJson: string, withRaw = false) {
-    super(JSON.parse(exportJson), true);
+    super({wrapper: JSON.parse(exportJson)}, true);
     this.withRaw = withRaw
   }
 }

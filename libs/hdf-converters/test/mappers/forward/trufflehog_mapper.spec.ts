@@ -2,17 +2,17 @@ import fs from 'fs';
 import {TrufflehogMapper} from '../../../src/trufflehog-mapper';
 import {omitVersions} from '../../utils';
 
-describe('SKELETON_mapper', () => {
-  it('Successfully converts SKELETON targeted at a local/cloned repository data', () => {
+describe('trufflehog_mapper', () => {
+  it('Successfully converts trufflehog targeted at a local/cloned repository data', () => {
     const mapper = new TrufflehogMapper(
       fs.readFileSync(
-        'sample_jsons/SKELETON_mapper/sample_input_report/SKELETON.json',
+        'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog.json',
         {encoding: 'utf-8'}
       )
     );
 
     // fs.writeFileSync(
-    //   'sample_jsons/SKELETON_mapper/SKELETON-hdf.json',
+    //   'sample_jsons/trufflehog_mapper/trufflehog-hdf.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
@@ -20,7 +20,7 @@ describe('SKELETON_mapper', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync(
-            'sample_jsons/SKELETON_mapper/SKELETON-hdf.json',
+            'sample_jsons/trufflehog_mapper/trufflehog-hdf.json',
             {
               encoding: 'utf-8'
             }
@@ -31,18 +31,18 @@ describe('SKELETON_mapper', () => {
   });
 });
 
-describe('SKELETON_mapper_withraw', () => {
-  it('Successfully converts withraw flagged SKELETON targeted at a local/cloned repository data', () => {
+describe('trufflehog_mapper_withraw', () => {
+  it('Successfully converts withraw flagged trufflehog targeted at a local/cloned repository data', () => {
     const mapper = new TrufflehogMapper(
       fs.readFileSync(
-        'sample_jsons/SKELETON_mapper/sample_input_report/SKELETON.json',
+        'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog.json',
         {encoding: 'utf-8'}
       ),
       true
     );
 
     // fs.writeFileSync(
-    //   'sample_jsons/SKELETON_mapper/SKELETON-hdf-withraw.json',
+    //   'sample_jsons/trufflehog_mapper/trufflehog-hdf-withraw.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
@@ -50,7 +50,7 @@ describe('SKELETON_mapper_withraw', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync(
-            'sample_jsons/SKELETON_mapper/SKELETON-hdf-withraw.json',
+            'sample_jsons/trufflehog_mapper/trufflehog-hdf-withraw.json',
             {
               encoding: 'utf-8'
             }
