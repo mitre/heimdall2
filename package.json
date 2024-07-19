@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "backend": "yarn workspace heimdall-server",
-    "build": "lerna run build",
+    "build": "lerna run build --include-dependencies",
     "cypress-test": "yarn workspace @heimdall/cypress-tests",
     "frontend": "yarn workspace @mitre/heimdall-lite",
     "hdf-converters": "yarn workspace @mitre/hdf-converters",
