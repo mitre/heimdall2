@@ -8,7 +8,7 @@ describe('msft_secure_score_hdf', () => {
       JSON.stringify({
         secureScore: JSON.parse(
           fs.readFileSync(
-            'sample_jsons/msft_secure_score_mapper/secureScore.json',
+            'sample_jsons/msft_secure_score_mapper/sample_input_report/secureScore.json',
             {
               encoding: 'utf-8'
             }
@@ -16,7 +16,7 @@ describe('msft_secure_score_hdf', () => {
         ),
         profiles: JSON.parse(
           fs.readFileSync(
-            'sample_jsons/msft_secure_score_mapper/profiles.json',
+            'sample_jsons/msft_secure_score_mapper/sample_input_report/profiles.json',
             {
               encoding: 'utf-8'
             }
