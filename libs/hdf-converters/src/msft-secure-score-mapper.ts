@@ -29,7 +29,6 @@ export class MsftSecureScoreMapper extends BaseConverter {
     profiles: [
       {
         name: 'Microsoft Secure Score Scan',
-        version: {path: 'v4'},
         title: {
           transformer: (data: SecureScore) =>
             `Azure Secure Score report - TenantID: ${data.azureTenantId}`
