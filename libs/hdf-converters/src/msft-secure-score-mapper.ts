@@ -59,9 +59,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                 }
               }
             },
-            desc: {
-              transformer: (d: ControlScore) => d.description || ''
-            },
+            desc: {path: 'description'},
             impact: {
               transformer: (d: ControlScore) => {
                 // return controlCategory from the profile document where its id matches the controlName
