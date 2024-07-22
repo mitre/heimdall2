@@ -193,7 +193,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
     passthrough: {
       profiles: {
         value: {
-          tramsformer: () => this.profiles
+          transformer: () => this.profiles
         }
       },
       secureScore: this.data
