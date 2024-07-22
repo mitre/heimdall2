@@ -11,10 +11,10 @@ describe('trufflehog_mapper', () => {
       )
     );
 
-     fs.writeFileSync(
-       'sample_jsons/trufflehog_mapper/trufflehog-hdf.json',
-       JSON.stringify(mapper.toHdf(), null, 2)
-    );
+     // fs.writeFileSync(
+     //   'sample_jsons/trufflehog_mapper/trufflehog-hdf.json',
+     //   JSON.stringify(mapper.toHdf(), null, 2)
+     // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
