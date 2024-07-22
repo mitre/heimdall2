@@ -28,7 +28,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
     statistics: {},
     profiles: [
       {
-        name: 'Microsoft Secure Score',
+        name: 'Microsoft Secure Score Scan',
         version: {path: 'v4'},
         title: {
           transformer: (data: SecureScore) =>
