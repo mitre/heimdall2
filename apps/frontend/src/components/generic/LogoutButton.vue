@@ -5,8 +5,9 @@
     text="Logout"
     icon="mdi-logout"
     @click="logOut"
-    >Logout</IconLinkItem
   >
+    Logout
+  </IconLinkItem>
 </template>
 
 <script lang="ts">
