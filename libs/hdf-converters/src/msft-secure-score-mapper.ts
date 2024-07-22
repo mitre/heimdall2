@@ -34,7 +34,6 @@ export class MsftSecureScoreMapper extends BaseConverter {
           transformer: (d: SecureScore) =>
             `Azure Secure Score report: TenantID: ${d.azureTenantId}`
         },
-        summary: 'NAME',
         supports: [],
         attributes: [],
         groups: [],
