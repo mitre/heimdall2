@@ -20,7 +20,6 @@ export class MsftSecureScoreMapper extends BaseConverter {
   }
 
   private getProfiles(controlName: string): SecureScoreControlProfile[] {
-    console.log('filtering profiles');
     return this.profiles.filter((p) => p.id === controlName);
   }
 
@@ -56,8 +55,6 @@ export class MsftSecureScoreMapper extends BaseConverter {
             },
             title: {
               transformer: (d: ControlScore) => {
-                console.log('filtering profiles to get title');
-
                 const titles = this.getProfiles(d.controlName || '')
                   .filter((p) => p.title !== undefined)
                   .map((p) => p.title);
@@ -126,7 +123,6 @@ export class MsftSecureScoreMapper extends BaseConverter {
               userImpacts: {
                 transformer: (d: ControlScore) => {
                   // return userImpacts from the profile document where its id matches the controlName
-                  console.log('filter profiles to get userImpact');
                   return this.getProfiles(d.controlName || '')
                     .filter((p) => p.userImpact !== undefined)
                     .map((p) => p.userImpact);
