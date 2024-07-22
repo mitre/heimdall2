@@ -11,10 +11,10 @@ describe('sbom_mapper_saf', () => {
       )
     );
 
-     fs.writeFileSync(
-       'sample_jsons/sbom_mapper/sbom-saf-hdf.json',
-       JSON.stringify(mapper.toHdf(), null, 2)
-     );
+    // fs.writeFileSync(
+    //   'sample_jsons/sbom_mapper/sbom-saf-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -36,10 +36,10 @@ describe('sbom_mapper_saf', () => {
       true
     );
 
-     fs.writeFileSync(
-       'sample_jsons/sbom_mapper/sbom-saf-hdf-withraw.json',
-       JSON.stringify(mapper.toHdf(), null, 2)
-     );
+    // fs.writeFileSync(
+    //   'sample_jsons/sbom_mapper/sbom-saf-hdf-withraw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -65,10 +65,10 @@ describe('sbom_mapper_dropwizard_vulns', () => {
       )
     );
 
-     fs.writeFileSync(
-       'sample_jsons/sbom_mapper/sbom-dropwizard-vulns-hdf.json',
-       JSON.stringify(mapper.toHdf(), null, 2)
-     );
+    // fs.writeFileSync(
+    //   'sample_jsons/sbom_mapper/sbom-dropwizard-vulns-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -93,10 +93,10 @@ describe('sbom_mapper_dropwizard_vulns', () => {
       true
     );
 
-     fs.writeFileSync(
-       'sample_jsons/sbom_mapper/sbom-dropwizard-vulns-hdf-withraw.json',
-       JSON.stringify(mapper.toHdf(), null, 2)
-     );
+    // fs.writeFileSync(
+    //   'sample_jsons/sbom_mapper/sbom-dropwizard-vulns-hdf-withraw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
