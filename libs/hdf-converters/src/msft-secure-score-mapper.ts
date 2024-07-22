@@ -195,7 +195,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
   };
   constructor(secureScore_and_profiles_combined: string, withRaw = false) {
     const rawParams = JSON.parse(secureScore_and_profiles_combined);
-    super(rawParams.secureScore, true);
+    super(rawParams.secureScore.value[0], true);
     this.withRaw = withRaw;
     this.profiles = rawParams.profiles.value as SecureScoreControlProfile[];
   }
