@@ -45,7 +45,13 @@ export class TrufflehogMapper extends BaseConverter {
             key: 'id',
             tags: {
                 nist: 'IA-5(7)',
-                cci: []
+                cci: [
+                  'CCI-004069',
+                  'CCI-000202',
+                  'CCI-000203',
+                  'CCI-002367'
+                ],
+                severity: 'medium'
             },             
             descriptions: [],     
             refs: [],             
@@ -65,12 +71,16 @@ export class TrufflehogMapper extends BaseConverter {
                     return 'Found ' + _.get(data, 'DetectorName') + ' secret using ' + _.get(data, 'DecoderName') + ' decoder'
                 }
             },           
-            impact: 0,            
+            impact: 0.5,            
             code: null,           
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,  
-                code_desc: '',                                
+                code_desc: {
+                  transformer: (data: Record<string, unknown>): string => {
+                    return `${JSON.stringify(_.get(data, 'SourceMetadata'))}`;
+                  }
+                },                                
                 message: {
                     transformer: (data: Record<string, unknown>): string => {
                         return `${JSON.stringify(_.omit(data, 'SourceMetadata'))}`;
