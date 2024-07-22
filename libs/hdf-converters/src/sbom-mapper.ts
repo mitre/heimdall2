@@ -29,11 +29,12 @@ export class SBOMResults {
   constructor(SBOMJson: string, withRaw = false) {
     this.data = JSON.parse(SBOMJson);
     this.withRaw = withRaw;
+    this.flattenComponents(this.data);
     this.generateIntermediary(this.data);
   }
 
-  generateIntermediary(data: Record<string, unknown>) {
-    // Flatten components list
+  // Flatten components list
+  flattenComponents(data: Record<string, unknown>) {
     for (const component of data.components as Record<string, unknown>[]) {
       if (_.has(component, 'components')) {
         for (const subcomponent of component.components as Record<
@@ -45,8 +46,10 @@ export class SBOMResults {
         delete component.components;
       }
     }
+  }
 
-    // Collect all components that affect a vulnerability and place them under the corresponding vulnerability
+  // Collect all components that affect a vulnerability and place them under the corresponding vulnerability
+  generateIntermediary(data: Record<string, unknown>) {
     if (_.has(data, 'vulnerabilities')) {
       for (let vulnerability of data.vulnerabilities as (Record<
         string,
@@ -107,7 +110,9 @@ export class SBOMMapper extends BaseConverter {
           {
             path: 'vulnerabilities',
             key: 'id',
-            tags: {}, //Insert data
+            tags: {
+              cweid: {path: 'cwes'}
+            },
             descriptions: [], //Insert data
             refs: [], //Insert data
             source_location: {}, //Insert data
