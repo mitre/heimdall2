@@ -31,8 +31,8 @@ export class MsftSecureScoreMapper extends BaseConverter {
         name: 'Microsoft Secure Score',
         version: {path: 'v4'},
         title: {
-          transformer: (d: SecureScore) =>
-            `Azure Secure Score report - TenantID: ${d.azureTenantId}`
+          transformer: (data: SecureScore) =>
+            `Azure Secure Score report - TenantID: ${data.azureTenantId}`
         },
         supports: [],
         attributes: [],
@@ -42,29 +42,29 @@ export class MsftSecureScoreMapper extends BaseConverter {
           {
             path: 'controlScores',
             id: {
-              transformer: (d: ControlScore) =>
-                `${d.controlCategory}:${d.controlName}`
+              transformer: (data: ControlScore) =>
+                `${data.controlCategory}:${data.controlName}`
             },
             title: {
-              transformer: (d: ControlScore) => {
-                const titles = this.getProfiles(d.controlName || '')
-                  .filter((p) => p.title !== undefined)
-                  .map((p) => p.title);
+              transformer: (data: ControlScore) => {
+                const titles = this.getProfiles(data.controlName || '')
+                  .filter((profile) => profile.title !== undefined)
+                  .map((profile) => profile.title);
 
                 if (titles.length > 0) {
                   return titles.join('... ');
                 } else {
-                  return `${d.controlCategory || ''}:${d.controlName || ''}`;
+                  return `${data.controlCategory || ''}:${data.controlName || ''}`;
                 }
               }
             },
             desc: {path: 'description'},
             impact: {
-              transformer: (d: ControlScore) => {
+              transformer: (data: ControlScore) => {
                 // return controlCategory from the profile document where its id matches the controlName
                 const knownMaxScores = this.getProfiles(
-                  d.controlName || ''
-                ).map((p) => p.maxScore || 0);
+                  data.controlName || ''
+                ).map((profile) => profile.maxScore || 0);
 
                 if (knownMaxScores.length === 0) {
                   return 0.5;
@@ -77,45 +77,46 @@ export class MsftSecureScoreMapper extends BaseConverter {
             refs: [],
             tags: {
               group: {
-                transformer: (d: ControlScore) => {
+                transformer: (data: ControlScore) => {
                   // return controlCategory from the profile document where its id matches the controlName
-                  return this.getProfiles(d.controlName || '').map(
+                  return this.getProfiles(data.controlName || '').map(
                     (p) => p.controlCategory
                   );
                 }
               },
               tiers: {
-                transformer: (d: ControlScore) => {
+                transformer: (data: ControlScore) => {
                   // return tiers from the profile document where its id matches the controlName
-                  return this.getProfiles(d.controlName || '').map(
+                  return this.getProfiles(data.controlName || '').map(
                     (p) => p.tier
                   );
                 }
               },
               threats: {
-                transformer: (d: ControlScore) => {
+                transformer: (data: ControlScore) => {
                   // return unique threats from the profile document where its id matches the controlName
                   const uniqs: Set<string> = new Set();
-                  this.getProfiles(d.controlName || '').forEach((p) =>
-                    p.threats?.forEach((threat) => uniqs.add(threat))
+                  this.getProfiles(data.controlName || '').forEach(
+                    (profile: SecureScoreControlProfile) =>
+                      profile.threats?.forEach((threat) => uniqs.add(threat))
                   );
                   return [...uniqs];
                 }
               },
               services: {
-                transformer: (d: ControlScore) => {
+                transformer: (data: ControlScore) => {
                   // return thrserviceeats from the profile document where its id matches the controlName
-                  return this.getProfiles(d.controlName || '').map(
-                    (p) => p.service
+                  return this.getProfiles(data.controlName || '').map(
+                    (profile) => profile.service
                   );
                 }
               },
               userImpacts: {
-                transformer: (d: ControlScore) => {
+                transformer: (data: ControlScore) => {
                   // return userImpacts from the profile document where its id matches the controlName
-                  return this.getProfiles(d.controlName || '')
-                    .filter((p) => p.userImpact !== undefined)
-                    .map((p) => p.userImpact);
+                  return this.getProfiles(data.controlName || '')
+                    .filter((profile) => profile.userImpact !== undefined)
+                    .map((profile) => profile.userImpact);
                 }
               }
             },
@@ -127,10 +128,13 @@ export class MsftSecureScoreMapper extends BaseConverter {
                 const implementationStatus = d.implementationStatus;
                 const profiles = this.getProfiles(d.controlName || '');
                 const remediationSteps = profiles
-                  .map((p: SecureScoreControlProfile) =>
-                    p.remediation?.toString()
+                  .map((profile: SecureScoreControlProfile) =>
+                    profile.remediation?.toString()
                   )
-                  .filter((r: string | undefined) => r !== undefined);
+                  .filter(
+                    (remediation: string | undefined) =>
+                      remediation !== undefined
+                  );
 
                 return Array(implementationStatus, ...remediationSteps).join(
                   '\n'
@@ -141,24 +145,24 @@ export class MsftSecureScoreMapper extends BaseConverter {
               {
                 status: {
                   transformer: (
-                    d: ControlScore & {scoreInPercentage: number}
+                    data: ControlScore & {scoreInPercentage: number}
                   ) => {
-                    if (d.scoreInPercentage === 100) {
+                    if (data.scoreInPercentage === 100) {
                       return ExecJSON.ControlResultStatus.Passed;
                     }
 
                     const knownMaxScores = this.getProfiles(
-                      d.controlName || ''
-                    ).map((p) => p.maxScore || 0);
+                      data.controlName || ''
+                    ).map((profile) => profile.maxScore || 0);
 
                     const highMaxScore = Math.max(...knownMaxScores);
 
                     if (knownMaxScores.length === 0) {
                       // no Profile found matching the controlName
                       return ExecJSON.ControlResultStatus.Failed;
-                    } else if (d.score === undefined) {
+                    } else if (data.score === undefined) {
                       return ExecJSON.ControlResultStatus.Error;
-                    } else if (d.score === highMaxScore) {
+                    } else if (data.score === highMaxScore) {
                       return ExecJSON.ControlResultStatus.Passed;
                     } else {
                       return ExecJSON.ControlResultStatus.Failed;
@@ -170,8 +174,8 @@ export class MsftSecureScoreMapper extends BaseConverter {
                     d: ControlScore & {implementationStatus: string}
                   ) => {
                     const remediations = this.getProfiles(d.controlName || '')
-                      .filter((p) => p.remediation !== undefined)
-                      .map((p) => p.remediation);
+                      .filter((profile) => profile.remediation !== undefined)
+                      .map((profile) => profile.remediation);
 
                     if (remediations.length > 0) {
                       return remediations.join('\n\n');
