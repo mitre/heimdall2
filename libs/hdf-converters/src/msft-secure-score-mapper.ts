@@ -1,7 +1,8 @@
 import {
   SecureScore,
   ControlScore,
-  SecureScoreControlProfile
+  SecureScoreControlProfile,
+  NullableOption
 } from '@microsoft/microsoft-graph-types';
 import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
@@ -126,11 +127,17 @@ export class MsftSecureScoreMapper extends BaseConverter {
               transformer: (
                 d: ControlScore & {implementationStatus: string}
               ) => {
+                const implementationStatus = d.implementationStatus;
                 const profiles = this.getProfiles(d.controlName || '');
+                const remediationSteps = profiles
+                  .map((p: SecureScoreControlProfile) =>
+                    p.remediation?.toString()
+                  )
+                  .filter((r: string | undefined) => r !== undefined);
 
-                if (profiles?.length === 0) {
-                  return d.implementationStatus;
-                }
+                return Array(implementationStatus, ...remediationSteps).join(
+                  '\n'
+                );
               }
             },
             results: [
