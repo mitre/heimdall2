@@ -1,8 +1,7 @@
 import {
   SecureScore,
   ControlScore,
-  SecureScoreControlProfile,
-  NullableOption
+  SecureScoreControlProfile
 } from '@microsoft/microsoft-graph-types';
 import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
