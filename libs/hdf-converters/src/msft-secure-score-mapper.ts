@@ -4,20 +4,12 @@ import {
   SecureScoreControlProfile
 } from '@microsoft/microsoft-graph-types';
 import {ExecJSON} from 'inspecjs';
-
 import {version as HeimdallToolsVersion} from '../package.json';
-
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 
 export class MsftSecureScoreMapper extends BaseConverter {
+  withRaw: boolean;
   profiles: SecureScoreControlProfile[];
-
-  constructor(secureScore_and_profiles_combined: string) {
-    const rawParams = JSON.parse(secureScore_and_profiles_combined);
-
-    super(rawParams.secureScore);
-    this.profiles = rawParams.profiles.value as SecureScoreControlProfile[];
-  }
 
   private getProfiles(controlName: string): SecureScoreControlProfile[] {
     return this.profiles.filter((p) => p.id === controlName);
@@ -191,12 +183,20 @@ export class MsftSecureScoreMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      profiles: {
-        value: {
-          transformer: () => this.profiles
-        }
-      },
-      secureScore: this.data
+      transformer: (data: Record<string, any>): Record<string, unknown> => {
+        return {
+          auxiliary_data: [
+            {name: 'Microsoft Secure Score', data: this.profiles}
+          ],
+          ...(this.withRaw && {raw: data})
+        };
+      }
     }
   };
+  constructor(secureScore_and_profiles_combined: string, withRaw = false) {
+    const rawParams = JSON.parse(secureScore_and_profiles_combined);
+    super(rawParams.secureScore, true);
+    this.withRaw = withRaw;
+    this.profiles = rawParams.profiles.value as SecureScoreControlProfile[];
+  }
 }
