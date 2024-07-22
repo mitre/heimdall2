@@ -33,20 +33,19 @@ export class SBOMResults {
   }
 
   generateIntermediary(data: Record<string, unknown>) {
-    if (_.has(data, 'vulnerabilities')) {
-      if (
-        data.vulnerabilities instanceof Array &&
-        data.components instanceof Array
-      ) {
-        for (let vulnerability of data.vulnerabilities) {
-          for (const id of vulnerability.affects) {
-            const components = [];
-            for (const component of data.components) {
-              if (_.get(component, 'bom-ref') === id.ref) {
-                components.push(component);
-              }
-              vulnerability['affectedComponents'] = components;
+    if (
+      _.has(data, 'vulnerabilities') &&
+      data.vulnerabilities instanceof Array &&
+      data.components instanceof Array
+    ) {
+      for (let vulnerability of data.vulnerabilities) {
+        for (const id of vulnerability.affects) {
+          const components = [];
+          for (const component of data.components) {
+            if (_.get(component, 'bom-ref') === id.ref) {
+              components.push(component);
             }
+            vulnerability['affectedComponents'] = components;
           }
         }
       }
