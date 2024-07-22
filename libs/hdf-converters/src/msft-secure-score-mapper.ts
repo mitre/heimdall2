@@ -134,9 +134,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                       remediation !== undefined
                   );
 
-                return Array(implementationStatus, ...remediationSteps).join(
-                  '\n'
-                );
+                return [implementationStatus, ...remediationSteps].join('\n');
               }
             },
             results: [
