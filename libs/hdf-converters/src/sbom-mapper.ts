@@ -33,21 +33,35 @@ export class SBOMResults {
   }
 
   generateIntermediary(data: Record<string, unknown>) {
+    // Flatten components list
+    for (const component of data.components as Record<string, unknown>[]) {
+      if (_.has(component, 'components')) {
+        for (const subcomponent of component.components as Record<
+          string,
+          unknown
+        >[]) {
+          (data.components as Record<string, unknown>[]).push(subcomponent);
+        }
+        delete component.components;
+      }
+    }
+
+    // Collect all components that affect a vulnerability and place them under the corresponding vulnerability
     if (_.has(data, 'vulnerabilities')) {
       for (let vulnerability of data.vulnerabilities as (Record<
         string,
         unknown
-      > & {affects: (Object & {ref: string})[]})[]) {
+      > & {affects: Record<string, unknown>[]})[]) {
         for (const id of vulnerability.affects) {
           const components = [];
           for (const component of data.components as Record<
             string,
             unknown
           >[]) {
-            if (_.get(component, 'bom-ref') === id.ref) {
+            if (component['bom-ref'] === id.ref) {
               components.push(component);
             }
-            vulnerability['affectedComponents'] = components;
+            vulnerability.affectedComponents = components;
           }
         }
       }
@@ -97,9 +111,9 @@ export class SBOMMapper extends BaseConverter {
             descriptions: [], //Insert data
             refs: [], //Insert data
             source_location: {}, //Insert data
-            title: null, //Insert data
+            title: {path: 'bom-ref'},
             id: {path: 'id'},
-            desc: null, //Insert data
+            desc: {path: 'description'},
             impact: 0, //Insert data
             code: null, //Insert data
             results: [
@@ -123,7 +137,13 @@ export class SBOMMapper extends BaseConverter {
           auxiliary_data: [
             {
               name: 'SBOM',
-              data: _.omit(data, ['metadata', 'components', 'vulnerabilities'])
+              components: _.get(data, 'components'),
+              dependencies: _.get(data, 'dependencies'),
+              data: _.omit(data, [
+                'components',
+                'vulnerabilities',
+                'dependencies'
+              ])
             }
           ],
           ...(this.withRaw && {raw: data})
