@@ -1,0 +1,406 @@
+<template>
+  <Base :show-search="true" title="SBOM View" @changed-files="evalInfo = null">
+    <!-- Topbar content - give it a search bar -->
+    <template #topbar-content>
+      <v-btn :disabled="!can_clear" @click="clear">
+        <span class="d-none d-md-inline pr-2"> Clear </span>
+        <v-icon>mdi-filter-remove</v-icon>
+      </v-btn>
+      <UploadButton />
+      <div class="text-center">
+        <v-menu>
+          <template #activator="{on, attrs}">
+            <v-btn v-bind="attrs" class="mr-2" v-on="on">
+              <span class="d-none d-md-inline mr-2"> Export </span>
+              <v-icon> mdi-file-export </v-icon>
+            </v-btn>
+          </template>
+          <v-list class="py-0">
+            <v-list-item v-if="is_result_view" class="px-0">
+              <ExportCaat :filter="all_filter" />
+            </v-list-item>
+            <v-list-item v-if="is_result_view" class="px-0">
+              <ExportNist :filter="all_filter" />
+            </v-list-item>
+            <v-list-item v-if="is_result_view" class="px-0">
+              <ExportASFFModal :filter="all_filter" />
+            </v-list-item>
+            <v-list-item v-if="is_result_view" class="px-0">
+              <ExportCKLModal :filter="all_filter" />
+            </v-list-item>
+            <v-list-item v-if="is_result_view" class="px-0">
+              <ExportCSVModal :filter="all_filter" />
+            </v-list-item>
+            <v-list-item v-if="is_result_view" class="px-0">
+              <ExportHTMLModal
+                :filter="all_filter"
+                :file-type="current_route_name"
+              />
+            </v-list-item>
+            <v-list-item v-if="is_result_view" class="px-0">
+              <ExportSplunkModal />
+            </v-list-item>
+            <v-list-item class="px-0">
+              <ExportJson />
+            </v-list-item>
+            <v-list-item v-if="is_result_view" class="px-0">
+              <ExportXCCDFResults
+                :filter="all_filter"
+                :is-result-view="is_result_view"
+              />
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+      <PrintButton />
+    </template>
+
+    <!-- The main content: cards, etc -->
+    <template #main-content>
+      <v-container fluid grid-list-md pt-0 pa-2>
+        <v-container id="fileCards" mx-0 px-0 fluid>
+          <!-- Evaluation Info -->
+          <v-row no-gutters class="mx-n3 mb-3">
+            <v-col>
+              <v-slide-group v-model="evalInfo" show-arrows>
+                <v-slide-item v-for="(file, i) in activeFiles" :key="i">
+                  <v-card
+                    width="100%"
+                    max-width="100%"
+                    class="mx-3"
+                    data-cy="profileInfo"
+                    @click="toggle_profile(file)"
+                  >
+                    <EvaluationInfo :file="file" />
+                    <v-card-subtitle class="bottom-right">
+                      File Info ↓
+                    </v-card-subtitle>
+                  </v-card>
+                </v-slide-item>
+              </v-slide-group>
+            </v-col>
+          </v-row>
+          <ProfileData
+            v-if="evalInfo != null"
+            class="my-4 mx-2"
+            :file="evalInfo"
+          />
+        </v-container>
+
+        <!-- DataTable -->
+        <v-row>
+          <v-col xs-12>
+            <v-card elevation="2">
+              <ComponentTable :filter="all_filter" />
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-container>
+    </template>
+  </Base>
+</template>
+
+<script lang="ts">
+import ComplianceChart from '@/components/cards/ComplianceChart.vue';
+import ComponentTable from '@/components/cards/sbomview/ComponentTable.vue';
+import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
+import ProfileData from '@/components/cards/ProfileData.vue';
+import SeverityChart from '@/components/cards/SeverityChart.vue';
+import StatusChart from '@/components/cards/StatusChart.vue';
+import UploadButton from '@/components/generic/UploadButton.vue';
+import ExportASFFModal from '@/components/global/ExportASFFModal.vue';
+import ExportCaat from '@/components/global/ExportCaat.vue';
+import ExportCKLModal from '@/components/global/ExportCKLModal.vue';
+import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
+import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
+import ExportJson from '@/components/global/ExportJson.vue';
+import ExportNist from '@/components/global/ExportNist.vue';
+import PrintButton from '@/components/global/PrintButton.vue';
+import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
+import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
+import RouteMixin from '@/mixins/RouteMixin';
+import {
+  ExtendedControlStatus,
+  Filter,
+  FilteredDataModule,
+  TreeMapState
+} from '@/store/data_filters';
+import {InspecDataModule} from '@/store/data_store';
+import {
+  EvaluationFile,
+  FileID,
+  ProfileFile,
+  SourcedContextualizedEvaluation,
+  SourcedContextualizedProfile
+} from '@/store/report_intake';
+import {SearchModule} from '@/store/search';
+import {ServerModule} from '@/store/server';
+import Base from '@/views/Base.vue';
+import {IEvaluation} from '@heimdall/interfaces';
+import {Severity} from 'inspecjs';
+import {capitalize} from 'lodash';
+import Component, {mixins} from 'vue-class-component';
+import ServerMixin from '../mixins/ServerMixin';
+import {EvaluationModule} from '../store/evaluations';
+import {StatusCountModule} from '../store/status_counts';
+import {compare_times} from '../utilities/delta_util';
+
+@Component({
+  components: {
+    Base,
+    ComponentTable,
+    StatusChart,
+    SeverityChart,
+    ComplianceChart,
+    ExportASFFModal,
+    ExportCaat,
+    ExportCSVModal,
+    ExportNist,
+    ExportJson,
+    ExportXCCDFResults,
+    ExportCKLModal,
+    ExportHTMLModal,
+    PrintButton,
+    EvaluationInfo,
+    ExportSplunkModal,
+    ProfileData,
+    UploadButton
+  }
+})
+export default class Results extends mixins(RouteMixin, ServerMixin) {
+  /**
+   * The current state of the treemap as modeled by the treemap (duh).
+   * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
+   */
+  treeFilters: TreeMapState = [];
+  controlSelection: string | null = null;
+
+  gotStatus: boolean = false;
+  gotSeverity: boolean = false;
+
+  /** Model for if all-filtered snackbar should be showing */
+  filterSnackbar = false;
+
+  evalInfo:
+    | SourcedContextualizedEvaluation
+    | SourcedContextualizedProfile
+    | null = null;
+
+  /**
+   * The current search terms, as modeled by the search bar
+   */
+  get searchTerm(): string {
+    return SearchModule.searchTerm;
+  }
+
+  set searchTerm(term: string) {
+    SearchModule.updateSearch(term);
+  }
+
+  get severityFilter(): Severity[] {
+    return SearchModule.severityFilter;
+  }
+
+  set severityFilter(severity: Severity[]) {
+    SearchModule.setSeverity(severity);
+  }
+
+  get statusFilter(): ExtendedControlStatus[] {
+    return SearchModule.statusFilter;
+  }
+
+  set statusFilter(status: ExtendedControlStatus[]) {
+    SearchModule.setStatusFilter(status);
+  }
+
+  /**
+   * The currently selected file, if one exists.
+   * Controlled by router.
+   */
+  get file_filter(): FileID[] {
+    if (this.is_result_view) {
+      return FilteredDataModule.selectedEvaluationIds;
+    } else {
+      return FilteredDataModule.selectedProfileIds;
+    }
+  }
+
+  get evaluationFiles(): SourcedContextualizedEvaluation[] {
+    return Array.from(FilteredDataModule.evaluations(this.file_filter)).sort(
+      compare_times
+    );
+  }
+
+  get activeFiles(): SourcedContextualizedEvaluation[] {
+    return this.evaluationFiles;
+  }
+
+  getFile(fileID: FileID) {
+    return InspecDataModule.allFiles.find((f) => f.uniqueId === fileID);
+  }
+
+  getDbFile(file: EvaluationFile | ProfileFile): IEvaluation | undefined {
+    return EvaluationModule.evaluationForFile(file);
+  }
+
+  /**
+   * Returns true if we're showing results
+   */
+  get is_result_view(): boolean {
+    return this.current_route === 'results';
+  }
+
+  // Returns true if no files are uploaded
+  get no_files(): boolean {
+    return InspecDataModule.allFiles.length === 0;
+  }
+
+  /**
+   * The filter for charts. Contains all of our filter stuff
+   */
+  get all_filter(): Filter {
+    return {
+      status: SearchModule.statusFilter,
+      severity: SearchModule.severityFilter,
+      fromFile: this.file_filter,
+      ids: SearchModule.controlIdSearchTerms,
+      titleSearchTerms: SearchModule.titleSearchTerms,
+      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      nistIdFilter: SearchModule.NISTIdFilter,
+      searchTerm: SearchModule.freeSearch || '',
+      codeSearchTerms: SearchModule.codeSearchTerms,
+      tagFilter: SearchModule.tagFilter,
+      treeFilters: this.treeFilters,
+      omit_overlayed_controls: true,
+      control_id: this.controlSelection || undefined
+    };
+  }
+
+  /**
+   * The filter for treemap. Omits its own stuff
+   */
+  get treemap_full_filter(): Filter {
+    return {
+      status: SearchModule.statusFilter || [],
+      severity: SearchModule.severityFilter,
+      titleSearchTerms: SearchModule.titleSearchTerms,
+      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
+      codeSearchTerms: SearchModule.codeSearchTerms,
+      tagFilter: SearchModule.tagFilter,
+      nistIdFilter: SearchModule.NISTIdFilter,
+      ids: SearchModule.controlIdSearchTerms,
+      fromFile: this.file_filter,
+      searchTerm: SearchModule.freeSearch,
+      omit_overlayed_controls: true
+    };
+  }
+
+  /**
+   * Clear all filters
+   */
+  clear(clearSearchBar = false) {
+    SearchModule.clear();
+    this.filterSnackbar = false;
+    this.controlSelection = null;
+    this.treeFilters = [];
+    if (clearSearchBar) {
+      this.searchTerm = '';
+    }
+  }
+
+  /**
+   * Returns true if we can currently clear.
+   * Essentially, just controls whether the button is available
+   */
+  get can_clear(): boolean {
+    // Return if any params not null/empty
+    let result: boolean;
+    if (
+      SearchModule.severityFilter.length !== 0 ||
+      SearchModule.statusFilter.length !== 0 ||
+      SearchModule.controlIdSearchTerms.length !== 0 ||
+      SearchModule.codeSearchTerms.length !== 0 ||
+      SearchModule.tagFilter.length !== 0 ||
+      this.searchTerm ||
+      this.treeFilters.length
+    ) {
+      result = true;
+    } else {
+      result = false;
+    }
+
+    // Logic to check: are any files actually visible?
+    if (FilteredDataModule.controls(this.all_filter).length === 0) {
+      this.filterSnackbar = true;
+    } else {
+      this.filterSnackbar = false;
+    }
+
+    // Finally, return our result
+    return result;
+  }
+
+  get waivedProfilesExist(): boolean {
+    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1;
+  }
+
+  //changes width of eval info if it is in server mode and needs more room for tags
+  get info_width(): number {
+    if (ServerModule.serverMode) {
+      return 500;
+    }
+    return 300;
+  }
+
+  //basically a v-model for the eval info cards when there is no slide group
+  toggle_profile(
+    file: SourcedContextualizedEvaluation | SourcedContextualizedProfile
+  ) {
+    if (file === this.evalInfo) {
+      this.evalInfo = null;
+    } else {
+      this.evalInfo = file;
+    }
+  }
+
+  showErrors() {
+    this.searchTerm = 'status:"Profile Error"';
+  }
+
+  showWaived() {
+    this.searchTerm = 'status:"Waived"';
+  }
+
+  showSeverityOverrides() {
+    this.searchTerm = 'tags:"severityoverride"';
+  }
+
+  addStatusSearch(status: ExtendedControlStatus) {
+    SearchModule.addSearchFilter({
+      field: 'status',
+      value: status,
+      previousValues: this.statusFilter
+    });
+  }
+
+  removeStatusFilter(status: ExtendedControlStatus) {
+    SearchModule.removeSearchFilter({
+      field: 'status',
+      value: status,
+      previousValues: this.statusFilter
+    });
+  }
+}
+</script>
+
+<style scoped>
+.glow {
+  box-shadow: 0px 0px 8px 6px #5a5;
+}
+
+.bottom-right {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+</style>

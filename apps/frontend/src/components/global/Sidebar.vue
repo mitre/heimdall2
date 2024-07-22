@@ -34,6 +34,11 @@
         @toggle-all="toggle_all_profiles"
         @changed-files="$emit('changed-files')"
       />
+      <DropdownContent
+        header-text="SBOMs"
+        :files="visible_sbom_files"
+        :all-selected="all_evaluations_selected"
+      />
     </v-expansion-panels>
   </v-navigation-drawer>
 </template>
@@ -49,6 +54,7 @@ import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '../../store/server';
 import {EvaluationModule} from '@/store/evaluations';
+import _ from 'lodash';
 
 @Component({
   components: {
@@ -60,26 +66,28 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
-    if (this.current_route === 'profiles') {
-      return 1;
-    } else if (
-      this.current_route === 'results' ||
-      this.current_route === 'compare'
-    ) {
+    if (this.current_route === 'results' || this.current_route === 'compare') {
       return 0;
+    } else if (this.current_route === 'profiles') {
+      return 1;
+    } else if (this.current_route === 'sbom-view') {
+      return 2;
     } else {
       return -1;
     }
   }
 
   set active_path(id: number) {
-    // There are currently 2 available values that the v-modal can have,
+    // There are currently 3 available values that the v-modal can have,
     // 0 -> results view
     // 1 -> profile view
+    // 2 -> sbom view
     if (id === 0) {
       this.navigateWithNoErrors(`/results`);
     } else if (id === 1) {
       this.navigateWithNoErrors(`/profiles`);
+    } else if (id === 2) {
+      this.navigateWithNoErrors(`/sbom-view`);
     }
   }
 
@@ -92,6 +100,18 @@ export default class Sidebar extends mixins(RouteMixin) {
   // get all visible (uploaded) profile files
   get visible_profile_files(): ProfileFile[] {
     const files = InspecDataModule.allProfileFiles;
+    return files.sort((a, b) => a.filename.localeCompare(b.filename));
+  }
+
+  get visible_sbom_files(): EvaluationFile[] {
+    // get all the evaluation files that have at least one passthrough.auxiliary_data element
+    // that is from an SBOM
+    const files = InspecDataModule.allEvaluationFiles.filter((f) =>
+      _.some(
+        _.get(f, 'evaluation.data.passthrough.auxiliary_data'),
+        _.matchesProperty('name', 'SBOM')
+      )
+    );
     return files.sort((a, b) => a.filename.localeCompare(b.filename));
   }
 
