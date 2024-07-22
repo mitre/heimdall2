@@ -1,20 +1,20 @@
 import fs from 'fs';
-import {SbomMapper} from '../../../src/sbom-mapper';
+import {SBOMResults} from '../../../src/sbom-mapper';
 import {omitVersions} from '../../utils';
 
 describe('sbom_mapper_saf', () => {
   it('Successfully converts SBOM data', () => {
-    const mapper = new SbomMapper(
+    const mapper = new SBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/generated-saf-sbom.json',
         {encoding: 'utf-8'}
       )
     );
 
-    // fs.writeFileSync(
-    //   'sample_jsons/sbom_mapper/sbom-saf-hdf.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
+     fs.writeFileSync(
+       'sample_jsons/sbom_mapper/sbom-saf-hdf.json',
+       JSON.stringify(mapper.toHdf(), null, 2)
+     );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -28,7 +28,7 @@ describe('sbom_mapper_saf', () => {
   });
 
   it('Successfully converts withraw flagged SBOM data', () => {
-    const mapper = new SbomMapper(
+    const mapper = new SBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/generated-saf-sbom.json',
         {encoding: 'utf-8'}
@@ -36,10 +36,10 @@ describe('sbom_mapper_saf', () => {
       true
     );
 
-    // fs.writeFileSync(
-    //   'sample_jsons/sbom_mapper/sbom-saf-hdf-withraw.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
+     fs.writeFileSync(
+       'sample_jsons/sbom_mapper/sbom-saf-hdf-withraw.json',
+       JSON.stringify(mapper.toHdf(), null, 2)
+     );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -58,17 +58,17 @@ describe('sbom_mapper_saf', () => {
 
 describe('sbom_mapper_dropwizard_vulns', () => {
   it('Successfully converts SBOM data', () => {
-    const mapper = new SbomMapper(
+    const mapper = new SBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/dropwizard-vulns.json',
         {encoding: 'utf-8'}
       )
     );
 
-    // fs.writeFileSync(
-    //   'sample_jsons/sbom_mapper/sbom-dropwizard-vulns-hdf.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
+     fs.writeFileSync(
+       'sample_jsons/sbom_mapper/sbom-dropwizard-vulns-hdf.json',
+       JSON.stringify(mapper.toHdf(), null, 2)
+     );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -85,7 +85,7 @@ describe('sbom_mapper_dropwizard_vulns', () => {
   });
 
   it('Successfully converts withraw flagged SBOM data', () => {
-    const mapper = new SbomMapper(
+    const mapper = new SBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/dropwizard-vulns.json',
         {encoding: 'utf-8'}
@@ -93,10 +93,10 @@ describe('sbom_mapper_dropwizard_vulns', () => {
       true
     );
 
-    // fs.writeFileSync(
-    //   'sample_jsons/sbom_mapper/sbom-dropwizard-vulns-hdf-withraw.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
+     fs.writeFileSync(
+       'sample_jsons/sbom_mapper/sbom-dropwizard-vulns-hdf-withraw.json',
+       JSON.stringify(mapper.toHdf(), null, 2)
+     );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(

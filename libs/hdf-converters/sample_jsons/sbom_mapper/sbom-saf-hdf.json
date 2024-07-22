@@ -22,30 +22,8 @@
       "depends": [],
       "groups": [],
       "status": "loaded",
-      "controls": [
-        {
-          "key": "id",
-          "tags": {},
-          "descriptions": [],
-          "refs": [],
-          "source_location": {},
-          "title": null,
-          "id": "",
-          "desc": null,
-          "impact": 0,
-          "code": null,
-          "results": [
-            {
-              "status": "failed",
-              "code_desc": "",
-              "message": null,
-              "run_time": null,
-              "start_time": ""
-            }
-          ]
-        }
-      ],
-      "sha256": "73c2aaa2337b354d7fdb7126fe606d7434728cc838b6779fb3e6952d8082d138"
+      "controls": [],
+      "sha256": "569c078b8149960c980abb20c9d5a9005ba9d713965cac778799f1669f428981"
     }
   ],
   "passthrough": {

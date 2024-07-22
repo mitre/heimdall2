@@ -23,7 +23,42 @@ function formatLicense(input: Record<string, unknown>): string {
   return message.slice(0, -2);
 }
 
-export class SbomMapper extends BaseConverter {
+export class SBOMResults {
+  data: Record<string, unknown>;
+  withRaw: boolean;
+  constructor(SBOMJson: string, withRaw = false) {
+    this.data = JSON.parse(SBOMJson);
+    this.withRaw = withRaw;
+    this.generateIntermediary(this.data);
+  }
+
+  generateIntermediary(data: Record<string, unknown>) {
+    if (_.has(data, 'vulnerabilities')) {
+      if (
+        data.vulnerabilities instanceof Array &&
+        data.components instanceof Array
+      ) {
+        for (let vulnerability of data.vulnerabilities) {
+          for (const id of vulnerability.affects) {
+            const components = [];
+            for (const component of data.components) {
+              if (_.get(component, 'bom-ref') === id.ref) {
+                components.push(component);
+              }
+              vulnerability['affectedComponents'] = components;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  toHdf(): ExecJSON.Execution {
+    return new SBOMMapper(this.data, this.withRaw).toHdf();
+  }
+}
+
+export class SBOMMapper extends BaseConverter {
   withRaw: boolean;
 
   mappings: MappedTransform<
@@ -55,18 +90,20 @@ export class SbomMapper extends BaseConverter {
         status: 'loaded',
         controls: [
           {
+            path: 'vulnerabilities',
             key: 'id',
             tags: {}, //Insert data
             descriptions: [], //Insert data
             refs: [], //Insert data
             source_location: {}, //Insert data
             title: null, //Insert data
-            id: '', //Insert data
+            id: {path: 'id'},
             desc: null, //Insert data
             impact: 0, //Insert data
             code: null, //Insert data
             results: [
               {
+                path: 'affectedComponents',
                 status: ExecJSON.ControlResultStatus.Failed, //Insert data
                 code_desc: '', //Insert data
                 message: null, //Insert data
@@ -83,15 +120,18 @@ export class SbomMapper extends BaseConverter {
       transformer: (data: Record<string, any>): Record<string, unknown> => {
         return {
           auxiliary_data: [
-            {name: 'SBOM', data: _.omit(data, ['metadata', 'components'])}
+            {
+              name: 'SBOM',
+              data: _.omit(data, ['metadata', 'components', 'vulnerabilities'])
+            }
           ],
           ...(this.withRaw && {raw: data})
         };
       }
     }
   };
-  constructor(exportJson: string, withRaw = false) {
-    super(JSON.parse(exportJson), true);
+  constructor(exportJson: Record<string, unknown>, withRaw = false) {
+    super(exportJson, true);
     this.withRaw = withRaw;
   }
 }
