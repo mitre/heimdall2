@@ -40,6 +40,7 @@
             placeholder="file name"
             clearable
             hide-details="auto"
+            data-cy="fileSearchField"
           />
           <div class="d-flex flex-column">
             <v-data-table

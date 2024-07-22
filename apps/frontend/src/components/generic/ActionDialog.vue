@@ -5,9 +5,9 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline"
-        >Are you sure you want to {{ action }} this {{ type }}?</v-card-title
-      >
+      <v-card-title class="headline">
+        Are you sure you want to {{ action }} this {{ type }}?
+      </v-card-title>
       <v-card-text>
         {{ message }}
       </v-card-text>
@@ -21,8 +21,9 @@
           data-cy="deleteConfirm"
           text
           @click="$emit('confirm')"
-          >OK</v-btn
         >
+          OK
+        </v-btn>
         <v-spacer />
       </v-card-actions>
     </v-card>

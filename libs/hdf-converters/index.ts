@@ -4,6 +4,7 @@ export * from './src/burpsuite-mapper';
 export * from './src/ckl-mapper/checklist-mapper';
 export * from './src/ckl-mapper/checklistJsonix';
 export * from './src/ckl-mapper/checklist-jsonix-converter';
+export * from './src/ckl-mapper/checklist-metadata-utils';
 export * from './src/converters-from-hdf/asff/reverse-asff-mapper';
 export * from './src/converters-from-hdf/caat/reverse-caat-mapper';
 export * from './src/converters-from-hdf/html/reverse-html-mapper';

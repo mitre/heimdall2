@@ -45,8 +45,9 @@
           <v-btn
             :disabled="filter.status.indexOf('Profile Error') !== -1"
             @click="$emit('show-errors')"
-            >Filter to Errors</v-btn
           >
+            Filter to Errors
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -75,8 +76,9 @@
           <v-btn
             :disabled="filter.status.indexOf('Waived') !== -1"
             @click="$emit('show-waived')"
-            >Filter to Waived</v-btn
           >
+            Filter to Waived
+          </v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
