@@ -28,10 +28,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "The setting is not compliant.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "The setting is not compliant.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -50,10 +60,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "The setting is not compliant.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "The setting is not compliant.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -82,11 +102,20 @@
             ]
           },
           "source_location": {},
-          "code": "Feature in place: false.\n <ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2099424\" target=\"_blank\">Automatic log upload</a> page.</li>   <li>In the <b>Data sources</b> tab, select <b>Add data source</b> to create a data source for your appliance.</li> <li>In the <b>Log collector</b> tab, select <b>Add log collector</b> to add a new one.</li> <li>Follow the instructions provided to <a href=\"https://docs.microsoft.com/cloud-app-security/discovery-docker\" target=\"_blank\">deploy Docker</a> and the log collector container. </li> </ol>  </ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": " <ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2099424\" target=\"_blank\">Automatic log upload</a> page.</li>   <li>In the <b>Data sources</b> tab, select <b>Add data source</b> to create a data source for your appliance.</li> <li>In the <b>Log collector</b> tab, select <b>Add log collector</b> to add a new one.</li> <li>Follow the instructions provided to <a href=\"https://docs.microsoft.com/cloud-app-security/discovery-docker\" target=\"_blank\">deploy Docker</a> and the log collector container. </li> </ol>  </ul>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": " <ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2099424\" target=\"_blank\">Automatic log upload</a> page.</li>   <li>In the <b>Data sources</b> tab, select <b>Add data source</b> to create a data source for your appliance.</li> <li>In the <b>Log collector</b> tab, select <b>Add log collector</b> to add a new one.</li> <li>Follow the instructions provided to <a href=\"https://docs.microsoft.com/cloud-app-security/discovery-docker\" target=\"_blank\">deploy Docker</a> and the log collector container. </li> </ol>  </ul>",
+              "code_desc": "Feature in place: false.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -117,11 +146,20 @@
             ]
           },
           "source_location": {},
-          "code": "Policy in place: false.\n<ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2099337\" target=\"_blank\">Create activity policy</a> page.</li> <li>Select the policy severity.</li> <li>Configure filters according to your business requirements.</li> <li>(Optional) Configure alert settings such as email and text message notifications.</li> <li>(Optional) Configure governance actions as required.</li> </ol> ",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2099337\" target=\"_blank\">Create activity policy</a> page.</li> <li>Select the policy severity.</li> <li>Configure filters according to your business requirements.</li> <li>(Optional) Configure alert settings such as email and text message notifications.</li> <li>(Optional) Configure governance actions as required.</li> </ol> ",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2099337\" target=\"_blank\">Create activity policy</a> page.</li> <li>Select the policy severity.</li> <li>Configure filters according to your business requirements.</li> <li>(Optional) Configure alert settings such as email and text message notifications.</li> <li>(Optional) Configure governance actions as required.</li> </ol> ",
+              "code_desc": "Policy in place: false.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -150,11 +188,20 @@
             ]
           },
           "source_location": {},
-          "code": "Policy in place: false.\n <ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2099425\" target=\"_blank\">App discovery policy</a> page.</li>   <li>Select the policy severity.</li> <li>Select filters according to your business requirements, then select the reports this policy will apply to.</li> <li>(Optional) Configure alerts settings such as email and text messages notifications.</li> <li>(Optional) Configure governance actions to tag apps.</li> </ol> ",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": " <ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2099425\" target=\"_blank\">App discovery policy</a> page.</li>   <li>Select the policy severity.</li> <li>Select filters according to your business requirements, then select the reports this policy will apply to.</li> <li>(Optional) Configure alerts settings such as email and text messages notifications.</li> <li>(Optional) Configure governance actions to tag apps.</li> </ol> ",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": " <ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2099425\" target=\"_blank\">App discovery policy</a> page.</li>   <li>Select the policy severity.</li> <li>Select filters according to your business requirements, then select the reports this policy will apply to.</li> <li>(Optional) Configure alerts settings such as email and text messages notifications.</li> <li>(Optional) Configure governance actions to tag apps.</li> </ol> ",
+              "code_desc": "Policy in place: false.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -185,11 +232,20 @@
             ]
           },
           "source_location": {},
-          "code": "Feature in place: false.\n <ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2098989\" target=\"_blank\">OAuth app policy</a> page.</li> <li>Select the policy severity and application (if relevant). </li> <li>Select filters according to your business requirements.</li> <li>(Optional) Configure alerts settings such as email and text message notifications.</li> <li>(Optional) Configure governance actions to revoke the app.</li> </ol> ",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": " <ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2098989\" target=\"_blank\">OAuth app policy</a> page.</li> <li>Select the policy severity and application (if relevant). </li> <li>Select filters according to your business requirements.</li> <li>(Optional) Configure alerts settings such as email and text message notifications.</li> <li>(Optional) Configure governance actions to revoke the app.</li> </ol> ",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": " <ol> <li>In the Defender for Cloud Apps portal, go to the <a href=\"https://go.microsoft.com/fwlink/?linkid=2098989\" target=\"_blank\">OAuth app policy</a> page.</li> <li>Select the policy severity and application (if relevant). </li> <li>Select filters according to your business requirements.</li> <li>(Optional) Configure alerts settings such as email and text message notifications.</li> <li>(Optional) Configure governance actions to revoke the app.</li> </ol> ",
+              "code_desc": "Feature in place: false.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -216,11 +272,20 @@
             ]
           },
           "source_location": {},
-          "code": "\nGo to the <a href='https://security.microsoft.com/settings/identities?tabid=sensor' target='_blank'>sensor page</a> in Settings, you can view the already installed sensors in your environment and download the install package to deploy them on your remaining domain controllers. <br/> You will be scored as a precentage of your deployment progress.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "Go to the <a href='https://security.microsoft.com/settings/identities?tabid=sensor' target='_blank'>sensor page</a> in Settings, you can view the already installed sensors in your environment and download the install package to deploy them on your remaining domain controllers. <br/> You will be scored as a precentage of your deployment progress.",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "Go to the <a href='https://security.microsoft.com/settings/identities?tabid=sensor' target='_blank'>sensor page</a> in Settings, you can view the already installed sensors in your environment and download the install package to deploy them on your remaining domain controllers. <br/> You will be scored as a precentage of your deployment progress.",
+              "code_desc": "",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -247,11 +312,20 @@
             ]
           },
           "source_location": {},
-          "code": "\n<p>Ensure that the following global tenant setting for <strong>&lsquo;Safe Attachments&rsquo;</strong> is <strong>enabled</strong>:</p>\n<ul>\n<li>Turn on the Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams</li>\n</ul>\n<p>For detailed implementation instructions, see <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-mdo-for-spo-odb-and-teams?view=o365-worldwide\">Turn on Safe Attachments for SharePoint, OneDrive, and Microsoft Teams - Office 365 | Microsoft Docs</a>.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that the following global tenant setting for <strong>&lsquo;Safe Attachments&rsquo;</strong> is <strong>enabled</strong>:</p>\n<ul>\n<li>Turn on the Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams</li>\n</ul>\n<p>For detailed implementation instructions, see <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-mdo-for-spo-odb-and-teams?view=o365-worldwide\">Turn on Safe Attachments for SharePoint, OneDrive, and Microsoft Teams - Office 365 | Microsoft Docs</a>.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p>Ensure that the following global tenant setting for <strong>&lsquo;Safe Attachments&rsquo;</strong> is <strong>enabled</strong>:</p>\n<ul>\n<li>Turn on the Defender for Office 365 for SharePoint, OneDrive, and Microsoft Teams</li>\n</ul>\n<p>For detailed implementation instructions, see <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-mdo-for-spo-odb-and-teams?view=o365-worldwide\">Turn on Safe Attachments for SharePoint, OneDrive, and Microsoft Teams - Office 365 | Microsoft Docs</a>.</p>",
+              "code_desc": "",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -278,11 +352,20 @@
             ]
           },
           "source_location": {},
-          "code": "\n\n    Ensure that at least one Microsoft 365 DLP policy exists in the <a href=\"https://compliance.microsoft.com/\">Microsoft 365 Compliance portal</a>\n    <br>\n    <b>Learn more</b>\n    <ul>\n        <li>\n            <a href=\"https://docs.microsoft.com//microsoft-365/compliance/dlp-learn-about-dlp\">Learn about data loss prevention | Microsoft Docs</a>\n        </li>\n    <li>\n        <a href=\"https://docs.microsoft.com/en-us/microsoft-365/compliance/create-test-tune-dlp-policy\">Create, test, and tune a DLP policy - Microsoft 365 Compliance | Microsoft Docs</a>\n    </li>\n    </ul>\n    ",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "\n    Ensure that at least one Microsoft 365 DLP policy exists in the <a href=\"https://compliance.microsoft.com/\">Microsoft 365 Compliance portal</a>\n    <br>\n    <b>Learn more</b>\n    <ul>\n        <li>\n            <a href=\"https://docs.microsoft.com//microsoft-365/compliance/dlp-learn-about-dlp\">Learn about data loss prevention | Microsoft Docs</a>\n        </li>\n    <li>\n        <a href=\"https://docs.microsoft.com/en-us/microsoft-365/compliance/create-test-tune-dlp-policy\">Create, test, and tune a DLP policy - Microsoft 365 Compliance | Microsoft Docs</a>\n    </li>\n    </ul>\n    ",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "\n    Ensure that at least one Microsoft 365 DLP policy exists in the <a href=\"https://compliance.microsoft.com/\">Microsoft 365 Compliance portal</a>\n    <br>\n    <b>Learn more</b>\n    <ul>\n        <li>\n            <a href=\"https://docs.microsoft.com//microsoft-365/compliance/dlp-learn-about-dlp\">Learn about data loss prevention | Microsoft Docs</a>\n        </li>\n    <li>\n        <a href=\"https://docs.microsoft.com/en-us/microsoft-365/compliance/create-test-tune-dlp-policy\">Create, test, and tune a DLP policy - Microsoft 365 Compliance | Microsoft Docs</a>\n    </li>\n    </ul>\n    ",
+              "code_desc": "",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -309,11 +392,20 @@
             ]
           },
           "source_location": {},
-          "code": "\n<ol>\n<li>In the <a href=\"https://admin.exchange.microsoft.com/\">Microsoft 365 Exchange admin center</a>, go to&nbsp;<strong>Organization &gt; Sharing.</strong></li>\n<li>Under <strong>Individual Sharing</strong>, make sure <span style=\"text-decoration: underline;\"><strong>all policies</strong></span> are unticked.</li>\n</ol>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<ol>\n<li>In the <a href=\"https://admin.exchange.microsoft.com/\">Microsoft 365 Exchange admin center</a>, go to&nbsp;<strong>Organization &gt; Sharing.</strong></li>\n<li>Under <strong>Individual Sharing</strong>, make sure <span style=\"text-decoration: underline;\"><strong>all policies</strong></span> are unticked.</li>\n</ol>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<ol>\n<li>In the <a href=\"https://admin.exchange.microsoft.com/\">Microsoft 365 Exchange admin center</a>, go to&nbsp;<strong>Organization &gt; Sharing.</strong></li>\n<li>Under <strong>Individual Sharing</strong>, make sure <span style=\"text-decoration: underline;\"><strong>all policies</strong></span> are unticked.</li>\n</ol>",
+              "code_desc": "",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -340,11 +432,20 @@
             ]
           },
           "source_location": {},
-          "code": "\n<p>Ensure that the global tenant settings for &lsquo;<strong>Safe Attachments&rsquo;</strong> are configured as follows:</p>\n<ul>\n<li>&lsquo;Turn on Safe Documents for Office clients<strong>&rsquo; </strong>should be <strong>Turned On</strong></li>\n<li>&lsquo;Allow people to click through Protected View even if Safe Documents identified the file as malicious&rsquo; should be <strong>Turned Off</strong></li>\n</ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that the global tenant settings for &lsquo;<strong>Safe Attachments&rsquo;</strong> are configured as follows:</p>\n<ul>\n<li>&lsquo;Turn on Safe Documents for Office clients<strong>&rsquo; </strong>should be <strong>Turned On</strong></li>\n<li>&lsquo;Allow people to click through Protected View even if Safe Documents identified the file as malicious&rsquo; should be <strong>Turned Off</strong></li>\n</ul>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p>Ensure that the global tenant settings for &lsquo;<strong>Safe Attachments&rsquo;</strong> are configured as follows:</p>\n<ul>\n<li>&lsquo;Turn on Safe Documents for Office clients<strong>&rsquo; </strong>should be <strong>Turned On</strong></li>\n<li>&lsquo;Allow people to click through Protected View even if Safe Documents identified the file as malicious&rsquo; should be <strong>Turned Off</strong></li>\n</ul>",
+              "code_desc": "",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -371,11 +472,20 @@
             ]
           },
           "source_location": {},
-          "code": "The allowed IP addresses list in the connection filter policy is empty \n<p>1. Open <b>Anti-spam policies</b> page in Microsoft 365 Defender portal <br> 2. Remove all allowed IP addresses from the <b>default connection filter policy</b></p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>1. Open <b>Anti-spam policies</b> page in Microsoft 365 Defender portal <br> 2. Remove all allowed IP addresses from the <b>default connection filter policy</b></p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>1. Open <b>Anti-spam policies</b> page in Microsoft 365 Defender portal <br> 2. Remove all allowed IP addresses from the <b>default connection filter policy</b></p>",
+              "code_desc": "The allowed IP addresses list in the connection filter policy is empty ",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -394,10 +504,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "The setting was not enabled.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "The setting was not enabled.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -428,11 +548,20 @@
             ]
           },
           "source_location": {},
-          "code": "Feature in place: false.\n Turn on customer lockbox by: <br> 1. Using a work or school account that has either the global administrator or the Customer Lockbox access approver role assigned, go to https://admin.microsoft.com and sign in. <br> 2. Choose Settings > Org Settings. <br> 3. Select Security & Privacy > Customer Lockbox > Edit, and then move the toggle to On or Off to turn the feature on or off. <br>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": " Turn on customer lockbox by: <br> 1. Using a work or school account that has either the global administrator or the Customer Lockbox access approver role assigned, go to https://admin.microsoft.com and sign in. <br> 2. Choose Settings > Org Settings. <br> 3. Select Security & Privacy > Customer Lockbox > Edit, and then move the toggle to On or Off to turn the feature on or off. <br>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": " Turn on customer lockbox by: <br> 1. Using a work or school account that has either the global administrator or the Customer Lockbox access approver role assigned, go to https://admin.microsoft.com and sign in. <br> 2. Choose Settings > Org Settings. <br> 3. Select Security & Privacy > Customer Lockbox > Edit, and then move the toggle to On or Off to turn the feature on or off. <br>",
+              "code_desc": "Feature in place: false.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -462,11 +591,20 @@
             ]
           },
           "source_location": {},
-          "code": "Modern authentication for Exchange Online is enabled\n<p>To enable modern authentication, use the Exchange Online PowerShell Module:</p> <ol> <li>Run the Microsoft Exchange Online PowerShell Module.</li> <li>Connect to Exchange Online using \"Connect-ExchangeOnline.\"</li> <li>Run the following PowerShell command: <em>Set-OrganizationConfig -OAuth2ClientProfileEnabled $True</em></li> </ol>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>To enable modern authentication, use the Exchange Online PowerShell Module:</p> <ol> <li>Run the Microsoft Exchange Online PowerShell Module.</li> <li>Connect to Exchange Online using \"Connect-ExchangeOnline.\"</li> <li>Run the following PowerShell command: <em>Set-OrganizationConfig -OAuth2ClientProfileEnabled $True</em></li> </ol>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>To enable modern authentication, use the Exchange Online PowerShell Module:</p> <ol> <li>Run the Microsoft Exchange Online PowerShell Module.</li> <li>Connect to Exchange Online using \"Connect-ExchangeOnline.\"</li> <li>Run the following PowerShell command: <em>Set-OrganizationConfig -OAuth2ClientProfileEnabled $True</em></li> </ol>",
+              "code_desc": "Modern authentication for Exchange Online is enabled",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -496,11 +634,20 @@
             ]
           },
           "source_location": {},
-          "code": "MailTips for end users are disabled.\n<p>To enable MailTips, use the Exchange Online PowerShell Module:</p> <ol> <li>Run Microsoft Exchange Online PowerShell Module</li> <li>Connect using &quot;Connect-ExchangeOnline&quot;</li> <li>Run the following PowerShell command:</li> </ol> <p><em>Set-OrganizationConfig -MailTipsAllTipsEnabled $true -MailTipsExternalRecipientsTipsEnabled $true -MailTipsGroupMetricsEnabled $true -MailTipsLargeAudienceThreshold &apos;25&apos;</em></p> <p><br></p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>To enable MailTips, use the Exchange Online PowerShell Module:</p> <ol> <li>Run Microsoft Exchange Online PowerShell Module</li> <li>Connect using &quot;Connect-ExchangeOnline&quot;</li> <li>Run the following PowerShell command:</li> </ol> <p><em>Set-OrganizationConfig -MailTipsAllTipsEnabled $true -MailTipsExternalRecipientsTipsEnabled $true -MailTipsGroupMetricsEnabled $true -MailTipsLargeAudienceThreshold &apos;25&apos;</em></p> <p><br></p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p>To enable MailTips, use the Exchange Online PowerShell Module:</p> <ol> <li>Run Microsoft Exchange Online PowerShell Module</li> <li>Connect using &quot;Connect-ExchangeOnline&quot;</li> <li>Run the following PowerShell command:</li> </ol> <p><em>Set-OrganizationConfig -MailTipsAllTipsEnabled $true -MailTipsExternalRecipientsTipsEnabled $true -MailTipsGroupMetricsEnabled $true -MailTipsLargeAudienceThreshold &apos;25&apos;</em></p> <p><br></p>",
+              "code_desc": "MailTips for end users are disabled.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -529,11 +676,20 @@
             ]
           },
           "source_location": {},
-          "code": "Spam confidence level (SCL) is not configured in mail transport rules with specific domain\n<p>To modify SCL in mail transport rules so they do not allow any specific domains:</p> <ol> <li>Navigate to&nbsp;<em>Exchange admin center</em>&nbsp;<a href=\"https://admin.exchange.microsoft.com/\">https://admin.exchange.microsoft.com</a>.</li> <li>Click to expand&nbsp;<em>Mail Flow</em>&nbsp;and then select&nbsp;<em>Rules</em>.</li> <li><em>For each rule that allows specific domains, set the&nbsp;spam confident level (SCL)&nbsp;to 0 or greater.</em> <ul> <li><em>In \"Do the following\" section, select \"Modify the message properties\" and \"set the spam confidence level (SCL)\" and set to at least 0 (specifying the action for this domain, read more in the references attached below,&nbsp;<strong>some options may entirely block mail from this domain</strong>).</em></li> </ul> </li> </ol> <p>References:</p> <ol> <li><a href=\"https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-spam-confidence-level-scl-about?view=o365-worldwide\">Spam confidence level | Microsoft Learn</a></li> <li><a href=\"https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/configuration-best-practices\">Best practices for configuring mail flow rules in Exchange Online | Microsoft Learn</a></li> <li><a href=\"https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/mail-flow-rules\">Mail flow rules (transport rules) in Exchange Online | Microsoft Learn</a></li> </ol>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>To modify SCL in mail transport rules so they do not allow any specific domains:</p> <ol> <li>Navigate to&nbsp;<em>Exchange admin center</em>&nbsp;<a href=\"https://admin.exchange.microsoft.com/\">https://admin.exchange.microsoft.com</a>.</li> <li>Click to expand&nbsp;<em>Mail Flow</em>&nbsp;and then select&nbsp;<em>Rules</em>.</li> <li><em>For each rule that allows specific domains, set the&nbsp;spam confident level (SCL)&nbsp;to 0 or greater.</em> <ul> <li><em>In \"Do the following\" section, select \"Modify the message properties\" and \"set the spam confidence level (SCL)\" and set to at least 0 (specifying the action for this domain, read more in the references attached below,&nbsp;<strong>some options may entirely block mail from this domain</strong>).</em></li> </ul> </li> </ol> <p>References:</p> <ol> <li><a href=\"https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-spam-confidence-level-scl-about?view=o365-worldwide\">Spam confidence level | Microsoft Learn</a></li> <li><a href=\"https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/configuration-best-practices\">Best practices for configuring mail flow rules in Exchange Online | Microsoft Learn</a></li> <li><a href=\"https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/mail-flow-rules\">Mail flow rules (transport rules) in Exchange Online | Microsoft Learn</a></li> </ol>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>To modify SCL in mail transport rules so they do not allow any specific domains:</p> <ol> <li>Navigate to&nbsp;<em>Exchange admin center</em>&nbsp;<a href=\"https://admin.exchange.microsoft.com/\">https://admin.exchange.microsoft.com</a>.</li> <li>Click to expand&nbsp;<em>Mail Flow</em>&nbsp;and then select&nbsp;<em>Rules</em>.</li> <li><em>For each rule that allows specific domains, set the&nbsp;spam confident level (SCL)&nbsp;to 0 or greater.</em> <ul> <li><em>In \"Do the following\" section, select \"Modify the message properties\" and \"set the spam confidence level (SCL)\" and set to at least 0 (specifying the action for this domain, read more in the references attached below,&nbsp;<strong>some options may entirely block mail from this domain</strong>).</em></li> </ul> </li> </ol> <p>References:</p> <ol> <li><a href=\"https://learn.microsoft.com/en-us/microsoft-365/security/office-365-security/anti-spam-spam-confidence-level-scl-about?view=o365-worldwide\">Spam confidence level | Microsoft Learn</a></li> <li><a href=\"https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/configuration-best-practices\">Best practices for configuring mail flow rules in Exchange Online | Microsoft Learn</a></li> <li><a href=\"https://learn.microsoft.com/en-us/exchange/security-and-compliance/mail-flow-rules/mail-flow-rules\">Mail flow rules (transport rules) in Exchange Online | Microsoft Learn</a></li> </ol>",
+              "code_desc": "Spam confidence level (SCL) is not configured in mail transport rules with specific domain",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -552,10 +708,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "Microsoft 365 audit log search is enabled disabled",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "Microsoft 365 audit log search is enabled disabled",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -585,11 +751,20 @@
             ]
           },
           "source_location": {},
-          "code": "Mailbox auditing for all users is disabled\n<p>To enable mailbox auditing for all users:</p> <ol> <li>Connect to Exchange Online using <em>Connect-ExchangeOnline</em>.</li> <li>Run the following PowerShell command:<br /><em>Set-OrganizationConfig -AuditDisabled $false</em></li> <li>For each unconfigured MailBox of type Resource Mailboxes, Public Folder Mailboxes or DiscoverySearch Mailbox run:<br /><em>Get-Mailbox -Filter \"Name -eq 'MailBox name'\" | Set-Mailbox -AuditEnabled $true</em></li> </ol>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>To enable mailbox auditing for all users:</p> <ol> <li>Connect to Exchange Online using <em>Connect-ExchangeOnline</em>.</li> <li>Run the following PowerShell command:<br /><em>Set-OrganizationConfig -AuditDisabled $false</em></li> <li>For each unconfigured MailBox of type Resource Mailboxes, Public Folder Mailboxes or DiscoverySearch Mailbox run:<br /><em>Get-Mailbox -Filter \"Name -eq 'MailBox name'\" | Set-Mailbox -AuditEnabled $true</em></li> </ol>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p>To enable mailbox auditing for all users:</p> <ol> <li>Connect to Exchange Online using <em>Connect-ExchangeOnline</em>.</li> <li>Run the following PowerShell command:<br /><em>Set-OrganizationConfig -AuditDisabled $false</em></li> <li>For each unconfigured MailBox of type Resource Mailboxes, Public Folder Mailboxes or DiscoverySearch Mailbox run:<br /><em>Get-Mailbox -Filter \"Name -eq 'MailBox name'\" | Set-Mailbox -AuditEnabled $true</em></li> </ol>",
+              "code_desc": "Mailbox auditing for all users is disabled",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -619,11 +794,20 @@
             ]
           },
           "source_location": {},
-          "code": "Additional storage providers are restricted in Outlook on the web is not configured correctly. Please follow next steps to correctly configure the control.\n<p>Restrict additional storage providers are restricted using PowerShell:</p> <ol> <li>Connect to Exchange Online using <em>Connect-ExchangeOnline</em>.</li> <li>Run the following PowerShell command:<br /><br /><em>Set-OwaMailboxPolicy -Identity OwaMailboxPolicy-Default -AdditionalStorageProvidersAvailable $false</em></li> <li>Run the following Powershell command to verify that the value is now <em>False</em>:<br /><br /><em>Get-OwaMailboxPolicy | Format-Table Name, AdditionalStorageProvidersAvailable</em></li> </ol>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Restrict additional storage providers are restricted using PowerShell:</p> <ol> <li>Connect to Exchange Online using <em>Connect-ExchangeOnline</em>.</li> <li>Run the following PowerShell command:<br /><br /><em>Set-OwaMailboxPolicy -Identity OwaMailboxPolicy-Default -AdditionalStorageProvidersAvailable $false</em></li> <li>Run the following Powershell command to verify that the value is now <em>False</em>:<br /><br /><em>Get-OwaMailboxPolicy | Format-Table Name, AdditionalStorageProvidersAvailable</em></li> </ol>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p>Restrict additional storage providers are restricted using PowerShell:</p> <ol> <li>Connect to Exchange Online using <em>Connect-ExchangeOnline</em>.</li> <li>Run the following PowerShell command:<br /><br /><em>Set-OwaMailboxPolicy -Identity OwaMailboxPolicy-Default -AdditionalStorageProvidersAvailable $false</em></li> <li>Run the following Powershell command to verify that the value is now <em>False</em>:<br /><br /><em>Get-OwaMailboxPolicy | Format-Table Name, AdditionalStorageProvidersAvailable</em></li> </ol>",
+              "code_desc": "Additional storage providers are restricted in Outlook on the web is not configured correctly. Please follow next steps to correctly configure the control.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -653,11 +837,20 @@
             ]
           },
           "source_location": {},
-          "code": "Installing Outlook add-ins configuration is disabled\n<p><strong>To prohibit users installing Outlook add-ins:</strong></p> <ol> <li>Navigate to <strong>Exchange admin center</strong> <a href=\"https://admin.exchange.microsoft.com\">https://admin.exchange.microsoft.com</a>.</li> <li>Click to expand <strong>Roles</strong> select <strong>User roles</strong>.</li> <li>Select <strong>Default Role Assignment Policy</strong>.</li> <li>In the properties pane on the right click on <strong>Manage permissions</strong>.</li> <li>Under Other roles uncheck <strong>My Custom Apps, My Marketplace Apps and My ReadWriteMailboxApps</strong>.</li> <li>Click <strong>Save changes</strong>.</li> </ol> <p><strong>Note</strong> - This security control will take into account only the default policy. It is suggested to set the above for all the policies.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p><strong>To prohibit users installing Outlook add-ins:</strong></p> <ol> <li>Navigate to <strong>Exchange admin center</strong> <a href=\"https://admin.exchange.microsoft.com\">https://admin.exchange.microsoft.com</a>.</li> <li>Click to expand <strong>Roles</strong> select <strong>User roles</strong>.</li> <li>Select <strong>Default Role Assignment Policy</strong>.</li> <li>In the properties pane on the right click on <strong>Manage permissions</strong>.</li> <li>Under Other roles uncheck <strong>My Custom Apps, My Marketplace Apps and My ReadWriteMailboxApps</strong>.</li> <li>Click <strong>Save changes</strong>.</li> </ol> <p><strong>Note</strong> - This security control will take into account only the default policy. It is suggested to set the above for all the policies.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p><strong>To prohibit users installing Outlook add-ins:</strong></p> <ol> <li>Navigate to <strong>Exchange admin center</strong> <a href=\"https://admin.exchange.microsoft.com\">https://admin.exchange.microsoft.com</a>.</li> <li>Click to expand <strong>Roles</strong> select <strong>User roles</strong>.</li> <li>Select <strong>Default Role Assignment Policy</strong>.</li> <li>In the properties pane on the right click on <strong>Manage permissions</strong>.</li> <li>Under Other roles uncheck <strong>My Custom Apps, My Marketplace Apps and My ReadWriteMailboxApps</strong>.</li> <li>Click <strong>Save changes</strong>.</li> </ol> <p><strong>Note</strong> - This security control will take into account only the default policy. It is suggested to set the above for all the policies.</p>",
+              "code_desc": "Installing Outlook add-ins configuration is disabled",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -676,10 +869,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -698,10 +901,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -720,10 +933,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -750,11 +973,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Built-In Protection Policy - 1 users (100%)&nbsp;</li></ul>\n<p><span>Ensure that all users have an assigned &lsquo;Safe Attachments&rsquo; policy in <strong>Block</strong> <strong>mode</strong> by either updating your existing policies or creating new ones.</span></p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p><span>Ensure that all users have an assigned &lsquo;Safe Attachments&rsquo; policy in <strong>Block</strong> <strong>mode</strong> by either updating your existing policies or creating new ones.</span></p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p><span>Ensure that all users have an assigned &lsquo;Safe Attachments&rsquo; policy in <strong>Block</strong> <strong>mode</strong> by either updating your existing policies or creating new ones.</span></p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Built-In Protection Policy - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -773,10 +1005,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Built-In Protection Policy - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Built-In Protection Policy - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -803,11 +1045,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Update your existing policies or create new ones to ensure that all users have an assigned anti-malware policy with the &lsquo;<strong>Enable common attachments filter</strong>&rsquo; option turned on .</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Update your existing policies or create new ones to ensure that all users have an assigned anti-malware policy with the &lsquo;<strong>Enable common attachments filter</strong>&rsquo; option turned on .</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>Update your existing policies or create new ones to ensure that all users have an assigned anti-malware policy with the &lsquo;<strong>Enable common attachments filter</strong>&rsquo; option turned on .</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -826,10 +1077,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "Policies were published on 1 of the 1 users",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "Policies were published on 1 of the 1 users",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -848,10 +1109,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "Policies were published on 0 of the 1 users",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "Policies were published on 0 of the 1 users",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -878,11 +1149,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>High confidence spam message action</strong>&rsquo; option set to &ldquo;Quarantine message&rdquo;, by either updating your existing policies or creating new ones.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>High confidence spam message action</strong>&rsquo; option set to &ldquo;Quarantine message&rdquo;, by either updating your existing policies or creating new ones.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>High confidence spam message action</strong>&rsquo; option set to &ldquo;Quarantine message&rdquo;, by either updating your existing policies or creating new ones.</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -909,11 +1189,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Phishing message action</strong>&rsquo; option set to &ldquo;Quarantine message&rdquo;, by either updating your existing policies or creating new ones.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Phishing message action</strong>&rsquo; option set to &ldquo;Quarantine message&rdquo;, by either updating your existing policies or creating new ones.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Phishing message action</strong>&rsquo; option set to &ldquo;Quarantine message&rdquo;, by either updating your existing policies or creating new ones.</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -940,11 +1229,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>High confidence phishing message action</strong>&rsquo; option set to &ldquo;Quarantine message&rdquo;, by either updating your existing policies or creating new ones.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>High confidence phishing message action</strong>&rsquo; option set to &ldquo;Quarantine message&rdquo;, by either updating your existing policies or creating new ones.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>High confidence phishing message action</strong>&rsquo; option set to &ldquo;Quarantine message&rdquo;, by either updating your existing policies or creating new ones.</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -971,11 +1269,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Bulk complaint level (BCL) met or exceeded</strong>&rsquo; option set to &ldquo;Move message to Junk Email folder&rdquo;, by either updating your existing policies or creating new ones.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Bulk complaint level (BCL) met or exceeded</strong>&rsquo; option set to &ldquo;Move message to Junk Email folder&rdquo;, by either updating your existing policies or creating new ones.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Bulk complaint level (BCL) met or exceeded</strong>&rsquo; option set to &ldquo;Move message to Junk Email folder&rdquo;, by either updating your existing policies or creating new ones.</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1002,11 +1309,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Retain spam in quarantine for this many days</strong>&rsquo; option set to <strong>30</strong>, by either updating your existing policies or creating new ones.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Retain spam in quarantine for this many days</strong>&rsquo; option set to <strong>30</strong>, by either updating your existing policies or creating new ones.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Retain spam in quarantine for this many days</strong>&rsquo; option set to <strong>30</strong>, by either updating your existing policies or creating new ones.</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1033,11 +1349,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\nRemove all allowed domains and allowed senders from all your inbound anti-spam policies.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "Remove all allowed domains and allowed senders from all your inbound anti-spam policies.",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "Remove all allowed domains and allowed senders from all your inbound anti-spam policies.",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1064,11 +1389,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Bulk email spam action</strong>&rsquo; option enabled and the &lsquo;<strong>Bulk email threshold</strong>&rsquo; option set to 6 or lower, by either updating your existing policies or creating new ones.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Bulk email spam action</strong>&rsquo; option enabled and the &lsquo;<strong>Bulk email threshold</strong>&rsquo; option set to 6 or lower, by either updating your existing policies or creating new ones.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p>Ensure that all users have an assigned inbound anti-spam policy with the &lsquo;<strong>Bulk email spam action</strong>&rsquo; option enabled and the &lsquo;<strong>Bulk email threshold</strong>&rsquo; option set to 6 or lower, by either updating your existing policies or creating new ones.</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1087,10 +1421,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1117,11 +1461,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Ensure that all users have an assigned outbound anti-spam policy with the &lsquo;<strong>Automatic forwarding rules</strong>&rsquo; option set to <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#eop-outbound-spam-policy-settings\">recommended values</a> which is &ldquo;Automatic – System-controlled&rdquo; or to &ldquo;Off - Forwarding is disabled&rdquo;, by either updating your existing policies or creating new ones.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that all users have an assigned outbound anti-spam policy with the &lsquo;<strong>Automatic forwarding rules</strong>&rsquo; option set to <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#eop-outbound-spam-policy-settings\">recommended values</a> which is &ldquo;Automatic – System-controlled&rdquo; or to &ldquo;Off - Forwarding is disabled&rdquo;, by either updating your existing policies or creating new ones.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>Ensure that all users have an assigned outbound anti-spam policy with the &lsquo;<strong>Automatic forwarding rules</strong>&rsquo; option set to <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#eop-outbound-spam-policy-settings\">recommended values</a> which is &ldquo;Automatic – System-controlled&rdquo; or to &ldquo;Off - Forwarding is disabled&rdquo;, by either updating your existing policies or creating new ones.</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1148,11 +1501,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Ensure that all users have an assigned outbound anti-spam policy by setting the &lsquo;<strong>Restrict sending to external recipients (per hour)</strong>&rsquo; option to a <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#eop-outbound-spam-policy-settings\">recommended values</a> which is 500 or lower, by either updating your existing policies or creating new ones.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that all users have an assigned outbound anti-spam policy by setting the &lsquo;<strong>Restrict sending to external recipients (per hour)</strong>&rsquo; option to a <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#eop-outbound-spam-policy-settings\">recommended values</a> which is 500 or lower, by either updating your existing policies or creating new ones.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>Ensure that all users have an assigned outbound anti-spam policy by setting the &lsquo;<strong>Restrict sending to external recipients (per hour)</strong>&rsquo; option to a <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#eop-outbound-spam-policy-settings\">recommended values</a> which is 500 or lower, by either updating your existing policies or creating new ones.</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1179,11 +1541,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Ensure that all users have an assigned outbound anti-spam policy with the &lsquo;<strong>Restrict sending to internal recipients (per hour)</strong>&rsquo; option set to <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#eop-outbound-spam-policy-settings\">recommended values</a> which is 1000 or lower, by either updating your existing policies or creating new ones.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that all users have an assigned outbound anti-spam policy with the &lsquo;<strong>Restrict sending to internal recipients (per hour)</strong>&rsquo; option set to <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#eop-outbound-spam-policy-settings\">recommended values</a> which is 1000 or lower, by either updating your existing policies or creating new ones.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>Ensure that all users have an assigned outbound anti-spam policy with the &lsquo;<strong>Restrict sending to internal recipients (per hour)</strong>&rsquo; option set to <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/recommended-settings-for-eop-and-office365?view=o365-worldwide#eop-outbound-spam-policy-settings\">recommended values</a> which is 1000 or lower, by either updating your existing policies or creating new ones.</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1210,11 +1581,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p>Ensure that all users have an assigned outbound anti-spam policy with the &lsquo;<strong>Maximum recipient limit per day</strong>&rsquo; option set to <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-mdo-for-spo-odb-and-teams?view=o365-worldwide\">recommended values</a> which is 1000 or lower, by either updating your existing policies or creating new ones.</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>Ensure that all users have an assigned outbound anti-spam policy with the &lsquo;<strong>Maximum recipient limit per day</strong>&rsquo; option set to <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-mdo-for-spo-odb-and-teams?view=o365-worldwide\">recommended values</a> which is 1000 or lower, by either updating your existing policies or creating new ones.</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>Ensure that all users have an assigned outbound anti-spam policy with the &lsquo;<strong>Maximum recipient limit per day</strong>&rsquo; option set to <a href=\"https://docs.microsoft.com/en-us/microsoft-365/security/office-365-security/turn-on-mdo-for-spo-odb-and-teams?view=o365-worldwide\">recommended values</a> which is 1000 or lower, by either updating your existing policies or creating new ones.</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1233,10 +1613,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1263,11 +1653,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>\n\n      Ensure that all users have an assigned anti-phishing policy with the &lsquo;<strong>Enable mailbox intelligence&rsquo;</strong> option enabled, by either updating your existing policies or creating new ones.\n    ",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "\n      Ensure that all users have an assigned anti-phishing policy with the &lsquo;<strong>Enable mailbox intelligence&rsquo;</strong> option enabled, by either updating your existing policies or creating new ones.\n    ",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "\n      Ensure that all users have an assigned anti-phishing policy with the &lsquo;<strong>Enable mailbox intelligence&rsquo;</strong> option enabled, by either updating your existing policies or creating new ones.\n    ",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1294,11 +1693,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>\n\n      Ensure that all users have an assigned anti-phishing policy with &lsquo;<strong>Enable mailbox intelligence&rsquo;</strong> and &lsquo;<strong>Enable intelligence for impersonation protection&rsquo;</strong> options enabled, by either updating your existing policies or creating new ones.\n    ",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "\n      Ensure that all users have an assigned anti-phishing policy with &lsquo;<strong>Enable mailbox intelligence&rsquo;</strong> and &lsquo;<strong>Enable intelligence for impersonation protection&rsquo;</strong> options enabled, by either updating your existing policies or creating new ones.\n    ",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n      Ensure that all users have an assigned anti-phishing policy with &lsquo;<strong>Enable mailbox intelligence&rsquo;</strong> and &lsquo;<strong>Enable intelligence for impersonation protection&rsquo;</strong> options enabled, by either updating your existing policies or creating new ones.\n    ",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1325,11 +1733,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>\n\n    Ensure that all users have an assigned anti-phishing policy with the &lsquo;<strong>Enable mailbox intelligence&rsquo;</strong> and &lsquo;<strong>Enable intelligence for impersonation protection&rsquo;</strong> options enabled by either updating your existing policies or creating new ones.\n    <br/>\n    <br/>\n    For those policies, ensure that the &lsquo;<strong>If mailbox Intelligence detects an impersonated user&rsquo;</strong> option set to &lsquo;<strong>Quarantine the message&rsquo;</strong> or &lsquo;<strong>Move message to the recipients’ junk email folders&rsquo;</strong>.\n  ",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "\n    Ensure that all users have an assigned anti-phishing policy with the &lsquo;<strong>Enable mailbox intelligence&rsquo;</strong> and &lsquo;<strong>Enable intelligence for impersonation protection&rsquo;</strong> options enabled by either updating your existing policies or creating new ones.\n    <br/>\n    <br/>\n    For those policies, ensure that the &lsquo;<strong>If mailbox Intelligence detects an impersonated user&rsquo;</strong> option set to &lsquo;<strong>Quarantine the message&rsquo;</strong> or &lsquo;<strong>Move message to the recipients’ junk email folders&rsquo;</strong>.\n  ",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n    Ensure that all users have an assigned anti-phishing policy with the &lsquo;<strong>Enable mailbox intelligence&rsquo;</strong> and &lsquo;<strong>Enable intelligence for impersonation protection&rsquo;</strong> options enabled by either updating your existing policies or creating new ones.\n    <br/>\n    <br/>\n    For those policies, ensure that the &lsquo;<strong>If mailbox Intelligence detects an impersonated user&rsquo;</strong> option set to &lsquo;<strong>Quarantine the message&rsquo;</strong> or &lsquo;<strong>Move message to the recipients’ junk email folders&rsquo;</strong>.\n  ",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1356,11 +1773,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>\n\n      Ensure that all users have an assigned anti-phishing policy with &lsquo;<strong>Enable domains to protect&rsquo;</strong>, &lsquo;<strong>Include domains I own&rsquo;</strong> and &lsquo;<strong>Include custom domains&rsquo;</strong> options enabled, by either updating your existing policies or creating new ones.\n      <br/>\n      <br/>\n      We recommend adding sender domains that you frequently interact with, even if you don't own them.\n    ",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "\n      Ensure that all users have an assigned anti-phishing policy with &lsquo;<strong>Enable domains to protect&rsquo;</strong>, &lsquo;<strong>Include domains I own&rsquo;</strong> and &lsquo;<strong>Include custom domains&rsquo;</strong> options enabled, by either updating your existing policies or creating new ones.\n      <br/>\n      <br/>\n      We recommend adding sender domains that you frequently interact with, even if you don't own them.\n    ",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n      Ensure that all users have an assigned anti-phishing policy with &lsquo;<strong>Enable domains to protect&rsquo;</strong>, &lsquo;<strong>Include domains I own&rsquo;</strong> and &lsquo;<strong>Include custom domains&rsquo;</strong> options enabled, by either updating your existing policies or creating new ones.\n      <br/>\n      <br/>\n      We recommend adding sender domains that you frequently interact with, even if you don't own them.\n    ",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1387,11 +1813,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>\n\n        Ensure that all users have an assigned anti-phishing policy with the &lsquo;<strong>Phishing email threshold&rsquo;</strong> option set to 2 or 3, by either updating your existing policies or creating new ones.\n      ",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "\n        Ensure that all users have an assigned anti-phishing policy with the &lsquo;<strong>Phishing email threshold&rsquo;</strong> option set to 2 or 3, by either updating your existing policies or creating new ones.\n      ",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "\n        Ensure that all users have an assigned anti-phishing policy with the &lsquo;<strong>Phishing email threshold&rsquo;</strong> option set to 2 or 3, by either updating your existing policies or creating new ones.\n      ",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1410,10 +1845,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1432,10 +1877,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1454,10 +1909,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1476,10 +1941,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1498,10 +1973,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1520,10 +2005,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1542,10 +2037,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1575,11 +2080,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Built-In Protection Policy - 1 users (100%)&nbsp;</li></ul>\n<p>To enable the Safe Attachments policy:</p> <ol> <li>Navigate to <em>Microsoft 365 Defender</em> <a href=\"https://security.microsoft.com\">https://security.microsoft.com</a>.</li> <li>Click to expand <em>E-mail &amp; Collaboration</em> select <em>Policies &amp; rules</em>.</li> <li>On the Policies &amp; rules page select <em>Threat policies</em>.</li> <li>Under <em>Policies</em> select <em>Safe Attachments</em>.</li> <li>Click <em>+ Create</em>.</li> <li>Create a Policy Name and Description, and then click <em>Next</em>.</li> <li>Select all valid domains and click <em>Next</em>.</li> <li>Select <em>Block</em>.</li> <li>Quarantine policy is <em>AdminOnlyAccessPolicy</em>.</li> <li>Leave <em>Enable redirect</em> unchecked.</li> <li>Click <em>Next</em> and finally <em>Submit</em>.</li> </ol>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p>To enable the Safe Attachments policy:</p> <ol> <li>Navigate to <em>Microsoft 365 Defender</em> <a href=\"https://security.microsoft.com\">https://security.microsoft.com</a>.</li> <li>Click to expand <em>E-mail &amp; Collaboration</em> select <em>Policies &amp; rules</em>.</li> <li>On the Policies &amp; rules page select <em>Threat policies</em>.</li> <li>Under <em>Policies</em> select <em>Safe Attachments</em>.</li> <li>Click <em>+ Create</em>.</li> <li>Create a Policy Name and Description, and then click <em>Next</em>.</li> <li>Select all valid domains and click <em>Next</em>.</li> <li>Select <em>Block</em>.</li> <li>Quarantine policy is <em>AdminOnlyAccessPolicy</em>.</li> <li>Leave <em>Enable redirect</em> unchecked.</li> <li>Click <em>Next</em> and finally <em>Submit</em>.</li> </ol>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<p>To enable the Safe Attachments policy:</p> <ol> <li>Navigate to <em>Microsoft 365 Defender</em> <a href=\"https://security.microsoft.com\">https://security.microsoft.com</a>.</li> <li>Click to expand <em>E-mail &amp; Collaboration</em> select <em>Policies &amp; rules</em>.</li> <li>On the Policies &amp; rules page select <em>Threat policies</em>.</li> <li>Under <em>Policies</em> select <em>Safe Attachments</em>.</li> <li>Click <em>+ Create</em>.</li> <li>Create a Policy Name and Description, and then click <em>Next</em>.</li> <li>Select all valid domains and click <em>Next</em>.</li> <li>Select <em>Block</em>.</li> <li>Quarantine policy is <em>AdminOnlyAccessPolicy</em>.</li> <li>Leave <em>Enable redirect</em> unchecked.</li> <li>Click <em>Next</em> and finally <em>Submit</em>.</li> </ol>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured securely&nbsp;</p><ul><li>Built-In Protection Policy - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1598,10 +2112,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Built-In Protection Policy - 1 users (100%)&nbsp;</li></ul>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Built-In Protection Policy - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1632,11 +2156,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>\n<p><strong>Note</strong>: Audit and Remediation guidance may focus on the Default policy however, if a <br />Custom Policy exists in the organization's tenant then ensure the setting is set as <br />outlined in the highest priority policy listed.</p> <p><br /><strong>To set the anti-phishing policy -</strong></p> <ol> <li>Navigate to<em> Microsoft 365 Defender</em> <a href=\"https://security.microsoft.com\">https://security.microsoft.com</a>.</li> <li>Click to expand <em>Email &amp; collaboration</em> select <em>Policies &amp; rules</em></li> <li>Select <em>Threat policies</em>.</li> <li>Under <em>Policies</em> select <em>Anti-phishing</em>.</li> <li>Select the <em>Office365 AntiPhish Default (Default)</em> policy and click <em>Edit </em><br /><em>protection settings</em>.</li> <li>Set the Phishing email threshold to at least 2 - Aggressive. <ol> <li>Under <strong>Impersonation</strong><br />&bull; Check <em>Enable mailbox intelligence (Recommended)</em>.<br />&bull; Check <em>Enable Intelligence for impersonation protection (Recommended)</em>.</li> <li>Under <strong>Spoof</strong><br />&bull; Check <em>Enable spoof intelligence (Recommended)</em>.</li> </ol> </li> <li>Click Save.</li> </ol> <p><strong>To create an anti-phishing policy using PowerShell:</strong></p> <ol> <li>Connect to Exchange Online service using <em>Connect-ExchangeOnline</em>.</li> <li>Run the following Exchange Online PowerShell command:</li> </ol> <p><br />New-AntiPhishPolicy -Name \"Office365 AntiPhish Policy\"</p>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p><strong>Note</strong>: Audit and Remediation guidance may focus on the Default policy however, if a <br />Custom Policy exists in the organization's tenant then ensure the setting is set as <br />outlined in the highest priority policy listed.</p> <p><br /><strong>To set the anti-phishing policy -</strong></p> <ol> <li>Navigate to<em> Microsoft 365 Defender</em> <a href=\"https://security.microsoft.com\">https://security.microsoft.com</a>.</li> <li>Click to expand <em>Email &amp; collaboration</em> select <em>Policies &amp; rules</em></li> <li>Select <em>Threat policies</em>.</li> <li>Under <em>Policies</em> select <em>Anti-phishing</em>.</li> <li>Select the <em>Office365 AntiPhish Default (Default)</em> policy and click <em>Edit </em><br /><em>protection settings</em>.</li> <li>Set the Phishing email threshold to at least 2 - Aggressive. <ol> <li>Under <strong>Impersonation</strong><br />&bull; Check <em>Enable mailbox intelligence (Recommended)</em>.<br />&bull; Check <em>Enable Intelligence for impersonation protection (Recommended)</em>.</li> <li>Under <strong>Spoof</strong><br />&bull; Check <em>Enable spoof intelligence (Recommended)</em>.</li> </ol> </li> <li>Click Save.</li> </ol> <p><strong>To create an anti-phishing policy using PowerShell:</strong></p> <ol> <li>Connect to Exchange Online service using <em>Connect-ExchangeOnline</em>.</li> <li>Run the following Exchange Online PowerShell command:</li> </ol> <p><br />New-AntiPhishPolicy -Name \"Office365 AntiPhish Policy\"</p>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p><strong>Note</strong>: Audit and Remediation guidance may focus on the Default policy however, if a <br />Custom Policy exists in the organization's tenant then ensure the setting is set as <br />outlined in the highest priority policy listed.</p> <p><br /><strong>To set the anti-phishing policy -</strong></p> <ol> <li>Navigate to<em> Microsoft 365 Defender</em> <a href=\"https://security.microsoft.com\">https://security.microsoft.com</a>.</li> <li>Click to expand <em>Email &amp; collaboration</em> select <em>Policies &amp; rules</em></li> <li>Select <em>Threat policies</em>.</li> <li>Under <em>Policies</em> select <em>Anti-phishing</em>.</li> <li>Select the <em>Office365 AntiPhish Default (Default)</em> policy and click <em>Edit </em><br /><em>protection settings</em>.</li> <li>Set the Phishing email threshold to at least 2 - Aggressive. <ol> <li>Under <strong>Impersonation</strong><br />&bull; Check <em>Enable mailbox intelligence (Recommended)</em>.<br />&bull; Check <em>Enable Intelligence for impersonation protection (Recommended)</em>.</li> <li>Under <strong>Spoof</strong><br />&bull; Check <em>Enable spoof intelligence (Recommended)</em>.</li> </ol> </li> <li>Click Save.</li> </ol> <p><strong>To create an anti-phishing policy using PowerShell:</strong></p> <ol> <li>Connect to Exchange Online service using <em>Connect-ExchangeOnline</em>.</li> <li>Run the following Exchange Online PowerShell command:</li> </ol> <p><br />New-AntiPhishPolicy -Name \"Office365 AntiPhish Policy\"</p>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Office365 AntiPhish Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1666,11 +2199,20 @@
             ]
           },
           "source_location": {},
-          "code": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>\n<p><strong>NOTE</strong>: In this control, remediation is carried out in two stages - Step 1 is manual and will not be monitored automatically by secure score, whereas Step 2 is monitored automatically:</p> <p><strong>STEP 1: Transport rules</strong></p> <p><strong>To alter the mail transport rules so they do not forward email to external domains, </strong><strong>use the Microsoft 365 Admin Center:</strong></p> <ol> <li>Select <em>Exchange</em> to open the Exchange admin center.</li> <li>Select <em>Mail Flow</em> then <em>Rules</em>.</li> <li>For each rule that redirects email to external domains, select the rule and click the 'Delete' icon.</li> </ol> <p><strong>To perform remediation you may also use the Exchange Online PowerShell </strong><br /><strong>Module:</strong></p> <ol> <li>Connect to Exchange Online user <em>Connect-ExchangeOnline</em>.</li> <li>Run the following PowerShell command:<br /><br /><em>Remove-TransportRule {RuleName}</em><br /><br /></li> <li>To verify this worked you may re-run the audit command as follows:<br /><br /><em>Get-TransportRule | Where-Object {$_.RedirectMessageTo -ne $null} | ft </em><br /><em>Name,RedirectMessageTo</em></li> </ol> <p><br /><strong>STEP 2: Anti-spam outbound policy</strong></p> <p><strong>Configure an anti-spam outbound policy:</strong></p> <ol> <li>Navigate to <em>Microsoft 365 Defender</em> <a href=\"https://security.microsoft.com/\">https://security.microsoft.com/</a></li> <li>Expand <em>E-mail &amp; collaboration</em> then select <em>Policies &amp; rules</em>.</li> <li>Select <em>Threat policies</em> &gt; <em>Anti-spam</em>.</li> <li>Select <em>Anti-spam outbound policy (default)</em></li> <li>Click <em>Edit protection settings</em></li> <li>Set <em>Automatic forwarding rules</em> dropdown to <em>Off - Forwarding is disabled</em> and click <em>Save</em></li> <li>Repeat steps 4-6 for any additional higher priority, custom policies.</li> </ol>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<p><strong>NOTE</strong>: In this control, remediation is carried out in two stages - Step 1 is manual and will not be monitored automatically by secure score, whereas Step 2 is monitored automatically:</p> <p><strong>STEP 1: Transport rules</strong></p> <p><strong>To alter the mail transport rules so they do not forward email to external domains, </strong><strong>use the Microsoft 365 Admin Center:</strong></p> <ol> <li>Select <em>Exchange</em> to open the Exchange admin center.</li> <li>Select <em>Mail Flow</em> then <em>Rules</em>.</li> <li>For each rule that redirects email to external domains, select the rule and click the 'Delete' icon.</li> </ol> <p><strong>To perform remediation you may also use the Exchange Online PowerShell </strong><br /><strong>Module:</strong></p> <ol> <li>Connect to Exchange Online user <em>Connect-ExchangeOnline</em>.</li> <li>Run the following PowerShell command:<br /><br /><em>Remove-TransportRule {RuleName}</em><br /><br /></li> <li>To verify this worked you may re-run the audit command as follows:<br /><br /><em>Get-TransportRule | Where-Object {$_.RedirectMessageTo -ne $null} | ft </em><br /><em>Name,RedirectMessageTo</em></li> </ol> <p><br /><strong>STEP 2: Anti-spam outbound policy</strong></p> <p><strong>Configure an anti-spam outbound policy:</strong></p> <ol> <li>Navigate to <em>Microsoft 365 Defender</em> <a href=\"https://security.microsoft.com/\">https://security.microsoft.com/</a></li> <li>Expand <em>E-mail &amp; collaboration</em> then select <em>Policies &amp; rules</em>.</li> <li>Select <em>Threat policies</em> &gt; <em>Anti-spam</em>.</li> <li>Select <em>Anti-spam outbound policy (default)</em></li> <li>Click <em>Edit protection settings</em></li> <li>Set <em>Automatic forwarding rules</em> dropdown to <em>Off - Forwarding is disabled</em> and click <em>Save</em></li> <li>Repeat steps 4-6 for any additional higher priority, custom policies.</li> </ol>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<p><strong>NOTE</strong>: In this control, remediation is carried out in two stages - Step 1 is manual and will not be monitored automatically by secure score, whereas Step 2 is monitored automatically:</p> <p><strong>STEP 1: Transport rules</strong></p> <p><strong>To alter the mail transport rules so they do not forward email to external domains, </strong><strong>use the Microsoft 365 Admin Center:</strong></p> <ol> <li>Select <em>Exchange</em> to open the Exchange admin center.</li> <li>Select <em>Mail Flow</em> then <em>Rules</em>.</li> <li>For each rule that redirects email to external domains, select the rule and click the 'Delete' icon.</li> </ol> <p><strong>To perform remediation you may also use the Exchange Online PowerShell </strong><br /><strong>Module:</strong></p> <ol> <li>Connect to Exchange Online user <em>Connect-ExchangeOnline</em>.</li> <li>Run the following PowerShell command:<br /><br /><em>Remove-TransportRule {RuleName}</em><br /><br /></li> <li>To verify this worked you may re-run the audit command as follows:<br /><br /><em>Get-TransportRule | Where-Object {$_.RedirectMessageTo -ne $null} | ft </em><br /><em>Name,RedirectMessageTo</em></li> </ol> <p><br /><strong>STEP 2: Anti-spam outbound policy</strong></p> <p><strong>Configure an anti-spam outbound policy:</strong></p> <ol> <li>Navigate to <em>Microsoft 365 Defender</em> <a href=\"https://security.microsoft.com/\">https://security.microsoft.com/</a></li> <li>Expand <em>E-mail &amp; collaboration</em> then select <em>Policies &amp; rules</em>.</li> <li>Select <em>Threat policies</em> &gt; <em>Anti-spam</em>.</li> <li>Select <em>Anti-spam outbound policy (default)</em></li> <li>Click <em>Edit protection settings</em></li> <li>Set <em>Automatic forwarding rules</em> dropdown to <em>Off - Forwarding is disabled</em> and click <em>Save</em></li> <li>Repeat steps 4-6 for any additional higher priority, custom policies.</li> </ol>",
+              "code_desc": "<p> 100% of users are affected by policies that are configured less securely than is recommended&nbsp;</p><ul><li>Default - 1 users (100%)&nbsp;</li></ul>",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1700,11 +2242,20 @@
             ]
           },
           "source_location": {},
-          "code": "You have no user consent policy in place.\n<ol><li>Go to Microsoft Entra ID &gt; Enterprise applications &gt; Consent and permissions. <a href=\"https://portal.azure.com/#blade/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/UserSettings\">Go to Consent and permissions</a>&nbsp;</li><li>Select &ldquo;Allow user consent for apps from verified publishers, for selected permissions (Recommended)&ldquo; to follow Microsoft&rsquo;s best practice. <a href=\"https://docs.microsoft.com/azure/active-directory/manage-apps/consent-and-permissions-overview\">Learn more</a>&nbsp;</li><li>Configure the low-impact permissions that users are allowed to consent to. Click &ldquo;Select permissions to classify as low impact&rdquo;. <a href=\"https://docs.microsoft.com/azure/active-directory/manage-apps/configure-permission-classifications?tabs=azure-portal\">Learn more</a>&nbsp;</li><li>Optionally, you can help your users to consent to apps that require admin consent by setting up the admin consent workflow. This step is recommended but not required to get full score. <a href=\"https://docs.microsoft.com/azure/active-directory/manage-apps/configure-admin-consent-workflow\">Learn how to configure the admin consent workflow</a>&nbsp;</li></ol>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<ol><li>Go to Microsoft Entra ID &gt; Enterprise applications &gt; Consent and permissions. <a href=\"https://portal.azure.com/#blade/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/UserSettings\">Go to Consent and permissions</a>&nbsp;</li><li>Select &ldquo;Allow user consent for apps from verified publishers, for selected permissions (Recommended)&ldquo; to follow Microsoft&rsquo;s best practice. <a href=\"https://docs.microsoft.com/azure/active-directory/manage-apps/consent-and-permissions-overview\">Learn more</a>&nbsp;</li><li>Configure the low-impact permissions that users are allowed to consent to. Click &ldquo;Select permissions to classify as low impact&rdquo;. <a href=\"https://docs.microsoft.com/azure/active-directory/manage-apps/configure-permission-classifications?tabs=azure-portal\">Learn more</a>&nbsp;</li><li>Optionally, you can help your users to consent to apps that require admin consent by setting up the admin consent workflow. This step is recommended but not required to get full score. <a href=\"https://docs.microsoft.com/azure/active-directory/manage-apps/configure-admin-consent-workflow\">Learn how to configure the admin consent workflow</a>&nbsp;</li></ol>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
-              "code_desc": "<ol><li>Go to Microsoft Entra ID &gt; Enterprise applications &gt; Consent and permissions. <a href=\"https://portal.azure.com/#blade/Microsoft_AAD_IAM/ConsentPoliciesMenuBlade/UserSettings\">Go to Consent and permissions</a>&nbsp;</li><li>Select &ldquo;Allow user consent for apps from verified publishers, for selected permissions (Recommended)&ldquo; to follow Microsoft&rsquo;s best practice. <a href=\"https://docs.microsoft.com/azure/active-directory/manage-apps/consent-and-permissions-overview\">Learn more</a>&nbsp;</li><li>Configure the low-impact permissions that users are allowed to consent to. Click &ldquo;Select permissions to classify as low impact&rdquo;. <a href=\"https://docs.microsoft.com/azure/active-directory/manage-apps/configure-permission-classifications?tabs=azure-portal\">Learn more</a>&nbsp;</li><li>Optionally, you can help your users to consent to apps that require admin consent by setting up the admin consent workflow. This step is recommended but not required to get full score. <a href=\"https://docs.microsoft.com/azure/active-directory/manage-apps/configure-admin-consent-workflow\">Learn how to configure the admin consent workflow</a>&nbsp;</li></ol>",
+              "code_desc": "You have no user consent policy in place.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1723,10 +2274,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "Your current policy is set to let passwords expire.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "Your current policy is set to let passwords expire.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1745,10 +2306,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "You have 0 of 0 users who don't have self-service password reset enabled.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "You have 0 of 0 users who don't have self-service password reset enabled.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1778,11 +2349,20 @@
             ]
           },
           "source_location": {},
-          "code": "You have 0 of 1 users that don't have legacy authentication blocked.\n<ol><li>We provide step-by-step guidance to select and enable the right method to block legacy authentication for your organization in the Microsoft 365 admin center (part of the MFA wizard). <a href=\"https://admin.microsoft.com/adminportal/home?Q=SecureScore#/featureexplorer/security/ConditionalAccess\">Go to the Microsoft 365 MFA wizard</a>&nbsp;</li><li>If you would like to perform the implementation yourself, first check what Microsoft Entra ID license you have under &ldquo;Prerequisites&rdquo; in Microsoft Secure Score or <a href=\"https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview\">see your license type under \"Basic information\" in the Microsoft Entra ID Overview</a>.&nbsp;</li><li>If you&rsquo;ve invested in Microsoft Entra ID Premium P1 or P2 licenses, you can create a Conditional Access policy from scratch or by using a template. <a href=\"https://docs.microsoft.com/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy\">Follow these steps to create a Conditional Access policy from scratch or by using a template</a>&nbsp;</li><li>If you would like to perform the implementation yourself and you&rsquo;re using Microsoft Entra ID Free, turn on security defaults. Note: Security defaults and Conditional Access can&rsquo;t be used side by side. <a href=\"https://docs.microsoft.com/azure/active-directory/fundamentals/concept-fundamentals-security-defaults\">Enable security defaults</a>&nbsp;</li></ol>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<ol><li>We provide step-by-step guidance to select and enable the right method to block legacy authentication for your organization in the Microsoft 365 admin center (part of the MFA wizard). <a href=\"https://admin.microsoft.com/adminportal/home?Q=SecureScore#/featureexplorer/security/ConditionalAccess\">Go to the Microsoft 365 MFA wizard</a>&nbsp;</li><li>If you would like to perform the implementation yourself, first check what Microsoft Entra ID license you have under &ldquo;Prerequisites&rdquo; in Microsoft Secure Score or <a href=\"https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview\">see your license type under \"Basic information\" in the Microsoft Entra ID Overview</a>.&nbsp;</li><li>If you&rsquo;ve invested in Microsoft Entra ID Premium P1 or P2 licenses, you can create a Conditional Access policy from scratch or by using a template. <a href=\"https://docs.microsoft.com/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy\">Follow these steps to create a Conditional Access policy from scratch or by using a template</a>&nbsp;</li><li>If you would like to perform the implementation yourself and you&rsquo;re using Microsoft Entra ID Free, turn on security defaults. Note: Security defaults and Conditional Access can&rsquo;t be used side by side. <a href=\"https://docs.microsoft.com/azure/active-directory/fundamentals/concept-fundamentals-security-defaults\">Enable security defaults</a>&nbsp;</li></ol>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<ol><li>We provide step-by-step guidance to select and enable the right method to block legacy authentication for your organization in the Microsoft 365 admin center (part of the MFA wizard). <a href=\"https://admin.microsoft.com/adminportal/home?Q=SecureScore#/featureexplorer/security/ConditionalAccess\">Go to the Microsoft 365 MFA wizard</a>&nbsp;</li><li>If you would like to perform the implementation yourself, first check what Microsoft Entra ID license you have under &ldquo;Prerequisites&rdquo; in Microsoft Secure Score or <a href=\"https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview\">see your license type under \"Basic information\" in the Microsoft Entra ID Overview</a>.&nbsp;</li><li>If you&rsquo;ve invested in Microsoft Entra ID Premium P1 or P2 licenses, you can create a Conditional Access policy from scratch or by using a template. <a href=\"https://docs.microsoft.com/azure/active-directory/conditional-access/howto-conditional-access-policy-block-legacy\">Follow these steps to create a Conditional Access policy from scratch or by using a template</a>&nbsp;</li><li>If you would like to perform the implementation yourself and you&rsquo;re using Microsoft Entra ID Free, turn on security defaults. Note: Security defaults and Conditional Access can&rsquo;t be used side by side. <a href=\"https://docs.microsoft.com/azure/active-directory/fundamentals/concept-fundamentals-security-defaults\">Enable security defaults</a>&nbsp;</li></ol>",
+              "code_desc": "You have 0 of 1 users that don't have legacy authentication blocked.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1801,10 +2381,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "You have 0 out of 1 users that aren’t registered with MFA.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "You have 0 out of 1 users that aren’t registered with MFA.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1835,11 +2425,20 @@
             ]
           },
           "source_location": {},
-          "code": "You have 0 out of 1 users with administrative roles that aren’t registered and protected with MFA.\n<ol><li>We provide step-by-step guidance to select and enable the right MFA method for your organization in the Microsoft 365 admin center. <a href=\"https://admin.microsoft.com/adminportal/home?Q=SecureScore#/featureexplorer/security/ConditionalAccess\">Go to the Microsoft 365 MFA </a>wizard&nbsp;</li><li>If you would like to perform the implementation yourself, first check what Microsoft Entra ID license you have under &ldquo;Prerequisites&rdquo; in Microsoft Secure Score or <a href=\"https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview\">see your license type under \"Basic information\" in the Microsoft Entra ID Overview</a>.&nbsp;</li><li>If you&rsquo;ve invested in Microsoft Entra ID Premium P1 or P2 licenses, you can create a Conditional Access policy from scratch or by using a template. <a href=\"https://docs.microsoft.com/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa\">Follow these steps to create a Conditional Access policy from scratch or by using a template</a>&nbsp;</li><li>If you would like to perform the implementation yourself and you&rsquo;re using Microsoft Entra ID Free, turn on security defaults. Note: Security defaults and Conditional Access can&rsquo;t be used side by side. <a href=\"https://docs.microsoft.com/azure/active-directory/fundamentals/concept-fundamentals-security-defaults\">Enable security defaults</a>&nbsp;</li><li>Keep track of your admin&rsquo;s progress of registering authentication methods by going to Microsoft Entra ID &gt; Security &gt; Authentication methods &gt; User registration details (requires Microsoft Entra ID Premium P1 or P2 licenses). <a href=\"https://portal.azure.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/UserRegistrationDetails\">Go to User registration details</a>&nbsp;</li></ol>",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "<ol><li>We provide step-by-step guidance to select and enable the right MFA method for your organization in the Microsoft 365 admin center. <a href=\"https://admin.microsoft.com/adminportal/home?Q=SecureScore#/featureexplorer/security/ConditionalAccess\">Go to the Microsoft 365 MFA </a>wizard&nbsp;</li><li>If you would like to perform the implementation yourself, first check what Microsoft Entra ID license you have under &ldquo;Prerequisites&rdquo; in Microsoft Secure Score or <a href=\"https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview\">see your license type under \"Basic information\" in the Microsoft Entra ID Overview</a>.&nbsp;</li><li>If you&rsquo;ve invested in Microsoft Entra ID Premium P1 or P2 licenses, you can create a Conditional Access policy from scratch or by using a template. <a href=\"https://docs.microsoft.com/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa\">Follow these steps to create a Conditional Access policy from scratch or by using a template</a>&nbsp;</li><li>If you would like to perform the implementation yourself and you&rsquo;re using Microsoft Entra ID Free, turn on security defaults. Note: Security defaults and Conditional Access can&rsquo;t be used side by side. <a href=\"https://docs.microsoft.com/azure/active-directory/fundamentals/concept-fundamentals-security-defaults\">Enable security defaults</a>&nbsp;</li><li>Keep track of your admin&rsquo;s progress of registering authentication methods by going to Microsoft Entra ID &gt; Security &gt; Authentication methods &gt; User registration details (requires Microsoft Entra ID Premium P1 or P2 licenses). <a href=\"https://portal.azure.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/UserRegistrationDetails\">Go to User registration details</a>&nbsp;</li></ol>",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
-              "code_desc": "<ol><li>We provide step-by-step guidance to select and enable the right MFA method for your organization in the Microsoft 365 admin center. <a href=\"https://admin.microsoft.com/adminportal/home?Q=SecureScore#/featureexplorer/security/ConditionalAccess\">Go to the Microsoft 365 MFA </a>wizard&nbsp;</li><li>If you would like to perform the implementation yourself, first check what Microsoft Entra ID license you have under &ldquo;Prerequisites&rdquo; in Microsoft Secure Score or <a href=\"https://portal.azure.com/#blade/Microsoft_AAD_IAM/ActiveDirectoryMenuBlade/Overview\">see your license type under \"Basic information\" in the Microsoft Entra ID Overview</a>.&nbsp;</li><li>If you&rsquo;ve invested in Microsoft Entra ID Premium P1 or P2 licenses, you can create a Conditional Access policy from scratch or by using a template. <a href=\"https://docs.microsoft.com/azure/active-directory/conditional-access/howto-conditional-access-policy-admin-mfa\">Follow these steps to create a Conditional Access policy from scratch or by using a template</a>&nbsp;</li><li>If you would like to perform the implementation yourself and you&rsquo;re using Microsoft Entra ID Free, turn on security defaults. Note: Security defaults and Conditional Access can&rsquo;t be used side by side. <a href=\"https://docs.microsoft.com/azure/active-directory/fundamentals/concept-fundamentals-security-defaults\">Enable security defaults</a>&nbsp;</li><li>Keep track of your admin&rsquo;s progress of registering authentication methods by going to Microsoft Entra ID &gt; Security &gt; Authentication methods &gt; User registration details (requires Microsoft Entra ID Premium P1 or P2 licenses). <a href=\"https://portal.azure.com/#view/Microsoft_AAD_IAM/AuthenticationMethodsMenuBlade/~/UserRegistrationDetails\">Go to User registration details</a>&nbsp;</li></ol>",
+              "code_desc": "You have 0 out of 1 users with administrative roles that aren’t registered and protected with MFA.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1858,10 +2457,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "You have 0 of 1 users that don't have the sign-in risky policy turned on.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "You have 0 of 1 users that don't have the sign-in risky policy turned on.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1880,10 +2489,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "You have 0 users out of 1 that do not have user risk policy enabled.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "passed",
+              "code_desc": "You have 0 users out of 1 that do not have user risk policy enabled.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1902,10 +2521,20 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "You currently have 1 global admins.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "You currently have 1 global admins.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
@@ -1924,16 +2553,26 @@
             "userImpacts": []
           },
           "source_location": {},
-          "code": "You have 0 users with least privileged administrative roles.",
+          "descriptions": [
+            {
+              "data": "",
+              "label": "check"
+            },
+            {
+              "data": "",
+              "label": "fix"
+            }
+          ],
           "results": [
             {
               "status": "failed",
+              "code_desc": "You have 0 users with least privileged administrative roles.",
               "start_time": "2024-01-01T00:00:00Z"
             }
           ]
         }
       ],
-      "sha256": "6983e4f216a845ddef95f709cabba0c7b2b5c7b756dc8692eedf8ab288427c1c"
+      "sha256": "75687ca6c12a3a2f91b3a77aba8bf479dc239a8ea0bb0f1119a73588546c11fd"
     }
   ],
   "passthrough": {

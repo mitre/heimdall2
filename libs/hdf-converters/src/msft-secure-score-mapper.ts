@@ -119,24 +119,28 @@ export class MsftSecureScoreMapper extends BaseConverter {
               }
             },
             source_location: {},
-            code: {
-              transformer: (
-                data: ControlScore & {implementationStatus: string}
-              ) => {
-                const implementationStatus = data.implementationStatus;
-                const profiles = this.getProfiles(data.controlName || '');
-                const remediationSteps = profiles
-                  .map((profile: SecureScoreControlProfile) =>
-                    profile.remediation?.toString()
-                  )
-                  .filter(
-                    (remediation: string | undefined) =>
-                      remediation !== undefined
-                  );
+            descriptions: [
+              {
+                data: {
+                  transformer: (
+                    data: ControlScore & {implementationStatus: string}
+                  ) => {
+                    const profiles = this.getProfiles(data.controlName || '');
+                    const remediationSteps = profiles
+                      .map((profile: SecureScoreControlProfile) =>
+                        profile.remediation?.toString()
+                      )
+                      .filter(
+                        (remediation: string | undefined) =>
+                          remediation !== undefined
+                      );
 
-                return [implementationStatus, ...remediationSteps].join('\n');
+                    return remediationSteps.join('\n');
+                  }
+                },
+                label: 'fix'
               }
-            },
+            ],
             results: [
               {
                 status: {
@@ -168,17 +172,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                 code_desc: {
                   transformer: (
                     data: ControlScore & {implementationStatus: string}
-                  ) => {
-                    const remediations = this.getProfiles(
-                      data.controlName || ''
-                    )
-                      .filter((profile) => profile.remediation !== undefined)
-                      .map((profile) => profile.remediation);
-
-                    if (remediations.length > 0) {
-                      return remediations.join('\n\n');
-                    }
-                  }
+                  ) => data.implementationStatus
                 },
                 start_time: {transformer: () => this.data.createdDateTime}
               }
