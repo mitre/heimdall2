@@ -51,7 +51,7 @@ export class SBOMResults {
   // Collect all components that affect a vulnerability and place them under the corresponding vulnerability
   generateIntermediary(data: Record<string, unknown>) {
     if (_.has(data, 'vulnerabilities')) {
-      for (let vulnerability of data.vulnerabilities as (Record<
+      for (const vulnerability of data.vulnerabilities as (Record<
         string,
         unknown
       > & {affects: Record<string, unknown>[]})[]) {
