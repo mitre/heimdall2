@@ -4,7 +4,6 @@ import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
   ILookupPath,
-  impactMapping,
   MappedTransform
 } from './base-converter';
 
