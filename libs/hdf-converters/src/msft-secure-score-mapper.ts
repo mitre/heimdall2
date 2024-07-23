@@ -12,7 +12,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
   profiles: SecureScoreControlProfile[];
 
   private getProfiles(controlName: string): SecureScoreControlProfile[] {
-    return this.profiles.filter((p) => p.id === controlName);
+    return this.profiles.filter((profile) => profile.id === controlName);
   }
 
   mappings: MappedTransform<
@@ -78,7 +78,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                 transformer: (data: ControlScore) => {
                   // return controlCategory from the profile document where its id matches the controlName
                   return this.getProfiles(data.controlName || '').map(
-                    (p) => p.controlCategory
+                    (profile) => profile.controlCategory
                   );
                 }
               },
@@ -86,7 +86,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                 transformer: (data: ControlScore) => {
                   // return tiers from the profile document where its id matches the controlName
                   return this.getProfiles(data.controlName || '').map(
-                    (p) => p.tier
+                    (profile) => profile.tier
                   );
                 }
               },
@@ -121,10 +121,10 @@ export class MsftSecureScoreMapper extends BaseConverter {
             source_location: {},
             code: {
               transformer: (
-                d: ControlScore & {implementationStatus: string}
+                data: ControlScore & {implementationStatus: string}
               ) => {
-                const implementationStatus = d.implementationStatus;
-                const profiles = this.getProfiles(d.controlName || '');
+                const implementationStatus = data.implementationStatus;
+                const profiles = this.getProfiles(data.controlName || '');
                 const remediationSteps = profiles
                   .map((profile: SecureScoreControlProfile) =>
                     profile.remediation?.toString()
@@ -167,9 +167,9 @@ export class MsftSecureScoreMapper extends BaseConverter {
                 },
                 code_desc: {
                   transformer: (
-                    d: ControlScore & {implementationStatus: string}
+                    data: ControlScore & {implementationStatus: string}
                   ) => {
-                    const remediations = this.getProfiles(d.controlName || '')
+                    const remediations = this.getProfiles(data.controlName || '')
                       .filter((profile) => profile.remediation !== undefined)
                       .map((profile) => profile.remediation);
 
