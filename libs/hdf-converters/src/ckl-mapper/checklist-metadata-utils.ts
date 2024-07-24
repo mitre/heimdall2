@@ -116,7 +116,9 @@ export function validateChecklistMetadata(
     const profileResult = validateChecklistProfileMetadata(profile);
     if (!profileResult.ok) {
       invalid = invalid.concat(profileResult.error.invalid);
-      messages.push(`In profile ${profile.name}:\n${profileResult.error.message.split(':\n').at(-1)}`);
+      messages.push(
+        `In profile ${profile.name}:\n${profileResult.error.message.split(':\n').at(-1)}`
+      );
     }
   }
 
