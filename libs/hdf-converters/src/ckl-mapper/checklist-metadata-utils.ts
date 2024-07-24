@@ -77,7 +77,7 @@ export function validateChecklistAssetMetadata(
   const invalidFields = errors.map(
     (e) => `${e.message} (${_.get(asset, e.property)})`
   );
-  const message = `Invalid checklist metadata fields:\n${invalidFields.join('\n\t')}`;
+  const message = `Invalid checklist metadata fields:\n\t${invalidFields.join('\n\t')}`;
   return {ok: false, error: {invalid: errors.map((e) => e.property), message}};
 }
 
@@ -93,7 +93,7 @@ export function validateChecklistProfileMetadata(
   const invalidFields = errors.map(
     (e) => `${e.message} (${_.get(metadata, e.property)})`
   );
-  const message = `Invalid checklist profile metadata fields:\n${invalidFields.join('\n\t')}`;
+  const message = `Invalid checklist profile metadata fields:\n\t${invalidFields.join('\n\t')}`;
   return {ok: false, error: {invalid: errors.map((e) => e.property), message}};
 }
 
