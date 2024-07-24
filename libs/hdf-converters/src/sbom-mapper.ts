@@ -2,35 +2,26 @@ import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import {CweNistMapping} from './mappings/CweNistMapping';
+import {getCCIsForNISTTags} from './utils/global';
 
-function formatName(input: Record<string, unknown>): string {
-  return `${input.type}/${input['bom-ref']}`;
-}
+const CWE_NIST_MAPPING = new CweNistMapping();
+const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
 
-function formatTitle(input: Record<string, unknown>): string {
-  const group = input.group ? `${input.group}/` : '';
-  return `${group}${input.name}`;
-}
-
-function formatLicense(input: Record<string, unknown>): string {
-  let message = '';
-  if (Array.isArray(input.licenses)) {
-    // Join together all applicable licenses for this component
-    input.licenses.map((license) => {
-      message = message.concat(`${license.license.id}, `);
-    });
+function formatCWETags(input: number[], addPrefix = true): string[] {
+  const stringifiedCWE: string[] = [];
+  for (const cwe of input) {
+    const cweTag = addPrefix ? `CWE-${cwe}` : `${cwe}`;
+    stringifiedCWE.push(cweTag);
   }
-  return message.slice(0, -2);
+  return stringifiedCWE;
 }
 
-function formatCodeDesc(input: Record<string, unknown>): string {
-  const group = input.group ? `${input.group}/` : '';
-  const version = input.version ? `@${input.version}` : '';
-  return `Component ${group}${input.name}${version} is vulnerable`;
-}
-
-function formatMessage(input: Record<string, unknown>): string {
-  return `Component Summary\nType: ${input.type}\nName: ${input.name}\nGroup: ${input.group}`
+function getNISTTags(input: number[]): string[] {
+  return CWE_NIST_MAPPING.nistFilter(
+    formatCWETags(input, false),
+    DEFAULT_NIST_TAG
+  );
 }
 
 export class SBOMResults {
@@ -128,13 +119,36 @@ export class SBOMMapper extends BaseConverter {
     statistics: {},
     profiles: [
       {
-        name: {path: 'metadata.component', transformer: formatName},
-        title: {path: 'metadata.component', transformer: formatTitle},
+        name: {
+          path: 'metadata.component',
+          transformer: (input: Record<string, unknown>): string => {
+            return `${input.type}/${input['bom-ref']}`;
+          }
+        },
+        title: {
+          path: 'metadata.component',
+          transformer: (input: Record<string, unknown>): string => {
+            const group = input.group ? `${input.group}/` : '';
+            return `${group}${input.name}`;
+          }
+        },
         version: {path: 'metadata.component.version'},
         maintainer: {path: 'metadata.component.author'},
         summary: null, //Insert data
         description: {path: 'metadata.component.description'},
-        license: {path: 'metadata.component', transformer: formatLicense},
+        license: {
+          path: 'metadata.component',
+          transformer: (input: Record<string, unknown>): string => {
+            let message = '';
+            if (Array.isArray(input.licenses)) {
+              // Join together all applicable licenses for this component
+              input.licenses.map((license) => {
+                message = message.concat(`${license.license.id}, `);
+              });
+            }
+            return message.slice(0, -2);
+          }
+        },
         supports: [], //Insert data
         attributes: [], //Insert data
         copyright: null, //Insert data
@@ -147,7 +161,16 @@ export class SBOMMapper extends BaseConverter {
             path: 'vulnerabilities',
             key: 'id',
             tags: {
-              cweid: {path: 'cwes'}
+              nist: {
+                path: 'cwes',
+                transformer: getNISTTags
+              },
+              cci: {
+                path: 'cwes',
+                transformer: (input: number[]) =>
+                  getCCIsForNISTTags(getNISTTags(input))
+              },
+              cwe: {path: 'cwes', transformer: formatCWETags}
             },
             descriptions: [
               {
@@ -165,13 +188,27 @@ export class SBOMMapper extends BaseConverter {
             id: {path: 'id'},
             desc: {path: 'description'},
             impact: 0.5, //Insert data
-            code: null, //Insert data
+            code: {
+              transformer: (vulnerability: Record<string, unknown>): string => {
+                return JSON.stringify(vulnerability, null, 2);
+              }
+            },
             results: [
               {
                 path: 'affectedComponents',
                 status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: {transformer: formatCodeDesc},
-                message: {transformer: formatMessage},
+                code_desc: {
+                  transformer: (input: Record<string, unknown>): string => {
+                    const group = input.group ? `${input.group}/` : '';
+                    const version = input.version ? `@${input.version}` : '';
+                    return `Component ${group}${input.name}${version} is vulnerable`;
+                  }
+                },
+                message: {
+                  transformer: (input: Record<string, unknown>): string => {
+                    return `Component Summary\nType: ${input.type}\nName: ${input.name}\nGroup: ${input.group}\nVersion: ${input.version}\nBOM-ref: ${input['bom-ref']}\nAuthor: ${input.author}\nDescription: ${input.description}\nPURL: ${input.purl}`;
+                  }
+                },
                 start_time: ''
               }
             ]
