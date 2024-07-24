@@ -25,12 +25,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -58,12 +57,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -99,13 +97,13 @@
             "services": [
               "MCAS"
             ],
-            "userImpacts": {
-              "0": "Low",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Low"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -143,13 +141,13 @@
             "services": [
               "MCAS"
             ],
-            "userImpacts": {
-              "0": "Moderate",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Moderate"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -185,13 +183,13 @@
             "services": [
               "MCAS"
             ],
-            "userImpacts": {
-              "0": "Moderate",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Moderate"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -229,13 +227,13 @@
             "services": [
               "MCAS"
             ],
-            "userImpacts": {
-              "0": "Moderate",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Moderate"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -269,13 +267,13 @@
             "services": [
               "Azure ATP"
             ],
-            "userImpacts": {
-              "0": "low",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "low"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -309,13 +307,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "High",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "High"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -349,13 +347,13 @@
             "services": [
               "MIP"
             ],
-            "userImpacts": {
-              "0": "High",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "High"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -389,13 +387,13 @@
             "services": [
               "EXO"
             ],
-            "userImpacts": {
-              "0": "High",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "High"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -429,13 +427,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "High",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "High"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -469,13 +467,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -503,12 +501,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -546,13 +543,13 @@
             "services": [
               "EXO"
             ],
-            "userImpacts": {
-              "0": "Moderate",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Moderate"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -589,13 +586,13 @@
             "services": [
               "EXO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -632,13 +629,13 @@
             "services": [
               "EXO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -674,13 +671,13 @@
             "services": [
               "EXO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -708,12 +705,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -750,13 +746,13 @@
             "services": [
               "EXO"
             ],
-            "userImpacts": {
-              "0": null,
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              null
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -793,13 +789,13 @@
             "services": [
               "EXO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -836,13 +832,13 @@
             "services": [
               "EXO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -870,12 +866,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -903,12 +898,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -936,12 +930,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -975,13 +968,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "High",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "High"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1009,12 +1002,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1048,13 +1040,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "High",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "High"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1082,12 +1074,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1115,12 +1106,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1154,13 +1144,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1194,13 +1184,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1234,13 +1224,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1274,13 +1264,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1314,13 +1304,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1354,13 +1344,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1394,13 +1384,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1428,12 +1418,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1467,13 +1456,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1507,13 +1496,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1547,13 +1536,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1587,13 +1576,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1621,12 +1610,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1660,13 +1648,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1700,13 +1688,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1740,13 +1728,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1780,13 +1768,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1820,13 +1808,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1854,12 +1842,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1887,12 +1874,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1920,12 +1906,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1953,12 +1938,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -1986,12 +1970,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2019,12 +2002,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2052,12 +2034,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2094,13 +2075,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2128,12 +2109,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2171,13 +2151,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2214,13 +2194,13 @@
             "services": [
               "MDO"
             ],
-            "userImpacts": {
-              "0": "Unknown",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Unknown"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2257,13 +2237,13 @@
             "services": [
               "AzureAD"
             ],
-            "userImpacts": {
-              "0": "Moderate",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Moderate"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2291,12 +2271,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2324,12 +2303,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2366,13 +2344,13 @@
             "services": [
               "AzureAD"
             ],
-            "userImpacts": {
-              "0": "Moderate",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Moderate"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2400,12 +2378,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2443,13 +2420,13 @@
             "services": [
               "AzureAD"
             ],
-            "userImpacts": {
-              "0": "Low",
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [
+              "Low"
+            ],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2477,12 +2454,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2510,12 +2486,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2543,12 +2518,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2576,12 +2550,11 @@
             "tiers": [],
             "threats": [],
             "services": [],
-            "userImpacts": {
-              "nist": [
-                "SA-11",
-                "RA-5"
-              ]
-            }
+            "userImpacts": [],
+            "nist": [
+              "SA-11",
+              "RA-5"
+            ]
           },
           "source_location": {},
           "descriptions": [
@@ -2599,7 +2572,7 @@
           ]
         }
       ],
-      "sha256": "bd5fd12a9522582b1e085165f83f723cb049fc3f916f7945e4751604066ae933"
+      "sha256": "f7cbf8a150994f90789bdcf18af5448c82d11dd740dd0c62a8d0aa33ed285cf4"
     }
   ],
   "passthrough": {
