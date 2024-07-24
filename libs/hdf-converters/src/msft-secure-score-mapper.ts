@@ -116,7 +116,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                     .filter((profile) => profile.userImpact !== undefined)
                     .map((profile) => profile.userImpact);
                 },
-               nist: ['SA-11', 'RA-5']
+                nist: ['SA-11', 'RA-5']
               }
             },
             source_location: {},
