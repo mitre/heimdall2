@@ -1923,9 +1923,9 @@
   integrity sha512-dBVuXR082gk3jsFp7Rd/JI4kytwGHecnCoTtXFb7DB6CNHp4rg5k1bhg0nWdLGLnOV71lmDzGQaLMy8iPLY0pw==
 
 "@e965/xlsx@^0.20.0":
-  version "0.20.2"
-  resolved "https://registry.npmjs.org/@e965/xlsx/-/xlsx-0.20.2.tgz#811f0cab04fa5867e6750bccb1fb181f9596e979"
-  integrity sha512-VtTND/9MDM4G3fgwo6sV0xOKM4rrragqWNUPPoSrUQ+lGRRaYYfcS/9UaqgkNLm9do3rJBEn59fZQ+BPeG2yyA==
+  version "0.20.3"
+  resolved "https://registry.yarnpkg.com/@e965/xlsx/-/xlsx-0.20.3.tgz#4577f2c7691137d3e315018218ba2b76e4721ba9"
+  integrity sha512-703RN/3OdsRD5mtse2HBX7Um7xwaP9tlswEG6svOtjqokXoX7rJdQj7DyabD2I+xk22RgaIIU+R6BHgkpZGB/w==
 
 "@esbuild/aix-ppc64@0.21.5":
   version "0.21.5"
