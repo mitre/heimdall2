@@ -68,7 +68,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.NOT_FOUND]: [],
   [INPUT_TYPES.VERACODE]: [],
   [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues'],
-  [INPUT_TYPES.SBOM]: ['bomFormat', 'metadata', 'components']
+  [INPUT_TYPES.SBOM]: ['bomFormat', 'metadata', 'specVersion']
 };
 
 export function fingerprint(guessOptions: {
