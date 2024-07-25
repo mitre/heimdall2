@@ -99,7 +99,7 @@ export class SBOMResults {
   */
   generateIntermediary(data: Record<string, unknown>) {
     // Find if vulnerabilities structure exists, else skip vulnerability restructuring
-    if (_.has(data, ['vulnerabilities', 'components'])) {
+    if (_.has(data, 'components') && _.has(data, 'vulnerabilities')) {
       for (const vulnerability of data.vulnerabilities as (Record<
         string,
         unknown
