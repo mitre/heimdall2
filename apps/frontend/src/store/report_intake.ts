@@ -23,6 +23,7 @@ import {
   NiktoMapper,
   PrismaMapper,
   SarifMapper,
+  SBOMResults,
   ScoutsuiteMapper,
   SnykResults,
   TwistlockResults,
@@ -271,6 +272,8 @@ export class InspecIntake extends VuexModule {
         return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
         return new GoSecMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.SBOM:
+        return new SBOMResults(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
