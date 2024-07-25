@@ -17,22 +17,14 @@ export class TrufflehogMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: null  
     },
     version: HeimdallToolsVersion,
     statistics: {
-      duration: null  
     },
     profiles: [
       {
-        name: {path: 'SourceName'},              
-        title: {path: 'SourceName'},           
-        version: null,         
-        maintainer: null,      
-        summary: null,         
-        license: null,         
-        copyright: null,       
-        copyright_email: null, 
+        name: {path: 'wrapper[0].SourceName'},              
+        title: {path: 'wrapper[0].SourceName'},           
         supports: [],          
         attributes: [],        
         depends: [],           
@@ -51,8 +43,7 @@ export class TrufflehogMapper extends BaseConverter {
                   'CCI-002367'
                 ],
                 severity: 'medium'
-            },             
-            descriptions: [],     
+            },                 
             refs: [],             
             source_location: {},  
             title: {
@@ -70,22 +61,20 @@ export class TrufflehogMapper extends BaseConverter {
                     return 'Found ' + _.get(data, 'DetectorName') + ' secret using ' + _.get(data, 'DecoderName') + ' decoder'
                 }
             },           
-            impact: 0.5,            
-            code: null,           
+            impact: 0.5,                      
             results: [
               {
                 status: ExecJSON.ControlResultStatus.Failed,  
                 code_desc: {
                   transformer: (data: Record<string, unknown>): string => {
-                    return `${JSON.stringify(_.get(data, 'SourceMetadata'))}`;
+                    return `${JSON.stringify(_.get(data, 'SourceMetadata'), null, 2)}`;
                   }
                 },                                
                 message: {
                     transformer: (data: Record<string, unknown>): string => {
-                        return `${JSON.stringify(_.omit(data, 'SourceMetadata'))}`;
+                      return `${JSON.stringify(_.omit(data, 'SourceMetadata'), null, 2)}`;
                     }
-                },                                
-                run_time: null,                               
+                },                                                            
                 start_time: ''                                
               }
             ]
@@ -97,7 +86,6 @@ export class TrufflehogMapper extends BaseConverter {
     passthrough: {
       transformer: (data: Record<string, any>): Record<string, unknown> => {
         return {
-          auxiliary_data: [{name: '', data: _.omit([])}],  //Insert service name and mapped fields to be removed
           ...(this.withRaw && {raw: data})
         };
       }

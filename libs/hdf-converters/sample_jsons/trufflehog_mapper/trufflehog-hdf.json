@@ -1,23 +1,14 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.8",
-    "target_id": null
+    "release": "2.10.8"
   },
   "version": "2.10.8",
-  "statistics": {
-    "duration": null
-  },
+  "statistics": {},
   "profiles": [
     {
-      "name": "",
-      "title": "",
-      "version": null,
-      "maintainer": null,
-      "summary": null,
-      "license": null,
-      "copyright": null,
-      "copyright_email": null,
+      "name": "trufflehog - git",
+      "title": "trufflehog - git",
       "supports": [],
       "attributes": [],
       "depends": [],
@@ -35,27 +26,23 @@
             ],
             "severity": "medium"
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "AWS_PLAIN",
           "id": "2_PLAIN",
           "desc": "Found AWS secret using PLAIN decoder",
           "impact": 0.5,
-          "code": null,
           "results": [
             {
               "status": "failed",
-              "code_desc": "{\"Data\":{\"Git\":{\"commit\":\"0416560b1330d8ac42045813251d85c688717eaf\",\"file\":\"new_key\",\"email\":\"counter <hello@trufflesec.com>\",\"repository\":\"https://github.com/trufflesecurity/test_keys\",\"timestamp\":\"2023-10-19 02:56:37 +0000\",\"line\":2}}}",
-              "message": "{\"SourceID\":1,\"SourceType\":16,\"SourceName\":\"trufflehog - git\",\"DetectorType\":2,\"DetectorName\":\"AWS\",\"DecoderName\":\"PLAIN\",\"Verified\":true,\"Raw\":\"AKIAQYLPMN5HHHFPZAM2\",\"RawV2\":\"AKIAQYLPMN5HHHFPZAM21tUm636uS1yOEcfP5pvfqJ/ml36mF7AkyHsEU0IU\",\"Redacted\":\"AKIAQYLPMN5HHHFPZAM2\",\"ExtraData\":{\"account\":\"052310077262\",\"arn\":\"arn:aws:iam::052310077262:user/canarytokens.com@@c20nnjzlioibnaxvt392i9ope\",\"is_canary\":\"true\",\"message\":\"This is an AWS canary token generated at canarytokens.org, and was not set off; learn more here: https://trufflesecurity.com/canaries\",\"resource_type\":\"Access key\"},\"StructuredData\":null}",
-              "run_time": null,
+              "code_desc": "{\n  \"Data\": {\n    \"Git\": {\n      \"commit\": \"0416560b1330d8ac42045813251d85c688717eaf\",\n      \"file\": \"new_key\",\n      \"email\": \"counter <hello@trufflesec.com>\",\n      \"repository\": \"https://github.com/trufflesecurity/test_keys\",\n      \"timestamp\": \"2023-10-19 02:56:37 +0000\",\n      \"line\": 2\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 16,\n  \"SourceName\": \"trufflehog - git\",\n  \"DetectorType\": 2,\n  \"DetectorName\": \"AWS\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": true,\n  \"Raw\": \"AKIAQYLPMN5HHHFPZAM2\",\n  \"RawV2\": \"AKIAQYLPMN5HHHFPZAM21tUm636uS1yOEcfP5pvfqJ/ml36mF7AkyHsEU0IU\",\n  \"Redacted\": \"AKIAQYLPMN5HHHFPZAM2\",\n  \"ExtraData\": {\n    \"account\": \"052310077262\",\n    \"arn\": \"arn:aws:iam::052310077262:user/canarytokens.com@@c20nnjzlioibnaxvt392i9ope\",\n    \"is_canary\": \"true\",\n    \"message\": \"This is an AWS canary token generated at canarytokens.org, and was not set off; learn more here: https://trufflesecurity.com/canaries\",\n    \"resource_type\": \"Access key\"\n  },\n  \"StructuredData\": null\n}",
               "start_time": ""
             },
             {
               "status": "failed",
-              "code_desc": "{\"Data\":{\"Git\":{\"commit\":\"fbc14303ffbf8fb1c2c1914e8dda7d0121633aca\",\"file\":\"keys\",\"email\":\"counter <counter@counters-MacBook-Air.local>\",\"repository\":\"https://github.com/trufflesecurity/test_keys\",\"timestamp\":\"2022-06-16 17:17:40 +0000\",\"line\":4}}}",
-              "message": "{\"SourceID\":1,\"SourceType\":16,\"SourceName\":\"trufflehog - git\",\"DetectorType\":2,\"DetectorName\":\"AWS\",\"DecoderName\":\"PLAIN\",\"Verified\":true,\"Raw\":\"AKIAYVP4CIPPERUVIFXG\",\"RawV2\":\"AKIAYVP4CIPPERUVIFXGZt2U1h267eViPnuSA+JO5ABhiu4T7XUMSZ+Y2Oth\",\"Redacted\":\"AKIAYVP4CIPPERUVIFXG\",\"ExtraData\":{\"account\":\"595918472158\",\"arn\":\"arn:aws:iam::595918472158:user/canarytokens.com@@mirux23ppyky6hx3l6vclmhnj\",\"is_canary\":\"true\",\"message\":\"This is an AWS canary token generated at canarytokens.org, and was not set off; learn more here: https://trufflesecurity.com/canaries\",\"resource_type\":\"Access key\"},\"StructuredData\":null}",
-              "run_time": null,
+              "code_desc": "{\n  \"Data\": {\n    \"Git\": {\n      \"commit\": \"fbc14303ffbf8fb1c2c1914e8dda7d0121633aca\",\n      \"file\": \"keys\",\n      \"email\": \"counter <counter@counters-MacBook-Air.local>\",\n      \"repository\": \"https://github.com/trufflesecurity/test_keys\",\n      \"timestamp\": \"2022-06-16 17:17:40 +0000\",\n      \"line\": 4\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 16,\n  \"SourceName\": \"trufflehog - git\",\n  \"DetectorType\": 2,\n  \"DetectorName\": \"AWS\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": true,\n  \"Raw\": \"AKIAYVP4CIPPERUVIFXG\",\n  \"RawV2\": \"AKIAYVP4CIPPERUVIFXGZt2U1h267eViPnuSA+JO5ABhiu4T7XUMSZ+Y2Oth\",\n  \"Redacted\": \"AKIAYVP4CIPPERUVIFXG\",\n  \"ExtraData\": {\n    \"account\": \"595918472158\",\n    \"arn\": \"arn:aws:iam::595918472158:user/canarytokens.com@@mirux23ppyky6hx3l6vclmhnj\",\n    \"is_canary\": \"true\",\n    \"message\": \"This is an AWS canary token generated at canarytokens.org, and was not set off; learn more here: https://trufflesecurity.com/canaries\",\n    \"resource_type\": \"Access key\"\n  },\n  \"StructuredData\": null\n}",
               "start_time": ""
             }
           ]
@@ -71,34 +58,24 @@
             ],
             "severity": "medium"
           },
-          "descriptions": [],
           "refs": [],
           "source_location": {},
           "title": "URI_PLAIN",
           "id": "17_PLAIN",
           "desc": "Found URI secret using PLAIN decoder",
           "impact": 0.5,
-          "code": null,
           "results": [
             {
               "status": "failed",
-              "code_desc": "{\"Data\":{\"Git\":{\"commit\":\"77b2a3e56973785a52ba4ae4b8dac61d4bac016f\",\"file\":\"keys\",\"email\":\"counter <counter@counters-MacBook-Air.local>\",\"repository\":\"https://github.com/trufflesecurity/test_keys\",\"timestamp\":\"2022-06-16 17:27:56 +0000\",\"line\":3}}}",
-              "message": "{\"SourceID\":1,\"SourceType\":16,\"SourceName\":\"trufflehog - git\",\"DetectorType\":17,\"DetectorName\":\"URI\",\"DecoderName\":\"PLAIN\",\"Verified\":true,\"Raw\":\"https://admin:admin@the-internet.herokuapp.com\",\"RawV2\":\"https://admin:admin@the-internet.herokuapp.com/basic_auth\",\"Redacted\":\"https://admin:********@the-internet.herokuapp.com\",\"ExtraData\":null,\"StructuredData\":null}",
-              "run_time": null,
+              "code_desc": "{\n  \"Data\": {\n    \"Git\": {\n      \"commit\": \"77b2a3e56973785a52ba4ae4b8dac61d4bac016f\",\n      \"file\": \"keys\",\n      \"email\": \"counter <counter@counters-MacBook-Air.local>\",\n      \"repository\": \"https://github.com/trufflesecurity/test_keys\",\n      \"timestamp\": \"2022-06-16 17:27:56 +0000\",\n      \"line\": 3\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 16,\n  \"SourceName\": \"trufflehog - git\",\n  \"DetectorType\": 17,\n  \"DetectorName\": \"URI\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": true,\n  \"Raw\": \"https://admin:admin@the-internet.herokuapp.com\",\n  \"RawV2\": \"https://admin:admin@the-internet.herokuapp.com/basic_auth\",\n  \"Redacted\": \"https://admin:********@the-internet.herokuapp.com\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
               "start_time": ""
             }
           ]
         }
       ],
-      "sha256": "f8817c9d615e2d773d9122bb19651ef2474b85f3828a61989bcb77a6a7a282ca"
+      "sha256": "cd4f10038245ec4469868f1e1288491a4fa5b76a546d64a8f9adcca7dff3352f"
     }
   ],
-  "passthrough": {
-    "auxiliary_data": [
-      {
-        "name": "",
-        "data": {}
-      }
-    ]
-  }
+  "passthrough": {}
 }

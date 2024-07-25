@@ -1,0 +1,1584 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.10.8"
+  },
+  "version": "2.10.8",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "trufflehog - docker",
+      "title": "trufflehog - docker",
+      "supports": [],
+      "attributes": [],
+      "depends": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "nist": "IA-5(7)",
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Aiven_PLAIN",
+          "id": "917_PLAIN",
+          "desc": "Found Aiven secret using PLAIN decoder",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/misc/trace/trace_viewer_full.html\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 917,\n  \"DetectorName\": \"Aiven\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"DGnfccMNNzzU0tLSKE2V+OSvmiuYXZFOkwDmvD2e7saa/X99iCLxOBoAF7W3ljfewGABZ1ucpw2d7733XusTTzxxE33+xCNNlfjED3vcqELON2WGr0+WCS03cXtaTmy6qbutppUkyHAnNO+tl/xgAUc9DLmmxWnacAeB/hDdANK3I/cjSCAIebi3d0QokKfRZHcrvZ01D9XtW72DhqjX3mBtUC5ZwGGqaFqcws5LL7109dGjR9+WN4DiPx7DHXLc0HE5Wt7es/m21WCob4PiTOimTjiJJwM46gPg2PiCE2ee/Wc/+9lvyB5vkvY4SSNO12+uxFkgT7LB7vZ6uptq9678DQ3JThsYggkAppgvCg7OJQs4WkUn\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": "IA-5(7)",
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Github_PLAIN",
+          "id": "8_PLAIN",
+          "desc": "Found Github secret using PLAIN decoder",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/testdata/mod/rsc.io_breaker_v2.0.0+incompatible.txt\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 8,\n  \"DetectorName\": \"Github\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"7307b307f4f0dde421900f8e5126fadac1e13aed\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": {\n    \"rotation_guide\": \"https://howtorotate.com/docs/tutorials/github/\",\n    \"version\": \"1\"\n  },\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/internal/modconv/testdata/juju.out\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 8,\n  \"DetectorName\": \"Github\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"13f4951698adc0fa9c1dda3e275d489a24201161\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": {\n    \"rotation_guide\": \"https://howtorotate.com/docs/tutorials/github/\",\n    \"version\": \"1\"\n  },\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/internal/modconv/testdata/govmomi.out\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 8,\n  \"DetectorName\": \"Github\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"4930550ba2e22f87187498acfd78348b15f4e7a8\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": {\n    \"rotation_guide\": \"https://howtorotate.com/docs/tutorials/github/\",\n    \"version\": \"1\"\n  },\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/testdata/mod/rsc.io_breaker_v2.0.0.txt\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 8,\n  \"DetectorName\": \"Github\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"7307b307f4f0dde421900f8e5126fadac1e13aed\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": {\n    \"rotation_guide\": \"https://howtorotate.com/docs/tutorials/github/\",\n    \"version\": \"1\"\n  },\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 8,\n  \"DetectorName\": \"Github\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"c589d0c9f0d81640c518354c7bcae77d99820aa3\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": {\n    \"rotation_guide\": \"https://howtorotate.com/docs/tutorials/github/\",\n    \"version\": \"1\"\n  },\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 8,\n  \"DetectorName\": \"Github\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": {\n    \"rotation_guide\": \"https://howtorotate.com/docs/tutorials/github/\",\n    \"version\": \"1\"\n  },\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 8,\n  \"DetectorName\": \"Github\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": {\n    \"rotation_guide\": \"https://howtorotate.com/docs/tutorials/github/\",\n    \"version\": \"1\"\n  },\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": "IA-5(7)",
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "PivotalTracker_PLAIN",
+          "id": "23_PLAIN",
+          "desc": "Found PivotalTracker secret using PLAIN decoder",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 23,\n  \"DetectorName\": \"PivotalTracker\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"3fd3c1944c59d9742e1cd333672181cd\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 23,\n  \"DetectorName\": \"PivotalTracker\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"3fd3c1944c59d9742e1cd333672181cd\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": "IA-5(7)",
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "URI_PLAIN",
+          "id": "17_PLAIN",
+          "desc": "Found URI secret using PLAIN decoder",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/net/http/client_test.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 17,\n  \"DetectorName\": \"URI\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"VerificationError\": \"lookup dummy.faketld: no such host\",\n  \"Raw\": \"http://My%20User:My%20Pass@dummy.faketld\",\n  \"RawV2\": \"http://My%20User:My%20Pass@dummy.faketld\",\n  \"Redacted\": \"http://My%20User:********@dummy.faketld\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/net/url/url_test.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 17,\n  \"DetectorName\": \"URI\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"http://user:password@google.com\",\n  \"RawV2\": \"http://user:password@google.com\",\n  \"Redacted\": \"http://user:********@google.com\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": "IA-5(7)",
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "CloudflareApiToken_PLAIN",
+          "id": "100_PLAIN",
+          "desc": "Found CloudflareApiToken secret using PLAIN decoder",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 100,\n  \"DetectorName\": \"CloudflareApiToken\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"7fb22c8cba7ecaf98e4082d22d65800cf45e042a\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 100,\n  \"DetectorName\": \"CloudflareApiToken\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"7fb22c8cba7ecaf98e4082d22d65800cf45e042a\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": "IA-5(7)",
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "PrivateKey_PLAIN",
+          "id": "15_PLAIN",
+          "desc": "Found PrivateKey secret using PLAIN decoder",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/crypto/tls/handshake_server_test.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXQIBAAKBgQC6b6qGvc+/n/LvXJRgeG/oE/LRlm/N2TJuIjfOQfnKXSms4Sfa\\nYaLugcsQx980WJWG6T0Z5lwnc2DIjXgC9B2kmAmjGXBpPCViZiqrIiPFe4U4Ty4J\\nczKnvT6brcqEB+YPOv93xZ1BhQCKtpvusKQ/LUxM5kI+u1HI3UhU9AyORwIDAQAB\\nAoGAEJZ03q4uuMb7b26WSQsOMeDsftdatT747LGgs3pNRkMJvTb/O7/qJjxoG+Mc\\nqeSj0TAZXp+PXXc3ikCECAc+R8rVMfWdmp903XgO/qYtmZGCorxAHEmR80SrfMXv\\nPJnznLQWc8U9nphQErR+tTESg7xWEzmFcPKwnZd1xg8ERYkCQQDTGtrFczlB2b/Z\\n9TjNMqUlMnTLIk/a/rPE2fLLmAYhK5sHnJdvDURaH2mF4nso0EGtENnTsh6LATnY\\ndkrxXGm9AkEA4hXHG2q3MnhgK1Z5hjv+Fnqd+8bcbII9WW4flFs15EKoMgS1w/PJ\\nzbsySaSy5IVS8XeShmT9+3lrleed4sy+UwJBAJOOAbxhfXP5r4+5R6ql66jES75w\\njUCVJzJA5ORJrn8g64u2eGK28z/LFQbv9wXgCwfc72R468BdawFSLa/m2EECQGbZ\\nrWiFla26IVXV0xcD98VWJsTBZMlgPnSOqoMdM1kSEd4fUmlAYI/dFzV1XYSkOmVr\\nFhdZnklmpVDeu27P4c0CQQCuCOup0FlJSBpWY1TTfun/KMBkBatMz0VMA3d7FKIU\\ncsPezl677Yjo8u1r/KzeI6zLg87Z8E6r6ZWNc9wBSZK6\\n-----END RSA PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXQIBAAKBgQC6b6qGvc+/n/LvXJRg\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/crypto/x509/x509_test_import.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIIBOgIBAAJBALKZD0nEffqM1ACuak0bijtqE2QrI/KLADv7l3kK3ppMyCuLKoF0\\nfd7Ai2KW5ToIwzFofvJcS/STa6HA5gQenRUCAwEAAQJBAIq9amn00aS0h/CrjXqu\\n/ThglAXJmZhOMPVn4eiu7/ROixi9sex436MaVeMqSNf7Ex9a8fRNfWss7Sqd9eWu\\nRTUCIQDasvGASLqmjeffBNLTXV2A5g4t+kLVCpsEIZAycV5GswIhANEPLmax0ME/\\nEO+ZJ79TJKN5yiGBRsv5yvx5UiHxajEXAiAhAol5N4EUyq6I9w1rYdhPMGpLfk7A\\nIU2snfRJ6Nq2CQIgFrPsWRCkV+gOYcajD17rEqmuLrdIRexpg8N1DOSXoJ8CIGlS\\ntAboUGBxTDq3ZroNism3DaMIbKPyYrAqhKov1h5V\\n-----END RSA PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIIBOgIBAAJBALKZD0nEffqM1ACuak0b\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/crypto/tls/testdata/example-key.pem\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN EC PRIVATE KEY-----\\nMHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLYX5CB04fSeQ6tF1aY/PuoAoGCCqGSM49\\nAwEHoUQDQgAEPR3tU2Fta9ktY+6P9G0cWO+0kETA6SFs38GecTyudlHz6xvCdz8q\\nEKTcWGekdmdDPsHloRNtsiCa697B2O9IFA==\\n-----END EC PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN EC PRIVATE KEY-----\\nMHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLY\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/crypto/tls/handshake_client_test.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIIBOgIBAAJBAN17PWsVQPBrHYdPFtycVQ/0CFyAQYwdVXaefhVURYUkHojwL82T\\nHRfLJCWuYVgHMRCcg+EqWzhPSEWgu+MmdekCAwEAAQJBALjQYNTdXF4CFBbXwUz/\\nyt9QFDYT9B5WT/12jeGAe653gtYS6OOi/+eAkGmzg1GlRnw6fOfn+HYNFDORST7z\\n4j0CIQDn2xz9hVWQEu9ee3vecNT3f60huDGTNoRhtqgweQGX0wIhAPSLj1VcRZEz\\nnKpbtU22+PbIMSJ+e80fmY9LIPx5N4HTAiAthGSimMR9bloz0EY3GyuUEyqoDgMd\\nhXxjuno2WesoJQIgemilbcALXpxsLmZLgcQ2KSmaVr7jb5ECx9R+hYKTw1sCIG4s\\nT+E0J8wlH24pgwQHzy7Ko2qLwn1b5PW8ecrlvP1g\\n-----END RSA PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIIBOgIBAAJBAN17PWsVQPBrHYdPFtyc\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/encoding/pem/pem_test.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info: DES-EDE3-CBC,80C7C7A09690757A\\n\\neQp5ZkH6CyHBz7BZfUPxyLCCmftsBJ7HlqGb8Ld21cSwnzWZ4/SIlhyrUtsfw7VR\\n2TTwA+odo9ex7GdxOTaH8oZFumIRoiEjHsk8U7Bhntp+ekkPP79xunnN7hb7hkhr\\nyGDQZgA7s2cQHQ71v3gwT2BACAft26jCjbM1wgNzBnJ8M0Rzn68YWqaPtdBu8qb/\\nzVR5JB1mnqvTSbFsfF5yMc6o2WQ9jJCl6KypnMl+BpL+dlvdjYVK4l9lYsB1Hs3d\\n+zDBbWxos818zzhS8/y6eIfiSG27cqrbhURbmgiSfDXjncK4m/pLcQ7mmBL6mFOr\\n3Pj4jepzgOiFRL6MKE//h62fZvI1ErYr8VunHEykgKNhChDvb1RO6LEfqKBu+Ivw\\nTB6fBhW3TCLMnVPYVoYwA+fHNTmZZm8BEonlIMfI+KktjWUg4Oia+NI6vKcPpFox\\nhSnlGgCtvfEaq5/H4kHJp95eOpnFsLviw2seHNkz/LxJMRP1X428+DpYW/QD/0JU\\ntJSuC/q9FUHL6RI3u/Asrv8pCb4+D7i1jW/AMIdJTtycOGsbPxQA7yHMWujHmeb1\\nBTiHcL3s3KrJu1vDVrshvxfnz71KTeNnZH8UbOqT5i7fPGyXtY1XJddcbI/Q6tXf\\nwHFsZc20TzSdsVLBtwksUacpbDogcEVMctnNrB8FIrB3vZEv9Q0Z1VeY7nmTpF+6\\na+z2P7acL7j6A6Pr3+q8P9CPiPC7zFonVzuVPyB8GchGR2hytyiOVpuD9+k8hcuw\\nZWAaUoVtWIQ52aKS0p19G99hhb+IVANC4akkdHV4SP8i7MVNZhfUmg==\\n-----END RSA PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN RSA PRIVATE KEY-----\\nProc-Type: 4,ENCRYPTED\\nDEK-Info:\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/net/http/internal/testcert.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"PLAIN\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXgIBAAKBgQDuLnQAI3mDgey3VBzWnB2L39JUU4txjeVE6myuDqkM/uGlfjb9\\nSjY1bIw4iA5sBBZzHi3z0h1YV8QPuxEbi4nW91IJm2gsvvZhIrCHS3l6afab4pZB\\nl2+XsDulrKBxKKtD1rGxlG4LjncdabFn9gvLZad2bSysqz/qTAUStTvqJQIDAQAB\\nAoGAGRzwwir7XvBOAy5tM/uV6e+Zf6anZzus1s1Y1ClbjbE6HXbnWWF/wbZGOpet\\n3Zm4vD6MXc7jpTLryzTQIvVdfQbRc6+MUVeLKwZatTXtdZrhu+Jk7hx0nTPy8Jcb\\nuJqFk541aEw+mMogY/xEcfbWd6IOkp+4xqjlFLBEDytgbIECQQDvH/E6nk+hgN4H\\nqzzVtxxr397vWrjrIgPbJpQvBsafG7b0dA4AFjwVbFLmQcj2PprIMmPcQrooz8vp\\njy4SHEg1AkEA/v13/5M47K9vCxmb8QeD/asydfsgS5TeuNi8DoUBEmiSJwma7FXY\\nfFUtxuvL7XvjwjN5B30pNEbc6Iuyt7y4MQJBAIt21su4b3sjXNueLKH85Q+phy2U\\nfQtuUE9txblTu14q3N7gHRZB4ZMhFYyDy8CKrN2cPg/Fvyt0Xlp/DoCzjA0CQQDU\\ny2ptGsuSmgUtWj3NM9xuwYPm+Z/F84K6+ARYiZ6PYj013sovGKUFfYAqVXVlxtIX\\nqyUBnu3X9ps8ZfjLZO7BAkEAlT4R5Yl6cGhaJQYZHOde3JEMhNRcVFMO8dJDaFeo\\nf9Oeos0UUothgiDktdQHxdNEwLjQf7lJJBzV+5OtwswCWA==\\n-----END RSA PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXgIBAAKBgQDuLnQAI3mDgey3VBzW\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": "IA-5(7)",
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "PrivateKey_BASE64",
+          "id": "15_BASE64",
+          "desc": "Found PrivateKey secret using BASE64 decoder",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/crypto/tls/handshake_server_test.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"BASE64\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIIBOgIBAAJBAN17PWsVQPBrHYdPFtycVQ/0CFyAQYwdVXaefhVURYUkHojwL82T\\nHRfLJCWuYVgHMRCcg+EqWzhPSEWgu+MmdekCAwEAAQJBALjQYNTdXF4CFBbXwUz/\\nyt9QFDYT9B5WT/12jeGAe653gtYS6OOi/+eAkGmzg1GlRnw6fOfn+HYNFDORST7z\\n4j0CIQDn2xz9hVWQEu9ee3vecNT3f60huDGTNoRhtqgweQGX0wIhAPSLj1VcRZEz\\nnKpbtU22+PbIMSJ+e80fmY9LIPx5N4HTAiAthGSimMR9bloz0EY3GyuUEyqoDgMd\\nhXxjuno2WesoJQIgemilbcALXpxsLmZLgcQ2KSmaVr7jb5ECx9R+hYKTw1sCIG4s\\nT+E0J8wlH24pgwQHzy7Ko2qLwn1b5PW8ecrlvP1g\\n-----END RSA PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIIBOgIBAAJBAN17PWsVQPBrHYdPFtyc\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/net/smtp/smtp_test.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"BASE64\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXgIBAAKBgQDScVtBC45ayNsa16NylbPXnc6XOJkzhtWMn2Niu43DmfZHLq5h\\nAB9+Gpok4icKaZxV7ayImCWzIf1pGHq8qKhsFshRddRTUAF3np5sDOW3QuhsuXHu\\nlkQzLfQuoiL0TrOYvdi90bOliWQVGdGurAS1ZhsYF/fOc7bnRLnoIJYfZQIDAQAB\\nAoGBAMst7OgpKyFV6c3JwyI/jWqxDySL3caU+RuTTBaodKAUx2ZEmNJIlx9eudLA\\nkucHvoxsM/eRxlxkhdFxdBcwU6J+zqooTnhu/FE3jhrT1lPrbhfGhyKnUrB0KKMM\\nVY3IQZyiehpxaeXAwoAou6TbWoTpl9t8ImAqAMY8hlULCUqlAkEA+9+Ry5FSYK/m\\n542LujIcCaIGoG1/Te6Sxr3hsPagKC2rH20rDLqXwEedSFOpSS0vpzlPAzy/6Rbb\\nPHTJUhNdwwJBANXkA+TkMdbJI5do9/mn//U0LfrCR9NkcoYohxfKz8JuhgRQxzF2\\n6jpo3q7CdTuuRixLWVfeJzcrAyNrVcBq87cCQFkTCtOMNC7fZnCTPUv+9q1tcJyB\\nvNjJu3yvoEZeIeuzouX9TJE21/33FaeDdsXbRhQEj23cqR38qFHsF1qAYNMCQQDP\\nQXLEiJoClkR2orAmqjPLVhR3t2oB3INcnEjLNSq8LHyQEfXyaFfu4U9l5+fRPL2i\\njiC0k/9L5dHUsF0XZothAkEA23ddgRs+Id/HxtojqqUT27B8MT/IGNrYsp4DvS/c\\nqgkeluku4GjxRlDMBuXk94xOBEinUs+p/hwP1Alll80Tpg==\\n-----END RSA PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXgIBAAKBgQDScVtBC45ayNsa16Ny\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/crypto/tls/tls_test.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"BASE64\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN EC PRIVATE KEY-----\\nMIHcAgEBBEIBrsoKp0oqcv6/JovJJDoDVSGWdirrkgCWxrprGlzB9o0X8fV675X0\\nNwuBenXFfeZvVcwluO7/Q9wkYoPd/t3jGImgBwYFK4EEACOhgYkDgYYABAFj36bL\\n06h5JRGUNB1X/Hwuw64uKW2GGJLVPPhoYMcg/ALWaW+d/t+DmV5xikwKssuFq4Bz\\nVQldyCXTXGgu7OC0AQCC/Y/+ODK3NFKlRi+AsG3VQDSV4tgHLqZBBus0S6pPcg1q\\nkohxS/xfFg/TEwRSSws+roJr4JFKpO2t3/be5OdqmQ==\\n-----END EC PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN EC PRIVATE KEY-----\\nMIHcAgEBBEIBrsoKp0oqcv6/JovJJDoDV\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/crypto/tls/example_test.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"BASE64\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN EC PRIVATE KEY-----\\nMHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLYX5CB04fSeQ6tF1aY/PuoAoGCCqGSM49\\nAwEHoUQDQgAEPR3tU2Fta9ktY+6P9G0cWO+0kETA6SFs38GecTyudlHz6xvCdz8q\\nEKTcWGekdmdDPsHloRNtsiCa697B2O9IFA==\\n-----END EC PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN EC PRIVATE KEY-----\\nMHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLY\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "nist": "IA-5(7)",
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "PrivateKey_ESCAPED_UNICODE",
+          "id": "15_ESCAPED_UNICODE",
+          "desc": "Found PrivateKey secret using ESCAPED_UNICODE decoder",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Docker\": {\n      \"file\": \"/usr/local/go/src/crypto/x509/x509_test.go\",\n      \"image\": \"golang\",\n      \"layer\": \"sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597\",\n      \"tag\": \"1.12-alpine\"\n    }\n  }\n}",
+              "message": "{\n  \"SourceID\": 1,\n  \"SourceType\": 4,\n  \"SourceName\": \"trufflehog - docker\",\n  \"DetectorType\": 15,\n  \"DetectorName\": \"PrivateKey\",\n  \"DecoderName\": \"ESCAPED_UNICODE\",\n  \"Verified\": false,\n  \"Raw\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXAIBAAKBgQCxoeCUW5KJxNPxMp+KmCxKLc1Zv9Ny+4CFqcUXVUYH69L3mQ7v\\nIWrJ9GBfcaA7BPQqUlWxWM+OCEQZH1EZNIuqRMNQVuIGCbz5UQ8w6tS0gcgdeGX7\\nJ7jgCQ4RK3F/PuCM38QBLaHx988qG8NMc6VKErBjctCXFHQt14lerd5KpQIDAQAB\\nAoGAYrf6Hbk+mT5AI33k2Jt1kcweodBP7UkExkPxeuQzRVe0KVJw0EkcFhywKpr1\\nV5eLMrILWcJnpyHE5slWwtFHBG6a5fLaNtsBBtcAIfqTQ0Vfj5c6SzVaJv0Z5rOd\\n7gQF6isy3t3w9IF3We9wXQKzT6q5ypPGdm6fciKQ8RnzREkCQQDZwppKATqQ41/R\\nvhSj90fFifrGE6aVKC1hgSpxGQa4oIdsYYHwMzyhBmWW9Xv/R+fPyr8ZwPxp2c12\\n33QwOLPLAkEA0NNUb+z4ebVVHyvSwF5jhfJxigim+s49KuzJ1+A2RaSApGyBZiwS\\nrWvWkB471POAKUYt5ykIWVZ83zcceQiNTwJBAMJUFQZX5GDqWFc/zwGoKkeR49Yi\\nMTXIvf7Wmv6E++eFcnT461FlGAUHRV+bQQXGsItR/opIG7mGogIkVXa3E1MCQARX\\nAAA7eoZ9AEHflUeuLn9QJI/r0hyQQLEtrpwv6rDT1GCWaLII5HJ6NUFVf4TTcqxo\\n6vdM4QGKTJoO+SaCyP0CQFdpcxSAuzpFcKv0IlJ8XzS/cy+mweCMwyJ1PFEc4FX6\\nwg/HcAJWY60xZTJDFN+Qfx8ZQvBEin6c2/h+zZi5IVY=\\n-----END RSA PRIVATE KEY-----\\n\",\n  \"RawV2\": \"\",\n  \"Redacted\": \"-----BEGIN RSA PRIVATE KEY-----\\nMIICXAIBAAKBgQCxoeCUW5KJxNPxMp+K\",\n  \"ExtraData\": null,\n  \"StructuredData\": null\n}",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "181ccf4bf6af9e36d00417e2ae366e9d36754825d9be9b859fde5e6518ff0c30"
+    }
+  ],
+  "passthrough": {
+    "raw": {
+      "wrapper": [
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/misc/trace/trace_viewer_full.html",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 917,
+          "DetectorName": "Aiven",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "DGnfccMNNzzU0tLSKE2V+OSvmiuYXZFOkwDmvD2e7saa/X99iCLxOBoAF7W3ljfewGABZ1ucpw2d7733XusTTzxxE33+xCNNlfjED3vcqELON2WGr0+WCS03cXtaTmy6qbutppUkyHAnNO+tl/xgAUc9DLmmxWnacAeB/hDdANK3I/cjSCAIebi3d0QokKfRZHcrvZ01D9XtW72DhqjX3mBtUC5ZwGGqaFqcws5LL7109dGjR9+WN4DiPx7DHXLc0HE5Wt7es/m21WCob4PiTOimTjiJJwM46gPg2PiCE2ee/Wc/+9lvyB5vkvY4SSNO12+uxFkgT7LB7vZ6uptq9678DQ3JThsYggkAppgvCg7OJQs4WkUn",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/testdata/mod/rsc.io_breaker_v2.0.0+incompatible.txt",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "7307b307f4f0dde421900f8e5126fadac1e13aed",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/juju.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "13f4951698adc0fa9c1dda3e275d489a24201161",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/govmomi.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "4930550ba2e22f87187498acfd78348b15f4e7a8",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/testdata/mod/rsc.io_breaker_v2.0.0.txt",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "7307b307f4f0dde421900f8e5126fadac1e13aed",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "c589d0c9f0d81640c518354c7bcae77d99820aa3",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "346938d642f2ec3594ed81d874461961cd0faa76",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 23,
+          "DetectorName": "PivotalTracker",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "3fd3c1944c59d9742e1cd333672181cd",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "346938d642f2ec3594ed81d874461961cd0faa76",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 23,
+          "DetectorName": "PivotalTracker",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "3fd3c1944c59d9742e1cd333672181cd",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/http/client_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "VerificationError": "lookup dummy.faketld: no such host",
+          "Raw": "http://My%20User:My%20Pass@dummy.faketld",
+          "RawV2": "http://My%20User:My%20Pass@dummy.faketld",
+          "Redacted": "http://My%20User:********@dummy.faketld",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/http/client_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "VerificationError": "lookup dummy.faketld: no such host",
+          "Raw": "http://user:password@dummy.faketld",
+          "RawV2": "http://user:password@dummy.faketld/password",
+          "Redacted": "http://user:********@dummy.faketld",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/http/client_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "VerificationError": "lookup dummy.faketld: no such host",
+          "Raw": "http://user:password@dummy.faketld",
+          "RawV2": "http://user:password@dummy.faketld",
+          "Redacted": "http://user:********@dummy.faketld",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/http/client_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "VerificationError": "lookup [REDACTED].faketld: no such host",
+          "Raw": "http://user:password@password.faketld",
+          "RawV2": "http://user:password@password.faketld",
+          "Redacted": "http://user:********@password.faketld",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/http/client_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "VerificationError": "lookup dummy.faketld: no such host",
+          "Raw": "http://user:password@dummy.faketld",
+          "RawV2": "http://user:password@dummy.faketld/password",
+          "Redacted": "http://user:********@dummy.faketld",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/http/client_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "VerificationError": "lookup dummy.faketld: no such host",
+          "Raw": "http://user:password@dummy.faketld",
+          "RawV2": "http://user:password@dummy.faketld",
+          "Redacted": "http://user:********@dummy.faketld",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/http/client_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "VerificationError": "lookup [REDACTED].faketld: no such host",
+          "Raw": "http://user:password@password.faketld",
+          "RawV2": "http://user:password@password.faketld",
+          "Redacted": "http://user:********@password.faketld",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 100,
+          "DetectorName": "CloudflareApiToken",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "7fb22c8cba7ecaf98e4082d22d65800cf45e042a",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/moby.vconf",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 100,
+          "DetectorName": "CloudflareApiToken",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "7fb22c8cba7ecaf98e4082d22d65800cf45e042a",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/handshake_server_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nMIICXQIBAAKBgQC6b6qGvc+/n/LvXJRgeG/oE/LRlm/N2TJuIjfOQfnKXSms4Sfa\nYaLugcsQx980WJWG6T0Z5lwnc2DIjXgC9B2kmAmjGXBpPCViZiqrIiPFe4U4Ty4J\nczKnvT6brcqEB+YPOv93xZ1BhQCKtpvusKQ/LUxM5kI+u1HI3UhU9AyORwIDAQAB\nAoGAEJZ03q4uuMb7b26WSQsOMeDsftdatT747LGgs3pNRkMJvTb/O7/qJjxoG+Mc\nqeSj0TAZXp+PXXc3ikCECAc+R8rVMfWdmp903XgO/qYtmZGCorxAHEmR80SrfMXv\nPJnznLQWc8U9nphQErR+tTESg7xWEzmFcPKwnZd1xg8ERYkCQQDTGtrFczlB2b/Z\n9TjNMqUlMnTLIk/a/rPE2fLLmAYhK5sHnJdvDURaH2mF4nso0EGtENnTsh6LATnY\ndkrxXGm9AkEA4hXHG2q3MnhgK1Z5hjv+Fnqd+8bcbII9WW4flFs15EKoMgS1w/PJ\nzbsySaSy5IVS8XeShmT9+3lrleed4sy+UwJBAJOOAbxhfXP5r4+5R6ql66jES75w\njUCVJzJA5ORJrn8g64u2eGK28z/LFQbv9wXgCwfc72R468BdawFSLa/m2EECQGbZ\nrWiFla26IVXV0xcD98VWJsTBZMlgPnSOqoMdM1kSEd4fUmlAYI/dFzV1XYSkOmVr\nFhdZnklmpVDeu27P4c0CQQCuCOup0FlJSBpWY1TTfun/KMBkBatMz0VMA3d7FKIU\ncsPezl677Yjo8u1r/KzeI6zLg87Z8E6r6ZWNc9wBSZK6\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nMIICXQIBAAKBgQC6b6qGvc+/n/LvXJRg",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/handshake_server_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "BASE64",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOgIBAAJBAN17PWsVQPBrHYdPFtycVQ/0CFyAQYwdVXaefhVURYUkHojwL82T\nHRfLJCWuYVgHMRCcg+EqWzhPSEWgu+MmdekCAwEAAQJBALjQYNTdXF4CFBbXwUz/\nyt9QFDYT9B5WT/12jeGAe653gtYS6OOi/+eAkGmzg1GlRnw6fOfn+HYNFDORST7z\n4j0CIQDn2xz9hVWQEu9ee3vecNT3f60huDGTNoRhtqgweQGX0wIhAPSLj1VcRZEz\nnKpbtU22+PbIMSJ+e80fmY9LIPx5N4HTAiAthGSimMR9bloz0EY3GyuUEyqoDgMd\nhXxjuno2WesoJQIgemilbcALXpxsLmZLgcQ2KSmaVr7jb5ECx9R+hYKTw1sCIG4s\nT+E0J8wlH24pgwQHzy7Ko2qLwn1b5PW8ecrlvP1g\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOgIBAAJBAN17PWsVQPBrHYdPFtyc",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/x509/x509_test_import.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOgIBAAJBALKZD0nEffqM1ACuak0bijtqE2QrI/KLADv7l3kK3ppMyCuLKoF0\nfd7Ai2KW5ToIwzFofvJcS/STa6HA5gQenRUCAwEAAQJBAIq9amn00aS0h/CrjXqu\n/ThglAXJmZhOMPVn4eiu7/ROixi9sex436MaVeMqSNf7Ex9a8fRNfWss7Sqd9eWu\nRTUCIQDasvGASLqmjeffBNLTXV2A5g4t+kLVCpsEIZAycV5GswIhANEPLmax0ME/\nEO+ZJ79TJKN5yiGBRsv5yvx5UiHxajEXAiAhAol5N4EUyq6I9w1rYdhPMGpLfk7A\nIU2snfRJ6Nq2CQIgFrPsWRCkV+gOYcajD17rEqmuLrdIRexpg8N1DOSXoJ8CIGlS\ntAboUGBxTDq3ZroNism3DaMIbKPyYrAqhKov1h5V\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOgIBAAJBALKZD0nEffqM1ACuak0b",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/x509/x509_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "ESCAPED_UNICODE",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQCxoeCUW5KJxNPxMp+KmCxKLc1Zv9Ny+4CFqcUXVUYH69L3mQ7v\nIWrJ9GBfcaA7BPQqUlWxWM+OCEQZH1EZNIuqRMNQVuIGCbz5UQ8w6tS0gcgdeGX7\nJ7jgCQ4RK3F/PuCM38QBLaHx988qG8NMc6VKErBjctCXFHQt14lerd5KpQIDAQAB\nAoGAYrf6Hbk+mT5AI33k2Jt1kcweodBP7UkExkPxeuQzRVe0KVJw0EkcFhywKpr1\nV5eLMrILWcJnpyHE5slWwtFHBG6a5fLaNtsBBtcAIfqTQ0Vfj5c6SzVaJv0Z5rOd\n7gQF6isy3t3w9IF3We9wXQKzT6q5ypPGdm6fciKQ8RnzREkCQQDZwppKATqQ41/R\nvhSj90fFifrGE6aVKC1hgSpxGQa4oIdsYYHwMzyhBmWW9Xv/R+fPyr8ZwPxp2c12\n33QwOLPLAkEA0NNUb+z4ebVVHyvSwF5jhfJxigim+s49KuzJ1+A2RaSApGyBZiwS\nrWvWkB471POAKUYt5ykIWVZ83zcceQiNTwJBAMJUFQZX5GDqWFc/zwGoKkeR49Yi\nMTXIvf7Wmv6E++eFcnT461FlGAUHRV+bQQXGsItR/opIG7mGogIkVXa3E1MCQARX\nAAA7eoZ9AEHflUeuLn9QJI/r0hyQQLEtrpwv6rDT1GCWaLII5HJ6NUFVf4TTcqxo\n6vdM4QGKTJoO+SaCyP0CQFdpcxSAuzpFcKv0IlJ8XzS/cy+mweCMwyJ1PFEc4FX6\nwg/HcAJWY60xZTJDFN+Qfx8ZQvBEin6c2/h+zZi5IVY=\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQCxoeCUW5KJxNPxMp+K",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/testdata/example-key.pem",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLYX5CB04fSeQ6tF1aY/PuoAoGCCqGSM49\nAwEHoUQDQgAEPR3tU2Fta9ktY+6P9G0cWO+0kETA6SFs38GecTyudlHz6xvCdz8q\nEKTcWGekdmdDPsHloRNtsiCa697B2O9IFA==\n-----END EC PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLY",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/handshake_server_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "BASE64",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOgIBAAJBAN17PWsVQPBrHYdPFtycVQ/0CFyAQYwdVXaefhVURYUkHojwL82T\nHRfLJCWuYVgHMRCcg+EqWzhPSEWgu+MmdekCAwEAAQJBALjQYNTdXF4CFBbXwUz/\nyt9QFDYT9B5WT/12jeGAe653gtYS6OOi/+eAkGmzg1GlRnw6fOfn+HYNFDORST7z\n4j0CIQDn2xz9hVWQEu9ee3vecNT3f60huDGTNoRhtqgweQGX0wIhAPSLj1VcRZEz\nnKpbtU22+PbIMSJ+e80fmY9LIPx5N4HTAiAthGSimMR9bloz0EY3GyuUEyqoDgMd\nhXxjuno2WesoJQIgemilbcALXpxsLmZLgcQ2KSmaVr7jb5ECx9R+hYKTw1sCIG4s\nT+E0J8wlH24pgwQHzy7Ko2qLwn1b5PW8ecrlvP1g\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOgIBAAJBAN17PWsVQPBrHYdPFtyc",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/handshake_client_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOgIBAAJBAN17PWsVQPBrHYdPFtycVQ/0CFyAQYwdVXaefhVURYUkHojwL82T\nHRfLJCWuYVgHMRCcg+EqWzhPSEWgu+MmdekCAwEAAQJBALjQYNTdXF4CFBbXwUz/\nyt9QFDYT9B5WT/12jeGAe653gtYS6OOi/+eAkGmzg1GlRnw6fOfn+HYNFDORST7z\n4j0CIQDn2xz9hVWQEu9ee3vecNT3f60huDGTNoRhtqgweQGX0wIhAPSLj1VcRZEz\nnKpbtU22+PbIMSJ+e80fmY9LIPx5N4HTAiAthGSimMR9bloz0EY3GyuUEyqoDgMd\nhXxjuno2WesoJQIgemilbcALXpxsLmZLgcQ2KSmaVr7jb5ECx9R+hYKTw1sCIG4s\nT+E0J8wlH24pgwQHzy7Ko2qLwn1b5PW8ecrlvP1g\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOgIBAAJBAN17PWsVQPBrHYdPFtyc",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/encoding/pem/pem_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info: DES-EDE3-CBC,80C7C7A09690757A\n\neQp5ZkH6CyHBz7BZfUPxyLCCmftsBJ7HlqGb8Ld21cSwnzWZ4/SIlhyrUtsfw7VR\n2TTwA+odo9ex7GdxOTaH8oZFumIRoiEjHsk8U7Bhntp+ekkPP79xunnN7hb7hkhr\nyGDQZgA7s2cQHQ71v3gwT2BACAft26jCjbM1wgNzBnJ8M0Rzn68YWqaPtdBu8qb/\nzVR5JB1mnqvTSbFsfF5yMc6o2WQ9jJCl6KypnMl+BpL+dlvdjYVK4l9lYsB1Hs3d\n+zDBbWxos818zzhS8/y6eIfiSG27cqrbhURbmgiSfDXjncK4m/pLcQ7mmBL6mFOr\n3Pj4jepzgOiFRL6MKE//h62fZvI1ErYr8VunHEykgKNhChDvb1RO6LEfqKBu+Ivw\nTB6fBhW3TCLMnVPYVoYwA+fHNTmZZm8BEonlIMfI+KktjWUg4Oia+NI6vKcPpFox\nhSnlGgCtvfEaq5/H4kHJp95eOpnFsLviw2seHNkz/LxJMRP1X428+DpYW/QD/0JU\ntJSuC/q9FUHL6RI3u/Asrv8pCb4+D7i1jW/AMIdJTtycOGsbPxQA7yHMWujHmeb1\nBTiHcL3s3KrJu1vDVrshvxfnz71KTeNnZH8UbOqT5i7fPGyXtY1XJddcbI/Q6tXf\nwHFsZc20TzSdsVLBtwksUacpbDogcEVMctnNrB8FIrB3vZEv9Q0Z1VeY7nmTpF+6\na+z2P7acL7j6A6Pr3+q8P9CPiPC7zFonVzuVPyB8GchGR2hytyiOVpuD9+k8hcuw\nZWAaUoVtWIQ52aKS0p19G99hhb+IVANC4akkdHV4SP8i7MVNZhfUmg==\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nProc-Type: 4,ENCRYPTED\nDEK-Info:",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "c589d0c9f0d81640c518354c7bcae77d99820aa3",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "c589d0c9f0d81640c518354c7bcae77d99820aa3",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "a98ad7ee00ec53921f08832bc06ecf7fd600e6a1",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/cmd/go/internal/modconv/testdata/prometheus.out",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 8,
+          "DetectorName": "Github",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "bd40a432e4c76585ef6b72d3fd96fb9b6dc7b68d",
+          "RawV2": "",
+          "Redacted": "",
+          "ExtraData": {
+            "rotation_guide": "https://howtorotate.com/docs/tutorials/github/",
+            "version": "1"
+          },
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/http/internal/testcert.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQDuLnQAI3mDgey3VBzWnB2L39JUU4txjeVE6myuDqkM/uGlfjb9\nSjY1bIw4iA5sBBZzHi3z0h1YV8QPuxEbi4nW91IJm2gsvvZhIrCHS3l6afab4pZB\nl2+XsDulrKBxKKtD1rGxlG4LjncdabFn9gvLZad2bSysqz/qTAUStTvqJQIDAQAB\nAoGAGRzwwir7XvBOAy5tM/uV6e+Zf6anZzus1s1Y1ClbjbE6HXbnWWF/wbZGOpet\n3Zm4vD6MXc7jpTLryzTQIvVdfQbRc6+MUVeLKwZatTXtdZrhu+Jk7hx0nTPy8Jcb\nuJqFk541aEw+mMogY/xEcfbWd6IOkp+4xqjlFLBEDytgbIECQQDvH/E6nk+hgN4H\nqzzVtxxr397vWrjrIgPbJpQvBsafG7b0dA4AFjwVbFLmQcj2PprIMmPcQrooz8vp\njy4SHEg1AkEA/v13/5M47K9vCxmb8QeD/asydfsgS5TeuNi8DoUBEmiSJwma7FXY\nfFUtxuvL7XvjwjN5B30pNEbc6Iuyt7y4MQJBAIt21su4b3sjXNueLKH85Q+phy2U\nfQtuUE9txblTu14q3N7gHRZB4ZMhFYyDy8CKrN2cPg/Fvyt0Xlp/DoCzjA0CQQDU\ny2ptGsuSmgUtWj3NM9xuwYPm+Z/F84K6+ARYiZ6PYj013sovGKUFfYAqVXVlxtIX\nqyUBnu3X9ps8ZfjLZO7BAkEAlT4R5Yl6cGhaJQYZHOde3JEMhNRcVFMO8dJDaFeo\nf9Oeos0UUothgiDktdQHxdNEwLjQf7lJJBzV+5OtwswCWA==\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQDuLnQAI3mDgey3VBzW",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/smtp/smtp_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "BASE64",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQDScVtBC45ayNsa16NylbPXnc6XOJkzhtWMn2Niu43DmfZHLq5h\nAB9+Gpok4icKaZxV7ayImCWzIf1pGHq8qKhsFshRddRTUAF3np5sDOW3QuhsuXHu\nlkQzLfQuoiL0TrOYvdi90bOliWQVGdGurAS1ZhsYF/fOc7bnRLnoIJYfZQIDAQAB\nAoGBAMst7OgpKyFV6c3JwyI/jWqxDySL3caU+RuTTBaodKAUx2ZEmNJIlx9eudLA\nkucHvoxsM/eRxlxkhdFxdBcwU6J+zqooTnhu/FE3jhrT1lPrbhfGhyKnUrB0KKMM\nVY3IQZyiehpxaeXAwoAou6TbWoTpl9t8ImAqAMY8hlULCUqlAkEA+9+Ry5FSYK/m\n542LujIcCaIGoG1/Te6Sxr3hsPagKC2rH20rDLqXwEedSFOpSS0vpzlPAzy/6Rbb\nPHTJUhNdwwJBANXkA+TkMdbJI5do9/mn//U0LfrCR9NkcoYohxfKz8JuhgRQxzF2\n6jpo3q7CdTuuRixLWVfeJzcrAyNrVcBq87cCQFkTCtOMNC7fZnCTPUv+9q1tcJyB\nvNjJu3yvoEZeIeuzouX9TJE21/33FaeDdsXbRhQEj23cqR38qFHsF1qAYNMCQQDP\nQXLEiJoClkR2orAmqjPLVhR3t2oB3INcnEjLNSq8LHyQEfXyaFfu4U9l5+fRPL2i\njiC0k/9L5dHUsF0XZothAkEA23ddgRs+Id/HxtojqqUT27B8MT/IGNrYsp4DvS/c\nqgkeluku4GjxRlDMBuXk94xOBEinUs+p/hwP1Alll80Tpg==\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nMIICXgIBAAKBgQDScVtBC45ayNsa16Ny",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/handshake_server_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIBkJN9X4IqZIguiEVKMqeBUP5xtRsEv4HJEtOpOGLELwO53SD78Ew8\nk+wLWoqizS3NpQyMtrU8JFdWfj+C57UNkOugBwYFK4EEACOhgYkDgYYABACVjJF1\nFMBexFe01MNvja5oHt1vzobhfm6ySD6B5U7ixohLZNz1MLvT/2XMW/TdtWo+PtAd\n3kfDdq0Z9kUsjLzYHQFMH3CQRnZIi4+DzEpcj0B22uCJ7B0rxE4wdihBsmKo+1vx\n+U56jb0JuK7qixgnTy5w/hOWusPTQBbNZU6sER7m8Q==\n-----END EC PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIBkJN9X4IqZIguiEVKMqeBU",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/handshake_server_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nMIICXQIBAAKBgQC6b6qGvc+/n/LvXJRgeG/oE/LRlm/N2TJuIjfOQfnKXSms4Sfa\nYaLugcsQx980WJWG6T0Z5lwnc2DIjXgC9B2kmAmjGXBpPCViZiqrIiPFe4U4Ty4J\nczKnvT6brcqEB+YPOv93xZ1BhQCKtpvusKQ/LUxM5kI+u1HI3UhU9AyORwIDAQAB\nAoGAEJZ03q4uuMb7b26WSQsOMeDsftdatT747LGgs3pNRkMJvTb/O7/qJjxoG+Mc\nqeSj0TAZXp+PXXc3ikCECAc+R8rVMfWdmp903XgO/qYtmZGCorxAHEmR80SrfMXv\nPJnznLQWc8U9nphQErR+tTESg7xWEzmFcPKwnZd1xg8ERYkCQQDTGtrFczlB2b/Z\n9TjNMqUlMnTLIk/a/rPE2fLLmAYhK5sHnJdvDURaH2mF4nso0EGtENnTsh6LATnY\ndkrxXGm9AkEA4hXHG2q3MnhgK1Z5hjv+Fnqd+8bcbII9WW4flFs15EKoMgS1w/PJ\nzbsySaSy5IVS8XeShmT9+3lrleed4sy+UwJBAJOOAbxhfXP5r4+5R6ql66jES75w\njUCVJzJA5ORJrn8g64u2eGK28z/LFQbv9wXgCwfc72R468BdawFSLa/m2EECQGbZ\nrWiFla26IVXV0xcD98VWJsTBZMlgPnSOqoMdM1kSEd4fUmlAYI/dFzV1XYSkOmVr\nFhdZnklmpVDeu27P4c0CQQCuCOup0FlJSBpWY1TTfun/KMBkBatMz0VMA3d7FKIU\ncsPezl677Yjo8u1r/KzeI6zLg87Z8E6r6ZWNc9wBSZK6\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nMIICXQIBAAKBgQC6b6qGvc+/n/LvXJRg",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/tls_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "BASE64",
+          "Verified": false,
+          "Raw": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIBrsoKp0oqcv6/JovJJDoDVSGWdirrkgCWxrprGlzB9o0X8fV675X0\nNwuBenXFfeZvVcwluO7/Q9wkYoPd/t3jGImgBwYFK4EEACOhgYkDgYYABAFj36bL\n06h5JRGUNB1X/Hwuw64uKW2GGJLVPPhoYMcg/ALWaW+d/t+DmV5xikwKssuFq4Bz\nVQldyCXTXGgu7OC0AQCC/Y/+ODK3NFKlRi+AsG3VQDSV4tgHLqZBBus0S6pPcg1q\nkohxS/xfFg/TEwRSSws+roJr4JFKpO2t3/be5OdqmQ==\n-----END EC PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN EC PRIVATE KEY-----\nMIHcAgEBBEIBrsoKp0oqcv6/JovJJDoDV",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/tls_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "BASE64",
+          "Verified": false,
+          "Raw": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOwIBAAJBANLJhPHhITqQbPklG3ibCVxwGMRfp/v4XqhfdQHdcVfHap6NQ5Wo\nk/4xIA+ui35/MmNartNuC+BdZ1tMuVCPFZcCAwEAAQJAEJ2N+zsR0Xn8/Q6twa4G\n6OB1M1WO+k+ztnX/1SvNeWu8D6GImtupLTYgjZcHufykj09jiHmjHx8u8ZZB/o1N\nMQIhAPW+eyZo7ay3lMz1V01WVjNKK9QSn1MJlb06h/LuYv9FAiEA25WPedKgVyCW\nSmUwbPw8fnTcpqDWE3yTO3vKcebqMSsCIBF3UmVue8YU3jybC3NxuXq3wNm34R8T\nxVLHwDXh/6NJAiEAl2oHGGLz64BuAfjKrqwz7qMYr9HCLIe/YsoWq/olzScCIQDi\nD2lWusoe2/nEqfDVVWGWlyJ7yOmqaVm/iNUN9B2N2g==\n-----END RSA PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN RSA PRIVATE KEY-----\nMIIBOwIBAAJBANLJhPHhITqQbPklG3ib",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/example_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "BASE64",
+          "Verified": false,
+          "Raw": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLYX5CB04fSeQ6tF1aY/PuoAoGCCqGSM49\nAwEHoUQDQgAEPR3tU2Fta9ktY+6P9G0cWO+0kETA6SFs38GecTyudlHz6xvCdz8q\nEKTcWGekdmdDPsHloRNtsiCa697B2O9IFA==\n-----END EC PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLY",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/crypto/tls/example_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 15,
+          "DetectorName": "PrivateKey",
+          "DecoderName": "BASE64",
+          "Verified": false,
+          "Raw": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLYX5CB04fSeQ6tF1aY/PuoAoGCCqGSM49\nAwEHoUQDQgAEPR3tU2Fta9ktY+6P9G0cWO+0kETA6SFs38GecTyudlHz6xvCdz8q\nEKTcWGekdmdDPsHloRNtsiCa697B2O9IFA==\n-----END EC PRIVATE KEY-----\n",
+          "RawV2": "",
+          "Redacted": "-----BEGIN EC PRIVATE KEY-----\nMHcCAQEEIIrYSSNQFaA2Hwf1duRSxKtLY",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/url/url_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "http://user:password@google.com",
+          "RawV2": "http://user:password@google.com",
+          "Redacted": "http://user:********@google.com",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/url/url_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "http://j%40ne:password@google.com",
+          "RawV2": "http://j%40ne:password@google.com",
+          "Redacted": "http://j%40ne:********@google.com",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/url/url_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "http://jane:p%40ssword@google.com",
+          "RawV2": "http://jane:p%40ssword@google.com",
+          "Redacted": "http://jane:********@google.com",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/url/url_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "http://jane:p%40ssword@google.com",
+          "RawV2": "http://jane:p%40ssword@google.com",
+          "Redacted": "http://jane:********@google.com",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/url/url_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "http://j%40ne:password@google.com?q=@go",
+          "RawV2": "http://j%40ne:password@google.com/p@th?q=@go",
+          "Redacted": "http://j%40ne:********@google.com?q=@go",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/url/url_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "http://j%40ne:password@google.com?q=@go",
+          "RawV2": "http://j%40ne:password@google.com/p@th?q=@go",
+          "Redacted": "http://j%40ne:********@google.com?q=@go",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/url/url_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "http://%3Fam:pa%3Fsword@google.com",
+          "RawV2": "http://%3Fam:pa%3Fsword@google.com",
+          "Redacted": "http://%3Fam:********@google.com",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/url/url_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "http://j%40ne:password@google.com",
+          "RawV2": "http://j%40ne:password@google.com",
+          "Redacted": "http://j%40ne:********@google.com",
+          "ExtraData": null,
+          "StructuredData": null
+        },
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Docker": {
+                "file": "/usr/local/go/src/net/url/url_test.go",
+                "image": "golang",
+                "layer": "sha256:665fbbf998e4658c0a6f232f6b2e286eea9c794e8e92a529a92246fb7a7a1597",
+                "tag": "1.12-alpine"
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 4,
+          "SourceName": "trufflehog - docker",
+          "DetectorType": 17,
+          "DetectorName": "URI",
+          "DecoderName": "PLAIN",
+          "Verified": false,
+          "Raw": "http://user:password@google.com",
+          "RawV2": "http://user:password@google.com",
+          "Redacted": "http://user:********@google.com",
+          "ExtraData": null,
+          "StructuredData": null
+        }
+      ]
+    }
+  }
+}
