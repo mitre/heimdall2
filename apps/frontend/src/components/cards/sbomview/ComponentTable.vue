@@ -4,8 +4,8 @@
       ref="componentTableTitle"
       :class="
         $vuetify.breakpoint.smAndDown
-          ? 'component-table-title'
-          : 'pinned-header component-table-title'
+          ? 'components-table-title'
+          : 'pinned-header components-table-title'
       "
     >
     </div>
@@ -18,20 +18,45 @@
           :headers="headers"
           :items-per-page="-1"
           :item-key="'bom-ref'"
+          :search="search"
           show-expand
           single-expand
           hide-default-footer
         >
         <!--The single expand is to hide the tabs syncing together when multiple components are open-->
           <template #top>
-            <v-card-title class="pb-0">Component View Data</v-card-title>
+            <v-card-title class="pb-0">Component View Data
+            <v-spacer />
+          <v-text-field
+            v-model="search"
+            label="Search"
+            class="mx-4"
+          ></v-text-field>
+            <v-autocomplete chips multiple :items="stringFields" v-model="headerColumns"></v-autocomplete>
+<!--             
+            <v-menu offset-y offset-overflow :close-on-content-click="false">
+              <template #activator=" {on, attrs }">
+                <v-icon v-on.click="on">
+                  mdi-cog-outline
+                </v-icon>
+              </template>
+                  <v-autocomplete chips multiple v-modal.items="stringFields"></v-autocomplete>
+            </v-menu> 
+          -->
+            </v-card-title>
           </template>
+
+<!--           <template #item="item">
+            <v-data-table-header :item="item"></v-data-table-header>
+          </template> -->
+
           <template #expanded-item="{headers, item}">
           <td class="m-10 p-10" :colspan="headers.length">
             <v-tabs v-model="tabs">
               <v-tab>General Properties</v-tab>
               <v-tab>References</v-tab>
               <v-tab>Licenses</v-tab>
+              <v-tab>Example</v-tab>
             </v-tabs>
             <v-tabs-items v-model="tabs">
               <!--General Properties Tab-->
@@ -92,6 +117,33 @@
                 </v-simple-table>
                 </span>
               </v-tab-item>
+
+              <!-- Example Tab -->
+              <v-tab-item>
+                <v-simple-table dense>
+                  <template #default>
+                    <thead>
+                      <tr>
+                        <th>Property</th><th>Value</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr :colspan="headers.length">
+                        <td>Example</td>
+                        <td>Example</td>
+                      </tr>
+                      <tr :colspan="headers.length">
+                        <td>Example</td>
+                        <td>Example</td>
+                      </tr>
+                      <tr :colspan="headers.length">
+                        <td>Example</td>
+                        <td>Example</td>
+                      </tr>
+                    </tbody>
+                  </template>
+                </v-simple-table>
+              </v-tab-item>
             </v-tabs-items>
           </td>
           </template>
@@ -133,7 +185,7 @@ export default class ComponentTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   
-  headers = [
+  testHeaders = [
     {
       text: 'Component Name',
       value: 'name'
@@ -164,6 +216,8 @@ export default class ComponentTable extends Vue {
     }
   ];
 
+  headerColumns = ['name', 'group', 'bom-ref', 'type', 'author', 'description']
+
   tabs = {
     tab: null,
     items: [
@@ -171,11 +225,14 @@ export default class ComponentTable extends Vue {
     ]
   }
 
+  search = ''
+
   stringFields = [
     'type',
     'mime-type',
     'publisher',
     'group',
+    'bom-ref',
     'name',
     'version',
     'description',
@@ -185,7 +242,13 @@ export default class ComponentTable extends Vue {
     'purl'
   ]
 
-  get items(): any[] {
+  get headers() {
+    return this.headerColumns.map(v => {
+      return {value: v, text: _.startCase(v)}
+    })
+  }
+
+  get items(): SBOMComponent[] {
     const evaluations = FilteredDataModule.evaluations(
       FilteredDataModule.selectedEvaluationIds
     );
@@ -196,7 +259,7 @@ export default class ComponentTable extends Vue {
     for (const auxes of aux_datas) {
       for (const a of auxes) {
         if (_.matchesProperty('name', 'SBOM')(a)) {
-          sboms = sboms.concat(_.get(a, 'data.components', []));
+          sboms = sboms.concat(_.get(a, 'components', []));
         }
       }
     }
@@ -213,7 +276,7 @@ export default class ComponentTable extends Vue {
   padding-bottom: 2px;
 }
 
-.control-table-title {
+.components-table-title {
   background-color: var(--v-secondary-lighten1);
   z-index: 10;
 }
