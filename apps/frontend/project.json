@@ -1,7 +1,27 @@
 {
     "name": "@mitre/heimdall-lite",
     "implicitDependencies": ["@mitre/hdf-converters"],
-    "build": {
-        "dependsOn": ["^build"]
+    "targets": {
+        "prebuild": {
+            "executor": "nx:run-commands",
+            "options": {
+                "cwd": "apps/frontend",
+                "command": "rimraf ../../dist/frontend"
+            }
+        },
+        "build": {
+            "executor": "nx:run-commands",
+            "options": {
+                "cwd": "apps/frontend",
+                "command": "vue-cli-service build"
+            }
+        },
+        "test": {
+            "executor": "nx:run-commands",
+            "options": {
+                "cwd": "apps/frontend",
+                "command": "jest"
+            }
+        }
     }
 }
