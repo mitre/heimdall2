@@ -35,6 +35,9 @@
           <v-col cols="3" md="auto" class="text-right pb-0">
             <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
           </v-col>
+          <v-col cols="3" md="auto" class="text-right pb-0">
+            <ToggleDiv />
+          </v-col>
         </v-row>
       </v-row>
 
@@ -157,6 +160,7 @@ import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Ref} from 'vue-property-decorator';
+import ToggleDiv from '@/components/global/tags/ToggleDiv.vue';
 
 // Tracks the visibility of an HDF control
 interface ListElt {
@@ -177,7 +181,8 @@ interface ListElt {
     ControlRowHeader,
     ControlRowDetails,
     ColumnHeader,
-    ResponsiveRowSwitch
+    ResponsiveRowSwitch,
+    ToggleDiv
   }
 })
 export default class ControlTable extends Vue {

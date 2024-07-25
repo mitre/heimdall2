@@ -16,7 +16,6 @@
         </v-card-text>
       </v-card>
     </template>
-
     <template #set>
       <v-row class="pa-4">
         <div
@@ -25,20 +24,18 @@
           v-text="filename"
         />
         <v-tooltip v-if="isOverlaid" bottom>
-          <template #activator="{on, attrs}">
+          <template #activator="{ on, attrs }">
             <v-icon
               style="cursor: pointer"
               class="ml-2"
               v-bind="attrs"
               v-on="on"
-              >mdi-delta</v-icon
-            >
+            >mdi-delta</v-icon>
           </template>
           <span>This control has been modified in an overlay</span>
         </v-tooltip>
       </v-row>
     </template>
-
     <template #severity>
       <v-card-text class="pa-2">
         <v-tooltip v-if="'severityoverride' in control.data.tags" bottom>
@@ -73,13 +70,11 @@
         </v-chip>
       </v-card-text>
     </template>
-
     <!-- eslint-disable vue/no-v-html -->
     <template #title>
       <div class="pa-2 title" v-html="sanitize_html(control.data.title)" />
     </template>
     <!-- eslint-enable vue/no-v-html -->
-
     <!-- ID and Tags -->
     <template #id>
       <v-card-text class="pa-2 title font-weight-bold">
@@ -94,8 +89,18 @@
     <template #tags>
       <v-chip-group column>
         <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
+<<<<<<< Updated upstream
           <template #activator="{on}">
             <v-chip :href="tag.url" target="_blank" v-on="on">
+=======
+          <template #activator="{ on }">
+            <v-chip
+              :href="tag.url"
+              target="_blank"
+              active-class="NONE"
+              v-on="on"
+            >
+>>>>>>> Stashed changes
               {{ tag.label }}
             </v-chip>
           </template>
@@ -104,8 +109,23 @@
       </v-chip-group>
       <v-chip-group column>
         <v-tooltip v-for="(tag, i) in cciTags" :key="'cci-chip' + i" bottom>
+<<<<<<< Updated upstream
           <template #activator="{on}">
             <v-chip style="cursor: help" v-on="on">
+=======
+          <template #activator="{ on }">
+            <v-chip style="cursor: help" active-class="NONE" v-on="on">
+              {{ tag.label }}
+            </v-chip>
+          </template>
+          <span>{{ tag.description }}</span>
+        </v-tooltip>
+      </v-chip-group>
+      <v-chip-group column active-class="NONE">
+        <v-tooltip v-for="(tag, i) in mappedTags" :key="'mapped-chip' + i" bottom>
+          <template #activator="{ on }">
+            <v-chip style="cursor: help" active-class="NONE" v-on="on">
+>>>>>>> Stashed changes
               {{ tag.label }}
             </v-chip>
           </template>
@@ -115,11 +135,18 @@
     </template>
     <!-- Control Run Time -->
     <template #runTime>
+<<<<<<< Updated upstream
       <v-card-text class="pa-2 title font-weight-bold">{{
         runTime
       }}</v-card-text>
     </template>
 
+=======
+      <v-card-text class="pa-2 title font-weight-bold">
+        {{ runTime }}
+      </v-card-text>
+    </template>
+>>>>>>> Stashed changes
     <template #viewed>
       <v-container class="py-0 my-0 fill-height">
         <v-layout
@@ -138,26 +165,25 @@
     </template>
   </ResponsiveRowSwitch>
 </template>
-
 <script lang="ts">
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
-import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
-import {getControlRunTime} from '@/utilities/delta_util';
-import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
-import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
+import { CCI_DESCRIPTIONS } from '@/utilities/cci_util';
+import { getControlRunTime } from '@/utilities/delta_util';
+import { nistCanonConfig, NIST_DESCRIPTIONS } from '@/utilities/nist_util';
+import { ContextualizedControl, is_control, parse_nist } from 'inspecjs';
 import * as _ from 'lodash';
-import Component, {mixins} from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
-
+import Component, { mixins } from 'vue-class-component';
+import { Prop } from 'vue-property-decorator';
+import { mapGetters } from 'vuex';
 interface Tag {
   label: string;
   url: string;
   description: string;
 }
-
 @Component({
   components: {
+<<<<<<< Updated upstream
     ResponsiveRowSwitch
   }
 })
@@ -170,17 +196,30 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
 
   @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
 
+=======
+    ResponsiveRowSwitch,
+    CircleRating
+  },
+  computed: {
+    ...mapGetters('selectedTags', ['checkedValues']),
+    ...mapGetters('mappings', ['mappings'])
+  }
+})
+export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
+  @Prop({ type: Object, required: true }) readonly control!: ContextualizedControl;
+  @Prop({ type: Array, required: true }) readonly viewedControls!: string[];
+  @Prop({ type: Boolean, default: false }) readonly controlExpanded!: boolean;
+  @Prop({ type: Boolean, default: false }) readonly showImpact!: boolean;
+>>>>>>> Stashed changes
   get runTime(): string {
     return `${_.truncate(getControlRunTime(this.control).toString(), {
       length: 5,
       omission: ''
     })}s`;
   }
-
   get filename(): string | undefined {
     return _.get(this.control, 'sourcedFrom.sourcedFrom.from_file.filename');
   }
-
   get truncated_title(): string {
     if (this.control.data.title && this.control.data.title.length > 80) {
       return this.control.data.title.substr(0, 80) + '...';
@@ -188,24 +227,23 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
       return this.control.data.title || 'Untitled';
     }
   }
-
   get status_color(): string {
-    // maps stuff like "not applicable" -> "statusnotapplicable", which is a defined color name
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
   }
+<<<<<<< Updated upstream
 
   get severity_color(): string {
     return `severity${_.startCase(this.control.hdf.severity)}`;
   }
 
+=======
+>>>>>>> Stashed changes
   get wasViewed(): boolean {
     return this.viewedControls.indexOf(this.control.data.id) !== -1;
   }
-
   set wasViewed(_value: boolean) {
     this.$emit('control-viewed', this.control);
   }
-
   get isOverlaid() {
     return this.control.extendsFrom.some(
       (extension) =>
@@ -213,9 +251,26 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         extension.data.code !== ''
     );
   }
+<<<<<<< Updated upstream
 
   // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
   // and relies on a script not contained in the project
+=======
+  severity_arrow_count(severity: string): number {
+    switch (severity) {
+      case 'low':
+        return 1;
+      case 'medium':
+        return 2;
+      case 'high':
+        return 3;
+      case 'critical':
+        return 4;
+      default:
+        return 0;
+    }
+  }
+>>>>>>> Stashed changes
   descriptionForTag(tag: string): string {
     const nisted = parse_nist(tag);
     if (is_control(nisted)) {
@@ -229,8 +284,10 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     }
     return 'Unrecognized Tag';
   }
-
   get nistTags(): Tag[] {
+    if (!this.checkedValues.includes('nist')) {
+      return [];
+    }
     let nistTags = this.control.hdf.rawNistTags;
     nistTags = nistTags.filter((tag) => tag.search(/Rev.*\d/i) === -1);
     return nistTags.map((tag) => {
@@ -247,22 +304,39 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
           'https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/control?version=5.1&number=' +
           url;
       }
-      return {label: tag, url: url, description: this.descriptionForTag(tag)};
+      return { label: tag, url: url, description: this.descriptionForTag(tag) };
     });
   }
-
   get cciTags(): Tag[] {
     let cci_tags: string | string[] = this.control.data.tags.cci || '';
-    if (!cci_tags) {
+    if (!cci_tags || !this.checkedValues.includes('cci')) {
       return [];
     } else if (typeof cci_tags == 'string') {
       cci_tags = cci_tags.split(' ');
     }
     return cci_tags.map((cci) => {
-      return {label: cci, url: '', description: this.descriptionForTag(cci)};
+      return { label: cci, url: '', description: this.descriptionForTag(cci) };
     });
   }
-
+  get mappedTags(): Tag[] {
+    const tags: Tag[] = [];
+    const mappings = this.mappings;
+    for (const key in mappings) {
+      if (this.checkedValues.includes(key)) {
+        const mapping = mappings[key];
+        for (const cci of this.control.data.tags.cci || []) {
+          if (mapping[cci]) {
+            tags.push({
+              label: `${key}: ${mapping[cci].join(', ')}`,
+              url: '',
+              description: `Mapped ${cci} to ${mapping[cci].join(', ')}`
+            });
+          }
+        }
+      }
+    }
+    return tags;
+  }
   showLegacy(control: ContextualizedControl) {
     let legacyTag = control.data.tags['legacy'];
     if (!legacyTag) {
@@ -276,5 +350,30 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
     );
     return legacyID ? '(' + legacyID + ')' : '';
   }
+  // Add the computed property for checkedValues
+  get checkedValues(): string[] {
+    return this.$store.getters['selectedTags/checkedValues'];
+  }
+  get mappings(): { [id: string]: { [key: string]: string[] } } {
+    return this.$store.getters['mappings/mappings'];
+  }
 }
 </script>
+<style scoped>
+.checkbox-container {
+  text-align: left;
+}
+.add-mapping-button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+}
+.add-mapping-button:hover {
+  background-color: darkblue;
+}
+</style>

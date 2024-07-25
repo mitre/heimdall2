@@ -159,6 +159,17 @@
           </v-col>
         </v-row>
 
+        <!-- Calvinstuff - html
+        <div class="container">
+          <button @click="toggleDiv">Toggle Div</button>
+          <div v-if="isVisible" class="center-div">
+            This is a center-aligned div with a white background.
+          </div>
+        </div>
+        <input type="checkbox" id="input - cci" name="input - cci" onclick="alert('Hello world!')" />
+        <label for="input - cci">cci</label><br> -->
+
+
         <!-- DataTable -->
         <v-row>
           <v-col xs-12>
@@ -246,6 +257,7 @@ import ServerMixin from '../mixins/ServerMixin';
 import {EvaluationModule} from '../store/evaluations';
 import {StatusCountModule} from '../store/status_counts';
 import {compare_times} from '../utilities/delta_util';
+import ToggleDiv from '@/components/global/tags/ToggleDiv.vue';
 
 @Component({
   components: {
@@ -269,7 +281,8 @@ import {compare_times} from '../utilities/delta_util';
     EvaluationInfo,
     ExportSplunkModal,
     ProfileData,
-    UploadButton
+    UploadButton,
+    ToggleDiv
   }
 })
 export default class Results extends mixins(RouteMixin, ServerMixin) {
