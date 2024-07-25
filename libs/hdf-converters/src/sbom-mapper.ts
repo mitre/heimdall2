@@ -98,7 +98,7 @@ export class SBOMResults {
   }
   */
   generateIntermediary(data: Record<string, unknown>) {
-    // Find if vulnerabilities structure exists, else skip vulnerability restructuring
+    // Determine if this is an SBOM; if so, proceed with restructuring
     if (_.has(data, 'components') && _.has(data, 'vulnerabilities')) {
       for (const vulnerability of data.vulnerabilities as (Record<
         string,
@@ -136,8 +136,7 @@ export class SBOMMapper extends BaseConverter {
   > = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: null //Insert data
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
     statistics: {},
@@ -158,7 +157,6 @@ export class SBOMMapper extends BaseConverter {
         },
         version: {path: 'metadata.component.version'},
         maintainer: {path: 'metadata.component.author'},
-        summary: null, //Insert data
         description: {path: 'metadata.component.description'},
         license: {
           path: 'metadata.component',
@@ -173,12 +171,9 @@ export class SBOMMapper extends BaseConverter {
             return message.slice(0, -2);
           }
         },
-        supports: [], //Insert data
-        attributes: [], //Insert data
-        copyright: null, //Insert data
-        copyright_email: null, //Insert data
-        depends: [], //Insert data
-        groups: [], //Insert data
+        supports: [],
+        attributes: [],
+        groups: [],
         status: 'loaded',
         controls: [
           {
@@ -268,7 +263,11 @@ export class SBOMMapper extends BaseConverter {
               name: 'SBOM',
               components: _.get(data, 'components'),
               dependencies: _.get(data, 'dependencies'),
-              data: _.omit(data, ['components', 'dependencies'])
+              data: _.omit(data, [
+                'components',
+                'vulnerabilities',
+                'dependencies'
+              ])
             }
           ],
           ...(this.withRaw && {raw: data})
