@@ -1,0 +1,7 @@
+{
+    "name": "@mitre/heimdall-lite",
+    "implicitDependencies": ["@mitre/hdf-converters"],
+    "build": {
+        "dependsOn": ["^build"]
+    }
+}
