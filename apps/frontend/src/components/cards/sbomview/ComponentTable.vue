@@ -7,8 +7,7 @@
           ? 'components-table-title'
           : 'pinned-header components-table-title'
       "
-    >
-    </div>
+    />
 
     <!-- Body -->
     <v-row>
@@ -23,17 +22,19 @@
           single-expand
           hide-default-footer
         >
-        <!--The single expand is to hide the tabs syncing together when multiple components are open-->
+          <!--The single expand is to hide the tabs syncing together when multiple components are open-->
           <template #top>
-            <v-card-title class="pb-0">Component View Data
-            <v-spacer />
-          <v-text-field
-            v-model="search"
-            label="Search"
-            class="mx-4"
-          ></v-text-field>
-            <v-autocomplete chips multiple :items="stringFields" v-model="headerColumns"></v-autocomplete>
-<!--             
+            <v-card-title class="pb-0"
+              >Component View Data
+              <v-spacer />
+              <v-text-field v-model="search" label="Search" class="mx-4" />
+              <v-autocomplete
+                v-model="headerColumns"
+                chips
+                multiple
+                :items="stringFields"
+              />
+              <!--             
             <v-menu offset-y offset-overflow :close-on-content-click="false">
               <template #activator=" {on, attrs }">
                 <v-icon v-on.click="on">
@@ -46,106 +47,128 @@
             </v-card-title>
           </template>
 
-<!--           <template #item="item">
+          <!--           <template #item="item">
             <v-data-table-header :item="item"></v-data-table-header>
           </template> -->
 
           <template #expanded-item="{headers, item}">
-          <td class="m-10 p-10" :colspan="headers.length">
-            <v-tabs v-model="tabs">
-              <v-tab>General Properties</v-tab>
-              <v-tab>References</v-tab>
-              <v-tab>Licenses</v-tab>
-              <v-tab>Example</v-tab>
-            </v-tabs>
-            <v-tabs-items v-model="tabs">
-              <!--General Properties Tab-->
-              <v-tab-item>
-                <v-simple-table dense>
-                  <template #default>
-                    <thead>
-                      <tr>
-                        <th>Property</th><th>Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="key in stringFields" :colspan="headers.length">
-                        <td v-if="key in item">{{ key }}</td>
-                        <td v-if="key in item">{{ item[key] }}</td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </v-tab-item>
-
-              <!--References Tab-->
-              <v-tab-item>
-                <v-simple-table dense>
-                  <template #default>
-                    <thead>
-                      <tr>
-                        <th>Property</th><th>Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr v-for="reference in item.externalReferences" :colspan="headers.length">
-                        <td>{{ reference.type }}</td>
-                        <td><a :href="reference.url" target="_blank">{{ reference.url }}</a></td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </v-tab-item>
-
-              <!--Licenses Tab-->
-              <v-tab-item>
-                <span v-for="license in item.licenses">
+            <td class="m-10 p-10" :colspan="headers.length">
+              <v-tabs v-model="tabs">
+                <v-tab>General Properties</v-tab>
+                <v-tab>References</v-tab>
+                <v-tab>Licenses</v-tab>
+                <v-tab>Example</v-tab>
+              </v-tabs>
+              <v-tabs-items v-model="tabs">
+                <!--General Properties Tab-->
+                <v-tab-item>
                   <v-simple-table dense>
                     <template #default>
                       <thead>
                         <tr>
-                          <th>Property</th><th>Value</th>
+                          <th>Property</th>
+                          <th>Value</th>
                         </tr>
                       </thead>
                       <tbody>
-                        <tr v-for="(value, key) in license.license" :colspan="headers.length">
-                          <td v-if="typeof(value) === 'string'">{{ key }}</td>
-                          <td v-if="typeof(value) === 'string'">{{  value }}</td>
+                        <tr
+                          v-for="field in stringFields"
+                          :key="field"
+                          :colspan="headers.length"
+                        >
+                          <td v-if="field in item">{{ field }}</td>
+                          <td v-if="field in item">{{ item[field] }}</td>
                         </tr>
                       </tbody>
                     </template>
-                </v-simple-table>
-                </span>
-              </v-tab-item>
+                  </v-simple-table>
+                </v-tab-item>
 
-              <!-- Example Tab -->
-              <v-tab-item>
-                <v-simple-table dense>
-                  <template #default>
-                    <thead>
-                      <tr>
-                        <th>Property</th><th>Value</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr :colspan="headers.length">
-                        <td>Example</td>
-                        <td>Example</td>
-                      </tr>
-                      <tr :colspan="headers.length">
-                        <td>Example</td>
-                        <td>Example</td>
-                      </tr>
-                      <tr :colspan="headers.length">
-                        <td>Example</td>
-                        <td>Example</td>
-                      </tr>
-                    </tbody>
-                  </template>
-                </v-simple-table>
-              </v-tab-item>
-            </v-tabs-items>
-          </td>
+                <!--References Tab-->
+                <v-tab-item>
+                  <v-simple-table dense>
+                    <template #default>
+                      <thead>
+                        <tr>
+                          <th>Property</th>
+                          <th>Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr
+                          v-for="reference in item.externalReferences"
+                          :key="reference.type"
+                          :colspan="headers.length"
+                        >
+                          <td>{{ reference.type }}</td>
+                          <td>
+                            <a :href="reference.url" target="_blank">{{
+                              reference.url
+                            }}</a>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-tab-item>
+
+                <!--Licenses Tab-->
+                <v-tab-item>
+                  <span v-for="license in item.licenses" :key="license">
+                    <v-simple-table dense>
+                      <template #default>
+                        <thead>
+                          <tr>
+                            <th>Property</th>
+                            <th>Value</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr
+                            v-for="(value, key) in license.license"
+                            :key="key"
+                            :colspan="headers.length"
+                          >
+                            <td v-if="typeof value === 'string'">{{ key }}</td>
+                            <td v-if="typeof value === 'string'">
+                              {{ value }}
+                            </td>
+                          </tr>
+                        </tbody>
+                      </template>
+                    </v-simple-table>
+                  </span>
+                </v-tab-item>
+
+                <!-- Example Tab -->
+                <v-tab-item>
+                  <v-simple-table dense>
+                    <template #default>
+                      <thead>
+                        <tr>
+                          <th>Property</th>
+                          <th>Value</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr :colspan="headers.length">
+                          <td>Example</td>
+                          <td>Example</td>
+                        </tr>
+                        <tr :colspan="headers.length">
+                          <td>Example</td>
+                          <td>Example</td>
+                        </tr>
+                        <tr :colspan="headers.length">
+                          <td>Example</td>
+                          <td>Example</td>
+                        </tr>
+                      </tbody>
+                    </template>
+                  </v-simple-table>
+                </v-tab-item>
+              </v-tabs-items>
+            </td>
           </template>
         </v-data-table>
       </v-col>
@@ -178,13 +201,12 @@ interface Passthrough {
 }
 
 @Component({
-  components: {
-  }
+  components: {}
 })
 export default class ComponentTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
-  
+
   testHeaders = [
     {
       text: 'Component Name',
@@ -216,16 +238,14 @@ export default class ComponentTable extends Vue {
     }
   ];
 
-  headerColumns = ['name', 'group', 'bom-ref', 'type', 'author', 'description']
+  headerColumns = ['name', 'group', 'bom-ref', 'type', 'author', 'description'];
 
   tabs = {
     tab: null,
-    items: [
-      'strings', 'provenance', 'references', 'etc'
-    ]
-  }
+    items: ['strings', 'provenance', 'references', 'etc']
+  };
 
-  search = ''
+  search = '';
 
   stringFields = [
     'type',
@@ -240,12 +260,12 @@ export default class ComponentTable extends Vue {
     'copyright',
     'cpe',
     'purl'
-  ]
+  ];
 
   get headers() {
-    return this.headerColumns.map(v => {
-      return {value: v, text: _.startCase(v)}
-    })
+    return this.headerColumns.map((v) => {
+      return {value: v, text: _.startCase(v)};
+    });
   }
 
   get items(): SBOMComponent[] {
