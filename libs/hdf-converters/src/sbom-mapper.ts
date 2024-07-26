@@ -7,6 +7,12 @@ import {getCCIsForNISTTags} from './utils/global';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
+const IMPACT_MAPPING: Map<string, number> = new Map([
+  ['critical', 1.0],
+  ['high', 0.7],
+  ['medium', 0.5],
+  ['low', 0.3]
+]);
 
 function formatCWETags(input: number[], addPrefix = true): string[] {
   const stringifiedCWE: string[] = [];
@@ -24,6 +30,21 @@ function getNISTTags(input: number[]): string[] {
   );
 }
 
+// A single SBOM vulnerability can contain multiple severity reports
+// Need to average any existing severities and then pass to `impact`
+function aggregateImpact(ratings: Record<string, unknown>[]) {
+  let impact = 0;
+  for (const rating of ratings) {
+    const severity = IMPACT_MAPPING.get(
+      (rating as {severity: string}).severity.toLowerCase()
+    );
+    if (severity) {
+      impact += severity;
+    }
+  }
+  return Math.ceil((impact / ratings.length) * 100) / 100;
+}
+
 export class SBOMResults {
   data: Record<string, unknown>;
   withRaw: boolean;
@@ -37,18 +58,21 @@ export class SBOMResults {
 
   // Flatten any arbitrarily nested components list
   flattenComponents(data: Record<string, unknown>) {
-    // Look through every component at the top level of the list
-    for (const component of data.components as Record<string, unknown>[]) {
-      // Identify if subcomponents exist
-      if (_.has(component, 'components')) {
-        // If so, pull out the subcomponents and push them to end of top level component list for further flattening
-        for (const subcomponent of component.components as Record<
-          string,
-          unknown
-        >[]) {
-          (data.components as Record<string, unknown>[]).push(subcomponent);
+    // Ensure that a components structure is available
+    if (_.has(data, 'components')) {
+      // Look through every component at the top level of the list
+      for (const component of data.components as Record<string, unknown>[]) {
+        // Identify if subcomponents exist
+        if (_.has(component, 'components')) {
+          // If so, pull out the subcomponents and push them to end of top level component list for further flattening
+          for (const subcomponent of component.components as Record<
+            string,
+            unknown
+          >[]) {
+            (data.components as Record<string, unknown>[]).push(subcomponent);
+          }
+          delete component.components;
         }
-        delete component.components;
       }
     }
   }
@@ -74,8 +98,8 @@ export class SBOMResults {
   }
   */
   generateIntermediary(data: Record<string, unknown>) {
-    // Find if vulnerabilities structure exists, else skip vulnerability restructuring
-    if (_.has(data, 'vulnerabilities')) {
+    // Determine if this is an SBOM; if so, proceed with restructuring
+    if (_.has(data, 'components') && _.has(data, 'vulnerabilities')) {
       for (const vulnerability of data.vulnerabilities as (Record<
         string,
         unknown
@@ -112,8 +136,7 @@ export class SBOMMapper extends BaseConverter {
   > = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: null //Insert data
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
     statistics: {},
@@ -134,7 +157,6 @@ export class SBOMMapper extends BaseConverter {
         },
         version: {path: 'metadata.component.version'},
         maintainer: {path: 'metadata.component.author'},
-        summary: null, //Insert data
         description: {path: 'metadata.component.description'},
         license: {
           path: 'metadata.component',
@@ -149,12 +171,9 @@ export class SBOMMapper extends BaseConverter {
             return message.slice(0, -2);
           }
         },
-        supports: [], //Insert data
-        attributes: [], //Insert data
-        copyright: null, //Insert data
-        copyright_email: null, //Insert data
-        depends: [], //Insert data
-        groups: [], //Insert data
+        supports: [],
+        attributes: [],
+        groups: [],
         status: 'loaded',
         controls: [
           {
@@ -181,16 +200,27 @@ export class SBOMMapper extends BaseConverter {
                 data: {path: 'updated'},
                 label: 'Date updated'
               }
-            ], //Insert data
-            refs: [], //Insert data
-            source_location: {}, //Insert data
+            ],
+            refs: [
+              {
+                path: 'source',
+                transformer: (data: Record<string, unknown>) => {
+                  return {ref: [data]};
+                }
+              }
+            ],
+            source_location: {},
             title: {path: 'bom-ref'},
             id: {path: 'id'},
             desc: {path: 'description'},
-            impact: 0.5, //Insert data
+            impact: {path: 'ratings', transformer: aggregateImpact},
             code: {
               transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(vulnerability, null, 2);
+                return JSON.stringify(
+                  _.omit(vulnerability, 'affectedComponents'),
+                  null,
+                  2
+                );
               }
             },
             results: [
@@ -206,7 +236,15 @@ export class SBOMMapper extends BaseConverter {
                 },
                 message: {
                   transformer: (input: Record<string, unknown>): string => {
-                    return `Component Summary\nType: ${input.type}\nName: ${input.name}\nGroup: ${input.group}\nVersion: ${input.version}\nBOM-ref: ${input['bom-ref']}\nAuthor: ${input.author}\nDescription: ${input.description}\nPURL: ${input.purl}`;
+                    let msg = 'Component Summary';
+                    for (const item in input) {
+                      if (input[item] instanceof Array) {
+                        msg += `\n- ${item}: ${JSON.stringify(input[item], null, 2).replace(/\"/g, '')}`;
+                      } else {
+                        msg += `\n- ${item}: ${input[item]}`;
+                      }
+                    }
+                    return msg;
                   }
                 },
                 start_time: ''
@@ -225,7 +263,11 @@ export class SBOMMapper extends BaseConverter {
               name: 'SBOM',
               components: _.get(data, 'components'),
               dependencies: _.get(data, 'dependencies'),
-              data: _.omit(data, ['components', 'dependencies'])
+              data: _.omit(data, [
+                'components',
+                'vulnerabilities',
+                'dependencies'
+              ])
             }
           ],
           ...(this.withRaw && {raw: data})
