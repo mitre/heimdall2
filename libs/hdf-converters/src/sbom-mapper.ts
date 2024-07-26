@@ -54,6 +54,8 @@ export class SBOMResults {
     // In-place manipulations on ingested SBOM data
     this.flattenComponents(this.data);
     this.generateIntermediary(this.data);
+    // Back up operations in case we ingest VEX data instead
+    this.formatVEX(this.data);
   }
 
   // Flatten any arbitrarily nested components list
@@ -98,7 +100,7 @@ export class SBOMResults {
   }
   */
   generateIntermediary(data: Record<string, unknown>) {
-    // Determine if this is an SBOM; if so, proceed with restructuring
+    // Determine if this is an SBOM and has a vulnerabilities structure; if so, proceed with restructuring
     if (_.has(data, 'components') && _.has(data, 'vulnerabilities')) {
       for (const vulnerability of data.vulnerabilities as (Record<
         string,
@@ -118,6 +120,26 @@ export class SBOMResults {
           // Add that affected components list to the corresponding vulnerability object
           vulnerability.affectedComponents = components;
         }
+      }
+    }
+  }
+
+  // VEX by default has no component info, resulting in profile errors when parsing the vulnerabilities for OHDF
+  // Fix that by adding a temporary result that refers the vulnerability back to its associated BOM
+  formatVEX(data: Record<string, unknown>) {
+    // Filter for VEX files only
+    if (_.has(data, 'vulnerabilities') && !_.has(data, 'components')) {
+      for (const vulnerability of data.vulnerabilities as (Record<
+        string,
+        unknown
+      > & {affects: Record<string, unknown>[]})[]) {
+        const components = [];
+        for (const id of vulnerability.affects) {
+          // Build a dummy component for each bom-ref identified as being affected by the vulnerability
+          components.push({'bom-ref': `${id.ref}`, name: `${id.ref}`});
+        }
+        // Add that affected components list to the corresponding vulnerability object
+        vulnerability.affectedComponents = components;
       }
     }
   }
