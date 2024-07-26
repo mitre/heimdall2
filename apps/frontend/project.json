@@ -21,7 +21,8 @@
             "options": {
                 "cwd": "apps/frontend",
                 "command": "jest"
-            }
+            },
+            "dependsOn": ["^build"]
         }
     }
 }

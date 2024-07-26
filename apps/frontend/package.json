@@ -75,7 +75,6 @@
     "highlight.js": "^11.0.0",
     "html-loader": "^5.0.0",
     "inspecjs": "^2.10.8",
-    "jest-transform-stub": "^2.0.0",
     "lodash": "4.17.21",
     "lru-cache": "^10.1.0",
     "luxon": "^3.0.1",
