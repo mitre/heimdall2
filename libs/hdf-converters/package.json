@@ -22,7 +22,7 @@
     "build:win32": "xcopy data lib",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": "jest",
+    "test": "nx run test",
     "csv2json": "tsx data/converters/csv2json.ts",
     "xml2json": "tsx data/converters/xml2json.ts"
   },

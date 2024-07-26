@@ -13,6 +13,7 @@
     "src/server.js"
   ],
   "scripts": {
+    "build": "nx run build",
     "lint": "vue-cli-service lint",
     "lint:ci": "vue-cli-service lint --no-fix  --maxWarnings 0",
     "make:component": "vue-cli-service make:component",
