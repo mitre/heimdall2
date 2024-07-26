@@ -11,7 +11,6 @@
       "title": "trufflehog - docker",
       "supports": [],
       "attributes": [],
-      "depends": [],
       "groups": [],
       "status": "loaded",
       "controls": [
@@ -326,7 +325,7 @@
           ]
         }
       ],
-      "sha256": "181ccf4bf6af9e36d00417e2ae366e9d36754825d9be9b859fde5e6518ff0c30"
+      "sha256": "1e281b72288db49f4b6ac8ae55205d75dc4165f9a5dfa5d0e67b69196c4f7c44"
     }
   ],
   "passthrough": {}

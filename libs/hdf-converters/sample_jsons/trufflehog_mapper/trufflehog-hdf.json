@@ -11,7 +11,6 @@
       "title": "trufflehog - git",
       "supports": [],
       "attributes": [],
-      "depends": [],
       "groups": [],
       "status": "loaded",
       "controls": [
@@ -74,7 +73,7 @@
           ]
         }
       ],
-      "sha256": "cd4f10038245ec4469868f1e1288491a4fa5b76a546d64a8f9adcca7dff3352f"
+      "sha256": "d21cf384a20ae4c72fd2699fb9965215c38dc130f8dfdf74a10870f39ac012e4"
     }
   ],
   "passthrough": {}
