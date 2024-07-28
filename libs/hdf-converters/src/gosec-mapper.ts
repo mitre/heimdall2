@@ -38,18 +38,18 @@ function formatSkipMessage(input: Record<string, unknown>): string {
   if (`${suppressions}` === 'null') {
     return 'N/A';
   }
-  // If test is skipped
-  let skipMessage = '';
-  if (Array.isArray(suppressions)) {
-    suppressions.map((suppression) => {
-      // If a justification is given, report; otherwise, report that none is given
-      skipMessage = skipMessage.concat(
-        `${suppression.justification ? suppression.justification : 'No reason provided'} (${suppression.kind}) `
-      );
-    });
-  }
 
-  return skipMessage.trim();
+  // If test is skipped and there are no justifications, report that none are given
+  if (!Array.isArray(suppressions)) {
+    return '';
+  }
+  // otherwise, supply the justifications
+  return suppressions
+    .map(
+      (suppression) =>
+        `${suppression.justification ? suppression.justification : 'No reason provided'} (${suppression.kind})`
+    )
+    .join(' ');
 }
 
 // Report gosec rule violation and violation location
