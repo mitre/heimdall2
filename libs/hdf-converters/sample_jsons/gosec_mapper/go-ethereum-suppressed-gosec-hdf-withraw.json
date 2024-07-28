@@ -34,35 +34,30 @@
           "results": [
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G404 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\difflayer.go\nLine: 91\nColumn: 30",
               "message": "MEDIUM confidence of rule violation at:\n90: \tfor bloomAccountHasherOffset == bloomDestructHasherOffset {\n91: \t\tbloomAccountHasherOffset = rand.Intn(25)\n92: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G404 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\difflayer.go\nLine: 85\nColumn: 29",
               "message": "MEDIUM confidence of rule violation at:\n84: \tbloomAccountHasherOffset = rand.Intn(25)\n85: \tbloomStorageHasherOffset = rand.Intn(25)\n86: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G404 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\difflayer.go\nLine: 84\nColumn: 29",
               "message": "MEDIUM confidence of rule violation at:\n83: \tbloomDestructHasherOffset = rand.Intn(25)\n84: \tbloomAccountHasherOffset = rand.Intn(25)\n85: \tbloomStorageHasherOffset = rand.Intn(25)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G404 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\difflayer.go\nLine: 83\nColumn: 30",
               "message": "MEDIUM confidence of rule violation at:\n82: \t// Init the bloom offsets in the range [0:24] (requires 8 bytes)\n83: \tbloomDestructHasherOffset = rand.Intn(25)\n84: \tbloomAccountHasherOffset = rand.Intn(25)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G404 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\forkchoice.go\nLine: 67\nColumn: 13",
               "message": "MEDIUM confidence of rule violation at:\n66: \t\tchain:    chainReader,\n67: \t\trand:     mrand.New(mrand.NewSource(seed.Int64())),\n68: \t\tpreserve: preserve,\n",
               "start_time": ""
@@ -88,42 +83,36 @@
           "results": [
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\pruner\\bloom.go\nLine: 86\nColumn: 12",
               "message": "HIGH confidence of rule violation at:\n85: \t// Ensure the file is synced to disk\n86: \tf, err := os.OpenFile(tempname, os.O_RDWR, 0666)\n87: \tif err != nil {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 102\nColumn: 9",
               "message": "HIGH confidence of rule violation at:\n101: func openFreezerFileTruncated(filename string) (*os.File, error) {\n102: \treturn os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644) // #nosec G302\n103: }\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 97\nColumn: 9",
               "message": "HIGH confidence of rule violation at:\n96: func openFreezerFileForReadOnly(filename string) (*os.File, error) {\n97: \treturn os.OpenFile(filename, os.O_RDONLY, 0644) // #nosec G302\n98: }\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 84\nColumn: 15",
               "message": "HIGH confidence of rule violation at:\n83: \t// on different OS's\n84: \tfile, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE, 0644)\n85: \tif err != nil {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 53\nColumn: 14",
               "message": "HIGH confidence of rule violation at:\n52: \t// Open the source file\n53: \tsrc, err := os.Open(srcPath)\n54: \tif err != nil {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G304 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_resettable.go\nLine: 221\nColumn: 14",
               "message": "HIGH confidence of rule violation at:\n220: \t}\n221: \tdir, err := os.Open(parent)\n222: \tif err != nil {\n",
               "start_time": ""
@@ -171,14 +160,14 @@
             },
             {
               "status": "skipped",
-              "skip_message": "No reason provided (inSource) Globally suppressed. (external)",
+              "skip_message": "No justification provided (inSource)\nGlobally suppressed. (external)",
               "code_desc": "Rule G302 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 102\nColumn: 9",
               "message": "HIGH confidence of rule violation at:\n101: func openFreezerFileTruncated(filename string) (*os.File, error) {\n102: \treturn os.OpenFile(filename, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0644) // #nosec G302\n103: }\n",
               "start_time": ""
             },
             {
               "status": "skipped",
-              "skip_message": "No reason provided (inSource) Globally suppressed. (external)",
+              "skip_message": "No justification provided (inSource)\nGlobally suppressed. (external)",
               "code_desc": "Rule G302 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 97\nColumn: 9",
               "message": "HIGH confidence of rule violation at:\n96: func openFreezerFileForReadOnly(filename string) (*os.File, error) {\n97: \treturn os.OpenFile(filename, os.O_RDONLY, 0644) // #nosec G302\n98: }\n",
               "start_time": ""
@@ -212,14 +201,12 @@
           "results": [
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G301 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 133\nColumn: 12",
               "message": "HIGH confidence of rule violation at:\n132: \t// Ensure the containing directory exists and open the indexEntry file\n133: \tif err := os.MkdirAll(path, 0755); err != nil {\n134: \t\treturn nil, err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G301 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer.go\nLine: 99\nColumn: 12",
               "message": "HIGH confidence of rule violation at:\n98: \tflockFile := filepath.Join(datadir, \"FLOCK\")\n99: \tif err := os.MkdirAll(filepath.Dir(flockFile), 0755); err != nil {\n100: \t\treturn nil, err\n",
               "start_time": ""
@@ -246,1057 +233,909 @@
           "results": [
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\vm\\instructions.go\nLine: 243\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n242: \tinterpreter.hasher.Write(data)\n243: \tinterpreter.hasher.Read(interpreter.hasherBuf[:])\n244: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\vm\\instructions.go\nLine: 242\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n241: \t}\n242: \tinterpreter.hasher.Write(data)\n243: \tinterpreter.hasher.Read(interpreter.hasherBuf[:])\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\vm\\contracts.go\nLine: 943\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n942: \tr := new(bls12381.G2Affine)\n943: \tr.MultiExp(points, scalars, ecc.MultiExpConfig{})\n944: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\vm\\contracts.go\nLine: 808\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n807: \tr := new(bls12381.G1Affine)\n808: \tr.MultiExp(points, scalars, ecc.MultiExpConfig{})\n809: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\withdrawal.go\nLine: 55\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n54: func (s Withdrawals) EncodeIndex(i int, w *bytes.Buffer) {\n55: \trlp.Encode(w, s[i])\n56: }\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\transaction.go\nLine: 555\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n554: \t} else {\n555: \t\ttx.encodeTyped(w)\n556: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\transaction.go\nLine: 553\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n552: \tif tx.Type() == LegacyTxType {\n553: \t\trlp.Encode(w, tx.inner)\n554: \t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\transaction.go\nLine: 508\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n507: \tc := writeCounter(0)\n508: \trlp.Encode(&c, &tx.inner)\n509: \tsize := uint64(c)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\receipt.go\nLine: 316\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n315: \tcase AccessListTxType, DynamicFeeTxType, BlobTxType:\n316: \t\trlp.Encode(w, data)\n317: \tdefault:\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\receipt.go\nLine: 310\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n309: \tif r.Type == LegacyTxType {\n310: \t\trlp.Encode(w, data)\n311: \t\treturn\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\hashing.go\nLine: 131\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n130: \t\tvalue := encodeForDerive(list, i, valueBuf)\n131: \t\thasher.Update(indexBuf, value)\n132: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\hashing.go\nLine: 126\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n125: \t\tvalue := encodeForDerive(list, 0, valueBuf)\n126: \t\thasher.Update(indexBuf, value)\n127: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\hashing.go\nLine: 121\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n120: \t\tvalue := encodeForDerive(list, i, valueBuf)\n121: \t\thasher.Update(indexBuf, value)\n122: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\hashing.go\nLine: 75\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n74: \trlp.Encode(sha, x)\n75: \tsha.Read(h[:])\n76: \treturn h\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\hashing.go\nLine: 74\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n73: \tsha.Write([]byte{prefix})\n74: \trlp.Encode(sha, x)\n75: \tsha.Read(h[:])\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\hashing.go\nLine: 73\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n72: \tsha.Reset()\n73: \tsha.Write([]byte{prefix})\n74: \trlp.Encode(sha, x)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\hashing.go\nLine: 63\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n62: \trlp.Encode(sha, x)\n63: \tsha.Read(h[:])\n64: \treturn h\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\hashing.go\nLine: 62\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n61: \tsha.Reset()\n62: \trlp.Encode(sha, x)\n63: \tsha.Read(h[:])\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\gen_header_rlp.go\nLine: 78\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n77: \t\tif obj.ParentBeaconRoot == nil {\n78: \t\t\tw.Write([]byte{0x80})\n79: \t\t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\gen_header_rlp.go\nLine: 71\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n70: \t\tif obj.ExcessBlobGas == nil {\n71: \t\t\tw.Write([]byte{0x80})\n72: \t\t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\gen_header_rlp.go\nLine: 64\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n63: \t\tif obj.BlobGasUsed == nil {\n64: \t\t\tw.Write([]byte{0x80})\n65: \t\t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\gen_header_rlp.go\nLine: 57\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n56: \t\tif obj.WithdrawalsHash == nil {\n57: \t\t\tw.Write([]byte{0x80})\n58: \t\t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\gen_header_rlp.go\nLine: 47\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n46: \t\tif obj.BaseFee == nil {\n47: \t\t\tw.Write(rlp.EmptyString)\n48: \t\t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\gen_header_rlp.go\nLine: 27\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n26: \tif obj.Number == nil {\n27: \t\tw.Write(rlp.EmptyString)\n28: \t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\gen_header_rlp.go\nLine: 19\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n18: \tif obj.Difficulty == nil {\n19: \t\tw.Write(rlp.EmptyString)\n20: \t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\gen_account_rlp.go\nLine: 13\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n12: \tif obj.Balance == nil {\n13: \t\tw.Write(rlp.EmptyString)\n14: \t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\bloom9.go\nLine: 143\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n142: \tsha.Write(data)\n143: \tsha.Read(hashbuf)\n144: \thasherPool.Put(sha)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\bloom9.go\nLine: 142\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n141: \tsha.Reset()\n142: \tsha.Write(data)\n143: \tsha.Read(hashbuf)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\types\\block.go\nLine: 411\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n410: \tc := writeCounter(0)\n411: \trlp.Encode(&c, b)\n412: \tb.size.Store(uint64(c))\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\txpool.go\nLine: 98\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n97: \t\t\tfor j := i - 1; j >= 0; j-- {\n98: \t\t\t\tsubpools[j].Close()\n99: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\legacypool\\legacypool.go\nLine: 1697\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n1696: \t\t\tif _, ok := pool.queue[addr]; !ok {\n1697: \t\t\t\tpool.reserve(addr, false)\n1698: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\legacypool\\legacypool.go\nLine: 1689\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n1688: \t\t\t\t// Internal shuffle shouldn't touch the lookup set.\n1689: \t\t\t\tpool.enqueueTx(hash, tx, false, false)\n1690: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\legacypool\\legacypool.go\nLine: 1675\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n1674: \t\t\t// Internal shuffle shouldn't touch the lookup set.\n1675: \t\t\tpool.enqueueTx(hash, tx, false, false)\n1676: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\legacypool\\legacypool.go\nLine: 1502\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n1501: \t\t\tif _, ok := pool.pending[addr]; !ok {\n1502: \t\t\t\tpool.reserve(addr, false)\n1503: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\legacypool\\legacypool.go\nLine: 1134\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n1133: \t\t\t\t// Internal shuffle shouldn't touch the lookup set.\n1134: \t\t\t\tpool.enqueueTx(tx.Hash(), tx, false, false)\n1135: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\legacypool\\legacypool.go\nLine: 1112\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n1111: \t\t\tif !hasPending && !hasQueued {\n1112: \t\t\t\tpool.reserve(addr, false)\n1113: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\legacypool\\legacypool.go\nLine: 709\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n708: \t\t\tif err != nil {\n709: \t\t\t\tpool.reserve(from, false)\n710: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\legacypool\\legacypool.go\nLine: 408\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n407: \tif pool.journal != nil {\n408: \t\tpool.journal.close()\n409: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\legacypool\\journal.go\nLine: 156\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n155: \t}\n156: \treplacement.Close()\n157: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\legacypool\\journal.go\nLine: 150\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n149: \t\t\tif err = rlp.Encode(replacement, tx); err != nil {\n150: \t\t\t\treplacement.Close()\n151: \t\t\t\treturn err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\blobpool\\limbo.go\nLine: 73\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n72: \t\t\tif err := l.store.Delete(id); err != nil {\n73: \t\t\t\tl.Close()\n74: \t\t\t\treturn nil, err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\blobpool\\blobpool.go\nLine: 1413\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n1412: \t\tdelete(p.spent, from)\n1413: \t\tp.reserve(from, false)\n1414: \t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\blobpool\\blobpool.go\nLine: 1281\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n1280: \t\t\tif err != nil {\n1281: \t\t\t\tp.reserve(from, false)\n1282: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\blobpool\\blobpool.go\nLine: 1058\nColumn: 7",
               "message": "HIGH confidence of rule violation at:\n1057: \t\t\t\t\t\theap.Remove(p.evict, p.evict.index[addr])\n1058: \t\t\t\t\t\tp.reserve(addr, false)\n1059: \t\t\t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\blobpool\\blobpool.go\nLine: 699\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n698: \t\t\t}\n699: \t\t\tp.reserve(addr, false)\n700: \t\t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\blobpool\\blobpool.go\nLine: 546\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n545: \t\t}\n546: \t\tp.reserve(addr, false)\n547: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\blobpool\\blobpool.go\nLine: 416\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n415: \tif err != nil {\n416: \t\tp.Close()\n417: \t\treturn err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\txpool\\blobpool\\blobpool.go\nLine: 393\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n392: \t\t\tif err := p.store.Delete(id); err != nil {\n393: \t\t\t\tp.Close()\n394: \t\t\t\treturn err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\stateless\\database.go\nLine: 55\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n54: \t\thasher.Write(blob)\n55: \t\thasher.Read(hash)\n56: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\stateless\\database.go\nLine: 54\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n53: \t\thasher.Reset()\n54: \t\thasher.Write(blob)\n55: \t\thasher.Read(hash)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\stateless\\database.go\nLine: 45\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n44: \t\thasher.Write(blob)\n45: \t\thasher.Read(hash)\n46: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\stateless\\database.go\nLine: 44\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n43: \t\thasher.Reset()\n44: \t\thasher.Write(blob)\n45: \t\thasher.Read(hash)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\trie_prefetcher.go\nLine: 379\nColumn: 6",
               "message": "HIGH confidence of rule violation at:\n378: \t\t\t\t} else {\n379: \t\t\t\t\tsf.trie.GetStorage(sf.addr, task.key)\n380: \t\t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\trie_prefetcher.go\nLine: 377\nColumn: 6",
               "message": "HIGH confidence of rule violation at:\n376: \t\t\t\tif len(task.key) == common.AddressLength {\n377: \t\t\t\t\tsf.trie.GetAccount(common.BytesToAddress(task.key))\n378: \t\t\t\t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\statedb.go\nLine: 904\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n903: \t}\n904: \tworkers.Wait()\n905: \ts.StorageUpdates += time.Since(start)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\statedb.go\nLine: 566\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n565: \tif obj.dirtyCode {\n566: \t\ts.trie.UpdateContractCode(obj.Address(), common.BytesToHash(obj.CodeHash()), obj.code)\n567: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\snapshot.go\nLine: 673\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n672: \tif dl := t.disklayer(); dl != nil {\n673: \t\tdl.Release()\n674: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\snapshot.go\nLine: 568\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n567: \t\t\tkey := it.Key()\n568: \t\t\tbatch.Delete(key)\n569: \t\t\tbase.cache.Del(key[1:])\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\generate.go\nLine: 620\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n619: \t\tif acc.Root == types.EmptyRootHash {\n620: \t\t\tctx.removeStorageAt(account)\n621: \t\t} else {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\generate.go\nLine: 577\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n576: \n577: \t\t\tctx.removeStorageAt(account)\n578: \t\t\treturn nil\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\generate.go\nLine: 366\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n365: \t\t\ttdb.Update(root, types.EmptyRootHash, 0, trienode.NewWithNodeSet(nodes), nil)\n366: \t\t\ttdb.Commit(root, false)\n367: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\generate.go\nLine: 365\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n364: \t\tif nodes != nil {\n365: \t\t\ttdb.Update(root, types.EmptyRootHash, 0, trienode.NewWithNodeSet(nodes), nil)\n366: \t\t\ttdb.Commit(root, false)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\generate.go\nLine: 361\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n360: \t\tfor i, key := range result.keys {\n361: \t\t\tsnapTrie.Update(key, result.vals[i])\n362: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\conversion.go\nLine: 373\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n372: \tfor leaf := range in {\n373: \t\tt.Update(leaf.key[:], leaf.value)\n374: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\context.go\nLine: 234\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n233: \t\tif ctx.batch.ValueSize() > ethdb.IdealBatchSize {\n234: \t\t\tctx.batch.Write()\n235: \t\t\tctx.batch.Reset()\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\context.go\nLine: 232\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n231: \t\tcount++\n232: \t\tctx.batch.Delete(iter.Key())\n233: \t\tif ctx.batch.ValueSize() > ethdb.IdealBatchSize {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\context.go\nLine: 213\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n212: \t\tif ctx.batch.ValueSize() > ethdb.IdealBatchSize {\n213: \t\t\tctx.batch.Write()\n214: \t\t\tctx.batch.Reset()\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\context.go\nLine: 211\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n210: \t\tcount++\n211: \t\tctx.batch.Delete(key)\n212: \t\tif ctx.batch.ValueSize() > ethdb.IdealBatchSize {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\context.go\nLine: 182\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n181: \t\tif ctx.batch.ValueSize() > ethdb.IdealBatchSize {\n182: \t\t\tctx.batch.Write()\n183: \t\t\tctx.batch.Reset()\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\snapshot\\context.go\nLine: 180\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n179: \t\tcount++\n180: \t\tctx.batch.Delete(key)\n181: \t\tif ctx.batch.ValueSize() > ethdb.IdealBatchSize {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\pruner\\pruner.go\nLine: 456\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n455: \t\t\tif !bytes.Equal(acc.CodeHash, types.EmptyCodeHash.Bytes()) {\n456: \t\t\t\tstateBloom.Put(acc.CodeHash, nil)\n457: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\pruner\\pruner.go\nLine: 448\nColumn: 7",
               "message": "HIGH confidence of rule violation at:\n447: \t\t\t\t\tif hash != (common.Hash{}) {\n448: \t\t\t\t\t\tstateBloom.Put(hash.Bytes(), nil)\n449: \t\t\t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\pruner\\pruner.go\nLine: 426\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n425: \t\tif hash != (common.Hash{}) {\n426: \t\t\tstateBloom.Put(hash.Bytes(), nil)\n427: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\pruner\\pruner.go\nLine: 209\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n208: \t// the things.\n209: \tos.RemoveAll(bloomPath)\n210: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\pruner\\pruner.go\nLine: 186\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n185: \tif batch.ValueSize() > 0 {\n186: \t\tbatch.Write()\n187: \t\tbatch.Reset()\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\pruner\\pruner.go\nLine: 177\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n176: \t\t\tif batch.ValueSize() >= ethdb.IdealBatchSize {\n177: \t\t\t\tbatch.Write()\n178: \t\t\t\tbatch.Reset()\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\pruner\\pruner.go\nLine: 159\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n158: \t\t\tsize += common.StorageSize(len(key) + len(iter.Value()))\n159: \t\t\tbatch.Delete(key)\n160: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\pruner\\bloom.go\nLine: 94\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n93: \t}\n94: \tf.Close()\n95: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\pruner\\bloom.go\nLine: 91\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n90: \tif err := f.Sync(); err != nil {\n91: \t\tf.Close()\n92: \t\treturn err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\dump.go\nLine: 108-110\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n107: func (d iterativeDump) OnRoot(root common.Hash) {\n108: \td.Encode(struct {\n109: \t\tRoot common.Hash `json:\"root\"`\n110: \t}{root})\n111: }\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\state\\dump.go\nLine: 103\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n102: \t}\n103: \td.Encode(dumpAccount)\n104: }\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\sender_cacher.go\nLine: 65\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n64: \t\tfor i := 0; i < len(task.txs); i += task.inc {\n65: \t\t\ttypes.Sender(task.signer, task.txs[i])\n66: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 70\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n69: \t// we do the final move.\n70: \tsrc.Close()\n71: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 64\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n63: \tif err != nil {\n64: \t\tsrc.Close()\n65: \t\treturn err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 58\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n57: \tif _, err = src.Seek(int64(offset), 0); err != nil {\n58: \t\tsrc.Close()\n59: \t\treturn err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 43\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n42: \t\t}\n43: \t\tos.Remove(fname)\n44: \t}()\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_utils.go\nLine: 41\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n40: \t\tif f != nil {\n41: \t\t\tf.Close()\n42: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 923\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n922: \tt.releaseFile(t.headId)\n923: \tt.openFile(t.headId, openFreezerFileForReadOnly)\n924: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 682\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n681: \t\t\tif remove {\n682: \t\t\t\tos.Remove(f.Name())\n683: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 680\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n679: \t\t\tdelete(t.files, fnum)\n680: \t\t\tf.Close()\n681: \t\t\tif remove {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 669\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n668: \t\t\tif remove {\n669: \t\t\t\tos.Remove(f.Name())\n670: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 667\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n666: \t\t\tdelete(t.files, fnum)\n667: \t\t\tf.Close()\n668: \t\t\tif remove {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 658\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n657: \t\tdelete(t.files, num)\n658: \t\tf.Close()\n659: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 310\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n309: \t\t\t} else {\n310: \t\t\t\tt.index.ReadAt(buffer, offsetsSize-indexEntrySize)\n311: \t\t\t\tnewLastIndex.unmarshalBinary(buffer)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 259\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n258: \t} else {\n259: \t\tt.index.ReadAt(buffer, offsetsSize-indexEntrySize)\n260: \t\tlastIndex.unmarshalBinary(buffer)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 238\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n237: \t// and what item offset to use\n238: \tt.index.ReadAt(buffer, 0)\n239: \tfirstIndex.unmarshalBinary(buffer)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 189\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n188: \tif err != nil {\n189: \t\ttab.Close()\n190: \t\treturn nil, err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer_table.go\nLine: 183\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n182: \tif err := tab.repair(); err != nil {\n183: \t\ttab.Close()\n184: \t\treturn nil, err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer.go\nLine: 146\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n145: \t\t}\n146: \t\tlock.Unlock()\n147: \t\treturn nil, err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer.go\nLine: 144\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n143: \t\tfor _, table := range freezer.tables {\n144: \t\t\ttable.Close()\n145: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer.go\nLine: 128\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n127: \t\t\t}\n128: \t\t\tlock.Unlock()\n129: \t\t\treturn nil, err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\freezer.go\nLine: 126\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n125: \t\t\tfor _, table := range freezer.tables {\n126: \t\t\t\ttable.Close()\n127: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\database.go\nLine: 417\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n416: \tif err != nil {\n417: \t\tkvdb.Close()\n418: \t\treturn nil, err\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 312\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n311: \t\t\tfor i := 0; i < 100; i++ {\n312: \t\t\t\top.AppendRaw(\"a\", uint64(i), data[i])\n313: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 310-315\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n309: \t\tdb.Reset()\n310: \t\tdb.ModifyAncients(func(op ethdb.AncientWriteOp) error {\n311: \t\t\tfor i := 0; i < 100; i++ {\n312: \t\t\t\top.AppendRaw(\"a\", uint64(i), data[i])\n313: \t\t\t}\n314: \t\t\treturn nil\n315: \t\t})\n316: \t})\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 309\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n308: \t\t// Ancient write should work after resetting\n309: \t\tdb.Reset()\n310: \t\tdb.ModifyAncients(func(op ethdb.AncientWriteOp) error {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 306\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n305: \t\tdb.TruncateTail(10)\n306: \t\tdb.TruncateHead(90)\n307: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 305\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n304: \t\t})\n305: \t\tdb.TruncateTail(10)\n306: \t\tdb.TruncateHead(90)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 301\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n300: \t\t\tfor i := 0; i < 100; i++ {\n301: \t\t\t\top.AppendRaw(\"a\", uint64(i), data[i])\n302: \t\t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 299-304\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n298: \n299: \t\tdb.ModifyAncients(func(op ethdb.AncientWriteOp) error {\n300: \t\t\tfor i := 0; i < 100; i++ {\n301: \t\t\t\top.AppendRaw(\"a\", uint64(i), data[i])\n302: \t\t\t}\n303: \t\t\treturn nil\n304: \t\t})\n305: \t\tdb.TruncateTail(10)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 271\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n270: \t\tdata := make([]byte, 100)\n271: \t\top.AppendRaw(\"a\", uint64(0), data)\n272: \t\tfor i := range data {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 269-276\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n268: \t// We write 100 zero-bytes to the freezer and immediately mutate the slice\n269: \tdb.ModifyAncients(func(op ethdb.AncientWriteOp) error {\n270: \t\tdata := make([]byte, 100)\n271: \t\top.AppendRaw(\"a\", uint64(0), data)\n272: \t\tfor i := range data {\n273: \t\t\tdata[i] = 0xff\n274: \t\t}\n275: \t\treturn nil\n276: \t})\n277: \t// Now read it.\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 255\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n254: \t\t\top.AppendRaw(\"a\", uint64(i), dataA[i])\n255: \t\t\top.AppendRaw(\"b\", uint64(i), dataB[i])\n256: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 254\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n253: \t\tfor i := 0; i < 100; i++ {\n254: \t\t\top.AppendRaw(\"a\", uint64(i), dataA[i])\n255: \t\t\top.AppendRaw(\"b\", uint64(i), dataB[i])\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 251\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n250: \t// Write should work after truncating everything\n251: \tdb.TruncateTail(0)\n252: \t_, err = db.ModifyAncients(func(op ethdb.AncientWriteOp) error {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 242\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n241: \t\t\top.AppendRaw(\"a\", uint64(i), dataA[i])\n242: \t\t\top.AppendRaw(\"b\", uint64(i), dataB[i])\n243: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 241\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n240: \t\tfor i := 90; i < 100; i++ {\n241: \t\t\top.AppendRaw(\"a\", uint64(i), dataA[i])\n242: \t\t\top.AppendRaw(\"b\", uint64(i), dataB[i])\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 238\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n237: \t// Write should work after head truncating\n238: \tdb.TruncateHead(90)\n239: \t_, err = db.ModifyAncients(func(op ethdb.AncientWriteOp) error {\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 225\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n224: \t\t\top.AppendRaw(\"a\", uint64(i), dataA[i])\n225: \t\t\top.AppendRaw(\"b\", uint64(i), dataB[i])\n226: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 224\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n223: \t\tfor i := 0; i < 100; i++ {\n224: \t\t\top.AppendRaw(\"a\", uint64(i), dataA[i])\n225: \t\t\top.AppendRaw(\"b\", uint64(i), dataB[i])\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 213\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n212: \t\tfor i := 0; i < 100; i++ {\n213: \t\t\top.AppendRaw(\"a\", uint64(i), dataA[i])\n214: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 140\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n139: \tdb.TruncateTail(10)\n140: \tdb.TruncateHead(90)\n141: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 139\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n138: \t})\n139: \tdb.TruncateTail(10)\n140: \tdb.TruncateHead(90)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 135\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n134: \t\tfor i := 0; i < 100; i++ {\n135: \t\t\top.AppendRaw(\"a\", uint64(i), data[i])\n136: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 133-138\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n132: \n133: \tdb.ModifyAncients(func(op ethdb.AncientWriteOp) error {\n134: \t\tfor i := 0; i < 100; i++ {\n135: \t\t\top.AppendRaw(\"a\", uint64(i), data[i])\n136: \t\t}\n137: \t\treturn nil\n138: \t})\n139: \tdb.TruncateTail(10)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 58\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n57: \tdb.TruncateTail(10)\n58: \tdb.TruncateHead(90)\n59: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 57\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n56: \t})\n57: \tdb.TruncateTail(10)\n58: \tdb.TruncateHead(90)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 53\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n52: \t\tfor i := 0; i < len(data); i++ {\n53: \t\t\top.AppendRaw(\"a\", uint64(i), data[i])\n54: \t\t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\ancienttest\\testsuite.go\nLine: 51-56\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n50: \n51: \tdb.ModifyAncients(func(op ethdb.AncientWriteOp) error {\n52: \t\tfor i := 0; i < len(data); i++ {\n53: \t\t\top.AppendRaw(\"a\", uint64(i), data[i])\n54: \t\t}\n55: \t\treturn nil\n56: \t})\n57: \tdb.TruncateTail(10)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_state.go\nLine: 263\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n262: \t\top.AppendRaw(stateHistoryAccountData, id-1, accounts)\n263: \t\top.AppendRaw(stateHistoryStorageData, id-1, storages)\n264: \t\treturn nil\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_state.go\nLine: 262\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n261: \t\top.AppendRaw(stateHistoryStorageIndex, id-1, storageIndex)\n262: \t\top.AppendRaw(stateHistoryAccountData, id-1, accounts)\n263: \t\top.AppendRaw(stateHistoryStorageData, id-1, storages)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_state.go\nLine: 261\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n260: \t\top.AppendRaw(stateHistoryAccountIndex, id-1, accountIndex)\n261: \t\top.AppendRaw(stateHistoryStorageIndex, id-1, storageIndex)\n262: \t\top.AppendRaw(stateHistoryAccountData, id-1, accounts)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_state.go\nLine: 260\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n259: \t\top.AppendRaw(stateHistoryMeta, id-1, meta)\n260: \t\top.AppendRaw(stateHistoryAccountIndex, id-1, accountIndex)\n261: \t\top.AppendRaw(stateHistoryStorageIndex, id-1, storageIndex)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_state.go\nLine: 259\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n258: \tdb.ModifyAncients(func(op ethdb.AncientWriteOp) error {\n259: \t\top.AppendRaw(stateHistoryMeta, id-1, meta)\n260: \t\top.AppendRaw(stateHistoryAccountIndex, id-1, accountIndex)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_state.go\nLine: 258-265\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n257: func WriteStateHistory(db ethdb.AncientWriter, id uint64, meta []byte, accountIndex []byte, storageIndex []byte, accounts []byte, storages []byte) {\n258: \tdb.ModifyAncients(func(op ethdb.AncientWriteOp) error {\n259: \t\top.AppendRaw(stateHistoryMeta, id-1, meta)\n260: \t\top.AppendRaw(stateHistoryAccountIndex, id-1, accountIndex)\n261: \t\top.AppendRaw(stateHistoryStorageIndex, id-1, storageIndex)\n262: \t\top.AppendRaw(stateHistoryAccountData, id-1, accounts)\n263: \t\top.AppendRaw(stateHistoryStorageData, id-1, storages)\n264: \t\treturn nil\n265: \t})\n266: }\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_indexes.go\nLine: 176\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n175: \t\t}\n176: \t\tdb.Delete(it.Key())\n177: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_chain.go\nLine: 574-583\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n573: \tvar data []byte\n574: \tdb.ReadAncients(func(reader ethdb.AncientReaderOp) error {\n575: \t\t// Check if the data is in ancients\n576: \t\tif isCanon(reader, number, hash) {\n577: \t\t\tdata, _ = reader.Ancient(ChainFreezerReceiptTable, number)\n578: \t\t\treturn nil\n579: \t\t}\n580: \t\t// If not, try reading from leveldb\n581: \t\tdata, _ = db.Get(blockReceiptsKey(number, hash))\n582: \t\treturn nil\n583: \t})\n584: \treturn data\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_chain.go\nLine: 514-523\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n513: \tvar data []byte\n514: \tdb.ReadAncients(func(reader ethdb.AncientReaderOp) error {\n515: \t\t// Check if the data is in ancients\n516: \t\tif isCanon(reader, number, hash) {\n517: \t\t\tdata, _ = reader.Ancient(ChainFreezerDifficultyTable, number)\n518: \t\t\treturn nil\n519: \t\t}\n520: \t\t// If not, try reading from leveldb\n521: \t\tdata, _ = db.Get(headerTDKey(number, hash))\n522: \t\treturn nil\n523: \t})\n524: \treturn data\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_chain.go\nLine: 448-459\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n447: \tvar data []byte\n448: \tdb.ReadAncients(func(reader ethdb.AncientReaderOp) error {\n449: \t\tdata, _ = reader.Ancient(ChainFreezerBodiesTable, number)\n450: \t\tif len(data) > 0 {\n451: \t\t\treturn nil\n452: \t\t}\n453: \t\t// Block is not in ancients, read from leveldb by hash and number.\n454: \t\t// Note: ReadCanonicalHash cannot be used here because it also\n455: \t\t// calls ReadAncients internally.\n456: \t\thash, _ := db.Get(headerHashKey(number))\n457: \t\tdata, _ = db.Get(blockBodyKey(number, common.BytesToHash(hash)))\n458: \t\treturn nil\n459: \t})\n460: \treturn data\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_chain.go\nLine: 431-440\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n430: \tvar data []byte\n431: \tdb.ReadAncients(func(reader ethdb.AncientReaderOp) error {\n432: \t\t// Check if the data is in ancients\n433: \t\tif isCanon(reader, number, hash) {\n434: \t\t\tdata, _ = reader.Ancient(ChainFreezerBodiesTable, number)\n435: \t\t\treturn nil\n436: \t\t}\n437: \t\t// If not, try reading from leveldb\n438: \t\tdata, _ = db.Get(blockBodyKey(number, hash))\n439: \t\treturn nil\n440: \t})\n441: \treturn data\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_chain.go\nLine: 338-349\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n337: \tvar data []byte\n338: \tdb.ReadAncients(func(reader ethdb.AncientReaderOp) error {\n339: \t\t// First try to look up the data in ancient database. Extra hash\n340: \t\t// comparison is necessary since ancient database only maintains\n341: \t\t// the canonical data.\n342: \t\tdata, _ = reader.Ancient(ChainFreezerHeaderTable, number)\n343: \t\tif len(data) > 0 && crypto.Keccak256Hash(data) == hash {\n344: \t\t\treturn nil\n345: \t\t}\n346: \t\t// If not, try reading from leveldb\n347: \t\tdata, _ = db.Get(headerKey(number, hash))\n348: \t\treturn nil\n349: \t})\n350: \treturn data\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\rawdb\\accessors_chain.go\nLine: 39-46\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n38: \tvar data []byte\n39: \tdb.ReadAncients(func(reader ethdb.AncientReaderOp) error {\n40: \t\tdata, _ = reader.Ancient(ChainFreezerHashTable, number)\n41: \t\tif len(data) == 0 {\n42: \t\t\t// Get it by hash from leveldb\n43: \t\t\tdata, _ = db.Get(headerHashKey(number))\n44: \t\t}\n45: \t\treturn nil\n46: \t})\n47: \treturn common.BytesToHash(data)\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\chain_indexer.go\nLine: 522\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n521: \n522: \tc.indexDb.Delete(append([]byte(\"shead\"), data[:]...))\n523: }\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\chain_indexer.go\nLine: 513\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n512: \n513: \tc.indexDb.Put(append([]byte(\"shead\"), data[:]...), hash.Bytes())\n514: }\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\chain_indexer.go\nLine: 484\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n483: \tbinary.BigEndian.PutUint64(data[:], sections)\n484: \tc.indexDb.Put([]byte(\"count\"), data[:])\n485: \n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\bloom_indexer.go\nLine: 70\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n69: func (b *BloomIndexer) Process(ctx context.Context, header *types.Header) error {\n70: \tb.gen.AddBloom(uint(header.Number.Uint64()-b.section*b.size), header.Bloom)\n71: \tb.head = header.Hash()\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\blockchain.go\nLine: 1536\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n1535: \t\t}\n1536: \t\tbc.triedb.Dereference(root)\n1537: \t}\n",
               "start_time": ""
             },
             {
               "status": "skipped",
-              "skip_message": "No reason provided (inSource)",
+              "skip_message": "No justification provided (inSource)",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\blockchain.go\nLine: 1524\nColumn: 4",
               "message": "HIGH confidence of rule violation at:\n1523: \t\t\t// Flush an entire trie and restart the counters\n1524: \t\t\tbc.triedb.Commit(header.Root, true) // #nosec G104\n1525: \t\t\tbc.lastWrite = chosen\n",
               "start_time": ""
             },
             {
               "status": "skipped",
-              "skip_message": "No reason provided (inSource)",
+              "skip_message": "No justification provided (inSource)",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\blockchain.go\nLine: 1505\nColumn: 3",
               "message": "HIGH confidence of rule violation at:\n1504: \tif nodes > limit || imgs > 4*1024*1024 {\n1505: \t\tbc.triedb.Cap(limit - ethdb.IdealBatchSize) // #nosec G104\n1506: \t}\n",
               "start_time": ""
             },
             {
               "status": "failed",
-              "skip_message": "N/A",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\blockchain.go\nLine: 1491\nColumn: 2",
               "message": "HIGH confidence of rule violation at:\n1490: \t// Full but not archive node, do proper garbage collection\n1491: \tbc.triedb.Reference(root, common.Hash{}) // metadata reference to keep trie alive\n1492: \tbc.triegc.Push(root, -int64(block.NumberU64()))\n",
               "start_time": ""
             },
             {
               "status": "skipped",
-              "skip_message": "No reason provided (inSource)",
+              "skip_message": "No justification provided (inSource)",
               "code_desc": "Rule G104 violation detected at:\nFile: C:\\Users\\chu\\Downloads\\go-ethereum-master\\core\\blockchain.go\nLine: 1148\nColumn: 5",
               "message": "HIGH confidence of rule violation at:\n1147: \t\t\tfor !bc.triegc.Empty() {\n1148: \t\t\t\ttriedb.Dereference(bc.triegc.PopItem()) // #nosec G104\n1149: \t\t\t}\n",
               "start_time": ""
@@ -1325,7 +1164,7 @@
           ]
         }
       ],
-      "sha256": "6c54f5b25eb7af71f7a18a31403ea7892d29280f31d6ebe4fedcd72e759d1234"
+      "sha256": "ffd164852c13af0396819224624bceb4873791b403a217d145c00c7b0f39fe0f"
     }
   ],
   "passthrough": {
