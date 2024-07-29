@@ -56,17 +56,17 @@ describe('gosec_mapper_grype', () => {
   });
 });
 
-describe('gosec_mapper_go_ethereum_unsuppressed', () => {
+describe('gosec_mapper_go_ethereum_external_suppressed', () => {
   it('Successfully converts unsuppressed Go Ethereum gosec reports', () => {
     const mapper = new GosecMapper(
       fs.readFileSync(
-        'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_unsuppressed.json',
+        'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_external_suppressed.json',
         {encoding: 'utf-8'}
       )
     );
 
     // fs.writeFileSync(
-    //   'sample_jsons/gosec_mapper/go-ethereum-unsuppressed-gosec-hdf.json',
+    //   'sample_jsons/gosec_mapper/go-ethereum-external-unsuppressed-gosec-hdf.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
@@ -74,7 +74,7 @@ describe('gosec_mapper_go_ethereum_unsuppressed', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync(
-            'sample_jsons/gosec_mapper/go-ethereum-unsuppressed-gosec-hdf.json',
+            'sample_jsons/gosec_mapper/go-ethereum-external-unsuppressed-gosec-hdf.json',
             {
               encoding: 'utf-8'
             }
@@ -87,14 +87,14 @@ describe('gosec_mapper_go_ethereum_unsuppressed', () => {
   it('Successfully converts withRaw flagged unsuppressed Go Ethereum gosec reports', () => {
     const mapper = new GosecMapper(
       fs.readFileSync(
-        'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_unsuppressed.json',
+        'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_external_suppressed.json',
         {encoding: 'utf-8'}
       ),
       true
     );
 
     // fs.writeFileSync(
-    //   'sample_jsons/gosec_mapper/go-ethereum-unsuppressed-gosec-hdf-withraw.json',
+    //   'sample_jsons/gosec_mapper/go-ethereum-external-unsuppressed-gosec-hdf-withraw.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
@@ -102,7 +102,7 @@ describe('gosec_mapper_go_ethereum_unsuppressed', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync(
-            'sample_jsons/gosec_mapper/go-ethereum-unsuppressed-gosec-hdf-withraw.json',
+            'sample_jsons/gosec_mapper/go-ethereum-external-unsuppressed-gosec-hdf-withraw.json',
             {
               encoding: 'utf-8'
             }
@@ -113,17 +113,17 @@ describe('gosec_mapper_go_ethereum_unsuppressed', () => {
   });
 });
 
-describe('gosec_mapper_go_ethereum_suppressed', () => {
+describe('gosec_mapper_go_ethereum_all_suppressed', () => {
   it('Successfully converts suppressed Go Ethereum gosec reports', () => {
     const mapper = new GosecMapper(
       fs.readFileSync(
-        'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_suppressed.json',
+        'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_all_suppressed.json',
         {encoding: 'utf-8'}
       )
     );
 
     // fs.writeFileSync(
-    //   'sample_jsons/gosec_mapper/go-ethereum-suppressed-gosec-hdf.json',
+    //   'sample_jsons/gosec_mapper/go-ethereum-all-unsuppressed-gosec-hdf.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
@@ -131,7 +131,7 @@ describe('gosec_mapper_go_ethereum_suppressed', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync(
-            'sample_jsons/gosec_mapper/go-ethereum-suppressed-gosec-hdf.json',
+            'sample_jsons/gosec_mapper/go-ethereum-all-unsuppressed-gosec-hdf.json',
             {
               encoding: 'utf-8'
             }
@@ -144,14 +144,14 @@ describe('gosec_mapper_go_ethereum_suppressed', () => {
   it('Successfully converts withRaw flagged suppressed Go Ethereum gosec reports', () => {
     const mapper = new GosecMapper(
       fs.readFileSync(
-        'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_suppressed.json',
+        'sample_jsons/gosec_mapper/sample_input_report/Go_Ethereum_gosec_results_all_suppressed.json',
         {encoding: 'utf-8'}
       ),
       true
     );
 
     // fs.writeFileSync(
-    //   'sample_jsons/gosec_mapper/go-ethereum-suppressed-gosec-hdf-withraw.json',
+    //   'sample_jsons/gosec_mapper/go-ethereum-all-unsuppressed-gosec-hdf-withraw.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
@@ -159,7 +159,7 @@ describe('gosec_mapper_go_ethereum_suppressed', () => {
       omitVersions(
         JSON.parse(
           fs.readFileSync(
-            'sample_jsons/gosec_mapper/go-ethereum-suppressed-gosec-hdf-withraw.json',
+            'sample_jsons/gosec_mapper/go-ethereum-all-unsuppressed-gosec-hdf-withraw.json',
             {
               encoding: 'utf-8'
             }
