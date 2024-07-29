@@ -76,8 +76,13 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
   }
 
   get resultMessage(): string | undefined {
+    // Check if either `skip_message` or `message` exist
+    // If one but not the other exists, display the individual message
+    // Otherwise display both messages in a joint string
     return this.result.skip_message
-      ? `-Message-\n${this.result.message}\n-Skip Message-\n${this.result.skip_message}`
+      ? this.result.message
+        ? `-Message-\n${this.result.message}\n\n-Skip Message-\n${this.result.skip_message}`
+        : this.result.skip_message
       : this.result.message;
   }
 }
