@@ -42,6 +42,7 @@ function aggregateImpact(ratings: Record<string, unknown>[]) {
       impact += severity;
     }
   }
+  // Round up aggregate impact to the 2nd decimal place
   return Math.ceil((impact / ratings.length) * 100) / 100;
 }
 
@@ -51,30 +52,33 @@ export class SBOMResults {
   constructor(SBOMJson: string, withRaw = false) {
     this.data = JSON.parse(SBOMJson);
     this.withRaw = withRaw;
-    // In-place manipulations on ingested SBOM data
-    this.flattenComponents(this.data);
-    this.generateIntermediary(this.data);
-    // Back up operations in case we ingest VEX data instead
-    this.formatVEX(this.data);
+
+    if (_.has(this.data, 'components')) {
+      // In-place manipulations on ingested SBOM data
+      this.flattenComponents(this.data);
+      if (_.has(this.data, 'vulnerabilities')) {
+        this.generateIntermediary(this.data);
+      }
+    } else if (_.has(this.data, 'vulnerabilities')) {
+      // Back up operations in case we ingest VEX data instead
+      this.formatVEX(this.data);
+    }
   }
 
   // Flatten any arbitrarily nested components list
   flattenComponents(data: Record<string, unknown>) {
-    // Ensure that a components structure is available
-    if (_.has(data, 'components')) {
-      // Look through every component at the top level of the list
-      for (const component of data.components as Record<string, unknown>[]) {
-        // Identify if subcomponents exist
-        if (_.has(component, 'components')) {
-          // If so, pull out the subcomponents and push them to end of top level component list for further flattening
-          for (const subcomponent of component.components as Record<
-            string,
-            unknown
-          >[]) {
-            (data.components as Record<string, unknown>[]).push(subcomponent);
-          }
-          delete component.components;
+    // Look through every component at the top level of the list
+    for (const component of data.components as Record<string, unknown>[]) {
+      // Identify if subcomponents exist
+      if (_.has(component, 'components')) {
+        // If so, pull out the subcomponents and push them to end of top level component list for further flattening
+        for (const subcomponent of component.components as Record<
+          string,
+          unknown
+        >[]) {
+          (data.components as Record<string, unknown>[]).push(subcomponent);
         }
+        delete component.components;
       }
     }
   }
@@ -100,25 +104,20 @@ export class SBOMResults {
   }
   */
   generateIntermediary(data: Record<string, unknown>) {
-    // Determine if this is an SBOM and has a vulnerabilities structure; if so, proceed with restructuring
-    if (_.has(data, 'components') && _.has(data, 'vulnerabilities')) {
-      for (const vulnerability of data.vulnerabilities as (Record<
-        string,
-        unknown
-      > & {affects: Record<string, unknown>[]})[]) {
-        for (const id of vulnerability.affects) {
-          const components = [];
-          for (const component of data.components as Record<
-            string,
-            unknown
-          >[]) {
-            // Find every comoponent that is affected via listed bom-refs and copy to an affected components list
-            if (component['bom-ref'] === id.ref) {
-              components.push(component);
-            }
+    for (const vulnerability of data.vulnerabilities as (Record<
+      string,
+      unknown
+    > & {affects: Record<string, unknown>[]})[]) {
+      vulnerability.affectedComponents = [];
+      for (const id of vulnerability.affects) {
+        for (const component of data.components as Record<string, unknown>[]) {
+          // Find every component that is affected via listed bom-refs and copy to an affected components list
+          if (component['bom-ref'] === id.ref) {
+            // Add that affected components list to the corresponding vulnerability object
+            (
+              vulnerability.affectedComponents as Record<string, unknown>[]
+            ).push(component);
           }
-          // Add that affected components list to the corresponding vulnerability object
-          vulnerability.affectedComponents = components;
         }
       }
     }
@@ -127,19 +126,18 @@ export class SBOMResults {
   // VEX by default has no component info, resulting in profile errors when parsing the vulnerabilities for OHDF
   // Fix that by adding a temporary result that refers the vulnerability back to its associated BOM
   formatVEX(data: Record<string, unknown>) {
-    // Filter for VEX files only
-    if (_.has(data, 'vulnerabilities') && !_.has(data, 'components')) {
-      for (const vulnerability of data.vulnerabilities as (Record<
-        string,
-        unknown
-      > & {affects: Record<string, unknown>[]})[]) {
-        const components = [];
-        for (const id of vulnerability.affects) {
-          // Build a dummy component for each bom-ref identified as being affected by the vulnerability
-          components.push({'bom-ref': `${id.ref}`, name: `${id.ref}`});
-        }
-        // Add that affected components list to the corresponding vulnerability object
-        vulnerability.affectedComponents = components;
+    for (const vulnerability of data.vulnerabilities as (Record<
+      string,
+      unknown
+    > & {affects: Record<string, unknown>[]})[]) {
+      vulnerability.affectedComponents = [];
+      for (const id of vulnerability.affects) {
+        // Build a dummy component for each bom-ref identified as being affected by the vulnerability
+        // Add that component to the corresponding vulnerability object
+        (vulnerability.affectedComponents as Record<string, unknown>[]).push({
+          'bom-ref': `${id.ref}`,
+          name: `${id.ref}`
+        });
       }
     }
   }
