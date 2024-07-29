@@ -103,7 +103,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
               },
               services: {
                 transformer: (data: ControlScore) => {
-                  // return thrserviceeats from the profile document where its id matches the controlName
+                  // return services from the profile document where its id matches the controlName
                   return this.getProfiles(data.controlName || '').map(
                     (profile) => profile.service
                   );
