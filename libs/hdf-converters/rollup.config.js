@@ -15,11 +15,12 @@ module.exports = {
             tsconfig: "tsconfig.build.json"
         }), 
         json(), 
+        // these are to import template files as raw text for hdf to html conversion
         stringPlugin.string({
             include: [
                 "**/*.html",
                 "**/*.css",
-                "**/*.js.txt",
+                "**/*.js.txt", // this is so the file is treated as text and not JavaScript
             ]
         })
     ]

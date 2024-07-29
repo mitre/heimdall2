@@ -3,5 +3,7 @@ converted_jsons
 lib
 mitre-hdf-converters-v*.tgz
 sample_jsons/*/output_report/*.xml
+
+# template files hdf to html conversion
 src/**/*.css
-*.js.txt
+src/**/*.js.txt

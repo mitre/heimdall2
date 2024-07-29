@@ -23,8 +23,11 @@ import {
   IResultSeverity,
   IResultStatus
 } from './html-types';
+
+// template files used for generating the final HTML
 import tailwindStyles from './style.css';
 import htmlTemplate from './template.html';
+// this is ".js.txt" because it is to be treated as raw text and not as JavaScript
 import twElementsScript from './tw-elements.umd.min.js.txt';
 
 type InputData = {
