@@ -16,38 +16,8 @@
             </v-btn>
           </template>
           <v-list class="py-0">
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportCaat :filter="all_filter" />
-            </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportNist :filter="all_filter" />
-            </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportASFFModal :filter="all_filter" />
-            </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportCKLModal :filter="all_filter" />
-            </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportCSVModal :filter="all_filter" />
-            </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportHTMLModal
-                :filter="all_filter"
-                :file-type="current_route_name"
-              />
-            </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportSplunkModal />
-            </v-list-item>
             <v-list-item class="px-0">
               <ExportJson />
-            </v-list-item>
-            <v-list-item v-if="is_result_view" class="px-0">
-              <ExportXCCDFResults
-                :filter="all_filter"
-                :is-result-view="is_result_view"
-              />
             </v-list-item>
           </v-list>
         </v-menu>
@@ -91,7 +61,10 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <ComponentTable :filter="all_filter" />
+              <ComponentTable
+                :filter="all_filter"
+                :component-ref="$route.params.componentRef"
+              />
             </v-card>
           </v-col>
         </v-row>
@@ -101,23 +74,11 @@
 </template>
 
 <script lang="ts">
-import ComplianceChart from '@/components/cards/ComplianceChart.vue';
 import ComponentTable from '@/components/cards/sbomview/ComponentTable.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
-import ProfileData from '@/components/cards/ProfileData.vue';
-import SeverityChart from '@/components/cards/SeverityChart.vue';
-import StatusChart from '@/components/cards/StatusChart.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
-import ExportASFFModal from '@/components/global/ExportASFFModal.vue';
-import ExportCaat from '@/components/global/ExportCaat.vue';
-import ExportCKLModal from '@/components/global/ExportCKLModal.vue';
-import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
-import ExportHTMLModal from '@/components/global/ExportHTMLModal.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
-import ExportNist from '@/components/global/ExportNist.vue';
 import PrintButton from '@/components/global/PrintButton.vue';
-import ExportSplunkModal from '@/components/global/ExportSplunkModal.vue';
-import ExportXCCDFResults from '@/components/global/ExportXCCDFResults.vue';
 import RouteMixin from '@/mixins/RouteMixin';
 import {
   ExtendedControlStatus,
@@ -138,7 +99,6 @@ import {ServerModule} from '@/store/server';
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/interfaces';
 import {Severity} from 'inspecjs';
-import {capitalize} from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '../mixins/ServerMixin';
 import {EvaluationModule} from '../store/evaluations';
@@ -149,25 +109,13 @@ import {compare_times} from '../utilities/delta_util';
   components: {
     Base,
     ComponentTable,
-    StatusChart,
-    SeverityChart,
-    ComplianceChart,
-    ExportASFFModal,
-    ExportCaat,
-    ExportCSVModal,
-    ExportNist,
     ExportJson,
-    ExportXCCDFResults,
-    ExportCKLModal,
-    ExportHTMLModal,
     PrintButton,
     EvaluationInfo,
-    ExportSplunkModal,
-    ProfileData,
     UploadButton
   }
 })
-export default class Results extends mixins(RouteMixin, ServerMixin) {
+export default class Components extends mixins(RouteMixin, ServerMixin) {
   /**
    * The current state of the treemap as modeled by the treemap (duh).
    * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
@@ -218,11 +166,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    * Controlled by router.
    */
   get file_filter(): FileID[] {
-    if (this.is_result_view) {
-      return FilteredDataModule.selectedEvaluationIds;
-    } else {
-      return FilteredDataModule.selectedProfileIds;
-    }
+    return FilteredDataModule.selectedProfileIds; // TODO: Update this to call a new function to get only the SBOM evaluations profiles
   }
 
   get evaluationFiles(): SourcedContextualizedEvaluation[] {
@@ -241,13 +185,6 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   getDbFile(file: EvaluationFile | ProfileFile): IEvaluation | undefined {
     return EvaluationModule.evaluationForFile(file);
-  }
-
-  /**
-   * Returns true if we're showing results
-   */
-  get is_result_view(): boolean {
-    return this.current_route === 'results';
   }
 
   // Returns true if no files are uploaded

@@ -18,6 +18,7 @@
           :items-per-page="-1"
           :item-key="'bom-ref'"
           :search="search"
+          :expanded.sync="expanded"
           show-expand
           single-expand
           hide-default-footer
@@ -34,6 +35,7 @@
                 multiple
                 :items="stringFields"
               />
+
               <!--             
             <v-menu offset-y offset-overflow :close-on-content-click="false">
               <template #activator=" {on, attrs }">
@@ -47,9 +49,12 @@
             </v-card-title>
           </template>
 
-          <!--           <template #item="item">
-            <v-data-table-header :item="item"></v-data-table-header>
-          </template> -->
+          <template #[`item.name`]="{item}">
+            {{ item.name }}
+            <template v-if="componentRef == item['bom-ref']">
+              <a id="scroll-to" />
+            </template>
+          </template>
 
           <template #expanded-item="{headers, item}">
             <td class="m-10 p-10" :colspan="headers.length">
@@ -114,7 +119,7 @@
 
                 <!--Licenses Tab-->
                 <v-tab-item>
-                  <span v-for="license in item.licenses" :key="license">
+                  <span v-for="license in item.licenses" :key="license.license">
                     <v-simple-table dense>
                       <template #default>
                         <thead>
@@ -184,11 +189,40 @@ import Component from 'vue-class-component';
 import {Prop, Ref} from 'vue-property-decorator';
 
 interface SBOMComponent {
+  // TODO: UPDATE ME!!!!
+  type: string;
+  'mime-type'?: string;
+  'bom-ref'?: string;
+  supplier?: Record<string, unknown>;
+  manufacturer?: Record<string, unknown>;
+  authors?: Record<string, unknown>[];
+  author?: string;
+  publisher?: string;
+  group?: string;
   name: string;
-  version: string;
-  dependents: number;
-  id: string;
-  author: string;
+  version?: string;
+  description?: string;
+  scope?: string;
+  hashes?: Record<string, unknown>[];
+  licenses?: Record<string, unknown>[];
+  copyright?: string;
+  cpe?: string;
+  purl?: string;
+  omniborId?: string[];
+  swhid?: string[];
+  swid?: Record<string, unknown>[];
+  modified?: boolean; // deprecated
+  pedigree?: Record<string, unknown>;
+  externalReferences?: Record<string, unknown>[];
+  components?: SBOMComponent[];
+  evidence?: Record<string, unknown>;
+  releaseNotes?: Record<string, unknown>;
+  modelCard?: Record<string, unknown>;
+  data?: Record<string, unknown>[];
+  cryptoProperties?: Record<string, unknown>;
+  properties?: Record<string, unknown>[];
+  tags?: string[];
+  signature?: Record<string, unknown>[];
 }
 
 interface Passthrough {
@@ -206,46 +240,13 @@ interface Passthrough {
 export default class ComponentTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({required: true}) readonly componentRef!: string | undefined;
 
-  testHeaders = [
-    {
-      text: 'Component Name',
-      value: 'name'
-    },
-    {
-      text: 'Version',
-      value: 'version'
-    },
-    {
-      text: 'Group',
-      value: 'group'
-    },
-    {
-      text: 'BOM Ref',
-      value: 'bom-ref'
-    },
-    {
-      text: 'Type',
-      value: 'type'
-    },
-    {
-      text: 'Author',
-      value: 'author'
-    },
-    {
-      text: 'Description',
-      value: 'description'
-    }
-  ];
-
-  headerColumns = ['name', 'group', 'bom-ref', 'type', 'author', 'description'];
-
-  tabs = {
-    tab: null,
-    items: ['strings', 'provenance', 'references', 'etc']
-  };
+  headerColumns = ['name', 'version', 'author', 'group', 'type', 'description'];
+  tabs = {tab: null};
 
   search = '';
+  expanded: SBOMComponent[] = [];
 
   stringFields = [
     'type',
@@ -262,10 +263,27 @@ export default class ComponentTable extends Vue {
     'purl'
   ];
 
+  mounted() {
+    this.$nextTick(() => {
+      if (!this.componentRef) return;
+      const element = document.getElementById('scroll-to');
+      if (element) {
+        element.scrollIntoView({block: 'start', behavior: 'smooth'});
+        element.parentElement?.parentElement?.classList.add('highlight');
+        const item = this.items.find((i) => i['bom-ref'] === this.componentRef);
+        if (item) {
+          this.expanded = [item];
+        }
+      }
+    });
+  }
+
   get headers() {
-    return this.headerColumns.map((v) => {
+    let h = this.headerColumns.map((v) => {
       return {value: v, text: _.startCase(v)};
     });
+    h.push({value: 'data-table-expand', text: 'More'});
+    return h;
   }
 
   get items(): SBOMComponent[] {
@@ -299,5 +317,25 @@ export default class ComponentTable extends Vue {
 .components-table-title {
   background-color: var(--v-secondary-lighten1);
   z-index: 10;
+}
+
+.highlight {
+  border: 2px solid yellow;
+}
+
+/*.v-data-table > .v-data-table__wrapper > table {
+  border-collapse: collapse;
+}*/
+
+::v-deep .v-data-table__expanded {
+  border-left: 5px solid var(--v-primary-base);
+}
+
+::v-deep .v-data-table__expanded__row {
+  background-color: #616161;
+}
+
+::v-deep .v-data-table__wrapper table {
+  border-collapse: collapse;
 }
 </style>
