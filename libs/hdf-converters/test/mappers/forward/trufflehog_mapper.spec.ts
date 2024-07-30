@@ -11,10 +11,10 @@ describe('trufflehog_mapper', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/trufflehog_mapper/trufflehog-hdf.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/trufflehog_mapper/trufflehog-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -41,10 +41,10 @@ describe('trufflehog_mapper_withraw', () => {
       true
     );
 
-    fs.writeFileSync(
-      'sample_jsons/trufflehog_mapper/trufflehog-hdf-withraw.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/trufflehog_mapper/trufflehog-hdf-withraw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -70,10 +70,10 @@ describe('trufflehog_docker_mapper', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/trufflehog_mapper/trufflehog-docker-hdf.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/trufflehog_mapper/trufflehog-docker-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -100,10 +100,10 @@ describe('trufflehog_docker_mapper_withraw', () => {
       true
     );
 
-    fs.writeFileSync(
-      'sample_jsons/trufflehog_mapper/trufflehog-docker-hdf-withraw.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/trufflehog_mapper/trufflehog-docker-hdf-withraw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -129,10 +129,10 @@ describe('trufflehog_saf_example_mapper', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/trufflehog_mapper/trufflehog-saf-hdf.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/trufflehog_mapper/trufflehog-saf-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -159,10 +159,10 @@ describe('trufflehog_saf_example_mapper_withraw', () => {
       true
     );
 
-    fs.writeFileSync(
-      'sample_jsons/trufflehog_mapper/trufflehog-saf-hdf-withraw.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/trufflehog_mapper/trufflehog-saf-hdf-withraw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -189,10 +189,10 @@ describe('trufflehog_example_mapper', () => {
       false
     );
 
-    fs.writeFileSync(
-      'sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -219,10 +219,10 @@ describe('trufflehog_example_mapper', () => {
       true
     );
 
-    fs.writeFileSync(
-      'sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf-withraw.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/trufflehog_mapper/trufflehog-report-example-hdf-withraw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
