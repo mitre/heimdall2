@@ -7,12 +7,12 @@
     "test"
   ],
   "scripts": {
-    "backend": "yarn workspace heimdall-server nx",
+    "backend": "yarn workspace heimdall-server",
     "build": "nx run-many --target=build --all",
-    "cypress-test": "yarn workspace @heimdall/cypress-tests nx",
+    "cypress-test": "yarn workspace @heimdall/cypress-tests",
     "frontend": "yarn workspace @mitre/heimdall-lite nx",
-    "hdf-converters": "yarn workspace @mitre/hdf-converters nx",
-    "inspecjs": "yarn workspace inspecjs nx",
+    "hdf-converters": "yarn workspace @mitre/hdf-converters",
+    "inspecjs": "yarn workspace inspecjs",
     "lint": "nx run-many --target=lint --all",
     "lint:ci": "nx run-many --target=lint:ci --all",
     "pack:all": "nx exec --parallel -p inspecjs @mitre/hdf-converters @mitre/heimdall-lite -- yarn pack",
