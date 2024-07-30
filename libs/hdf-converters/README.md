@@ -25,10 +25,11 @@ OHDF Converters supplies several methods to convert various types of security to
 18. [**snyk-mapper**] - Snyk results JSON file
 19. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
 20. [**splunk-mapper**] - Splunk instance
-21. [**twistlock-mapper**] - Twistlock CLI output file
-22. [**veracode-mapper**] - Veracode Scan Results XML file
-23. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
-24. [**zap-mapper**] - OWASP ZAP results JSON
+21. [**trufflehog-mapper**] - Trufflehog results json file 
+22. [**twistlock-mapper**] - Twistlock CLI output file
+23. [**veracode-mapper**] - Veracode Scan Results XML file
+24. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+25. [**zap-mapper**] - OWASP ZAP results JSON
 
 ### NOTICE
 

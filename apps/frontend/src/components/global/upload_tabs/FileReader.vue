@@ -47,6 +47,7 @@
                   <li>Scoutsuite</li>
                   <li>Snyk</li>
                   <li>Tenable (API)</li>
+                  <li>Trufflehog</li>
                   <li>Twistlock</li>
                   <li>Veracode</li>
                   <li>XCCDF Results (native OpenSCAP and SCC outputs)</li>
