@@ -175,7 +175,8 @@ export class MsftSecureScoreMapper extends BaseConverter {
                     data: ControlScore & {implementationStatus: string}
                   ) => data.implementationStatus
                 },
-                start_time: {transformer: () => this.data.createdDateTime}
+                start_time: {transformer: () => this.data.createdDateTime},
+                run_time: 0
               }
             ]
           }
