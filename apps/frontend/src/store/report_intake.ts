@@ -25,7 +25,6 @@ import {
   SarifMapper,
   ScoutsuiteMapper,
   SnykResults,
-  TrufflehogMapper,
   TrufflehogResults,
   TwistlockResults,
   VeracodeMapper,
