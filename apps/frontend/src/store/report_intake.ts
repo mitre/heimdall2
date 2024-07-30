@@ -271,7 +271,7 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.CHECKLIST:
         return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
-        return new GoSecMapper(convertOptions.data).toHdf();
+        return new GosecMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.TRUFFLEHOG:
         return new TrufflehogResults(convertOptions.data).toHdf();
       default:
