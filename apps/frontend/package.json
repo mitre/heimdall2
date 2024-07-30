@@ -14,8 +14,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf ../../dist/frontend",
-    "build:tailwind": "tailwindcss -i ./src/tailwind.css -o ./public/static/export/style.css --minify",
-    "build": "yarn build:tailwind && vue-cli-service build",
+    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "lint:ci": "vue-cli-service lint --no-fix  --maxWarnings 0",
     "make:component": "vue-cli-service make:component",
@@ -25,7 +24,7 @@
     "make:view": "vue-cli-service make:view",
     "prepack": "vue-cli-service build --dest dist && cp ../../README.md README.md && cp package.json package.json.orig && cat package.json.orig | jq '.dependencies = (.dependencies | with_entries(select(.key | contains(\"express\"))))' > package.json",
     "postpack": "mv package.json.orig package.json && rm README.md",
-    "start:dev": "vue-cli-service serve & yarn build:tailwind --watch",
+    "start:dev": "vue-cli-service serve",
     "test": "jest"
   },
   "dependencies": {
@@ -123,6 +122,7 @@
     "chai-as-promised": "^7.1.1",
     "jest": "^27.0.6",
     "jest-useragent-mock": "^0.1.1",
+    "nx": "^19.5.3",
     "sinon": "^18.0.0",
     "ts-jest": "^29.1.0",
     "vue-jest": "^3.0.7"
@@ -133,5 +133,22 @@
   "branch": "/blob/master/",
   "changelog": "/releases",
   "issues": "/issues/new/choose",
-  "readme": "README.md"
+  "readme": "README.md",
+  "nx": {
+    "implicitDependencies": [
+      "@mitre/hdf-converters"
+    ],
+    "targets": {
+      "start:dev": {
+        "dependsOn": [
+          "^build"
+        ]
+      },
+      "test": {
+        "dependsOn": [
+          "^build"
+        ]
+      }
+    }
+  }
 }

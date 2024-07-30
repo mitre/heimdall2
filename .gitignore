@@ -69,3 +69,6 @@ certs/*.pem
 
 # Database Content
 data/*
+
+# Nx build manager
+.nx/*
