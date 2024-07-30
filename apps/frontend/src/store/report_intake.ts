@@ -26,6 +26,7 @@ import {
   ScoutsuiteMapper,
   SnykResults,
   TrufflehogMapper,
+  TrufflehogResults,
   TwistlockResults,
   VeracodeMapper,
   XCCDFResultsMapper,
@@ -273,7 +274,7 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.GOSEC:
         return new GoSecMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.TRUFFLEHOG:
-        return new TrufflehogMapper(convertOptions.data).toHdf();
+        return new TrufflehogResults(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
