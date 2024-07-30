@@ -102,7 +102,13 @@ export default class EvaluationInfo extends Vue {
   }
 
   get duration(): string | undefined {
-    return _.get(this.file_object, 'evaluation.data.statistics.duration');
+    const duration = _.get(
+      this.file_object,
+      'evaluation.data.statistics.duration'
+    );
+    return duration === null || duration === undefined
+      ? undefined
+      : duration.toString();
   }
 
   get evaluation(): IEvaluation | undefined {
