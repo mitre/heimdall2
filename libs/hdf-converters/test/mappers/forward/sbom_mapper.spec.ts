@@ -112,3 +112,117 @@ describe('sbom_mapper_dropwizard_vulns', () => {
     );
   });
 });
+
+describe('sbom_mapper_dropwizard_no_vulns', () => {
+  it('Successfully converts SBOM data', () => {
+    const mapper = new SBOMResults(
+      fs.readFileSync(
+        'sample_jsons/sbom_mapper/sample_input_report/dropwizard-no-vulns.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/sbom_mapper/sbom-dropwizard-no-vulns-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/sbom_mapper/sbom-dropwizard-no-vulns-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+  });
+
+  it('Successfully converts withraw flagged SBOM data', () => {
+    const mapper = new SBOMResults(
+      fs.readFileSync(
+        'sample_jsons/sbom_mapper/sample_input_report/dropwizard-no-vulns.json',
+        {encoding: 'utf-8'}
+      ),
+      true
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/sbom_mapper/sbom-dropwizard-no-vulns-hdf-withraw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/sbom_mapper/sbom-dropwizard-no-vulns-hdf-withraw.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+  });
+});
+
+describe('sbom_mapper_dropwizard_vex', () => {
+  it('Successfully converts SBOM data', () => {
+    const mapper = new SBOMResults(
+      fs.readFileSync(
+        'sample_jsons/sbom_mapper/sample_input_report/dropwizard-vex.json',
+        {encoding: 'utf-8'}
+      )
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/sbom_mapper/sbom-dropwizard-vex-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/sbom_mapper/sbom-dropwizard-vex-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+  });
+
+  it('Successfully converts withraw flagged SBOM data', () => {
+    const mapper = new SBOMResults(
+      fs.readFileSync(
+        'sample_jsons/sbom_mapper/sample_input_report/dropwizard-vex.json',
+        {encoding: 'utf-8'}
+      ),
+      true
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/sbom_mapper/sbom-dropwizard-vex-hdf-withraw.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/sbom_mapper/sbom-dropwizard-vex-hdf-withraw.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+  });
+});
