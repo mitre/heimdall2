@@ -31,7 +31,7 @@ jobs:
         run: rm -rf apps/backend
 
       - name: Install frontend dev dependencies
-        run: yarn frontend install --frozen-lockfile
+        run: yarn workspace @mitre/heimdall-lite install --frozen-lockfile
 
       - name: Run frontend tests
         run: yarn frontend test
