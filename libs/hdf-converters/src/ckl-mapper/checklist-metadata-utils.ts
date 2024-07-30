@@ -77,7 +77,7 @@ export function validateChecklistAssetMetadata(
   const invalidFields = errors.map(
     (e) => `${e.message} (${_.get(asset, e.property)})`
   );
-  const message = `Invalid checklist metadata fields: ${invalidFields.join(', ')}`;
+  const message = `Invalid checklist metadata fields:\n\t${invalidFields.join('\n\t')}`;
   return {ok: false, error: {invalid: errors.map((e) => e.property), message}};
 }
 
@@ -93,7 +93,7 @@ export function validateChecklistProfileMetadata(
   const invalidFields = errors.map(
     (e) => `${e.message} (${_.get(metadata, e.property)})`
   );
-  const message = `Invalid checklist profile metadata fields: ${invalidFields.join(', ')}`;
+  const message = `Invalid checklist profile metadata fields:\n\t${invalidFields.join('\n\t')}`;
   return {ok: false, error: {invalid: errors.map((e) => e.property), message}};
 }
 
@@ -104,7 +104,7 @@ export function validateChecklistMetadata(
   const messages: string[] = [];
   const assetResult = validateChecklistAssetMetadata({
     ...metadata,
-    webordatabase: metadata.webdbinstance === 'true',
+    webordatabase: metadata.webordatabase === 'true',
     targetkey: null
   });
   if (!assetResult.ok) {
@@ -116,13 +116,15 @@ export function validateChecklistMetadata(
     const profileResult = validateChecklistProfileMetadata(profile);
     if (!profileResult.ok) {
       invalid = invalid.concat(profileResult.error.invalid);
-      messages.push(`Profile ${profile.name}: ${profileResult.error.message}`);
+      messages.push(
+        `In profile ${profile.name}:\n${profileResult.error.message.split(':\n').at(-1)}`
+      );
     }
   }
 
   if (invalid.length === 0) return {ok: true, value: true};
 
-  const message = messages.join(', ');
+  const message = messages.join('\n');
   return {ok: false, error: {invalid, message}};
 }
 
