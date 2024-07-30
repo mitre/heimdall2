@@ -95,7 +95,7 @@
         </template>
 
         <template #tags>
-          <ColumnHeader text="800-53 Controls & CCIs" sort="disabled" />
+          <ColumnHeader text="Guidance Mappings" sort="disabled" />
         </template>
 
         <template #runTime>

@@ -89,10 +89,6 @@
     <template #tags>
       <v-chip-group column>
         <v-tooltip v-for="(tag, i) in nistTags" :key="'nist-chip' + i" bottom>
-<<<<<<< Updated upstream
-          <template #activator="{on}">
-            <v-chip :href="tag.url" target="_blank" v-on="on">
-=======
           <template #activator="{ on }">
             <v-chip
               :href="tag.url"
@@ -100,7 +96,6 @@
               active-class="NONE"
               v-on="on"
             >
->>>>>>> Stashed changes
               {{ tag.label }}
             </v-chip>
           </template>
@@ -109,10 +104,6 @@
       </v-chip-group>
       <v-chip-group column>
         <v-tooltip v-for="(tag, i) in cciTags" :key="'cci-chip' + i" bottom>
-<<<<<<< Updated upstream
-          <template #activator="{on}">
-            <v-chip style="cursor: help" v-on="on">
-=======
           <template #activator="{ on }">
             <v-chip style="cursor: help" active-class="NONE" v-on="on">
               {{ tag.label }}
@@ -125,7 +116,6 @@
         <v-tooltip v-for="(tag, i) in mappedTags" :key="'mapped-chip' + i" bottom>
           <template #activator="{ on }">
             <v-chip style="cursor: help" active-class="NONE" v-on="on">
->>>>>>> Stashed changes
               {{ tag.label }}
             </v-chip>
           </template>
@@ -135,18 +125,10 @@
     </template>
     <!-- Control Run Time -->
     <template #runTime>
-<<<<<<< Updated upstream
       <v-card-text class="pa-2 title font-weight-bold">{{
         runTime
       }}</v-card-text>
     </template>
-
-=======
-      <v-card-text class="pa-2 title font-weight-bold">
-        {{ runTime }}
-      </v-card-text>
-    </template>
->>>>>>> Stashed changes
     <template #viewed>
       <v-container class="py-0 my-0 fill-height">
         <v-layout
@@ -183,34 +165,18 @@ interface Tag {
 }
 @Component({
   components: {
-<<<<<<< Updated upstream
-    ResponsiveRowSwitch
-  }
-})
-export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
-  @Prop({type: Object, required: true})
-  readonly control!: ContextualizedControl;
-
-  @Prop({type: Array, required: true})
-  readonly viewedControls!: string[];
-
-  @Prop({type: Boolean, default: false}) readonly controlExpanded!: boolean;
-
-=======
     ResponsiveRowSwitch,
-    CircleRating
   },
   computed: {
     ...mapGetters('selectedTags', ['checkedValues']),
-    ...mapGetters('mappings', ['mappings'])
+    ...mapGetters('mappings', ['mappings']),
+    ...mapGetters('mappings', ['descriptions'])
   }
-})
-export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
+})export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   @Prop({ type: Object, required: true }) readonly control!: ContextualizedControl;
   @Prop({ type: Array, required: true }) readonly viewedControls!: string[];
   @Prop({ type: Boolean, default: false }) readonly controlExpanded!: boolean;
   @Prop({ type: Boolean, default: false }) readonly showImpact!: boolean;
->>>>>>> Stashed changes
   get runTime(): string {
     return `${_.truncate(getControlRunTime(this.control).toString(), {
       length: 5,
@@ -230,14 +196,9 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   get status_color(): string {
     return `status${this.control.root.hdf.status.replace(' ', '')}`;
   }
-<<<<<<< Updated upstream
-
   get severity_color(): string {
     return `severity${_.startCase(this.control.hdf.severity)}`;
   }
-
-=======
->>>>>>> Stashed changes
   get wasViewed(): boolean {
     return this.viewedControls.indexOf(this.control.data.id) !== -1;
   }
@@ -251,11 +212,6 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         extension.data.code !== ''
     );
   }
-<<<<<<< Updated upstream
-
-  // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
-  // and relies on a script not contained in the project
-=======
   severity_arrow_count(severity: string): number {
     switch (severity) {
       case 'low':
@@ -270,7 +226,8 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
         return 0;
     }
   }
->>>>>>> Stashed changes
+  // Get NIST tag description for NIST tag, this is pulled from the 800-53 xml
+  // and relies on a script not contained in the project
   descriptionForTag(tag: string): string {
     const nisted = parse_nist(tag);
     if (is_control(nisted)) {
@@ -321,15 +278,20 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   get mappedTags(): Tag[] {
     const tags: Tag[] = [];
     const mappings = this.mappings;
+    const descriptions = this.descriptions;
+    console.log("Why", descriptions)
     for (const key in mappings) {
       if (this.checkedValues.includes(key)) {
         const mapping = mappings[key];
         for (const cci of this.control.data.tags.cci || []) {
           if (mapping[cci]) {
-            tags.push({
-              label: `${key}: ${mapping[cci].join(', ')}`,
-              url: '',
-              description: `Mapped ${cci} to ${mapping[cci].join(', ')}`
+            const name = key.includes('->') ? key.split('->')[1].trim() : key;
+            mapping[cci].forEach((userMapping) => {
+              tags.push({
+                label: `${name}: ${userMapping}`,
+                url: '',
+                description: descriptions[key][userMapping]
+              });
             });
           }
         }
@@ -356,6 +318,9 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
   }
   get mappings(): { [id: string]: { [key: string]: string[] } } {
     return this.$store.getters['mappings/mappings'];
+  }
+  get descriptions(): { [id: string]: { [mappingName: string]: string } } {
+    return this.$store.getters['mappings/descriptions'];
   }
 }
 </script>
