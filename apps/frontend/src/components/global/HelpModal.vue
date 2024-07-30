@@ -7,9 +7,9 @@
     </template>
 
     <v-card>
-      <v-card-title class="headline grey" primary-title
-        >How to use Heimdall {{ instanceMode }} {{ version }}</v-card-title
-      >
+      <v-card-title class="headline grey" primary-title>
+        How to use Heimdall {{ instanceMode }} {{ version }}
+      </v-card-title>
 
       <v-card-text>
         <br />

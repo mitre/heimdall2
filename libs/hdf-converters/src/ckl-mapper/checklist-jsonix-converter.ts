@@ -22,6 +22,7 @@ import {
   Vulnattribute
 } from './checklistJsonix';
 import {coerce} from 'semver';
+import {throwIfInvalidProfileMetadata} from './checklist-metadata-utils';
 
 export type ChecklistObject = {
   asset: ChecklistAsset;
@@ -31,7 +32,7 @@ export type ChecklistObject = {
 
 type ChecklistAsset = Asset;
 
-type ChecklistStig = {
+export type ChecklistStig = {
   header: StigHeader;
   vulns: ChecklistVuln[];
 };
@@ -92,6 +93,14 @@ enum StatusMapping {
   Not_Applicable = 'Not Applicable',
   Not_Reviewed = 'Not Reviewed'
 }
+
+const IMPACT_MAPPING: Map<string, number> = new Map([
+  ['critical', 0.9],
+  ['high', 0.7],
+  ['medium', 0.5],
+  ['low', 0.3],
+  ['none', 0.0]
+]);
 
 export enum Severity {
   Empty = '',
@@ -576,7 +585,24 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     }
   }
 
-  severityMap(impact: number): Severity {
+  severityMap(impact: number, severityTag: string | null): Severity {
+    // test if this control has a valid severity tag
+    // and map it to a checklist severity level
+    // note: some mappers can produce non-lowercase severity tags
+    switch (severityTag?.toLowerCase()) {
+      case 'none':
+      // if none, it will be added to Checklist's thirdPartyTools section
+      case 'low':
+        return Severity.Low;
+      case 'medium':
+        return Severity.Medium;
+      case 'high':
+      case 'critical':
+        // if critical, it will be added to Checklist's thirdPartyTools section
+        return Severity.High;
+    }
+
+    // if no valid severity tag, compute severity based on impact
     if (impact < 0.4) {
       return Severity.Low;
     } else if (impact < 0.7) {
@@ -635,10 +661,41 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   addHdfControlSpecificData(control: ExecJSON.Control): string {
     const hdfSpecificData: Record<string, unknown> = {};
-    const checklistImpactNumbers = [0.7, 0.5, 0.3, 0];
-    if (!checklistImpactNumbers.includes(control.impact)) {
+
+    const impact = control.impact;
+    const severityTag = _.get(control.tags, 'severity', null);
+    const severityOverrideTag = _.get(control.tags, 'severityoverride', null);
+
+    // if severity or severity override don't fit into low, medium, high
+    // denote them in the control specific data
+    if (severityTag === 'none' || severityTag === 'critical')
+      hdfSpecificData['severity'] = severityTag;
+
+    if (severityOverrideTag === 'none' || severityOverrideTag === 'critical')
+      hdfSpecificData['severityoverride'] = severityOverrideTag;
+
+    // if impact does not align with what would be computed from the checklist
+    // store it in the hdfSpecificData
+    // also, if it needs to be represented with none or critical, it has
+    // to be stored in the hdfSpecificData
+    const computedImpact = this.computeImpact(severityTag, severityOverrideTag);
+    if (
+      ((computedImpact !== undefined && computedImpact !== impact) ||
+        impact < 0.1 ||
+        impact >= 0.9) &&
+      impact !== 0.0
+    ) {
       hdfSpecificData['impact'] = control.impact;
     }
+
+    // if there is no severity tag, severity is aligned to impact
+    // this must be represented in hdfSpecificData when impact needs to
+    // map to severity none or critical
+    if (severityTag === null) {
+      if (impact < 0.1) hdfSpecificData['severity'] = 'none';
+      else if (impact >= 0.9) hdfSpecificData['severity'] = 'critical';
+    }
+
     if (control.code?.startsWith('control')) {
       hdfSpecificData['code'] = control.code;
     }
@@ -648,6 +705,17 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     return hdfDataExist
       ? JSON.stringify({hdfSpecificData: hdfSpecificData}, null, 2)
       : '';
+  }
+
+  // computes what the impact would be based on the given tags
+  computeImpact(
+    severityTag: string | null,
+    severityOverrideTag: string | null
+  ): number | undefined {
+    let computedSeverity = severityTag;
+    if (severityOverrideTag) computedSeverity = severityOverrideTag;
+    computedSeverity = computedSeverity?.toLowerCase() ?? null;
+    if (computedSeverity) return IMPACT_MAPPING.get(computedSeverity);
   }
 
   addHdfProfileSpecificData(profile: ExecJSON.Profile): string {
@@ -686,7 +754,10 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           metadata?.vulidmapping === 'gid'
             ? _.get(control.tags, 'gid', defaultId)
             : defaultId,
-        severity: this.severityMap(control.impact),
+        severity: this.severityMap(
+          control.impact,
+          _.get(control.tags, 'severity', Severity.Empty)
+        ),
         groupTitle: _.get(control.tags, 'gtitle', defaultId),
         ruleId: _.get(control.tags, 'rid', defaultId),
         ruleVer: _.get(control.tags, 'stig_id', defaultId),
@@ -734,8 +805,16 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
           control.descriptions as ExecJSON.ControlDescription[]
         ),
         findingdetails: this.getFindingDetails(control.results) ?? '',
-        severityjustification: '',
-        severityoverride: Severityoverride.Empty
+        severityjustification: _.get(
+          control.tags,
+          'severityjustification',
+          Severityoverride.Empty
+        ),
+        severityoverride: _.get(
+          control.tags,
+          'severityoverride',
+          Severityoverride.Empty
+        )
       };
       vulns.push(vuln);
     }
@@ -777,6 +856,8 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       const profileMetadata = metadata?.profiles.find(
         (p) => p.name === profile.name
       );
+      throwIfInvalidProfileMetadata(profileMetadata);
+
       const version = coerce(profile.version);
       const header: StigHeader = {
         version: _.get(
