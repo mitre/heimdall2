@@ -190,31 +190,72 @@ export class SBOMMapper extends BaseConverter {
       {
         name: {
           path: 'metadata.component',
-          transformer: (input: Record<string, unknown>): string => {
-            return `${input.type}/${input['bom-ref']}`;
-          }
+          transformer: (input: Record<string, unknown>): string =>
+            input['bom-ref']
+              ? `CycloneDX BOM Report: ${input.type}/${input['bom-ref']}`
+              : 'CycloneDX BOM Report'
         },
         title: {
           path: 'metadata.component',
           transformer: (input: Record<string, unknown>): string => {
-            const group = input.group ? `${input.group}/` : '';
-            return `${group}${input.name}`;
+            if (input.name) {
+              const group = input.group ? `${input.group}/` : '';
+              return `${group}${input.name} CycloneDX BOM Report`;
+            } else {
+              return 'CycloneDX BOM Report';
+            }
           }
         },
-        version: {path: 'metadata.component.version'},
-        maintainer: {path: 'metadata.component.author'},
-        description: {path: 'metadata.component.description'},
+        version: {
+          path: 'metadata.component.version',
+          transformer: (input: Record<string, unknown>): string | undefined =>
+            input ? `${input}` : undefined
+        },
+        maintainer: {
+          path: 'metadata.component',
+          transformer: (input: Record<string, unknown>): string | undefined => {
+            // Check through every single possible field which may hold ownership over this component
+            if (input.author) {
+              // `author` is deprecated in v1.6 but may still appear
+              return `${input.author}`;
+            } else if (input.authors) {
+              // Join list of component authors
+              let msg = '';
+              for (const author of input.authors as Record<string, unknown>[]) {
+                msg += `${author.name}, `;
+              }
+              return msg.slice(0, -2);
+            } else if (input.manufacturer) {
+              // If we can't pinpoint the exact authors, resort to the organization
+              return `${(input.manufacturer as Record<string, unknown>).name}`;
+            } else {
+              return undefined;
+            }
+          }
+        },
+        description: {
+          path: 'metadata.component',
+          transformer: (input: Record<string, unknown>): string | undefined =>
+            input.description ? `${input.description}` : undefined
+        },
+        copyright: {
+          path: 'metadata.component',
+          transformer: (input: Record<string, unknown>): string | undefined =>
+            input.copyright ? `${input.copyright}` : undefined
+        },
         license: {
           path: 'metadata.component',
-          transformer: (input: Record<string, unknown>): string => {
+          transformer: (input: Record<string, unknown>): string | undefined => {
             let message = '';
             if (Array.isArray(input.licenses)) {
               // Join together all applicable licenses for this component
               input.licenses.map((license) => {
                 message = message.concat(`${license.license.id}, `);
               });
+              return message.slice(0, -2);
             }
-            return message.slice(0, -2);
+            // If there are no found licenses, remove field
+            return undefined;
           }
         },
         supports: [],
@@ -232,12 +273,28 @@ export class SBOMMapper extends BaseConverter {
               },
               cci: {
                 path: 'cwes',
-                transformer: (input: number[]) =>
+                transformer: (input: number[]): string[] =>
                   getCCIsForNISTTags(getNISTTags(input))
               },
               cwe: {path: 'cwes', transformer: formatCWETags}
             },
             descriptions: [
+              {
+                data: {path: 'detail'},
+                label: 'Detail'
+              },
+              {
+                data: {path: 'recommendation'},
+                label: 'Recommendation'
+              },
+              {
+                data: {path: 'workaround'},
+                label: 'Workaround'
+              },
+              {
+                data: {path: 'proofOfConcept'},
+                label: 'Proof of concept'
+              },
               {
                 data: {path: 'created'},
                 label: 'Date created'
@@ -249,29 +306,54 @@ export class SBOMMapper extends BaseConverter {
               {
                 data: {path: 'updated'},
                 label: 'Date updated'
+              },
+              {
+                data: {path: 'rejected'},
+                label: 'Date rejected'
+              },
+              {
+                data: {path: 'credits'},
+                label: 'Credits'
+              },
+              {
+                data: {path: 'tools'},
+                label: 'Tools'
+              },
+              {
+                data: {path: 'analysis'},
+                label: 'Analysis'
               }
             ],
             refs: [
               {
-                path: 'source',
-                transformer: (data: Record<string, unknown>) => {
-                  return {ref: [data]};
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> => {
+                  const searchFor = ['source', 'references', 'advisories'];
+                  const ref = [];
+                  for (const key of searchFor) {
+                    if (input[key]) {
+                      ref.push(input[key] as Record<string, unknown>);
+                    }
+                  }
+                  return {ref: ref};
                 }
               }
             ],
             source_location: {},
-            title: {path: 'bom-ref'},
+            title: {
+              transformer: (input: Record<string, unknown>): string =>
+                input.description ? `${input.description}` : `${input.id}`
+            },
             id: {path: 'id'},
-            desc: {path: 'description'},
-            impact: {path: 'ratings', transformer: aggregateImpact},
+            impact: {path: 'ratings', transformer: aggregateImpact}, // temp
             code: {
-              transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(
                   _.omit(vulnerability, 'affectedComponents'),
                   null,
                   2
-                );
-              }
+                )
             },
             results: [
               {
@@ -306,21 +388,21 @@ export class SBOMMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      transformer: (data: Record<string, any>): Record<string, unknown> => {
+      transformer: (input: Record<string, any>): Record<string, unknown> => {
         return {
           auxiliary_data: [
             {
               name: 'SBOM',
-              components: _.get(data, 'components'),
-              dependencies: _.get(data, 'dependencies'),
-              data: _.omit(data, [
+              components: _.get(input, 'components'),
+              dependencies: _.get(input, 'dependencies'),
+              data: _.omit(input, [
                 'components',
                 'vulnerabilities',
                 'dependencies'
               ])
             }
           ],
-          ...(this.withRaw && {raw: data})
+          ...(this.withRaw && {raw: input})
         };
       }
     }

@@ -7,18 +7,16 @@
   "statistics": {},
   "profiles": [
     {
-      "name": "application/602de70a-7107-4ac8-9ad2-3c1c816892a7",
-      "title": "test 9",
+      "name": "CycloneDX BOM Report: application/602de70a-7107-4ac8-9ad2-3c1c816892a7",
+      "title": "test 9 CycloneDX BOM Report",
       "version": "SNAPSHOT",
-      "maintainer": "",
       "description": "This is the project I want to use to generate data to understand the schema a bit better",
-      "license": "",
       "supports": [],
       "attributes": [],
       "groups": [],
       "status": "loaded",
       "controls": [],
-      "sha256": "45a072f28e84cfb00c8cab2139b026114a1f548fff8551d51d84c8c13b05f772"
+      "sha256": "457073f76a4355932e902365ca9adf836dac722c1faa4ea1a78e3db202f28c68"
     }
   ],
   "passthrough": {
