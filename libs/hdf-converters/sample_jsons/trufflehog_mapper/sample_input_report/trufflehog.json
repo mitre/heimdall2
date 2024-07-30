@@ -1,0 +1,92 @@
+[
+    {
+        "SourceMetadata": {
+            "Data": {
+                "Git": {
+                    "commit": "0416560b1330d8ac42045813251d85c688717eaf",
+                    "file": "new_key",
+                    "email": "counter \u003chello@trufflesec.com\u003e",
+                    "repository": "https://github.com/trufflesecurity/test_keys",
+                    "timestamp": "2023-10-19 02:56:37 +0000",
+                    "line": 2
+                }
+            }
+        },
+        "SourceID": 1,
+        "SourceType": 16,
+        "SourceName": "trufflehog - git",
+        "DetectorType": 2,
+        "DetectorName": "AWS",
+        "DecoderName": "PLAIN",
+        "Verified": true,
+        "Raw": "AKIAQYLPMN5HHHFPZAM2",
+        "RawV2": "AKIAQYLPMN5HHHFPZAM21tUm636uS1yOEcfP5pvfqJ/ml36mF7AkyHsEU0IU",
+        "Redacted": "AKIAQYLPMN5HHHFPZAM2",
+        "ExtraData": {
+            "account": "052310077262",
+            "arn": "arn:aws:iam::052310077262:user/canarytokens.com@@c20nnjzlioibnaxvt392i9ope",
+            "is_canary": "true",
+            "message": "This is an AWS canary token generated at canarytokens.org, and was not set off; learn more here: https://trufflesecurity.com/canaries",
+            "resource_type": "Access key"
+        },
+        "StructuredData": null
+    },
+    {
+        "SourceMetadata": {
+            "Data": {
+                "Git": {
+                    "commit": "fbc14303ffbf8fb1c2c1914e8dda7d0121633aca",
+                    "file": "keys",
+                    "email": "counter \u003ccounter@counters-MacBook-Air.local\u003e",
+                    "repository": "https://github.com/trufflesecurity/test_keys",
+                    "timestamp": "2022-06-16 17:17:40 +0000",
+                    "line": 4
+                }
+            }
+        },
+        "SourceID": 1,
+        "SourceType": 16,
+        "SourceName": "trufflehog - git",
+        "DetectorType": 2,
+        "DetectorName": "AWS",
+        "DecoderName": "PLAIN",
+        "Verified": true,
+        "Raw": "AKIAYVP4CIPPERUVIFXG",
+        "RawV2": "AKIAYVP4CIPPERUVIFXGZt2U1h267eViPnuSA+JO5ABhiu4T7XUMSZ+Y2Oth",
+        "Redacted": "AKIAYVP4CIPPERUVIFXG",
+        "ExtraData": {
+            "account": "595918472158",
+            "arn": "arn:aws:iam::595918472158:user/canarytokens.com@@mirux23ppyky6hx3l6vclmhnj",
+            "is_canary": "true",
+            "message": "This is an AWS canary token generated at canarytokens.org, and was not set off; learn more here: https://trufflesecurity.com/canaries",
+            "resource_type": "Access key"
+        },
+        "StructuredData": null
+    },
+    {
+        "SourceMetadata": {
+            "Data": {
+                "Git": {
+                    "commit": "77b2a3e56973785a52ba4ae4b8dac61d4bac016f",
+                    "file": "keys",
+                    "email": "counter \u003ccounter@counters-MacBook-Air.local\u003e",
+                    "repository": "https://github.com/trufflesecurity/test_keys",
+                    "timestamp": "2022-06-16 17:27:56 +0000",
+                    "line": 3
+                }
+            }
+        },
+        "SourceID": 1,
+        "SourceType": 16,
+        "SourceName": "trufflehog - git",
+        "DetectorType": 17,
+        "DetectorName": "URI",
+        "DecoderName": "PLAIN",
+        "Verified": true,
+        "Raw": "https://admin:admin@the-internet.herokuapp.com",
+        "RawV2": "https://admin:admin@the-internet.herokuapp.com/basic_auth",
+        "Redacted": "https://admin:********@the-internet.herokuapp.com",
+        "ExtraData": null,
+        "StructuredData": null
+    }
+]
