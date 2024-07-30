@@ -13,7 +13,8 @@
     "src/server.js"
   ],
   "scripts": {
-    "build": "nx run build",
+    "prebuild": "rimraf ../../dist/frontend",
+    "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
     "lint:ci": "vue-cli-service lint --no-fix  --maxWarnings 0",
     "make:component": "vue-cli-service make:component",
@@ -24,7 +25,7 @@
     "prepack": "vue-cli-service build --dest dist && cp ../../README.md README.md && cp package.json package.json.orig && cat package.json.orig | jq '.dependencies = (.dependencies | with_entries(select(.key | contains(\"express\"))))' > package.json",
     "postpack": "mv package.json.orig package.json && rm README.md",
     "start:dev": "yarn workspace @mitre/hdf-converters build && vue-cli-service serve",
-    "test": "nx run test"
+    "test": "jest"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.425.0",
@@ -131,5 +132,13 @@
   "branch": "/blob/master/",
   "changelog": "/releases",
   "issues": "/issues/new/choose",
-  "readme": "README.md"
+  "readme": "README.md",
+  "nx": {
+    "implicitDependencies": ["@mitre/hdf-converters"],
+    "targets": {
+      "test": {
+        "dependsOn": ["^build"]
+      }
+    }
+  }
 }
