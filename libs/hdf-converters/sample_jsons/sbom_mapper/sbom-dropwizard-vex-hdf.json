@@ -37,6 +37,10 @@
           },
           "descriptions": [
             {
+              "data": "",
+              "label": "Date created"
+            },
+            {
               "data": "2021-03-25T17:04:19Z",
               "label": "Date published"
             },
@@ -65,7 +69,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -86,6 +90,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2023-06-14T18:30:38Z",
               "label": "Date published"
@@ -115,7 +123,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -133,6 +141,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-04-23T21:08:40Z",
               "label": "Date published"
@@ -162,7 +174,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -180,6 +192,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-05-15T18:58:44Z",
               "label": "Date published"
@@ -209,7 +225,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -227,6 +243,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-06-10T21:12:41Z",
               "label": "Date published"
@@ -256,7 +276,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -274,6 +294,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-05-15T18:58:50Z",
               "label": "Date published"
@@ -303,7 +327,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -321,6 +345,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-04-23T20:19:02Z",
               "label": "Date published"
@@ -350,7 +378,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -368,6 +396,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-05-15T18:58:47Z",
               "label": "Date published"
@@ -397,7 +429,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -415,6 +447,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-05-15T18:58:54Z",
               "label": "Date published"
@@ -444,7 +480,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -462,6 +498,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-04-23T21:36:03Z",
               "label": "Date published"
@@ -491,7 +531,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -509,6 +549,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-04-23T16:32:59Z",
               "label": "Date published"
@@ -538,7 +582,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -556,6 +600,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-06-18T14:44:50Z",
               "label": "Date published"
@@ -585,7 +633,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -603,6 +651,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-06-18T14:44:43Z",
               "label": "Date published"
@@ -632,7 +684,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -650,6 +702,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-06-18T14:44:46Z",
               "label": "Date published"
@@ -679,7 +735,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -697,6 +753,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-06-18T14:44:48Z",
               "label": "Date published"
@@ -726,7 +786,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -744,6 +804,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-03-04T20:52:14Z",
               "label": "Date published"
@@ -773,7 +837,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -791,6 +855,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-07-15T19:41:47Z",
               "label": "Date published"
@@ -820,7 +888,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -838,6 +906,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2019-11-13T00:32:27Z",
               "label": "Date published"
@@ -867,7 +939,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -885,6 +957,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2019-11-13T00:32:38Z",
               "label": "Date published"
@@ -914,7 +990,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -932,6 +1008,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2019-10-28T20:51:15Z",
               "label": "Date published"
@@ -961,7 +1041,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -979,6 +1059,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-05-15T18:59:10Z",
               "label": "Date published"
@@ -1008,7 +1092,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1026,6 +1110,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-05-15T18:59:01Z",
               "label": "Date published"
@@ -1055,7 +1143,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1074,6 +1162,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:14:51Z",
               "label": "Date published"
@@ -1103,7 +1195,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1121,6 +1213,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:15:36Z",
               "label": "Date published"
@@ -1150,7 +1246,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1168,6 +1264,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:16:02Z",
               "label": "Date published"
@@ -1197,7 +1297,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1215,6 +1315,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:16:26Z",
               "label": "Date published"
@@ -1244,7 +1348,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1262,6 +1366,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-11-19T20:13:06Z",
               "label": "Date published"
@@ -1291,7 +1399,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1309,6 +1417,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:16:51Z",
               "label": "Date published"
@@ -1338,7 +1450,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1356,6 +1468,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:16:59Z",
               "label": "Date published"
@@ -1385,7 +1501,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1403,6 +1519,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:16:42Z",
               "label": "Date published"
@@ -1432,7 +1552,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1450,6 +1570,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:16:10Z",
               "label": "Date published"
@@ -1479,7 +1603,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1497,6 +1621,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:15:54Z",
               "label": "Date published"
@@ -1526,7 +1654,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1544,6 +1672,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:15:46Z",
               "label": "Date published"
@@ -1573,7 +1705,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1591,6 +1723,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:16:18Z",
               "label": "Date published"
@@ -1620,7 +1756,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1638,6 +1774,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:16:34Z",
               "label": "Date published"
@@ -1667,7 +1807,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1685,6 +1825,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:15:24Z",
               "label": "Date published"
@@ -1714,7 +1858,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1732,6 +1876,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:15:00Z",
               "label": "Date published"
@@ -1761,7 +1909,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1780,6 +1928,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-09T19:15:11Z",
               "label": "Date published"
@@ -1809,7 +1961,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1828,6 +1980,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-10-03T00:00:31Z",
               "label": "Date published"
@@ -1857,7 +2013,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1875,6 +2031,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-01-20T21:20:15Z",
               "label": "Date published"
@@ -1904,7 +2064,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1922,6 +2082,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-03-12T00:00:36Z",
               "label": "Date published"
@@ -1951,7 +2115,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -1969,6 +2133,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-02-18T20:51:54Z",
               "label": "Date published"
@@ -1998,7 +2166,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2016,6 +2184,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-03-04T20:52:11Z",
               "label": "Date published"
@@ -2045,7 +2217,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2064,6 +2236,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-10-03T00:00:31Z",
               "label": "Date published"
@@ -2093,7 +2269,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2111,6 +2287,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-05-15T18:59:04Z",
               "label": "Date published"
@@ -2140,7 +2320,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2160,6 +2340,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-04-10T18:42:20Z",
               "label": "Date published"
@@ -2189,7 +2373,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2209,6 +2393,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-02-24T17:27:27Z",
               "label": "Date published"
@@ -2238,7 +2426,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2258,6 +2446,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-06-04T21:37:45Z",
               "label": "Date published"
@@ -2287,7 +2479,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2306,6 +2498,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-09-06T00:00:27Z",
               "label": "Date published"
@@ -2335,7 +2531,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2354,6 +2550,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-11-11T19:00:31Z",
               "label": "Date published"
@@ -2383,7 +2583,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2402,6 +2602,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-09-06T00:00:27Z",
               "label": "Date published"
@@ -2431,7 +2635,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2450,6 +2654,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-09-06T00:00:27Z",
               "label": "Date published"
@@ -2479,7 +2687,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2498,6 +2706,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-09-06T00:00:27Z",
               "label": "Date published"
@@ -2527,7 +2739,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2546,6 +2758,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-08-31T00:00:24Z",
               "label": "Date published"
@@ -2575,7 +2791,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2594,6 +2810,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-12-12T21:19:47Z",
               "label": "Date published"
@@ -2623,7 +2843,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2641,6 +2861,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-12-17T20:00:50Z",
               "label": "Date published"
@@ -2670,7 +2894,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2688,6 +2912,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2023-11-29T12:30:16Z",
               "label": "Date published"
@@ -2717,7 +2945,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2735,6 +2963,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-03-10T03:46:47Z",
               "label": "Date published"
@@ -2764,7 +2996,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2782,6 +3014,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-06-23T20:23:04Z",
               "label": "Date published"
@@ -2811,7 +3047,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2831,6 +3067,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-04-06T17:31:30Z",
               "label": "Date published"
@@ -2860,7 +3100,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2878,6 +3118,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2023-04-18T22:19:57Z",
               "label": "Date published"
@@ -2907,7 +3151,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2926,6 +3170,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2023-04-19T18:15:45Z",
               "label": "Date published"
@@ -2955,7 +3203,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -2973,6 +3221,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-12-02T18:28:18Z",
               "label": "Date published"
@@ -3002,7 +3254,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3020,6 +3272,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-07-07T20:55:34Z",
               "label": "Date published"
@@ -3049,7 +3305,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3069,6 +3325,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2023-09-14T16:17:27Z",
               "label": "Date published"
@@ -3098,7 +3358,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3120,6 +3380,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-11-04T17:50:24Z",
               "label": "Date published"
@@ -3149,7 +3413,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3167,6 +3431,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2023-07-10T21:52:39Z",
               "label": "Date published"
@@ -3196,7 +3464,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3214,6 +3482,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-06-10T15:43:22Z",
               "label": "Date published"
@@ -3243,7 +3515,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3263,6 +3535,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2023-09-14T16:16:00Z",
               "label": "Date published"
@@ -3292,7 +3568,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3313,6 +3589,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-10-12T17:33:00Z",
               "label": "Date published"
@@ -3342,7 +3622,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3360,6 +3640,10 @@
             "cwe": []
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "",
               "label": "Date published"
@@ -3388,7 +3672,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3406,6 +3690,10 @@
             "cwe": []
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "",
               "label": "Date published"
@@ -3434,7 +3722,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3452,6 +3740,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-02-09T22:57:29Z",
               "label": "Date published"
@@ -3481,7 +3773,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3499,6 +3791,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-02-10T23:05:04Z",
               "label": "Date published"
@@ -3528,7 +3824,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3546,6 +3842,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2020-06-05T16:13:36Z",
               "label": "Date published"
@@ -3575,7 +3875,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3593,6 +3893,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2021-06-03T23:40:23Z",
               "label": "Date published"
@@ -3622,7 +3926,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3640,6 +3944,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-03-05T00:00:45Z",
               "label": "Date published"
@@ -3669,7 +3977,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3688,6 +3996,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-07-07T20:55:40Z",
               "label": "Date published"
@@ -3717,7 +4029,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3735,6 +4047,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2023-10-10T21:28:24Z",
               "label": "Date published"
@@ -3764,7 +4080,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3782,6 +4098,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2024-02-26T20:13:46Z",
               "label": "Date published"
@@ -3811,7 +4131,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3829,6 +4149,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2023-10-10T21:16:23Z",
               "label": "Date published"
@@ -3858,7 +4182,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3878,6 +4202,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2018-10-18T18:06:08Z",
               "label": "Date published"
@@ -3907,7 +4235,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3925,6 +4253,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2023-10-24T01:49:09Z",
               "label": "Date published"
@@ -3954,7 +4286,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -3972,6 +4304,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-01-06T23:55:09Z",
               "label": "Date published"
@@ -4001,7 +4337,7 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
@@ -4021,6 +4357,10 @@
             ]
           },
           "descriptions": [
+            {
+              "data": "",
+              "label": "Date created"
+            },
             {
               "data": "2022-01-21T23:07:39Z",
               "label": "Date published"
@@ -4050,13 +4390,13 @@
             {
               "status": "failed",
               "code_desc": "Component 602de70a-7107-4ac8-9ad2-3c1c816892a7 is vulnerable",
-              "message": "Component Summary\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
+              "message": "-Component Summary-\n- bom-ref: 602de70a-7107-4ac8-9ad2-3c1c816892a7\n- name: 602de70a-7107-4ac8-9ad2-3c1c816892a7",
               "start_time": ""
             }
           ]
         }
       ],
-      "sha256": "d547c818aee4fc72cd640de501c635493af622d5a75e15e3fca9f213727c9f88"
+      "sha256": "b90c78f4c0936df3350a3460489cbc98ebb18a6edc000f68bf7f9f951ba54404"
     }
   ],
   "passthrough": {

@@ -111,12 +111,38 @@ export class SBOMResults {
       vulnerability.affectedComponents = [];
       for (const id of vulnerability.affects) {
         for (const component of data.components as Record<string, unknown>[]) {
-          // Find every component that is affected via listed bom-refs and copy to an affected components list
+          // Find every component that is affected via listed bom-refs
           if (component['bom-ref'] === id.ref) {
-            // Add that affected components list to the corresponding vulnerability object
+            // Add that affected component to the corresponding vulnerability object
+            // Selectively pick out fields to display; full components are listed in full component structure
             (
               vulnerability.affectedComponents as Record<string, unknown>[]
-            ).push(component);
+            ).push(
+              _.pick(component, [
+                'type',
+                'mime-type',
+                'bom-ref',
+                'supplier',
+                'manufacturer',
+                'authors', // Replaces `author` in v1.6
+                'author', // Deprecated in v1.6
+                'publisher',
+                'group',
+                'name',
+                'version',
+                'description',
+                'licenses',
+                'copyright'
+              ])
+            );
+
+            if (!component.affectingVulnerabilities) {
+              component.affectingVulnerabilities = [];
+            }
+            // Also record the ID of the vulnerability in the component for use in bidirectional traversal
+            (component.affectingVulnerabilities as string[]).push(
+              vulnerability['bom-ref'] as string
+            );
           }
         }
       }
@@ -213,6 +239,10 @@ export class SBOMMapper extends BaseConverter {
             },
             descriptions: [
               {
+                data: {path: 'created'},
+                label: 'Date created'
+              },
+              {
                 data: {path: 'published'},
                 label: 'Date published'
               },
@@ -256,7 +286,7 @@ export class SBOMMapper extends BaseConverter {
                 },
                 message: {
                   transformer: (input: Record<string, unknown>): string => {
-                    let msg = 'Component Summary';
+                    let msg = '-Component Summary-';
                     for (const item in input) {
                       if (input[item] instanceof Array) {
                         msg += `\n- ${item}: ${JSON.stringify(input[item], null, 2).replace(/\"/g, '')}`;
