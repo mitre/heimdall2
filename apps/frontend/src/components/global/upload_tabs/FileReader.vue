@@ -35,7 +35,7 @@
                   <li>Checklist</li>
                   <li>DBProtect</li>
                   <li>Fortify</li>
-                  <li>Golang Security Checker (GoSec)</li>
+                  <li>Golang Security Checker (gosec)</li>
                   <li>Ion Channel</li>
                   <li>JFrog Xray</li>
                   <li>Nessus</li>
