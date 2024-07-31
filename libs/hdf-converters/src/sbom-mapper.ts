@@ -405,8 +405,9 @@ export class SBOMMapper extends BaseConverter {
             id: {path: 'id'},
             desc: {
               path: 'description',
-              transformer: (input: string): string | undefined =>
-                input ? input : undefined
+              transformer: (
+                input: Record<string, unknown>
+              ): string | undefined => (input ? `${input}` : undefined)
             },
             impact: {path: 'ratings', transformer: aggregateImpact},
             code: {
