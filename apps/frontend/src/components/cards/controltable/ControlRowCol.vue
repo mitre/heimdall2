@@ -28,9 +28,7 @@
         class="pa-2 mono pre-formatted"
         v-html="sanitize_html(result.code_desc.trim())"
       />
-      <v-btn
-        v-if="componentRef"
-        @click="goToComponent()"
+      <v-btn v-if="componentRef" @click="goToComponent()"
         >See component details <v-icon>mdi-view-list-outline</v-icon></v-btn
       >
       <!-- eslint-enable vue/no-v-html -->

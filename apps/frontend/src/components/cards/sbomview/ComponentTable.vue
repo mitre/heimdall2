@@ -13,7 +13,7 @@
     <v-row>
       <v-col>
         <v-data-table
-          :items="items"
+          :items="components"
           :headers="headers"
           :items-per-page="-1"
           :item-key="'bom-ref'"
@@ -33,7 +33,7 @@
                 v-model="headerColumns"
                 chips
                 multiple
-                :items="stringFields"
+                :items="headerOptions"
               />
 
               <!--             
@@ -43,7 +43,7 @@
                   mdi-cog-outline
                 </v-icon>
               </template>
-                  <v-autocomplete chips multiple v-modal.items="stringFields"></v-autocomplete>
+                  <v-autocomplete chips multiple v-modal.items="headerOptions"></v-autocomplete>
             </v-menu> 
           -->
             </v-card-title>
@@ -54,6 +54,34 @@
             <template v-if="componentRef == item['bom-ref']">
               <a id="scroll-to" />
             </template>
+          </template>
+
+          <template #[`item.affectingVulnerabilities`]="{item}">
+            <v-chip-group
+              v-for="vuln in affectingVulns.get(item['bom-ref'])"
+              :key="vuln.data.id"
+            >
+              <v-tooltip max-width="400" left>
+                <template #activator="{on}">
+                  <span v-on="on">
+                    <v-chip
+                      outlined
+                      small
+                      :color="severity_color(vuln.hdf.severity)"
+                      >{{ vuln.data.id }}</v-chip
+                    >
+                  </span>
+                </template>
+                <template style="word-break: break-word">
+                  {{ vuln.data.title?.substring(0, 100) }}
+                  <template v-if="vuln.data.title?.length || 0 > 100"
+                    >...</template
+                  >
+                  <br />
+                  <b>click to view more details</b>
+                </template>
+              </v-tooltip>
+            </v-chip-group>
           </template>
 
           <template #expanded-item="{headers, item}">
@@ -77,7 +105,7 @@
                       </thead>
                       <tbody>
                         <tr
-                          v-for="field in stringFields"
+                          v-for="field in headerOptions"
                           :key="field"
                           :colspan="headers.length"
                         >
@@ -183,6 +211,8 @@
 
 <script lang="ts">
 import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {Result} from '@mitre/hdf-converters/src/utils/result';
+import {ContextualizedControl} from 'inspecjs';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -223,6 +253,9 @@ interface SBOMComponent {
   properties?: Record<string, unknown>[];
   tags?: string[];
   signature?: Record<string, unknown>[];
+
+  // custom
+  affectingVulnerabilities: string[]; // an array of bom-refs
 }
 
 interface Passthrough {
@@ -242,13 +275,22 @@ export default class ComponentTable extends Vue {
   @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({required: true}) readonly componentRef!: string | undefined;
 
-  headerColumns = ['name', 'version', 'author', 'group', 'type', 'description'];
+  headerColumns = [
+    'name',
+    'version',
+    'author',
+    'group',
+    'type',
+    'description',
+    'affectingVulnerabilities'
+  ];
+
   tabs = {tab: null};
 
   search = '';
   expanded: SBOMComponent[] = [];
 
-  stringFields = [
+  headerOptions = [
     'type',
     'mime-type',
     'publisher',
@@ -260,7 +302,8 @@ export default class ComponentTable extends Vue {
     'scope',
     'copyright',
     'cpe',
-    'purl'
+    'purl',
+    'affectingVulnerabilities'
   ];
 
   mounted() {
@@ -270,7 +313,9 @@ export default class ComponentTable extends Vue {
       if (element) {
         element.scrollIntoView({block: 'start', behavior: 'smooth'});
         element.parentElement?.parentElement?.classList.add('highlight');
-        const item = this.items.find((i) => i['bom-ref'] === this.componentRef);
+        const item = this.components.find(
+          (i) => i['bom-ref'] === this.componentRef
+        );
         if (item) {
           this.expanded = [item];
         }
@@ -286,7 +331,7 @@ export default class ComponentTable extends Vue {
     return h;
   }
 
-  get items(): SBOMComponent[] {
+  get components(): SBOMComponent[] {
     const evaluations = FilteredDataModule.evaluations(
       FilteredDataModule.selectedEvaluationIds
     );
@@ -302,6 +347,41 @@ export default class ComponentTable extends Vue {
       }
     }
     return sboms;
+  }
+
+  get all_filter(): Filter {
+    return {
+      fromFile: FilteredDataModule.selectedEvaluationIds
+    };
+  }
+
+  get affectingVulns(): Map<string, ContextualizedControl[]> {
+    let vulnMap: Map<string, ContextualizedControl[]> = new Map();
+    for (const c of this.components) {
+      // get the component's affecting vulnerabilities
+      const componentVulns = [];
+      for (const vulnBomRef of c.affectingVulnerabilities || []) {
+        let result = this.getVulns(vulnBomRef);
+        if (result.ok) componentVulns.push(result.value); // TODO: show components with unloaded vulns as errors?
+      }
+      // associate component bom-ref with vuln info
+      if (c['bom-ref']) vulnMap.set(c['bom-ref'], componentVulns);
+    }
+    return vulnMap;
+  }
+
+  getVulns(vulnBomRef: string): Result<ContextualizedControl, null> {
+    const vuln = FilteredDataModule.controls(this.all_filter).find((c) => {
+      // regex to get the value of bom-ref from the vuln code stored as JSON
+      let match = c.full_code.match(/"bom-ref": "(?<ref>.*?)"/);
+      return match ? match.groups?.ref === vulnBomRef : false;
+    });
+    if (vuln) return {ok: true, value: vuln};
+    return {ok: false, error: null};
+  }
+
+  severity_color(severity: string): string {
+    return `severity${_.startCase(severity)}`;
   }
 }
 </script>
