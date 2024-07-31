@@ -11,7 +11,10 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 1.0],
   ['high', 0.7],
   ['medium', 0.5],
-  ['low', 0.3]
+  ['low', 0.3],
+  ['info', 0.0],
+  ['none', 0.0],
+  ['unknown', 0.0]
 ]);
 
 function formatCWETags(input: number[], addPrefix = true): string[] {
@@ -30,20 +33,26 @@ function getNISTTags(input: number[]): string[] {
   );
 }
 
-// A single SBOM vulnerability can contain multiple severity reports
-// Need to average any existing severities and then pass to `impact`
-function aggregateImpact(ratings: Record<string, unknown>[]) {
+// A single SBOM vulnerability can contain multiple security ratings
+// Average any existing ratings and then pass to `impact`
+function aggregateImpact(ratings: Record<string, unknown>[]): number {
   let impact = 0;
   for (const rating of ratings) {
-    const severity = IMPACT_MAPPING.get(
-      (rating as {severity: string}).severity.toLowerCase()
-    );
-    if (severity) {
-      impact += severity;
+    // Prefer to use CVSS-based `score` field when possible
+    if (_.has(rating, 'score') && _.get(rating, 'method') == 'CVSSv31') {
+      impact += (rating as {score: number}).score;
+    } else {
+      // Else interpret it from `severity` field
+      const severity = IMPACT_MAPPING.get(
+        (rating as {severity: string}).severity.toLowerCase()
+      );
+      if (severity) {
+        impact += severity * 10;
+      }
     }
   }
   // Round up aggregate impact to the 2nd decimal place
-  return Math.ceil((impact / ratings.length) * 100) / 100;
+  return Math.ceil((impact / ratings.length) * 10) / 100;
 }
 
 export class SBOMResults {
@@ -66,7 +75,7 @@ export class SBOMResults {
   }
 
   // Flatten any arbitrarily nested components list
-  flattenComponents(data: Record<string, unknown>) {
+  flattenComponents(data: Record<string, unknown>): void {
     // Look through every component at the top level of the list
     for (const component of data.components as Record<string, unknown>[]) {
       // Identify if subcomponents exist
@@ -103,7 +112,7 @@ export class SBOMResults {
     ...
   }
   */
-  generateIntermediary(data: Record<string, unknown>) {
+  generateIntermediary(data: Record<string, unknown>): void {
     for (const vulnerability of data.vulnerabilities as (Record<
       string,
       unknown
@@ -151,7 +160,7 @@ export class SBOMResults {
 
   // VEX by default has no component info, resulting in profile errors when parsing the vulnerabilities for OHDF
   // Fix that by adding a temporary result that refers the vulnerability back to its associated BOM
-  formatVEX(data: Record<string, unknown>) {
+  formatVEX(data: Record<string, unknown>): void {
     for (const vulnerability of data.vulnerabilities as (Record<
       string,
       unknown
@@ -280,49 +289,93 @@ export class SBOMMapper extends BaseConverter {
             },
             descriptions: [
               {
-                data: {path: 'detail'},
-                label: 'Detail'
-              },
+                path: 'detail',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Detail'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'recommendation'},
-                label: 'Recommendation'
-              },
+                path: 'recommendation',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Recommendation'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'workaround'},
-                label: 'Workaround'
-              },
+                path: 'workaround',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Workaround'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'proofOfConcept'},
-                label: 'Proof of concept'
-              },
+                path: 'proofOfConcept',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input
+                    ? {
+                        data: JSON.stringify(input, null, 2),
+                        label: 'Proof of concept'
+                      }
+                    : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'created'},
-                label: 'Date created'
-              },
+                path: 'created',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Date created'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'published'},
-                label: 'Date published'
-              },
+                path: 'published',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Date published'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'updated'},
-                label: 'Date updated'
-              },
+                path: 'updated',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Date updated'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'rejected'},
-                label: 'Date rejected'
-              },
+                path: 'rejected',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Date rejected'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'credits'},
-                label: 'Credits'
-              },
+                path: 'credits',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input
+                    ? {data: JSON.stringify(input, null, 2), label: 'Credits'}
+                    : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'tools'},
-                label: 'Tools'
-              },
+                path: 'tools',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input
+                    ? {data: JSON.stringify(input, null, 2), label: 'Tools'}
+                    : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'analysis'},
-                label: 'Analysis'
-              }
+                path: 'analysis',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input
+                    ? {data: JSON.stringify(input, null, 2), label: 'Analysis'}
+                    : undefined
+              } as unknown as ExecJSON.ControlDescription
             ],
             refs: [
               {
@@ -342,11 +395,21 @@ export class SBOMMapper extends BaseConverter {
             ],
             source_location: {},
             title: {
+              // Give description as title if possible
+              // Cut off description after certain word count for frontend display on smaller screens
               transformer: (input: Record<string, unknown>): string =>
-                input.description ? `${input.description}` : `${input.id}`
+                input.description
+                  ? `${(input.description as string).split(' ').splice(0, 20).join(' ')}...`
+                  : `${input.id}`
             },
             id: {path: 'id'},
-            impact: {path: 'ratings', transformer: aggregateImpact}, // temp
+            desc: {
+              path: 'description',
+              transformer: (
+                input: Record<string, unknown>
+              ): string | undefined => (input ? `${input}` : undefined)
+            },
+            impact: {path: 'ratings', transformer: aggregateImpact},
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
                 JSON.stringify(
@@ -371,9 +434,9 @@ export class SBOMMapper extends BaseConverter {
                     let msg = '-Component Summary-';
                     for (const item in input) {
                       if (input[item] instanceof Array) {
-                        msg += `\n- ${item}: ${JSON.stringify(input[item], null, 2).replace(/\"/g, '')}`;
+                        msg += `\n\n- ${_.capitalize(item)}: ${JSON.stringify(input[item], null, 2).replace(/"/g, '')}`;
                       } else {
-                        msg += `\n- ${item}: ${input[item]}`;
+                        msg += `\n\n- ${_.capitalize(item)}: ${input[item]}`;
                       }
                     }
                     return msg;
