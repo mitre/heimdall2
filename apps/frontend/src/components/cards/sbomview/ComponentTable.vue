@@ -68,11 +68,18 @@
                       outlined
                       small
                       :color="severity_color(vuln.hdf.severity)"
-                      >{{ vuln.data.id }}</v-chip
+                      @click="
+                        $router.push({
+                          name: 'results',
+                          query: {id: vuln.data.id}
+                        })
+                      "
                     >
+                      {{ vuln.data.id }}
+                    </v-chip>
                   </span>
                 </template>
-                <template style="text-overflow: ellipsis;">
+                <template style="text-overflow: ellipsis">
                   {{ vuln.data.title }}
                   <br />
                   <b>click to view more details</b>
@@ -208,6 +215,7 @@
 
 <script lang="ts">
 import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {SnackbarModule} from '@/store/snackbar';
 import {Result} from '@mitre/hdf-converters/src/utils/result';
 import {ContextualizedControl} from 'inspecjs';
 import * as _ from 'lodash';
@@ -270,7 +278,8 @@ interface Passthrough {
 export default class ComponentTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
-  @Prop({required: true}) readonly componentRef!: string | undefined;
+
+  componentRef = this.$route.query.componentRef;
 
   headerColumns = [
     'name',
@@ -306,16 +315,20 @@ export default class ComponentTable extends Vue {
   mounted() {
     this.$nextTick(() => {
       if (!this.componentRef) return;
-      const element = document.getElementById('scroll-to');
-      if (element) {
-        element.scrollIntoView({block: 'start', behavior: 'smooth'});
-        element.parentElement?.parentElement?.classList.add('highlight');
-        const item = this.components.find(
-          (i) => i['bom-ref'] === this.componentRef
+      try {
+        this.$vuetify.goTo(`#scroll-to`, {duration: 300}); // vue's scroll functionality
+      } catch (e) {
+        SnackbarModule.failure(
+          `The component you are trying to view is not currently loaded (bom-ref: ${this.componentRef})`
         );
-        if (item) {
-          this.expanded = [item];
-        }
+        return;
+      }
+
+      const item = this.components.find(
+        (i) => i['bom-ref'] === this.componentRef
+      );
+      if (item) {
+        this.expanded = [item];
       }
     });
   }

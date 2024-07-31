@@ -291,6 +291,22 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     | SourcedContextualizedProfile
     | null = null;
 
+  mounted() {
+    // url can contain an optional id or list of ids to filter to
+    // used when navigating from SBOM component to its associated
+    // vulnerability
+    const id = this.$route.query.id;
+    if (!id) return;
+
+    if (typeof id === 'string') {
+      SearchModule.clear();
+      SearchModule.addIdFilter(id);
+    } else {
+      SearchModule.clear();
+      SearchModule.addIdFilter(id.filter((i): i is string => i !== null));
+    }
+  }
+
   /**
    * The current search terms, as modeled by the search bar
    */

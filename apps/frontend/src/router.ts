@@ -46,12 +46,6 @@ const router = new Router({
       ]
     },
     {
-      path: '/sbom-view/:componentRef',
-      name: 'sbom',
-      component: SbomView,
-      meta: {requiresAuth: true, hasIdParams: true}
-    },
-    {
       path: '/sbom-view',
       name: 'sbom',
       component: SbomView,

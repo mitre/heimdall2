@@ -100,7 +100,7 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
     if (this.componentRef)
       this.$router.push({
         name: 'sbom',
-        params: {componentRef: this.componentRef}
+        query: {componentRef: this.componentRef}
       });
   }
 }
