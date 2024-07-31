@@ -3,7 +3,10 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {getCCIsForNISTTags} from './utils/global';
+import {
+  conditionallyProvideAttribute,
+  getCCIsForNISTTags
+} from './utils/global';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
@@ -11,7 +14,10 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 1.0],
   ['high', 0.7],
   ['medium', 0.5],
-  ['low', 0.3]
+  ['low', 0.3],
+  ['info', 0.0],
+  ['none', 0.0],
+  ['unknown', 0.0]
 ]);
 
 function formatCWETags(input: number[], addPrefix = true): string[] {
@@ -30,20 +36,24 @@ function getNISTTags(input: number[]): string[] {
   );
 }
 
-// A single SBOM vulnerability can contain multiple severity reports
-// Need to average any existing severities and then pass to `impact`
-function aggregateImpact(ratings: Record<string, unknown>[]) {
+// A single SBOM vulnerability can contain multiple security ratings
+// Average any existing ratings and then pass to `impact`
+function aggregateImpact(ratings: Record<string, unknown>[]): number {
   let impact = 0;
   for (const rating of ratings) {
-    const severity = IMPACT_MAPPING.get(
-      (rating as {severity: string}).severity.toLowerCase()
-    );
-    if (severity) {
-      impact += severity;
+    if (_.has(rating, 'score') && _.get(rating, 'method') == 'CVSSv31') {
+      impact += (rating as {score: number}).score;
+    } else {
+      const severity = IMPACT_MAPPING.get(
+        (rating as {severity: string}).severity.toLowerCase()
+      );
+      if (severity) {
+        impact += severity * 10;
+      }
     }
   }
   // Round up aggregate impact to the 2nd decimal place
-  return Math.ceil((impact / ratings.length) * 100) / 100;
+  return Math.ceil((impact / ratings.length) * 10) / 100;
 }
 
 export class SBOMResults {
@@ -66,7 +76,7 @@ export class SBOMResults {
   }
 
   // Flatten any arbitrarily nested components list
-  flattenComponents(data: Record<string, unknown>) {
+  flattenComponents(data: Record<string, unknown>): void {
     // Look through every component at the top level of the list
     for (const component of data.components as Record<string, unknown>[]) {
       // Identify if subcomponents exist
@@ -103,7 +113,7 @@ export class SBOMResults {
     ...
   }
   */
-  generateIntermediary(data: Record<string, unknown>) {
+  generateIntermediary(data: Record<string, unknown>): void {
     for (const vulnerability of data.vulnerabilities as (Record<
       string,
       unknown
@@ -151,7 +161,7 @@ export class SBOMResults {
 
   // VEX by default has no component info, resulting in profile errors when parsing the vulnerabilities for OHDF
   // Fix that by adding a temporary result that refers the vulnerability back to its associated BOM
-  formatVEX(data: Record<string, unknown>) {
+  formatVEX(data: Record<string, unknown>): void {
     for (const vulnerability of data.vulnerabilities as (Record<
       string,
       unknown
@@ -346,7 +356,7 @@ export class SBOMMapper extends BaseConverter {
                 input.description ? `${input.description}` : `${input.id}`
             },
             id: {path: 'id'},
-            impact: {path: 'ratings', transformer: aggregateImpact}, // temp
+            impact: {path: 'ratings', transformer: aggregateImpact},
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
                 JSON.stringify(

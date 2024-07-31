@@ -35,7 +35,7 @@
                   <li>Checklist</li>
                   <li>DBProtect</li>
                   <li>Fortify</li>
-                  <li>Golang Security Checker (GoSec)</li>
+                  <li>Golang Security Checker (gosec)</li>
                   <li>Ion Channel</li>
                   <li>JFrog Xray</li>
                   <li>Nessus</li>
@@ -47,6 +47,7 @@
                   <li>Scoutsuite</li>
                   <li>Snyk</li>
                   <li>Tenable (API)</li>
+                  <li>Trufflehog</li>
                   <li>Twistlock</li>
                   <li>Veracode</li>
                   <li>XCCDF Results (native OpenSCAP and SCC outputs)</li>
