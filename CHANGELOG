@@ -1,4 +1,4 @@
-v2.10.11
+v2.10.12
 
 - Hdf2ckl severity @kemley76 (#5866)
 - checklist metadata input validation on export @kemley76 (#5902)
@@ -10,6 +10,7 @@ v2.10.11
 
 ## Dependency Updates
 
+- Bump cypress-wait-until from 1.7.2 to 3.0.2 @dependabot (#6046)
 - Bump @aws-sdk/client-config-service from 3.620.1 to 3.621.0 @dependabot (#6044)
 - Bump @types/lodash from 4.17.5 to 4.17.7 @dependabot (#6001)
 - Bump @types/node from 20.14.12 to 22.0.0 @dependabot (#6043)
