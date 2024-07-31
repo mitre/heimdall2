@@ -5,7 +5,7 @@
 import {InspecDataModule} from '@/store/data_store';
 import Store from '@/store/store';
 import {Tag} from '@/types/models';
-import {read_file_async} from '@/utilities/async_util';
+import {readFileAsync} from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
@@ -136,7 +136,7 @@ export class InspecIntake extends VuexModule {
     const filename =
       options.file?.name || options.filename || 'Missing Filename';
     if (options.file) {
-      read = await read_file_async(options.file);
+      read = await readFileAsync(options.file);
     } else if (options.data) {
       read = options.data;
     } else {
