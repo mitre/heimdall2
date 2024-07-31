@@ -314,7 +314,12 @@ export class SBOMMapper extends BaseConverter {
                 transformer: (
                   input: Record<string, unknown>
                 ): Record<string, unknown> | undefined =>
-                  input ? {data: input, label: 'Proof of concept'} : undefined
+                  input
+                    ? {
+                        data: JSON.stringify(input, null, 2),
+                        label: 'Proof of concept'
+                      }
+                    : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'created',
@@ -349,21 +354,27 @@ export class SBOMMapper extends BaseConverter {
                 transformer: (
                   input: Record<string, unknown>
                 ): Record<string, unknown> | undefined =>
-                  input ? {data: input, label: 'Credits'} : undefined
+                  input
+                    ? {data: JSON.stringify(input, null, 2), label: 'Credits'}
+                    : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'tools',
                 transformer: (
                   input: Record<string, unknown>
                 ): Record<string, unknown> | undefined =>
-                  input ? {data: input, label: 'Tools'} : undefined
+                  input
+                    ? {data: JSON.stringify(input, null, 2), label: 'Tools'}
+                    : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'analysis',
                 transformer: (
                   input: Record<string, unknown>
                 ): Record<string, unknown> | undefined =>
-                  input ? {data: input, label: 'Analysis'} : undefined
+                  input
+                    ? {data: JSON.stringify(input, null, 2), label: 'Analysis'}
+                    : undefined
               } as unknown as ExecJSON.ControlDescription
             ],
             refs: [
@@ -384,10 +395,19 @@ export class SBOMMapper extends BaseConverter {
             ],
             source_location: {},
             title: {
+              // Give description as title if possible
+              // Cut off description after certain word count for frontend display on smaller screens
               transformer: (input: Record<string, unknown>): string =>
-                input.description ? `${input.description}` : `${input.id}`
+                input.description
+                  ? `${(input.description as string).split(' ').splice(0, 20).join(' ')}...`
+                  : `${input.id}`
             },
             id: {path: 'id'},
+            desc: {
+              path: 'description',
+              transformer: (input: string): string | undefined =>
+                input ? input : undefined
+            },
             impact: {path: 'ratings', transformer: aggregateImpact},
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
@@ -413,9 +433,9 @@ export class SBOMMapper extends BaseConverter {
                     let msg = '-Component Summary-';
                     for (const item in input) {
                       if (input[item] instanceof Array) {
-                        msg += `\n- ${item}: ${JSON.stringify(input[item], null, 2).replace(/\"/g, '')}`;
+                        msg += `\n\n- ${_.capitalize(item)}: ${JSON.stringify(input[item], null, 2).replace(/"/g, '')}`;
                       } else {
-                        msg += `\n- ${item}: ${input[item]}`;
+                        msg += `\n\n- ${_.capitalize(item)}: ${input[item]}`;
                       }
                     }
                     return msg;
