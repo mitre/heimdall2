@@ -3,10 +3,7 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {
-  conditionallyProvideAttribute,
-  getCCIsForNISTTags
-} from './utils/global';
+import {getCCIsForNISTTags} from './utils/global';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
@@ -41,9 +38,11 @@ function getNISTTags(input: number[]): string[] {
 function aggregateImpact(ratings: Record<string, unknown>[]): number {
   let impact = 0;
   for (const rating of ratings) {
+    // Prefer to use CVSS-based `score` field when possible
     if (_.has(rating, 'score') && _.get(rating, 'method') == 'CVSSv31') {
       impact += (rating as {score: number}).score;
     } else {
+      // Else interpret it from `severity` field
       const severity = IMPACT_MAPPING.get(
         (rating as {severity: string}).severity.toLowerCase()
       );
@@ -290,49 +289,82 @@ export class SBOMMapper extends BaseConverter {
             },
             descriptions: [
               {
-                data: {path: 'detail'},
-                label: 'Detail'
-              },
+                path: 'detail',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Detail'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'recommendation'},
-                label: 'Recommendation'
-              },
+                path: 'recommendation',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Recommendation'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'workaround'},
-                label: 'Workaround'
-              },
+                path: 'workaround',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Workaround'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'proofOfConcept'},
-                label: 'Proof of concept'
-              },
+                path: 'proofOfConcept',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Proof of concept'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'created'},
-                label: 'Date created'
-              },
+                path: 'created',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Date created'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'published'},
-                label: 'Date published'
-              },
+                path: 'published',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Date published'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'updated'},
-                label: 'Date updated'
-              },
+                path: 'updated',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Date updated'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'rejected'},
-                label: 'Date rejected'
-              },
+                path: 'rejected',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Date rejected'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'credits'},
-                label: 'Credits'
-              },
+                path: 'credits',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Credits'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'tools'},
-                label: 'Tools'
-              },
+                path: 'tools',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Tools'} : undefined
+              } as unknown as ExecJSON.ControlDescription,
               {
-                data: {path: 'analysis'},
-                label: 'Analysis'
-              }
+                path: 'analysis',
+                transformer: (
+                  input: Record<string, unknown>
+                ): Record<string, unknown> | undefined =>
+                  input ? {data: input, label: 'Analysis'} : undefined
+              } as unknown as ExecJSON.ControlDescription
             ],
             refs: [
               {

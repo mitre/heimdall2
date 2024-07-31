@@ -36,14 +36,6 @@
               "label": "Recommendation"
             },
             {
-              "data": "",
-              "label": "Workaround"
-            },
-            {
-              "data": "",
-              "label": "Proof of concept"
-            },
-            {
               "data": "2020-12-03T00:00:00.000Z",
               "label": "Date created"
             },
@@ -56,10 +48,6 @@
               "label": "Date updated"
             },
             {
-              "data": "",
-              "label": "Date rejected"
-            },
-            {
               "data": {
                 "individuals": [
                   {
@@ -68,10 +56,6 @@
                 ]
               },
               "label": "Credits"
-            },
-            {
-              "data": "",
-              "label": "Tools"
             },
             {
               "data": {
@@ -134,7 +118,7 @@
           ]
         }
       ],
-      "sha256": "34f7fa34392e163ba11e5899db408e3c390e0c4c38c5085f69e8d6405c26141c"
+      "sha256": "ea955961c50e68aa955994bdfdc4e8d2e4d5de134971a3d1d7aaf9bd418b254f"
     }
   ],
   "passthrough": {

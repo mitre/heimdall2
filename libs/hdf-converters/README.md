@@ -21,7 +21,7 @@ OHDF Converters supplies several methods to convert various types of security to
 14. [**nikto-mapper**] - Nikto results JSON file
 15. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
 16. [**sarif-mapper**] - SARIF JSON file
-17. [**sbom-mapper**] - SBOM JSON file
+17. [**sbom-mapper**] - CycloneDX SBOM JSON file
 18. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
 19. [**snyk-mapper**] - Snyk results JSON file
 20. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
