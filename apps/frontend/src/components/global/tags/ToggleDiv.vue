@@ -1,74 +1,116 @@
 <template>
-  <div :key="renderKey">
-    <img @click="toggleModal" src="../../../assets/settingsgear.png" alt="Toggle Modal" style="width: 60px; height: 60px; margin-right: 20px; cursor: pointer;">
-    <Modal :isVisible="isModalVisible" @close="toggleModal">
-      <div class="modal-content-wrapper">
-        <div class="checkbox-container">
-          <div v-for="(checkbox, index) in combinedCheckboxes" :key="checkbox.id" class="checkbox-item">
-            <label>
-              <input type="checkbox" :value="checkbox.id" v-model="localCheckedValues" />
-              {{ checkbox.label }}
-            </label>
-            <button v-if="index >= 2" @click="handleRemoveMapping(checkbox.id)" class="remove-button">X</button>
+  <v-container>
+    <v-btn @click="toggleModal" class="mx-2" fab dark small><v-icon dark> mdi-cog</v-icon></v-btn>
+    <!-- <v-img
+      @click="toggleModal"
+      src="../../../assets/settingsgear.png"
+      alt="Toggle Modal"
+      width="60"
+      height="60"
+      class="mr-4"
+      style="cursor: pointer;"
+    ></v-img> -->
+    <v-dialog v-model="isModalVisible" max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">Modal Title</span>
+        </v-card-title>
+        <v-card-text>
+          <div class="modal-content-wrapper">
+            <!-- Special row for the first two switches -->
+            <v-row class="checkbox-container">
+              <v-col
+                v-for="checkbox in combinedCheckboxes.slice(0, 2)"
+                :key="checkbox.id"
+                cols="12"
+                sm="4"
+                md="4"
+                class="checkbox-item"
+              >
+                <v-switch
+                  :label="checkbox.label"
+                  :value="checkbox.id"
+                  v-model="localCheckedValues"
+                  dense
+                  hide-details
+                  class="custom-switch"
+                ></v-switch>
+              </v-col>
+            </v-row>
+            <!-- Row for additional switches -->
+            <v-row class="checkbox-container">
+              <v-col
+                v-for="checkbox in combinedCheckboxes.slice(2)"
+                :key="checkbox.id"
+                cols="12"
+                sm="4"
+                md="4"
+                class="checkbox-item"
+              >
+                <v-switch
+                  :label="checkbox.label"
+                  :value="checkbox.id"
+                  v-model="localCheckedValues"
+                  dense
+                  hide-details
+                  class="custom-switch"
+                ></v-switch>
+                <v-btn @click="handleRemoveMapping(checkbox.id)" color="red" class="mx-2" fab dark small><v-icon dark> mdi-cancel</v-icon></v-btn>
+              </v-col>
+            </v-row>
+            <div class="accordion-container">
+              <v-expansion-panels>
+                <v-expansion-panel>
+                  <v-expansion-panel-header>CSV Instructions</v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <p>In order to upload a guidance mapping as a CSV, please adhere to the following format:</p>
+                    <p>The first row of the csv, being the headers, should have minimum two values. The first value should be the name of your guidance mapping, and the second MUST be "CCI" or "800-53", depending on whether you are mapping from your guidance to CCI's or to NIST 800-53 families.</p>
+                    <p>Each row after the first must also include minimum two values, the first being your guidance tag, and the second being the CCI or 800-53 family that it maps to. Additionally, you may include an optional third value, which will be the descriptive text for the tag that appears on hover. (Note: You need only include this description for one instance of the tag)</p>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+                <v-expansion-panel>
+                  <v-expansion-panel-header>JSON Instructions</v-expansion-panel-header>
+                  <v-expansion-panel-content>
+                    <p>In order to upload a guidance mapping as a .json file, please adhere to the following format:</p>
+                    <p>The json must include four values: "type", which must be either "CCI" or "800-53", depending on which the mapping is based upon. "name", being the name of the guidance mapping. "mappings", which should be a json object which uses the user's tag as a key, and an array of CCI's or 800-53's the tag maps to. Finally, descriptions, which should be a json object optionally linking the user's tags to descriptions that will appear on hover. As an example:</p>
+                    <pre>
+                      <code>
+                        {
+                          "type": "CCI",
+                          "name": "UserMapping",
+                          "mappings": {
+                            "1": ["CCI-000366", "CCI-000367", "CCI-000368"],
+                            "97": ["CCI-000366"],
+                            "8675309": ["CCI-001199"]
+                          },
+                          "descriptions": {
+                            "97": "This tag gets a description"
+                          }
+                        }
+                      </code>
+                    </pre>
+                  </v-expansion-panel-content>
+                </v-expansion-panel>
+              </v-expansion-panels>
+            </div>
+            <div class="button-container">
+              <v-btn @click="triggerFileInput" color="primary">Add Mapping</v-btn>
+            </div>
           </div>
-        </div>
-        <div class="accordion-container">
-          <UploadAccordion :items="accordionItems">
-            <template #csv>
-              <p>In order to upload a guidance mapping as a CSV, please adhere to the following format:</p>
-              <p>The first row of the csv, being the headers, should have minimum two values. The first value should be the name of your guidance mapping, and the second MUST be "CCI" or "800-53", depending on whether you are mapping from your guidance to CCI's or to NIST 800-53 families.</p>
-              <p>Each row after the first must also include minimum two values, the first being your guidance tag, and the second being the CCI or 800-53 family that it maps to. Additionally, you may include an optional third value, which will be the descriptive text for the tag that appears on hover. (Note: You need only include this description for one instance of the tag)</p>
-            </template>
-            <template #json>
-              <p>In order to upload a guidance mapping as a .json file, please adhere to the following format:</p>
-              <p>The json must include four values: "type", which must be either "CCI" or "800-53", depending on which the mapping is based upon. "name", being the name of the guidance mapping. "mappings", which should be a json object which uses the user's tag as a key, and an array of CCI's or 800-53's the tag maps to. Finally, descriptions, which should be a json object optionally linking the user's tags to descriptions that will appear on hover. As an example:</p>
-              <pre>
-                <code>
-                  {
-                    "type": "CCI",
-                    "name": "UserMapping",,
-                    "mappings": {
-                      "1": ["CCI-000366", "CCI-000367", "CCI-000368"],
-                      "97": ["CCI-000366"],
-                      "8675309": ["CCI-001199"]
-                    },
-                    "descriptions": {
-                      "97": "This tag gets a description"
-                    }
-                  }
-                </code>
-              </pre>
-            </template>
-            <!-- Add more templates for additional tabs -->
-          </UploadAccordion>
-        </div>
-        <div class="button-container">
-          <button @click="triggerFileInput" class="add-mapping-button">Add Mapping</button>
-        </div>
-      </div>
-      <input type="file" ref="fileInput" @change="handleFileUpload" style="display: none;" />
-    </Modal>
-  </div>
+          <input type="file" ref="fileInput" @change="handleFileUpload" style="display: none;" />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 <script>
 import { mapGetters, mapActions } from 'vuex';
-import Modal from './CheckboxModal.vue';
-import UploadAccordion from './UploadAccordion.vue';
 export default {
-  components: {
-    Modal,
-    UploadAccordion
-  },
   data() {
     return {
       isModalVisible: false,
       localCheckedValues: [],
-      renderKey: 0, // Key for forcing re-render
-      accordionItems: [
-        { title: 'CSV Instructions', slotName: 'csv' },
-        { title: 'JSON Instructions', slotName: 'json' }
-        // Add more items as needed
-      ]
+      renderKey: 0,
     };
   },
   computed: {
@@ -76,8 +118,7 @@ export default {
   },
   watch: {
     combinedCheckboxes(newCheckboxes) {
-      console.log('combinedCheckboxes updated:', newCheckboxes);
-      this.renderKey += 1; // Increment key to force re-render
+      this.renderKey += 1;
     },
     checkedValues: {
       handler(newValues) {
@@ -90,7 +131,6 @@ export default {
     }
   },
   created() {
-    // Initialize localCheckedValues with the first two checkbox IDs
     if (this.combinedCheckboxes.length >= 2) {
       this.localCheckedValues = [this.combinedCheckboxes[0].id, this.combinedCheckboxes[1].id];
       this.syncCheckedValues(this.localCheckedValues);
@@ -232,28 +272,10 @@ export default {
 .checkbox-item {
   display: flex;
   align-items: center;
+  margin-bottom: 4px; /* Reduce the margin to make checkboxes closer */
 }
-.remove-button {
-  background-color: red;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  margin-left: 10px;
-  padding: 0 5px;
-}
-.add-mapping-button {
-  margin-top: 20px;
-  padding: 10px 20px;
-  cursor: pointer;
-  background-color: blue;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
-}
-.add-mapping-button:hover {
-  background-color: darkblue;
+.custom-switch {
+  margin-bottom: 0px; /* Remove margin from v-switch */
 }
 .button-container {
   display: flex;
