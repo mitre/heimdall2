@@ -72,11 +72,8 @@
                     >
                   </span>
                 </template>
-                <template style="word-break: break-word">
-                  {{ vuln.data.title?.substring(0, 100) }}
-                  <template v-if="vuln.data.title?.length || 0 > 100"
-                    >...</template
-                  >
+                <template style="text-overflow: ellipsis;">
+                  {{ vuln.data.title }}
                   <br />
                   <b>click to view more details</b>
                 </template>
