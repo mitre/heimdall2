@@ -99,3 +99,9 @@ export function ensureContextualizedEvaluation(
     return contextualizeEvaluation(data);
   }
 }
+
+// Clean up any unescaped tags
+export function cleanTags(text: string) {
+  return new DOMParser().parseFromString(text, 'text/html').documentElement
+    .textContent;
+}
