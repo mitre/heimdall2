@@ -24,7 +24,6 @@ import {
   IResultSeverity,
   IResultStatus
 } from './html-types';
-import {cleanTags} from '../../utils/global';
 
 type InputData = {
   data: ContextualizedEvaluation | string;
@@ -416,14 +415,6 @@ export class FromHDFToHTMLMapper {
     const filteredControls = allControls
       .map((control) => (control === 'unmapped' ? 'UM-1' : control))
       .filter((control) => control !== 'Rev_4');
-
-    // Clean up possible tags that may get passed from the OHDF file
-    result.hdf.wraps.title = result.hdf.wraps.title
-      ? cleanTags(result.hdf.wraps.title)
-      : '';
-    result.hdf.wraps.desc = result.hdf.wraps.desc
-      ? cleanTags(result.hdf.wraps.desc)
-      : '';
 
     // Assign attributes
     return {
