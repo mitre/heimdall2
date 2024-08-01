@@ -250,6 +250,7 @@ export class BaseConverter {
       return transformer(pathV) as T;
     }
 
+    // NOTE: Although we can pass an array to a transformer, it still expects the argument type to be an object
     if (Array.isArray(pathV)) {
       return hasTransformer
         ? (transformer(pathV) as T[])
