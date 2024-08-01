@@ -50,7 +50,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   .map((profile) => profile.title);
 
                 if (titles.length > 0) {
-                  return titles.join('... ');
+                  return titles.join('\n');
                 } else {
                   return `${data.controlCategory || ''}:${data.controlName || ''}`;
                 }
