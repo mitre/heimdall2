@@ -20,8 +20,8 @@
           :search="search"
           :expanded.sync="expanded"
           show-expand
-          single-expand
           hide-default-footer
+          fixed-header
         >
           <!--The single expand is to hide the tabs syncing together when multiple components are open-->
           <template #top>
@@ -29,23 +29,29 @@
               >Component View Data
               <v-spacer />
               <v-text-field v-model="search" label="Search" class="mx-4" />
-              <v-autocomplete
-                v-model="headerColumns"
-                chips
-                multiple
-                :items="headerOptions"
-              />
 
-              <!--             
-            <v-menu offset-y offset-overflow :close-on-content-click="false">
-              <template #activator=" {on, attrs }">
-                <v-icon v-on.click="on">
-                  mdi-cog-outline
-                </v-icon>
-              </template>
-                  <v-autocomplete chips multiple v-modal.items="headerOptions"></v-autocomplete>
-            </v-menu> 
-          -->
+              <v-menu offset-y offset-overflow :close-on-content-click="false">
+                <template #activator="{on}">
+                  <v-btn fab small v-on="on">
+                    <v-icon> mdi-cog-outline </v-icon>
+                  </v-btn>
+                </template>
+                <v-card max-width="400">
+                  <v-card-title>Column Select</v-card-title>
+                  <v-chip-group
+                    active-class="primary--text"
+                    center-active
+                    column
+                    multiple
+                    style="padding: 0px 10px 10px 10px"
+                    v-model="headerColumns"
+                  >
+                    <v-chip :value="field.key" v-for="field in headerOptions" :key="field.key">
+                      {{ field.name }}
+                    </v-chip>
+                  </v-chip-group>
+                </v-card>
+              </v-menu>
             </v-card-title>
           </template>
 
@@ -68,144 +74,23 @@
                       outlined
                       small
                       :color="severity_color(vuln.hdf.severity)"
-                      @click="
-                        $router.push({
-                          name: 'results',
-                          query: {id: vuln.data.id}
-                        })
-                      "
+                      :to="{name: 'results', query: {id: vuln.data.id}}"
                     >
                       {{ vuln.data.id }}
                     </v-chip>
                   </span>
                 </template>
-                <template style="text-overflow: ellipsis">
+                <span style="text-overflow: ellipsis">
                   {{ vuln.data.title }}
                   <br />
                   <b>click to view more details</b>
-                </template>
+                </span>
               </v-tooltip>
             </v-chip-group>
           </template>
 
           <template #expanded-item="{headers, item}">
-            <td class="m-10 p-10" :colspan="headers.length">
-              <v-tabs v-model="tabs">
-                <v-tab>General Properties</v-tab>
-                <v-tab>References</v-tab>
-                <v-tab>Licenses</v-tab>
-                <v-tab>Example</v-tab>
-              </v-tabs>
-              <v-tabs-items v-model="tabs">
-                <!--General Properties Tab-->
-                <v-tab-item>
-                  <v-simple-table dense>
-                    <template #default>
-                      <thead>
-                        <tr>
-                          <th>Property</th>
-                          <th>Value</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr
-                          v-for="field in headerOptions"
-                          :key="field"
-                          :colspan="headers.length"
-                        >
-                          <td v-if="field in item">{{ field }}</td>
-                          <td v-if="field in item">{{ item[field] }}</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </v-tab-item>
-
-                <!--References Tab-->
-                <v-tab-item>
-                  <v-simple-table dense>
-                    <template #default>
-                      <thead>
-                        <tr>
-                          <th>Property</th>
-                          <th>Value</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr
-                          v-for="reference in item.externalReferences"
-                          :key="reference.type"
-                          :colspan="headers.length"
-                        >
-                          <td>{{ reference.type }}</td>
-                          <td>
-                            <a :href="reference.url" target="_blank">{{
-                              reference.url
-                            }}</a>
-                          </td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </v-tab-item>
-
-                <!--Licenses Tab-->
-                <v-tab-item>
-                  <span v-for="license in item.licenses" :key="license.license">
-                    <v-simple-table dense>
-                      <template #default>
-                        <thead>
-                          <tr>
-                            <th>Property</th>
-                            <th>Value</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr
-                            v-for="(value, key) in license.license"
-                            :key="key"
-                            :colspan="headers.length"
-                          >
-                            <td v-if="typeof value === 'string'">{{ key }}</td>
-                            <td v-if="typeof value === 'string'">
-                              {{ value }}
-                            </td>
-                          </tr>
-                        </tbody>
-                      </template>
-                    </v-simple-table>
-                  </span>
-                </v-tab-item>
-
-                <!-- Example Tab -->
-                <v-tab-item>
-                  <v-simple-table dense>
-                    <template #default>
-                      <thead>
-                        <tr>
-                          <th>Property</th>
-                          <th>Value</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr :colspan="headers.length">
-                          <td>Example</td>
-                          <td>Example</td>
-                        </tr>
-                        <tr :colspan="headers.length">
-                          <td>Example</td>
-                          <td>Example</td>
-                        </tr>
-                        <tr :colspan="headers.length">
-                          <td>Example</td>
-                          <td>Example</td>
-                        </tr>
-                      </tbody>
-                    </template>
-                  </v-simple-table>
-                </v-tab-item>
-              </v-tabs-items>
-            </td>
+            <ComponentContent :component="item" :vulnerabilities="affectingVulns.get(item['bom-ref'])" :colspan="headers.length" />
           </template>
         </v-data-table>
       </v-col>
@@ -218,12 +103,13 @@ import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {SnackbarModule} from '@/store/snackbar';
 import {Result} from '@mitre/hdf-converters/src/utils/result';
 import {ContextualizedControl} from 'inspecjs';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Ref} from 'vue-property-decorator';
+import ComponentContent from './ComponentContent.vue';
 
-interface SBOMComponent {
+export interface SBOMComponent {
   // TODO: UPDATE ME!!!!
   type: string;
   'mime-type'?: string;
@@ -248,7 +134,12 @@ interface SBOMComponent {
   swid?: Record<string, unknown>[];
   modified?: boolean; // deprecated
   pedigree?: Record<string, unknown>;
-  externalReferences?: Record<string, unknown>[];
+  externalReferences?: {
+    url: string,
+    comment?: string;
+    type: string;
+    hashes: Record<string, unknown>[]
+  }[];
   components?: SBOMComponent[];
   evidence?: Record<string, unknown>;
   releaseNotes?: Record<string, unknown>;
@@ -273,14 +164,15 @@ interface Passthrough {
 }
 
 @Component({
-  components: {}
+  components: {
+    ComponentContent
+  }
 })
 export default class ComponentTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
 
-  componentRef = this.$route.query.componentRef;
-
+  componentRef = this.$route.query.componentRef ?? null;
   headerColumns = [
     'name',
     'version',
@@ -291,32 +183,31 @@ export default class ComponentTable extends Vue {
     'affectingVulnerabilities'
   ];
 
-  tabs = {tab: null};
-
-  search = '';
+  search = ''; // TODO: move search field to the top bar
   expanded: SBOMComponent[] = [];
 
-  headerOptions = [
-    'type',
-    'mime-type',
-    'publisher',
-    'group',
-    'bom-ref',
+  stringFields = [
     'name',
     'version',
     'description',
-    'scope',
+    'author',
+    'affectingVulnerabilities',
+    'type',
+    'bom-ref',
     'copyright',
-    'cpe',
     'purl',
-    'affectingVulnerabilities'
+    'cpe',
+    'group',
+    'publisher',
+    'scope',
+    'mime-type'
   ];
 
   mounted() {
     this.$nextTick(() => {
       if (!this.componentRef) return;
       try {
-        this.$vuetify.goTo(`#scroll-to`, {duration: 300}); // vue's scroll functionality
+        this.$vuetify.goTo(`#scroll-to`, {duration: 300});
       } catch (e) {
         SnackbarModule.failure(
           `The component you are trying to view is not currently loaded (bom-ref: ${this.componentRef})`
@@ -357,6 +248,12 @@ export default class ComponentTable extends Vue {
       }
     }
     return sboms;
+  }
+
+  get headerOptions(): {key: string, name: string}[] {
+    return this.stringFields.map(f => {
+      return {name: _.startCase(f), key: f}
+    });
   }
 
   get all_filter(): Filter {
@@ -425,7 +322,13 @@ export default class ComponentTable extends Vue {
   background-color: #616161;
 }
 
+.chip-selected {
+  border-color: #616161 !important;
+}
+
 ::v-deep .v-data-table__wrapper table {
   border-collapse: collapse;
 }
 </style>
+
+<!--TODO, look at all the v-fors and make sure I understand them correctly-->
