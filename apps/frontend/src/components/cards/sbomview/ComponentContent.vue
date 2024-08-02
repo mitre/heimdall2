@@ -19,8 +19,22 @@
               <tbody>
                 <tr v-for="(row, i) in tab.tableData.rows" :key="i">
                   <td v-for="(value, j) in row" :key="value">
+                    <!-- Check if the column represents an alternate references -->
                     <template v-if="tab.tableData.columns[j] === 'Url'">
                       <a :href="value" target="_blank">{{ value }}</a>
+                    </template>
+                    <!-- Render link in table to navigate back to results table view -->
+                    <template
+                      v-else-if="
+                        tab.tableData.columns[j] === 'Vulnerability Id'
+                      "
+                    >
+                      <router-link
+                        outlined
+                        small
+                        :to="{name: 'results', query: {id: value}}"
+                        >{{ value }}</router-link
+                      >
                     </template>
                     <template v-else>
                       {{ value }}
@@ -63,7 +77,6 @@ interface Treeview {
 }
 
 /**
- *
  * @param obj The object being converted to fit in a v-treeview.
  * @param id The next id to be used. If unique items are not given,
  * treeview items will fail to open on mount properly.
@@ -156,7 +169,7 @@ export default class ComponentContent extends Vue {
    * Every root level property (except primitives) get their own tab.
    * Data that can be represented in a table will be, but some data may need
    * to be represnted using a nested tree view.
-   * `component.properties` is special in that any items with `value: <stringified JSON>` 
+   * `component.properties` is special in that any items with `value: <stringified JSON>`
    * will be rendered in its own tab as well
    */
   get computedTabs(): Tab[] {
@@ -168,11 +181,12 @@ export default class ComponentContent extends Vue {
       }
     ];
 
-    if (this.vulnerabilities) {
+    // show vulnerabilities that affect this component
+    if (this.vulnerabilities && this.vulnerabilities.length > 0) {
       tabs.push({
         name: 'Vulnerabilities',
         tableData: {
-          columns: ['Id', 'Title', 'Severity'],
+          columns: ['Vulnerability Id', 'Title', 'Severity'],
           rows: this.vulnerabilities.map((v) => [
             v.data.id,
             v.data.title || '',

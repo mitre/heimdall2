@@ -213,7 +213,7 @@ export default class ComponentTable extends Vue {
     'publisher',
     'scope',
     'mime-type'
-  ].map(option => ({name: _.startCase(option), key: option}));
+  ].map((option) => ({name: _.startCase(option), key: option}));
 
   mounted() {
     this.$nextTick(() => {
@@ -324,5 +324,4 @@ export default class ComponentTable extends Vue {
 ::v-deep .v-data-table__expanded__row {
   background-color: #616161;
 }
-
 </style>
