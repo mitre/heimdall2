@@ -242,7 +242,7 @@ export class SBOMMapper extends BaseConverter {
             }
           }
         },
-        description: {
+        summary: {
           path: 'metadata.component',
           transformer: (input: Record<string, unknown>): string | undefined =>
             input.description ? `${input.description}` : undefined

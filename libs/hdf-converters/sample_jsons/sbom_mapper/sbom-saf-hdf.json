@@ -11,14 +11,14 @@
       "title": "@mitre/saf CycloneDX BOM Report",
       "version": "1.4.7",
       "maintainer": "The MITRE Security Automation Framework",
-      "description": "The MITRE Security Automation Framework (SAF) Command Line Interface (CLI) brings together applications, techniques, libraries, and tools developed by MITRE and the security community to streamline security automation for systems and DevOps pipelines.",
+      "summary": "The MITRE Security Automation Framework (SAF) Command Line Interface (CLI) brings together applications, techniques, libraries, and tools developed by MITRE and the security community to streamline security automation for systems and DevOps pipelines.",
       "license": "Apache-2.0",
       "supports": [],
       "attributes": [],
       "groups": [],
       "status": "loaded",
       "controls": [],
-      "sha256": "d0eb06874c873528a609afe066d8ce3728bc38e9f6d57dd693ed21455edfe0f8"
+      "sha256": "bb7e08a6555c552f8096497e3ea8043e91f3425eebe8ddc4e0966c262f7e7635"
     }
   ],
   "passthrough": {

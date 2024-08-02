@@ -10,7 +10,7 @@
       "name": "CycloneDX BOM Report: application/602de70a-7107-4ac8-9ad2-3c1c816892a7",
       "title": "test 9 CycloneDX BOM Report",
       "version": "SNAPSHOT",
-      "description": "This is the project I want to use to generate data to understand the schema a bit better",
+      "summary": "This is the project I want to use to generate data to understand the schema a bit better",
       "supports": [],
       "attributes": [],
       "groups": [],
@@ -4047,7 +4047,7 @@
           ]
         }
       ],
-      "sha256": "9d65827cc2bf25a92db7f8ebe51718810b1a04a6ba4ebd9f6a6d5e56b8180c50"
+      "sha256": "c5b3d361578315660c5384bff0b00d8ee600e087d5f1b4e33a41dff34178dd04"
     }
   ],
   "passthrough": {
