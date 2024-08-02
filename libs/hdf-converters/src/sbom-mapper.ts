@@ -397,10 +397,15 @@ export class SBOMMapper extends BaseConverter {
             title: {
               // Give description as title if possible
               // Cut off description after certain word count for frontend display on smaller screens
-              transformer: (input: Record<string, unknown>): string =>
-                input.description
-                  ? `${(input.description as string).split(' ').splice(0, 20).join(' ')}...`
-                  : `${input.id}`
+              transformer: (input: Record<string, unknown>): string => {
+                if (input.description) {
+                  return (input.description as string).split(' ').length > 20
+                    ? `${(input.description as string).split(' ').splice(0, 20).join(' ')}...`
+                    : `${input.description}`;
+                } else {
+                  return `${input.id}`;
+                }
+              }
             },
             id: {path: 'id'},
             desc: {
