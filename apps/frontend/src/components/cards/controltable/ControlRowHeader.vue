@@ -279,7 +279,6 @@ interface Tag {
     const tags: Tag[] = [];
     const mappings = this.mappings;
     const descriptions = this.descriptions;
-    console.log("Why", descriptions)
     for (const key in mappings) {
       if (this.checkedValues.includes(key)) {
         const mapping = mappings[key];

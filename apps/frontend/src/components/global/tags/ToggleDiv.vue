@@ -1,104 +1,127 @@
 <template>
   <v-container>
     <v-btn @click="toggleModal" class="mx-2" fab dark small><v-icon dark> mdi-cog</v-icon></v-btn>
-    <!-- <v-img
-      @click="toggleModal"
-      src="../../../assets/settingsgear.png"
-      alt="Toggle Modal"
-      width="60"
-      height="60"
-      class="mr-4"
-      style="cursor: pointer;"
-    ></v-img> -->
     <v-dialog v-model="isModalVisible" max-width="600px">
       <v-card>
-        <v-card-title>
-          <span class="headline">Modal Title</span>
-        </v-card-title>
-        <v-card-text>
-          <div class="modal-content-wrapper">
-            <!-- Special row for the first two switches -->
-            <v-row class="checkbox-container">
-              <v-col
-                v-for="checkbox in combinedCheckboxes.slice(0, 2)"
-                :key="checkbox.id"
-                cols="12"
-                sm="4"
-                md="4"
-                class="checkbox-item"
-              >
-                <v-switch
-                  :label="checkbox.label"
-                  :value="checkbox.id"
-                  v-model="localCheckedValues"
-                  dense
-                  hide-details
-                  class="custom-switch"
-                ></v-switch>
-              </v-col>
-            </v-row>
-            <!-- Row for additional switches -->
-            <v-row class="checkbox-container">
-              <v-col
-                v-for="checkbox in combinedCheckboxes.slice(2)"
-                :key="checkbox.id"
-                cols="12"
-                sm="4"
-                md="4"
-                class="checkbox-item"
-              >
-                <v-switch
-                  :label="checkbox.label"
-                  :value="checkbox.id"
-                  v-model="localCheckedValues"
-                  dense
-                  hide-details
-                  class="custom-switch"
-                ></v-switch>
-                <v-btn @click="handleRemoveMapping(checkbox.id)" color="red" class="mx-2" fab dark small><v-icon dark> mdi-cancel</v-icon></v-btn>
-              </v-col>
-            </v-row>
-            <div class="accordion-container">
-              <v-expansion-panels>
-                <v-expansion-panel>
-                  <v-expansion-panel-header>CSV Instructions</v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <p>In order to upload a guidance mapping as a CSV, please adhere to the following format:</p>
-                    <p>The first row of the csv, being the headers, should have minimum two values. The first value should be the name of your guidance mapping, and the second MUST be "CCI" or "800-53", depending on whether you are mapping from your guidance to CCI's or to NIST 800-53 families.</p>
-                    <p>Each row after the first must also include minimum two values, the first being your guidance tag, and the second being the CCI or 800-53 family that it maps to. Additionally, you may include an optional third value, which will be the descriptive text for the tag that appears on hover. (Note: You need only include this description for one instance of the tag)</p>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-                <v-expansion-panel>
-                  <v-expansion-panel-header>JSON Instructions</v-expansion-panel-header>
-                  <v-expansion-panel-content>
-                    <p>In order to upload a guidance mapping as a .json file, please adhere to the following format:</p>
-                    <p>The json must include four values: "type", which must be either "CCI" or "800-53", depending on which the mapping is based upon. "name", being the name of the guidance mapping. "mappings", which should be a json object which uses the user's tag as a key, and an array of CCI's or 800-53's the tag maps to. Finally, descriptions, which should be a json object optionally linking the user's tags to descriptions that will appear on hover. As an example:</p>
-                    <pre>
-                      <code>
-                        {
-                          "type": "CCI",
-                          "name": "UserMapping",
-                          "mappings": {
-                            "1": ["CCI-000366", "CCI-000367", "CCI-000368"],
-                            "97": ["CCI-000366"],
-                            "8675309": ["CCI-001199"]
-                          },
-                          "descriptions": {
-                            "97": "This tag gets a description"
-                          }
-                        }
-                      </code>
-                    </pre>
-                  </v-expansion-panel-content>
-                </v-expansion-panel>
-              </v-expansion-panels>
-            </div>
-            <div class="button-container">
-              <v-btn @click="triggerFileInput" color="primary">Add Mapping</v-btn>
-            </div>
-          </div>
-          <input type="file" ref="fileInput" @change="handleFileUpload" style="display: none;" />
-        </v-card-text>
+        <v-tabs v-model="activeTab">
+          <v-tab>View Options</v-tab>
+          <v-tab>User Guidance Mappings</v-tab>
+        </v-tabs>
+        <v-tabs-items v-model="activeTab">
+          <v-tab-item>
+            <v-card-text>
+              <!-- Settings content goes here -->
+              <v-switch
+                v-model="localDisplayUnviewedControls"
+                label="Show Only Unviewed"
+                @change="emitChange('displayUnviewedControls', localDisplayUnviewedControls)"
+              />
+              <v-switch
+                v-model="localSyncTabs"
+                label="Sync Tabs"
+                @change="emitChange('syncTabs', localSyncTabs)"
+              />
+              <v-switch
+                v-model="localSingleExpand"
+                label="Single Expand"
+                @change="emitChange('singleExpand', localSingleExpand)"
+              />
+              <v-switch
+                v-model="localExpandAll"
+                label="Expand All"
+                @change="emitChange('expandAll', localExpandAll)"
+              />
+            </v-card-text>
+          </v-tab-item>
+          <v-tab-item>
+            <v-card-text>
+              <div class="modal-content-wrapper">
+                <!-- Add Default Tags label -->
+                <div class="label">Default Tags:</div>
+                <!-- Special row for the first two switches -->
+                <v-row class="checkbox-container">
+                  <v-col
+                    v-for="checkbox in combinedCheckboxes.slice(0, 2)"
+                    :key="checkbox.id"
+                    cols="12"
+                    sm="4"
+                    md="4"
+                    class="checkbox-item"
+                  >
+                    <v-switch
+                      :label="checkbox.label"
+                      :value="checkbox.id"
+                      v-model="localCheckedValues"
+                      dense
+                      hide-details
+                      class="custom-switch"
+                    ></v-switch>
+                  </v-col>
+                </v-row>
+                <!-- Add User Defined Guidance Mappings label -->
+                <div class="label">User Defined Guidance Mappings:</div>
+                <!-- Row for additional switches -->
+                <v-row class="checkbox-container">
+                  <v-col
+                    v-for="checkbox in combinedCheckboxes.slice(2)"
+                    :key="checkbox.id"
+                    cols="12"
+                    sm="4"
+                    md="4"
+                    class="checkbox-item"
+                  >
+                    <v-switch
+                      :label="checkbox.label"
+                      :value="checkbox.id"
+                      v-model="localCheckedValues"
+                      dense
+                      hide-details
+                      class="custom-switch"
+                    ></v-switch>
+                    <v-btn @click="handleRemoveMapping(checkbox.id)" color="red" class="mx-2" fab dark small><v-icon dark> mdi-delete</v-icon></v-btn>
+                  </v-col>
+                </v-row>
+                <div class="accordion-container">
+                  <v-expansion-panels>
+                    <v-expansion-panel>
+                      <v-expansion-panel-header>CSV Instructions</v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        <p>In order to upload a guidance mapping as a CSV, please adhere to the following format:</p>
+                        <p>The first row of the csv, being the headers, should have minimum two values. The first value should be the name of your guidance mapping, and the second MUST be "CCI" or "800-53", depending on whether you are mapping from your guidance to CCI's or to NIST 800-53 families.</p>
+                        <p>Each row after the first must also include minimum two values, the first being your guidance tag, and the second being the CCI or 800-53 family that it maps to. Additionally, you may include an optional third value, which will be the descriptive text for the tag that appears on hover. (Note: You need only include this description for one instance of the tag)</p>
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                    <v-expansion-panel>
+                      <v-expansion-panel-header>JSON Instructions</v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        <p>In order to upload a guidance mapping as a .json file, please adhere to the following format:</p>
+                        <p>The json must include four values: "type", which must be either "CCI" or "800-53", depending on which the mapping is based upon. "name", being the name of the guidance mapping. "mappings", which should be a json object which uses the user's tag as a key, and an array of CCI's or 800-53's the tag maps to. Finally, descriptions, which should be a json object optionally linking the user's tags to descriptions that will appear on hover. As an example:</p>
+                        <pre>
+{
+  "type": "CCI",
+  "name": "UserMapping",
+  "mappings": {
+    "1": ["CCI-000366", "CCI-000367", "CCI-000368"],
+    "97": ["CCI-000366"],
+    "8675309": ["CCI-001199"]
+  },
+  "descriptions": {
+    "97": "This tag gets a description"
+  }
+}
+                        </pre>
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                </div>
+                <div class="button-container">
+                  <v-btn @click="triggerFileInput" color="primary">Add Mapping</v-btn>
+                </div>
+              </div>
+              <input type="file" ref="fileInput" @change="handleFileUpload" style="display: none;" />
+            </v-card-text>
+          </v-tab-item>
+        </v-tabs-items>
       </v-card>
     </v-dialog>
   </v-container>
@@ -106,11 +129,22 @@
 <script>
 import { mapGetters, mapActions } from 'vuex';
 export default {
+  props: {
+    displayUnviewedControls: Boolean,
+    syncTabs: Boolean,
+    singleExpand: Boolean,
+    expandAll: Boolean
+  },
   data() {
     return {
       isModalVisible: false,
       localCheckedValues: [],
       renderKey: 0,
+      activeTab: 0, // Add this line to track the active tab
+      localDisplayUnviewedControls: this.displayUnviewedControls,
+      localSyncTabs: this.syncTabs,
+      localSingleExpand: this.singleExpand,
+      localExpandAll: this.expandAll
     };
   },
   computed: {
@@ -128,6 +162,18 @@ export default {
     },
     localCheckedValues(newValues) {
       this.syncCheckedValues(newValues);
+    },
+    displayUnviewedControls(newVal) {
+      this.localDisplayUnviewedControls = newVal;
+    },
+    syncTabs(newVal) {
+      this.localSyncTabs = newVal;
+    },
+    singleExpand(newVal) {
+      this.localSingleExpand = newVal;
+    },
+    expandAll(newVal) {
+      this.localExpandAll = newVal;
     }
   },
   created() {
@@ -259,6 +305,9 @@ export default {
       // Remove the value from localCheckedValues
       this.localCheckedValues = this.localCheckedValues.filter(value => value !== id);
       console.log("Mapping removed: ", id)
+    },
+    emitChange(prop, value) {
+      this.$emit(`update:${prop}`, value);
     }
   }
 };

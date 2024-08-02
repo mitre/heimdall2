@@ -16,27 +16,13 @@
             <v-card-title class="pb-0">Results View Data</v-card-title>
           </v-col>
           <v-spacer />
-          <v-col cols="3" md="auto" class="text-right pl-6 pb-0">
-            <v-switch
-              v-model="displayUnviewedControls"
-              label="Show Only Unviewed"
+          <v-col cols="3" md="auto" class="text-right pb-0">
+            <ToggleDiv
+              :displayUnviewedControls.sync="displayUnviewedControls"
+              :syncTabs.sync="syncTabs"
+              :singleExpand.sync="singleExpand"
+              :expandAll.sync="expandAll"
             />
-          </v-col>
-          <v-col cols="3" md="auto" class="text-right pb-0">
-            <v-switch v-model="syncTabs" label="Sync Tabs" />
-          </v-col>
-          <v-col cols="3" md="auto" class="text-right pb-0">
-            <v-switch
-              v-model="singleExpand"
-              label="Single Expand"
-              @change="handleToggleSingleExpand"
-            />
-          </v-col>
-          <v-col cols="3" md="auto" class="text-right pb-0">
-            <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
-          </v-col>
-          <v-col cols="3" md="auto" class="text-right pb-0">
-            <ToggleDiv />
           </v-col>
         </v-row>
       </v-row>
@@ -50,7 +36,6 @@
             @input="set_sort('status', $event)"
           />
         </template>
-
         <template #set>
           <ColumnHeader
             text="Result Set"
@@ -58,7 +43,6 @@
             @input="set_sort('set', $event)"
           />
         </template>
-
         <template #id>
           <v-row class="pa-3">
             <ColumnHeader
@@ -81,11 +65,9 @@
             </v-tooltip>
           </v-row>
         </template>
-
         <template #title>
           <ColumnHeader text="Title" sort="disabled" />
         </template>
-
         <template #severity>
           <ColumnHeader
             :text="'Severity'"
@@ -93,11 +75,9 @@
             @input="set_sort('severity', $event)"
           />
         </template>
-
         <template #tags>
           <ColumnHeader text="Guidance Mappings" sort="disabled" />
         </template>
-
         <template #runTime>
           <ColumnHeader
             text="Run Time"
@@ -105,7 +85,6 @@
             @input="set_sort('runTime', $event)"
           />
         </template>
-
         <template #viewed>
           <ColumnHeader
             text="Controls Viewed"
@@ -117,7 +96,6 @@
         </template>
       </ResponsiveRowSwitch>
     </div>
-
     <!-- Body -->
     <v-lazy
       v-for="item in items"
@@ -145,7 +123,6 @@
     </v-lazy>
   </v-container>
 </template>
-
 <script lang="ts">
 import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails.vue';
 import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
@@ -159,23 +136,18 @@ import {ContextualizedControl, severities} from 'inspecjs';
 import * as _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, Ref} from 'vue-property-decorator';
+import {Prop, Ref, Watch} from 'vue-property-decorator';
 import ToggleDiv from '@/components/global/tags/ToggleDiv.vue';
-
 // Tracks the visibility of an HDF control
 interface ListElt {
   // A unique id to be used as a key.
   key: string;
-
   filename: string;
-
   // Computed values for status and severity, for sorting
   status_val: number;
   severity_val: number;
-
   control: ContextualizedControl;
 }
-
 @Component({
   components: {
     ControlRowHeader,
@@ -188,34 +160,31 @@ interface ListElt {
 export default class ControlTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
-
   // Whether to allow multiple expansions
   singleExpand = true;
-
   // If the currently selected tab should sync
   syncTabs = false;
   syncTab = 'tab-test';
-
   // List of currently expanded options. If unique id is in here, it is expanded
   expanded: string[] = [];
-
   // Sorts
   sortId: Sort = 'none';
   sortStatus: Sort = 'none';
   sortSet: Sort = 'none';
   sortSeverity: Sort = 'none';
   sortRunTime: Sort = 'none';
-
   // Used for viewed/unviewed controls.
   viewedControlIds: string[] = [];
   displayUnviewedControls = true;
-
+  @Watch('singleExpand')
+  onSingleExpandChange(newVal: boolean) {
+    this.handleToggleSingleExpand(newVal);
+  }
   get numOfViewed() {
     return this.raw_items.filter((elem) =>
       this.viewedControlIds.some((id) => elem.control.data.id === id)
     ).length;
   }
-
   toggleControlViewed(control: ContextualizedControl) {
     const alreadyViewed = this.viewedControlIds.indexOf(control.data.id);
     // If the control hasn't been marked as viewed yet, mark it as viewed.
@@ -227,11 +196,9 @@ export default class ControlTable extends Vue {
       this.viewedControlIds.splice(alreadyViewed, 1);
     }
   }
-
   mounted() {
     this.onResize();
   }
-
   onResize() {
     // Allow the page to settle before checking the controlTableHeader height
     // (this is what $nextTick is supposed to do but it's firing too quickly)
@@ -241,7 +208,6 @@ export default class ControlTable extends Vue {
       );
     }, 2000);
   }
-
   /** Callback to handle setting a new sort */
   set_sort(column: string, newSort: Sort) {
     this.sortId = 'none';
@@ -267,11 +233,9 @@ export default class ControlTable extends Vue {
         break;
     }
   }
-
   get expandAll() {
     return this.expanded.length === this.items.length;
   }
-
   set expandAll(value: boolean) {
     if (value) {
       this.singleExpand = false;
@@ -280,41 +244,34 @@ export default class ControlTable extends Vue {
       this.expanded = [];
     }
   }
-
   get controlTableTitleStyle() {
     return {top: `${HeightsModule.topbarHeight}px`};
   }
-
   get controlRowPinOffset() {
     // There is ~10px of padding being added which makes the ControlRowHeader look out of place
     return {top: `${this.topOfPage - 10}px`};
   }
-
   // The top of the page, relative to the topbar and the title bar
   get topOfPage() {
     return HeightsModule.topbarHeight + HeightsModule.controlTableHeaderHeight;
   }
-
   /** Closes all open controls when single-expand is re-enabled */
   async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
+    console.log(singleExpand)
     if (singleExpand) {
       this.expandAll = false;
     }
   }
-
   async updateTab(tab: string) {
     this.syncTab = tab;
   }
-
   /** Toggles the given expansion of a control details panel */
   toggle(key: string) {
     if (this.singleExpand) {
       // Check if key already there
       const had = this.expanded.includes(key);
-
       // Clear
       this.expanded = [];
-
       // If key is new, add it
       if (!had) {
         this.expanded.push(key);
@@ -331,7 +288,6 @@ export default class ControlTable extends Vue {
       }
     }
   }
-
   jump_to_key(key: string) {
     if (!this.$vuetify.breakpoint.smAndDown) {
       this.$nextTick(() => {
@@ -342,16 +298,13 @@ export default class ControlTable extends Vue {
       });
     }
   }
-
   striptoChars(key: string) {
     return key.replace(/[^a-z0-9]/gi, '');
   }
-
   /** Return items as key, value pairs */
   get raw_items(): ListElt[] {
     return FilteredDataModule.controls(this.filter).map((d) => {
       const key = control_unique_key(d);
-
       // File, hdf wrapper
       return {
         key,
@@ -372,7 +325,6 @@ export default class ControlTable extends Vue {
       };
     });
   }
-
   /** Return items sorted and filters out viewed controls */
   get items(): ListElt[] {
     // Controls ascending/descending
@@ -381,9 +333,7 @@ export default class ControlTable extends Vue {
     let sort = true;
     // Our comparator function
     let cmp: (a: ListElt, b: ListElt) => number;
-
     let items = this.raw_items;
-
     if (this.sortId === 'ascending' || this.sortId === 'descending') {
       cmp = (a: ListElt, b: ListElt) =>
         a.control.data.id.localeCompare(b.control.data.id);
@@ -423,23 +373,19 @@ export default class ControlTable extends Vue {
     } else {
       sort = false;
     }
-
     // Displays only unviewed controls.
     if (this.displayUnviewedControls) {
       items = items.filter(
         (val) => !this.viewedControlIds.includes(val.control.data.id)
       );
     }
-
     if (sort === true) {
       items = items.sort((a, b) => cmp(a, b) * factor);
     }
-
     return items;
   }
 }
 </script>
-
 <style scoped>
 .pinned-header {
   position: sticky;
@@ -447,9 +393,9 @@ export default class ControlTable extends Vue {
   padding-top: 2px;
   padding-bottom: 2px;
 }
-
 .control-table-title {
   background-color: var(--v-secondary-lighten1);
   z-index: 10;
 }
 </style>
+
