@@ -39,14 +39,18 @@
                 <v-card max-width="400">
                   <v-card-title>Column Select</v-card-title>
                   <v-chip-group
+                    v-model="headerColumns"
                     active-class="primary--text"
                     center-active
                     column
                     multiple
                     style="padding: 0px 10px 10px 10px"
-                    v-model="headerColumns"
                   >
-                    <v-chip :value="field.key" v-for="field in headerOptions" :key="field.key">
+                    <v-chip
+                      v-for="field in headerOptions"
+                      :key="field.key"
+                      :value="field.key"
+                    >
                       {{ field.name }}
                     </v-chip>
                   </v-chip-group>
@@ -90,7 +94,11 @@
           </template>
 
           <template #expanded-item="{headers, item}">
-            <ComponentContent :component="item" :vulnerabilities="affectingVulns.get(item['bom-ref'])" :colspan="headers.length" />
+            <ComponentContent
+              :component="item"
+              :vulnerabilities="affectingVulns.get(item['bom-ref'])"
+              :colspan="headers.length"
+            />
           </template>
         </v-data-table>
       </v-col>
@@ -135,10 +143,10 @@ export interface SBOMComponent {
   modified?: boolean; // deprecated
   pedigree?: Record<string, unknown>;
   externalReferences?: {
-    url: string,
+    url: string;
     comment?: string;
     type: string;
-    hashes: Record<string, unknown>[]
+    hashes: Record<string, unknown>[];
   }[];
   components?: SBOMComponent[];
   evidence?: Record<string, unknown>;
@@ -146,7 +154,7 @@ export interface SBOMComponent {
   modelCard?: Record<string, unknown>;
   data?: Record<string, unknown>[];
   cryptoProperties?: Record<string, unknown>;
-  properties?: Record<string, unknown>[];
+  properties?: {name: string; value: string}[];
   tags?: string[];
   signature?: Record<string, unknown>[];
 
@@ -186,7 +194,11 @@ export default class ComponentTable extends Vue {
   search = ''; // TODO: move search field to the top bar
   expanded: SBOMComponent[] = [];
 
-  stringFields = [
+  /**
+   * A list of options (selectable in the column select menu) for which
+   * headers to display
+   */
+  headerOptions = [
     'name',
     'version',
     'description',
@@ -201,7 +213,7 @@ export default class ComponentTable extends Vue {
     'publisher',
     'scope',
     'mime-type'
-  ];
+  ].map(option => ({name: _.startCase(option), key: option}));
 
   mounted() {
     this.$nextTick(() => {
@@ -225,9 +237,7 @@ export default class ComponentTable extends Vue {
   }
 
   get headers() {
-    let h = this.headerColumns.map((v) => {
-      return {value: v, text: _.startCase(v)};
-    });
+    let h = this.headerColumns.map((v) => ({value: v, text: _.startCase(v)}));
     h.push({value: 'data-table-expand', text: 'More'});
     return h;
   }
@@ -248,12 +258,6 @@ export default class ComponentTable extends Vue {
       }
     }
     return sboms;
-  }
-
-  get headerOptions(): {key: string, name: string}[] {
-    return this.stringFields.map(f => {
-      return {name: _.startCase(f), key: f}
-    });
   }
 
   get all_filter(): Filter {
@@ -306,29 +310,19 @@ export default class ComponentTable extends Vue {
   z-index: 10;
 }
 
-.highlight {
-  border: 2px solid yellow;
-}
-
-/*.v-data-table > .v-data-table__wrapper > table {
-  border-collapse: collapse;
-}*/
-
+/* Blue bar on the left side of the row that is currently expanded */
 ::v-deep .v-data-table__expanded {
   border-left: 5px solid var(--v-primary-base);
 }
 
+/** Allows blue bar to be visible */
+::v-deep .v-data-table__wrapper table {
+  border-collapse: collapse;
+}
+
+/** Keep hover effect when expanded */
 ::v-deep .v-data-table__expanded__row {
   background-color: #616161;
 }
 
-.chip-selected {
-  border-color: #616161 !important;
-}
-
-::v-deep .v-data-table__wrapper table {
-  border-collapse: collapse;
-}
 </style>
-
-<!--TODO, look at all the v-fors and make sure I understand them correctly-->

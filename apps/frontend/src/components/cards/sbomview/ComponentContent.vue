@@ -4,26 +4,23 @@
       <v-tab v-for="tab in computedTabs" :key="tab.name">{{ tab.name }}</v-tab>
     </v-tabs>
     <v-tabs-items v-model="tabs">
-
-
       <v-tab-item v-for="tab in computedTabs" :key="tab.name">
-
-      <!-- Viewing lists of simple objects -->
+        <!-- Viewing lists of simple objects -->
         <template v-if="tab.tableData">
           <v-simple-table dense>
             <template #default>
               <thead>
                 <tr>
-                  <td v-for="col in tab.tableData.columns" :key="col">{{ col }}</td>
+                  <td v-for="col in tab.tableData.columns" :key="col">
+                    {{ col }}
+                  </td>
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="row, i in tab.tableData.rows" :key="i">
-                  <td v-for="value, j in row" :key="value">
+                <tr v-for="(row, i) in tab.tableData.rows" :key="i">
+                  <td v-for="(value, j) in row" :key="value">
                     <template v-if="tab.tableData.columns[j] === 'Url'">
-                      <a :href="value" target="_blank">{{
-                        value
-                      }}</a>
+                      <a :href="value" target="_blank">{{ value }}</a>
                     </template>
                     <template v-else>
                       {{ value }}
@@ -48,7 +45,8 @@ import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {SBOMComponent} from './ComponentTable.vue';
 import _ from 'lodash';
-import { ContextualizedControl } from 'inspecjs';
+import {ContextualizedControl} from 'inspecjs';
+import {parseJson} from '@mitre/hdf-converters/src/utils/parseJson';
 
 interface Tab {
   name: string;
@@ -56,13 +54,14 @@ interface Tab {
   treeData?: Treeview[];
 }
 
-type TableData = {columns: string[], rows: string[][]};
+type TableData = {columns: string[]; rows: string[][]};
 
 interface Treeview {
   name?: string;
   children?: Treeview[];
   id: number;
 }
+
 /**
  *
  * @param obj The object being converted to fit in a v-treeview.
@@ -70,17 +69,69 @@ interface Treeview {
  * treeview items will fail to open on mount properly.
  */
 function objectToTreeview(obj: Object, id: number): Treeview[] {
-  return Object.entries(obj).map(([key, value]) => {
-    if (typeof value === 'string') {
-      const result = {name: `${key}: ${value}`, id};
-      id += 1;
-      return result;
+  const view: Treeview[] = [];
+  for (const [key, value] of Object.entries(obj)) {
+    if (value instanceof Object) {
+      const children = objectToTreeview(value, id); // recursively generate the data structure
+      const last = children.at(-1); // find the next unused id
+      if (last) id = last.id + 1;
+      view.push({name: key, children, id});
+    } else {
+      view.push({name: `${key}: ${value}`, id});
     }
-    const children = objectToTreeview(value, id); // recursively generate the data structure
-    const last = children.at(-1); // find the next unused id
-    if (last) id = last.id + 1;
-    return {name: key, children, id};
-  });
+    id += 1;
+  }
+  return view;
+}
+
+/**
+ * Recursive function to compute the depth of an object.
+ * Used for computing how to display an arbitrary object structure
+ * @param obj The object to count the depth of
+ * @param n A counter to track recursive depth
+ */
+function objectDepth(obj: Object, n: number): number {
+  let max = n;
+  for (const [key, value] of Object.entries(obj)) {
+    if (value instanceof Object) {
+      const current = objectDepth(value, n + 1);
+      if (current > max) max = current;
+    }
+  }
+  return max;
+}
+
+function jsonToTabFormat(value: Object): Omit<Tab, 'name'> {
+  // `value` is a list of primitives (strings, numbers, booleans, etc.)
+  const isArray = Array.isArray(value);
+  const depth = objectDepth(value, 1);
+  if (isArray && depth === 1) {
+    return {
+      tableData: {
+        columns: ['Elements'],
+        rows: value.map((v) => [v])
+      }
+    };
+  }
+
+  // `value` is a list of simple objects (each of depth 1)
+  if (isArray && depth === 2) {
+    // get the complete set of properties amongst the items in `value`
+    const columns = _.uniq(value.flatMap(Object.keys));
+    return {
+      tableData: {
+        columns: columns.map(_.startCase),
+        // convert each element in `value` to a list
+        // corresponding to each property in `columns`
+        rows: value.map((v) => columns.map((c) => v[c]))
+      }
+    };
+  }
+
+  // data is nested too much to display in a single table
+  return {
+    treeData: objectToTreeview(value, 0)
+  };
 }
 
 @Component({
@@ -88,30 +139,33 @@ function objectToTreeview(obj: Object, id: number): Treeview[] {
 })
 export default class ComponentContent extends Vue {
   @Prop({type: Object, required: true}) readonly component!: SBOMComponent;
-  @Prop({type: Object, required: true}) readonly vulnerabilities!: ContextualizedControl[];
+  @Prop({type: Array, required: true})
+  readonly vulnerabilities!: ContextualizedControl[];
+
   @Prop({type: Number, required: true}) readonly colspan!: number;
 
   // stores the state of the tab selected
   tabs = {tab: null};
 
-  // a list of tabs that don't need to be auto-generated  
-  customTabs = ['affectingVulnerabilities'];
-  //customTabs: string[] = [];
+  // a list of tabs that don't need to be auto-generated
+  customTabs = ['affectingVulnerabilities', 'properties'];
 
-  /** 
-   * Converts the properties on a component into 
+  /**
+   * Converts the properties on a component into
    * a data structure that can be displayed in separate tabs.
-   * Every root level property (except strings) get their own tab.
+   * Every root level property (except primitives) get their own tab.
    * Data that can be represented in a table will be, but some data may need
    * to be represnted using a nested tree view.
-  */
+   * `component.properties` is special in that any items with `value: <stringified JSON>` 
+   * will be rendered in its own tab as well
+   */
   get computedTabs(): Tab[] {
     const generalProps: TableData = {columns: ['Property', 'Value'], rows: []};
     const tabs: Tab[] = [
       {
         name: 'General Properties',
         tableData: generalProps
-      }, 
+      }
     ];
 
     if (this.vulnerabilities) {
@@ -119,69 +173,48 @@ export default class ComponentContent extends Vue {
         name: 'Vulnerabilities',
         tableData: {
           columns: ['Id', 'Title', 'Severity'],
-          rows: this.vulnerabilities.map(v => [v.data.id, v.data.title || '', v.hdf.severity])
+          rows: this.vulnerabilities.map((v) => [
+            v.data.id,
+            v.data.title || '',
+            v.hdf.severity
+          ])
         }
-      })
+      });
+    }
+
+    if (this.component.properties) {
+      const properties: Tab = {
+        name: 'Properties',
+        tableData: {
+          columns: ['Property', 'Value'],
+          rows: []
+        }
+      };
+      for (const property of this.component.properties) {
+        const json = parseJson(property.value);
+        if (json.ok && json.value instanceof Object) {
+          tabs.push({
+            name: _.startCase(property.name),
+            ...jsonToTabFormat(json.value)
+          });
+        } else {
+          properties.tableData?.rows.push([property.name, property.value]);
+        }
+      }
+      if (properties.tableData && properties.tableData.rows.length > 0) {
+        tabs.push(properties);
+      }
     }
 
     for (const [key, value] of Object.entries(this.component)) {
       if (value instanceof Object) {
-        if (this.customTabs.includes(key))
-          continue;
-
-        // is the value is a list of string 
-        if (Array.isArray(value) && value.every(v => typeof v ==='string')) {
-           tabs.push({
-            name: _.startCase(key),
-            tableData: {
-              columns: ['Elements'],
-              rows: value.map(v => [v])
-            }
-           })
-        }
-
-        /* if value is a list of height-one objects (can be represented in a table)
-          [
-            {
-              p1: 'value',
-              p2: 'value',
-              ...
-            },
-            {
-              p1: 'value',
-              p2: 'value'
-            },
-            ...
-          ]
-        */
-        else if (Array.isArray(value) && value.every(v => { // todo: move this to separate function
-          return Object.entries(v).every(([_key, value]) => typeof value === 'string')
-        })) {
-          // get the complete set of properties amongst the items in `value`
-          const columns = _.uniq(value.flatMap(Object.keys))
-          tabs.push({
-            name: _.startCase(key),
-            tableData: {
-              columns: columns.map(_.startCase),
-              // convert each element in `value` to a list 
-              // corresponding to each property in `columns`  
-              rows: value.map(v => {
-                return columns.map(c => v[c])
-              })
-            }
-          })
-        } else {
-          // data is nested too much to display in a concise table
-          tabs.push({
-            name: _.startCase(key),
-            treeData: objectToTreeview(value, 0)
-          });
-        }
-      } else { // value is a string
+        if (!this.customTabs.includes(key))
+          tabs.push({name: _.startCase(key), ...jsonToTabFormat(value)});
+      } else {
+        // value is a primitive
         generalProps.rows.push([key, value]);
       }
     }
-    console.log(generalProps)
     return tabs;
   }
 }
