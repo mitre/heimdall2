@@ -3,7 +3,7 @@ import {
   ControlScore,
   SecureScoreControlProfile
 } from '@microsoft/microsoft-graph-types';
-import {ExecJSON, ProfileJSON} from 'inspecjs';
+import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import * as _ from 'lodash';
