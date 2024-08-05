@@ -22,6 +22,13 @@
       </v-btn>
     </v-list-item-action>
 
+    <v-list-item-action v-if="isSbomFile">
+      <v-chip outlined :to="{name: 'sbom'}">
+        SBOM
+        <v-icon right>mdi-page-next-outline</v-icon>
+      </v-chip>
+    </v-list-item-action>
+
     <v-list-item-action @click.stop="remove_file">
       <v-btn data-cy="closeFile" icon small>
         <v-icon title="Remove entry from result set">
@@ -40,6 +47,7 @@ import {InspecDataModule} from '@/store/data_store';
 import {EvaluationModule} from '@/store/evaluations';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
+import {isSbom} from '@/utilities/sbom_util';
 import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
 import axios from 'axios';
 import * as _ from 'lodash';
@@ -157,6 +165,11 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     } else {
       return 'mdi-google-analytics';
     }
+  }
+
+  get isSbomFile(): Boolean {
+    const evaluation = _.get(this.file, 'evaluation');
+    return evaluation !== undefined && isSbom(evaluation);
   }
 }
 </script>

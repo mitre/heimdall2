@@ -44,6 +44,17 @@
             <span>Remove selected {{ headerText }} </span>
             <v-icon right>mdi-text-box-remove-outline</v-icon>
           </v-btn>
+
+          <v-btn
+            v-if="navigateBack"
+            small
+            style="cursor: pointer"
+            class="ml-10"
+            :to="{name: navigateBack}"
+          >
+            <span>Back to {{ navigateBack }}</span>
+            <v-icon right>mdi-page-previous-outline</v-icon>
+          </v-btn>
         </v-row>
 
         <v-divider v-if="enableCompareView" />
@@ -95,6 +106,9 @@ export default class DropdownContent extends Vue {
 
   @Prop({default: false, type: Boolean, required: false})
   readonly enableCompareView!: boolean;
+
+  @Prop({type: String, required: false})
+  readonly navigateBack?: string;
 
   @Prop({default: false, type: Boolean, required: false})
   readonly anySelected!: boolean;

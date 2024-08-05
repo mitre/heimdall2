@@ -251,6 +251,19 @@ export class FilteredData extends VuexModule {
     };
   }
 
+  /**
+   * Parameterized getter.
+   * Gets all evaluations from the specified file ids that contain
+   * SBOM component data in the passthrough
+   */
+  get sboms(): (files: FileID[]) => readonly SourcedContextualizedEvaluation[] {
+    return (files: FileID[]) => {
+      return InspecDataModule.contextualSboms.filter((e) => {
+        files.includes(e.from_file.uniqueId);
+      });
+    };
+  }
+
   get selected_file_ids(): FileID[] {
     return [...this.selectedEvaluationIds, ...this.selectedProfileIds];
   }

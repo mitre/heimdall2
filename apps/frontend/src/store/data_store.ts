@@ -18,6 +18,7 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
+import {isSbom} from '@/utilities/sbom_util';
 
 /** We make some new variant types of the Contextual types, to include their files*/
 export function isFromProfileFile(p: SourcedContextualizedProfile) {
@@ -55,12 +56,25 @@ export class InspecData extends VuexModule {
     return this.profileFiles;
   }
 
+  /* Return all sbom files only */
+  get allSbomFiles(): EvaluationFile[] {
+    return this.executionFiles.filter((e) => isSbom(e.evaluation));
+  }
+
   /**
    * Returns a readonly list of all executions currently held in the data store
    * including associated context
    */
   get contextualExecutions(): readonly SourcedContextualizedEvaluation[] {
     return this.executionFiles.map((file) => file.evaluation);
+  }
+
+  /**
+   * Returns a readonly list of all SBOMs currently held in the data store
+   * including associated context
+   */
+  get contextualSboms(): readonly SourcedContextualizedEvaluation[] {
+    return this.allSbomFiles.map((file) => file.evaluation);
   }
 
   get loadedDatabaseIds(): string[] {
