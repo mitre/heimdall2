@@ -3,17 +3,28 @@ import {
   ControlScore,
   SecureScoreControlProfile
 } from '@microsoft/microsoft-graph-types';
-import {ExecJSON} from 'inspecjs';
+import {ExecJSON, ProfileJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import * as _ from 'lodash';
 
+type ProfileResponse = {
+  '@odata.context': string;
+  '@odata.nextLink': string;
+  value: SecureScoreControlProfile[];
+}
+type SecureScoreResponse = {
+  '@odata.context': string;
+  '@odata.nextLink': string;
+  value: SecureScore[];
+}
+
 export class MsftSecureScoreMapper extends BaseConverter {
   withRaw: boolean;
-  profiles: SecureScoreControlProfile[];
+  rawData: {secureScore: SecureScoreResponse, profiles: ProfileResponse}
 
   private getProfiles(controlName: string): SecureScoreControlProfile[] {
-    return this.profiles.filter((profile) => profile.id === controlName);
+    return this.rawData.profiles.value.filter((profile) => profile.id === controlName);
   }
 
   mappings: MappedTransform<
@@ -206,9 +217,15 @@ export class MsftSecureScoreMapper extends BaseConverter {
       transformer: (data: Record<string, any>): Record<string, unknown> => {
         return {
           auxiliary_data: [
-            {name: 'Microsoft Secure Score', data: this.profiles}
+            {
+              name: 'Microsoft Secure Score', 
+              data: {
+                profiles: this.rawData.profiles,
+                secureScores: _.pick(this.rawData.secureScore, ['@odata.context', '@odata.nextLink'])
+              }
+            }
           ],
-          ...(this.withRaw && {raw: data})
+          ...(this.withRaw && {raw: this.rawData})
         };
       }
     }
@@ -217,6 +234,6 @@ export class MsftSecureScoreMapper extends BaseConverter {
     const rawParams = JSON.parse(secureScore_and_profiles_combined);
     super(rawParams.secureScore.value[0]);
     this.withRaw = withRaw;
-    this.profiles = rawParams.profiles.value as SecureScoreControlProfile[];
+    this.rawData = rawParams;
   }
 }
