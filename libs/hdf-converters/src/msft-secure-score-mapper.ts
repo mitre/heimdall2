@@ -74,7 +74,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
             },
             refs: [],
             tags: {
-              group: {
+              category: {
                 transformer: (data: ControlScore) => {
                   // return controlCategory from the profile document where its id matches the controlName
                   return this.getProfiles(data.controlName || '').map(
