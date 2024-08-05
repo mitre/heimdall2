@@ -225,7 +225,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      transformer: (data: Record<string, any>): Record<string, unknown> => {
+      transformer: (): Record<string, unknown> => {
         return {
           auxiliary_data: [
             {
