@@ -13,6 +13,7 @@ export enum INPUT_TYPES {
   NIKTO = 'nikto',
   SARIF = 'sarif',
   SNYK = 'snyk',
+  TRUFFLEHOG = 'trufflehog',
   TWISTLOCK = 'twistlock',
   ZAP = 'zap',
   NESSUS = 'nessus',
@@ -46,6 +47,12 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
     'summary',
     'vulnerabilities',
     'vulnerabilities[0].identifiers'
+  ],
+  [INPUT_TYPES.TRUFFLEHOG]: [
+    'SourceName',
+    'DetectorType',
+    'DetectorName',
+    'DecoderName'
   ],
   [INPUT_TYPES.TWISTLOCK]: [
     'results[0].complianceDistribution',

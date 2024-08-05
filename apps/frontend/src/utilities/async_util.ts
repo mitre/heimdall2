@@ -1,7 +1,7 @@
 /* Provides async wrappers over various common functions/tasks */
 
 /** Provides the resulting text of reading a file as a promise */
-export async function read_file_async(file: File): Promise<string> {
+export async function readFileAsync(file: File): Promise<string> {
   const reader = new FileReader();
   return new Promise((resolve, reject) => {
     reader.onerror = () => {
