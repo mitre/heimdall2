@@ -147,7 +147,7 @@ export class FromHdfToAsffMapper extends FromHdfBaseConverter {
   constructor(hdfObj: ExecJSON.Execution, options: IOptions | undefined) {
     super(hdfObj);
     this.ioptions = options === undefined ? this.defaultOptions() : options;
-    this.counts = statusCount(contextualizeEvaluation(hdfObj));
+    this.counts = statusCount(contextualizeEvaluation(hdfObj, [""]));
   }
 
   defaultOptions(): IOptions {

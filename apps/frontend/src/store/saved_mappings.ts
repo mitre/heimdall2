@@ -14,6 +14,10 @@ const state: MappingsState = {
   mappings: {},
   descriptions: {}
 };
+// Utility function to extract the right part of the '->'
+function extractRightPart(id: string): string {
+  return id.split('->')[1];
+}
 // Mutations
 const mutations = {
   ADD_MAPPING(state: MappingsState, { id, mapping }: { id: string, mapping: DictionaryObject }) {
@@ -44,17 +48,31 @@ const mutations = {
 };
 // Actions
 const actions = {
-  addMapping({ commit }: any, { id, mapping }: { id: string, mapping: DictionaryObject }) {
+  addMapping({ state, commit }: any, { id, mapping }: { id: string, mapping: DictionaryObject }) {
+    const newRightPart = extractRightPart(id);
+    // Check if any existing ID has the same right part
+    const existingRightParts = Object.keys(state.mappings).map(extractRightPart);
+    if (existingRightParts.includes(newRightPart)) {
+      console.error(`Mapping with the right part "${newRightPart}" already exists.`);
+      return; // Prevent adding the new mapping
+    }
     commit('ADD_MAPPING', { id, mapping });
+  },
+  addDescription({ state, commit }: any, { id, descriptions }: { id: string, descriptions: { [mappingName: string]: string } }) {
+    const newRightPart = extractRightPart(id);
+    // Check if any existing ID has the same right part
+    const existingRightParts = Object.keys(state.descriptions).map(extractRightPart);
+    if (existingRightParts.includes(newRightPart)) {
+      console.error(`Description with the right part "${newRightPart}" already exists.`);
+      return; // Prevent adding the new description
+    }
+    commit('ADD_DESCRIPTION', { id, descriptions });
   },
   removeMapping({ commit }: any, id: string) {
     commit('REMOVE_MAPPING', id);
   },
   updateMapping({ commit }: any, { id, updatedMapping }: { id: string, updatedMapping: DictionaryObject }) {
     commit('UPDATE_MAPPING', { id, updatedMapping });
-  },
-  addDescription({ commit }: any, { id, descriptions }: { id: string, descriptions: { [mappingName: string]: string } }) {
-    commit('ADD_DESCRIPTION', { id, descriptions });
   },
   removeDescription({ commit }: any, id: string) {
     commit('REMOVE_DESCRIPTION', id);

@@ -80,7 +80,7 @@ export function createProfileInfoFinding(
   const runTime = getRunTime(hdf);
   const inspecJSJson = convertFile(JSON.stringify(hdf));
   const contextualizedEvaluation = contextualizeEvaluation(
-    inspecJSJson['1_0_ExecJson'] as any
+    inspecJSJson['1_0_ExecJson'] as any, [""]
   );
   const counts = statusCount(contextualizedEvaluation);
   const updatedAt = new Date();

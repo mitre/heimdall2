@@ -277,24 +277,50 @@ interface Tag {
   }
   get mappedTags(): Tag[] {
     const tags: Tag[] = [];
+    const labelSet: Set<string> = new Set(); // Set to keep track of unique labels
     const mappings = this.mappings;
     const descriptions = this.descriptions;
     for (const key in mappings) {
-      if (this.checkedValues.includes(key)) {
-        const mapping = mappings[key];
-        for (const cci of this.control.data.tags.cci || []) {
-          if (mapping[cci]) {
-            const name = key.includes('->') ? key.split('->')[1].trim() : key;
-            mapping[cci].forEach((userMapping) => {
-              tags.push({
-                label: `${name}: ${userMapping}`,
-                url: '',
-                description: descriptions[key][userMapping]
-              });
-            });
-          }
+        if (this.checkedValues.includes(key)) {
+            const mapping = mappings[key];
+            const type = key.includes('->') ? key.split('->')[0].trim() : key;
+            if (type == "CCI") {
+                for (const cci of this.control.data.tags.cci || []) {
+                    if (mapping[cci]) {
+                        const name = key.includes('->') ? key.split('->')[1].trim() : key;
+                        mapping[cci].forEach((userMapping) => {
+                            const label = `${name}: ${userMapping}`;
+                            if (!labelSet.has(label)) {
+                                tags.push({
+                                    label: label,
+                                    url: '',
+                                    description: descriptions[key][userMapping]
+                                });
+                                labelSet.add(label); // Add the label to the set
+                            }
+                        });
+                    }
+                }
+            } else if (type == "800-53") {
+                console.log(this.control.hdf.rawNistTags);
+                for (const nistTag of this.control.hdf.rawNistTags || []) {
+                    if (mapping[nistTag]) {
+                        const name = key.includes('->') ? key.split('->')[1].trim() : key;
+                        mapping[nistTag].forEach((userMapping) => {
+                            const label = `${name}: ${userMapping}`;
+                            if (!labelSet.has(label)) {
+                                tags.push({
+                                    label: label,
+                                    url: '',
+                                    description: descriptions[key][userMapping]
+                                });
+                                labelSet.add(label); // Add the label to the set
+                            }
+                        });
+                    }
+                }
+            }
         }
-      }
     }
     return tags;
   }

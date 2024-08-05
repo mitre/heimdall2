@@ -12,6 +12,7 @@ import {
   AnyProfile
 } from './fileparse';
 
+
 /**
  * Mixin type to express that this type wraps another data type to add additional fields,
  * without modifying the inner type.
@@ -156,17 +157,15 @@ ${this.data.code}`.trim();
   }
 }
 
-//Calvin: I think this is where I should get the names of the mappings? euurgh
 export function contextualizeEvaluation(
-  evaluation: AnyEval
+  evaluation: AnyEval,
+  additionalStrings: string[]
 ): ContextualizedEvaluation {
-  // To begin, create basic context for profiles and evaluation
   const evalContext: ContextualizedEvaluation = {
     data: evaluation,
     contains: [],
-    has: []
+    has: additionalStrings // Add the array of strings to the has property
   };
-
   for (const profile of evaluation.profiles) {
     const evalProfileContext: ContextualizedProfile = {
       data: profile,
@@ -174,36 +173,22 @@ export function contextualizeEvaluation(
       extendedBy: [],
       extendsFrom: [],
       contains: [],
-      has: []
+      has: additionalStrings // Add the array of strings to the has property
     };
-
-    // Add it to our parent
     evalContext.contains.push(evalProfileContext);
   }
-
-  // After our initial save of profiles, we go over them again to establish parentage/dependency
   for (const profile of evalContext.contains) {
-    // We know these are from a report; label as such
     const asExec = profile.data as AnyEvalProfile;
-
-    // If it has a parent profile then we link them by extendedby/extendsfrom
     if (asExec.parent_profile !== undefined) {
-      // Look it up
       const parent = evalContext.contains.find(
         (p) => p.data.name === asExec.parent_profile
       );
-
-      // Link it up
       if (parent) {
         parent.extendsFrom.push(profile);
         profile.extendedBy.push(parent);
       }
     }
   }
-
-  // Next step: Extract controls and connect them
-  // Extract the controls and set them as the "contained" data for each profile
-  // These ContextualizedControls are basically empty - just have data and from where they were sourced
   const allControls: ContextualizedControl[] = [];
   for (const profile of evalContext.contains) {
     const pControls = profile.data.controls as AnyEvalControl[];
@@ -212,54 +197,32 @@ export function contextualizeEvaluation(
     });
     allControls.push(...profile.contains);
   }
-
-  // Link each contextualized control
   for (const cc of allControls) {
-    // Behavior changes based on if we have well-formed or malformed profile dependency
     if (cc.sourcedFrom.extendsFrom.length || cc.sourcedFrom.extendedBy.length) {
-      // Our profile is a baseline! No need to continue - children will make connections for us
-      // If we aren't extended from something we just drop. Our children will make connections for us
       if (cc.sourcedFrom.extendsFrom.length === 0) {
         continue;
       }
-
-      // Get the profile(s) that this control's owning profile is extending
-      // For a wrapper profile, there might be many of these!
-      // We don't know which one it will be, so we iterate
       for (const extendedProfile of cc.sourcedFrom.extendsFrom) {
-        // Hunt for its ancestor in the extended profile
         const ancestor = extendedProfile.contains.find(
           (c) => c.data.id === cc.data.id
         );
-        // First one we find with a matching id we assume is the root (or at least, closer to root)
         if (ancestor) {
           ancestor.extendedBy.push(cc);
           cc.extendsFrom.push(ancestor);
-          break; // Note that we're in a nested loop here
+          break;
         }
       }
-      // If it's not found, then we just assume it does not exist!
     } else {
-      // If we don't have a normal profile dependency layout, then we have to hunt ye-olde-fashioned-way
-      // Unfortunately, if theres more than 2 profiles there's ultimately no way to figure out which one was applied "last".
-      // This method leaves them as siblings. However, as a fallback method that is perhaps the best we can hope for
-      // First, hunt out all controls from this file that have the same id as cc
       const sameId = allControls.filter((c) => c.data.id === cc.data.id);
-      // Find which of them, if any, is populated with results.
       let sameIdPopulated = sameId.find(
         (c) => c.hdf.segments && c.hdf.segments.length
       );
-
-      // If found a populated base, use that. If not, we substitute in the first found element in sameId. This is arbitrary.
       if (!sameIdPopulated) {
         sameIdPopulated = sameId[0];
       }
-
-      // If the object we end up with is "us", then just ignore
       if (Object.is(cc, sameIdPopulated)) {
         continue;
       } else {
-        // Otherwise, bind
         sameIdPopulated.extendedBy.push(cc);
         cc.extendsFrom.push(sameIdPopulated);
       }
@@ -267,15 +230,9 @@ export function contextualizeEvaluation(
   }
   return evalContext;
 }
-
-// Here we handle the independent profile (IE those in their own files, generated by inspec json).
-// These are slightly simpler because they do not actually include their overlays (even if they depend on them)
-// as a separate data structure.
-// As such, we can just do all the profile and controls from each in one fell swoop
-
-//Calvin: Think this is where you add the mapping names
 export function contextualizeProfile(
-  profile: AnyProfile
+  profile: AnyProfile,
+  additionalStrings: string[]
 ): ContextualizedProfile {
   const profileContext: ContextualizedProfile = {
     data: profile,
@@ -283,14 +240,11 @@ export function contextualizeProfile(
     extendsFrom: [],
     contains: [],
     sourcedFrom: null,
-    has: []
+    has: additionalStrings // Add the array of strings to the has property
   };
-
-  // Now give it its controls
   for (const c of profile.controls) {
     const result = new ContextualizedControlImp(c, profileContext, [], []);
     profileContext.contains.push(result);
   }
-
   return profileContext;
 }

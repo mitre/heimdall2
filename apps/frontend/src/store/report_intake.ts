@@ -45,6 +45,7 @@ import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
 import {SnackbarModule} from './snackbar';
+import selectedTags from '@/store/selected_tags';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -308,15 +309,14 @@ export class InspecIntake extends VuexModule {
       return false;
     }
   }
-
+  
   @Action
   async loadText(options: TextLoadOptions): Promise<FileID> {
-    // Convert it
     const fileID: FileID = uuid();
     const result: ConversionResult = convertFile(options.text, true);
-    // Determine what sort of file we (hopefully) have, then add it
+    // Get the checkedValues from the selectedTags module
+    const checkedValues = Store.getters['selectedTags/checkedValues'];
     if (result['1_0_ExecJson']) {
-      // A bit of chicken and egg here
       const evalFile = {
         uniqueId: fileID,
         filename: options.filename,
@@ -324,54 +324,36 @@ export class InspecIntake extends VuexModule {
         createdAt: options.createdAt,
         updatedAt: options.updatedAt,
         tags: options.tags
-        // evaluation
       } as EvaluationFile;
-
-      // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
-      const evaluation = contextualizeEvaluation(
-        result['1_0_ExecJson']
-      ) as unknown as SourcedContextualizedEvaluation;
+      const evaluation = contextualizeEvaluation(result['1_0_ExecJson'], checkedValues) as SourcedContextualizedEvaluation;
       evaluation.from_file = evalFile;
-
-      // Set and freeze
       evalFile.evaluation = evaluation;
       Object.freeze(evaluation);
       InspecDataModule.addExecution(evalFile);
       FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
     } else if (result['1_0_ProfileJson']) {
-      // Handle as profile
       const profileFile = {
         uniqueId: fileID,
         filename: options.filename
       } as ProfileFile;
-
-      // Fixup the evaluation to be Sourced from a file. Requires a temporary type break
-      const profile = contextualizeProfile(
-        result['1_0_ProfileJson']
-      ) as unknown as SourcedContextualizedProfile;
+      const profile = contextualizeProfile(result['1_0_ProfileJson'], checkedValues) as SourcedContextualizedProfile;
       profile.from_file = profileFile;
-
-      // Set and freeze
       profileFile.profile = profile;
       Object.freeze(profile);
       InspecDataModule.addProfile(profileFile);
       FilteredDataModule.toggle_profile(profileFile.uniqueId);
     } else {
-      // eslint-disable-next-line no-console
       console.error(result.errors);
-      throw new Error(
-        "Couldn't parse data. See developer's tools for more details."
-      );
+      throw new Error("Couldn't parse data. See developer's tools for more details.");
     }
     return fileID;
   }
-
-  // Instead of re-stringifying converted evaluations, add the allow loading the ExecJSON directly.
   @Action
   async loadExecJson(options: ExecJSONLoadOptions) {
-    // Convert it
     const fileID: FileID = uuid();
-    // A bit of chicken and egg here, this will be our circular JSON structure
+    // Get the checkedValues from the selectedTags module
+    const checkedValues = Store.getters['selectedTags/checkedValues'];
+    console.log(checkedValues)
     const evalFile = {
       uniqueId: fileID,
       filename: options.filename,
@@ -380,19 +362,12 @@ export class InspecIntake extends VuexModule {
       updatedAt: options.updatedAt,
       tags: options.tags
     } as EvaluationFile;
-
-    // Fixup the evaluation to be Sourced from a file.
-    const evaluation = contextualizeEvaluation(
-      options.data
-    ) as SourcedContextualizedEvaluation;
+    const evaluation = contextualizeEvaluation(options.data, checkedValues) as SourcedContextualizedEvaluation;
     evaluation.from_file = evalFile;
-
-    // Set and freeze
     evalFile.evaluation = evaluation;
     Object.freeze(evaluation);
     InspecDataModule.addExecution(evalFile);
     FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
-
     return fileID;
   }
 }

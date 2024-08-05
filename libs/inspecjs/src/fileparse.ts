@@ -102,11 +102,11 @@ export function convertFileContextual(
   if (result['1_0_ExecJson']) {
     // Handle as exec
     const evaluation = result['1_0_ExecJson'];
-    return contextualizeEvaluation(evaluation);
+    return contextualizeEvaluation(evaluation, [""]);
   } else if (result['1_0_ProfileJson']) {
     // Handle as profile
     const profile = result['1_0_ProfileJson'];
-    return contextualizeProfile(profile);
+    return contextualizeProfile(profile, [""]);
   } else {
     throw new Error(`Failed to convert file due to possible errors`);
   }
