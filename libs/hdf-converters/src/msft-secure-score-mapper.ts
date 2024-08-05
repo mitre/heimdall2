@@ -138,6 +138,26 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   }
                 },
                 label: 'fix'
+              },
+              {
+                data: {
+                  transformer: (
+                    data: ControlScore & {implementationStatus: string}
+                  ) => {
+                    const profiles = this.getProfiles(data.controlName || '');
+                    const impact = profiles
+                      .map((profile: SecureScoreControlProfile) =>
+                        profile.remediationImpact?.toString()
+                      )
+                      .filter(
+                        (remediationImpact: string | undefined) =>
+                          remediationImpact !== undefined
+                      );
+
+                    return impact.join('\n');
+                  }
+                },
+                label: 'rationale'
               }
             ],
             results: [
