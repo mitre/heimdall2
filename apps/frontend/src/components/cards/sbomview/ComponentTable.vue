@@ -1,13 +1,5 @@
 <template>
-  <v-container fluid class="font-weight-bold">
-    <div
-      ref="componentTableTitle"
-      :class="
-        $vuetify.breakpoint.smAndDown
-          ? 'components-table-title'
-          : 'pinned-header components-table-title'
-      "
-    />
+   <v-container fluid class="font-weight-bold">
 
     <!-- Body -->
     <v-row>
@@ -17,34 +9,33 @@
           :headers="headers"
           :items-per-page="-1"
           :item-key="'bom-ref'"
-          :search="search"
+          :search="searchTerm"
           :expanded.sync="expanded"
           show-expand
           hide-default-footer
-          fixed-header
         >
-          <!--The single expand is to hide the tabs syncing together when multiple components are open-->
+<!--           fixed-header
+          height="calc(100vh - 250px)" -->
           <template #top>
-            <v-card-title class="pb-0"
-              >Component View Data
+            <v-card-title>
+              Component View Data
               <v-spacer />
-              <v-text-field v-model="search" label="Search" class="mx-4" />
 
+              <!-- Table settings menu -->
               <v-menu offset-y offset-overflow :close-on-content-click="false">
                 <template #activator="{on}">
                   <v-btn fab small v-on="on">
                     <v-icon> mdi-cog-outline </v-icon>
                   </v-btn>
                 </template>
-                <v-card max-width="400">
-                  <v-card-title>Column Select</v-card-title>
+                <v-card max-width="400" class="px-5">
+                  <v-card-title class="py-5">Column Select</v-card-title>
                   <v-chip-group
                     v-model="headerColumns"
                     active-class="primary--text"
                     center-active
                     column
                     multiple
-                    style="padding: 0px 10px 10px 10px"
                   >
                     <v-chip
                       v-for="field in headerOptions"
@@ -54,6 +45,9 @@
                       {{ field.name }}
                     </v-chip>
                   </v-chip-group>
+                  <v-divider />
+                  <v-card-title class="py-2">Filters</v-card-title>
+                  <v-switch class="my-0" v-model="showOnlyVulns" label="Only show vulnerable components"></v-switch>
                 </v-card>
               </v-menu>
             </v-card-title>
@@ -100,7 +94,7 @@
               :colspan="headers.length"
             />
           </template>
-        </v-data-table>
+         </v-data-table>
       </v-col>
     </v-row>
   </v-container>
@@ -179,6 +173,7 @@ interface Passthrough {
 export default class ComponentTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: String, required: false}) readonly searchTerm!: string;
 
   componentRef = this.$route.query.componentRef ?? null;
   headerColumns = [
@@ -190,8 +185,8 @@ export default class ComponentTable extends Vue {
     'description',
     'affectingVulnerabilities'
   ];
+  showOnlyVulns: Boolean = false;
 
-  search = ''; // TODO: move search field to the top bar
   expanded: SBOMComponent[] = [];
 
   /**
@@ -237,8 +232,11 @@ export default class ComponentTable extends Vue {
   }
 
   get headers() {
-    let h = this.headerColumns.map((v) => ({value: v, text: _.startCase(v)}));
-    h.push({value: 'data-table-expand', text: 'More'});
+    let h = this.headerColumns.map((v) => {
+      return {value: v, class: 'header-box', text: _.startCase(v)}
+    });
+    h.push({value: 'data-table-expand', text: 'More', class: 'header-box'});
+    console.log(h);
     return h;
   }
 
@@ -246,18 +244,21 @@ export default class ComponentTable extends Vue {
     const evaluations = FilteredDataModule.evaluations(
       FilteredDataModule.selectedEvaluationIds
     );
-    const aux_datas: Passthrough['auxiliary_data'][] = evaluations.map((e) =>
+    // get each section of the auxiliary data as one large section 
+    const auxDataSections: Passthrough['auxiliary_data'] = evaluations.flatMap((e) =>
       _.get(e, 'data.passthrough.auxiliary_data', [])
     );
-    let sboms: SBOMComponent[] = [];
-    for (const auxes of aux_datas) {
-      for (const a of auxes) {
-        if (_.matchesProperty('name', 'SBOM')(a)) {
-          sboms = sboms.concat(_.get(a, 'components', []));
+    let components: SBOMComponent[] = [];
+    // grab every component from each section and apply a the filter if necessary
+    for (const section of auxDataSections) {
+      if (_.matchesProperty('name', 'SBOM')(section)) {
+        for (const component of _.get(section, 'components', []) as SBOMComponent[]) {
+          if (!this.showOnlyVulns || (component.affectingVulnerabilities && component.affectingVulnerabilities.length > 0))
+            components.push(component);
         }
       }
     }
-    return sboms;
+    return components;
   }
 
   get all_filter(): Filter {
@@ -318,10 +319,16 @@ export default class ComponentTable extends Vue {
 /** Allows blue bar to be visible */
 ::v-deep .v-data-table__wrapper table {
   border-collapse: collapse;
-}
+} 
 
 /** Keep hover effect when expanded */
 ::v-deep .v-data-table__expanded__row {
   background-color: #616161;
 }
+
+/** Ensure there is no line break between the header text and header icon */
+::v-deep .v-data-table .header-box {
+  white-space: nowrap;
+}
+
 </style>

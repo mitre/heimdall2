@@ -1,11 +1,20 @@
 <template>
-  <Base :show-search="true" title="SBOM View" @changed-files="evalInfo = null">
+  <Base title="SBOM View" @changed-files="evalInfo = null">
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
-      <v-btn :disabled="!can_clear" @click="clear">
-        <span class="d-none d-md-inline pr-2"> Clear </span>
-        <v-icon>mdi-filter-remove</v-icon>
-      </v-btn>
+    <v-text-field
+      v-model="searchTerm"
+      flat
+      hide-details
+      dense
+      solo
+      prepend-inner-icon="mdi-magnify"
+      label="Search"
+      clearable
+      :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'regular-bar mx-2'"
+      @click:clear="searchTerm = ''"
+    />
+
       <UploadButton />
       <div class="text-center">
         <v-menu>
@@ -64,6 +73,7 @@
               <ComponentTable
                 :filter="all_filter"
                 :component-ref="$route.params.componentRef"
+                :searchTerm="searchTerm"
               />
             </v-card>
           </v-col>
@@ -125,6 +135,7 @@ export default class Components extends mixins(RouteMixin, ServerMixin) {
 
   gotStatus: boolean = false;
   gotSeverity: boolean = false;
+  searchTerm: string = '';
 
   /** Model for if all-filtered snackbar should be showing */
   filterSnackbar = false;
@@ -133,33 +144,6 @@ export default class Components extends mixins(RouteMixin, ServerMixin) {
     | SourcedContextualizedEvaluation
     | SourcedContextualizedProfile
     | null = null;
-
-  /**
-   * The current search terms, as modeled by the search bar
-   */
-  get searchTerm(): string {
-    return SearchModule.searchTerm;
-  }
-
-  set searchTerm(term: string) {
-    SearchModule.updateSearch(term);
-  }
-
-  get severityFilter(): Severity[] {
-    return SearchModule.severityFilter;
-  }
-
-  set severityFilter(severity: Severity[]) {
-    SearchModule.setSeverity(severity);
-  }
-
-  get statusFilter(): ExtendedControlStatus[] {
-    return SearchModule.statusFilter;
-  }
-
-  set statusFilter(status: ExtendedControlStatus[]) {
-    SearchModule.setStatusFilter(status);
-  }
 
   /**
    * The currently selected file, if one exists.
@@ -310,22 +294,6 @@ export default class Components extends mixins(RouteMixin, ServerMixin) {
 
   showSeverityOverrides() {
     this.searchTerm = 'tags:"severityoverride"';
-  }
-
-  addStatusSearch(status: ExtendedControlStatus) {
-    SearchModule.addSearchFilter({
-      field: 'status',
-      value: status,
-      previousValues: this.statusFilter
-    });
-  }
-
-  removeStatusFilter(status: ExtendedControlStatus) {
-    SearchModule.removeSearchFilter({
-      field: 'status',
-      value: status,
-      previousValues: this.statusFilter
-    });
   }
 }
 </script>

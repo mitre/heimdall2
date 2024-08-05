@@ -301,6 +301,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     if (typeof id === 'string') {
       SearchModule.clear();
       SearchModule.addIdFilter(id);
+      this.$vuetify.goTo(document.body.scrollHeight);
     } else {
       SearchModule.clear();
       SearchModule.addIdFilter(id.filter((i): i is string => i !== null));
