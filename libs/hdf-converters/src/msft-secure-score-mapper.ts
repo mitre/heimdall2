@@ -6,6 +6,8 @@ import {
 import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
+import * as _ from 'lodash';
+
 
 export class MsftSecureScoreMapper extends BaseConverter {
   withRaw: boolean;
@@ -92,13 +94,9 @@ export class MsftSecureScoreMapper extends BaseConverter {
               },
               threats: {
                 transformer: (data: ControlScore) => {
-                  // return unique threats from the profile document where its id matches the controlName
-                  const uniqs: Set<string> = new Set();
-                  this.getProfiles(data.controlName || '').forEach(
-                    (profile: SecureScoreControlProfile) =>
-                      profile.threats?.forEach((threat) => uniqs.add(threat))
-                  );
-                  return [...uniqs];
+                  const threats = this.getProfiles(data.controlName || '').map(
+                    (profile: SecureScoreControlProfile) => profile.threats);
+                  return [..._.uniq(threats)];
                 }
               },
               services: {
