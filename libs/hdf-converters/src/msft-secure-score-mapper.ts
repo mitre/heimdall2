@@ -122,6 +122,14 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   );
                 }
               },
+              rank: {
+                transformer: (data: ControlScore) => {
+                  // return rank from the profile document where its id matches the controlName
+                  return this.getProfiles(data.controlName || '').map(
+                    (profile) => profile.rank
+                  );
+                }
+              },
               userImpacts: {
                 transformer: (data: ControlScore) => {
                   // return userImpacts from the profile document where its id matches the controlName
