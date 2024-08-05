@@ -7,6 +7,7 @@ import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import * as _ from 'lodash';
+import {conditionallyProvideAttribute} from './utils/global';
 
 type ProfileResponse = {
   '@odata.context': string;
@@ -90,54 +91,57 @@ export class MsftSecureScoreMapper extends BaseConverter {
             },
             refs: [],
             tags: {
-              category: {
-                transformer: (data: ControlScore) => {
-                  // return controlCategory from the profile document where its id matches the controlName
-                  return this.getProfiles(data.controlName || '').map(
-                    (profile) => profile.controlCategory
-                  );
-                }
-              },
-              tiers: {
-                transformer: (data: ControlScore) => {
-                  // return tiers from the profile document where its id matches the controlName
-                  return this.getProfiles(data.controlName || '').map(
-                    (profile) => profile.tier
-                  );
-                }
-              },
-              threats: {
-                transformer: (data: ControlScore) => {
-                  const threats = this.getProfiles(data.controlName || '').map(
-                    (profile: SecureScoreControlProfile) => profile.threats
-                  );
-                  return [..._.uniq(threats)];
-                }
-              },
-              services: {
-                transformer: (data: ControlScore) => {
-                  // return services from the profile document where its id matches the controlName
-                  return this.getProfiles(data.controlName || '').map(
-                    (profile) => profile.service
-                  );
-                }
-              },
-              rank: {
-                transformer: (data: ControlScore) => {
-                  // return rank from the profile document where its id matches the controlName
-                  return this.getProfiles(data.controlName || '').map(
-                    (profile) => profile.rank
-                  );
-                }
-              },
-              userImpacts: {
-                transformer: (data: ControlScore) => {
-                  // return userImpacts from the profile document where its id matches the controlName
-                  return this.getProfiles(data.controlName || '')
-                    .filter((profile) => profile.userImpact !== undefined)
-                    .map((profile) => profile.userImpact);
-                }
-              },
+              transformer: (data:ControlScore) => ({
+                ...conditionallyProvideAttribute(
+                  'category',
+                  this.getProfiles(data.controlName || '').map((profile)=> profile.controlCategory),
+                  (()=>{
+                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.controlCategory).filter((v) => Boolean(v));
+                    return result.length > 0;
+                  })()
+                ),
+                ...conditionallyProvideAttribute(
+                  'tiers',
+                  this.getProfiles(data.controlName || '').map((profile)=> profile.tier),
+                  (()=>{
+                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.tier).filter((v) => Boolean(v));
+                    return result.length > 0;
+                  })()
+                ),
+                ...conditionallyProvideAttribute(
+                  'threats',
+                  _.uniq(this.getProfiles(data.controlName || '').map((profile)=> profile.threats)),
+                  (()=>{
+                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.threats).filter((v) => Boolean(v));
+                    return result.length > 0;
+                  })()
+                ),
+                ...conditionallyProvideAttribute(
+                  'services',
+                  _.uniq(this.getProfiles(data.controlName || '').map((profile)=> profile.service)),
+                  (()=>{
+                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.service).filter((v) => Boolean(v));
+                    return result.length > 0;
+                  })()
+                ),
+                ...conditionallyProvideAttribute(
+                  'rank',
+                  _.uniq(this.getProfiles(data.controlName || '').map((profile)=> profile.rank)),
+                  (()=>{
+                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.rank).filter((v) => Boolean(v));
+                    return result.length > 0;
+                  })()
+                ),
+                ...conditionallyProvideAttribute(
+                  'userImpacts',
+                  _.uniq(this.getProfiles(data.controlName || '').map((profile)=> profile.userImpact)),
+                  (()=>{
+                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.userImpact).filter((v) => Boolean(v));
+                    return result.length > 0;
+                  })()
+                )
+
+              }),
               nist: ['SA-11', 'RA-5']
             },
             source_location: {},
