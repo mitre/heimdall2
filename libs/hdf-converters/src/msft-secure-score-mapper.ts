@@ -12,19 +12,21 @@ type ProfileResponse = {
   '@odata.context': string;
   '@odata.nextLink': string;
   value: SecureScoreControlProfile[];
-}
+};
 type SecureScoreResponse = {
   '@odata.context': string;
   '@odata.nextLink': string;
   value: SecureScore[];
-}
+};
 
 export class MsftSecureScoreMapper extends BaseConverter {
   withRaw: boolean;
-  rawData: {secureScore: SecureScoreResponse, profiles: ProfileResponse}
+  rawData: {secureScore: SecureScoreResponse; profiles: ProfileResponse};
 
   private getProfiles(controlName: string): SecureScoreControlProfile[] {
-    return this.rawData.profiles.value.filter((profile) => profile.id === controlName);
+    return this.rawData.profiles.value.filter(
+      (profile) => profile.id === controlName
+    );
   }
 
   mappings: MappedTransform<
@@ -64,7 +66,9 @@ export class MsftSecureScoreMapper extends BaseConverter {
                 if (titles.length > 0) {
                   return titles.join('\n');
                 } else {
-                  return `${data.controlCategory || ''}:${data.controlName || ''}`;
+                  return [data.controlCategory || '', data.controlName || '']
+                    .filter((title) => title)
+                    .join(':');
                 }
               }
             },
@@ -218,10 +222,13 @@ export class MsftSecureScoreMapper extends BaseConverter {
         return {
           auxiliary_data: [
             {
-              name: 'Microsoft Secure Score', 
+              name: 'Microsoft Secure Score',
               data: {
                 profiles: this.rawData.profiles,
-                secureScores: _.pick(this.rawData.secureScore, ['@odata.context', '@odata.nextLink'])
+                secureScores: _.pick(this.rawData.secureScore, [
+                  '@odata.context',
+                  '@odata.nextLink'
+                ])
               }
             }
           ],
