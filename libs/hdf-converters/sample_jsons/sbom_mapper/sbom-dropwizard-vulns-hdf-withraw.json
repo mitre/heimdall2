@@ -151,7 +151,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.hadoop.shaded.com.zaxxer.hikari.HikariConfig (aka shaded hikari-config)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.hadoop.shaded.com.zaxxer.hikari.HikariConfig (aka shaded hikari-config).",
           "id": "GHSA-5p34-5m6p-p58g",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.hadoop.shaded.com.zaxxer.hikari.HikariConfig (aka shaded hikari-config).",
           "impact": 1,
@@ -198,7 +198,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.springframework.aop.config.MethodLocatingFactoryBean (aka spring-aop)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.springframework.aop.config.MethodLocatingFactoryBean (aka spring-aop).",
           "id": "GHSA-27xj-rqx5-2255",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.springframework.aop.config.MethodLocatingFactoryBean (aka spring-aop).",
           "impact": 0.7,
@@ -245,7 +245,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.proxy.provider.remoting.RmiProvider (aka apache/commons-proxy)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.proxy.provider.remoting.RmiProvider (aka apache/commons-proxy).",
           "id": "GHSA-58pp-9c76-5625",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.proxy.provider.remoting.RmiProvider (aka apache/commons-proxy).",
           "impact": 0.7,
@@ -339,7 +339,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.jelly.impl.Embedded (aka commons-jelly)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.jelly.impl.Embedded (aka commons-jelly).",
           "id": "GHSA-h4rc-386g-6m85",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.jelly.impl.Embedded (aka commons-jelly).",
           "impact": 0.7,
@@ -386,7 +386,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.openjpa.ee.WASRegistryManagedRuntime (aka openjpa)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.openjpa.ee.WASRegistryManagedRuntime (aka openjpa).",
           "id": "GHSA-9vvp-fxw6-jcxr",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.openjpa.ee.WASRegistryManagedRuntime (aka openjpa).",
           "impact": 0.7,
@@ -433,7 +433,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.aoju.bus.proxy.provider.remoting.RmiProvider (aka bus-proxy)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.aoju.bus.proxy.provider.remoting.RmiProvider (aka bus-proxy).",
           "id": "GHSA-rf6r-2c4q-2vwg",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.aoju.bus.proxy.provider.remoting.RmiProvider (aka bus-proxy).",
           "impact": 0.7,
@@ -480,7 +480,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to javax.swing.JEditorPane....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to javax.swing.JEditorPane.",
           "id": "GHSA-758m-v56v-grj4",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to javax.swing.JEditorPane.",
           "impact": 0.7,
@@ -527,7 +527,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.aries.transaction.jms.internal.XaPooledConnectionFactory (aka aries.transaction.jms)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.aries.transaction.jms.internal.XaPooledConnectionFactory (aka aries.transaction.jms).",
           "id": "GHSA-95cm-88f5-f2c7",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.4 mishandles the interaction between serialization gadgets and typing, related to org.apache.aries.transaction.jms.internal.XaPooledConnectionFactory (aka aries.transaction.jms).",
           "impact": 0.7,
@@ -621,7 +621,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.5 mishandles the interaction between serialization gadgets and typing, related to org.jsecurity.realm.jndi.JndiRealmFactory (aka org.jsecurity)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.5 mishandles the interaction between serialization gadgets and typing, related to org.jsecurity.realm.jndi.JndiRealmFactory (aka org.jsecurity).",
           "id": "GHSA-mc6h-4qgp-37qh",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.5 mishandles the interaction between serialization gadgets and typing, related to org.jsecurity.realm.jndi.JndiRealmFactory (aka org.jsecurity).",
           "impact": 0.7,
@@ -668,7 +668,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.5 mishandles the interaction between serialization gadgets and typing, related to oadd.org.apache.xalan.lib.sql.JNDIConnectionPool (aka apache/drill)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.5 mishandles the interaction between serialization gadgets and typing, related to oadd.org.apache.xalan.lib.sql.JNDIConnectionPool (aka apache/drill).",
           "id": "GHSA-j823-4qch-3rgm",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.5 mishandles the interaction between serialization gadgets and typing, related to oadd.org.apache.xalan.lib.sql.JNDIConnectionPool (aka apache/drill).",
           "impact": 0.7,
@@ -715,7 +715,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.5 mishandles the interaction between serialization gadgets and typing, related to com.sun.org.apache.xalan.internal.lib.sql.JNDIConnectionPool (aka xalan2)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.5 mishandles the interaction between serialization gadgets and typing, related to com.sun.org.apache.xalan.internal.lib.sql.JNDIConnectionPool (aka xalan2).",
           "id": "GHSA-c265-37vj-cwcc",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.5 mishandles the interaction between serialization gadgets and typing, related to com.sun.org.apache.xalan.internal.lib.sql.JNDIConnectionPool (aka xalan2).",
           "impact": 0.7,
@@ -1186,7 +1186,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to `org.apache.tomcat.dbcp.dbcp2.datasources.SharedPoolDataSource`....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to `org.apache.tomcat.dbcp.dbcp2.datasources.SharedPoolDataSource`.",
           "id": "GHSA-8w26-6f25-cm9x",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to `org.apache.tomcat.dbcp.dbcp2.datasources.SharedPoolDataSource`.",
           "impact": 0.7,
@@ -1233,7 +1233,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.tomcat.dbcp.dbcp2.datasources.PerUserPoolDataSource....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.tomcat.dbcp.dbcp2.datasources.PerUserPoolDataSource.",
           "id": "GHSA-m6x4-97wx-4q27",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.tomcat.dbcp.dbcp2.datasources.PerUserPoolDataSource.",
           "impact": 0.7,
@@ -1280,7 +1280,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to `org.apache.tomcat.dbcp.dbcp.datasources.PerUserPoolDataSource`....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to `org.apache.tomcat.dbcp.dbcp.datasources.PerUserPoolDataSource`.",
           "id": "GHSA-v585-23hc-c647",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to `org.apache.tomcat.dbcp.dbcp.datasources.PerUserPoolDataSource`.",
           "impact": 0.7,
@@ -1327,7 +1327,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.tomcat.dbcp.dbcp.datasources.SharedPoolDataSource....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.tomcat.dbcp.dbcp.datasources.SharedPoolDataSource.",
           "id": "GHSA-r695-7vr9-jgc2",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.tomcat.dbcp.dbcp.datasources.SharedPoolDataSource.",
           "impact": 0.7,
@@ -1374,7 +1374,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 an 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to com.newrelic.agent.deps.ch.qos.logback.core.db.DriverManagerConnectionSource....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 an 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to com.newrelic.agent.deps.ch.qos.logback.core.db.DriverManagerConnectionSource.",
           "id": "GHSA-vfqx-33qm-g869",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 an 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to com.newrelic.agent.deps.ch.qos.logback.core.db.DriverManagerConnectionSource.",
           "impact": 0.7,
@@ -1421,7 +1421,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to `com.newrelic.agent.deps.ch.qos.logback.core.db.JNDIConnectionSource`....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to `com.newrelic.agent.deps.ch.qos.logback.core.db.JNDIConnectionSource`.",
           "id": "GHSA-f9xh-2qgp-cq57",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to `com.newrelic.agent.deps.ch.qos.logback.core.db.JNDIConnectionSource`.",
           "impact": 0.7,
@@ -1468,7 +1468,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to `org.apache.tomcat.dbcp.dbcp.cpdsadapter.DriverAdapterCPDS`....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to `org.apache.tomcat.dbcp.dbcp.cpdsadapter.DriverAdapterCPDS`.",
           "id": "GHSA-cvm9-fjm9-3572",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to `org.apache.tomcat.dbcp.dbcp.cpdsadapter.DriverAdapterCPDS`.",
           "impact": 0.7,
@@ -1515,7 +1515,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to `oadd.org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS`....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to `oadd.org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS`.",
           "id": "GHSA-9gph-22xh-8x98",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to `oadd.org.apache.commons.dbcp.cpdsadapter.DriverAdapterCPDS`.",
           "impact": 0.7,
@@ -1562,7 +1562,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to org.apache.tomcat.dbcp.dbcp2.cpdsadapter.DriverAdapterCPDS....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to org.apache.tomcat.dbcp.dbcp2.cpdsadapter.DriverAdapterCPDS.",
           "id": "GHSA-89qr-369f-5m5x",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to org.apache.tomcat.dbcp.dbcp2.cpdsadapter.DriverAdapterCPDS.",
           "impact": 0.7,
@@ -1609,7 +1609,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS.",
           "id": "GHSA-8c4j-34r4-xr8g",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.dbcp2.cpdsadapter.DriverAdapterCPDS.",
           "impact": 0.7,
@@ -1656,7 +1656,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to org.docx4j.org.apache.xalan.lib.sql.JNDIConnectionPool....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to org.docx4j.org.apache.xalan.lib.sql.JNDIConnectionPool.",
           "id": "GHSA-9m6f-7xcq-8vf8",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 and 2.6.7.5 mishandles the interaction between serialization gadgets and typing, related to org.docx4j.org.apache.xalan.lib.sql.JNDIConnectionPool.",
           "impact": 0.7,
@@ -1750,7 +1750,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.dbcp2.datasources.PerUserPoolDataSource....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.dbcp2.datasources.PerUserPoolDataSource.",
           "id": "GHSA-wh8g-3j2c-rqj5",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.dbcp2.datasources.PerUserPoolDataSource.",
           "impact": 0.7,
@@ -1798,7 +1798,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.dbcp2.datasources.SharedPoolDataSource....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.dbcp2.datasources.SharedPoolDataSource.",
           "id": "GHSA-r3gr-cxrf-hg25",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.8 mishandles the interaction between serialization gadgets and typing, related to org.apache.commons.dbcp2.datasources.SharedPoolDataSource.",
           "impact": 0.7,
@@ -2034,7 +2034,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.6.7.4, 2.7.x before 2.7.9.7, 2.8.x before 2.8.11.5, and 2.9.x before 2.9.10.2 lacks certain `net.sf.ehcache` blocking....",
+          "title": "FasterXML jackson-databind 2.x before 2.6.7.4, 2.7.x before 2.7.9.7, 2.8.x before 2.8.11.5, and 2.9.x before 2.9.10.2 lacks certain `net.sf.ehcache` blocking.",
           "id": "GHSA-gww7-p5w4-wrfv",
           "desc": "FasterXML jackson-databind 2.x before 2.6.7.4, 2.7.x before 2.7.9.7, 2.8.x before 2.8.11.5, and 2.9.x before 2.9.10.2 lacks certain `net.sf.ehcache` blocking.",
           "impact": 1,
@@ -2129,7 +2129,7 @@
             }
           ],
           "source_location": {},
-          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 and 2.6.7.4 mishandles the interaction between serialization gadgets and typing, related to com.caucho.config.types.ResourceRef (aka caucho-quercus)....",
+          "title": "FasterXML jackson-databind 2.x before 2.9.10.4 and 2.6.7.4 mishandles the interaction between serialization gadgets and typing, related to com.caucho.config.types.ResourceRef (aka caucho-quercus).",
           "id": "GHSA-fqwf-pjwf-7vqv",
           "desc": "FasterXML jackson-databind 2.x before 2.9.10.4 and 2.6.7.4 mishandles the interaction between serialization gadgets and typing, related to com.caucho.config.types.ResourceRef (aka caucho-quercus).",
           "impact": 0.7,
@@ -2276,7 +2276,7 @@
             }
           ],
           "source_location": {},
-          "title": "The Alias feature in SnakeYAML 1.18 allows entity expansion during a load operation, a related issue to CVE-2003-1564....",
+          "title": "The Alias feature in SnakeYAML 1.18 allows entity expansion during a load operation, a related issue to CVE-2003-1564.",
           "id": "GHSA-rvwf-54qp-4r6v",
           "desc": "The Alias feature in SnakeYAML 1.18 allows entity expansion during a load operation, a related issue to CVE-2003-1564.",
           "impact": 0.7,
@@ -3410,7 +3410,7 @@
             }
           ],
           "source_location": {},
-          "title": "testing...",
+          "title": "testing",
           "id": "INT-63e3-49kp-blqt",
           "desc": "testing",
           "impact": 0.3,
@@ -4047,7 +4047,7 @@
           ]
         }
       ],
-      "sha256": "c5b3d361578315660c5384bff0b00d8ee600e087d5f1b4e33a41dff34178dd04"
+      "sha256": "423500d681549aa5606b24248ba94a5e2801d4a5394a672d8b1292d679fe0cfc"
     }
   ],
   "passthrough": {
