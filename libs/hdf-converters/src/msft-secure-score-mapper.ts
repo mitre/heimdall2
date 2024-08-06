@@ -28,9 +28,11 @@ export type CombinedResponse = {
 
 export class MsftSecureScoreResults {
   data: CombinedResponse;
+  withRaw: boolean;
 
-  constructor(combinedJson: string) {
+  constructor(combinedJson: string, withRaw = false) {
     this.data = JSON.parse(combinedJson);
+    this.withRaw = withRaw;
   }
 
   toHdf(): ExecJSON.Execution[] {
@@ -47,7 +49,8 @@ export class MsftSecureScoreResults {
             ])
           },
           profiles: this.data.profiles
-        })
+        }),
+        this.withRaw
       );
       results.push(entry.toHdf());
     });
