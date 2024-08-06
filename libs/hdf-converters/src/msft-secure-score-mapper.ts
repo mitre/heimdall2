@@ -9,19 +9,19 @@ import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import * as _ from 'lodash';
 import {conditionallyProvideAttribute} from './utils/global';
 
-type ProfileResponse = {
+export type ProfileResponse = {
   '@odata.context': string;
   '@odata.nextLink': string;
   value: SecureScoreControlProfile[];
 };
 
-type SecureScoreResponse = {
+export type SecureScoreResponse = {
   '@odata.context': string;
   '@odata.nextLink': string;
   value: SecureScore[];
 };
 
-type CombinedResponse = {
+export type CombinedResponse = {
   secureScore: SecureScoreResponse;
   profiles: ProfileResponse;
 };
