@@ -7,7 +7,10 @@ import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import * as _ from 'lodash';
-import {conditionallyProvideAttribute, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {
+  conditionallyProvideAttribute,
+  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+} from './utils/global';
 
 export type ProfileResponse = {
   '@odata.context': string;
@@ -38,8 +41,8 @@ export class MsftSecureScoreResults {
   toHdf(): ExecJSON.Execution[] {
     const results: ExecJSON.Execution[] = [];
 
-    for (const element of this.data.secureScore.value) {
-      const entry = new MsftSecureScoreMapper(
+    return this.data.secureScore.value.map((element) =>
+      new MsftSecureScoreMapper(
         JSON.stringify({
           secureScore: {
             value: [element],
@@ -51,10 +54,8 @@ export class MsftSecureScoreResults {
           profiles: this.data.profiles
         }),
         this.withRaw
-      );
-      results.push(entry.toHdf());
-    };
-    return results;
+      ).toHdf()
+    );
   }
 }
 
