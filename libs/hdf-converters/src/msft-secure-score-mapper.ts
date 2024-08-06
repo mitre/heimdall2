@@ -38,7 +38,7 @@ export class MsftSecureScoreResults {
   toHdf(): ExecJSON.Execution[] {
     const results: ExecJSON.Execution[] = [];
 
-    this.data.secureScore.value.forEach((element) => {
+    for (const element of this.data.secureScore.value) {
       const entry = new MsftSecureScoreMapper(
         JSON.stringify({
           secureScore: {
@@ -53,7 +53,7 @@ export class MsftSecureScoreResults {
         this.withRaw
       );
       results.push(entry.toHdf());
-    });
+    };
     return results;
   }
 }
