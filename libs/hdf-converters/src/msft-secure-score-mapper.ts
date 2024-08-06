@@ -55,7 +55,7 @@ export class MsftSecureScoreResults {
   }
 }
 
-class MsftSecureScoreMapper extends BaseConverter {
+export class MsftSecureScoreMapper extends BaseConverter {
   withRaw: boolean;
   rawData: CombinedResponse;
 
