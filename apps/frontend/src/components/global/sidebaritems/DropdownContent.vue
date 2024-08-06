@@ -9,6 +9,7 @@
           v-for="(file, i) in files"
           :key="i"
           :file="file"
+          :show-chips="showChips"
           @changed-files="$emit('changed-files')"
         />
 
@@ -43,17 +44,6 @@
           >
             <span>Remove selected {{ headerText }} </span>
             <v-icon right>mdi-text-box-remove-outline</v-icon>
-          </v-btn>
-
-          <v-btn
-            v-if="navigateBack"
-            small
-            style="cursor: pointer"
-            class="ml-10"
-            :to="{name: navigateBack}"
-          >
-            <span>Back to {{ navigateBack }}</span>
-            <v-icon right>mdi-page-previous-outline</v-icon>
           </v-btn>
         </v-row>
 
@@ -95,6 +85,8 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 export default class DropdownContent extends Vue {
   @Prop({type: String, required: true}) readonly headerText!: string;
   @Prop({type: String, required: true}) readonly allSelected!: Trinary;
+  @Prop({default: () => [], type: Array, required: false})
+  readonly showChips!: string[];
 
   @Prop({type: Array, required: true}) readonly files!:
     | EvaluationFile[]

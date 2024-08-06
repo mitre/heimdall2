@@ -18,9 +18,9 @@
         :files="visible_evaluation_files"
         :all-selected="all_evaluations_selected"
         :any-selected="any_evaluation_selected"
-        :enable-compare-view="!navigateBack"
+        :enable-compare-view="true"
         :compare-view-active="compareViewActive"
-        :navigate-back="navigateBack"
+        :show-chips="['sbom']"
         @remove-selected="removeSelectedEvaluations"
         @toggle-all="toggle_all_evaluations"
         @toggle-compare-view="compareView"
@@ -33,6 +33,17 @@
         :any-selected="any_profile_selected"
         @remove-selected="removeSelectedProfiles"
         @toggle-all="toggle_all_profiles"
+        @changed-files="$emit('changed-files')"
+      />
+      <!-- add remove selected!!! -->
+      <DropdownContent
+        header-text="SBOMs"
+        :files="visible_sbom_files"
+        :all-selected="all_sboms_selected"
+        :any-selected="any_sbom_selected"
+        :show-chips="['results']"
+        @remove-selected="removeSelectedSboms"
+        @toggle-all="toggle_all_sboms"
         @changed-files="$emit('changed-files')"
       />
     </v-expansion-panels>
@@ -62,15 +73,12 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   // open the appropriate v-expansion-panel based on current route
   get active_path() {
-    if (
-      this.current_route === 'results' ||
-      this.current_route === 'compare' ||
-      this.current_route === 'sbom-view'
-    ) {
+    if (this.current_route === 'results' || this.current_route === 'compare') {
       return 0;
     } else if (this.current_route === 'profiles') {
       return 1;
-    } else {
+    } else if (this.current_route === 'sbom-view') return 2;
+    else {
       return -1;
     }
   }
@@ -79,12 +87,14 @@ export default class Sidebar extends mixins(RouteMixin) {
     // There are currently 2 available values that the v-modal can have,
     // 0 -> results view
     // 1 -> profile view
-    if (this.active_path === id) return;
+    // 2 -> sbom view
 
     if (id === 0) {
       this.navigateWithNoErrors(`/results`);
     } else if (id === 1) {
       this.navigateWithNoErrors(`/profiles`);
+    } else if (id === 2) {
+      this.navigateWithNoErrors(`/sbom-view`);
     }
   }
 
@@ -97,6 +107,12 @@ export default class Sidebar extends mixins(RouteMixin) {
   // get all visible (uploaded) profile files
   get visible_profile_files(): ProfileFile[] {
     const files = InspecDataModule.allProfileFiles;
+    return files.sort((a, b) => a.filename.localeCompare(b.filename));
+  }
+
+  // get all visible (uploaded) sbom files
+  get visible_sbom_files(): EvaluationFile[] {
+    const files = InspecDataModule.allSbomFiles;
     return files.sort((a, b) => a.filename.localeCompare(b.filename));
   }
 
@@ -116,20 +132,20 @@ export default class Sidebar extends mixins(RouteMixin) {
     return FilteredDataModule.any_profile_selected;
   }
 
+  get all_sboms_selected(): Trinary {
+    return FilteredDataModule.all_sboms_selected;
+  }
+
+  get any_sbom_selected(): boolean {
+    return FilteredDataModule.any_sbom_selected;
+  }
+
   get compareViewActive(): boolean {
     return this.current_route === 'compare';
   }
 
   get classification(): string {
     return ServerModule.classificationBannerText;
-  }
-
-  // determine if the button to naviage back to a route should appear
-  get navigateBack(): string | null {
-    if (this.current_route === 'sbom-view') {
-      return 'results';
-    }
-    return null;
   }
 
   // toggle the "select all" for profiles
@@ -140,6 +156,11 @@ export default class Sidebar extends mixins(RouteMixin) {
   // toggle the "select all" for evaluations
   toggle_all_evaluations(): void {
     FilteredDataModule.toggle_all_evaluations();
+  }
+
+  // toggle the "select all" for sboms
+  toggle_all_sboms(): void {
+    FilteredDataModule.toggle_all_sboms();
   }
 
   // toggle between the comparison view and the results view
@@ -166,6 +187,18 @@ export default class Sidebar extends mixins(RouteMixin) {
 
   removeSelectedProfiles(): void {
     const selectedFiles = FilteredDataModule.selected_profile_ids;
+    selectedFiles.forEach((fileId) => {
+      EvaluationModule.removeEvaluation(fileId);
+      InspecDataModule.removeFile(fileId);
+      // Remove any database files that may have been in the URL
+      // by calling the router and causing it to write the appropriate
+      // route to the URL bar
+      this.navigateWithNoErrors(`/${this.current_route}`);
+    });
+  }
+
+  removeSelectedSboms(): void {
+    const selectedFiles = FilteredDataModule.selected_sbom_ids;
     selectedFiles.forEach((fileId) => {
       EvaluationModule.removeEvaluation(fileId);
       InspecDataModule.removeFile(fileId);

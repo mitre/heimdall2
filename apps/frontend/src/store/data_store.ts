@@ -18,7 +18,7 @@ import {
   VuexModule
 } from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
-import {isSbom} from '@/utilities/sbom_util';
+import {isSbomFile} from '@/utilities/sbom_util';
 
 /** We make some new variant types of the Contextual types, to include their files*/
 export function isFromProfileFile(p: SourcedContextualizedProfile) {
@@ -38,11 +38,19 @@ export class InspecData extends VuexModule {
   /** State var containing all profile files that have been added */
   profileFiles: ProfileFile[] = [];
 
+  /**
+   * State var containing all SBOM files that have been added
+   * Note: some SBOMs are only contained in `executionFiles` because
+   * they contain results as well
+   */
+  sbomFiles: EvaluationFile[] = [];
+
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
     const result: (EvaluationFile | ProfileFile)[] = [];
     result.push(...this.executionFiles);
     result.push(...this.profileFiles);
+    result.push(...this.sbomFiles);
     return result;
   }
 
@@ -58,7 +66,9 @@ export class InspecData extends VuexModule {
 
   /* Return all sbom files only */
   get allSbomFiles(): EvaluationFile[] {
-    return this.executionFiles.filter((e) => isSbom(e.evaluation));
+    return this.executionFiles
+      .filter((f) => isSbomFile(f))
+      .concat(this.sbomFiles);
   }
 
   /**
@@ -128,6 +138,15 @@ export class InspecData extends VuexModule {
   }
 
   /**
+   * Adds an SBOM file to the store.
+   * @param newSbom The new SBOM to add
+   */
+  @Mutation
+  addSbom(newSbom: EvaluationFile) {
+    this.sbomFiles.push(newSbom);
+  }
+
+  /**
    * Unloads the file with the given id
    */
   @Action
@@ -135,6 +154,7 @@ export class InspecData extends VuexModule {
     FilteredDataModule.clear_file(fileId);
     this.context.commit('REMOVE_PROFILE', fileId);
     this.context.commit('REMOVE_RESULT', fileId);
+    this.context.commit('REMOVE_SBOM', fileId);
   }
 
   @Action
@@ -173,6 +193,11 @@ export class InspecData extends VuexModule {
     );
   }
 
+  @Mutation
+  REMOVE_SBOM(fileId: FileID) {
+    this.sbomFiles = this.sbomFiles.filter((sf) => sf.uniqueId !== fileId);
+  }
+
   /**
    * Clear all stored data.
    */
@@ -180,6 +205,7 @@ export class InspecData extends VuexModule {
   reset() {
     this.profileFiles = [];
     this.executionFiles = [];
+    this.sbomFiles = [];
   }
 }
 

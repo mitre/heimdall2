@@ -57,10 +57,11 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-import {SBOMComponent} from './ComponentTable.vue';
+
 import _ from 'lodash';
 import {ContextualizedControl} from 'inspecjs';
 import {parseJson} from '@mitre/hdf-converters/src/utils/parseJson';
+import {SBOMComponent} from '@/utilities/sbom_util';
 
 interface Tab {
   name: string;

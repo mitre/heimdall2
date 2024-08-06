@@ -22,12 +22,22 @@
       </v-btn>
     </v-list-item-action>
 
-    <v-list-item-action v-if="isSbomFile">
-      <v-chip outlined :to="{name: 'sbom'}">
-        SBOM
-        <v-icon right>mdi-page-next-outline</v-icon>
-      </v-chip>
-    </v-list-item-action>
+    <template v-if="showChips.includes('sbom')">
+      <v-list-item-action v-if="isSbom">
+        <v-chip outlined :to="{name: 'sbom'}" :disabled="!selected">
+          SBOM
+          <v-icon right>mdi-page-next-outline</v-icon>
+        </v-chip>
+      </v-list-item-action>
+    </template>
+    <template v-if="showChips.includes('results')">
+      <v-list-item-action v-if="hasResults">
+        <v-chip outlined :to="{name: 'results'}" :disabled="!selected">
+          Results
+          <v-icon right>mdi-page-next-outline</v-icon>
+        </v-chip>
+      </v-list-item-action>
+    </template>
 
     <v-list-item-action @click.stop="remove_file">
       <v-btn data-cy="closeFile" icon small>
@@ -47,7 +57,7 @@ import {InspecDataModule} from '@/store/data_store';
 import {EvaluationModule} from '@/store/evaluations';
 import {EvaluationFile, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {isSbom} from '@/utilities/sbom_util';
+import {isOnlySbomFile, isSbomFile} from '@/utilities/sbom_util';
 import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
 import axios from 'axios';
 import * as _ from 'lodash';
@@ -57,12 +67,18 @@ import {Prop} from 'vue-property-decorator';
 @Component
 export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   @Prop({type: Object}) readonly file!: EvaluationFile | ProfileFile;
+  @Prop({default: () => [], type: Array, required: false})
+  readonly showChips!: string[];
 
   saving = false;
 
   select_file() {
     if (this.file.hasOwnProperty('evaluation')) {
-      FilteredDataModule.toggle_evaluation(this.file.uniqueId);
+      if (this.onlySbom) {
+        FilteredDataModule.toggle_sbom(this.file.uniqueId);
+      } else {
+        FilteredDataModule.toggle_evaluation(this.file.uniqueId);
+      }
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.toggle_profile(this.file.uniqueId);
     }
@@ -78,6 +94,8 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
 
   //checks if file is selected
   get selected(): boolean {
+    if (this.onlySbom)
+      return FilteredDataModule.selected_sbom_ids.includes(this.file.uniqueId);
     return FilteredDataModule.selected_file_ids.includes(this.file.uniqueId);
   }
 
@@ -167,9 +185,20 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  get isSbomFile(): Boolean {
-    const evaluation = _.get(this.file, 'evaluation');
-    return evaluation !== undefined && isSbom(evaluation);
+  get onlySbom(): boolean {
+    return isOnlySbomFile(this.file);
+  }
+
+  get isSbom(): boolean {
+    return isSbomFile(this.file);
+  }
+
+  get hasResults(): boolean {
+    return (
+      _.get(this.file, 'evaluation')?.data.profiles.some(
+        (p) => p.controls.length > 0
+      ) || false
+    );
   }
 }
 </script>

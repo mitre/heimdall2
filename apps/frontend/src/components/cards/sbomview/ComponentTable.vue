@@ -1,20 +1,19 @@
 <template>
-   <v-container fluid class="font-weight-bold">
-
+  <v-container fluid class="font-weight-bold">
     <!-- Body -->
     <v-row>
       <v-col>
         <v-data-table
           :items="components"
           :headers="headers"
-          :items-per-page="-1"
-          :item-key="'bom-ref'"
           :search="searchTerm"
           :expanded.sync="expanded"
           show-expand
+          :items-per-page="-1"
+          item-key="key"
           hide-default-footer
         >
-<!--           fixed-header
+          <!--           fixed-header
           height="calc(100vh - 250px)" -->
           <template #top>
             <v-card-title>
@@ -46,8 +45,22 @@
                     </v-chip>
                   </v-chip-group>
                   <v-divider />
-                  <v-card-title class="py-2">Filters</v-card-title>
-                  <v-switch class="my-0" v-model="showOnlyVulns" label="Only show vulnerable components"></v-switch>
+                  <v-card-title class="py-2">Severity Filters</v-card-title>
+                  <v-chip-group
+                    v-model="severityFilter"
+                    active-class="primary--text"
+                    center-active
+                    column
+                    multiple
+                  >
+                    <v-chip
+                      v-for="severity in severities"
+                      :key="severity"
+                      :value="severity"
+                    >
+                      {{ severityName(severity) }}
+                    </v-chip>
+                  </v-chip-group>
                 </v-card>
               </v-menu>
             </v-card-title>
@@ -71,7 +84,7 @@
                     <v-chip
                       outlined
                       small
-                      :color="severity_color(vuln.hdf.severity)"
+                      :color="severityColor(vuln.hdf.severity)"
                       :to="{name: 'results', query: {id: vuln.data.id}}"
                     >
                       {{ vuln.data.id }}
@@ -94,7 +107,7 @@
               :colspan="headers.length"
             />
           </template>
-         </v-data-table>
+        </v-data-table>
       </v-col>
     </v-row>
   </v-container>
@@ -103,67 +116,13 @@
 <script lang="ts">
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {SnackbarModule} from '@/store/snackbar';
-import {Result} from '@mitre/hdf-converters/src/utils/result';
-import {ContextualizedControl} from 'inspecjs';
+import {ContextualizedControl, severities, Severity} from 'inspecjs';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop, Ref} from 'vue-property-decorator';
 import ComponentContent from './ComponentContent.vue';
-
-export interface SBOMComponent {
-  // TODO: UPDATE ME!!!!
-  type: string;
-  'mime-type'?: string;
-  'bom-ref'?: string;
-  supplier?: Record<string, unknown>;
-  manufacturer?: Record<string, unknown>;
-  authors?: Record<string, unknown>[];
-  author?: string;
-  publisher?: string;
-  group?: string;
-  name: string;
-  version?: string;
-  description?: string;
-  scope?: string;
-  hashes?: Record<string, unknown>[];
-  licenses?: Record<string, unknown>[];
-  copyright?: string;
-  cpe?: string;
-  purl?: string;
-  omniborId?: string[];
-  swhid?: string[];
-  swid?: Record<string, unknown>[];
-  modified?: boolean; // deprecated
-  pedigree?: Record<string, unknown>;
-  externalReferences?: {
-    url: string;
-    comment?: string;
-    type: string;
-    hashes: Record<string, unknown>[];
-  }[];
-  components?: SBOMComponent[];
-  evidence?: Record<string, unknown>;
-  releaseNotes?: Record<string, unknown>;
-  modelCard?: Record<string, unknown>;
-  data?: Record<string, unknown>[];
-  cryptoProperties?: Record<string, unknown>;
-  properties?: {name: string; value: string}[];
-  tags?: string[];
-  signature?: Record<string, unknown>[];
-
-  // custom
-  affectingVulnerabilities: string[]; // an array of bom-refs
-}
-
-interface Passthrough {
-  auxiliary_data: {
-    name: string;
-    data: {
-      components: SBOMComponent[];
-    };
-  }[];
-}
+import {getVulnsFromBomRef, SBOMComponent} from '@/utilities/sbom_util';
 
 @Component({
   components: {
@@ -176,6 +135,9 @@ export default class ComponentTable extends Vue {
   @Prop({type: String, required: false}) readonly searchTerm!: string;
 
   componentRef = this.$route.query.componentRef ?? null;
+  severityFilter: Severity[] = this.severities;
+  expanded: SBOMComponent[] = [];
+  /** The list of columns that are currently displayed */
   headerColumns = [
     'name',
     'version',
@@ -185,9 +147,6 @@ export default class ComponentTable extends Vue {
     'description',
     'affectingVulnerabilities'
   ];
-  showOnlyVulns: Boolean = false;
-
-  expanded: SBOMComponent[] = [];
 
   /**
    * A list of options (selectable in the column select menu) for which
@@ -233,37 +192,20 @@ export default class ComponentTable extends Vue {
 
   get headers() {
     let h = this.headerColumns.map((v) => {
-      return {value: v, class: 'header-box', text: _.startCase(v)}
+      return {value: v, class: 'header-box', text: _.startCase(v)};
     });
     h.push({value: 'data-table-expand', text: 'More', class: 'header-box'});
-    console.log(h);
     return h;
   }
 
-  get components(): SBOMComponent[] {
-    const evaluations = FilteredDataModule.evaluations(
-      FilteredDataModule.selectedEvaluationIds
-    );
-    // get each section of the auxiliary data as one large section 
-    const auxDataSections: Passthrough['auxiliary_data'] = evaluations.flatMap((e) =>
-      _.get(e, 'data.passthrough.auxiliary_data', [])
-    );
-    let components: SBOMComponent[] = [];
-    // grab every component from each section and apply a the filter if necessary
-    for (const section of auxDataSections) {
-      if (_.matchesProperty('name', 'SBOM')(section)) {
-        for (const component of _.get(section, 'components', []) as SBOMComponent[]) {
-          if (!this.showOnlyVulns || (component.affectingVulnerabilities && component.affectingVulnerabilities.length > 0))
-            components.push(component);
-        }
-      }
-    }
-    return components;
+  get components(): readonly SBOMComponent[] {
+    return FilteredDataModule.components(this.all_filter);
   }
 
   get all_filter(): Filter {
     return {
-      fromFile: FilteredDataModule.selectedEvaluationIds
+      fromFile: FilteredDataModule.selected_sbom_ids,
+      severity: this.severityFilter
     };
   }
 
@@ -272,8 +214,9 @@ export default class ComponentTable extends Vue {
     for (const c of this.components) {
       // get the component's affecting vulnerabilities
       const componentVulns = [];
+      const controls = FilteredDataModule.controls(this.all_filter);
       for (const vulnBomRef of c.affectingVulnerabilities || []) {
-        let result = this.getVulns(vulnBomRef);
+        let result = getVulnsFromBomRef(vulnBomRef, controls);
         if (result.ok) componentVulns.push(result.value); // TODO: show components with unloaded vulns as errors?
       }
       // associate component bom-ref with vuln info
@@ -282,18 +225,17 @@ export default class ComponentTable extends Vue {
     return vulnMap;
   }
 
-  getVulns(vulnBomRef: string): Result<ContextualizedControl, null> {
-    const vuln = FilteredDataModule.controls(this.all_filter).find((c) => {
-      // regex to get the value of bom-ref from the vuln code stored as JSON
-      let match = c.full_code.match(/"bom-ref": "(?<ref>.*?)"/);
-      return match ? match.groups?.ref === vulnBomRef : false;
-    });
-    if (vuln) return {ok: true, value: vuln};
-    return {ok: false, error: null};
+  severityColor(severity: string): string {
+    return `severity${_.startCase(severity)}`;
   }
 
-  severity_color(severity: string): string {
-    return `severity${_.startCase(severity)}`;
+  severityName(severity: string): string {
+    return _.startCase(severity);
+  }
+
+  get severities(): Severity[] {
+    // returns the list of severities defined by inspecJS
+    return [...severities];
   }
 }
 </script>
@@ -319,7 +261,7 @@ export default class ComponentTable extends Vue {
 /** Allows blue bar to be visible */
 ::v-deep .v-data-table__wrapper table {
   border-collapse: collapse;
-} 
+}
 
 /** Keep hover effect when expanded */
 ::v-deep .v-data-table__expanded__row {
@@ -330,5 +272,4 @@ export default class ComponentTable extends Vue {
 ::v-deep .v-data-table .header-box {
   white-space: nowrap;
 }
-
 </style>

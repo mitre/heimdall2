@@ -2,18 +2,20 @@
   <Base title="SBOM View" @changed-files="evalInfo = null">
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
-    <v-text-field
-      v-model="searchTerm"
-      flat
-      hide-details
-      dense
-      solo
-      prepend-inner-icon="mdi-magnify"
-      label="Search"
-      clearable
-      :class="$vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'regular-bar mx-2'"
-      @click:clear="searchTerm = ''"
-    />
+      <v-text-field
+        v-model="searchTerm"
+        flat
+        hide-details
+        dense
+        solo
+        prepend-inner-icon="mdi-magnify"
+        label="Search"
+        clearable
+        :class="
+          $vuetify.breakpoint.xs ? 'overtake-bar mx-2' : 'regular-bar mx-2'
+        "
+        @click:clear="searchTerm = ''"
+      />
 
       <UploadButton />
       <div class="text-center">
@@ -73,7 +75,7 @@
               <ComponentTable
                 :filter="all_filter"
                 :component-ref="$route.params.componentRef"
-                :searchTerm="searchTerm"
+                :search-term="searchTerm"
               />
             </v-card>
           </v-col>
@@ -86,16 +88,12 @@
 <script lang="ts">
 import ComponentTable from '@/components/cards/sbomview/ComponentTable.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
+import ProfileInfo from '@/components/cards/ProfileInfo.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import PrintButton from '@/components/global/PrintButton.vue';
 import RouteMixin from '@/mixins/RouteMixin';
-import {
-  ExtendedControlStatus,
-  Filter,
-  FilteredDataModule,
-  TreeMapState
-} from '@/store/data_filters';
+import {Filter, FilteredDataModule, TreeMapState} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {
   EvaluationFile,
@@ -108,7 +106,6 @@ import {SearchModule} from '@/store/search';
 import {ServerModule} from '@/store/server';
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/interfaces';
-import {Severity} from 'inspecjs';
 import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '../mixins/ServerMixin';
 import {EvaluationModule} from '../store/evaluations';
@@ -122,7 +119,8 @@ import {compare_times} from '../utilities/delta_util';
     ExportJson,
     PrintButton,
     EvaluationInfo,
-    UploadButton
+    UploadButton,
+    ProfileInfo
   }
 })
 export default class Components extends mixins(RouteMixin, ServerMixin) {
@@ -154,7 +152,7 @@ export default class Components extends mixins(RouteMixin, ServerMixin) {
   }
 
   get evaluationFiles(): SourcedContextualizedEvaluation[] {
-    return Array.from(FilteredDataModule.evaluations(this.file_filter)).sort(
+    return Array.from(FilteredDataModule.sboms(this.file_filter)).sort(
       compare_times
     );
   }
