@@ -19,10 +19,43 @@ type SecureScoreResponse = {
   '@odata.nextLink': string;
   value: SecureScore[];
 };
+export type CombinedResponse = {
+  secureScore: SecureScoreResponse;
+  profiles: ProfileResponse;
+};
 
-export class MsftSecureScoreMapper extends BaseConverter {
+export class MsftSecureScoreResults {
+  data: CombinedResponse;
+
+  constructor(combinedJson: string) {
+    this.data = JSON.parse(combinedJson);
+  }
+
+  toHdf(): ExecJSON.Execution[] {
+    const results: ExecJSON.Execution[] = [];
+
+    this.data.secureScore.value.forEach((element) => {
+      const entry = new MsftSecureScoreMapper(
+        JSON.stringify({
+          secureScore: {
+            value: [element],
+            ..._.pick(this.data.secureScore, [
+              '@odata.context',
+              '@odata.context'
+            ])
+          },
+          profiles: this.data.profiles
+        })
+      );
+      results.push(entry.toHdf());
+    });
+    return results;
+  }
+}
+
+class MsftSecureScoreMapper extends BaseConverter {
   withRaw: boolean;
-  rawData: {secureScore: SecureScoreResponse; profiles: ProfileResponse};
+  rawData: CombinedResponse;
 
   private getProfiles(controlName: string): SecureScoreControlProfile[] {
     return this.rawData.profiles.value.filter(
@@ -91,56 +124,87 @@ export class MsftSecureScoreMapper extends BaseConverter {
             },
             refs: [],
             tags: {
-              transformer: (data:ControlScore) => ({
+              transformer: (data: ControlScore) => ({
                 ...conditionallyProvideAttribute(
                   'category',
-                  this.getProfiles(data.controlName || '').map((profile)=> profile.controlCategory),
-                  (()=>{
-                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.controlCategory).filter((v) => Boolean(v));
+                  this.getProfiles(data.controlName || '').map(
+                    (profile) => profile.controlCategory
+                  ),
+                  (() => {
+                    const result = this.getProfiles(data.controlName || '')
+                      .map((profile) => profile.controlCategory)
+                      .filter((v) => Boolean(v));
                     return result.length > 0;
                   })()
                 ),
                 ...conditionallyProvideAttribute(
                   'tiers',
-                  this.getProfiles(data.controlName || '').map((profile)=> profile.tier),
-                  (()=>{
-                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.tier).filter((v) => Boolean(v));
+                  this.getProfiles(data.controlName || '').map(
+                    (profile) => profile.tier
+                  ),
+                  (() => {
+                    const result = this.getProfiles(data.controlName || '')
+                      .map((profile) => profile.tier)
+                      .filter((v) => Boolean(v));
                     return result.length > 0;
                   })()
                 ),
                 ...conditionallyProvideAttribute(
                   'threats',
-                  _.uniq(this.getProfiles(data.controlName || '').map((profile)=> profile.threats)),
-                  (()=>{
-                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.threats).filter((v) => Boolean(v));
+                  _.uniq(
+                    this.getProfiles(data.controlName || '').map(
+                      (profile) => profile.threats
+                    )
+                  ),
+                  (() => {
+                    const result = this.getProfiles(data.controlName || '')
+                      .map((profile) => profile.threats)
+                      .filter((v) => Boolean(v));
                     return result.length > 0;
                   })()
                 ),
                 ...conditionallyProvideAttribute(
                   'services',
-                  _.uniq(this.getProfiles(data.controlName || '').map((profile)=> profile.service)),
-                  (()=>{
-                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.service).filter((v) => Boolean(v));
+                  _.uniq(
+                    this.getProfiles(data.controlName || '').map(
+                      (profile) => profile.service
+                    )
+                  ),
+                  (() => {
+                    const result = this.getProfiles(data.controlName || '')
+                      .map((profile) => profile.service)
+                      .filter((v) => Boolean(v));
                     return result.length > 0;
                   })()
                 ),
                 ...conditionallyProvideAttribute(
                   'rank',
-                  _.uniq(this.getProfiles(data.controlName || '').map((profile)=> profile.rank)),
-                  (()=>{
-                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.rank).filter((v) => Boolean(v));
+                  _.uniq(
+                    this.getProfiles(data.controlName || '').map(
+                      (profile) => profile.rank
+                    )
+                  ),
+                  (() => {
+                    const result = this.getProfiles(data.controlName || '')
+                      .map((profile) => profile.rank)
+                      .filter((v) => Boolean(v));
                     return result.length > 0;
                   })()
                 ),
                 ...conditionallyProvideAttribute(
                   'userImpacts',
-                  _.uniq(this.getProfiles(data.controlName || '').map((profile)=> profile.userImpact)),
-                  (()=>{
-                    const result = this.getProfiles(data.controlName || '').map((profile)=> profile.userImpact).filter((v) => Boolean(v));
+                  _.uniq(
+                    this.getProfiles(data.controlName || '').map(
+                      (profile) => profile.userImpact
+                    )
+                  ),
+                  (() => {
+                    const result = this.getProfiles(data.controlName || '')
+                      .map((profile) => profile.userImpact)
+                      .filter((v) => Boolean(v));
                     return result.length > 0;
                   })()
                 )
-
               }),
               nist: ['SA-11', 'RA-5']
             },
