@@ -14,12 +14,14 @@ type ProfileResponse = {
   '@odata.nextLink': string;
   value: SecureScoreControlProfile[];
 };
+
 type SecureScoreResponse = {
   '@odata.context': string;
   '@odata.nextLink': string;
   value: SecureScore[];
 };
-export type CombinedResponse = {
+
+type CombinedResponse = {
   secureScore: SecureScoreResponse;
   profiles: ProfileResponse;
 };
