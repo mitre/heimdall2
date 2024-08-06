@@ -7,7 +7,7 @@ import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import * as _ from 'lodash';
-import {conditionallyProvideAttribute} from './utils/global';
+import {conditionallyProvideAttribute, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
 
 export type ProfileResponse = {
   '@odata.context': string;
@@ -235,7 +235,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   })()
                 )
               }),
-              nist: ['SA-11', 'RA-5']
+              nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
             },
             source_location: {},
             descriptions: [
