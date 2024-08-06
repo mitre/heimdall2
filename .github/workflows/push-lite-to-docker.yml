@@ -2,7 +2,7 @@ name: Push Heimdall Lite to Docker Hub on every merge to master and tag as lates
 
 on:
   push:
-    branches: [master, docker_improvements]
+    branches: [master]
 
 jobs:
   docker:
@@ -10,10 +10,6 @@ jobs:
     steps:
       - name: Checkout the Heimdall Repository
         uses: actions/checkout@v4
-      - name: Set up QEMU for Docker
-        uses: docker/setup-qemu-action@v3
-        with:
-          platforms: arm64 # ubuntu can build amd64 natively, so just need arm64
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Login to DockerHub
@@ -28,5 +24,5 @@ jobs:
           context: .
           file: Dockerfile.lite
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           tags: mitre/heimdall-lite:latest
