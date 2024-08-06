@@ -91,6 +91,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                1
+              ],
+              "rank": [
+                82
+              ],
               "tiers": [
                 "Advanced"
               ],
@@ -101,9 +107,6 @@
               ],
               "services": [
                 "MCAS"
-              ],
-              "rank": [
-                82
               ],
               "userImpacts": [
                 "Low"
@@ -142,6 +145,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                2
+              ],
+              "rank": [
+                80
+              ],
               "tiers": [
                 "Advanced"
               ],
@@ -154,9 +163,6 @@
               ],
               "services": [
                 "MCAS"
-              ],
-              "rank": [
-                80
               ],
               "userImpacts": [
                 "Moderate"
@@ -195,6 +201,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                3
+              ],
+              "rank": [
+                75
+              ],
               "tiers": [
                 "Advanced"
               ],
@@ -205,9 +217,6 @@
               ],
               "services": [
                 "MCAS"
-              ],
-              "rank": [
-                75
               ],
               "userImpacts": [
                 "Moderate"
@@ -246,6 +255,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                4
+              ],
+              "rank": [
+                57
+              ],
               "tiers": [
                 "Defense In Depth"
               ],
@@ -258,9 +273,6 @@
               ],
               "services": [
                 "MCAS"
-              ],
-              "rank": [
-                57
               ],
               "userImpacts": [
                 "Moderate"
@@ -299,6 +311,12 @@
               "category": [
                 "Identity"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                59
+              ],
               "tiers": [
                 "Core"
               ],
@@ -307,9 +325,6 @@
               ],
               "services": [
                 "Azure ATP"
-              ],
-              "rank": [
-                59
               ],
               "userImpacts": [
                 "low"
@@ -348,6 +363,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -356,9 +377,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "High"
@@ -397,6 +415,12 @@
               "category": [
                 "Data"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -405,9 +429,6 @@
               ],
               "services": [
                 "MIP"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "High"
@@ -446,6 +467,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -454,9 +481,6 @@
               ],
               "services": [
                 "EXO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "High"
@@ -495,6 +519,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -503,9 +533,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "High"
@@ -544,6 +571,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                1
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -552,9 +585,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -624,6 +654,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                1
+              ],
+              "rank": [
+                127
+              ],
               "tiers": [
                 "Advanced"
               ],
@@ -636,9 +672,6 @@
               ],
               "services": [
                 "EXO"
-              ],
-              "rank": [
-                127
               ],
               "userImpacts": [
                 "Moderate"
@@ -677,6 +710,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                3
+              ],
+              "rank": [
+                10
+              ],
               "tiers": [
                 "Core"
               ],
@@ -688,9 +727,6 @@
               ],
               "services": [
                 "EXO"
-              ],
-              "rank": [
-                10
               ],
               "userImpacts": [
                 "Unknown"
@@ -729,6 +765,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                3
+              ],
+              "rank": [
+                10
+              ],
               "tiers": [
                 "Core"
               ],
@@ -740,9 +782,6 @@
               ],
               "services": [
                 "EXO"
-              ],
-              "rank": [
-                10
               ],
               "userImpacts": [
                 "Unknown"
@@ -781,6 +820,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                3
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -791,9 +836,6 @@
               ],
               "services": [
                 "EXO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -863,6 +905,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                3
+              ],
+              "rank": [
+                10
+              ],
               "tiers": [
                 "Core"
               ],
@@ -874,9 +922,6 @@
               ],
               "services": [
                 "EXO"
-              ],
-              "rank": [
-                10
               ]
             },
             "source_location": {},
@@ -912,6 +957,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                10
+              ],
               "tiers": [
                 "Core"
               ],
@@ -923,9 +974,6 @@
               ],
               "services": [
                 "EXO"
-              ],
-              "rank": [
-                10
               ],
               "userImpacts": [
                 "Unknown"
@@ -964,6 +1012,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                3
+              ],
+              "rank": [
+                10
+              ],
               "tiers": [
                 "Core"
               ],
@@ -975,9 +1029,6 @@
               ],
               "services": [
                 "EXO"
-              ],
-              "rank": [
-                10
               ],
               "userImpacts": [
                 "Unknown"
@@ -1109,6 +1160,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                8
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1117,9 +1174,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "High"
@@ -1189,6 +1243,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1197,9 +1257,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "High"
@@ -1300,6 +1357,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1308,9 +1371,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1349,6 +1409,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1357,9 +1423,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1398,6 +1461,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1406,9 +1475,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1447,6 +1513,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                3
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1455,9 +1527,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1496,6 +1565,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                1
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1504,9 +1579,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1545,6 +1617,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                2
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1553,9 +1631,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1594,6 +1669,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                1
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1602,9 +1683,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1674,6 +1752,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                1
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1682,9 +1766,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1723,6 +1804,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                1
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1731,9 +1818,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1772,6 +1856,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                1
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1780,9 +1870,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1821,6 +1908,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                1
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1829,9 +1922,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1901,6 +1991,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                8
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1909,9 +2005,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1950,6 +2043,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                8
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -1958,9 +2057,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -1999,6 +2095,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                8
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -2007,9 +2109,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -2048,6 +2147,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                8
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -2056,9 +2161,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -2097,6 +2199,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                8
+              ],
+              "rank": [
+                128
+              ],
               "tiers": [
                 "Core"
               ],
@@ -2105,9 +2213,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                128
               ],
               "userImpacts": [
                 "Unknown"
@@ -2363,6 +2468,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                10
+              ],
               "tiers": [
                 "Core"
               ],
@@ -2374,9 +2485,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                10
               ],
               "userImpacts": [
                 "Unknown"
@@ -2446,6 +2554,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                3
+              ],
+              "rank": [
+                10
+              ],
               "tiers": [
                 "Core"
               ],
@@ -2458,9 +2572,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                10
               ],
               "userImpacts": [
                 "Unknown"
@@ -2499,6 +2610,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                5
+              ],
+              "rank": [
+                10
+              ],
               "tiers": [
                 "Core"
               ],
@@ -2510,9 +2627,6 @@
               ],
               "services": [
                 "MDO"
-              ],
-              "rank": [
-                10
               ],
               "userImpacts": [
                 "Unknown"
@@ -2551,6 +2665,12 @@
               "category": [
                 "Identity"
               ],
+              "maxScore": [
+                4
+              ],
+              "rank": [
+                35
+              ],
               "tiers": [
                 "Defense In Depth"
               ],
@@ -2562,9 +2682,6 @@
               ],
               "services": [
                 "AzureAD"
-              ],
-              "rank": [
-                35
               ],
               "userImpacts": [
                 "Moderate"
@@ -2665,6 +2782,12 @@
               "category": [
                 "Identity"
               ],
+              "maxScore": [
+                8
+              ],
+              "rank": [
+                68
+              ],
               "tiers": [
                 "Advanced"
               ],
@@ -2676,9 +2799,6 @@
               ],
               "services": [
                 "AzureAD"
-              ],
-              "rank": [
-                68
               ],
               "userImpacts": [
                 "Moderate"
@@ -2748,6 +2868,12 @@
               "category": [
                 "Identity"
               ],
+              "maxScore": [
+                10
+              ],
+              "rank": [
+                1
+              ],
               "tiers": [
                 "Core"
               ],
@@ -2760,9 +2886,6 @@
               ],
               "services": [
                 "AzureAD"
-              ],
-              "rank": [
-                1
               ],
               "userImpacts": [
                 "Low"
@@ -2912,7 +3035,7 @@
             ]
           }
         ],
-        "sha256": "e90095f8ddd4308b1d173fb3c16c47c207d7bc0c05f310485c6ef6580e10f5dc"
+        "sha256": "e34570699cb31e407b8e8444d1db0d5b0a12614b69ee9b5ba5e8b1068b556907"
       }
     ],
     "passthrough": {
@@ -2920,6 +3043,8 @@
         {
           "name": "Microsoft Secure Score",
           "data": {
+            "reportId": "12345678-1234-1234-1234-1234567890abcd_2024-01-01",
+            "tenantId": "12345678-1234-1234-1234-1234567890abcd",
             "profiles": {
               "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#security/secureScoreControlProfiles",
               "@odata.nextLink": "https://graph.microsoft.com/v1.0/security/secureScoreControlProfiles?$skiptoken=00000000-0000-0000-0000-00000000",
@@ -10369,6 +10494,49 @@
                 }
               ]
             },
+            "enabledServices": [
+              "HasOCAS",
+              "HasCLB",
+              "HasMDOP1",
+              "HasMDOP2",
+              "HasEXOP2",
+              "HasSPOP2",
+              "HasAADFree"
+            ],
+            "averageComparativeScores": [
+              {
+                "basis": "AllTenants",
+                "averageScore": 54.65,
+                "appsScore": 29.65,
+                "appsScoreMax": 79,
+                "dataScore": 0.46,
+                "dataScoreMax": 3.27,
+                "deviceScore": 9.13,
+                "deviceScoreMax": 16.76,
+                "identityScore": 36.02,
+                "identityScoreMax": 59.42,
+                "infrastructureScore": 0,
+                "infrastructureScoreMax": 0
+              },
+              {
+                "basis": "TotalSeats",
+                "averageScore": 48.98,
+                "SeatSizeRangeLowerValue": "1",
+                "SeatSizeRangeUpperValue": "100",
+                "appsScore": 34.15,
+                "appsScoreMax": 94.46,
+                "dataScore": 0.5,
+                "dataScoreMax": 3.97,
+                "deviceScore": 6.87,
+                "deviceScoreMax": 12.65,
+                "identityScore": 34.16,
+                "identityScoreMax": 59.5,
+                "infrastructureScore": 0,
+                "infrastructureScoreMax": 0
+              }
+            ],
+            "currentScore": 128,
+            "maxScore": 274,
             "secureScores": {
               "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#security/secureScores"
             }

@@ -140,6 +140,30 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   })()
                 ),
                 ...conditionallyProvideAttribute(
+                  'maxScore',
+                  this.getProfiles(data.controlName || '').map(
+                    (profile) => profile.maxScore
+                  ),
+                  (() => {
+                    const result = this.getProfiles(data.controlName || '')
+                      .map((profile) => profile.maxScore)
+                      .filter((v) => Boolean(v));
+                    return result.length > 0;
+                  })()
+                ),
+                ...conditionallyProvideAttribute(
+                  'rank',
+                  this.getProfiles(data.controlName || '').map(
+                    (profile) => profile.rank
+                  ),
+                  (() => {
+                    const result = this.getProfiles(data.controlName || '')
+                      .map((profile) => profile.rank)
+                      .filter((v) => Boolean(v));
+                    return result.length > 0;
+                  })()
+                ),
+                ...conditionallyProvideAttribute(
                   'tiers',
                   this.getProfiles(data.controlName || '').map(
                     (profile) => profile.tier
@@ -301,7 +325,15 @@ export class MsftSecureScoreMapper extends BaseConverter {
             {
               name: 'Microsoft Secure Score',
               data: {
+                reportId: this.rawData.secureScore.value[0].id,
+                tenantId: this.rawData.secureScore.value[0].azureTenantId,
                 profiles: this.rawData.profiles,
+                enabledServices:
+                  this.rawData.secureScore.value[0].enabledServices,
+                averageComparativeScores:
+                  this.rawData.secureScore.value[0].averageComparativeScores,
+                currentScore: this.rawData.secureScore.value[0].currentScore,
+                maxScore: this.rawData.secureScore.value[0].maxScore,
                 secureScores: _.pick(this.rawData.secureScore, [
                   '@odata.context',
                   '@odata.nextLink'

@@ -86,6 +86,8 @@
         {
           "name": "Microsoft Secure Score",
           "data": {
+            "reportId": "12345678-1234-1234-1234-1234567890abcd_2024-01-01",
+            "tenantId": "12345678-1234-1234-1234-1234567890abcd",
             "profiles": {
               "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#security/secureScoreControlProfiles",
               "@odata.nextLink": "https://graph.microsoft.com/v1.0/security/secureScoreControlProfiles?$skiptoken=00000000-0000-0000-0000-00000000",
@@ -7535,6 +7537,49 @@
                 }
               ]
             },
+            "enabledServices": [
+              "HasOCAS",
+              "HasCLB",
+              "HasMDOP1",
+              "HasMDOP2",
+              "HasEXOP2",
+              "HasSPOP2",
+              "HasAADFree"
+            ],
+            "averageComparativeScores": [
+              {
+                "basis": "AllTenants",
+                "averageScore": 54.65,
+                "appsScore": 29.65,
+                "appsScoreMax": 79,
+                "dataScore": 0.46,
+                "dataScoreMax": 3.27,
+                "deviceScore": 9.13,
+                "deviceScoreMax": 16.76,
+                "identityScore": 36.02,
+                "identityScoreMax": 59.42,
+                "infrastructureScore": 0,
+                "infrastructureScoreMax": 0
+              },
+              {
+                "basis": "TotalSeats",
+                "averageScore": 48.98,
+                "SeatSizeRangeLowerValue": "1",
+                "SeatSizeRangeUpperValue": "100",
+                "appsScore": 34.15,
+                "appsScoreMax": 94.46,
+                "dataScore": 0.5,
+                "dataScoreMax": 3.97,
+                "deviceScore": 6.87,
+                "deviceScoreMax": 12.65,
+                "identityScore": 34.16,
+                "identityScoreMax": 59.5,
+                "infrastructureScore": 0,
+                "infrastructureScoreMax": 0
+              }
+            ],
+            "currentScore": 128,
+            "maxScore": 1000,
             "secureScores": {
               "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#security/secureScores"
             }
@@ -7573,6 +7618,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                1
+              ],
+              "rank": [
+                82
+              ],
               "tiers": [
                 "Advanced"
               ],
@@ -7583,9 +7634,6 @@
               ],
               "services": [
                 "MCAS"
-              ],
-              "rank": [
-                82
               ],
               "userImpacts": [
                 "Low"
@@ -7624,6 +7672,12 @@
               "category": [
                 "Apps"
               ],
+              "maxScore": [
+                2
+              ],
+              "rank": [
+                80
+              ],
               "tiers": [
                 "Advanced"
               ],
@@ -7636,9 +7690,6 @@
               ],
               "services": [
                 "MCAS"
-              ],
-              "rank": [
-                80
               ],
               "userImpacts": [
                 "Moderate"
@@ -7664,7 +7715,7 @@
             ]
           }
         ],
-        "sha256": "6cbfb499d51a347b4c589692d225618d1146f848accf5572a8a1fd52de196bfc"
+        "sha256": "6fca1d41d6840f9beccb7ca15cdb393acd342366067da6ff6f9631e5bd0370e3"
       }
     ],
     "passthrough": {
@@ -7672,6 +7723,8 @@
         {
           "name": "Microsoft Secure Score",
           "data": {
+            "reportId": "12345678-1234-1234-1234-1234567890abcd_2024-01-02",
+            "tenantId": "12345678-1234-1234-1234-1234567890abcd",
             "profiles": {
               "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#security/secureScoreControlProfiles",
               "@odata.nextLink": "https://graph.microsoft.com/v1.0/security/secureScoreControlProfiles?$skiptoken=00000000-0000-0000-0000-00000000",
@@ -15121,6 +15174,49 @@
                 }
               ]
             },
+            "enabledServices": [
+              "HasOCAS",
+              "HasCLB",
+              "HasMDOP1",
+              "HasMDOP2",
+              "HasEXOP2",
+              "HasSPOP2",
+              "HasAADFree"
+            ],
+            "averageComparativeScores": [
+              {
+                "basis": "AllTenants",
+                "averageScore": 54.65,
+                "appsScore": 29.65,
+                "appsScoreMax": 79,
+                "dataScore": 0.46,
+                "dataScoreMax": 3.27,
+                "deviceScore": 9.13,
+                "deviceScoreMax": 16.76,
+                "identityScore": 36.02,
+                "identityScoreMax": 59.42,
+                "infrastructureScore": 0,
+                "infrastructureScoreMax": 0
+              },
+              {
+                "basis": "TotalSeats",
+                "averageScore": 48.98,
+                "SeatSizeRangeLowerValue": "1",
+                "SeatSizeRangeUpperValue": "100",
+                "appsScore": 34.15,
+                "appsScoreMax": 94.46,
+                "dataScore": 0.5,
+                "dataScoreMax": 3.97,
+                "deviceScore": 6.87,
+                "deviceScoreMax": 12.65,
+                "identityScore": 34.16,
+                "identityScoreMax": 59.5,
+                "infrastructureScore": 0,
+                "infrastructureScoreMax": 0
+              }
+            ],
+            "currentScore": 128,
+            "maxScore": 274,
             "secureScores": {
               "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#security/secureScores"
             }
