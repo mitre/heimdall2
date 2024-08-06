@@ -33,7 +33,7 @@ export class MsftSecureScoreResults {
     this.data = JSON.parse(combinedJson);
   }
 
-  toHdf(): ExecJSON.Execution[] {
+  toHdf(): Record<string, ExecJSON.Execution> {
     const results: ExecJSON.Execution[] = [];
 
     this.data.secureScore.value.forEach((element) => {
