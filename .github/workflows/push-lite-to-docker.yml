@@ -1,9 +1,8 @@
 name: Push Heimdall Lite to Docker Hub on every merge to master and tag as latest
 
 on:
-  workflow_dispatch:
   push:
-    branches: [master]
+    branches: [master, docker_improvements]
 
 jobs:
   docker:
