@@ -207,20 +207,6 @@ export class MsftSecureScoreMapper extends BaseConverter {
                   })()
                 ),
                 ...conditionallyProvideAttribute(
-                  'rank',
-                  _.uniq(
-                    this.getProfiles(data.controlName || '').map(
-                      (profile) => profile.rank
-                    )
-                  ),
-                  (() => {
-                    const result = this.getProfiles(data.controlName || '')
-                      .map((profile) => profile.rank)
-                      .filter((v) => Boolean(v));
-                    return result.length > 0;
-                  })()
-                ),
-                ...conditionallyProvideAttribute(
                   'userImpacts',
                   _.uniq(
                     this.getProfiles(data.controlName || '').map(
