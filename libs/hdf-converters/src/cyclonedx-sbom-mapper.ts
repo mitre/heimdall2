@@ -4,6 +4,7 @@ import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {getCCIsForNISTTags} from './utils/global';
+import {RatingRepository} from '@cyclonedx/cyclonedx-library/dist.d/models/vulnerability';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
@@ -18,7 +19,12 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 function formatCWETags(input: number[], addPrefix = true): string[] {
-  return input.map((cwe) => (addPrefix ? `CWE-${cwe}` : `${cwe}`));
+  const stringifiedCWE: string[] = [];
+  for (const cwe of input) {
+    const cweTag = addPrefix ? `CWE-${cwe}` : `${cwe}`;
+    stringifiedCWE.push(cweTag);
+  }
+  return stringifiedCWE;
 }
 
 function getNISTTags(input: number[]): string[] {
@@ -29,25 +35,24 @@ function getNISTTags(input: number[]): string[] {
 }
 
 // A single SBOM vulnerability can contain multiple security ratings
-// Average any existing ratings and then pass to `impact`
-function aggregateImpact(ratings: Record<string, unknown>[]): number {
+// Find the max of any existing ratings and then pass to `impact`
+function aggregateImpact(ratings: RatingRepository): number {
   let impact = 0;
   for (const rating of ratings) {
     // Prefer to use CVSS-based `score` field when possible
-    if (_.has(rating, 'score') && _.get(rating, 'method') == 'CVSSv31') {
-      impact += (rating as {score: number}).score;
+    if (rating.score && _.get(rating, 'method') == 'CVSSv31') {
+      impact = rating.score / 10 > impact ? rating.score / 10 : impact;
     } else {
       // Else interpret it from `severity` field
-      const severity = IMPACT_MAPPING.get(
-        (rating as {severity: string}).severity.toLowerCase()
-      );
-      if (severity) {
-        impact += severity * 10;
+      if (rating.severity) {
+        const severity = IMPACT_MAPPING.get(
+          rating.severity.toLowerCase()
+        ) as number;
+        impact = severity > impact ? severity : impact;
       }
     }
   }
-  // Round up aggregate impact to the 2nd decimal place
-  return Math.ceil((impact / ratings.length) * 10) / 100;
+  return impact;
 }
 
 export class CycloneDXSBOMResults {
