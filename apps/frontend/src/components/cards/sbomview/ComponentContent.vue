@@ -170,7 +170,7 @@ function generateTabs(
   };
 
   for (const [key, value] of Object.entries(object)) {
-    if (!customTabs.includes(key)) continue;
+    if (customTabs.includes(key)) continue;
     if (value instanceof Object) {
       tabs.push({
         name: `${prefix}${_.startCase(key)}`,
