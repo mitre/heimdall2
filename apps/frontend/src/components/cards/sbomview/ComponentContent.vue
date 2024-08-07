@@ -1,5 +1,5 @@
 <template>
-  <td :colspan="colspan">
+  <div>
     <v-tabs v-model="tabs">
       <v-tab v-for="tab in computedTabs" :key="tab.name">{{ tab.name }}</v-tab>
     </v-tabs>
@@ -46,11 +46,11 @@
           </v-simple-table>
         </template>
 
-        <!-- Viewing Nested Strucures -->
+        <!-- Viewing Nested Structures -->
         <v-treeview v-if="tab.treeData" open-all :items="tab.treeData" />
       </v-tab-item>
     </v-tabs-items>
-  </td>
+  </div>
 </template>
 
 <script lang="ts">
@@ -61,7 +61,7 @@ import {Prop} from 'vue-property-decorator';
 import _ from 'lodash';
 import {ContextualizedControl} from 'inspecjs';
 import {parseJson} from '@mitre/hdf-converters/src/utils/parseJson';
-import {SBOMComponent} from '@/utilities/sbom_util';
+import {SBOMComponent, SBOMMetadata, SBOMProperty} from '@/utilities/sbom_util';
 
 interface Tab {
   name: string;
@@ -148,39 +148,112 @@ function jsonToTabFormat(value: Object): Omit<Tab, 'name'> {
   };
 }
 
+/** A list of tabs that don't need to be auto-generated */
+const customTabs = ['affectingVulnerabilities', 'properties', 'component'];
+
+/**
+ * Generates a list of tabs to represent the given object
+ */
+function generateTabs(
+  object: SBOMComponent | SBOMMetadata,
+  prefix: string = ''
+): Tab[] {
+  const tabs: Tab[] = [];
+
+  // This is a tab that contain the string fields on `object`
+  const generalProps: Tab = {
+    name: `${prefix}General Properties`,
+    tableData: {
+      columns: ['Property', 'Value'],
+      rows: []
+    }
+  };
+
+  for (const [key, value] of Object.entries(object)) {
+    if (!customTabs.includes(key)) continue;
+    if (value instanceof Object) {
+      tabs.push({
+        name: `${prefix}${_.startCase(key)}`,
+        ...jsonToTabFormat(value)
+      });
+    } else {
+      // value is a primitive
+      generalProps.tableData!.rows.push([_.startCase(key), value]);
+    }
+  }
+  if (generalProps.tableData!.rows.length > 0) tabs.unshift(generalProps);
+
+  // These are properties on `object` used to include arbitrary data from external tools
+  if (object.properties)
+    tabs.push(...generateTabsFromProperties(object.properties, prefix));
+  return tabs;
+}
+
+/**
+ * Converts a list of properties (https://cyclonedx.org/docs/1.6/json/#components_items_properties)
+ * to a single tab for basic strings and other tabs to display stringified JSON
+ */
+function generateTabsFromProperties(
+  properties: SBOMProperty[],
+  prefix: string = ''
+): Tab[] {
+  const propsTab: Tab = {
+    name: `${prefix}External Properties`,
+    tableData: {
+      columns: ['Property', 'Value'],
+      rows: []
+    }
+  };
+  const tabs: Tab[] = [];
+  for (const property of properties) {
+    const json = parseJson(property.value);
+    if (json.ok && json.value instanceof Object) {
+      tabs.push({
+        name: `${prefix}${_.startCase(property.name)}`,
+        ...jsonToTabFormat(json.value)
+      });
+    } else {
+      propsTab.tableData!.rows.push([property.name, property.value]);
+    }
+  }
+  if (propsTab.tableData!.rows.length > 0) {
+    tabs.push(propsTab);
+  }
+  return tabs;
+}
+
 @Component({
   components: {}
 })
 export default class ComponentContent extends Vue {
   @Prop({type: Object, required: true}) readonly component!: SBOMComponent;
-  @Prop({type: Array, required: true})
+  // Describes metadata for an entire SBOM
+  @Prop({type: Object, required: false}) readonly metadata?: SBOMMetadata;
+  @Prop({type: Array, required: false, default: () => []})
   readonly vulnerabilities!: ContextualizedControl[];
-
-  @Prop({type: Number, required: true}) readonly colspan!: number;
 
   // stores the state of the tab selected
   tabs = {tab: null};
 
-  // a list of tabs that don't need to be auto-generated
-  customTabs = ['affectingVulnerabilities', 'properties'];
-
   /**
-   * Converts the properties on a component into
-   * a data structure that can be displayed in separate tabs.
-   * Every root level property (except primitives) get their own tab.
-   * Data that can be represented in a table will be, but some data may need
-   * to be represnted using a nested tree view.
-   * `component.properties` is special in that any items with `value: <stringified JSON>`
-   * will be rendered in its own tab as well
+   * Converts the properties on a component into a data structure that can be
+   * displayed in separate tabs. Every root level property (except primitives)
+   * get their own tab. Data that can be represented in a table will be, but
+   * some data may need to be represented using a nested tree view. Note that
+   * `component.properties` is special in that any items with
+   * `value: <stringified JSON>` will be rendered in its own tab as well.
    */
   get computedTabs(): Tab[] {
-    const generalProps: TableData = {columns: ['Property', 'Value'], rows: []};
-    const tabs: Tab[] = [
-      {
-        name: 'General Properties',
-        tableData: generalProps
-      }
-    ];
+    const tabs: Tab[] = [];
+
+    if (this.metadata) {
+      // for displaying top level component data
+      tabs.push(...generateTabs(this.metadata, 'Metadata - '));
+      tabs.push(...generateTabs(this.component, 'Component - '));
+    } else {
+      // display standard components
+      tabs.push(...generateTabs(this.component));
+    }
 
     // show vulnerabilities that affect this component
     if (this.vulnerabilities && this.vulnerabilities.length > 0) {
@@ -197,39 +270,6 @@ export default class ComponentContent extends Vue {
       });
     }
 
-    if (this.component.properties) {
-      const properties: Tab = {
-        name: 'Properties',
-        tableData: {
-          columns: ['Property', 'Value'],
-          rows: []
-        }
-      };
-      for (const property of this.component.properties) {
-        const json = parseJson(property.value);
-        if (json.ok && json.value instanceof Object) {
-          tabs.push({
-            name: _.startCase(property.name),
-            ...jsonToTabFormat(json.value)
-          });
-        } else {
-          properties.tableData?.rows.push([property.name, property.value]);
-        }
-      }
-      if (properties.tableData && properties.tableData.rows.length > 0) {
-        tabs.push(properties);
-      }
-    }
-
-    for (const [key, value] of Object.entries(this.component)) {
-      if (value instanceof Object) {
-        if (!this.customTabs.includes(key))
-          tabs.push({name: _.startCase(key), ...jsonToTabFormat(value)});
-      } else {
-        // value is a primitive
-        generalProps.rows.push([key, value]);
-      }
-    }
     return tabs;
   }
 }

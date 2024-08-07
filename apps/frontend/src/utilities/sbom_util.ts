@@ -4,13 +4,15 @@ import {
   ProfileFile,
   SourcedContextualizedEvaluation
 } from '@/store/report_intake';
+import {JSONValue} from '@mitre/hdf-converters/src/utils/parseJson';
 import {Result} from '@mitre/hdf-converters/src/utils/result';
 import {ContextualizedControl} from 'inspecjs';
 import _ from 'lodash';
 
+export type SBOMProperty = {name: string; value: string};
 /**
- * A type to reprsent a component from an SBOM
- * Other properties maybe defined but are only determined at runtime
+ * A type to represent a component from an SBOM
+ * Other properties may be defined but are only determined at runtime
  * See https://cyclonedx.org/docs/1.6/json/#components
  */
 export interface SBOMComponent {
@@ -22,14 +24,24 @@ export interface SBOMComponent {
     hashes: Record<string, unknown>[];
   }[];
   'bom-ref'?: string;
-  properties?: {name: string; value: string}[];
+  properties?: SBOMProperty[];
   affectingVulnerabilities: string[]; // an array of bom-refs
   key: string; // used to uniquely identify the component
 }
 
 /**
- * @param evaluation The evaulation to test
- * @returns ture if the given evaluation contains SBOM data in the passthrough section
+ * A type to represent the metadata for an entire SBOM
+ * Other properties may be defined but are only determined at runtime
+ * See https://cyclonedx.org/docs/1.6/json/#components_items_properties
+ */
+export interface SBOMMetadata {
+  component?: SBOMComponent;
+  properties?: SBOMProperty[];
+}
+
+/**
+ * @param evaluation The evaluation to test
+ * @returns true if the given evaluation contains SBOM data in the passthrough section
  */
 export function isSbom(evaluation?: SourcedContextualizedEvaluation): boolean {
   return _.get(evaluation, 'data.passthrough.auxiliary_data', []).some(
@@ -86,18 +98,24 @@ export function isOnlySbomFileId(fileId: string): boolean {
 
 /**
  * @param fileId The id to search for
- * @returns A Result object contianing an evaluation if one is found
+ * @returns A Result object containing an evaluation if one is found
  */
 export function getSbom(
   fileId: string
-): Result<SourcedContextualizedEvaluation, false> {
+): Result<SourcedContextualizedEvaluation, null> {
   const evaluation = InspecDataModule.contextualSboms.find(
     (s) => s.from_file.uniqueId === fileId
   );
   if (evaluation) return {ok: true, value: evaluation};
-  return {ok: false, error: false};
+  return {ok: false, error: null};
 }
 
+/**
+ * Finds the vulnerability corresponding to a given bom-ref
+ * @param vulnBomRef The target bom-ref
+ * @param controls The search space for a vulnerability with the target bom-ref
+ * @returns A Result object containing the vulnerability if found
+ */
 export function getVulnsFromBomRef(
   vulnBomRef: string,
   controls: readonly ContextualizedControl[]
@@ -108,5 +126,49 @@ export function getVulnsFromBomRef(
     return match ? match.groups?.ref === vulnBomRef : false;
   });
   if (vuln) return {ok: true, value: vuln};
+  return {ok: false, error: null};
+}
+
+function getSbomPassthroughSection(
+  evaluation: SourcedContextualizedEvaluation
+): Result<JSONValue, null> {
+  const passthroughSection = _.get(
+    evaluation,
+    'data.passthrough.auxiliary_data',
+    []
+  ).find(_.matchesProperty('name', 'SBOM'));
+  if (passthroughSection) return {ok: true, value: passthroughSection};
+  return {ok: false, error: null};
+}
+
+export function getSbomComponents(
+  evaluation: SourcedContextualizedEvaluation
+): Result<SBOMComponent[], null> {
+  const passthroughSection = getSbomPassthroughSection(evaluation);
+  if (passthroughSection.ok) {
+    const components: SBOMComponent[] = _.get(
+      passthroughSection.value,
+      'components',
+      []
+    ) as SBOMComponent[];
+    if (components) return {ok: true, value: components};
+  }
+  return {ok: false, error: null};
+}
+
+/**
+ * Gets the SBOM metadata from the given evaluation
+ */
+export function getSbomMetadata(
+  evaluation: SourcedContextualizedEvaluation
+): Result<SBOMMetadata, null> {
+  const passthroughSection = getSbomPassthroughSection(evaluation);
+  if (passthroughSection.ok) {
+    const metadata: SBOMMetadata | undefined = _.get(
+      passthroughSection.value,
+      'data.metadata'
+    ) as SBOMMetadata | undefined;
+    if (metadata) return {ok: true, value: metadata};
+  }
   return {ok: false, error: null};
 }

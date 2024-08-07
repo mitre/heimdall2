@@ -101,11 +101,12 @@
           </template>
 
           <template #expanded-item="{headers, item}">
-            <ComponentContent
-              :component="item"
-              :vulnerabilities="affectingVulns.get(item['bom-ref'])"
-              :colspan="headers.length"
-            />
+            <td :colspan="headers.length">
+              <ComponentContent
+                :component="item"
+                :vulnerabilities="affectingVulns.get(item['bom-ref'])"
+              />
+            </td>
           </template>
         </v-data-table>
       </v-col>
@@ -131,7 +132,6 @@ import {getVulnsFromBomRef, SBOMComponent} from '@/utilities/sbom_util';
 })
 export default class ComponentTable extends Vue {
   @Ref('controlTableTitle') readonly controlTableTitle!: Element;
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
   @Prop({type: String, required: false}) readonly searchTerm!: string;
 
   componentRef = this.$route.query.componentRef ?? null;
@@ -141,7 +141,6 @@ export default class ComponentTable extends Vue {
   headerColumns = [
     'name',
     'version',
-    'author',
     'group',
     'type',
     'description',

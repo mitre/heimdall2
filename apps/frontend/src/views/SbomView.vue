@@ -1,5 +1,5 @@
 <template>
-  <Base title="SBOM View" @changed-files="evalInfo = null">
+  <Base :title="curr_title" @changed-files="currentSbomMetadata = null">
     <!-- Topbar content - give it a search bar -->
     <template #topbar-content>
       <v-text-field
@@ -39,18 +39,17 @@
     <!-- The main content: cards, etc -->
     <template #main-content>
       <v-container fluid grid-list-md pt-0 pa-2>
-        <v-container id="fileCards" mx-0 px-0 fluid>
-          <!-- Evaluation Info -->
+        <v-container mx-0 px-0 fluid>
+          <!-- SBOM Info -->
           <v-row no-gutters class="mx-n3 mb-3">
             <v-col>
-              <v-slide-group v-model="evalInfo" show-arrows>
-                <v-slide-item v-for="(file, i) in activeFiles" :key="i">
+              <v-slide-group v-model="currentSbomMetadata" show-arrows>
+                <v-slide-item v-for="(file, i) in sbomFiles" :key="i">
                   <v-card
                     width="100%"
                     max-width="100%"
                     class="mx-3"
-                    data-cy="profileInfo"
-                    @click="toggle_profile(file)"
+                    @click="toggle_sbom(file)"
                   >
                     <EvaluationInfo :file="file" />
                     <v-card-subtitle class="bottom-right">
@@ -61,11 +60,16 @@
               </v-slide-group>
             </v-col>
           </v-row>
-          <ProfileData
-            v-if="evalInfo != null"
-            class="my-4 mx-2"
-            :file="evalInfo"
-          />
+          <v-card v-if="currentSbomMetadata !== null">
+            <v-row class="pa-4 my-3" flex-direction="column">
+              <v-col>
+                <ComponentContent
+                  :component="currentSbomMetadata.component"
+                  :metadata="currentSbomMetadata"
+                />
+              </v-col>
+            </v-row>
+          </v-card>
         </v-container>
 
         <!-- DataTable -->
@@ -73,7 +77,6 @@
           <v-col xs-12>
             <v-card elevation="2">
               <ComponentTable
-                :filter="all_filter"
                 :component-ref="$route.params.componentRef"
                 :search-term="searchTerm"
               />
@@ -82,6 +85,28 @@
         </v-row>
       </v-container>
     </template>
+
+    <!-- No viewable files snackbar -->
+    <v-snackbar
+      :value="file_filter.length === 0"
+      class="mt-11"
+      style="z-index: 2"
+      :timeout="-1"
+      color="warning"
+      top
+    >
+      <span v-if="no_files" class="subtitle-2">
+        No files are currently loaded. Press the <strong>LOAD</strong>
+        <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
+        some.
+      </span>
+      <span v-else class="subtitle-2">
+        No files are currently enabled for viewing. Open the
+        <v-icon class="mx-1">mdi-menu</v-icon> sidebar menu, and ensure that the
+        file(s) you wish to view are
+        <v-icon class="mx-1">mdi-checkbox-marked</v-icon> checked.
+      </span>
+    </v-snackbar>
   </Base>
 </template>
 
@@ -93,72 +118,54 @@ import UploadButton from '@/components/generic/UploadButton.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import PrintButton from '@/components/global/PrintButton.vue';
 import RouteMixin from '@/mixins/RouteMixin';
-import {Filter, FilteredDataModule, TreeMapState} from '@/store/data_filters';
+import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {
   EvaluationFile,
   FileID,
   ProfileFile,
-  SourcedContextualizedEvaluation,
-  SourcedContextualizedProfile
+  SourcedContextualizedEvaluation
 } from '@/store/report_intake';
-import {SearchModule} from '@/store/search';
-import {ServerModule} from '@/store/server';
 import Base from '@/views/Base.vue';
 import {IEvaluation} from '@heimdall/interfaces';
 import Component, {mixins} from 'vue-class-component';
 import ServerMixin from '../mixins/ServerMixin';
 import {EvaluationModule} from '../store/evaluations';
-import {StatusCountModule} from '../store/status_counts';
 import {compare_times} from '../utilities/delta_util';
+import ProfileData from '@/components/cards/ProfileData.vue';
+import ComponentContent from '@/components/cards/sbomview/ComponentContent.vue';
+import {getSbomMetadata, SBOMMetadata} from '@/utilities/sbom_util';
 
 @Component({
   components: {
     Base,
     ComponentTable,
+    ComponentContent,
     ExportJson,
     PrintButton,
     EvaluationInfo,
     UploadButton,
-    ProfileInfo
+    ProfileInfo,
+    ProfileData
   }
 })
 export default class Components extends mixins(RouteMixin, ServerMixin) {
-  /**
-   * The current state of the treemap as modeled by the treemap (duh).
-   * Once can reliably expect that if a "deep" selection is not null, then its parent should also be not-null.
-   */
-  treeFilters: TreeMapState = [];
-  controlSelection: string | null = null;
-
-  gotStatus: boolean = false;
-  gotSeverity: boolean = false;
   searchTerm: string = '';
 
-  /** Model for if all-filtered snackbar should be showing */
-  filterSnackbar = false;
-
-  evalInfo:
-    | SourcedContextualizedEvaluation
-    | SourcedContextualizedProfile
-    | null = null;
+  currentSbomMetadata: SBOMMetadata | null = null;
 
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
    */
   get file_filter(): FileID[] {
-    return FilteredDataModule.selectedProfileIds; // TODO: Update this to call a new function to get only the SBOM evaluations profiles
+    return FilteredDataModule.selected_sbom_ids;
   }
 
-  get evaluationFiles(): SourcedContextualizedEvaluation[] {
+  get sbomFiles(): SourcedContextualizedEvaluation[] {
     return Array.from(FilteredDataModule.sboms(this.file_filter)).sort(
       compare_times
     );
-  }
-
-  get activeFiles(): SourcedContextualizedEvaluation[] {
-    return this.evaluationFiles;
   }
 
   getFile(fileID: FileID) {
@@ -171,127 +178,34 @@ export default class Components extends mixins(RouteMixin, ServerMixin) {
 
   // Returns true if no files are uploaded
   get no_files(): boolean {
-    return InspecDataModule.allFiles.length === 0;
+    return InspecDataModule.allSbomFiles.length === 0;
   }
 
   /**
-   * The filter for charts. Contains all of our filter stuff
+   * The title to override with
    */
-  get all_filter(): Filter {
-    return {
-      status: SearchModule.statusFilter,
-      severity: SearchModule.severityFilter,
-      fromFile: this.file_filter,
-      ids: SearchModule.controlIdSearchTerms,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      searchTerm: SearchModule.freeSearch || '',
-      codeSearchTerms: SearchModule.codeSearchTerms,
-      tagFilter: SearchModule.tagFilter,
-      treeFilters: this.treeFilters,
-      omit_overlayed_controls: true,
-      control_id: this.controlSelection || undefined
-    };
-  }
-
-  /**
-   * The filter for treemap. Omits its own stuff
-   */
-  get treemap_full_filter(): Filter {
-    return {
-      status: SearchModule.statusFilter || [],
-      severity: SearchModule.severityFilter,
-      titleSearchTerms: SearchModule.titleSearchTerms,
-      descriptionSearchTerms: SearchModule.descriptionSearchTerms,
-      codeSearchTerms: SearchModule.codeSearchTerms,
-      tagFilter: SearchModule.tagFilter,
-      nistIdFilter: SearchModule.NISTIdFilter,
-      ids: SearchModule.controlIdSearchTerms,
-      fromFile: this.file_filter,
-      searchTerm: SearchModule.freeSearch,
-      omit_overlayed_controls: true
-    };
-  }
-
-  /**
-   * Clear all filters
-   */
-  clear(clearSearchBar = false) {
-    SearchModule.clear();
-    this.filterSnackbar = false;
-    this.controlSelection = null;
-    this.treeFilters = [];
-    if (clearSearchBar) {
-      this.searchTerm = '';
-    }
-  }
-
-  /**
-   * Returns true if we can currently clear.
-   * Essentially, just controls whether the button is available
-   */
-  get can_clear(): boolean {
-    // Return if any params not null/empty
-    let result: boolean;
-    if (
-      SearchModule.severityFilter.length !== 0 ||
-      SearchModule.statusFilter.length !== 0 ||
-      SearchModule.controlIdSearchTerms.length !== 0 ||
-      SearchModule.codeSearchTerms.length !== 0 ||
-      SearchModule.tagFilter.length !== 0 ||
-      this.searchTerm ||
-      this.treeFilters.length
-    ) {
-      result = true;
+  get curr_title(): string {
+    let returnText = 'SBOM View';
+    if (this.file_filter.length === 1) {
+      const file = this.getFile(this.file_filter[0]);
+      if (file) {
+        const dbFile = this.getDbFile(file);
+        returnText += ` (${dbFile?.filename || file.filename} selected)`;
+      }
     } else {
-      result = false;
+      returnText += ` (${this.file_filter.length} SBOMs selected)`;
     }
-
-    // Logic to check: are any files actually visible?
-    if (FilteredDataModule.controls(this.all_filter).length === 0) {
-      this.filterSnackbar = true;
-    } else {
-      this.filterSnackbar = false;
-    }
-
-    // Finally, return our result
-    return result;
-  }
-
-  get waivedProfilesExist(): boolean {
-    return StatusCountModule.countOf(this.all_filter, 'Waived') >= 1;
-  }
-
-  //changes width of eval info if it is in server mode and needs more room for tags
-  get info_width(): number {
-    if (ServerModule.serverMode) {
-      return 500;
-    }
-    return 300;
+    return returnText;
   }
 
   //basically a v-model for the eval info cards when there is no slide group
-  toggle_profile(
-    file: SourcedContextualizedEvaluation | SourcedContextualizedProfile
-  ) {
-    if (file === this.evalInfo) {
-      this.evalInfo = null;
+  toggle_sbom(file: SourcedContextualizedEvaluation) {
+    const metadata = getSbomMetadata(file);
+    if (metadata.ok && this.currentSbomMetadata !== metadata.value) {
+      this.currentSbomMetadata = metadata.value;
     } else {
-      this.evalInfo = file;
+      this.currentSbomMetadata = null;
     }
-  }
-
-  showErrors() {
-    this.searchTerm = 'status:"Profile Error"';
-  }
-
-  showWaived() {
-    this.searchTerm = 'status:"Waived"';
-  }
-
-  showSeverityOverrides() {
-    this.searchTerm = 'tags:"severityoverride"';
   }
 }
 </script>

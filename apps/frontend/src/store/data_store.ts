@@ -43,7 +43,7 @@ export class InspecData extends VuexModule {
    * Note: some SBOMs are only contained in `executionFiles` because
    * they contain results as well
    */
-  sbomFiles: EvaluationFile[] = [];
+  private sbomFiles: EvaluationFile[] = [];
 
   /** Return all of the files that we currently have. */
   get allFiles(): (EvaluationFile | ProfileFile)[] {
