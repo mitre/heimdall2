@@ -106,7 +106,7 @@ function objectToTreeview(obj: Object, id: number): Treeview[] {
  */
 function objectDepth(obj: Object, n: number): number {
   let max = n;
-  for (const [key, value] of Object.entries(obj)) {
+  for (const [_key, value] of Object.entries(obj)) {
     if (value instanceof Object) {
       const current = objectDepth(value, n + 1);
       if (current > max) max = current;

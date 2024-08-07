@@ -12,6 +12,7 @@ import {
 import Store from '@/store/store';
 import {execution_unique_key} from '@/utilities/format_util';
 import {
+  componentFitsSeverityFilter,
   getSbomComponents,
   getVulnsFromBomRef,
   isOnlySbomFileId,
@@ -521,6 +522,26 @@ export class FilteredData extends VuexModule {
       const components: SBOMComponent[] = [];
       const controls = this.controls(filter);
       // grab every component from each section and apply a filter if necessary
+      /*       return evaluations
+        .map(getSbomComponents)
+        .filter((result) => result.ok)
+        .map((result: {value: SBOMComponentsResult}) => result.value) // compiler typechecking doesn't know that `value` is guaranteed
+        .flatMap((pair) => {
+          const executionKey = execution_unique_key(pair.evaluation);
+          return pair.components.filter((component) => {
+          if (!component.affectingVulnerabilities?.length)
+            return filter.severity?.includes('none');
+          const vulns = [];
+          // collect all the controls corresponding to the ids in `affectingVulnerabilities`
+          for (const vulnRef of component.affectingVulnerabilities) {
+            const vuln = getVulnsFromBomRef(vulnRef, controls);
+            if (vuln.ok) vulns.push(vuln!.value);
+          }
+          // add the component if it has a vulnerability with an allowable severity
+          return vulns.some((v) => filter.severity?.includes(v.hdf.severity));
+        }).map(component => ({...component, key: `${executionKey}-${component['bom-ref']}`}))
+      }); */
+
       for (const evaluation of evaluations) {
         const sbomComponents: Result<SBOMComponent[], null> =
           getSbomComponents(evaluation);
@@ -529,22 +550,10 @@ export class FilteredData extends VuexModule {
           const key = `${execution_unique_key(evaluation)}-${component['bom-ref']}`;
           // filter components by their affecting vulnerabilities
           if (
-            !component.affectingVulnerabilities ||
-            component.affectingVulnerabilities.length === 0
-          ) {
-            if (filter.severity?.includes('none'))
-              components.push({...component, key});
-          } else {
-            const vulns = [];
-            // collect all the controls corresponding to the ids in `affectingVulnerabilities`
-            for (const vulnRef of component.affectingVulnerabilities) {
-              const vuln = getVulnsFromBomRef(vulnRef, controls);
-              if (vuln.ok) vulns.push(vuln.value);
-            }
-            // add the component if it has a vulnerability with an allowable severity
-            if (vulns.some((v) => filter.severity?.includes(v.hdf.severity)))
-              components.push({...component, key});
-          }
+            !filter.severity ||
+            componentFitsSeverityFilter(component, filter.severity, controls)
+          )
+            components.push({...component, key});
         }
       }
       return components;

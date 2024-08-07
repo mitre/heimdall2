@@ -61,7 +61,6 @@ import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import {ServerModule} from '../../store/server';
 import {EvaluationModule} from '@/store/evaluations';
-import _ from 'lodash';
 
 @Component({
   components: {

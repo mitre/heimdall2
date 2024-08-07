@@ -6,7 +6,7 @@ import {
 } from '@/store/report_intake';
 import {JSONValue} from '@mitre/hdf-converters/src/utils/parseJson';
 import {Result} from '@mitre/hdf-converters/src/utils/result';
-import {ContextualizedControl} from 'inspecjs';
+import {ContextualizedControl, Severity} from 'inspecjs';
 import _ from 'lodash';
 
 export type SBOMProperty = {name: string; value: string};
@@ -127,6 +127,28 @@ export function getVulnsFromBomRef(
   });
   if (vuln) return {ok: true, value: vuln};
   return {ok: false, error: null};
+}
+
+export function componentFitsSeverityFilter(
+  component: SBOMComponent,
+  severities: Severity[],
+  controls: readonly ContextualizedControl[]
+): boolean {
+  // if there are no vulnerabilities, then severity: none must be allowed
+  if (
+    !component.affectingVulnerabilities ||
+    component.affectingVulnerabilities.length === 0
+  ) {
+    return severities.includes('none');
+  }
+
+  // collect all the controls corresponding to the ids in `affectingVulnerabilities`
+  for (const vulnRef of component.affectingVulnerabilities) {
+    const vuln = getVulnsFromBomRef(vulnRef, controls);
+    // return true if the vuln has an allowable severity
+    if (vuln.ok && severities.includes(vuln.value.hdf.severity)) return true;
+  }
+  return false;
 }
 
 function getSbomPassthroughSection(
