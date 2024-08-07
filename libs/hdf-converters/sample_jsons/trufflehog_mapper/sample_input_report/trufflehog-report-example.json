@@ -1,0 +1,32 @@
+{
+    "SourceMetadata": {
+        "Data": {
+            "Git": {
+                "commit": "0416560b1330d8ac42045813251d85c688717eaf",
+                "file": "new_key",
+                "email": "counter \u003chello@trufflesec.com\u003e",
+                "repository": "https://github.com/trufflesecurity/test_keys",
+                "timestamp": "2023-10-19 02:56:37 +0000",
+                "line": 2
+            }
+        }
+    },
+    "SourceID": 1,
+    "SourceType": 16,
+    "SourceName": "trufflehog - git",
+    "DetectorType": 2,
+    "DetectorName": "AWS",
+    "DecoderName": "PLAIN",
+    "Verified": true,
+    "Raw": "AKIAQYLPMN5HHHFPZAM2",
+    "RawV2": "AKIAQYLPMN5HHHFPZAM21tUm636uS1yOEcfP5pvfqJ/ml36mF7AkyHsEU0IU",
+    "Redacted": "AKIAQYLPMN5HHHFPZAM2",
+    "ExtraData": {
+        "account": "052310077262",
+        "arn": "arn:aws:iam::052310077262:user/canarytokens.com@@c20nnjzlioibnaxvt392i9ope",
+        "is_canary": "true",
+        "message": "This is an AWS canary token generated at canarytokens.org, and was not set off; learn more here: https://trufflesecurity.com/canaries",
+        "resource_type": "Access key"
+    },
+    "StructuredData": null
+}

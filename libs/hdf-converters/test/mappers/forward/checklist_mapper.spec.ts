@@ -1,7 +1,7 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
-import * as checklistMapping from '../../../src/ckl-mapper/jsonixMapping';
 import {omitVersions} from '../../utils';
+import {InvalidChecklistMetadataException} from '../../../src/ckl-mapper/checklist-metadata-utils';
 
 describe('checklist_mapper_single_stig', () => {
   it('Successfully converts Checklists', () => {
@@ -58,6 +58,34 @@ describe('checklist_mapper_single_stig_with_raw', () => {
   });
 });
 
+describe('checklist_mapper_with_severity_overrides', () => {
+  it('Successfully converts Checklists with severity overrides', () => {
+    const mapper = new ChecklistResults(
+      fs.readFileSync(
+        'sample_jsons/checklist_mapper/sample_input_report/small_ckl_overrides.ckl',
+        {encoding: 'utf-8'}
+      ),
+      true
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/small_overrides_hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/checklist_mapper/small_overrides_hdf.json',
+            {encoding: 'utf-8'}
+          )
+        )
+      )
+    );
+  });
+});
+
 describe('checklist_mapper_multi_stig_wrapper', () => {
   it('Successfully converts Checklists', () => {
     const mapper = new ChecklistResults(
@@ -96,11 +124,11 @@ describe('checklist_jsonix', () => {
       )
     );
 
-    const results = mapper.toJsonix(checklistMapping.jsonixMapping);
+    const results = mapper.getJsonix();
 
     // fs.writeFileSync(
     //   'sample_jsons/checklist_mapper/checklist_jsonix_data.json',
-    //   JSON.stringify(mapper.toJsonix(checklistMapping.jsonixMapping), null, 2)
+    //   JSON.stringify(mapper.getJsonix(), null, 2)
     // );
 
     expect(results).toEqual(
@@ -123,7 +151,7 @@ describe('checklist_intermediate_object', () => {
       )
     );
 
-    const jsonixData = mapper.toJsonix(checklistMapping.jsonixMapping);
+    const jsonixData = mapper.getJsonix();
 
     const results = mapper.toIntermediateObject(jsonixData);
 
@@ -139,6 +167,19 @@ describe('checklist_intermediate_object', () => {
           {encoding: 'utf-8'}
         )
       )
+    );
+  });
+});
+
+describe('checklist_with_invalid_metadata', () => {
+  // ensures that checklist metadata is being validated
+  it('Throws InvalidChecklistFormatException when trying to convert checklist with invalid metadata', () => {
+    const fileContents = fs.readFileSync(
+      'sample_jsons/checklist_mapper/sample_input_report/invalid_metadata.ckl',
+      {encoding: 'utf-8'}
+    );
+    expect(() => new ChecklistResults(fileContents)).toThrowError(
+      InvalidChecklistMetadataException
     );
   });
 });

@@ -99,6 +99,11 @@
           @add-filter="addStatusSearch"
           @remove-filter="removeStatusFilter"
         />
+        <InfoCardRow
+          :filter="all_filter"
+          @show-severity-overrides="showSeverityOverrides"
+          @add-filter="addStatusSearch"
+        />
         <!-- Compliance Cards -->
         <v-row id="complianceCards" justify="space-around">
           <v-col xs="4">
@@ -158,10 +163,7 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <ControlTable
-                :filter="all_filter"
-                :show-impact="is_result_view"
-              />
+              <ControlTable :filter="all_filter" />
             </v-card>
           </v-col>
         </v-row>
@@ -204,6 +206,7 @@ import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 import ProfileData from '@/components/cards/ProfileData.vue';
 import SeverityChart from '@/components/cards/SeverityChart.vue';
 import StatusCardRow from '@/components/cards/StatusCardRow.vue';
+import InfoCardRow from '@/components/cards/InfoCardRow.vue';
 import StatusChart from '@/components/cards/StatusChart.vue';
 import Treemap from '@/components/cards/treemap/Treemap.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
@@ -248,6 +251,7 @@ import {compare_times} from '../utilities/delta_util';
   components: {
     Base,
     StatusCardRow,
+    InfoCardRow,
     Treemap,
     ControlTable,
     StatusChart,
@@ -275,6 +279,9 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
    */
   treeFilters: TreeMapState = [];
   controlSelection: string | null = null;
+
+  gotStatus: boolean = false;
+  gotSeverity: boolean = false;
 
   /** Model for if all-filtered snackbar should be showing */
   filterSnackbar = false;
@@ -367,6 +374,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       nistIdFilter: SearchModule.NISTIdFilter,
       searchTerm: SearchModule.freeSearch || '',
       codeSearchTerms: SearchModule.codeSearchTerms,
+      tagFilter: SearchModule.tagFilter,
       treeFilters: this.treeFilters,
       omit_overlayed_controls: true,
       control_id: this.controlSelection || undefined
@@ -383,6 +391,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       titleSearchTerms: SearchModule.titleSearchTerms,
       descriptionSearchTerms: SearchModule.descriptionSearchTerms,
       codeSearchTerms: SearchModule.codeSearchTerms,
+      tagFilter: SearchModule.tagFilter,
       nistIdFilter: SearchModule.NISTIdFilter,
       ids: SearchModule.controlIdSearchTerms,
       fromFile: this.file_filter,
@@ -416,6 +425,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
       SearchModule.statusFilter.length !== 0 ||
       SearchModule.controlIdSearchTerms.length !== 0 ||
       SearchModule.codeSearchTerms.length !== 0 ||
+      SearchModule.tagFilter.length !== 0 ||
       this.searchTerm ||
       this.treeFilters.length
     ) {
@@ -485,6 +495,10 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
 
   showWaived() {
     this.searchTerm = 'status:"Waived"';
+  }
+
+  showSeverityOverrides() {
+    this.searchTerm = 'tags:"severityoverride"';
   }
 
   addStatusSearch(status: ExtendedControlStatus) {

@@ -1,7 +1,7 @@
 import {IEvalPaginationParams} from '@heimdall/common/interfaces';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from '@nestjs/sequelize';
-import {FindOptions, Op, WhereOptions} from 'sequelize';
+import {FindOptions, Op, WhereOptions, Sequelize} from 'sequelize';
 import {DatabaseService} from '../database/database.service';
 import {CreateEvaluationTagDto} from '../evaluation-tags/dto/create-evaluation-tag.dto';
 import {EvaluationTag} from '../evaluation-tags/evaluation-tag.model';
@@ -64,8 +64,8 @@ export class EvaluationsService {
          [Model<any, any>, Model<any, any>, string, string]
 
        When using TypeScript the order variable is of type string[], which is not
-       supported by OrderItem. The only way to avoid it is to add string[] to the
-       list of accepted types in OrderItem.
+       supported by OrderItem. The only way to avoid a type error is to add string[]
+       to the list of accepted types in OrderItem.
 
        Hence the reason the order option is being initialized with array indices.
 
@@ -114,10 +114,10 @@ export class EvaluationsService {
         offset: params.offset,
         limit: Number(params.limit) * this.totalGroupMembers,
         order:
-          params.order.length == 2
+          params.order.length === 2
             ? [[params.order[0], params.order[1]]]
             : [[params.order[0], params.order[1], params.order[2]]],
-        subQuery: false,
+        subQuery: false, // enable where clause to reference attributes from the included models
         where: whereClause
       })
       .then(async (data) => {
@@ -152,8 +152,8 @@ export class EvaluationsService {
 
     const whereClauseParams: WhereClauseParams = {
       searchFields:
-        params.searchFields == undefined ? [''] : params.searchFields,
-      operator: params.operator == undefined ? 'OR' : params.operator,
+        params.searchFields === undefined ? [''] : params.searchFields,
+      operator: params.operator === undefined ? 'OR' : params.operator,
       email: email,
       role: role,
       action: 'search'
@@ -173,7 +173,7 @@ export class EvaluationsService {
         offset: params.offset,
         limit: Number(params.limit) * this.totalGroupMembers,
         order:
-          params.order.length == 2
+          params.order.length === 2
             ? [[params.order[0], params.order[1]]]
             : [[params.order[0], params.order[1], params.order[2]]],
         subQuery: false,
@@ -187,7 +187,7 @@ export class EvaluationsService {
         const onPage = Math.ceil(
           totalReturned / 100 / (Number(params.limit) / 100)
         );
-        if (onPage == totalPages) {
+        if (onPage === totalPages) {
           const returnCnt = totalItems - Number(params.offset);
           // Return from the back of the array
           queryResponse.evaluations = data.slice(-returnCnt);
@@ -208,10 +208,19 @@ export class EvaluationsService {
   getWhereClauseBaseCriteria(role: string, email: string): WhereOptions {
     const baseCriteria = [];
     baseCriteria.push({public: {[Op.eq]: 'true'}});
-    if (role == 'admin') {
+    if (role === 'admin') {
       baseCriteria.push({public: {[Op.eq]: 'false'}});
     } else {
       baseCriteria.push({'$user.email$': {[Op.like]: `${email}`}});
+      baseCriteria.push({
+        [Op.and]: {
+          '$groups->users.id$': {
+            [Op.eq]: Sequelize.literal(
+              `(SELECT id FROM "Users" WHERE "email" LIKE '${email}')`
+            )
+          }
+        }
+      });
     }
     return baseCriteria;
   }
@@ -226,19 +235,19 @@ export class EvaluationsService {
     const searchFields = [];
     const baseCriteria = this.getWhereClauseBaseCriteria(role, email);
 
-    if (fields[0] != '()') {
+    if (fields[0] !== '()') {
       searchFields.push({filename: {[Op.iRegexp]: `${fields[0]}`}});
     }
-    if (fields[1] != '()') {
+    if (fields[1] !== '()') {
       searchFields.push({'$groups.name$': {[Op.iRegexp]: `${fields[1]}`}});
     }
-    if (fields[2] != '()') {
-      if (action == 'count') {
+    if (fields[2] !== '()') {
+      if (action === 'count') {
         searchFields.push({
           '$evaluationTags.value$': {[Op.iRegexp]: `${fields[2]}`}
         });
       } else {
-        const evaluationIds = await this.getEvaluationId(fields[2]);
+        const evaluationIds = await this.getEvaluationIdsForTagName(fields[2]);
 
         searchFields.push({
           [Op.or]: [
@@ -249,7 +258,7 @@ export class EvaluationsService {
       }
     }
 
-    if (operation == 'AND') {
+    if (operation === 'AND') {
       // Expected outcome: an OR baseCriteria AND an AND searchFields
       return {[Op.or]: baseCriteria, [Op.and]: searchFields};
     } else {
@@ -260,7 +269,7 @@ export class EvaluationsService {
     }
   }
 
-  async getEvaluationId(tagValue: string): Promise<string[]> {
+  async getEvaluationIdsForTagName(tagValue: string): Promise<string[]> {
     let evaluationIds: string[] = [];
     await EvaluationTag.findAll({
       attributes: ['evaluationId'],
@@ -273,15 +282,24 @@ export class EvaluationsService {
   }
 
   async evaluationCount(userEmail: string, role: string): Promise<number> {
-    if (role == 'admin') {
+    if (role === 'admin') {
       return this.evaluationModel.count();
     } else {
       return this.evaluationModel.count({
-        include: User,
+        include: [User, {model: Group, include: [User]}],
         where: {
           [Op.or]: [
             {public: {[Op.eq]: 'true'}},
-            {'$user.email$': {[Op.like]: `${userEmail}`}}
+            {'$user.email$': {[Op.like]: `${userEmail}`}},
+            {
+              [Op.and]: {
+                '$groups->users.id$': {
+                  [Op.eq]: Sequelize.literal(
+                    `(SELECT id FROM "Users" WHERE "email" LIKE '${userEmail}')`
+                  )
+                }
+              }
+            }
           ]
         },
         distinct: true,
@@ -301,7 +319,7 @@ export class EvaluationsService {
       'count'
     );
     return this.evaluationModel.count({
-      include: [EvaluationTag, User, Group],
+      include: [EvaluationTag, User, {model: Group, include: [User]}],
       where: whereClause,
       distinct: true,
       col: 'id'

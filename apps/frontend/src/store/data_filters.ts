@@ -59,6 +59,9 @@ export interface Filter {
   /** Code to search for */
   codeSearchTerms?: string[];
 
+  /** Tags to search for */
+  tagFilter?: string[];
+
   /** CCIs to search for */
   nistIdFilter?: string[];
 
@@ -344,8 +347,22 @@ export class FilteredData extends VuexModule {
           (status) => status !== 'Waived'
         )
       };
-
       controls = filterControlsBy(controls, controlFilters);
+
+      // Filter by tags
+      if (filter.tagFilter && filter.tagFilter.length > 0) {
+        controls = controls.filter((control) => {
+          if (filter.tagFilter) {
+            // every tag in the filter must be contained in the control's tags
+            const tags = Object.keys(control.data.tags).map((t) =>
+              t.toLowerCase()
+            );
+            return filter.tagFilter.every((tag) => {
+              return tags.includes(tag);
+            });
+          }
+        });
+      }
 
       // Filter by overlay
       if (filter.omit_overlayed_controls) {

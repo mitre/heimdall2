@@ -23,13 +23,25 @@ import {CanonizationConfig, NistControl, NistRevision} from './nist';
  * 8. from profile -> "From Profile"
  * These cases are in theory comprehensive, but if somehow no apply, it is still Profile Error
  */
-export type ControlStatus =
-  | 'Not Applicable'
-  | 'From Profile'
-  | 'Profile Error'
-  | 'Passed'
-  | 'Failed'
-  | 'Not Reviewed';
+export const controlStatuses = [
+  'Not Applicable',
+  'From Profile',
+  'Profile Error',
+  'Passed',
+  'Failed',
+  'Not Reviewed'
+] as const;
+export type ControlStatus = (typeof controlStatuses)[number];
+export const lowercasedControlStatuses = [
+  'not applicable',
+  'from profile',
+  'profile error',
+  'passed',
+  'failed',
+  'not reviewed'
+] as const;
+export type LowercasedControlStatus =
+  (typeof lowercasedControlStatuses)[number];
 
 /** The severities a control can have. These map numeric impact values to No/Low/Medium/High/Crtiical impact
  * [0, 0.01) => No impact
@@ -38,7 +50,22 @@ export type ControlStatus =
  * [0.7, 0.9) => High impact
  * [0.9, 1.0] => Critical impact
  */
-export type Severity = 'none' | 'low' | 'medium' | 'high' | 'critical';
+export const severities = [
+  'none',
+  'low',
+  'medium',
+  'high',
+  'critical'
+] as const;
+export type Severity = (typeof severities)[number];
+export const titleCasedSeverities = [
+  'None',
+  'Low',
+  'Medium',
+  'High',
+  'Critical'
+] as const;
+export type TitleCasedSeverity = (typeof titleCasedSeverities)[number];
 
 /** The statuses that a segment of a control (IE a describe block) might have. */
 export type SegmentStatus =
@@ -47,6 +74,20 @@ export type SegmentStatus =
   | 'skipped'
   | 'error'
   | 'no_status';
+
+export function convertImpactToSeverity(impact: number): Severity {
+  if (impact < 0.1) {
+    return 'none';
+  } else if (impact < 0.4) {
+    return 'low';
+  } else if (impact < 0.7) {
+    return 'medium';
+  } else if (impact < 0.9) {
+    return 'high';
+  } else {
+    return 'critical';
+  }
+}
 
 /**
  * This interface acts as a polyfill on controls for our HDF "guaranteed" derived types, to provide a stable
@@ -109,12 +150,14 @@ export interface HDFControl {
    */
   parsedNistRevision: NistRevision | null;
 
-  /** Get the start time of this control's run, as determiend by the time of the first test.
+  /**
+   * Get the start time of this control's run, as determined by the time of the first test.
    * If no tests were run, (it is a profile-json or has no tests) returns undefined
    */
   start_time?: string;
 
-  /** Get the results of this control's control segments  as a list.
+  /**
+   * Get the results of this control's control segments  as a list.
    * If no tests were run, (this is a profile-json) returns undefined.
    * Can be empty in the rare case that no control segments exist/were run.
    */

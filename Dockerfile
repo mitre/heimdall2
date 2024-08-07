@@ -1,6 +1,6 @@
 ARG BASE_CONTAINER=registry.access.redhat.com/ubi8/nodejs-18-minimal:1
 
-FROM $BASE_CONTAINER as builder
+FROM $BASE_CONTAINER AS builder
 
 ARG NODE_ENV=production
 ENV NODE_ENV=$NODE_ENV
@@ -29,7 +29,7 @@ COPY apps ./apps
 COPY libs ./libs
 RUN yarn build
 
-FROM $BASE_CONTAINER as app
+FROM $BASE_CONTAINER AS app
 
 EXPOSE 3000
 

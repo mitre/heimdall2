@@ -33,10 +33,10 @@
                   </span>
                 </div>
                 <span v-if="caveat">Caveat: {{ caveat }}<br /></span>
-                <span v-if="justification"
-                  >Justification: {{ justification }}<br
-                /></span>
-
+                <span v-if="justification">
+                  Justification: {{ justification }}
+                  <br />
+                </span>
                 <span v-if="rationale">Rationale: {{ rationale }}<br /></span>
                 <span v-if="comments">Comments: {{ comments }}<br /></span>
                 <v-divider />
@@ -202,7 +202,23 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     detailsMap.set('Caveat', this.control.hdf.descriptions.caveat);
     detailsMap.set('Desc', this.control.data.desc);
     detailsMap.set('Rationale', this.control.hdf.descriptions.rationale);
-    detailsMap.set('Severity', this.control.root.hdf.severity);
+    // default to showing severity tag, otherwise show the computed severity (based on impact or severityoverride)
+    detailsMap.set(
+      'Severity',
+      _.get(
+        this.control.root.data.tags,
+        'severity',
+        this.control.root.hdf.severity
+      )
+    );
+    detailsMap.set(
+      'Severity Override',
+      _.get(this.control.root.data.tags, 'severityoverride')
+    );
+    detailsMap.set(
+      'Severity Override Justification',
+      _.get(this.control.root.data.tags, 'severityjustification')
+    );
     detailsMap.set('Impact', this.control.data.impact);
     detailsMap.set('NIST Controls', this.control.hdf.rawNistTags.join(', '));
     detailsMap.set('CCI Controls', this.cciControlString);
@@ -219,7 +235,10 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
     const sparseControl = _.omit(this.control, [
       'data.tags.nist',
       'data.tags.cci',
-      'data.tags.cwe'
+      'data.tags.cwe',
+      'data.tags.severity',
+      'data.tags.severityoverride',
+      'data.tags.severityjustification'
     ]);
 
     // Convert all tags to Details
@@ -241,8 +260,19 @@ export default class ControlRowDetails extends mixins(HtmlSanitizeMixin) {
         detailsMap.set(_.startCase(prop), this.control.hdf.descriptions[prop]);
       }
     }
+
+    // Convert all refs to a Detail
+    if (this.control.data.refs?.length) {
+      detailsMap.set(
+        'References',
+        this.control.data.refs
+          ?.map((ref) => JSON.stringify(ref, null, 2))
+          .join('\n')
+      );
+    }
+
     return Array.from(detailsMap, ([name, value]) => ({name, value})).filter(
-      (v) => v.value
+      (v) => v.value !== undefined
     );
   }
 

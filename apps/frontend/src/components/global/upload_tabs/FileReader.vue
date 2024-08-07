@@ -35,7 +35,7 @@
                   <li>Checklist</li>
                   <li>DBProtect</li>
                   <li>Fortify</li>
-                  <li>Golang Security Checker (GoSec)</li>
+                  <li>Golang Security Checker (gosec)</li>
                   <li>Ion Channel</li>
                   <li>JFrog Xray</li>
                   <li>Nessus</li>
@@ -47,6 +47,7 @@
                   <li>Scoutsuite</li>
                   <li>Snyk</li>
                   <li>Tenable (API)</li>
+                  <li>Trufflehog</li>
                   <li>Twistlock</li>
                   <li>Veracode</li>
                   <li>XCCDF Results (native OpenSCAP and SCC outputs)</li>
@@ -103,9 +104,13 @@
                 <v-progress-circular
                   indeterminate
                   color="#ff5600"
-                  :size="80"
-                  :width="20"
-                />
+                  :size="120"
+                  :width="15"
+                >
+                  <template #default>
+                    <b>{{ percent }}% loaded</b>
+                  </template>
+                </v-progress-circular>
               </div>
             </div>
           </v-col>
@@ -140,7 +145,7 @@ interface VueFileAgentRecord {
 export default class FileReader extends mixins(ServerMixin) {
   fileRecords: Array<VueFileAgentRecord> = [];
   loading = false;
-
+  percent = 0;
   isActiveDialog = false;
 
   filesSelected() {
@@ -151,12 +156,18 @@ export default class FileReader extends mixins(ServerMixin) {
 
   /** Callback for our file reader */
   commit_files(files: File[]) {
+    const totalFiles = files.length;
+    let index = 1;
+    document.body.style.cursor = 'wait';
     Promise.all(
       files.map(async (file) => {
         try {
-          return await InspecIntakeModule.loadFile({file});
+          const fileId = await InspecIntakeModule.loadFile({file});
+          this.percent = Math.floor((index++ / totalFiles) * 100);
+          return fileId;
         } catch (err) {
           SnackbarModule.failure(String(err));
+          document.body.style.cursor = 'default';
         }
       })
     )
@@ -174,6 +185,8 @@ export default class FileReader extends mixins(ServerMixin) {
       })
       .finally(() => {
         this.loading = false;
+        this.percent = 0;
+        document.body.style.cursor = 'default';
       });
   }
 

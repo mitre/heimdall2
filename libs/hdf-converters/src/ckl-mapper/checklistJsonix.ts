@@ -1,3 +1,8 @@
+/**
+ * Checklist type defines the JSONIX data structure that is the result of the unmarshalString
+ * function from an XML string and is the required data object used in the marshalString to
+ * result an XML string utilizing the mapping object found in jsonixMapping.ts
+ */
 export type Checklist = {
   name?: Name;
   value?: boolean | null | Stigdata | string;
@@ -78,26 +83,22 @@ export type Stigdata = {
   istig?: Istig[];
 };
 
-/**
- * The population of the values to this type uses
- * lodash which can return unknown
- */
 export type Asset = {
-  assettype: Assettype | unknown;
-  hostfqdn: null | string | unknown;
-  hostguid?: null | string | unknown;
-  hostip: null | string | unknown;
-  hostmac: null | string | unknown;
-  hostname: null | string | unknown;
-  marking?: null | string | unknown;
-  role: Role | unknown;
-  stigguid?: null | string | unknown;
-  targetcomment?: null | string | unknown;
-  targetkey: null | string | unknown;
-  techarea: Techarea | unknown;
-  webdbinstance: null | string | unknown;
-  webdbsite: null | string | unknown;
-  webordatabase: boolean | null | unknown;
+  assettype: Assettype;
+  hostfqdn: null | string;
+  hostguid?: null | string;
+  hostip: null | string;
+  hostmac: null | string;
+  hostname: null | string;
+  marking?: null | string;
+  role: Role;
+  stigguid?: null | string;
+  targetcomment?: null | string;
+  targetkey: null | string;
+  techarea: Techarea;
+  webdbinstance: null | string;
+  webdbsite: null | string;
+  webordatabase: boolean | null;
 };
 
 export enum Assettype {
@@ -113,13 +114,13 @@ export enum Role {
 }
 
 export enum Techarea {
+  Empty = '',
   ApplicationReview = 'Application Review',
   BoundarySecurity = 'Boundary Security',
   CDSAdminReview = 'CDS Admin Review',
   CDSTechnicalReview = 'CDS Technical Review',
   DatabaseReview = 'Database Review',
   DomainNameSystemDNS = 'Domain Name System (DNS)',
-  Empty = '',
   ExchangeServer = 'Exchange Server',
   HostBasedSystemSecurityHBSS = 'Host Based System Security (HBSS)',
   InternalNetwork = 'Internal Network',

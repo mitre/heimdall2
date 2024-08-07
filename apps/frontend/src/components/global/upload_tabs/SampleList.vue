@@ -20,7 +20,7 @@
             <br /><br />
             <b>NOTE:</b>
             To clear the search, either click the clear icon (X) or simply
-            deleted any value from the input box.
+            delete any value(s) from the input box.
           </v-card-text>
           <v-card-actions>
             <v-spacer />
@@ -40,6 +40,7 @@
             placeholder="file name"
             clearable
             hide-details="auto"
+            data-cy="fileSearchField"
           />
           <div class="d-flex flex-column">
             <v-data-table

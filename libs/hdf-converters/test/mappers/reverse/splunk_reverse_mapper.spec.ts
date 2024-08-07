@@ -7,7 +7,6 @@ export function delay(ms: number): Promise<void> {
 
 describe('Describe Splunk Reverse Mapper', () => {
   it('Successfully converts HDF into Splunk', async () => {
-    jest.setTimeout(50000);
     // The From Hdf to Asff mapper takes a HDF object and an options argument with the format of the CLI tool
     const inputData = JSON.parse(
       fs.readFileSync(
@@ -17,7 +16,7 @@ describe('Describe Splunk Reverse Mapper', () => {
     );
 
     // Currently tests are to make sure there are no errors during upload to Splunk
-    new FromHDFToSplunkMapper(inputData).toSplunk(
+    await new FromHDFToSplunkMapper(inputData).toSplunk(
       {
         host: '127.0.0.1',
         username: 'admin',
