@@ -40,7 +40,8 @@ describe('msft_secure_score_mapper_withraw', () => {
       fs.readFileSync(
         'sample_jsons/msft_secure_score_mapper/sample_input_report/combined.json',
         {encoding: 'utf-8'}
-      )
+      ),
+      true
     );
 
     // fs.writeFileSync(
