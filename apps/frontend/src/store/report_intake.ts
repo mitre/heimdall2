@@ -18,6 +18,7 @@ import {
   INPUT_TYPES,
   IonChannelMapper,
   JfrogXrayMapper,
+  MsftSecureScoreResults,
   NessusResults,
   NetsparkerMapper,
   NiktoMapper,
@@ -231,6 +232,8 @@ export class InspecIntake extends VuexModule {
     switch (typeGuess) {
       case INPUT_TYPES.JFROG:
         return new JfrogXrayMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.MSFT_SEC_SCORE:
+        return new MsftSecureScoreResults(convertOptions.data).toHdf();
       case INPUT_TYPES.ASFF:
         return Object.values(
           new ASFFResultsMapper(convertOptions.data).toHdf()

@@ -9,6 +9,7 @@ export enum INPUT_TYPES {
   GOSEC = 'gosec',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
+  MSFT_SEC_SCORE = 'msft_secure_score',
   NIKTO = 'nikto',
   SARIF = 'sarif',
   SBOM = 'sbom',
@@ -38,6 +39,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
     'trigger_hash'
   ],
   [INPUT_TYPES.JFROG]: ['total_count', 'data'],
+  [INPUT_TYPES.MSFT_SEC_SCORE]: ['secureScore', 'profiles'],
   [INPUT_TYPES.NIKTO]: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
   [INPUT_TYPES.SARIF]: ['$schema', 'version', 'runs'],
   [INPUT_TYPES.SNYK]: [

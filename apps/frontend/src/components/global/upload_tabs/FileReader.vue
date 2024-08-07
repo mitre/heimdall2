@@ -39,6 +39,7 @@
                   <li>Golang Security Checker (gosec)</li>
                   <li>Ion Channel</li>
                   <li>JFrog Xray</li>
+                  <li>Microsoft Secure Score</li>
                   <li>Nessus</li>
                   <li>Netsparker</li>
                   <li>Nikto</li>

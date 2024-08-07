@@ -2770,6 +2770,11 @@
   resolved "https://registry.npmjs.org/@mdi/js/-/js-7.4.47.tgz#7d8a4edc9631bffeed80d1ec784f9beae559a76a"
   integrity sha512-KPnNOtm5i2pMabqZxpUz7iQf+mfrYZyKCZ8QNz85czgEt7cuHcGorWfdzUMWYA0SD+a6Hn4FmJ+YhzzzjkTZrQ==
 
+"@microsoft/microsoft-graph-types@^2.40.0":
+  version "2.40.0"
+  resolved "https://registry.yarnpkg.com/@microsoft/microsoft-graph-types/-/microsoft-graph-types-2.40.0.tgz#65f51600ab45ace97d7b1368c47f9e0f835fddca"
+  integrity sha512-1fcPVrB/NkbNcGNfCy+Cgnvwxt6/sbIEEFgZHFBJ670zYLegENYJF8qMo7x3LqBjWX2/Eneq5BVVRCLTmlJN+g==
+
 "@mitre/jsonix@^3.0.7":
   version "3.0.7"
   resolved "https://registry.npmjs.org/@mitre/jsonix/-/jsonix-3.0.7.tgz#f1e33599c1cddb9b865618a04a6a99c343c14764"
@@ -7977,9 +7982,9 @@ core-js@^2.4.0:
   integrity sha512-Kb2wC0fvsWfQrgk8HU5lW6U/Lcs8+9aaYcy4ZFc6DDlo4nZ7n70dEgE5rtR0oG6ufKDUnrwfWL1mXR5ljDatrQ==
 
 core-js@^3.4.1:
-  version "3.37.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.37.1.tgz#d21751ddb756518ac5a00e4d66499df981a62db9"
-  integrity sha512-Xn6qmxrQZyB0FFY8E3bgRXei3lWDJHhvI+u0q9TKIYM49G8pAr0FgnnrFRAmsbptZL1yxRADVXn+x5AGsbBfyw==
+  version "3.38.0"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.38.0.tgz#8acb7c050bf2ccbb35f938c0d040132f6110f636"
+  integrity sha512-XPpwqEodRljce9KswjZShh95qJ1URisBeKCjUdq27YdenkslVe7OO0ZJhlYXAChW7OhXaRLl8AAba7IBfoIHug==
 
 core-util-is@1.0.2:
   version "1.0.2"
