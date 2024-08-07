@@ -60,11 +60,19 @@ export class MsftSecureScoreResults {
 export class MsftSecureScoreMapper extends BaseConverter {
   withRaw: boolean;
   rawData: CombinedResponse;
+  getProfiles: (controlName: string) => SecureScoreControlProfile[];
 
-  getProfiles(controlName: string): SecureScoreControlProfile[] {
-    return this.rawData.profiles.value.filter(
-      (profile) => profile.id === controlName
-    );
+  memoizedGetProfiles(): (controlName: string) => SecureScoreControlProfile[] {
+    const cache: Record<string, SecureScoreControlProfile[]> = {};
+
+    return (controlName: string): SecureScoreControlProfile[] => {
+      if (Object.prototype.hasOwnProperty.call(cache, controlName)) {
+        return cache[controlName];
+      }
+      return (cache[controlName] = this.rawData.profiles.value.filter(
+        (profile) => profile.id === controlName
+      ));
+    };
   }
 
   mappings: MappedTransform<
@@ -339,5 +347,6 @@ export class MsftSecureScoreMapper extends BaseConverter {
     super(rawParams.secureScore.value[0]);
     this.withRaw = withRaw;
     this.rawData = rawParams;
+    this.getProfiles = this.memoizedGetProfiles();
   }
 }
