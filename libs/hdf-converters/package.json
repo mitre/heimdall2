@@ -25,6 +25,7 @@
     "xml2json": "tsx data/converters/xml2json.ts"
   },
   "dependencies": {
+    "@microsoft/microsoft-graph-types": "^2.40.0",
     "@aws-sdk/client-config-service": "^3.95.0",
     "@e965/xlsx": "^0.20.0",
     "@mdi/js": "^7.0.96",
