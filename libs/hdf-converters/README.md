@@ -16,6 +16,21 @@ OHDF Converters supplies several methods to convert various types of security to
 9.  [**gosec-mapper**] - gosec results JSON file
 10. [**ionchannel-mapper**] - SBOM data from Ion Channel
 11. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
+12. [**msft-secure-mapper**] - Microsoft Secure Score results file
+13. [**nessus-mapper**] - Nessus XML results file
+14. [**netsparker-mapper**] - Netsparker XML results file
+15. [**nikto-mapper**] - Nikto results JSON file
+16. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
+17. [**sarif-mapper**] - SARIF JSON file
+18. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
+19. [**snyk-mapper**] - Snyk results JSON file
+20. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
+21. [**splunk-mapper**] - Splunk instance
+22. [**trufflehog-mapper**] - Trufflehog results json file 
+23. [**twistlock-mapper**] - Twistlock CLI output file
+24. [**veracode-mapper**] - Veracode Scan Results XML file
+25. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+26. [**zap-mapper**] - OWASP ZAP results JSON
 12. [**nessus-mapper**] - Nessus XML results file
 13. [**netsparker-mapper**] - Netsparker XML results file
 14. [**nikto-mapper**] - Nikto results JSON file
