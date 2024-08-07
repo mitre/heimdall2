@@ -61,7 +61,7 @@ export class MsftSecureScoreMapper extends BaseConverter {
   withRaw: boolean;
   rawData: CombinedResponse;
 
-  private getProfiles(controlName: string): SecureScoreControlProfile[] {
+  getProfiles(controlName: string): SecureScoreControlProfile[] {
     return this.rawData.profiles.value.filter(
       (profile) => profile.id === controlName
     );
