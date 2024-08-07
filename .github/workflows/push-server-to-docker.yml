@@ -21,9 +21,9 @@ jobs:
           fetch-depth: 0
       - name: Build and push
         id: docker_build
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          platforms: 'linux/amd64'
+          platforms: linux/amd64
           tags: mitre/heimdall2:latest
