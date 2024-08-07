@@ -24,6 +24,7 @@ export * as NiktoNistMappingData from './src/mappings/NiktoNistMappingData';
 export * as NistCciMappingData from './src/mappings/NistCciMappingData';
 export * as OWaspNistMappingData from './src/mappings/OWaspNistMappingData';
 export * as ScoutsuiteNistMappingData from './src/mappings/ScoutsuiteNistMappingData';
+export * from './src/msft-secure-score-mapper';
 export * from './src/nessus-mapper';
 export * from './src/netsparker-mapper';
 export * from './src/nikto-mapper';
