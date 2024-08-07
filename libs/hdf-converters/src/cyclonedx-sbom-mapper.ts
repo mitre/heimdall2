@@ -18,12 +18,7 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 function formatCWETags(input: number[], addPrefix = true): string[] {
-  const stringifiedCWE: string[] = [];
-  for (const cwe of input) {
-    const cweTag = addPrefix ? `CWE-${cwe}` : `${cwe}`;
-    stringifiedCWE.push(cweTag);
-  }
-  return stringifiedCWE;
+  return input.map((cwe) => (addPrefix ? `CWE-${cwe}` : `${cwe}`));
 }
 
 function getNISTTags(input: number[]): string[] {
@@ -55,11 +50,11 @@ function aggregateImpact(ratings: Record<string, unknown>[]): number {
   return Math.ceil((impact / ratings.length) * 10) / 100;
 }
 
-export class SBOMResults {
+export class CycloneDXSBOMResults {
   data: Record<string, unknown>;
   withRaw: boolean;
-  constructor(SBOMJson: string, withRaw = false) {
-    this.data = JSON.parse(SBOMJson);
+  constructor(sbomJson: string, withRaw = false) {
+    this.data = JSON.parse(sbomJson);
     this.withRaw = withRaw;
 
     if (_.has(this.data, 'components')) {
@@ -71,11 +66,15 @@ export class SBOMResults {
     } else if (_.has(this.data, 'vulnerabilities')) {
       // Back up operations in case we ingest VEX data instead
       this.formatVEX(this.data);
+    } else {
+      throw new Error(
+        'Unrecognized CycloneDX format detected. We currently only support SBOM and VEX formats.'
+      );
     }
   }
 
   // Flatten any arbitrarily nested components list
-  flattenComponents(data: Record<string, unknown>): void {
+  flattenComponents(data: Record<string, unknown>) {
     // Look through every component at the top level of the list
     for (const component of data.components as Record<string, unknown>[]) {
       // Identify if subcomponents exist
@@ -112,7 +111,7 @@ export class SBOMResults {
     ...
   }
   */
-  generateIntermediary(data: Record<string, unknown>): void {
+  generateIntermediary(data: Record<string, unknown>) {
     for (const vulnerability of data.vulnerabilities as (Record<
       string,
       unknown
@@ -160,7 +159,7 @@ export class SBOMResults {
 
   // VEX by default has no component info, resulting in profile errors when parsing the vulnerabilities for OHDF
   // Fix that by adding a temporary result that refers the vulnerability back to its associated BOM
-  formatVEX(data: Record<string, unknown>): void {
+  formatVEX(data: Record<string, unknown>) {
     for (const vulnerability of data.vulnerabilities as (Record<
       string,
       unknown
@@ -178,11 +177,11 @@ export class SBOMResults {
   }
 
   toHdf(): ExecJSON.Execution {
-    return new SBOMMapper(this.data, this.withRaw).toHdf();
+    return new CycloneDXSBOMMapper(this.data, this.withRaw).toHdf();
   }
 }
 
-export class SBOMMapper extends BaseConverter {
+export class CycloneDXSBOMMapper extends BaseConverter {
   withRaw: boolean;
 
   mappings: MappedTransform<

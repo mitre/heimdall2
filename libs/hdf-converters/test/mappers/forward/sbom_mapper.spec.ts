@@ -1,10 +1,10 @@
 import fs from 'fs';
-import {SBOMResults} from '../../../src/sbom-mapper';
+import {CycloneDXSBOMResults} from '../../../src/cyclonedx-sbom-mapper';
 import {omitVersions} from '../../utils';
 
 describe('sbom_mapper_saf', () => {
   it('Successfully converts SBOM data', () => {
-    const mapper = new SBOMResults(
+    const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/generated-saf-sbom.json',
         {encoding: 'utf-8'}
@@ -28,7 +28,7 @@ describe('sbom_mapper_saf', () => {
   });
 
   it('Successfully converts withraw flagged SBOM data', () => {
-    const mapper = new SBOMResults(
+    const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/generated-saf-sbom.json',
         {encoding: 'utf-8'}
@@ -58,7 +58,7 @@ describe('sbom_mapper_saf', () => {
 
 describe('sbom_mapper_dropwizard_vulns', () => {
   it('Successfully converts SBOM data', () => {
-    const mapper = new SBOMResults(
+    const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/dropwizard-vulns.json',
         {encoding: 'utf-8'}
@@ -85,7 +85,7 @@ describe('sbom_mapper_dropwizard_vulns', () => {
   });
 
   it('Successfully converts withraw flagged SBOM data', () => {
-    const mapper = new SBOMResults(
+    const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/dropwizard-vulns.json',
         {encoding: 'utf-8'}
@@ -115,7 +115,7 @@ describe('sbom_mapper_dropwizard_vulns', () => {
 
 describe('sbom_mapper_dropwizard_no_vulns', () => {
   it('Successfully converts SBOM data', () => {
-    const mapper = new SBOMResults(
+    const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/dropwizard-no-vulns.json',
         {encoding: 'utf-8'}
@@ -142,7 +142,7 @@ describe('sbom_mapper_dropwizard_no_vulns', () => {
   });
 
   it('Successfully converts withraw flagged SBOM data', () => {
-    const mapper = new SBOMResults(
+    const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/dropwizard-no-vulns.json',
         {encoding: 'utf-8'}
@@ -172,7 +172,7 @@ describe('sbom_mapper_dropwizard_no_vulns', () => {
 
 describe('sbom_mapper_dropwizard_vex', () => {
   it('Successfully converts SBOM data', () => {
-    const mapper = new SBOMResults(
+    const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/dropwizard-vex.json',
         {encoding: 'utf-8'}
@@ -199,7 +199,7 @@ describe('sbom_mapper_dropwizard_vex', () => {
   });
 
   it('Successfully converts withraw flagged SBOM data', () => {
-    const mapper = new SBOMResults(
+    const mapper = new CycloneDXSBOMResults(
       fs.readFileSync(
         'sample_jsons/sbom_mapper/sample_input_report/dropwizard-vex.json',
         {encoding: 'utf-8'}
@@ -229,7 +229,7 @@ describe('sbom_mapper_dropwizard_vex', () => {
 
 describe('sbom_mapper_vex', () => {
   it('Successfully converts SBOM data', () => {
-    const mapper = new SBOMResults(
+    const mapper = new CycloneDXSBOMResults(
       fs.readFileSync('sample_jsons/sbom_mapper/sample_input_report/vex.json', {
         encoding: 'utf-8'
       })
@@ -252,7 +252,7 @@ describe('sbom_mapper_vex', () => {
   });
 
   it('Successfully converts withraw flagged SBOM data', () => {
-    const mapper = new SBOMResults(
+    const mapper = new CycloneDXSBOMResults(
       fs.readFileSync('sample_jsons/sbom_mapper/sample_input_report/vex.json', {
         encoding: 'utf-8'
       }),

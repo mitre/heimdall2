@@ -12,7 +12,7 @@ export enum INPUT_TYPES {
   MSFT_SEC_SCORE = 'msft_secure_score',
   NIKTO = 'nikto',
   SARIF = 'sarif',
-  SBOM = 'sbom',
+  CYCLONEDX_SBOM = 'cyclonedx_sbom',
   SNYK = 'snyk',
   TRUFFLEHOG = 'trufflehog',
   TWISTLOCK = 'twistlock',
@@ -77,7 +77,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.NOT_FOUND]: [],
   [INPUT_TYPES.VERACODE]: [],
   [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues'],
-  [INPUT_TYPES.SBOM]: ['bomFormat', 'metadata', 'specVersion']
+  [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion']
 };
 
 export function fingerprint(guessOptions: {
