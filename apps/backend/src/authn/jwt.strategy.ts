@@ -1,4 +1,4 @@
-import {IUser} from '@heimdall/interfaces';
+import {IUser} from '@heimdall/common/interfaces';
 import {HttpException, Injectable, UnauthorizedException} from '@nestjs/common';
 import {PassportStrategy} from '@nestjs/passport';
 import jwt from 'jsonwebtoken';

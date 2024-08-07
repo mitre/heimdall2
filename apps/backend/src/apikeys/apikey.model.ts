@@ -20,42 +20,42 @@ export class ApiKey extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: string;
+  declare id: string;
 
   @ForeignKey(() => User)
   @Column(DataType.BIGINT)
-  userId!: string;
+  declare userId: string;
 
   @ForeignKey(() => Group)
   @Column(DataType.BIGINT)
-  groupId!: string;
+  declare groupId: string;
 
   @BelongsTo(() => User, {
     constraints: false
   })
-  user!: User;
+  declare user: User;
 
   @BelongsTo(() => Group, {
     constraints: false
   })
-  group!: Group;
+  declare group: Group;
 
   @Column(DataType.STRING)
-  name!: string;
+  declare name: string;
 
   @Column(DataType.STRING)
-  apiKey!: string;
+  declare apiKey: string;
 
   @Column(DataType.STRING)
-  type!: string;
+  declare type: string;
 
   @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  updatedAt!: Date;
+  declare updatedAt: Date;
 }

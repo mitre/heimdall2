@@ -10,6 +10,7 @@ import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_2
 } from '../../test/constants/users-test.constant';
+import {ConfigService} from '../config/config.service';
 import {DatabaseModule} from '../database/database.module';
 import {DatabaseService} from '../database/database.service';
 import {EvaluationTagDto} from '../evaluation-tags/dto/evaluation-tag.dto';
@@ -46,6 +47,7 @@ describe('GroupsService', () => {
         GroupUsersModule
       ],
       providers: [
+        ConfigService,
         GroupsService,
         DatabaseService,
         UsersService,

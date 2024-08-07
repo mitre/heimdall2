@@ -1,4 +1,4 @@
-import {IDeleteEvaluationTag} from '@heimdall/interfaces';
+import {IDeleteEvaluationTag} from '@heimdall/common/interfaces';
 import {IsNotEmpty, IsNumberString, IsString, Min} from 'class-validator';
 
 export class DeleteEvaluationTagDto implements IDeleteEvaluationTag {

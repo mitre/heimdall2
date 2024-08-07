@@ -247,7 +247,7 @@ import InputDialog from '@/components/generic/InputDialog.vue';
 import UserValidatorMixin from '@/mixins/UserValidatorMixin';
 import {ServerModule} from '@/store/server';
 import {SnackbarModule} from '@/store/snackbar';
-import {IApiKey, IUpdateUser, IUser} from '@heimdall/interfaces';
+import {IApiKey, IUpdateUser, IUser} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
 import Component from 'vue-class-component';

@@ -22,74 +22,74 @@ export class User extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: string;
+  declare id: string;
 
   @Unique
   @IsEmail
   @AllowNull(false)
   @Column(DataType.STRING)
-  email!: string;
+  declare email: string;
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  firstName!: string | undefined;
+  declare firstName: string | undefined;
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  lastName!: string | undefined;
+  declare lastName: string | undefined;
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  organization!: string | undefined;
+  declare organization: string | undefined;
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  title!: string | undefined;
+  declare title: string | undefined;
 
   @AllowNull(false)
   @Column(DataType.STRING)
-  encryptedPassword!: string;
+  declare encryptedPassword: string;
 
   @AllowNull(true)
   @Column(DataType.BOOLEAN)
-  forcePasswordChange!: boolean | undefined;
+  declare forcePasswordChange: boolean | undefined;
 
   @AllowNull(true)
   @Column(DataType.DATE)
-  lastLogin!: Date | undefined;
+  declare lastLogin: Date | undefined;
 
   @AllowNull(false)
   @Default(0)
   @Column(DataType.BIGINT)
-  loginCount!: number;
+  declare loginCount: number;
 
   @AllowNull(true)
   @Column(DataType.DATE)
-  passwordChangedAt!: Date | undefined;
+  declare passwordChangedAt: Date | undefined;
 
   @AllowNull(false)
   @Default('user')
   @Column(DataType.STRING)
-  role!: string;
+  declare role: string;
 
   @AllowNull(false)
   @Column(DataType.STRING)
-  creationMethod!: string;
+  declare creationMethod: string;
 
   @AllowNull(true)
   @Column(DataType.STRING)
-  jwtSecret!: string;
+  declare jwtSecret: string;
 
   @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  updatedAt!: Date;
+  declare updatedAt: Date;
 
   @BelongsToMany(() => Group, () => GroupUser)
-  groups!: Array<Group & {GroupUser: GroupUser}>;
+  declare groups: Array<Group & {GroupUser: GroupUser}>;
 }

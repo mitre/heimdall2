@@ -155,7 +155,7 @@ import GroupUsers from '@/components/global/groups/GroupUsers.vue';
 import Users from '@/components/global/groups/Users.vue';
 import {GroupsModule} from '@/store/groups';
 import {SnackbarModule} from '@/store/snackbar';
-import {IGroup, ISlimUser} from '@heimdall/interfaces';
+import {IGroup, ISlimUser} from '@heimdall/common/interfaces';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
