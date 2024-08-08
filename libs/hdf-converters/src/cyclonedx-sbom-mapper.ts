@@ -24,7 +24,7 @@ type IntermediaryComponent = {
 
 type IntermediaryVulnerability = {
   affectedComponents?: IntermediaryComponent[];
-  affects?: Record<string, unknown>[];
+  affects: Record<string, unknown>[];
   [key: string]: unknown;
 };
 
@@ -109,7 +109,7 @@ export class CycloneDXSBOMResults {
     // Pull components from raw data
     data.components = [
       ...(_.cloneDeep(data.raw.components) as ComponentRepository)
-    ].map((element) => element as {});
+    ].map((element) => Object(element));
 
     // Look through every component at the top level of the list
     for (const component of data.components) {
@@ -155,11 +155,11 @@ export class CycloneDXSBOMResults {
     // Pull vulnerabilities from raw data
     data.vulnerabilities = [
       ...(_.cloneDeep(data.raw.vulnerabilities) as VulnerabilityRepository)
-    ].map((element) => element as {});
+    ].map((element) => Object(element));
 
     for (const vulnerability of data.vulnerabilities) {
       vulnerability.affectedComponents = [];
-      for (const id of vulnerability.affects!) {
+      for (const id of vulnerability.affects) {
         for (const component of data.components as IntermediaryComponent[]) {
           // Find every component that is affected via listed bom-refs
           if (component['bom-ref'] === id.ref) {
@@ -203,11 +203,11 @@ export class CycloneDXSBOMResults {
     // Pull vulnerabilities from raw data
     data.vulnerabilities = [
       ...(_.cloneDeep(data.raw.vulnerabilities) as VulnerabilityRepository)
-    ].map((element) => element as {});
+    ].map((element) => Object(element));
 
     for (const vulnerability of data.vulnerabilities) {
       vulnerability.affectedComponents = [];
-      for (const id of vulnerability.affects!) {
+      for (const id of vulnerability.affects) {
         // Build a dummy component for each bom-ref identified as being affected by the vulnerability
         // Add that component to the corresponding vulnerability object
         vulnerability.affectedComponents.push({
