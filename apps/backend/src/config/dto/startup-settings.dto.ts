@@ -11,6 +11,7 @@ export class StartupSettingsDto implements IStartupSettings {
   readonly ldap: boolean;
   readonly registrationEnabled: boolean;
   readonly localLoginEnabled: boolean;
+  readonly disableUpdateCheck: boolean;
 
   constructor(settings: IStartupSettings) {
     this.apiKeysEnabled = settings.apiKeysEnabled;
@@ -23,5 +24,6 @@ export class StartupSettingsDto implements IStartupSettings {
     this.ldap = settings.ldap;
     this.registrationEnabled = settings.registrationEnabled;
     this.localLoginEnabled = settings.localLoginEnabled;
+    this.disableUpdateCheck = settings.disableUpdateCheck;
   }
 }
