@@ -5,6 +5,7 @@ import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {getCCIsForNISTTags} from './utils/global';
 import {RatingRepository} from '@cyclonedx/cyclonedx-library/dist.d/models/vulnerability';
+import {CweRepository} from '@cyclonedx/cyclonedx-library/dist.d/types';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
@@ -18,16 +19,11 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['unknown', 0.0]
 ]);
 
-function formatCWETags(input: number[], addPrefix = true): string[] {
-  const stringifiedCWE: string[] = [];
-  for (const cwe of input) {
-    const cweTag = addPrefix ? `CWE-${cwe}` : `${cwe}`;
-    stringifiedCWE.push(cweTag);
-  }
-  return stringifiedCWE;
+function formatCWETags(input: CweRepository, addPrefix = true): string[] {
+  return [...input].map((cwe) => (addPrefix ? `CWE-${cwe}` : `${cwe}`));
 }
 
-function getNISTTags(input: number[]): string[] {
+function getNISTTags(input: CweRepository): string[] {
   return CWE_NIST_MAPPING.nistFilter(
     formatCWETags(input, false),
     DEFAULT_NIST_TAG
@@ -286,7 +282,7 @@ export class CycloneDXSBOMMapper extends BaseConverter {
               },
               cci: {
                 path: 'cwes',
-                transformer: (input: number[]): string[] =>
+                transformer: (input: CweRepository): string[] =>
                   getCCIsForNISTTags(getNISTTags(input))
               },
               cwe: {path: 'cwes', transformer: formatCWETags}
