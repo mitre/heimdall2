@@ -19,9 +19,12 @@ describe('sbom_mapper_saf', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/cyclonedx_sbom_mapper/sbom-saf-hdf.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/cyclonedx_sbom_mapper/sbom-saf-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );
@@ -230,9 +233,12 @@ describe('sbom_mapper_dropwizard_vex', () => {
 describe('sbom_mapper_vex', () => {
   it('Successfully converts SBOM data', () => {
     const mapper = new CycloneDXSBOMResults(
-      fs.readFileSync('sample_jsons/cyclonedx_sbom_mapper/sample_input_report/vex.json', {
-        encoding: 'utf-8'
-      })
+      fs.readFileSync(
+        'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/vex.json',
+        {
+          encoding: 'utf-8'
+        }
+      )
     );
 
     // fs.writeFileSync(
@@ -243,9 +249,12 @@ describe('sbom_mapper_vex', () => {
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
         JSON.parse(
-          fs.readFileSync('sample_jsons/cyclonedx_sbom_mapper/sbom-vex-hdf.json', {
-            encoding: 'utf-8'
-          })
+          fs.readFileSync(
+            'sample_jsons/cyclonedx_sbom_mapper/sbom-vex-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
         )
       )
     );
@@ -253,9 +262,12 @@ describe('sbom_mapper_vex', () => {
 
   it('Successfully converts withraw flagged SBOM data', () => {
     const mapper = new CycloneDXSBOMResults(
-      fs.readFileSync('sample_jsons/cyclonedx_sbom_mapper/sample_input_report/vex.json', {
-        encoding: 'utf-8'
-      }),
+      fs.readFileSync(
+        'sample_jsons/cyclonedx_sbom_mapper/sample_input_report/vex.json',
+        {
+          encoding: 'utf-8'
+        }
+      ),
       true
     );
 
