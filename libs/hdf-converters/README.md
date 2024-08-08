@@ -11,18 +11,18 @@ OHDF Converters supplies several methods to convert various types of security to
 4.  [**caat-mapper**] - Compliance Assessment and Audit Tracking (CAAT) file
 5.  [**checklist-mapper**] - Checlist Mapper format
 6.  [**conveyor-mapper**] - Conveyor JSON file
-7.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
-8.  [**fortify-mapper**] - Fortify results FVDL file
-9.  [**gosec-mapper**] - gosec results JSON file
-10. [**ionchannel-mapper**] - SBOM data from Ion Channel
-11. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
-12. [**msft-secure-mapper**] - Microsoft Secure Score results file
-13. [**nessus-mapper**] - Nessus XML results file
-14. [**netsparker-mapper**] - Netsparker XML results file
-15. [**nikto-mapper**] - Nikto results JSON file
-16. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
-17. [**sarif-mapper**] - SARIF JSON file
-18. [**cyclonedx-sbom-mapper**] - CycloneDX SBOM JSON file
+7.  [**cyclonedx-sbom-mapper**] - CycloneDX SBOM JSON file
+8.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
+9.  [**fortify-mapper**] - Fortify results FVDL file
+10.  [**gosec-mapper**] - gosec results JSON file
+11. [**ionchannel-mapper**] - SBOM data from Ion Channel
+12. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
+13. [**msft-secure-mapper**] - Microsoft Secure Score results file
+14. [**nessus-mapper**] - Nessus XML results file
+15. [**netsparker-mapper**] - Netsparker XML results file
+16. [**nikto-mapper**] - Nikto results JSON file
+17. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
+18. [**sarif-mapper**] - SARIF JSON file 
 19. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
 20. [**snyk-mapper**] - Snyk results JSON file
 21. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API

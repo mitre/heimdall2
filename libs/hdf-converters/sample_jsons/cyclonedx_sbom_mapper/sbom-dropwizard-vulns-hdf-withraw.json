@@ -14367,10 +14367,6 @@
               "type": "vcs",
               "url": "https://github.com/rabbitmq/rabbitmq-java-client"
             }
-          ],
-          "affectingVulnerabilities": [
-            "f987bc98-65f5-402b-8b39-7e8e3e730ebe",
-            "5acc2eee-8433-4a66-b9c5-3dcc7be5b29a"
           ]
         },
         {
@@ -14806,10 +14802,6 @@
               "type": "issue-tracker",
               "url": "https://github.com/raphw/byte-buddy/issues"
             }
-          ],
-          "affectingVulnerabilities": [
-            "4ad3464b-09c7-40fa-ab51-754f3f196cd4",
-            "0cdbb69e-0ac6-4efd-ad09-2f8ead5b2aad"
           ]
         },
         {
@@ -15334,10 +15326,7 @@
               }
             }
           ],
-          "purl": "pkg:maven/org.dom4j/dom4j@2.1.1?type=jar",
-          "affectingVulnerabilities": [
-            "55ebe39e-12f6-4360-aeba-9913ef7efb68"
-          ]
+          "purl": "pkg:maven/org.dom4j/dom4j@2.1.1?type=jar"
         },
         {
           "type": "library",
@@ -16085,11 +16074,7 @@
               "content": "39a0130b80426db95faba737c484fb2e0c1db64f8e81e21cffcbd0b27b4dff4c4334cf9698b0c067549d0e8adaf7669dce867f2ad962c25f647b35829fbfee61"
             }
           ],
-          "purl": "pkg:maven/io.dropwizard/dropwizard-validation@1.3.15?type=jar",
-          "affectingVulnerabilities": [
-            "f2fa9b19-418a-4901-9840-a8631227701e",
-            "00bc944f-fead-400b-8bbd-0c5b56ba2b14"
-          ]
+          "purl": "pkg:maven/io.dropwizard/dropwizard-validation@1.3.15?type=jar"
         },
         {
           "type": "library",
@@ -16419,10 +16404,6 @@
               "type": "distribution",
               "url": "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             }
-          ],
-          "affectingVulnerabilities": [
-            "b7a12947-7a8d-4031-b59d-640d33dbad6a",
-            "bb03c210-ea12-450d-85df-17d81a75ede2"
           ]
         },
         {
@@ -16472,10 +16453,6 @@
               "type": "vcs",
               "url": "https://github.com/h2database/h2database"
             }
-          ],
-          "affectingVulnerabilities": [
-            "815a1358-2bd4-4028-bd3e-8219747c78f6",
-            "c8a50465-16df-44e0-84e9-7acff5870a51"
           ]
         },
         {
@@ -16638,10 +16615,6 @@
               "type": "vcs",
               "url": "http://github.com/hibernate/hibernate-orm"
             }
-          ],
-          "affectingVulnerabilities": [
-            "1f182b73-afb8-424c-8e08-533a0f702076",
-            "8ba20df5-3877-4825-a8f2-b52e2d2f86d8"
           ]
         },
         {
@@ -16990,10 +16963,6 @@
               "type": "vcs",
               "url": "https://github.com/eclipse/jetty.project"
             }
-          ],
-          "affectingVulnerabilities": [
-            "bc8ec43b-7cba-4167-9a9d-901fcb443ac8",
-            "affa7af3-427f-4223-8028-d9ac45e80e08"
           ]
         },
         {
@@ -17058,9 +17027,6 @@
               "type": "vcs",
               "url": "https://github.com/eclipse/jetty.project"
             }
-          ],
-          "affectingVulnerabilities": [
-            "c8bd5d7e-e9be-459c-b6e2-05de86a00bb9"
           ]
         },
         {
@@ -17125,10 +17091,6 @@
               "type": "vcs",
               "url": "https://github.com/eclipse/jetty.project"
             }
-          ],
-          "affectingVulnerabilities": [
-            "c3fdf61d-7886-423b-8a29-b6ab6790c127",
-            "affa7af3-427f-4223-8028-d9ac45e80e08"
           ]
         },
         {
@@ -17189,9 +17151,6 @@
               "type": "distribution",
               "url": "https://repository.apache.org/service/local/staging/deploy/maven2"
             }
-          ],
-          "affectingVulnerabilities": [
-            "8c0002e8-9326-40f7-9209-51020755ff02"
           ]
         },
         {
@@ -17472,51 +17431,6 @@
               "type": "distribution",
               "url": "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
             }
-          ],
-          "affectingVulnerabilities": [
-            "d097e083-0b0a-4e3c-9f29-fc936f27ec6f",
-            "f57dc81d-6b2d-4060-8c15-7613c1a37981",
-            "600ecfb9-66c7-4fc2-88e8-2bf9efe40628",
-            "36dba0ba-dc6c-4f8a-822c-e51ca444d1bf",
-            "e5cba611-d1ce-48a5-8fc2-ac68ba133947",
-            "9e292de9-f4f7-4d45-9ecb-846c4b972f6f",
-            "343cd240-f667-4770-aecf-ddc11f9d0172",
-            "0f7e16f6-f01e-4cc0-a835-08f3ba72625f",
-            "c2e5f22d-f91f-4689-bdb1-782974d6fa7a",
-            "49fa1888-bfa1-480a-8564-3b62b8bf5c3c",
-            "97981cb2-9228-4b8b-a172-ad12f550a19f",
-            "941d2fac-724b-4a2c-a8ba-c5a434fa3bf7",
-            "7e3a7481-266e-4cb7-af3b-94dcaf462942",
-            "db7cfe67-0b1d-4504-af8b-da26e12af73a",
-            "7c0af63e-ef57-43aa-9c91-d79c7e37ab20",
-            "c037af59-a132-4727-8cc3-c6095c490df7",
-            "0b8d112a-b683-414d-93b6-48fa2cabb7c9",
-            "e8b21aeb-ce1d-4df2-8102-577b813e712f",
-            "e141c668-bc18-4738-b3b6-e7ba1057d124",
-            "7aec5714-d04e-4e86-8f4c-51f5cf2568d9",
-            "6af6635c-bedd-40e5-88b8-324d3a80a33e",
-            "3ad04380-a25c-41d8-8fad-259c2561795b",
-            "86f78c35-adfb-48e4-9428-88084373e1c0",
-            "6d73d38a-3ff6-4fac-8c03-b09b64e9e537",
-            "00033bff-66dc-4a36-ab38-a10b0625409f",
-            "14e2856b-f78d-4a6d-99eb-470c8566df29",
-            "c224f923-be9a-4faa-a930-ef4db611bc2b",
-            "5201940b-1f04-4668-ae86-8261448d817d",
-            "b267fb08-27eb-4c71-a2a7-f17fe5fbf4fd",
-            "4fcb77a9-67b3-4b3f-bc01-684b8ba72294",
-            "950cff67-088e-4f41-9818-25943c9e17c0",
-            "53eda8c2-268a-4866-89ac-234bfe7f74ce",
-            "9edaa51d-929b-457e-aab5-0fffecdb4938",
-            "6d5189b4-d549-419a-b886-43a62cc43d40",
-            "135c6dab-529e-4855-ab72-a0138e2110c8",
-            "57f41366-73de-4a9c-ba15-4d09c9f60e33",
-            "ccd0ef88-c0fe-4a10-a648-c779ce82b888",
-            "726a055c-f364-4cb7-a75a-d3c541dad0fa",
-            "75d8b4d7-7c79-4627-b229-8d5e38fc5d8b",
-            "cc0ff323-0529-4064-8a2d-1f7a8e2a1332",
-            "7c4227e3-a0a9-4361-8eab-6ab5fa9550b2",
-            "87742746-bd8b-423d-979d-d9aa81a8ccfd",
-            "5c0b94e1-0577-42c9-8028-f244d68f61da"
           ]
         },
         {
@@ -20403,10 +20317,6 @@
               "type": "vcs",
               "url": "https://github.com/eclipse/jetty.project"
             }
-          ],
-          "affectingVulnerabilities": [
-            "c19b779d-2699-44de-a189-a0d18d8dc953",
-            "a2897b13-bdeb-4a6c-802e-abf09fef10a9"
           ]
         },
         {
@@ -20599,14 +20509,6 @@
               "type": "vcs",
               "url": "https://github.com/eclipse/jetty.project"
             }
-          ],
-          "affectingVulnerabilities": [
-            "17d2faa1-cd26-4ac7-8c68-c4a44ec398a8",
-            "f32ca540-f068-4392-bea0-c0d7b050b7d1",
-            "6d35c4e5-f5ee-4572-af28-1ca71cf48158",
-            "d5c5815d-1742-46b6-953a-a4ed90fdd920",
-            "f6ff72c7-6603-4627-899d-658f8f7c5f23",
-            "ebc03317-a0b4-4b53-9cd0-7ae4281c02e6"
           ]
         },
         {
@@ -20735,10 +20637,6 @@
               "type": "vcs",
               "url": "https://github.com/eclipse/jetty.project"
             }
-          ],
-          "affectingVulnerabilities": [
-            "d8add710-4eed-448d-b198-ecff8ffe86ea",
-            "123b8eaf-5572-4945-975d-21ed3c2f101d"
           ]
         },
         {
@@ -20931,9 +20829,6 @@
               "type": "vcs",
               "url": "https://github.com/eclipse/jetty.project"
             }
-          ],
-          "affectingVulnerabilities": [
-            "4bb1fb03-b1bb-4ddf-bcf2-d5314c0c6442"
           ]
         },
         {
@@ -20998,9 +20893,6 @@
               "type": "vcs",
               "url": "https://github.com/eclipse/jetty.project"
             }
-          ],
-          "affectingVulnerabilities": [
-            "76910119-ee18-4144-855b-b2fdab20e33c"
           ]
         },
         {
@@ -21397,9 +21289,6 @@
               "type": "vcs",
               "url": "http://github.com/junit-team/junit/tree/master"
             }
-          ],
-          "affectingVulnerabilities": [
-            "499117ae-d134-4505-8674-ed498531e7a9"
           ]
         },
         {
@@ -21656,9 +21545,6 @@
               "type": "issue-tracker",
               "url": "http://liquibase.jira.com/browse/CORE"
             }
-          ],
-          "affectingVulnerabilities": [
-            "7b0674fc-e326-47d0-b34b-b5bfb523784b"
           ]
         },
         {
@@ -21879,9 +21765,6 @@
               "type": "vcs",
               "url": "https://github.com/ceki/logback"
             }
-          ],
-          "affectingVulnerabilities": [
-            "0d58391c-d0fe-4b46-8f8d-6a49db7fb354"
           ]
         },
         {
@@ -21939,10 +21822,6 @@
               "type": "vcs",
               "url": "https://github.com/ceki/logback"
             }
-          ],
-          "affectingVulnerabilities": [
-            "bdd3f85b-5284-4163-be5b-0dd84b9300ac",
-            "0d58391c-d0fe-4b46-8f8d-6a49db7fb354"
           ]
         },
         {
@@ -23168,16 +23047,6 @@
               "type": "vcs",
               "url": "https://bitbucket.org/asomov/snakeyaml/src"
             }
-          ],
-          "affectingVulnerabilities": [
-            "210a5c45-88ac-4c1f-a5f4-f93c7af6f59e",
-            "63a53dc7-5769-43dc-a053-50ccd5295d8b",
-            "5ab41975-23cc-45e0-9a13-be603ea00595",
-            "dff65990-715e-4f71-aace-60d4436af108",
-            "d55a9a55-cf82-483f-9a7c-8bf5395ce510",
-            "6c215a04-8ea0-421f-961b-d5cceb64fd13",
-            "38c08d91-3487-44c4-b258-d5a274a4ad05",
-            "da9ea5d3-a3c2-4d1b-8425-a799e47a804f"
           ]
         },
         {
@@ -24434,23 +24303,6 @@
             {
               "ref": "1a021b8e-d143-4072-84f0-0e18292f1967"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1a021b8e-d143-4072-84f0-0e18292f1967",
-              "group": "com.google.guava",
-              "name": "guava",
-              "version": "24.1.1-jre",
-              "description": "Guava is a suite of core and expanded libraries that include utility classes, google's collections, io classes, and much much more.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -24481,23 +24333,6 @@
             {
               "ref": "1a021b8e-d143-4072-84f0-0e18292f1967"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1a021b8e-d143-4072-84f0-0e18292f1967",
-              "group": "com.google.guava",
-              "name": "guava",
-              "version": "24.1.1-jre",
-              "description": "Guava is a suite of core and expanded libraries that include utility classes, google's collections, io classes, and much much more.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -24526,23 +24361,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -24573,23 +24391,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -24618,23 +24419,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -24665,23 +24449,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -24710,23 +24477,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -24757,23 +24507,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -24802,23 +24535,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -24849,23 +24565,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -24894,23 +24593,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -24941,23 +24623,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -24986,23 +24651,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -25033,23 +24681,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25078,23 +24709,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -25125,23 +24739,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25170,23 +24767,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -25217,23 +24797,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25262,23 +24825,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -25309,23 +24855,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25355,23 +24884,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25400,23 +24912,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -25448,23 +24943,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25493,23 +24971,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -25540,23 +25001,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25585,23 +25029,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -25632,23 +25059,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25677,23 +25087,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -25724,23 +25117,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25769,23 +25145,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -25816,23 +25175,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25861,23 +25203,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -25908,23 +25233,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -25953,23 +25261,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -26000,23 +25291,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26046,23 +25320,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26091,23 +25348,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -26139,23 +25379,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26186,23 +25409,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26231,23 +25437,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -26278,23 +25467,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26324,23 +25496,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26369,23 +25524,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -26417,23 +25555,6 @@
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26462,23 +25583,6 @@
           "affects": [
             {
               "ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "1e0c53af-376a-4ca0-9d2e-38811dd17cba",
-              "group": "com.fasterxml.jackson.core",
-              "name": "jackson-databind",
-              "version": "2.9.10",
-              "description": "General data-binding functionality for Jackson: works on core streaming API",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -26509,15 +25613,6 @@
             {
               "ref": "9623a310-0e79-4f71-b9a7-b7046f1fbf30"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "9623a310-0e79-4f71-b9a7-b7046f1fbf30",
-              "group": "io.dropwizard",
-              "name": "dropwizard-validation",
-              "version": "1.3.15"
-            }
           ]
         },
         {
@@ -26547,15 +25642,6 @@
             {
               "ref": "9623a310-0e79-4f71-b9a7-b7046f1fbf30"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "9623a310-0e79-4f71-b9a7-b7046f1fbf30",
-              "group": "io.dropwizard",
-              "name": "dropwizard-validation",
-              "version": "1.3.15"
-            }
           ]
         },
         {
@@ -26584,23 +25670,6 @@
           "affects": [
             {
               "ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd",
-              "group": "org.yaml",
-              "name": "snakeyaml",
-              "version": "1.23",
-              "description": "YAML 1.1 parser and emitter for Java",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -26632,23 +25701,6 @@
             {
               "ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd",
-              "group": "org.yaml",
-              "name": "snakeyaml",
-              "version": "1.23",
-              "description": "YAML 1.1 parser and emitter for Java",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26678,23 +25730,6 @@
           "affects": [
             {
               "ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd",
-              "group": "org.yaml",
-              "name": "snakeyaml",
-              "version": "1.23",
-              "description": "YAML 1.1 parser and emitter for Java",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -26726,23 +25761,6 @@
             {
               "ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd",
-              "group": "org.yaml",
-              "name": "snakeyaml",
-              "version": "1.23",
-              "description": "YAML 1.1 parser and emitter for Java",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26772,23 +25790,6 @@
           "affects": [
             {
               "ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd",
-              "group": "org.yaml",
-              "name": "snakeyaml",
-              "version": "1.23",
-              "description": "YAML 1.1 parser and emitter for Java",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -26820,23 +25821,6 @@
             {
               "ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd",
-              "group": "org.yaml",
-              "name": "snakeyaml",
-              "version": "1.23",
-              "description": "YAML 1.1 parser and emitter for Java",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26866,23 +25850,6 @@
           "affects": [
             {
               "ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd",
-              "group": "org.yaml",
-              "name": "snakeyaml",
-              "version": "1.23",
-              "description": "YAML 1.1 parser and emitter for Java",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -26914,23 +25881,6 @@
             {
               "ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd",
-              "group": "org.yaml",
-              "name": "snakeyaml",
-              "version": "1.23",
-              "description": "YAML 1.1 parser and emitter for Java",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -26960,24 +25910,6 @@
             {
               "ref": "5e7cd916-704f-4746-83a0-ec3850bb3f49"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "5e7cd916-704f-4746-83a0-ec3850bb3f49",
-              "group": "ch.qos.logback",
-              "name": "logback-core",
-              "version": "1.2.3",
-              "description": "logback-core module",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0",
-                    "url": "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27006,24 +25938,6 @@
           "affects": [
             {
               "ref": "5e7cd916-704f-4746-83a0-ec3850bb3f49"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "5e7cd916-704f-4746-83a0-ec3850bb3f49",
-              "group": "ch.qos.logback",
-              "name": "logback-core",
-              "version": "1.2.3",
-              "description": "logback-core module",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0",
-                    "url": "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -27054,24 +25968,6 @@
             {
               "ref": "6d8385bd-f9a9-4a97-9031-3a1c717209b7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "6d8385bd-f9a9-4a97-9031-3a1c717209b7",
-              "group": "ch.qos.logback",
-              "name": "logback-classic",
-              "version": "1.2.3",
-              "description": "logback-classic module",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0",
-                    "url": "http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27101,23 +25997,6 @@
             {
               "ref": "4e012695-d45a-4296-b37b-54a8b6893a50"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "4e012695-d45a-4296-b37b-54a8b6893a50",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-server",
-              "version": "9.4.18.v20190429",
-              "description": "The core jetty server artifact.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27146,23 +26025,6 @@
           "affects": [
             {
               "ref": "4e012695-d45a-4296-b37b-54a8b6893a50"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "4e012695-d45a-4296-b37b-54a8b6893a50",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-server",
-              "version": "9.4.18.v20190429",
-              "description": "The core jetty server artifact.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -27195,23 +26057,6 @@
             {
               "ref": "4e012695-d45a-4296-b37b-54a8b6893a50"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "4e012695-d45a-4296-b37b-54a8b6893a50",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-server",
-              "version": "9.4.18.v20190429",
-              "description": "The core jetty server artifact.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27240,23 +26085,6 @@
           "affects": [
             {
               "ref": "4e012695-d45a-4296-b37b-54a8b6893a50"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "4e012695-d45a-4296-b37b-54a8b6893a50",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-server",
-              "version": "9.4.18.v20190429",
-              "description": "The core jetty server artifact.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -27288,23 +26116,6 @@
             {
               "ref": "4e012695-d45a-4296-b37b-54a8b6893a50"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "4e012695-d45a-4296-b37b-54a8b6893a50",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-server",
-              "version": "9.4.18.v20190429",
-              "description": "The core jetty server artifact.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27333,23 +26144,6 @@
           "affects": [
             {
               "ref": "4e012695-d45a-4296-b37b-54a8b6893a50"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "4e012695-d45a-4296-b37b-54a8b6893a50",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-server",
-              "version": "9.4.18.v20190429",
-              "description": "The core jetty server artifact.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -27380,23 +26174,6 @@
             {
               "ref": "c1abfd09-121f-418c-befa-4d6b9e164769"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "c1abfd09-121f-418c-befa-4d6b9e164769",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-http",
-              "version": "9.4.18.v20190429",
-              "description": "The Eclipse Jetty Project",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27425,23 +26202,6 @@
           "affects": [
             {
               "ref": "c1abfd09-121f-418c-befa-4d6b9e164769"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "c1abfd09-121f-418c-befa-4d6b9e164769",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-http",
-              "version": "9.4.18.v20190429",
-              "description": "The Eclipse Jetty Project",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -27474,23 +26234,6 @@
             {
               "ref": "71f396a0-0285-465e-8ce3-6eacb47be941"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "71f396a0-0285-465e-8ce3-6eacb47be941",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-webapp",
-              "version": "9.4.18.v20190429",
-              "description": "Jetty web application support",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27519,23 +26262,6 @@
           "affects": [
             {
               "ref": "39e5b7f2-b34e-4d46-8f70-841e0ef6a3b9"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "39e5b7f2-b34e-4d46-8f70-841e0ef6a3b9",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-xml",
-              "version": "9.4.18.v20190429",
-              "description": "The jetty xml utilities.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -27566,23 +26292,6 @@
             {
               "ref": "7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-servlets",
-              "version": "9.4.18.v20190429",
-              "description": "Utility Servlets from Jetty",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27611,23 +26320,6 @@
           "affects": [
             {
               "ref": "7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc",
-              "group": "org.eclipse.jetty",
-              "name": "jetty-servlets",
-              "version": "9.4.18.v20190429",
-              "description": "Utility Servlets from Jetty",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -27659,24 +26351,6 @@
             {
               "ref": "8005328c-f1b3-4ac3-8aa6-1e5013d8cef2"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "8005328c-f1b3-4ac3-8aa6-1e5013d8cef2",
-              "group": "junit",
-              "name": "junit",
-              "version": "4.12",
-              "description": "JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0",
-                    "url": "http://www.eclipse.org/legal/epl-v10.html"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27697,23 +26371,6 @@
           "affects": [
             {
               "ref": "0052b14c-fb6a-404e-89fb-48cad6d2535d"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "0052b14c-fb6a-404e-89fb-48cad6d2535d",
-              "group": "net.bytebuddy",
-              "name": "byte-buddy",
-              "version": "1.9.7",
-              "description": "Byte Buddy is a Java library for creating Java classes at run time. This artifact is a build of Byte Buddy with all ASM dependencies repackaged into its own name space.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -27736,23 +26393,6 @@
           "affects": [
             {
               "ref": "0052b14c-fb6a-404e-89fb-48cad6d2535d"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "0052b14c-fb6a-404e-89fb-48cad6d2535d",
-              "group": "net.bytebuddy",
-              "name": "byte-buddy",
-              "version": "1.9.7",
-              "description": "Byte Buddy is a Java library for creating Java classes at run time. This artifact is a build of Byte Buddy with all ASM dependencies repackaged into its own name space.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -27783,24 +26423,6 @@
             {
               "ref": "8c0378f7-4c0e-4ee3-849d-740b0035c371"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "8c0378f7-4c0e-4ee3-849d-740b0035c371",
-              "group": "org.hibernate",
-              "name": "hibernate-core",
-              "version": "5.2.18.Final",
-              "description": "The core O/RM functionality as provided by Hibernate",
-              "licenses": [
-                {
-                  "license": {
-                    "name": "GNU Lesser General Public License",
-                    "url": "http://www.gnu.org/licenses/lgpl-2.1.html"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27829,24 +26451,6 @@
           "affects": [
             {
               "ref": "8c0378f7-4c0e-4ee3-849d-740b0035c371"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "8c0378f7-4c0e-4ee3-849d-740b0035c371",
-              "group": "org.hibernate",
-              "name": "hibernate-core",
-              "version": "5.2.18.Final",
-              "description": "The core O/RM functionality as provided by Hibernate",
-              "licenses": [
-                {
-                  "license": {
-                    "name": "GNU Lesser General Public License",
-                    "url": "http://www.gnu.org/licenses/lgpl-2.1.html"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -27877,24 +26481,6 @@
             {
               "ref": "627bb70b-4b85-4801-8239-f03de04ca5db"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "627bb70b-4b85-4801-8239-f03de04ca5db",
-              "group": "org.dom4j",
-              "name": "dom4j",
-              "version": "2.1.1",
-              "description": "flexible XML framework for Java",
-              "licenses": [
-                {
-                  "license": {
-                    "name": "BSD 3-clause New License",
-                    "url": "https://github.com/dom4j/dom4j/blob/master/LICENSE"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27924,23 +26510,6 @@
             {
               "ref": "893beba4-580b-4ada-a4cf-067fbe145507"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "893beba4-580b-4ada-a4cf-067fbe145507",
-              "group": "org.apache.httpcomponents",
-              "name": "httpclient",
-              "version": "4.5.7",
-              "description": "Apache HttpComponents Client",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -27969,23 +26538,6 @@
           "affects": [
             {
               "ref": "ab3bfc00-8d35-4a4d-b314-86573681d910"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "ab3bfc00-8d35-4a4d-b314-86573681d910",
-              "group": "org.liquibase",
-              "name": "liquibase-core",
-              "version": "3.6.3",
-              "description": "Liquibase is a tool for managing and executing database changes.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "Apache-2.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -28017,23 +26569,6 @@
             {
               "ref": "55521fe9-aed2-403e-9df2-75fc5af90f54"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "55521fe9-aed2-403e-9df2-75fc5af90f54",
-              "group": "org.eclipse.jetty.http2",
-              "name": "http2-server",
-              "version": "9.4.18.v20190429",
-              "description": "The Eclipse Jetty Project",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -28062,23 +26597,6 @@
           "affects": [
             {
               "ref": "55521fe9-aed2-403e-9df2-75fc5af90f54"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "55521fe9-aed2-403e-9df2-75fc5af90f54",
-              "group": "org.eclipse.jetty.http2",
-              "name": "http2-server",
-              "version": "9.4.18.v20190429",
-              "description": "The Eclipse Jetty Project",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -28109,23 +26627,6 @@
             {
               "ref": "f4a06b14-3945-4381-b3dd-b46407b02b6b"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "f4a06b14-3945-4381-b3dd-b46407b02b6b",
-              "group": "org.eclipse.jetty.http2",
-              "name": "http2-common",
-              "version": "9.4.18.v20190429",
-              "description": "The Eclipse Jetty Project",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -28154,23 +26655,6 @@
           "affects": [
             {
               "ref": "f4a06b14-3945-4381-b3dd-b46407b02b6b"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "f4a06b14-3945-4381-b3dd-b46407b02b6b",
-              "group": "org.eclipse.jetty.http2",
-              "name": "http2-common",
-              "version": "9.4.18.v20190429",
-              "description": "The Eclipse Jetty Project",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -28201,23 +26685,6 @@
             {
               "ref": "d2a5e2bf-ead6-4768-866a-385166eb6709"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "d2a5e2bf-ead6-4768-866a-385166eb6709",
-              "group": "org.eclipse.jetty.http2",
-              "name": "http2-hpack",
-              "version": "9.4.18.v20190429",
-              "description": "The Eclipse Jetty Project",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "EPL-1.0"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -28246,23 +26713,6 @@
           "affects": [
             {
               "ref": "2687d928-5b18-4ce5-ab4c-8ef513f0b48c"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "2687d928-5b18-4ce5-ab4c-8ef513f0b48c",
-              "group": "com.rabbitmq",
-              "name": "amqp-client",
-              "version": "4.4.1",
-              "description": "The RabbitMQ Java client library allows Java applications to interface with RabbitMQ.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "MPL-1.1"
-                  }
-                }
-              ]
             }
           ]
         },
@@ -28293,23 +26743,6 @@
             {
               "ref": "2687d928-5b18-4ce5-ab4c-8ef513f0b48c"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "2687d928-5b18-4ce5-ab4c-8ef513f0b48c",
-              "group": "com.rabbitmq",
-              "name": "amqp-client",
-              "version": "4.4.1",
-              "description": "The RabbitMQ Java client library allows Java applications to interface with RabbitMQ.",
-              "licenses": [
-                {
-                  "license": {
-                    "id": "MPL-1.1"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -28339,24 +26772,6 @@
             {
               "ref": "c19e7b95-5753-489e-b720-c9dd79f15cc8"
             }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "c19e7b95-5753-489e-b720-c9dd79f15cc8",
-              "group": "com.h2database",
-              "name": "h2",
-              "version": "1.4.197",
-              "description": "H2 Database Engine",
-              "licenses": [
-                {
-                  "license": {
-                    "name": "MPL 2.0 or EPL 1.0",
-                    "url": "http://h2database.com/html/license.html"
-                  }
-                }
-              ]
-            }
           ]
         },
         {
@@ -28385,24 +26800,6 @@
           "affects": [
             {
               "ref": "c19e7b95-5753-489e-b720-c9dd79f15cc8"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "type": "library",
-              "bom-ref": "c19e7b95-5753-489e-b720-c9dd79f15cc8",
-              "group": "com.h2database",
-              "name": "h2",
-              "version": "1.4.197",
-              "description": "H2 Database Engine",
-              "licenses": [
-                {
-                  "license": {
-                    "name": "MPL 2.0 or EPL 1.0",
-                    "url": "http://h2database.com/html/license.html"
-                  }
-                }
-              ]
             }
           ]
         }

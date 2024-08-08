@@ -4120,12 +4120,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4156,12 +4150,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4190,12 +4178,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4226,12 +4208,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4260,12 +4236,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4296,12 +4266,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4330,12 +4294,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4366,12 +4324,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4400,12 +4352,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4436,12 +4382,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4470,12 +4410,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4506,12 +4440,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4540,12 +4468,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4576,12 +4498,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4610,12 +4526,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4646,12 +4556,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4680,12 +4584,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4716,12 +4614,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4750,12 +4642,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4786,12 +4672,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4821,12 +4701,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4855,12 +4729,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4892,12 +4760,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4926,12 +4788,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -4962,12 +4818,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -4996,12 +4846,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5032,12 +4876,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5066,12 +4904,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5102,12 +4934,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5136,12 +4962,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5172,12 +4992,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5206,12 +5020,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5242,12 +5050,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5276,12 +5078,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5312,12 +5108,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5347,12 +5137,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5381,12 +5165,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5418,12 +5196,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5454,12 +5226,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5488,12 +5254,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5524,12 +5284,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5559,12 +5313,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5593,12 +5341,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5630,12 +5372,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5664,12 +5400,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5700,12 +5430,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5735,12 +5459,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5769,12 +5487,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5806,12 +5518,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5841,12 +5547,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5878,12 +5578,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5913,12 +5607,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -5950,12 +5638,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -5985,12 +5667,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6022,12 +5698,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6057,12 +5727,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6092,12 +5756,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6126,12 +5784,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6162,12 +5814,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6196,12 +5842,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6234,12 +5874,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6268,12 +5902,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6305,12 +5933,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6339,12 +5961,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6375,12 +5991,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6409,12 +6019,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6447,12 +6051,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6481,12 +6079,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6517,12 +6109,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6551,12 +6137,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6588,12 +6168,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6614,12 +6188,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6642,12 +6210,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6678,12 +6240,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6712,12 +6268,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6748,12 +6298,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6783,12 +6327,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6817,12 +6355,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6854,12 +6386,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6888,12 +6414,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6924,12 +6444,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -6958,12 +6472,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -6994,12 +6502,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -7028,12 +6530,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         },
@@ -7064,12 +6560,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -7099,12 +6589,6 @@
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
           ]
         },
         {
@@ -7133,12 +6617,6 @@
           "affects": [
             {
               "ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
-            }
-          ],
-          "affectedComponents": [
-            {
-              "bom-ref": "602de70a-7107-4ac8-9ad2-3c1c816892a7",
-              "name": "602de70a-7107-4ac8-9ad2-3c1c816892a7"
             }
           ]
         }
