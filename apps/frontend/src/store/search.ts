@@ -20,6 +20,7 @@ export interface ISearchState {
   NISTIdFilter: string[];
   statusFilter: ExtendedControlStatus[];
   severityFilter: Severity[];
+  mappingGuidanceFilter: string[];
 }
 
 export interface SearchQuery {
@@ -73,6 +74,7 @@ class Search extends VuexModule implements ISearchState {
   severityFilter: Severity[] = [];
   titleSearchTerms: string[] = [];
   tagFilter: string[] = [];
+  mappingGuidanceFilter: string[] = [];
 
   /** Update the current search */
   @Action
@@ -99,11 +101,13 @@ class Search extends VuexModule implements ISearchState {
         'description',
         'code',
         'input',
-        'tags'
+        'tags',
+        'guidance',
       ]
     };
     const searchResult = parse(this.searchTerm, options);
     if (typeof searchResult === 'string') {
+      console.log("In the setFreeSearch if case")
       this.setFreesearch(searchResult);
     } else {
       for (const prop in searchResult) {
@@ -138,7 +142,18 @@ class Search extends VuexModule implements ISearchState {
             break;
           case 'text':
             if (typeof include === 'string') {
+              console.log("In the other setFreeSearch if case")
               this.setFreesearch(include);
+            }
+            break;
+          case 'guidance':
+            // Check if the prop matches any of the enabled checkboxes
+            const combinedCheckboxes = Store.getters['selectedTags/combinedCheckboxes'];
+            if(this.searchTerm.split(":").length == 3) {
+              const matchingCheckbox = combinedCheckboxes.find((checkbox: any) => checkbox.label.toLowerCase() === this.searchTerm.split(":")[1].toLowerCase());
+              if (matchingCheckbox) {
+                this.addMappingGuidanceFilter(`${matchingCheckbox.label}:${this.searchTerm.split(":")[2]}`);
+              }
             }
             break;
         }
@@ -164,6 +179,8 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_CODE');
     this.context.commit('CLEAR_TAG');
     this.context.commit('CLEAR_FREESEARCH');
+    this.context.commit('CLEAR_MAPPING_GUIDANCE')
+    console.log("Cleared filters")
   }
 
   // Generic filtering
@@ -318,6 +335,22 @@ class Search extends VuexModule implements ISearchState {
   @Mutation
   CLEAR_SEVERITY() {
     this.severityFilter = [];
+  }
+
+  /**Actions for mapping guidance */
+  @Action
+  addMappingGuidanceFilter(mapping: string | string[]) {
+    this.context.commit('ADD_MAPPING_GUIDANCE', mapping);
+  }
+  @Mutation
+  ADD_MAPPING_GUIDANCE(mapping: string | string[]) {
+    this.mappingGuidanceFilter = this.mappingGuidanceFilter.concat(mapping);
+    console.log("Adding mapping guidance:")
+    console.log(this.mappingGuidanceFilter)
+  }
+  @Mutation
+  CLEAR_MAPPING_GUIDANCE() {
+    this.mappingGuidanceFilter = [];
   }
 
   // Control ID Filtering

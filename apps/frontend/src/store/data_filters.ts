@@ -81,6 +81,9 @@ export interface Filter {
 
   /** A specific control id */
   control_id?: string;
+
+  /** Guidance mapping to search for */
+  mappingSearchTerm?: string[];
 }
 
 export type TreeMapState = string[]; // Representing the current path spec, from root
@@ -106,6 +109,50 @@ function contains_term(
   ].filter(_.isString);
 
   return searchables.some((s) => s.toLowerCase().includes(term));
+}
+
+function contains_mapping(
+  contextControl: ContextualizedControl,
+  mappingSearchTerm: string
+): boolean {
+  const asHDF = contextControl.root.hdf;
+  // Check if the mappingSearchTerm is in the "has" property
+  let mappingFound = false;
+  if (mappingSearchTerm) {
+    const [mappingKey, mappingValue] = mappingSearchTerm.split(':').map(s => s.trim());
+    if (contextControl.sourcedFrom.has.includes("CCI->" + mappingKey)) {
+      const mappings = Store.getters['mappings/mappings'];
+      if(mappings) {
+        const mappingDict = mappings[`CCI->${mappingKey}`];
+        if (mappingDict) {
+          if(asHDF.wraps.tags.cci) {
+            //Figure out why this isn't working
+            for(let key of asHDF.wraps.tags.cci) {
+              if(mappingDict[key].includes(mappingValue)) {
+                mappingFound = true
+              }
+            }
+          }
+        }
+      }
+    }
+    else if(contextControl.sourcedFrom.has.includes("800-53->" + mappingKey)) {
+      const mappings = Store.getters['mappings/mappings'];
+      if(mappings) {
+        const mappingDict = mappings[`800-53->${mappingKey}`];
+        if (mappingDict) {
+          if(asHDF.rawNistTags) {
+            for(let key in asHDF.rawNistTags) {
+              if(mappingDict[key].includes(mappingValue)) {
+                mappingFound = true
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  return mappingFound;
 }
 
 @Module({
@@ -303,38 +350,24 @@ export class FilteredData extends VuexModule {
    * Utilizes the profiles getter to accelerate the file filter.
    */
   get controls(): (filter: Filter) => readonly ContextualizedControl[] {
-    /** Cache by filter */
     const localCache: LRUCache<string, readonly ContextualizedControl[]> =
       new LRUCache({max: MAX_CACHE_ENTRIES});
-
     return (filter: Filter) => {
-      // Generate a hash for cache purposes.
-      // If the "searchTerm" string is not null, we don't cache - no need to pollute
       const id: string = filter_cache_key(filter);
-
-      // Check if we have this cached:
       const cached = localCache.get(id);
       if (cached !== undefined) {
         return cached;
       }
-
-      // Get profiles from loaded Results
       let profiles: readonly ContextualizedProfile[] =
         this.profiles_for_evaluations(filter.fromFile);
-
-      // Get profiles from loaded Profiles
       profiles = profiles.concat(this.profiles(filter.fromFile));
-
-      // And all the controls they contain
       let controls: readonly ContextualizedControl[] = profiles.flatMap(
         (profile) => profile.contains
       );
-
       // Filter by single control id
       if (filter.control_id !== undefined) {
         controls = controls.filter((c) => c.data.id === filter.control_id);
       }
-
       const controlFilters: Record<string, boolean | string[] | undefined> = {
         'root.hdf.severity': filter.severity,
         'hdf.wraps.id': filter.ids,
@@ -349,7 +382,6 @@ export class FilteredData extends VuexModule {
         )
       };
       controls = filterControlsBy(controls, controlFilters);
-
       // Filter by tags
       if (filter.tagFilter && filter.tagFilter.length > 0) {
         controls = controls.filter((control) => {
@@ -364,40 +396,45 @@ export class FilteredData extends VuexModule {
           }
         });
       }
-
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
         controls = controls.filter(
           (control) => control.extendedBy.length === 0
         );
       }
-
       // Freeform search
-      if (filter.searchTerm !== undefined) {
-        const term = filter.searchTerm.toLowerCase();
 
-        // Filter controls to those that contain search term
+      if (filter.searchTerm !== undefined || filter.mappingSearchTerm !== undefined) {
+        const term = filter.searchTerm?.toLowerCase() ?? '';
+        // Filter controls to those that contain search term or mapping search term
         controls = controls.filter((c) => contains_term(c, term));
       }
-
+      
       // Filter by nist stuff
       if (filter.treeFilters && filter.treeFilters.length > 0) {
         // Construct a nist control to represent the filter
         const control = new NistControl(filter.treeFilters);
-
         controls = controls.filter((c) => {
           // Get an hdf version so we have the fixed nist tags
           return c.root.hdf.parsedNistTags.some((t) => control.contains(t));
         });
       }
-
-      // Freeze and save to cache
+      // Filter by mapping search term
+      if (filter.mappingSearchTerm && filter.mappingSearchTerm.length > 0) {
+        controls = controls.filter((control) => {
+          return filter.mappingSearchTerm!.some((term) => {
+            const [mappingKey, mappingValue] = term.split(':').map(s => s.trim());
+            return contains_mapping(control, `${mappingKey}:${mappingValue}`);
+          });
+        });
+      }
       const r = Object.freeze(controls);
       localCache.set(id, r);
       return r;
     };
   }
 }
+
 
 export const FilteredDataModule = getModule(FilteredData);
 

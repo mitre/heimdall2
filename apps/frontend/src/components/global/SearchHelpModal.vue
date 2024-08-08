@@ -39,6 +39,9 @@
           <li class="pb-1">
             <h3>Tags: <code>tags:severityoverride</code></h3>
           </li>
+          <li class="pb-1">
+            <h3>User Guidance Mappings: <code>guidance:mappingname:mappingid</code></h3>
+          </li>
         </ul>
         <br />
         <h2>Joining Queries</h2>
