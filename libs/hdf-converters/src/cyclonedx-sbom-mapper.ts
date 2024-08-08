@@ -6,6 +6,7 @@ import {CweNistMapping} from './mappings/CweNistMapping';
 import {getCCIsForNISTTags} from './utils/global';
 import {RatingRepository} from '@cyclonedx/cyclonedx-library/dist.d/models/vulnerability';
 import {CweRepository} from '@cyclonedx/cyclonedx-library/dist.d/types';
+import {Severity} from '@cyclonedx/cyclonedx-library/dist.d/enums/vulnerability';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 const DEFAULT_NIST_TAG = ['SI-2', 'RA-5'];
@@ -40,12 +41,10 @@ function aggregateImpact(ratings: RatingRepository): number {
       impact = rating.score / 10 > impact ? rating.score / 10 : impact;
     } else {
       // Else interpret it from `severity` field
-      if (rating.severity) {
-        const severity = IMPACT_MAPPING.get(
-          rating.severity.toLowerCase()
-        ) as number;
-        impact = severity > impact ? severity : impact;
-      }
+      const severity = IMPACT_MAPPING.get(
+        (rating.severity as Severity).toLowerCase()
+      ) as number;
+      impact = severity > impact ? severity : impact;
     }
   }
   return impact;
