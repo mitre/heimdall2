@@ -5,6 +5,7 @@
 OHDF Converters supplies several methods to convert various types of security tool data to and from the OHDF standard. OHDF Converters can be used in a variety of tools, and is currently well integrated with Heimdall itself, and the [SAF CLI](https://github.com/mitre/saf).
 
 ## Supported Formats
+
 1.  [**asff-mapper**] - AWS Security Finding Format JSON file, Prowler-derived AWS Security Finding Format results from concatenated JSON blobs, and Trivy-derived AWS Security Finding Format results from concatenated JSON blobs
 2.  [**aws-config-mapper**] - AWS Config
 3.  [**burpsuite-mapper**] - BurpSuite Pro XML file
@@ -14,7 +15,7 @@ OHDF Converters supplies several methods to convert various types of security to
 7.  [**cyclonedx-sbom-mapper**] - CycloneDX SBOM JSON file
 8.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
 9.  [**fortify-mapper**] - Fortify results FVDL file
-10.  [**gosec-mapper**] - gosec results JSON file
+10. [**gosec-mapper**] - gosec results JSON file
 11. [**ionchannel-mapper**] - SBOM data from Ion Channel
 12. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
 13. [**msft-secure-mapper**] - Microsoft Secure Score results file
@@ -22,12 +23,12 @@ OHDF Converters supplies several methods to convert various types of security to
 15. [**netsparker-mapper**] - Netsparker XML results file
 16. [**nikto-mapper**] - Nikto results JSON file
 17. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
-18. [**sarif-mapper**] - SARIF JSON file 
+18. [**sarif-mapper**] - SARIF JSON file
 19. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
 20. [**snyk-mapper**] - Snyk results JSON file
 21. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
 22. [**splunk-mapper**] - Splunk instance
-23. [**trufflehog-mapper**] - Trufflehog results json file 
+23. [**trufflehog-mapper**] - Trufflehog results json file
 24. [**twistlock-mapper**] - Twistlock CLI output file
 25. [**veracode-mapper**] - Veracode Scan Results XML file
 26. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
@@ -49,4 +50,4 @@ This software was produced for the U. S. Government under Contract Number HHSM-5
 
 No other use other than that granted to the U. S. Government, or to those acting on behalf of the U. S. Government under that Clause is authorized without the express written permission of The MITRE Corporation.
 
-For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA  22102-7539, (703) 983-6000.
+For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA 22102-7539, (703) 983-6000.
