@@ -158,41 +158,39 @@ export class CycloneDXSBOMResults {
     ].map((element) => element as {});
 
     for (const vulnerability of data.vulnerabilities) {
-      if (vulnerability.affects) {
-        vulnerability.affectedComponents = [];
-        for (const id of vulnerability.affects) {
-          for (const component of data.components as IntermediaryComponent[]) {
-            // Find every component that is affected via listed bom-refs
-            if (component['bom-ref'] === id.ref) {
-              // Add that affected component to the corresponding vulnerability object
-              // Selectively pick out fields to display; full components are listed in full component structure
-              vulnerability.affectedComponents.push(
-                _.pick(component, [
-                  'type',
-                  'mime-type',
-                  'bom-ref',
-                  'supplier',
-                  'manufacturer',
-                  'authors', // Replaces `author` in v1.6
-                  'author', // Deprecated in v1.6
-                  'publisher',
-                  'group',
-                  'name',
-                  'version',
-                  'description',
-                  'licenses',
-                  'copyright'
-                ])
-              );
+      vulnerability.affectedComponents = [];
+      for (const id of vulnerability.affects!) {
+        for (const component of data.components as IntermediaryComponent[]) {
+          // Find every component that is affected via listed bom-refs
+          if (component['bom-ref'] === id.ref) {
+            // Add that affected component to the corresponding vulnerability object
+            // Selectively pick out fields to display; full components are listed in full component structure
+            vulnerability.affectedComponents.push(
+              _.pick(component, [
+                'type',
+                'mime-type',
+                'bom-ref',
+                'supplier',
+                'manufacturer',
+                'authors', // Replaces `author` in v1.6
+                'author', // Deprecated in v1.6
+                'publisher',
+                'group',
+                'name',
+                'version',
+                'description',
+                'licenses',
+                'copyright'
+              ])
+            );
 
-              if (!component.affectingVulnerabilities) {
-                component.affectingVulnerabilities = [];
-              }
-              // Also record the ID of the vulnerability in the component for use in bidirectional traversal
-              component.affectingVulnerabilities.push(
-                vulnerability['bom-ref'] as string
-              );
+            if (!component.affectingVulnerabilities) {
+              component.affectingVulnerabilities = [];
             }
+            // Also record the ID of the vulnerability in the component for use in bidirectional traversal
+            component.affectingVulnerabilities.push(
+              vulnerability['bom-ref'] as string
+            );
           }
         }
       }
@@ -208,16 +206,14 @@ export class CycloneDXSBOMResults {
     ].map((element) => element as {});
 
     for (const vulnerability of data.vulnerabilities) {
-      if (vulnerability.affects) {
-        vulnerability.affectedComponents = [];
-        for (const id of vulnerability.affects) {
-          // Build a dummy component for each bom-ref identified as being affected by the vulnerability
-          // Add that component to the corresponding vulnerability object
-          vulnerability.affectedComponents.push({
-            'bom-ref': `${id.ref}`,
-            name: `${id.ref}`
-          });
-        }
+      vulnerability.affectedComponents = [];
+      for (const id of vulnerability.affects!) {
+        // Build a dummy component for each bom-ref identified as being affected by the vulnerability
+        // Add that component to the corresponding vulnerability object
+        vulnerability.affectedComponents.push({
+          'bom-ref': `${id.ref}`,
+          name: `${id.ref}`
+        });
       }
     }
   }
