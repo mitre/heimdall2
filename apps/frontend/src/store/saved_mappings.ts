@@ -21,12 +21,10 @@ function extractRightPart(id: string): string {
 // Mutations
 const mutations = {
   ADD_MAPPING(state: MappingsState, { id, mapping }: { id: string, mapping: DictionaryObject }) {
-    console.log('Adding mapping:', id, mapping);
     Vue.set(state.mappings, id, mapping); // Use Vue.set for reactivity
   },
   REMOVE_MAPPING(state: MappingsState, id: string) {
     Vue.delete(state.mappings, id); // Use Vue.delete for reactivity
-    console.log('Removed mapping:', id, state.mappings);
   },
   UPDATE_MAPPING(state: MappingsState, { id, updatedMapping }: { id: string, updatedMapping: DictionaryObject }) {
     if (state.mappings[id]) {
@@ -38,7 +36,6 @@ const mutations = {
   },
   REMOVE_DESCRIPTION(state: MappingsState, id: string) {
     Vue.delete(state.descriptions, id); // Use Vue.delete for reactivity
-    console.log('Removed description:', id, state.descriptions);
   },
   UPDATE_DESCRIPTION(state: MappingsState, { id, updatedDescriptions }: { id: string, updatedDescriptions: { [mappingName: string]: string } }) {
     if (state.descriptions[id]) {

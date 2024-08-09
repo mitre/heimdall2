@@ -37,9 +37,6 @@ const getters = {
   defaultCheckboxes: (state: SelectedTagsState) => state.defaultCheckboxes,
   combinedCheckboxes: (state: SelectedTagsState, getters: any, rootState: any) => {
     const mappings = rootState.mappings.mappings;
-    const descriptions = rootState.mappings.descriptions;
-    console.log('Mappings in getter:', mappings); // Add this line
-    console.log('Descriptions in getter:', descriptions); // Add this line
     const mappingCheckboxes = Object.keys(mappings).map(id => {
       const label = id.includes('->') ? id.split('->')[1].trim() : id;
       return {

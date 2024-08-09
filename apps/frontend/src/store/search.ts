@@ -107,7 +107,6 @@ class Search extends VuexModule implements ISearchState {
     };
     const searchResult = parse(this.searchTerm, options);
     if (typeof searchResult === 'string') {
-      console.log("In the setFreeSearch if case")
       this.setFreesearch(searchResult);
     } else {
       for (const prop in searchResult) {
@@ -142,7 +141,6 @@ class Search extends VuexModule implements ISearchState {
             break;
           case 'text':
             if (typeof include === 'string') {
-              console.log("In the other setFreeSearch if case")
               this.setFreesearch(include);
             }
             break;
@@ -180,7 +178,6 @@ class Search extends VuexModule implements ISearchState {
     this.context.commit('CLEAR_TAG');
     this.context.commit('CLEAR_FREESEARCH');
     this.context.commit('CLEAR_MAPPING_GUIDANCE')
-    console.log("Cleared filters")
   }
 
   // Generic filtering
@@ -345,8 +342,6 @@ class Search extends VuexModule implements ISearchState {
   @Mutation
   ADD_MAPPING_GUIDANCE(mapping: string | string[]) {
     this.mappingGuidanceFilter = this.mappingGuidanceFilter.concat(mapping);
-    console.log("Adding mapping guidance:")
-    console.log(this.mappingGuidanceFilter)
   }
   @Mutation
   CLEAR_MAPPING_GUIDANCE() {

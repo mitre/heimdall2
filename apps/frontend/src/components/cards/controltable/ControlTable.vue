@@ -257,7 +257,6 @@ export default class ControlTable extends Vue {
   }
   /** Closes all open controls when single-expand is re-enabled */
   async handleToggleSingleExpand(singleExpand: boolean): Promise<void> {
-    console.log(singleExpand)
     if (singleExpand) {
       this.expandAll = false;
     }

@@ -255,8 +255,6 @@ export default {
           descriptionDict[item.mappingName] = item.description;
         }
       });
-      console.log("Mapping Dictionary:", mappingDict);
-      console.log("Description Dictionary:", descriptionDict);
       // Use the Vuex action to add the mapping with a unique key
       this.addMapping({ id: headers[1] + '->' + headers[0], mapping: mappingDict });
       this.addDescription({ id: headers[1] + '->' + headers[0], descriptions: descriptionDict });
@@ -289,8 +287,6 @@ export default {
         Object.keys(json.descriptions).forEach(key => {
           descriptionDict[key] = json.descriptions[key];
         });
-        console.log("Mapping Dictionary:", mappingDict);
-        console.log("Description Dictionary:", descriptionDict);
         // Use the Vuex action to add the mapping with a unique key
         this.addMapping({ id: json.type + '->' + json.name, mapping: mappingDict });
         this.addDescription({ id: json.type + '->' + json.name, descriptions: descriptionDict });
@@ -304,7 +300,6 @@ export default {
       this.removeDescription(id);
       // Remove the value from localCheckedValues
       this.localCheckedValues = this.localCheckedValues.filter(value => value !== id);
-      console.log("Mapping removed: ", id)
     },
     emitChange(prop, value) {
       this.$emit(`update:${prop}`, value);

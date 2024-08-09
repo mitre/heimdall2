@@ -302,7 +302,6 @@ interface Tag {
                     }
                 }
             } else if (type == "800-53") {
-                console.log(this.control.hdf.rawNistTags);
                 for (const nistTag of this.control.hdf.rawNistTags || []) {
                     if (mapping[nistTag]) {
                         const name = key.includes('->') ? key.split('->')[1].trim() : key;

@@ -126,10 +126,11 @@ function contains_mapping(
         const mappingDict = mappings[`CCI->${mappingKey}`];
         if (mappingDict) {
           if(asHDF.wraps.tags.cci) {
-            //Figure out why this isn't working
             for(let key of asHDF.wraps.tags.cci) {
-              if(mappingDict[key].includes(mappingValue)) {
-                mappingFound = true
+              if(mappingDict[key]) {
+                if(mappingDict[key].includes(mappingValue)) {
+                  mappingFound = true
+                }
               }
             }
           }
@@ -142,9 +143,11 @@ function contains_mapping(
         const mappingDict = mappings[`800-53->${mappingKey}`];
         if (mappingDict) {
           if(asHDF.rawNistTags) {
-            for(let key in asHDF.rawNistTags) {
-              if(mappingDict[key].includes(mappingValue)) {
-                mappingFound = true
+            for(let key of asHDF.rawNistTags) {
+              if(mappingDict[key]) {
+                if(mappingDict[key].includes(mappingValue)) {
+                  mappingFound = true
+                }
               }
             }
           }

@@ -353,7 +353,6 @@ export class InspecIntake extends VuexModule {
     const fileID: FileID = uuid();
     // Get the checkedValues from the selectedTags module
     const checkedValues = Store.getters['selectedTags/checkedValues'];
-    console.log(checkedValues)
     const evalFile = {
       uniqueId: fileID,
       filename: options.filename,
