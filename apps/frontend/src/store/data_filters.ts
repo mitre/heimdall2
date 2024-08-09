@@ -10,6 +10,14 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
+import {execution_unique_key} from '@/utilities/format_util';
+import {
+  componentFitsSeverityFilter,
+  getSbomComponents,
+  isOnlySbomFileId,
+  isSbomFileId,
+  SBOMComponent
+} from '@/utilities/sbom_util';
 import {
   ContextualizedControl,
   ContextualizedProfile,
@@ -118,6 +126,13 @@ export class FilteredData extends VuexModule {
   selectedEvaluationIds: FileID[] = [];
   selectedProfileIds: FileID[] = [];
 
+  /**
+   * Contains only SBOMs that have no results
+   * Some SBOMs will be contained in `selectedEvaulationIds`
+   * because they contian results
+   */
+  private selectedSbomIds: FileID[] = [];
+
   @Mutation
   SELECT_EVALUATIONS(files: FileID[]): void {
     this.selectedEvaluationIds = [
@@ -133,6 +148,17 @@ export class FilteredData extends VuexModule {
   }
 
   @Mutation
+  SELECT_SBOMS(files: FileID[]): void {
+    this.selectedSbomIds = [...new Set([...files, ...this.selectedSbomIds])];
+  }
+
+  /**
+   * Removes the given fileId from the selected evaluations
+   * or selected sboms lists because a file id could be in either one
+   * or both of the arrays
+   * @param removeId
+   */
+  @Mutation
   CLEAR_EVALUATION(removeId: FileID): void {
     this.selectedEvaluationIds = this.selectedEvaluationIds.filter(
       (ids) => ids !== removeId
@@ -147,6 +173,17 @@ export class FilteredData extends VuexModule {
   }
 
   @Mutation
+  CLEAR_SBOM(removeId: FileID): void {
+    this.selectedSbomIds = this.selectedSbomIds.filter(
+      (ids) => ids !== removeId
+    );
+    // removes the selection from the selectedEvaluation if it is not in `selectedSbomIds`
+    this.selectedEvaluationIds = this.selectedEvaluationIds.filter(
+      (ids) => ids !== removeId
+    );
+  }
+
+  @Mutation
   CLEAR_ALL_EVALUATIONS(): void {
     this.selectedEvaluationIds = [];
   }
@@ -154,6 +191,15 @@ export class FilteredData extends VuexModule {
   @Mutation
   CLEAR_ALL_PROFILES(): void {
     this.selectedProfileIds = [];
+  }
+
+  @Mutation
+  CLEAR_ALL_SBOMS(): void {
+    // remove all SBOM ids from selectedEvaluationIds
+    this.selectedEvaluationIds = this.selectedEvaluationIds.filter(
+      (id) => !isSbomFileId(id)
+    );
+    this.selectedSbomIds = [];
   }
 
   @Action
@@ -179,9 +225,29 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
+  public toggle_all_sboms(): void {
+    if (this.all_sboms_selected === Trinary.On) {
+      this.CLEAR_ALL_SBOMS();
+    } else {
+      const allSbomFiles = InspecDataModule.allSbomFiles.map((v) => v.uniqueId);
+      this.SELECT_SBOMS(allSbomFiles.filter(isOnlySbomFileId));
+      this.SELECT_EVALUATIONS(allSbomFiles.filter((f) => !isOnlySbomFileId(f)));
+    }
+  }
+
+  /**
+   * Leaves only one file selected between evaluations and SBOMs
+   * @param fileID The only file that will remain selected
+   */
+  @Action
   public select_exclusive_evaluation(fileID: FileID): void {
     this.CLEAR_ALL_EVALUATIONS();
-    this.SELECT_EVALUATIONS([fileID]);
+    this.CLEAR_ALL_SBOMS();
+    if (isOnlySbomFileId(fileID)) {
+      this.SELECT_SBOMS([fileID]);
+    } else {
+      this.SELECT_EVALUATIONS([fileID]);
+    }
   }
 
   @Action
@@ -209,9 +275,19 @@ export class FilteredData extends VuexModule {
   }
 
   @Action
+  public toggle_sbom(fileID: FileID): void {
+    if (this.selected_sbom_ids.includes(fileID)) {
+      this.CLEAR_SBOM(fileID);
+    } else {
+      this.SELECT_SBOMS([fileID]);
+    }
+  }
+
+  @Action
   public clear_file(fileID: FileID): void {
     this.CLEAR_EVALUATION(fileID);
     this.CLEAR_PROFILE(fileID);
+    this.CLEAR_SBOM(fileID);
   }
 
   /**
@@ -251,8 +327,25 @@ export class FilteredData extends VuexModule {
     };
   }
 
+  /**
+   * Parameterized getter.
+   * Gets all evaluations from the specified file ids that contain
+   * SBOM component data in the passthrough
+   */
+  get sboms(): (files: FileID[]) => readonly SourcedContextualizedEvaluation[] {
+    return (files: FileID[]) => {
+      return InspecDataModule.contextualSboms.filter((e) => {
+        return files.includes(e.from_file.uniqueId);
+      });
+    };
+  }
+
   get selected_file_ids(): FileID[] {
-    return [...this.selectedEvaluationIds, ...this.selectedProfileIds];
+    return [
+      ...this.selectedEvaluationIds,
+      ...this.selectedProfileIds,
+      ...this.selectedSbomIds
+    ];
   }
 
   get selected_evaluation_ids(): FileID[] {
@@ -261,6 +354,12 @@ export class FilteredData extends VuexModule {
 
   get selected_profile_ids(): FileID[] {
     return this.selectedProfileIds;
+  }
+
+  get selected_sbom_ids(): FileID[] {
+    return this.selectedSbomIds.concat(
+      this.selectedEvaluationIds.filter(isSbomFileId)
+    );
   }
 
   // check to see if all profiles are selected
@@ -295,6 +394,23 @@ export class FilteredData extends VuexModule {
   // check to see if any evaluation is selected
   get any_evaluation_selected(): boolean {
     return this.selectedEvaluationIds.length > 0;
+  }
+
+  // check to see if all evaluations are selected
+  get all_sboms_selected(): Trinary {
+    switch (this.selected_sbom_ids.length) {
+      case 0:
+        return Trinary.Off;
+      case InspecDataModule.allSbomFiles.length:
+        return Trinary.On;
+      default:
+        return Trinary.Mixed;
+    }
+  }
+
+  // check to see if any sbom is selected
+  get any_sbom_selected(): boolean {
+    return this.selected_sbom_ids.length > 0;
   }
 
   /**
@@ -395,6 +511,28 @@ export class FilteredData extends VuexModule {
       const r = Object.freeze(controls);
       localCache.set(id, r);
       return r;
+    };
+  }
+
+  get components(): (filter: Filter) => readonly SBOMComponent[] {
+    return (filter: Filter) => {
+      const evaluations = this.sboms(filter.fromFile);
+      const components: SBOMComponent[] = [];
+      const controls = this.controls(filter);
+
+      // grab every component from each section and apply a filter if necessary
+      for (const evaluation of evaluations) {
+        for (const component of getSbomComponents(evaluation)) {
+          const key = `${execution_unique_key(evaluation)}-${component['bom-ref']}`;
+          // filter components by their affecting vulnerabilities
+          if (
+            !filter.severity ||
+            componentFitsSeverityFilter(component, filter.severity, controls)
+          )
+            components.push({...component, _key: key});
+        }
+      }
+      return components;
     };
   }
 }

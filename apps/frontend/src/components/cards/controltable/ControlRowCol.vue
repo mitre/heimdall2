@@ -28,6 +28,9 @@
         class="pa-2 mono pre-formatted"
         v-html="sanitize_html(result.code_desc.trim())"
       />
+      <v-btn v-if="componentRef" @click="goToComponent()"
+        >See component details <v-icon>mdi-view-list-outline</v-icon></v-btn
+      >
       <!-- eslint-enable vue/no-v-html -->
     </v-col>
     <v-col v-if="resultMessage" cols="12" sm="6" lg="5" class="left">
@@ -82,6 +85,23 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
     return this.result.skip_message && this.result.message
       ? `-Message-\n${this.result.message}\n\n-Skip Message-\n${this.result.skip_message}`
       : this.result.message || this.result.skip_message;
+  }
+
+  get componentRef(): string | undefined {
+    // Checks to see if the result represents a component
+    // from an SBOM and contains a bom-ref
+    const matches = this.result.message?.match(/- Bom-ref: (?<ref>.+)$/m);
+    if (matches) {
+      return matches.groups?.ref;
+    }
+  }
+
+  goToComponent() {
+    if (this.componentRef)
+      this.$router.push({
+        name: 'sbom',
+        query: {componentRef: this.componentRef}
+      });
   }
 }
 </script>
