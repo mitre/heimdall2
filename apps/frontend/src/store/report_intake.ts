@@ -11,6 +11,7 @@ import {
   BurpSuiteMapper,
   ChecklistResults,
   ConveyorResults as ConveyorResultsMapper,
+  CycloneDXSBOMResults,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -275,6 +276,8 @@ export class InspecIntake extends VuexModule {
         return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
         return new GosecMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.CYCLONEDX_SBOM:
+        return new CycloneDXSBOMResults(convertOptions.data).toHdf();
       case INPUT_TYPES.TRUFFLEHOG:
         return new TrufflehogResults(convertOptions.data).toHdf();
       default:
