@@ -109,7 +109,7 @@ export class CycloneDXSBOMResults {
     // Pull components from raw data
     data.components = [
       ...(_.cloneDeep(data.raw.components) as ComponentRepository)
-    ].map((element) => Object(element));
+    ] as unknown as IntermediaryComponent[];
 
     // Look through every component at the top level of the list
     for (const component of data.components) {
@@ -155,7 +155,7 @@ export class CycloneDXSBOMResults {
     // Pull vulnerabilities from raw data
     data.vulnerabilities = [
       ...(_.cloneDeep(data.raw.vulnerabilities) as VulnerabilityRepository)
-    ].map((element) => Object(element));
+    ] as unknown as IntermediaryVulnerability[];
 
     for (const vulnerability of data.vulnerabilities) {
       vulnerability.affectedComponents = [];
@@ -203,18 +203,15 @@ export class CycloneDXSBOMResults {
     // Pull vulnerabilities from raw data
     data.vulnerabilities = [
       ...(_.cloneDeep(data.raw.vulnerabilities) as VulnerabilityRepository)
-    ].map((element) => Object(element));
+    ] as unknown as IntermediaryVulnerability[];
 
     for (const vulnerability of data.vulnerabilities) {
-      vulnerability.affectedComponents = [];
-      for (const id of vulnerability.affects) {
-        // Build a dummy component for each bom-ref identified as being affected by the vulnerability
-        // Add that component to the corresponding vulnerability object
-        vulnerability.affectedComponents.push({
-          'bom-ref': `${id.ref}`,
-          name: `${id.ref}`
-        });
-      }
+      // Build a dummy component for each bom-ref identified as being affected by the vulnerability
+      // Add that component to the corresponding vulnerability object
+      vulnerability.affectedComponents = vulnerability.affects.map((id) => ({
+        'bom-ref': `${id.ref}`,
+        name: `${id.ref}`
+      }));
     }
   }
 
@@ -331,30 +328,22 @@ export class CycloneDXSBOMMapper extends BaseConverter {
             descriptions: [
               {
                 path: 'detail',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input ? {data: input, label: 'Detail'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'recommendation',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: string) =>
                   input ? {data: input, label: 'Recommendation'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'workaround',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: string) =>
                   input ? {data: input, label: 'Workaround'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'proofOfConcept',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input
                     ? {
                         data: JSON.stringify(input, null, 2),
@@ -364,55 +353,41 @@ export class CycloneDXSBOMMapper extends BaseConverter {
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'created',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input ? {data: input, label: 'Date created'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'published',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input ? {data: input, label: 'Date published'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'updated',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input ? {data: input, label: 'Date updated'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'rejected',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input ? {data: input, label: 'Date rejected'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'credits',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input
                     ? {data: JSON.stringify(input, null, 2), label: 'Credits'}
                     : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'tools',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input
                     ? {data: JSON.stringify(input, null, 2), label: 'Tools'}
                     : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'analysis',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input
                     ? {data: JSON.stringify(input, null, 2), label: 'Analysis'}
                     : undefined
@@ -516,7 +491,7 @@ export class CycloneDXSBOMMapper extends BaseConverter {
       }
     }
   };
-  constructor(exportJson: Record<string, unknown>, withRaw = false) {
+  constructor(exportJson: DataStorage, withRaw = false) {
     super(exportJson, true);
     this.withRaw = withRaw;
   }
