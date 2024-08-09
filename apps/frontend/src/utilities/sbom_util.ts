@@ -1,10 +1,10 @@
+import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {
   EvaluationFile,
   ProfileFile,
   SourcedContextualizedEvaluation
 } from '@/store/report_intake';
-import {JSONValue} from '@mitre/hdf-converters/src/utils/parseJson';
 import {Result} from '@mitre/hdf-converters/src/utils/result';
 import {ContextualizedControl, Severity} from 'inspecjs';
 import _ from 'lodash';
@@ -17,6 +17,7 @@ export type SBOMProperty = {name: string; value: string};
  */
 export interface SBOMComponent {
   name: string;
+  description?: string;
   externalReferences?: {
     url: string;
     comment?: string;
@@ -26,7 +27,7 @@ export interface SBOMComponent {
   'bom-ref'?: string;
   properties?: SBOMProperty[];
   affectingVulnerabilities: string[]; // an array of bom-refs
-  key: string; // used to uniquely identify the component
+  _key: string; // used to uniquely identify the component. It won't show in UI
 }
 
 /**
@@ -37,6 +38,26 @@ export interface SBOMComponent {
 export interface SBOMMetadata {
   component?: SBOMComponent;
   properties?: SBOMProperty[];
+}
+
+export interface SBOMDependency {
+  ref: string;
+  dependsOn?: string[];
+}
+
+export interface ContextualizedSBOMDependency {
+  ref: string;
+  dependsOn: ContextualizedSBOMDependency[];
+}
+
+interface SBOMPassthroughSection {
+  name: 'SBOM';
+  components?: SBOMComponent[];
+  dependencies?: SBOMDependency[];
+  data?: {
+    // contains more unused fields
+    metadata?: SBOMMetadata;
+  };
 }
 
 /**
@@ -153,7 +174,7 @@ export function componentFitsSeverityFilter(
 
 function getSbomPassthroughSection(
   evaluation: SourcedContextualizedEvaluation
-): Result<JSONValue, null> {
+): Result<SBOMPassthroughSection, null> {
   const passthroughSection = _.get(
     evaluation,
     'data.passthrough.auxiliary_data',
@@ -165,17 +186,42 @@ function getSbomPassthroughSection(
 
 export function getSbomComponents(
   evaluation: SourcedContextualizedEvaluation
-): Result<SBOMComponent[], null> {
+): SBOMComponent[] {
   const passthroughSection = getSbomPassthroughSection(evaluation);
   if (passthroughSection.ok) {
-    const components: SBOMComponent[] = _.get(
-      passthroughSection.value,
-      'components',
-      []
-    ) as SBOMComponent[];
-    if (components) return {ok: true, value: components};
+    return _.get(passthroughSection.value, 'components', []);
   }
-  return {ok: false, error: null};
+  return [];
+}
+
+/**
+ * Returns a list describing the dependency relationships in an SBOM
+ */
+export function getSbomDependencies(
+  evaluation: SourcedContextualizedEvaluation
+): SBOMDependency[] {
+  const passthroughSection = getSbomPassthroughSection(evaluation);
+  if (passthroughSection.ok) {
+    return _.get(passthroughSection.value, 'dependencies', []);
+  }
+  return [];
+}
+
+/**
+ * Converts a single dependency object (lists all dependencies of a single component)
+ * into a list of components
+ */
+export function sbomDependencyToComponents(
+  dependency: SBOMDependency,
+  components: readonly SBOMComponent[]
+): SBOMComponent[] {
+  const refs = dependency.dependsOn || [];
+  const dependencies: SBOMComponent[] = [];
+  for (const ref of refs) {
+    const component = components.find(_.matchesProperty('bom-ref', ref));
+    if (component) dependencies.push(component);
+  }
+  return dependencies;
 }
 
 /**
@@ -189,8 +235,28 @@ export function getSbomMetadata(
     const metadata: SBOMMetadata | undefined = _.get(
       passthroughSection.value,
       'data.metadata'
-    ) as SBOMMetadata | undefined;
+    );
     if (metadata) return {ok: true, value: metadata};
   }
   return {ok: false, error: null};
+}
+
+/**
+ * Generates a mapping from component-bom ref to a list of its dependencies
+ * Ids are added later to uniquely identify the component within the treeview
+ */
+export function getStructuredSbomDependencies(): Map<
+  string,
+  Readonly<SBOMDependency>
+> {
+  // map from bom-ref to a reference to the dependency structure // the root component should recursively contain every component
+  const refMap = new Map<string, Readonly<SBOMDependency>>();
+
+  const dependencies = FilteredDataModule.sboms(
+    FilteredDataModule.selected_sbom_ids
+  ).flatMap(getSbomDependencies);
+  for (const dependency of dependencies) {
+    refMap.set(dependency.ref, dependency);
+  }
+  return refMap;
 }

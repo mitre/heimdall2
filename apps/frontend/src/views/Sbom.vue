@@ -36,7 +36,7 @@
       <PrintButton />
     </template>
 
-    <!-- The main content: cards, etc -->
+    <!-- The main content: cards, table, tree, etc -->
     <template #main-content>
       <v-container fluid grid-list-md pt-0 pa-2>
         <v-container mx-0 px-0 fluid>
@@ -72,14 +72,33 @@
           </v-card>
         </v-container>
 
-        <!-- DataTable -->
+        <!-- DataElements -->
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <ComponentTable
-                :component-ref="$route.params.componentRef"
-                :search-term="searchTerm"
-              />
+              <v-tabs v-model="tab">
+                <v-tab key="componentTable">Component Table</v-tab>
+                <v-tab key="dependencyTree">Dependency Tree</v-tab>
+              </v-tabs>
+              <v-tabs-items v-model="tab">
+                <v-tab-item key="componentTable">
+                  <!-- List of all components -->
+                  <ComponentTable
+                    :component-ref="$route.params.componentRef"
+                    :search-term="searchTerm"
+                    @show-component-in-tree="showComponentInTree"
+                    @show-component-in-table="showComponentInTable"
+                  />
+                </v-tab-item>
+                <v-tab-item key="dependencyTree">
+                  <!-- Show dependency relationships -->
+                  <DependencyTree
+                    :search-term="searchTerm"
+                    :target-component="treeRef"
+                    @show-component-in-table="showComponentInTable"
+                  />
+                </v-tab-item>
+              </v-tabs-items>
             </v-card>
           </v-col>
         </v-row>
@@ -112,6 +131,7 @@
 
 <script lang="ts">
 import ComponentTable from '@/components/cards/sbomview/ComponentTable.vue';
+import DependencyTree from '@/components/cards/sbomview/DependencyTree.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 import ProfileInfo from '@/components/cards/ProfileInfo.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
@@ -134,12 +154,17 @@ import {EvaluationModule} from '../store/evaluations';
 import {compare_times} from '../utilities/delta_util';
 import ProfileData from '@/components/cards/ProfileData.vue';
 import ComponentContent from '@/components/cards/sbomview/ComponentContent.vue';
-import {getSbomMetadata, SBOMMetadata} from '@/utilities/sbom_util';
+import {
+  getSbomDependencies,
+  getSbomMetadata,
+  SBOMMetadata
+} from '@/utilities/sbom_util';
 
 @Component({
   components: {
     Base,
     ComponentTable,
+    DependencyTree,
     ComponentContent,
     ExportJson,
     PrintButton,
@@ -149,10 +174,11 @@ import {getSbomMetadata, SBOMMetadata} from '@/utilities/sbom_util';
     ProfileData
   }
 })
-export default class Components extends mixins(RouteMixin, ServerMixin) {
+export default class Sbom extends mixins(RouteMixin, ServerMixin) {
   searchTerm: string = '';
-
   currentSbomMetadata: SBOMMetadata | null = null;
+  tab: number = 0; // open to componentTable
+  treeRef: string | null = null;
 
   /**
    * The currently selected file, if one exists.
@@ -206,6 +232,19 @@ export default class Components extends mixins(RouteMixin, ServerMixin) {
     } else {
       this.currentSbomMetadata = null;
     }
+  }
+
+  showComponentInTable(bomRef: string) {
+    console.log('table: ' + bomRef);
+    this.searchTerm = bomRef;
+    this.tab = 0; // corresponds to componentTable
+  }
+
+  showComponentInTree(bomRef: string) {
+    //this.searchTerm = bomRef;
+    console.log('tree: ' + bomRef);
+    this.treeRef = bomRef;
+    this.tab = 1; // corresponds to dependencyTree
   }
 }
 </script>

@@ -10,14 +10,14 @@
           :expanded.sync="expanded"
           show-expand
           :items-per-page="-1"
-          item-key="key"
+          item-key="_key"
           hide-default-footer
         >
           <!--           fixed-header
           height="calc(100vh - 250px)" -->
           <template #top>
             <v-card-title>
-              Component View Data
+              Components
               <v-spacer />
 
               <!-- Table settings menu -->
@@ -101,10 +101,14 @@
           </template>
 
           <template #expanded-item="{headers, item}">
-            <td :colspan="headers.length">
+            <td v-if="expanded.includes(item)" :colspan="headers.length">
               <ComponentContent
                 :component="item"
                 :vulnerabilities="affectingVulns.get(item['bom-ref'])"
+                :dependencies="componentDependencies(item)"
+                :parents="componentParents(item)"
+                @show-component-in-table="showComponentInTable"
+                @show-component-in-tree="showComponentInTree"
               />
             </td>
           </template>
@@ -121,9 +125,15 @@ import {ContextualizedControl, severities, Severity} from 'inspecjs';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop, Ref} from 'vue-property-decorator';
+import {Prop} from 'vue-property-decorator';
 import ComponentContent from './ComponentContent.vue';
-import {getVulnsFromBomRef, SBOMComponent} from '@/utilities/sbom_util';
+import {
+  getVulnsFromBomRef,
+  SBOMComponent,
+  getStructuredSbomDependencies,
+  sbomDependencyToComponents,
+  SBOMDependency
+} from '@/utilities/sbom_util';
 
 @Component({
   components: {
@@ -131,7 +141,6 @@ import {getVulnsFromBomRef, SBOMComponent} from '@/utilities/sbom_util';
   }
 })
 export default class ComponentTable extends Vue {
-  @Ref('controlTableTitle') readonly controlTableTitle!: Element;
   @Prop({type: String, required: false}) readonly searchTerm!: string;
 
   componentRef = this.$route.query.componentRef ?? null;
@@ -224,6 +233,28 @@ export default class ComponentTable extends Vue {
     return vulnMap;
   }
 
+  get structuredDependencies(): Map<string, SBOMDependency> {
+    return getStructuredSbomDependencies();
+  }
+
+  componentDependencies(component: SBOMComponent): SBOMComponent[] | undefined {
+    if (!component['bom-ref']) return;
+    const dependency = this.structuredDependencies.get(component['bom-ref']);
+
+    if (!dependency) return;
+    return sbomDependencyToComponents(dependency, this.components);
+  }
+
+  componentParents(component: SBOMComponent): SBOMComponent[] | undefined {
+    const ref = component['bom-ref'];
+    if (!ref) return;
+    return this.components.filter((c) => {
+      if (!c['bom-ref']) return false;
+      const dependency = this.structuredDependencies.get(c['bom-ref']);
+      return dependency?.dependsOn?.includes(ref);
+    });
+  }
+
   severityColor(severity: string): string {
     return `severity${_.startCase(severity)}`;
   }
@@ -235,6 +266,14 @@ export default class ComponentTable extends Vue {
   get severities(): Severity[] {
     // returns the list of severities defined by inspecJS
     return [...severities];
+  }
+
+  showComponentInTable(ref: string) {
+    this.$emit('show-component-in-table', ref);
+  }
+
+  showComponentInTree(ref: string) {
+    this.$emit('show-component-in-tree', ref);
   }
 }
 </script>

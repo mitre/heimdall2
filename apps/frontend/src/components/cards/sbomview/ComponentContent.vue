@@ -48,6 +48,46 @@
 
         <!-- Viewing Nested Structures -->
         <v-treeview v-if="tab.treeData" open-all :items="tab.treeData" />
+
+        <!-- Viewing a list of this component's direct dependencies -->
+        <v-simple-table v-if="tab.relatedComponents" dense>
+          <template #default>
+            <thead>
+              <tr>
+                <td>Name</td>
+                <td>Description</td>
+                <td />
+                <td />
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(component, i) in tab.relatedComponents" :key="i">
+                <td>{{ component.name }}</td>
+                <td>{{ component.description }}</td>
+                <td>
+                  <v-chip
+                    small
+                    outlined
+                    @click="
+                      $emit('show-component-in-table', component['bom-ref'])
+                    "
+                    >Go to Component Table</v-chip
+                  >
+                </td>
+                <td>
+                  <v-chip
+                    small
+                    outlined
+                    @click="
+                      $emit('show-component-in-tree', component['bom-ref'])
+                    "
+                    >Go to Dependency Tree</v-chip
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </template>
+        </v-simple-table>
       </v-tab-item>
     </v-tabs-items>
   </div>
@@ -67,6 +107,7 @@ interface Tab {
   name: string;
   tableData?: TableData;
   treeData?: Treeview[];
+  relatedComponents?: SBOMComponent[];
 }
 
 type TableData = {columns: string[]; rows: string[][]};
@@ -170,7 +211,7 @@ function generateTabs(
   };
 
   for (const [key, value] of Object.entries(object)) {
-    if (customTabs.includes(key)) continue;
+    if (customTabs.includes(key) || key.startsWith('_')) continue;
     if (value instanceof Object) {
       tabs.push({
         name: `${prefix}${_.startCase(key)}`,
@@ -232,6 +273,9 @@ export default class ComponentContent extends Vue {
   @Prop({type: Array, required: false, default: () => []})
   readonly vulnerabilities!: ContextualizedControl[];
 
+  @Prop({type: Array, required: false}) readonly dependencies?: SBOMComponent[];
+  @Prop({type: Array, required: false}) readonly parents?: SBOMComponent[];
+
   // stores the state of the tab selected
   tabs = {tab: null};
 
@@ -245,7 +289,6 @@ export default class ComponentContent extends Vue {
    */
   get computedTabs(): Tab[] {
     const tabs: Tab[] = [];
-
     if (this.metadata) {
       // for displaying top level component data
       tabs.push(...generateTabs(this.metadata, 'Metadata - '));
@@ -270,6 +313,19 @@ export default class ComponentContent extends Vue {
       });
     }
 
+    if (this.dependencies?.length) {
+      tabs.push({
+        name: 'Dependencies',
+        relatedComponents: this.dependencies
+      });
+    }
+
+    if (this.parents?.length) {
+      tabs.push({
+        name: 'Parents',
+        relatedComponents: this.parents
+      });
+    }
     return tabs;
   }
 }
