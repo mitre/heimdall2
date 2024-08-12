@@ -24,7 +24,11 @@
             ],
             "cwe": [
               "CWE-611"
-            ]
+            ],
+            "created": "2020-12-03T00:00:00.000Z",
+            "published": "2020-12-03T00:00:00.000Z",
+            "updated": "2021-10-26T00:00:00.000Z",
+            "rejected": ""
           },
           "descriptions": [
             {
@@ -34,18 +38,6 @@
             {
               "data": "Upgrade com.fasterxml.jackson.core:jackson-databind to version 2.6.7.4, 2.9.10.7, 2.10.5.1 or higher.",
               "label": "Recommendation"
-            },
-            {
-              "data": "2020-12-03T00:00:00.000Z",
-              "label": "Date created"
-            },
-            {
-              "data": "2020-12-03T00:00:00.000Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2021-10-26T00:00:00.000Z",
-              "label": "Date updated"
             },
             {
               "data": "{\n  \"individuals\": [\n    {\n      \"name\": \"Bartosz Baranowski\"\n    }\n  ]\n}",
@@ -105,7 +97,7 @@
           ]
         }
       ],
-      "sha256": "ff54a575f2b6ba5b71509d4333cf7d81e8222be0d6f020b401421db15fdb371a"
+      "sha256": "de340123e25d2d20c70b9ffc2f7f9f59d264b331ea37b662be6def8a5eb7705b"
     }
   ],
   "passthrough": {

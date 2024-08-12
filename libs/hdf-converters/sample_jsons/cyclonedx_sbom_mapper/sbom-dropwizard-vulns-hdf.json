@@ -31,18 +31,13 @@
               "CWE-200",
               "CWE-378",
               "CWE-732"
-            ]
+            ],
+            "created": "",
+            "published": "2021-03-25T17:04:19Z",
+            "updated": "2023-11-09T18:44:38Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-03-25T17:04:19Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-11-09T18:44:38Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -81,18 +76,13 @@
             "cwe": [
               "CWE-379",
               "CWE-552"
-            ]
+            ],
+            "created": "",
+            "published": "2023-06-14T18:30:38Z",
+            "updated": "2024-02-13T21:49:15Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2023-06-14T18:30:38Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-02-13T21:49:15Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -128,18 +118,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-04-23T21:08:40Z",
+            "updated": "2023-02-01T05:02:59Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-04-23T21:08:40Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-01T05:02:59Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -175,18 +160,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-05-15T18:58:44Z",
+            "updated": "2023-02-01T05:02:59Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-05-15T18:58:44Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-01T05:02:59Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -222,18 +202,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-06-10T21:12:41Z",
+            "updated": "2023-02-01T05:03:03Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-06-10T21:12:41Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-01T05:03:03Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -269,18 +244,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-05-15T18:58:50Z",
+            "updated": "2023-02-01T05:03:05Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-05-15T18:58:50Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-01T05:03:05Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -316,18 +286,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-04-23T20:19:02Z",
+            "updated": "2024-03-15T00:41:35Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-04-23T20:19:02Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:41:35Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -363,18 +328,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-05-15T18:58:47Z",
+            "updated": "2024-03-15T00:48:55Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-05-15T18:58:47Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:48:55Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -410,18 +370,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-05-15T18:58:54Z",
+            "updated": "2024-03-15T00:50:18Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-05-15T18:58:54Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:50:18Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -457,18 +412,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-04-23T21:36:03Z",
+            "updated": "2024-06-25T13:46:45Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-04-23T21:36:03Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-06-25T13:46:45Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -504,18 +454,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-04-23T16:32:59Z",
+            "updated": "2024-07-03T21:10:50Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-04-23T16:32:59Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-07-03T21:10:50Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -551,18 +496,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-06-18T14:44:50Z",
+            "updated": "2023-02-01T05:04:14Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-06-18T14:44:50Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-01T05:04:14Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -598,18 +538,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-06-18T14:44:43Z",
+            "updated": "2024-03-15T00:37:17Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-06-18T14:44:43Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:37:17Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -645,18 +580,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-06-18T14:44:46Z",
+            "updated": "2024-03-15T00:39:55Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-06-18T14:44:46Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:39:55Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -692,18 +622,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-06-18T14:44:48Z",
+            "updated": "2024-06-25T13:46:04Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-06-18T14:44:48Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-06-25T13:46:04Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -739,18 +664,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-03-04T20:52:14Z",
+            "updated": "2023-06-08T19:02:12Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-03-04T20:52:14Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-06-08T19:02:12Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -786,18 +706,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2022-07-15T19:41:47Z",
+            "updated": "2023-08-18T15:45:27Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-07-15T19:41:47Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-08-18T15:45:27Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -833,18 +748,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2019-11-13T00:32:27Z",
+            "updated": "2023-09-14T14:55:20Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2019-11-13T00:32:27Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T14:55:20Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -880,18 +790,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2019-11-13T00:32:38Z",
+            "updated": "2023-09-14T14:55:25Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2019-11-13T00:32:38Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T14:55:25Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -927,18 +832,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2019-10-28T20:51:15Z",
+            "updated": "2024-03-15T00:57:37Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2019-10-28T20:51:15Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:57:37Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -974,18 +874,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-05-15T18:59:10Z",
+            "updated": "2023-09-14T15:09:40Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-05-15T18:59:10Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T15:09:40Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1021,18 +916,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-05-15T18:59:01Z",
+            "updated": "2024-03-15T00:20:09Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-05-15T18:59:01Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:20:09Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1069,18 +959,13 @@
             "cwe": [
               "CWE-94",
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:14:51Z",
+            "updated": "2023-09-14T15:44:55Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:14:51Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T15:44:55Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1116,18 +1001,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:15:36Z",
+            "updated": "2023-09-14T15:47:50Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:15:36Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T15:47:50Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1163,18 +1043,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:16:02Z",
+            "updated": "2023-09-14T15:52:49Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:16:02Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T15:52:49Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1210,18 +1085,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:16:26Z",
+            "updated": "2023-09-14T15:53:30Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:16:26Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T15:53:30Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1257,18 +1127,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-11-19T20:13:06Z",
+            "updated": "2023-09-14T15:59:33Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-11-19T20:13:06Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T15:59:33Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1304,18 +1169,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:16:51Z",
+            "updated": "2023-09-14T16:01:31Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:16:51Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T16:01:31Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1351,18 +1211,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:16:59Z",
+            "updated": "2023-09-14T16:04:22Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:16:59Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T16:04:22Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1398,18 +1253,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:16:42Z",
+            "updated": "2023-09-14T16:04:22Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:16:42Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T16:04:22Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1445,18 +1295,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:16:10Z",
+            "updated": "2023-09-14T16:07:00Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:16:10Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T16:07:00Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1492,18 +1337,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:15:54Z",
+            "updated": "2023-09-14T16:07:40Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:15:54Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T16:07:40Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1539,18 +1379,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:15:46Z",
+            "updated": "2023-09-14T16:08:37Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:15:46Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T16:08:37Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1586,18 +1421,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:16:18Z",
+            "updated": "2023-09-14T16:13:01Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:16:18Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T16:13:01Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1633,18 +1463,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:16:34Z",
+            "updated": "2023-09-14T16:15:44Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:16:34Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-14T16:15:44Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1680,18 +1505,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:15:24Z",
+            "updated": "2023-11-21T11:40:53Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:15:24Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-11-21T11:40:53Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1727,18 +1547,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:15:00Z",
+            "updated": "2024-03-15T00:28:08Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:15:00Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:28:08Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1775,18 +1590,13 @@
             "cwe": [
               "CWE-502",
               "CWE-913"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-09T19:15:11Z",
+            "updated": "2024-06-25T13:47:23Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-09T19:15:11Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-06-25T13:47:23Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1823,18 +1633,13 @@
             "cwe": [
               "CWE-400",
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2022-10-03T00:00:31Z",
+            "updated": "2024-03-15T00:14:44Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-10-03T00:00:31Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:14:44Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1870,18 +1675,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-01-20T21:20:15Z",
+            "updated": "2024-03-15T00:16:04Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-01-20T21:20:15Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:16:04Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1917,18 +1717,13 @@
             ],
             "cwe": [
               "CWE-787"
-            ]
+            ],
+            "created": "",
+            "published": "2022-03-12T00:00:36Z",
+            "updated": "2024-03-15T00:24:56Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-03-12T00:00:36Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:24:56Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1964,18 +1759,13 @@
             ],
             "cwe": [
               "CWE-611"
-            ]
+            ],
+            "created": "",
+            "published": "2021-02-18T20:51:54Z",
+            "updated": "2024-03-15T00:31:24Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-02-18T20:51:54Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:31:24Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2011,18 +1801,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-03-04T20:52:11Z",
+            "updated": "2024-03-15T00:52:59Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-03-04T20:52:11Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T00:52:59Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2059,18 +1844,13 @@
             "cwe": [
               "CWE-400",
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2022-10-03T00:00:31Z",
+            "updated": "2024-03-24T05:01:05Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-10-03T00:00:31Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-24T05:01:05Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2106,18 +1886,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2020-05-15T18:59:04Z",
+            "updated": "2024-07-03T21:10:31Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-05-15T18:59:04Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-07-03T21:10:31Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2155,18 +1930,13 @@
             ],
             "cwe": [
               "CWE-74"
-            ]
+            ],
+            "created": "",
+            "published": "2020-04-10T18:42:20Z",
+            "updated": "2023-01-09T05:02:18Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-04-10T18:42:20Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-01-09T05:02:18Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2204,18 +1974,13 @@
             ],
             "cwe": [
               "CWE-74"
-            ]
+            ],
+            "created": "",
+            "published": "2020-02-24T17:27:27Z",
+            "updated": "2024-06-05T16:42:03Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-02-24T17:27:27Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-06-05T16:42:03Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2253,18 +2018,13 @@
             ],
             "cwe": [
               "CWE-776"
-            ]
+            ],
+            "created": "",
+            "published": "2021-06-04T21:37:45Z",
+            "updated": "2023-05-22T20:17:58Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-06-04T21:37:45Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-05-22T20:17:58Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2301,18 +2061,13 @@
             "cwe": [
               "CWE-121",
               "CWE-787"
-            ]
+            ],
+            "created": "",
+            "published": "2022-09-06T00:00:27Z",
+            "updated": "2024-03-15T12:30:36Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-09-06T00:00:27Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T12:30:36Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2349,18 +2104,13 @@
             "cwe": [
               "CWE-121",
               "CWE-787"
-            ]
+            ],
+            "created": "",
+            "published": "2022-11-11T19:00:31Z",
+            "updated": "2024-06-21T21:33:52Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-11-11T19:00:31Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-06-21T21:33:52Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2397,18 +2147,13 @@
             "cwe": [
               "CWE-121",
               "CWE-787"
-            ]
+            ],
+            "created": "",
+            "published": "2022-09-06T00:00:27Z",
+            "updated": "2024-03-15T12:30:36Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-09-06T00:00:27Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T12:30:36Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2445,18 +2190,13 @@
             "cwe": [
               "CWE-121",
               "CWE-787"
-            ]
+            ],
+            "created": "",
+            "published": "2022-09-06T00:00:27Z",
+            "updated": "2024-03-15T12:30:36Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-09-06T00:00:27Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T12:30:36Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2493,18 +2233,13 @@
             "cwe": [
               "CWE-121",
               "CWE-787"
-            ]
+            ],
+            "created": "",
+            "published": "2022-09-06T00:00:27Z",
+            "updated": "2024-03-15T12:30:36Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-09-06T00:00:27Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T12:30:36Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2541,18 +2276,13 @@
             "cwe": [
               "CWE-400",
               "CWE-776"
-            ]
+            ],
+            "created": "",
+            "published": "2022-08-31T00:00:24Z",
+            "updated": "2024-03-15T19:06:46Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-08-31T00:00:24Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-03-15T19:06:46Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2589,18 +2319,13 @@
             "cwe": [
               "CWE-20",
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2022-12-12T21:19:47Z",
+            "updated": "2024-06-24T21:22:59Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-12-12T21:19:47Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-06-24T21:22:59Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2636,18 +2361,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2021-12-17T20:00:50Z",
+            "updated": "2023-01-30T05:04:55Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-12-17T20:00:50Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-01-30T05:04:55Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2683,18 +2403,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2023-11-29T12:30:16Z",
+            "updated": "2023-12-05T21:31:13Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2023-11-29T12:30:16Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-12-05T21:31:13Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2736,18 +2451,13 @@
             ],
             "cwe": [
               "CWE-400"
-            ]
+            ],
+            "created": "",
+            "published": "2021-03-10T03:46:47Z",
+            "updated": "2023-02-01T05:05:09Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-03-10T03:46:47Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-01T05:05:09Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2783,18 +2493,13 @@
             ],
             "cwe": [
               "CWE-613"
-            ]
+            ],
+            "created": "",
+            "published": "2021-06-23T20:23:04Z",
+            "updated": "2023-02-01T05:05:59Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-06-23T20:23:04Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-01T05:05:59Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2832,18 +2537,13 @@
               "CWE-400",
               "CWE-551",
               "CWE-755"
-            ]
+            ],
+            "created": "",
+            "published": "2021-04-06T17:31:30Z",
+            "updated": "2023-09-26T11:11:47Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-04-06T17:31:30Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-26T11:11:47Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2879,18 +2579,13 @@
             ],
             "cwe": [
               "CWE-200"
-            ]
+            ],
+            "created": "",
+            "published": "2023-04-18T22:19:57Z",
+            "updated": "2023-11-06T05:01:53Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2023-04-18T22:19:57Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-11-06T05:01:53Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2927,18 +2622,13 @@
             "cwe": [
               "CWE-400",
               "CWE-770"
-            ]
+            ],
+            "created": "",
+            "published": "2023-04-19T18:15:45Z",
+            "updated": "2023-11-06T05:02:06Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2023-04-19T18:15:45Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-11-06T05:02:06Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2974,18 +2664,13 @@
             ],
             "cwe": [
               "CWE-226"
-            ]
+            ],
+            "created": "",
+            "published": "2020-12-02T18:28:18Z",
+            "updated": "2024-02-21T17:23:14Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-12-02T18:28:18Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-02-21T17:23:14Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3021,18 +2706,13 @@
             ],
             "cwe": [
               "CWE-20"
-            ]
+            ],
+            "created": "",
+            "published": "2022-07-07T20:55:34Z",
+            "updated": "2023-01-29T05:06:01Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-07-07T20:55:34Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-01-29T05:06:01Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3070,18 +2750,13 @@
             ],
             "cwe": [
               "CWE-130"
-            ]
+            ],
+            "created": "",
+            "published": "2023-09-14T16:17:27Z",
+            "updated": "2023-11-06T05:01:59Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2023-09-14T16:17:27Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-11-06T05:01:59Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3121,18 +2796,13 @@
               "CWE-378",
               "CWE-379",
               "CWE-552"
-            ]
+            ],
+            "created": "",
+            "published": "2020-11-04T17:50:24Z",
+            "updated": "2023-11-27T23:07:53Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-11-04T17:50:24Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-11-27T23:07:53Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3168,18 +2838,13 @@
             ],
             "cwe": [
               "CWE-611"
-            ]
+            ],
+            "created": "",
+            "published": "2023-07-10T21:52:39Z",
+            "updated": "2023-09-05T22:39:32Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2023-07-10T21:52:39Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-09-05T22:39:32Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3215,18 +2880,13 @@
             ],
             "cwe": [
               "CWE-200"
-            ]
+            ],
+            "created": "",
+            "published": "2021-06-10T15:43:22Z",
+            "updated": "2023-02-01T05:05:51Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-06-10T15:43:22Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-01T05:05:51Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3264,18 +2924,13 @@
             ],
             "cwe": [
               "CWE-149"
-            ]
+            ],
+            "created": "",
+            "published": "2023-09-14T16:16:00Z",
+            "updated": "2023-11-06T05:01:59Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2023-09-14T16:16:00Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-11-06T05:01:59Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3314,18 +2969,13 @@
             "cwe": [
               "CWE-200",
               "CWE-732"
-            ]
+            ],
+            "created": "",
+            "published": "2020-10-12T17:33:00Z",
+            "updated": "2023-02-01T05:04:50Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-10-12T17:33:00Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-01T05:04:50Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3361,7 +3011,11 @@
               "CCI-002605",
               "CCI-001643"
             ],
-            "cwe": []
+            "cwe": [],
+            "created": "",
+            "published": "",
+            "updated": "",
+            "rejected": ""
           },
           "descriptions": [],
           "refs": [
@@ -3397,7 +3051,11 @@
               "CCI-002605",
               "CCI-001643"
             ],
-            "cwe": []
+            "cwe": [],
+            "created": "",
+            "published": "",
+            "updated": "",
+            "rejected": ""
           },
           "descriptions": [],
           "refs": [
@@ -3434,18 +3092,13 @@
             ],
             "cwe": [
               "CWE-89"
-            ]
+            ],
+            "created": "",
+            "published": "2022-02-09T22:57:29Z",
+            "updated": "2024-06-27T16:39:59Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-02-09T22:57:29Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-06-27T16:39:59Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3481,18 +3134,13 @@
             ],
             "cwe": [
               "CWE-89"
-            ]
+            ],
+            "created": "",
+            "published": "2022-02-10T23:05:04Z",
+            "updated": "2024-06-27T18:05:49Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-02-10T23:05:04Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-06-27T18:05:49Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3528,18 +3176,13 @@
             ],
             "cwe": [
               "CWE-611"
-            ]
+            ],
+            "created": "",
+            "published": "2020-06-05T16:13:36Z",
+            "updated": "2023-01-27T05:02:30Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2020-06-05T16:13:36Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-01-27T05:02:30Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3575,18 +3218,13 @@
             ],
             "cwe": [
               "CWE-79"
-            ]
+            ],
+            "created": "",
+            "published": "2021-06-03T23:40:23Z",
+            "updated": "2023-02-01T05:05:30Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2021-06-03T23:40:23Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-01T05:05:30Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3622,18 +3260,13 @@
             ],
             "cwe": [
               "CWE-611"
-            ]
+            ],
+            "created": "",
+            "published": "2022-03-05T00:00:45Z",
+            "updated": "2023-01-27T05:02:46Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-03-05T00:00:45Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-01-27T05:02:46Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3670,18 +3303,13 @@
             "cwe": [
               "CWE-400",
               "CWE-410"
-            ]
+            ],
+            "created": "",
+            "published": "2022-07-07T20:55:40Z",
+            "updated": "2023-07-24T19:39:20Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-07-07T20:55:40Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-07-24T19:39:20Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3717,18 +3345,13 @@
             ],
             "cwe": [
               "CWE-400"
-            ]
+            ],
+            "created": "",
+            "published": "2023-10-10T21:28:24Z",
+            "updated": "2024-06-21T21:34:00Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2023-10-10T21:28:24Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-06-21T21:34:00Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3770,18 +3393,13 @@
             ],
             "cwe": [
               "CWE-400"
-            ]
+            ],
+            "created": "",
+            "published": "2024-02-26T20:13:46Z",
+            "updated": "2024-05-02T18:38:19Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2024-02-26T20:13:46Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-05-02T18:38:19Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3817,18 +3435,13 @@
             ],
             "cwe": [
               "CWE-190"
-            ]
+            ],
+            "created": "",
+            "published": "2023-10-10T21:16:23Z",
+            "updated": "2024-06-21T21:33:57Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2023-10-10T21:16:23Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2024-06-21T21:33:57Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3866,18 +3479,13 @@
             ],
             "cwe": [
               "CWE-295"
-            ]
+            ],
+            "created": "",
+            "published": "2018-10-18T18:06:08Z",
+            "updated": "2023-01-09T05:03:38Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2018-10-18T18:06:08Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-01-09T05:03:38Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3913,18 +3521,13 @@
             ],
             "cwe": [
               "CWE-400"
-            ]
+            ],
+            "created": "",
+            "published": "2023-10-24T01:49:09Z",
+            "updated": "2023-11-05T05:04:23Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2023-10-24T01:49:09Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-11-05T05:04:23Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3960,18 +3563,13 @@
             ],
             "cwe": [
               "CWE-502"
-            ]
+            ],
+            "created": "",
+            "published": "2022-01-06T23:55:09Z",
+            "updated": "2023-02-25T00:31:20Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-01-06T23:55:09Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-02-25T00:31:20Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -4009,18 +3607,13 @@
             ],
             "cwe": [
               "CWE-88"
-            ]
+            ],
+            "created": "",
+            "published": "2022-01-21T23:07:39Z",
+            "updated": "2023-08-18T15:47:05Z",
+            "rejected": ""
           },
-          "descriptions": [
-            {
-              "data": "2022-01-21T23:07:39Z",
-              "label": "Date published"
-            },
-            {
-              "data": "2023-08-18T15:47:05Z",
-              "label": "Date updated"
-            }
-          ],
+          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -4047,7 +3640,7 @@
           ]
         }
       ],
-      "sha256": "423500d681549aa5606b24248ba94a5e2801d4a5394a672d8b1292d679fe0cfc"
+      "sha256": "bf70242005c6b5e676974f138b98d38be83bb0d941a8a31a8985a17567976521"
     }
   ],
   "passthrough": {

@@ -293,13 +293,16 @@ export class CycloneDXSBOMMapper extends BaseConverter {
         license: {
           path: 'raw.metadata.component',
           transformer: (input: Component): string | undefined => {
-            let message = '';
-            if (Array.isArray(input.licenses)) {
-              // Join together all applicable licenses for this component
-              input.licenses.map((license) => {
-                message = message.concat(`${license.license.id}, `);
-              });
-              return message.slice(0, -2);
+            if (input.licenses) {
+              // Certain license reports only provide the license name in the `name` field
+              // Check there first and then default to `id`
+              return [..._.cloneDeep(input.licenses)]
+                .map((license) =>
+                  _.has(license, 'license.name')
+                    ? _.get(license, 'license.name')
+                    : _.get(license, 'license.id')
+                )
+                .join(', ');
             }
             // If there are no found licenses, remove field
             return undefined;
@@ -323,7 +326,11 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                 transformer: (input: CweRepository): string[] =>
                   getCCIsForNISTTags(getNISTTags(input))
               },
-              cwe: {path: 'cwes', transformer: formatCWETags}
+              cwe: {path: 'cwes', transformer: formatCWETags},
+              created: {path: 'created'},
+              published: {path: 'published'},
+              updated: {path: 'updated'},
+              rejected: {path: 'rejected'}
             },
             descriptions: [
               {
@@ -350,26 +357,6 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                         label: 'Proof of concept'
                       }
                     : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'created',
-                transformer: (input: Record<string, unknown>) =>
-                  input ? {data: input, label: 'Date created'} : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'published',
-                transformer: (input: Record<string, unknown>) =>
-                  input ? {data: input, label: 'Date published'} : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'updated',
-                transformer: (input: Record<string, unknown>) =>
-                  input ? {data: input, label: 'Date updated'} : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'rejected',
-                transformer: (input: Record<string, unknown>) =>
-                  input ? {data: input, label: 'Date rejected'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'credits',
