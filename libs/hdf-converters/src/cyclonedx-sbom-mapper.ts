@@ -6,6 +6,7 @@ import {CweNistMapping} from './mappings/CweNistMapping';
 import {getCCIsForNISTTags} from './utils/global';
 import {
   RatingRepository,
+  Vulnerability,
   VulnerabilityRepository
 } from '@cyclonedx/cyclonedx-library/dist.d/models/vulnerability';
 import {CweRepository} from '@cyclonedx/cyclonedx-library/dist.d/types';
@@ -13,19 +14,20 @@ import {Severity} from '@cyclonedx/cyclonedx-library/dist.d/enums/vulnerability'
 import {
   Component,
   ComponentRepository,
-  OptionalBomProperties
+  OptionalBomProperties,
+  OptionalComponentProperties
 } from '@cyclonedx/cyclonedx-library/dist.d/models';
 
-type IntermediaryComponent = {
+type IntermediaryComponent = Omit<OptionalComponentProperties, 'components'> & {
   components?: IntermediaryComponent[];
   affectingVulnerabilities?: string[];
-  [key: string]: unknown;
+  name: string;
+  'bom-ref'?: string;
+  isDummy?: boolean;
 };
 
-type IntermediaryVulnerability = {
-  affectedComponents?: IntermediaryComponent[];
-  affects: Record<string, unknown>[];
-  [key: string]: unknown;
+type IntermediaryVulnerability = Vulnerability & {
+  affectedComponents?: number[];
 };
 
 type DataStorage = {
@@ -125,23 +127,26 @@ export class CycloneDXSBOMResults {
   }
 
   /*
-  Copy all components that are affected by a vulnerability and place them under that corresponding vulnerability
+  Copy the indices of all components that are affected by a vulnerability and place them under that corresponding vulnerability
   Also note in each component the IDs of the vulnerabilities that affect them
   This allows for bidirectional traversal in SBOM view
 
   Should result in the following general structure:
   {
-    components: [...],
+    components: [
+      component: {
+        affectingVulnerabilities: [ // Added field
+          vulnID,
+          ...
+        ],
+        ...
+      },
+      ...
+    ],
     vulnerabilities: [
       vulnerability: {
-        affectedComponents: [             // Added field
-          component: {
-            affectingVulnerabilities: [   // Added field
-              vulnID,
-              ...
-            ],
-            ...
-          },
+        affectedComponents: [       // Added field
+          componentIndex,
           ...
         ],
         ...
@@ -162,26 +167,10 @@ export class CycloneDXSBOMResults {
       for (const id of vulnerability.affects) {
         for (const component of data.components as IntermediaryComponent[]) {
           // Find every component that is affected via listed bom-refs
-          if (component['bom-ref'] === id.ref) {
-            // Add that affected component to the corresponding vulnerability object
-            // Selectively pick out fields to display; full components are listed in full component structure
+          if (_.get(component, 'bom-ref') === id.ref.toString()) {
+            // Add the index of that affected component to the corresponding vulnerability object
             vulnerability.affectedComponents.push(
-              _.pick(component, [
-                'type',
-                'mime-type',
-                'bom-ref',
-                'supplier',
-                'manufacturer',
-                'authors', // Replaces `author` in v1.6
-                'author', // Deprecated in v1.6
-                'publisher',
-                'group',
-                'name',
-                'version',
-                'description',
-                'licenses',
-                'copyright'
-              ])
+              (data.components as IntermediaryComponent[]).indexOf(component)
             );
 
             if (!component.affectingVulnerabilities) {
@@ -189,7 +178,7 @@ export class CycloneDXSBOMResults {
             }
             // Also record the ID of the vulnerability in the component for use in bidirectional traversal
             component.affectingVulnerabilities.push(
-              vulnerability['bom-ref'] as string
+              _.get(vulnerability, 'bom-ref') as unknown as string
             );
           }
         }
@@ -204,14 +193,24 @@ export class CycloneDXSBOMResults {
     data.vulnerabilities = [
       ...(_.cloneDeep(data.raw.vulnerabilities) as VulnerabilityRepository)
     ] as unknown as IntermediaryVulnerability[];
+    // Have an empty components listing since this is a VEX
+    data.components = [];
 
     for (const vulnerability of data.vulnerabilities) {
-      // Build a dummy component for each bom-ref identified as being affected by the vulnerability
-      // Add that component to the corresponding vulnerability object
-      vulnerability.affectedComponents = vulnerability.affects.map((id) => ({
-        'bom-ref': `${id.ref}`,
-        name: `${id.ref}`
-      }));
+      vulnerability.affectedComponents = [...vulnerability.affects].map(
+        (id) => {
+          // Build a dummy component for each bom-ref identified as being affected by the vulnerability
+          const dummy: IntermediaryComponent = {
+            name: `${id.ref}`,
+            'bom-ref': `${id.ref}`,
+            isDummy: true
+          };
+          // Add that component to the corresponding vulnerability object
+          (data.components as IntermediaryComponent[]).push(dummy);
+          // Return the index of that dummy object
+          return (data.components as IntermediaryComponent[]).indexOf(dummy);
+        }
+      );
     }
   }
 
@@ -222,6 +221,17 @@ export class CycloneDXSBOMResults {
 
 export class CycloneDXSBOMMapper extends BaseConverter {
   withRaw: boolean;
+
+  // Pull any keys from a given index for the stored components listing
+  getComponentValueAtIndex(
+    index: number,
+    keys: string[]
+  ): Record<string, unknown> {
+    return _.pick(
+      (this.data.components as IntermediaryComponent[])[index],
+      keys
+    );
+  }
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -420,20 +430,48 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                 path: 'affectedComponents',
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: {
-                  transformer: (input: Record<string, unknown>): string => {
-                    const group = input.group ? `${input.group}/` : '';
-                    const version = input.version ? `@${input.version}` : '';
-                    return `Component ${group}${input.name}${version} is vulnerable`;
+                  transformer: (index: number): string => {
+                    const selectComponentValues = this.getComponentValueAtIndex(
+                      index,
+                      ['group', 'version', 'name']
+                    );
+                    const group = _.has(selectComponentValues, 'group')
+                      ? `${selectComponentValues.group}/`
+                      : '';
+                    const version = _.has(selectComponentValues, 'version')
+                      ? `@${selectComponentValues.version}`
+                      : '';
+                    return `Component ${group}${_.get(selectComponentValues, 'name')}${version} is vulnerable`;
                   }
                 },
                 message: {
-                  transformer: (input: Record<string, unknown>): string => {
+                  transformer: (index: number): string => {
+                    // Selectively pick out fields to display; full components are listed in full component structure
+                    const selectComponentValues = this.getComponentValueAtIndex(
+                      index,
+                      [
+                        'type',
+                        'mime-type',
+                        'bom-ref',
+                        'supplier',
+                        'manufacturer',
+                        'authors', // Replaces `author` in v1.6
+                        'author', // Deprecated in v1.6
+                        'publisher',
+                        'group',
+                        'name',
+                        'version',
+                        'description',
+                        'licenses',
+                        'copyright'
+                      ]
+                    );
                     let msg = '-Component Summary-';
-                    for (const item in input) {
-                      if (input[item] instanceof Array) {
-                        msg += `\n\n- ${_.capitalize(item)}: ${JSON.stringify(input[item], null, 2).replace(/"/g, '')}`;
+                    for (const item in selectComponentValues) {
+                      if (_.get(selectComponentValues, item) instanceof Array) {
+                        msg += `\n\n- ${_.capitalize(item)}: ${JSON.stringify(_.get(selectComponentValues, item), null, 2).replace(/"/g, '')}`;
                       } else {
-                        msg += `\n\n- ${_.capitalize(item)}: ${input[item]}`;
+                        msg += `\n\n- ${_.capitalize(item)}: ${_.get(selectComponentValues, item)}`;
                       }
                     }
                     return msg;
@@ -448,12 +486,17 @@ export class CycloneDXSBOMMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      transformer: (input: Record<string, any>): Record<string, unknown> => {
+      transformer: (input: DataStorage): Record<string, unknown> => {
+        // VEX files will generate dummy components for control results
+        // Filter them out for the proper components listing
+        const components = (
+          _.get(input, 'components') as IntermediaryComponent[]
+        ).filter((component) => !component.isDummy);
         return {
           auxiliary_data: [
             {
               name: 'SBOM',
-              components: _.get(input, 'components'),
+              components: components.length ? components : undefined,
               dependencies: _.get(input, 'raw.dependencies'),
               data: _.omit(input.raw, [
                 'components',
