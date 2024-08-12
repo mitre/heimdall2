@@ -197,6 +197,7 @@ function jsonToTabFormat(value: Object): Omit<Tab, 'name'> {
 const customRender = [
   'affectingVulnerabilities',
   'properties',
+  'externalReferences',
   'component',
   'parents',
   'children',
@@ -234,6 +235,16 @@ function generateTabs(
     }
   }
   if (generalProps.tableData!.rows.length > 0) tabs.unshift(generalProps);
+
+  const externalReferences = _.get(object, 'externalReferences');
+  if (externalReferences) {
+    tabs.push({
+      name: `${prefix}${' External References'}`,
+      ...jsonToTabFormat(
+        externalReferences.map((reference) => _.omit(reference, 'hashes'))
+      )
+    });
+  }
 
   // These are properties on `object` used to include arbitrary data from external tools
   if (object.properties)
@@ -323,6 +334,7 @@ export default class ComponentContent extends Vue {
       });
     }
 
+    // show components that this component depends on
     if (this.component.children.length) {
       tabs.push({
         name: 'Dependencies',
@@ -330,6 +342,7 @@ export default class ComponentContent extends Vue {
       });
     }
 
+    // show components that depend on this component
     if (this.component.parents.length) {
       tabs.push({
         name: 'Parents',
