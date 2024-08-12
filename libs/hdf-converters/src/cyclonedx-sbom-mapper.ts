@@ -61,7 +61,7 @@ function getNISTTags(input: CweRepository): string[] {
 
 // A single SBOM vulnerability can contain multiple security ratings
 // Find the max of any existing ratings and then pass to `impact`
-function aggregateImpact(ratings: RatingRepository): number {
+function maxImpact(ratings: RatingRepository): number {
   let impact = 0;
   for (const rating of ratings) {
     // Prefer to use CVSS-based `score` field when possible
@@ -296,7 +296,7 @@ export class CycloneDXSBOMMapper extends BaseConverter {
             if (input.licenses) {
               // Certain license reports only provide the license name in the `name` field
               // Check there first and then default to `id`
-              return [..._.cloneDeep(input.licenses)]
+              return [...input.licenses]
                 .map((license) =>
                   _.has(license, 'license.name')
                     ? _.get(license, 'license.name')
@@ -386,12 +386,9 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                   input: Record<string, unknown>
                 ): Record<string, unknown> => {
                   const searchFor = ['source', 'references', 'advisories'];
-                  const ref = [];
-                  for (const key of searchFor) {
-                    if (input[key]) {
-                      ref.push(input[key] as Record<string, unknown>);
-                    }
-                  }
+                  const ref = searchFor
+                    .filter((key) => input.hasOwnProperty(key))
+                    .map((key) => _.pick(input, key));
                   return {ref: ref};
                 }
               }
@@ -399,16 +396,8 @@ export class CycloneDXSBOMMapper extends BaseConverter {
             source_location: {},
             title: {
               // Give description as title if possible
-              // Cut off description after certain word count for frontend display on smaller screens
-              transformer: (input: Record<string, unknown>): string => {
-                if (input.description) {
-                  return (input.description as string).split(' ').length > 20
-                    ? `${(input.description as string).split(' ').splice(0, 20).join(' ')}...`
-                    : `${input.description}`;
-                } else {
-                  return `${input.id}`;
-                }
-              }
+              transformer: (input: Record<string, unknown>): string =>
+                input.description ? `${input.description}` : `${input.id}`
             },
             id: {path: 'id'},
             desc: {
@@ -417,7 +406,7 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                 input: Record<string, unknown>
               ): string | undefined => (input ? `${input}` : undefined)
             },
-            impact: {path: 'ratings', transformer: aggregateImpact},
+            impact: {path: 'ratings', transformer: maxImpact},
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
                 JSON.stringify(

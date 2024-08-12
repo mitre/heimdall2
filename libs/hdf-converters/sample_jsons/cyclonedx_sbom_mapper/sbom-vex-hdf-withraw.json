@@ -52,37 +52,43 @@
             {
               "ref": [
                 {
-                  "name": "NVD",
-                  "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-25649"
+                  "source": {
+                    "name": "NVD",
+                    "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-25649"
+                  }
                 },
-                [
-                  {
-                    "id": "SNYK-JAVA-COMFASTERXMLJACKSONCORE-1048302",
-                    "source": {
-                      "name": "SNYK",
-                      "url": "https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-1048302"
+                {
+                  "references": [
+                    {
+                      "id": "SNYK-JAVA-COMFASTERXMLJACKSONCORE-1048302",
+                      "source": {
+                        "name": "SNYK",
+                        "url": "https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-1048302"
+                      }
                     }
-                  }
-                ],
-                [
-                  {
-                    "title": "GitHub Commit",
-                    "url": "https://github.com/FasterXML/jackson-databind/commit/612f971b78c60202e9cd75a299050c8f2d724a59"
-                  },
-                  {
-                    "title": "GitHub Issue",
-                    "url": "https://github.com/FasterXML/jackson-databind/issues/2589"
-                  },
-                  {
-                    "title": "RedHat Bugzilla Bug",
-                    "url": "https://bugzilla.redhat.com/show_bug.cgi?id=1887664"
-                  }
-                ]
+                  ]
+                },
+                {
+                  "advisories": [
+                    {
+                      "title": "GitHub Commit",
+                      "url": "https://github.com/FasterXML/jackson-databind/commit/612f971b78c60202e9cd75a299050c8f2d724a59"
+                    },
+                    {
+                      "title": "GitHub Issue",
+                      "url": "https://github.com/FasterXML/jackson-databind/issues/2589"
+                    },
+                    {
+                      "title": "RedHat Bugzilla Bug",
+                      "url": "https://bugzilla.redhat.com/show_bug.cgi?id=1887664"
+                    }
+                  ]
+                }
               ]
             }
           ],
           "source_location": {},
-          "title": "com.fasterxml.jackson.core:jackson-databind is a library which contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor.\n\nAffected versions of this package...",
+          "title": "com.fasterxml.jackson.core:jackson-databind is a library which contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor.\n\nAffected versions of this package are vulnerable to XML External Entity (XXE) Injection. A flaw was found in FasterXML Jackson Databind, where it does not have entity expansion secured properly in the DOMDeserializer class. The highest threat from this vulnerability is data integrity.",
           "id": "CVE-2020-25649",
           "desc": "com.fasterxml.jackson.core:jackson-databind is a library which contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor.\n\nAffected versions of this package are vulnerable to XML External Entity (XXE) Injection. A flaw was found in FasterXML Jackson Databind, where it does not have entity expansion secured properly in the DOMDeserializer class. The highest threat from this vulnerability is data integrity.",
           "impact": 0.82,
@@ -97,7 +103,7 @@
           ]
         }
       ],
-      "sha256": "de340123e25d2d20c70b9ffc2f7f9f59d264b331ea37b662be6def8a5eb7705b"
+      "sha256": "b49665f82538e2550edbdc5cb008df636fbf721891c517523017b9aab060b92e"
     }
   ],
   "passthrough": {
