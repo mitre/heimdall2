@@ -10,13 +10,12 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {execution_unique_key} from '@/utilities/format_util';
 import {
   componentFitsSeverityFilter,
-  getSbomComponents,
   isOnlySbomFileId,
   isSbomFileId,
-  SBOMComponent
+  parseSbomPassthrough,
+  ContextualizedSBOMComponent
 } from '@/utilities/sbom_util';
 import {
   ContextualizedControl,
@@ -514,25 +513,20 @@ export class FilteredData extends VuexModule {
     };
   }
 
-  get components(): (filter: Filter) => readonly SBOMComponent[] {
+  get components(): (filter: Filter) => readonly ContextualizedSBOMComponent[] {
     return (filter: Filter) => {
-      const evaluations = this.sboms(filter.fromFile);
-      const components: SBOMComponent[] = [];
+      const sboms = this.sboms(filter.fromFile).map(parseSbomPassthrough);
       const controls = this.controls(filter);
 
-      // grab every component from each section and apply a filter if necessary
-      for (const evaluation of evaluations) {
-        for (const component of getSbomComponents(evaluation)) {
-          const key = `${execution_unique_key(evaluation)}-${component['bom-ref']}`;
-          // filter components by their affecting vulnerabilities
-          if (
+      // grab every component from each SBOM and apply a filter if necessary
+      return sboms.flatMap((sbom) =>
+        sbom.components.filter((component) => {
+          return (
             !filter.severity ||
             componentFitsSeverityFilter(component, filter.severity, controls)
-          )
-            components.push({...component, _key: key});
-        }
-      }
-      return components;
+          );
+        })
+      );
     };
   }
 }

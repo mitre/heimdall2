@@ -2,7 +2,7 @@
   <div>
     <v-treeview
       :items="loadedDependencies"
-      :load-children="getStructure"
+      :load-children="loadChildren"
       dense
       activatable
     >
@@ -24,12 +24,7 @@
 </template>
 
 <script lang="ts">
-import {FilteredDataModule} from '@/store/data_filters';
-import {
-  getSbomMetadata,
-  SBOMDependency,
-  getStructuredSbomDependencies
-} from '@/utilities/sbom_util';
+import {ContextualizedSBOMComponent, SBOMData} from '@/utilities/sbom_util';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -37,70 +32,56 @@ import {Prop} from 'vue-property-decorator';
 
 interface TreeNode {
   name: string;
-  children?: DependencyStructure[];
+  children?: TreeNode[];
   id: number;
+  component: ContextualizedSBOMComponent;
 }
-
-type DependencyStructure = TreeNode & SBOMDependency;
 
 @Component({
   components: {}
 })
 export default class DependencyTree extends Vue {
+  @Prop({type: Object, required: true}) readonly sbomData!: SBOMData;
   @Prop({type: String, required: false}) readonly searchTerm!: string;
   @Prop({type: String, required: false}) readonly targetComponent!:
     | string
     | null;
 
-  loadedDependencies: DependencyStructure[] = [];
+  loadedDependencies: TreeNode[] = [];
   nextId = 0;
+
   mounted() {
-    this.loadedDependencies = this.rootComponentRefs.map(this.getRootStructure);
-    console.log('Mounted ' + this.targetComponent);
+    const root = this.sbomData.metadata?.component;
+    if (root) this.loadedDependencies = [this.componentToTreeNode(root)];
   }
 
   severityColor(severity: string): string {
     return `severity${_.startCase(severity)}`;
   }
 
-  get structuredDependencies() {
-    return getStructuredSbomDependencies();
+  loadChildren(item: TreeNode) {
+    item.children = item.component.children.map(this.componentToTreeNode);
   }
 
-  get rootComponentRefs(): string[] {
-    return FilteredDataModule.sboms(FilteredDataModule.selected_sbom_ids)
-      .map(getSbomMetadata)
-      .map((result) =>
-        result.ok ? _.get(result.value, 'component.bom-ref', '') : ''
-      );
+  componentToTreeNode(component: ContextualizedSBOMComponent): TreeNode {
+    return {
+      name: this.componentDisplayName(component),
+      id: this.nextId++, // use this.nextId and then increment it
+      component: component,
+      // having a children array indicates that children can be loaded
+      // the UI will reflect this
+      children: component.children?.length ? [] : undefined
+    };
   }
 
-  getRootStructure(ref: string): DependencyStructure {
-    const root = this.structuredDependencies.get(ref);
-    const id = this.nextId;
-    this.nextId += 1;
-    if (root) return {...root, name: ref, children: [], id};
-    return {ref, name: ref, id, children: [], dependsOn: []};
-  }
-
-  getStructure(item: DependencyStructure) {
-    const children: DependencyStructure[] = [];
-    for (const ref of item.dependsOn || []) {
-      const child = this.structuredDependencies.get(ref);
-      if (child) {
-        if (child.dependsOn?.length)
-          // used to indicate that this tree node has more dependents to load in
-          children.push({
-            ...child,
-            name: child.ref,
-            children: [],
-            id: this.nextId
-          });
-        else children.push({...child, name: child.ref, id: this.nextId});
-        this.nextId += 1;
-      }
-    }
-    item.children = children;
+  componentDisplayName(component: ContextualizedSBOMComponent): string {
+    const group = _.get(component, 'group');
+    const version = _.get(component, 'version');
+    const name = component.name;
+    if (group && version) return `${group}/${name} ${version}`;
+    if (group) return `${group}/${name}`;
+    if (version) return `${name} ${version}`;
+    return component.name;
   }
 }
 

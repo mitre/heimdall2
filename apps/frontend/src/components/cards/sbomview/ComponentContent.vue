@@ -101,13 +101,17 @@ import {Prop} from 'vue-property-decorator';
 import _ from 'lodash';
 import {ContextualizedControl} from 'inspecjs';
 import {parseJson} from '@mitre/hdf-converters/src/utils/parseJson';
-import {SBOMComponent, SBOMMetadata, SBOMProperty} from '@/utilities/sbom_util';
+import {
+  ContextualizedSBOMComponent,
+  SBOMMetadata,
+  SBOMProperty
+} from '@/utilities/sbom_util';
 
 interface Tab {
   name: string;
   tableData?: TableData;
   treeData?: Treeview[];
-  relatedComponents?: SBOMComponent[];
+  relatedComponents?: ContextualizedSBOMComponent[];
 }
 
 type TableData = {columns: string[]; rows: string[][]};
@@ -147,7 +151,7 @@ function objectToTreeview(obj: Object, id: number): Treeview[] {
  */
 function objectDepth(obj: Object, n: number): number {
   let max = n;
-  for (const [_key, value] of Object.entries(obj)) {
+  for (const value of Object.values(obj)) {
     if (value instanceof Object) {
       const current = objectDepth(value, n + 1);
       if (current > max) max = current;
@@ -190,13 +194,20 @@ function jsonToTabFormat(value: Object): Omit<Tab, 'name'> {
 }
 
 /** A list of tabs that don't need to be auto-generated */
-const customTabs = ['affectingVulnerabilities', 'properties', 'component'];
+const customRender = [
+  'affectingVulnerabilities',
+  'properties',
+  'component',
+  'parents',
+  'children',
+  'key'
+];
 
 /**
  * Generates a list of tabs to represent the given object
  */
 function generateTabs(
-  object: SBOMComponent | SBOMMetadata,
+  object: ContextualizedSBOMComponent | SBOMMetadata,
   prefix: string = ''
 ): Tab[] {
   const tabs: Tab[] = [];
@@ -211,7 +222,7 @@ function generateTabs(
   };
 
   for (const [key, value] of Object.entries(object)) {
-    if (customTabs.includes(key) || key.startsWith('_')) continue;
+    if (customRender.includes(key)) continue;
     if (value instanceof Object) {
       tabs.push({
         name: `${prefix}${_.startCase(key)}`,
@@ -267,14 +278,13 @@ function generateTabsFromProperties(
   components: {}
 })
 export default class ComponentContent extends Vue {
-  @Prop({type: Object, required: true}) readonly component!: SBOMComponent;
+  @Prop({type: Object, required: true})
+  readonly component!: ContextualizedSBOMComponent;
+
   // Describes metadata for an entire SBOM
   @Prop({type: Object, required: false}) readonly metadata?: SBOMMetadata;
   @Prop({type: Array, required: false, default: () => []})
   readonly vulnerabilities!: ContextualizedControl[];
-
-  @Prop({type: Array, required: false}) readonly dependencies?: SBOMComponent[];
-  @Prop({type: Array, required: false}) readonly parents?: SBOMComponent[];
 
   // stores the state of the tab selected
   tabs = {tab: null};
@@ -313,17 +323,17 @@ export default class ComponentContent extends Vue {
       });
     }
 
-    if (this.dependencies?.length) {
+    if (this.component.children.length) {
       tabs.push({
         name: 'Dependencies',
-        relatedComponents: this.dependencies
+        relatedComponents: this.component.children
       });
     }
 
-    if (this.parents?.length) {
+    if (this.component.parents.length) {
       tabs.push({
         name: 'Parents',
-        relatedComponents: this.parents
+        relatedComponents: this.component.parents
       });
     }
     return tabs;

@@ -1,4 +1,3 @@
-import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {
   EvaluationFile,
@@ -8,6 +7,7 @@ import {
 import {Result} from '@mitre/hdf-converters/src/utils/result';
 import {ContextualizedControl, Severity} from 'inspecjs';
 import _ from 'lodash';
+import {execution_unique_key} from './format_util';
 
 export type SBOMProperty = {name: string; value: string};
 /**
@@ -15,7 +15,7 @@ export type SBOMProperty = {name: string; value: string};
  * Other properties may be defined but are only determined at runtime
  * See https://cyclonedx.org/docs/1.6/json/#components
  */
-export interface SBOMComponent {
+export interface ContextualizedSBOMComponent {
   name: string;
   description?: string;
   externalReferences?: {
@@ -24,10 +24,19 @@ export interface SBOMComponent {
     type: string;
     hashes: Record<string, unknown>[];
   }[];
-  'bom-ref'?: string;
+  'bom-ref': string;
   properties?: SBOMProperty[];
-  affectingVulnerabilities: string[]; // an array of bom-refs
-  _key: string; // used to uniquely identify the component. It won't show in UI
+
+  // custom SBOM component data not included in CycloneDX Schema
+
+  /** A list of bom-refs that link to controls (vulnerabilities) */
+  affectingVulnerabilities: string[];
+  /** a string to uniquely identify the component. It won't show in UI */
+  key: string;
+  /** a list of this component's dependencies */
+  children: ContextualizedSBOMComponent[];
+  /** a list of components dependent on this component */
+  parents: ContextualizedSBOMComponent[];
 }
 
 /**
@@ -36,28 +45,14 @@ export interface SBOMComponent {
  * See https://cyclonedx.org/docs/1.6/json/#components_items_properties
  */
 export interface SBOMMetadata {
-  component?: SBOMComponent;
+  component?: ContextualizedSBOMComponent;
   properties?: SBOMProperty[];
 }
 
-export interface SBOMDependency {
-  ref: string;
-  dependsOn?: string[];
-}
-
-export interface ContextualizedSBOMDependency {
-  ref: string;
-  dependsOn: ContextualizedSBOMDependency[];
-}
-
-interface SBOMPassthroughSection {
-  name: 'SBOM';
-  components?: SBOMComponent[];
-  dependencies?: SBOMDependency[];
-  data?: {
-    // contains more unused fields
-    metadata?: SBOMMetadata;
-  };
+export interface SBOMData {
+  components: Readonly<ContextualizedSBOMComponent>[];
+  metadata?: Readonly<SBOMMetadata>;
+  componentMap: Map<string, Readonly<ContextualizedSBOMComponent>>;
 }
 
 /**
@@ -151,7 +146,7 @@ export function getVulnsFromBomRef(
 }
 
 export function componentFitsSeverityFilter(
-  component: SBOMComponent,
+  component: ContextualizedSBOMComponent,
   severities: Severity[],
   controls: readonly ContextualizedControl[]
 ): boolean {
@@ -172,91 +167,94 @@ export function componentFitsSeverityFilter(
   return false;
 }
 
-function getSbomPassthroughSection(
+/**
+ * Takes the raw passthrough section and extracts the important SBOM data and relationships from them
+ *
+ * @param evaluation The evaluation to parse the passthrough of
+ * @returns An object containing all the important information and relationships about an SBOM
+ */
+export function parseSbomPassthrough(
   evaluation: SourcedContextualizedEvaluation
-): Result<SBOMPassthroughSection, null> {
+): SBOMData {
   const passthroughSection = _.get(
     evaluation,
     'data.passthrough.auxiliary_data',
     []
   ).find(_.matchesProperty('name', 'SBOM'));
-  if (passthroughSection) return {ok: true, value: passthroughSection};
-  return {ok: false, error: null};
-}
 
-export function getSbomComponents(
-  evaluation: SourcedContextualizedEvaluation
-): SBOMComponent[] {
-  const passthroughSection = getSbomPassthroughSection(evaluation);
-  if (passthroughSection.ok) {
-    return _.get(passthroughSection.value, 'components', []);
+  const componentKeyMap = new Map<
+    string,
+    Readonly<ContextualizedSBOMComponent>
+  >();
+  const componentRefMap = new Map<
+    string,
+    Readonly<ContextualizedSBOMComponent>
+  >();
+  if (!passthroughSection) {
+    return {
+      components: [],
+      componentMap: componentKeyMap
+    };
   }
-  return [];
-}
 
-/**
- * Returns a list describing the dependency relationships in an SBOM
- */
-export function getSbomDependencies(
-  evaluation: SourcedContextualizedEvaluation
-): SBOMDependency[] {
-  const passthroughSection = getSbomPassthroughSection(evaluation);
-  if (passthroughSection.ok) {
-    return _.get(passthroughSection.value, 'dependencies', []);
+  const components = [];
+  let rawComponents;
+  const root = _.get(passthroughSection, 'data.metadata.component');
+  // ensure that the source object does not get modified
+  if (root)
+    rawComponents = _.get(passthroughSection, 'components', []).concat([root]);
+  else rawComponents = _.get(passthroughSection, 'components', []);
+
+  for (const rawComponent of rawComponents) {
+    const bomRef = _.get(rawComponent, 'bom-ref', 'BOM REF NOT FOUND');
+    const key = `${execution_unique_key(evaluation)}-${bomRef}`;
+
+    const component = {
+      ...(_.omit(rawComponent, [
+        'name',
+        'bom-ref',
+        'affectingVulnerabilities'
+      ]) as Object),
+      name: _.get(rawComponent, 'name', 'NAME NOT FOUND'),
+      'bom-ref': bomRef,
+      affectingVulnerabilities: _.get(
+        rawComponent,
+        'affectingVulnerabilities',
+        []
+      ),
+      key,
+      children: [], // will be added to later
+      parents: [] // will be added to later
+    };
+    components.push(component);
+    componentKeyMap.set(key, component);
+    componentRefMap.set(bomRef, component);
   }
-  return [];
-}
 
-/**
- * Converts a single dependency object (lists all dependencies of a single component)
- * into a list of components
- */
-export function sbomDependencyToComponents(
-  dependency: SBOMDependency,
-  components: readonly SBOMComponent[]
-): SBOMComponent[] {
-  const refs = dependency.dependsOn || [];
-  const dependencies: SBOMComponent[] = [];
-  for (const ref of refs) {
-    const component = components.find(_.matchesProperty('bom-ref', ref));
-    if (component) dependencies.push(component);
+  let metadata: SBOMMetadata = _.get(passthroughSection, 'data.metadata');
+  const metadataRef = metadata.component?.['bom-ref'];
+  if (metadataRef) {
+    // ensure that component.metadata references the
+    // single component instance generated in the above loop
+    metadata = {...metadata, component: componentRefMap.get(metadataRef)};
   }
-  return dependencies;
-}
 
-/**
- * Gets the SBOM metadata from the given evaluation
- */
-export function getSbomMetadata(
-  evaluation: SourcedContextualizedEvaluation
-): Result<SBOMMetadata, null> {
-  const passthroughSection = getSbomPassthroughSection(evaluation);
-  if (passthroughSection.ok) {
-    const metadata: SBOMMetadata | undefined = _.get(
-      passthroughSection.value,
-      'data.metadata'
-    );
-    if (metadata) return {ok: true, value: metadata};
+  for (const rawDependency of _.get(passthroughSection, 'dependencies', [])) {
+    const ref = _.get(rawDependency, 'ref');
+    const parentComponent = componentRefMap.get(ref);
+    if (!ref || !parentComponent) continue;
+    for (const childRef of _.get(rawDependency, 'dependsOn', [])) {
+      const childComponent = componentRefMap.get(childRef);
+      if (!childComponent) continue;
+
+      childComponent.parents.push(parentComponent);
+      parentComponent.children.push(childComponent);
+    }
   }
-  return {ok: false, error: null};
-}
 
-/**
- * Generates a mapping from component-bom ref to a list of its dependencies
- * Ids are added later to uniquely identify the component within the treeview
- */
-export function getStructuredSbomDependencies(): Map<
-  string,
-  Readonly<SBOMDependency>
-> {
-  // map from bom-ref to a reference to the dependency structure // the root component should recursively contain every component
-  const refMap = new Map<string, Readonly<SBOMDependency>>();
-
-  const dependencies = FilteredDataModule.sboms(
-    FilteredDataModule.selected_sbom_ids
-  ).flatMap(getSbomDependencies);
-  for (const dependency of dependencies) {
-    refMap.set(dependency.ref, dependency);
-  }
-  return refMap;
+  return {
+    metadata,
+    components,
+    componentMap: componentKeyMap
+  };
 }

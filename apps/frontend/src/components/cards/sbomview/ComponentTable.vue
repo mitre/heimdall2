@@ -10,7 +10,7 @@
           :expanded.sync="expanded"
           show-expand
           :items-per-page="-1"
-          item-key="_key"
+          item-key="key"
           hide-default-footer
         >
           <!--           fixed-header
@@ -105,8 +105,6 @@
               <ComponentContent
                 :component="item"
                 :vulnerabilities="affectingVulns.get(item['bom-ref'])"
-                :dependencies="componentDependencies(item)"
-                :parents="componentParents(item)"
                 @show-component-in-table="showComponentInTable"
                 @show-component-in-tree="showComponentInTree"
               />
@@ -129,10 +127,7 @@ import {Prop} from 'vue-property-decorator';
 import ComponentContent from './ComponentContent.vue';
 import {
   getVulnsFromBomRef,
-  SBOMComponent,
-  getStructuredSbomDependencies,
-  sbomDependencyToComponents,
-  SBOMDependency
+  ContextualizedSBOMComponent
 } from '@/utilities/sbom_util';
 
 @Component({
@@ -145,7 +140,7 @@ export default class ComponentTable extends Vue {
 
   componentRef = this.$route.query.componentRef ?? null;
   severityFilter: Severity[] = this.severities;
-  expanded: SBOMComponent[] = [];
+  expanded: ContextualizedSBOMComponent[] = [];
   /** The list of columns that are currently displayed */
   headerColumns = [
     'name',
@@ -206,7 +201,7 @@ export default class ComponentTable extends Vue {
     return h;
   }
 
-  get components(): readonly SBOMComponent[] {
+  get components(): readonly ContextualizedSBOMComponent[] {
     return FilteredDataModule.components(this.all_filter);
   }
 
@@ -231,28 +226,6 @@ export default class ComponentTable extends Vue {
       if (c['bom-ref']) vulnMap.set(c['bom-ref'], componentVulns);
     }
     return vulnMap;
-  }
-
-  get structuredDependencies(): Map<string, SBOMDependency> {
-    return getStructuredSbomDependencies();
-  }
-
-  componentDependencies(component: SBOMComponent): SBOMComponent[] | undefined {
-    if (!component['bom-ref']) return;
-    const dependency = this.structuredDependencies.get(component['bom-ref']);
-
-    if (!dependency) return;
-    return sbomDependencyToComponents(dependency, this.components);
-  }
-
-  componentParents(component: SBOMComponent): SBOMComponent[] | undefined {
-    const ref = component['bom-ref'];
-    if (!ref) return;
-    return this.components.filter((c) => {
-      if (!c['bom-ref']) return false;
-      const dependency = this.structuredDependencies.get(c['bom-ref']);
-      return dependency?.dependsOn?.includes(ref);
-    });
   }
 
   severityColor(severity: string): string {

@@ -49,7 +49,7 @@
                     width="100%"
                     max-width="100%"
                     class="mx-3"
-                    @click="toggle_sbom(file)"
+                    @click="toggle_sbom(sbomData[i])"
                   >
                     <EvaluationInfo :file="file" />
                     <v-card-subtitle class="bottom-right">
@@ -92,11 +92,15 @@
                 </v-tab-item>
                 <v-tab-item key="dependencyTree">
                   <!-- Show dependency relationships -->
-                  <DependencyTree
-                    :search-term="searchTerm"
-                    :target-component="treeRef"
-                    @show-component-in-table="showComponentInTable"
-                  />
+                  <template v-for="(sbom, i) in sbomData">
+                    <DependencyTree
+                      :key="i"
+                      :search-term="searchTerm"
+                      :target-component="treeRef"
+                      :sbom-data="sbom"
+                      @show-component-in-table="showComponentInTable"
+                    />
+                  </template>
                 </v-tab-item>
               </v-tabs-items>
             </v-card>
@@ -155,8 +159,8 @@ import {compare_times} from '../utilities/delta_util';
 import ProfileData from '@/components/cards/ProfileData.vue';
 import ComponentContent from '@/components/cards/sbomview/ComponentContent.vue';
 import {
-  getSbomDependencies,
-  getSbomMetadata,
+  parseSbomPassthrough,
+  SBOMData,
   SBOMMetadata
 } from '@/utilities/sbom_util';
 
@@ -194,6 +198,10 @@ export default class Sbom extends mixins(RouteMixin, ServerMixin) {
     );
   }
 
+  get sbomData(): SBOMData[] {
+    return this.sbomFiles.map(parseSbomPassthrough);
+  }
+
   getFile(fileID: FileID) {
     return InspecDataModule.allFiles.find((f) => f.uniqueId === fileID);
   }
@@ -225,24 +233,21 @@ export default class Sbom extends mixins(RouteMixin, ServerMixin) {
   }
 
   //basically a v-model for the eval info cards when there is no slide group
-  toggle_sbom(file: SourcedContextualizedEvaluation) {
-    const metadata = getSbomMetadata(file);
-    if (metadata.ok && this.currentSbomMetadata !== metadata.value) {
-      this.currentSbomMetadata = metadata.value;
+  toggle_sbom(sbom: SBOMData) {
+    const metadata = sbom.metadata;
+    if (metadata && this.currentSbomMetadata !== metadata) {
+      this.currentSbomMetadata = metadata;
     } else {
       this.currentSbomMetadata = null;
     }
   }
 
   showComponentInTable(bomRef: string) {
-    console.log('table: ' + bomRef);
     this.searchTerm = bomRef;
     this.tab = 0; // corresponds to componentTable
   }
 
   showComponentInTree(bomRef: string) {
-    //this.searchTerm = bomRef;
-    console.log('tree: ' + bomRef);
     this.treeRef = bomRef;
     this.tab = 1; // corresponds to dependencyTree
   }
