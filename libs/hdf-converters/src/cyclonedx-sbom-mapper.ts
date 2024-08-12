@@ -61,7 +61,7 @@ function getNISTTags(input: CweRepository): string[] {
 
 // A single SBOM vulnerability can contain multiple security ratings
 // Find the max of any existing ratings and then pass to `impact`
-function aggregateImpact(ratings: RatingRepository): number {
+function maxImpact(ratings: RatingRepository): number {
   let impact = 0;
   for (const rating of ratings) {
     // Prefer to use CVSS-based `score` field when possible
@@ -109,7 +109,7 @@ export class CycloneDXSBOMResults {
     // Pull components from raw data
     data.components = [
       ...(_.cloneDeep(data.raw.components) as ComponentRepository)
-    ].map((element) => Object(element));
+    ] as unknown as IntermediaryComponent[];
 
     // Look through every component at the top level of the list
     for (const component of data.components) {
@@ -155,7 +155,7 @@ export class CycloneDXSBOMResults {
     // Pull vulnerabilities from raw data
     data.vulnerabilities = [
       ...(_.cloneDeep(data.raw.vulnerabilities) as VulnerabilityRepository)
-    ].map((element) => Object(element));
+    ] as unknown as IntermediaryVulnerability[];
 
     for (const vulnerability of data.vulnerabilities) {
       vulnerability.affectedComponents = [];
@@ -203,18 +203,15 @@ export class CycloneDXSBOMResults {
     // Pull vulnerabilities from raw data
     data.vulnerabilities = [
       ...(_.cloneDeep(data.raw.vulnerabilities) as VulnerabilityRepository)
-    ].map((element) => Object(element));
+    ] as unknown as IntermediaryVulnerability[];
 
     for (const vulnerability of data.vulnerabilities) {
-      vulnerability.affectedComponents = [];
-      for (const id of vulnerability.affects) {
-        // Build a dummy component for each bom-ref identified as being affected by the vulnerability
-        // Add that component to the corresponding vulnerability object
-        vulnerability.affectedComponents.push({
-          'bom-ref': `${id.ref}`,
-          name: `${id.ref}`
-        });
-      }
+      // Build a dummy component for each bom-ref identified as being affected by the vulnerability
+      // Add that component to the corresponding vulnerability object
+      vulnerability.affectedComponents = vulnerability.affects.map((id) => ({
+        'bom-ref': `${id.ref}`,
+        name: `${id.ref}`
+      }));
     }
   }
 
@@ -296,13 +293,16 @@ export class CycloneDXSBOMMapper extends BaseConverter {
         license: {
           path: 'raw.metadata.component',
           transformer: (input: Component): string | undefined => {
-            let message = '';
-            if (Array.isArray(input.licenses)) {
-              // Join together all applicable licenses for this component
-              input.licenses.map((license) => {
-                message = message.concat(`${license.license.id}, `);
-              });
-              return message.slice(0, -2);
+            if (input.licenses) {
+              // Certain license reports only provide the license name in the `name` field
+              // Check there first and then default to `id`
+              return [...input.licenses]
+                .map((license) =>
+                  _.has(license, 'license.name')
+                    ? _.get(license, 'license.name')
+                    : _.get(license, 'license.id')
+                )
+                .join(', ');
             }
             // If there are no found licenses, remove field
             return undefined;
@@ -326,35 +326,31 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                 transformer: (input: CweRepository): string[] =>
                   getCCIsForNISTTags(getNISTTags(input))
               },
-              cwe: {path: 'cwes', transformer: formatCWETags}
+              cwe: {path: 'cwes', transformer: formatCWETags},
+              created: {path: 'created'},
+              published: {path: 'published'},
+              updated: {path: 'updated'},
+              rejected: {path: 'rejected'}
             },
             descriptions: [
               {
                 path: 'detail',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input ? {data: input, label: 'Detail'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'recommendation',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: string) =>
                   input ? {data: input, label: 'Recommendation'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'workaround',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: string) =>
                   input ? {data: input, label: 'Workaround'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'proofOfConcept',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input
                     ? {
                         data: JSON.stringify(input, null, 2),
@@ -363,56 +359,22 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                     : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
-                path: 'created',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
-                  input ? {data: input, label: 'Date created'} : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'published',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
-                  input ? {data: input, label: 'Date published'} : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'updated',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
-                  input ? {data: input, label: 'Date updated'} : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'rejected',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
-                  input ? {data: input, label: 'Date rejected'} : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
                 path: 'credits',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input
                     ? {data: JSON.stringify(input, null, 2), label: 'Credits'}
                     : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'tools',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input
                     ? {data: JSON.stringify(input, null, 2), label: 'Tools'}
                     : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'analysis',
-                transformer: (
-                  input: Record<string, unknown>
-                ): Record<string, unknown> | undefined =>
+                transformer: (input: Record<string, unknown>) =>
                   input
                     ? {data: JSON.stringify(input, null, 2), label: 'Analysis'}
                     : undefined
@@ -424,12 +386,9 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                   input: Record<string, unknown>
                 ): Record<string, unknown> => {
                   const searchFor = ['source', 'references', 'advisories'];
-                  const ref = [];
-                  for (const key of searchFor) {
-                    if (input[key]) {
-                      ref.push(input[key] as Record<string, unknown>);
-                    }
-                  }
+                  const ref = searchFor
+                    .filter((key) => input.hasOwnProperty(key))
+                    .map((key) => _.pick(input, key));
                   return {ref: ref};
                 }
               }
@@ -437,16 +396,8 @@ export class CycloneDXSBOMMapper extends BaseConverter {
             source_location: {},
             title: {
               // Give description as title if possible
-              // Cut off description after certain word count for frontend display on smaller screens
-              transformer: (input: Record<string, unknown>): string => {
-                if (input.description) {
-                  return (input.description as string).split(' ').length > 20
-                    ? `${(input.description as string).split(' ').splice(0, 20).join(' ')}...`
-                    : `${input.description}`;
-                } else {
-                  return `${input.id}`;
-                }
-              }
+              transformer: (input: Record<string, unknown>): string =>
+                input.description ? `${input.description}` : `${input.id}`
             },
             id: {path: 'id'},
             desc: {
@@ -455,7 +406,7 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                 input: Record<string, unknown>
               ): string | undefined => (input ? `${input}` : undefined)
             },
-            impact: {path: 'ratings', transformer: aggregateImpact},
+            impact: {path: 'ratings', transformer: maxImpact},
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
                 JSON.stringify(
@@ -516,7 +467,7 @@ export class CycloneDXSBOMMapper extends BaseConverter {
       }
     }
   };
-  constructor(exportJson: Record<string, unknown>, withRaw = false) {
+  constructor(exportJson: DataStorage, withRaw = false) {
     super(exportJson, true);
     this.withRaw = withRaw;
   }
