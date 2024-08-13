@@ -59,7 +59,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.google.guava/guava@24.1.1-jre is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1a021b8e-d143-4072-84f0-0e18292f1967\n\n- Group: com.google.guava\n\n- Name: guava\n\n- Version: 24.1.1-jre\n\n- Description: Guava is a suite of core and expanded libraries that include utility classes, google's collections, io classes, and much much more.\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1a021b8e-d143-4072-84f0-0e18292f1967\n\n- Group: com.google.guava\n\n- Name: guava\n\n- Version: 24.1.1-jre\n\n- Description: Guava is a suite of core and expanded libraries that include utility classes, google's collections, io classes, and much much more.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -105,7 +105,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.google.guava/guava@24.1.1-jre is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1a021b8e-d143-4072-84f0-0e18292f1967\n\n- Group: com.google.guava\n\n- Name: guava\n\n- Version: 24.1.1-jre\n\n- Description: Guava is a suite of core and expanded libraries that include utility classes, google's collections, io classes, and much much more.\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1a021b8e-d143-4072-84f0-0e18292f1967\n\n- Group: com.google.guava\n\n- Name: guava\n\n- Version: 24.1.1-jre\n\n- Description: Guava is a suite of core and expanded libraries that include utility classes, google's collections, io classes, and much much more.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -148,7 +148,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -191,7 +191,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -234,7 +234,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -277,7 +277,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -320,7 +320,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -363,7 +363,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -406,7 +406,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -449,7 +449,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -492,7 +492,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -535,7 +535,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -578,7 +578,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -621,7 +621,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -664,7 +664,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -707,7 +707,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -750,7 +750,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -793,7 +793,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -836,7 +836,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -879,7 +879,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -922,7 +922,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -965,7 +965,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1009,7 +1009,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1052,7 +1052,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1095,7 +1095,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1138,7 +1138,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1181,7 +1181,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1224,7 +1224,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1267,7 +1267,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1310,7 +1310,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1353,7 +1353,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1396,7 +1396,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1439,7 +1439,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1482,7 +1482,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1525,7 +1525,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1568,7 +1568,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1611,7 +1611,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1655,7 +1655,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1699,7 +1699,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1742,7 +1742,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1785,7 +1785,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1828,7 +1828,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1871,7 +1871,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1915,7 +1915,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1958,7 +1958,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2093,7 +2093,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2137,7 +2137,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2181,7 +2181,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2225,7 +2225,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2269,7 +2269,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2313,7 +2313,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2357,7 +2357,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2401,7 +2401,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2444,7 +2444,7 @@
             {
               "status": "failed",
               "code_desc": "Component ch.qos.logback/logback-core@1.2.3 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 5e7cd916-704f-4746-83a0-ec3850bb3f49\n\n- Group: ch.qos.logback\n\n- Name: logback-core\n\n- Version: 1.2.3\n\n- Description: logback-core module\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0,\n      url: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 5e7cd916-704f-4746-83a0-ec3850bb3f49\n\n- Group: ch.qos.logback\n\n- Name: logback-core\n\n- Version: 1.2.3\n\n- Description: logback-core module\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\",\n      \"url\": \"http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2487,13 +2487,13 @@
             {
               "status": "failed",
               "code_desc": "Component ch.qos.logback/logback-core@1.2.3 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 5e7cd916-704f-4746-83a0-ec3850bb3f49\n\n- Group: ch.qos.logback\n\n- Name: logback-core\n\n- Version: 1.2.3\n\n- Description: logback-core module\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0,\n      url: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 5e7cd916-704f-4746-83a0-ec3850bb3f49\n\n- Group: ch.qos.logback\n\n- Name: logback-core\n\n- Version: 1.2.3\n\n- Description: logback-core module\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\",\n      \"url\": \"http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\"\n    }\n  }\n]",
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "Component ch.qos.logback/logback-classic@1.2.3 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 6d8385bd-f9a9-4a97-9031-3a1c717209b7\n\n- Group: ch.qos.logback\n\n- Name: logback-classic\n\n- Version: 1.2.3\n\n- Description: logback-classic module\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0,\n      url: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 6d8385bd-f9a9-4a97-9031-3a1c717209b7\n\n- Group: ch.qos.logback\n\n- Name: logback-classic\n\n- Version: 1.2.3\n\n- Description: logback-classic module\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\",\n      \"url\": \"http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2536,7 +2536,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2579,7 +2579,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2624,7 +2624,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2667,7 +2667,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2711,7 +2711,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2754,7 +2754,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2797,7 +2797,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-http@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c1abfd09-121f-418c-befa-4d6b9e164769\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-http\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c1abfd09-121f-418c-befa-4d6b9e164769\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-http\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2842,7 +2842,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-http@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c1abfd09-121f-418c-befa-4d6b9e164769\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-http\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c1abfd09-121f-418c-befa-4d6b9e164769\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-http\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2889,7 +2889,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-webapp@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 71f396a0-0285-465e-8ce3-6eacb47be941\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-webapp\n\n- Version: 9.4.18.v20190429\n\n- Description: Jetty web application support\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 71f396a0-0285-465e-8ce3-6eacb47be941\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-webapp\n\n- Version: 9.4.18.v20190429\n\n- Description: Jetty web application support\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2932,7 +2932,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-xml@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 39e5b7f2-b34e-4d46-8f70-841e0ef6a3b9\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-xml\n\n- Version: 9.4.18.v20190429\n\n- Description: The jetty xml utilities.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 39e5b7f2-b34e-4d46-8f70-841e0ef6a3b9\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-xml\n\n- Version: 9.4.18.v20190429\n\n- Description: The jetty xml utilities.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2975,7 +2975,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-servlets@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-servlets\n\n- Version: 9.4.18.v20190429\n\n- Description: Utility Servlets from Jetty\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-servlets\n\n- Version: 9.4.18.v20190429\n\n- Description: Utility Servlets from Jetty\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3020,7 +3020,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-servlets@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-servlets\n\n- Version: 9.4.18.v20190429\n\n- Description: Utility Servlets from Jetty\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-servlets\n\n- Version: 9.4.18.v20190429\n\n- Description: Utility Servlets from Jetty\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3066,7 +3066,7 @@
             {
               "status": "failed",
               "code_desc": "Component junit/junit@4.12 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8005328c-f1b3-4ac3-8aa6-1e5013d8cef2\n\n- Group: junit\n\n- Name: junit\n\n- Version: 4.12\n\n- Description: JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0,\n      url: http://www.eclipse.org/legal/epl-v10.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8005328c-f1b3-4ac3-8aa6-1e5013d8cef2\n\n- Group: junit\n\n- Name: junit\n\n- Version: 4.12\n\n- Description: JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\",\n      \"url\": \"http://www.eclipse.org/legal/epl-v10.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3105,7 +3105,7 @@
             {
               "status": "failed",
               "code_desc": "Component net.bytebuddy/byte-buddy@1.9.7 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0052b14c-fb6a-404e-89fb-48cad6d2535d\n\n- Group: net.bytebuddy\n\n- Name: byte-buddy\n\n- Version: 1.9.7\n\n- Description: Byte Buddy is a Java library for creating Java classes at run time. This artifact is a build of Byte Buddy with all ASM dependencies repackaged into its own name space.\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0052b14c-fb6a-404e-89fb-48cad6d2535d\n\n- Group: net.bytebuddy\n\n- Name: byte-buddy\n\n- Version: 1.9.7\n\n- Description: Byte Buddy is a Java library for creating Java classes at run time. This artifact is a build of Byte Buddy with all ASM dependencies repackaged into its own name space.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3145,7 +3145,7 @@
             {
               "status": "failed",
               "code_desc": "Component net.bytebuddy/byte-buddy@1.9.7 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0052b14c-fb6a-404e-89fb-48cad6d2535d\n\n- Group: net.bytebuddy\n\n- Name: byte-buddy\n\n- Version: 1.9.7\n\n- Description: Byte Buddy is a Java library for creating Java classes at run time. This artifact is a build of Byte Buddy with all ASM dependencies repackaged into its own name space.\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0052b14c-fb6a-404e-89fb-48cad6d2535d\n\n- Group: net.bytebuddy\n\n- Name: byte-buddy\n\n- Version: 1.9.7\n\n- Description: Byte Buddy is a Java library for creating Java classes at run time. This artifact is a build of Byte Buddy with all ASM dependencies repackaged into its own name space.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3188,7 +3188,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.hibernate/hibernate-core@5.2.18.Final is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8c0378f7-4c0e-4ee3-849d-740b0035c371\n\n- Group: org.hibernate\n\n- Name: hibernate-core\n\n- Version: 5.2.18.Final\n\n- Description: The core O/RM functionality as provided by Hibernate\n\n- Licenses: [\n  {\n    license: {\n      name: GNU Lesser General Public License,\n      url: http://www.gnu.org/licenses/lgpl-2.1.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8c0378f7-4c0e-4ee3-849d-740b0035c371\n\n- Group: org.hibernate\n\n- Name: hibernate-core\n\n- Version: 5.2.18.Final\n\n- Description: The core O/RM functionality as provided by Hibernate\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"GNU Lesser General Public License\",\n      \"url\": \"http://www.gnu.org/licenses/lgpl-2.1.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3231,7 +3231,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.hibernate/hibernate-core@5.2.18.Final is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8c0378f7-4c0e-4ee3-849d-740b0035c371\n\n- Group: org.hibernate\n\n- Name: hibernate-core\n\n- Version: 5.2.18.Final\n\n- Description: The core O/RM functionality as provided by Hibernate\n\n- Licenses: [\n  {\n    license: {\n      name: GNU Lesser General Public License,\n      url: http://www.gnu.org/licenses/lgpl-2.1.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8c0378f7-4c0e-4ee3-849d-740b0035c371\n\n- Group: org.hibernate\n\n- Name: hibernate-core\n\n- Version: 5.2.18.Final\n\n- Description: The core O/RM functionality as provided by Hibernate\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"GNU Lesser General Public License\",\n      \"url\": \"http://www.gnu.org/licenses/lgpl-2.1.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3274,7 +3274,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.dom4j/dom4j@2.1.1 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 627bb70b-4b85-4801-8239-f03de04ca5db\n\n- Group: org.dom4j\n\n- Name: dom4j\n\n- Version: 2.1.1\n\n- Description: flexible XML framework for Java\n\n- Licenses: [\n  {\n    license: {\n      name: BSD 3-clause New License,\n      url: https://github.com/dom4j/dom4j/blob/master/LICENSE\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 627bb70b-4b85-4801-8239-f03de04ca5db\n\n- Group: org.dom4j\n\n- Name: dom4j\n\n- Version: 2.1.1\n\n- Description: flexible XML framework for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"BSD 3-clause New License\",\n      \"url\": \"https://github.com/dom4j/dom4j/blob/master/LICENSE\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3317,7 +3317,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.apache.httpcomponents/httpclient@4.5.7 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 893beba4-580b-4ada-a4cf-067fbe145507\n\n- Group: org.apache.httpcomponents\n\n- Name: httpclient\n\n- Version: 4.5.7\n\n- Description: Apache HttpComponents Client\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 893beba4-580b-4ada-a4cf-067fbe145507\n\n- Group: org.apache.httpcomponents\n\n- Name: httpclient\n\n- Version: 4.5.7\n\n- Description: Apache HttpComponents Client\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3360,7 +3360,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.liquibase/liquibase-core@3.6.3 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: ab3bfc00-8d35-4a4d-b314-86573681d910\n\n- Group: org.liquibase\n\n- Name: liquibase-core\n\n- Version: 3.6.3\n\n- Description: Liquibase is a tool for managing and executing database changes.\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: ab3bfc00-8d35-4a4d-b314-86573681d910\n\n- Group: org.liquibase\n\n- Name: liquibase-core\n\n- Version: 3.6.3\n\n- Description: Liquibase is a tool for managing and executing database changes.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3404,7 +3404,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty.http2/http2-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 55521fe9-aed2-403e-9df2-75fc5af90f54\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 55521fe9-aed2-403e-9df2-75fc5af90f54\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3447,13 +3447,13 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty.http2/http2-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 55521fe9-aed2-403e-9df2-75fc5af90f54\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 55521fe9-aed2-403e-9df2-75fc5af90f54\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty.http2/http2-common@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: f4a06b14-3945-4381-b3dd-b46407b02b6b\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-common\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: f4a06b14-3945-4381-b3dd-b46407b02b6b\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-common\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3496,7 +3496,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty.http2/http2-common@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: f4a06b14-3945-4381-b3dd-b46407b02b6b\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-common\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: f4a06b14-3945-4381-b3dd-b46407b02b6b\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-common\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3539,7 +3539,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty.http2/http2-hpack@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: d2a5e2bf-ead6-4768-866a-385166eb6709\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-hpack\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: d2a5e2bf-ead6-4768-866a-385166eb6709\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-hpack\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3584,7 +3584,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.rabbitmq/amqp-client@4.4.1 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 2687d928-5b18-4ce5-ab4c-8ef513f0b48c\n\n- Group: com.rabbitmq\n\n- Name: amqp-client\n\n- Version: 4.4.1\n\n- Description: The RabbitMQ Java client library allows Java applications to interface with RabbitMQ.\n\n- Licenses: [\n  {\n    license: {\n      id: MPL-1.1\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 2687d928-5b18-4ce5-ab4c-8ef513f0b48c\n\n- Group: com.rabbitmq\n\n- Name: amqp-client\n\n- Version: 4.4.1\n\n- Description: The RabbitMQ Java client library allows Java applications to interface with RabbitMQ.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"MPL-1.1\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3627,7 +3627,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.rabbitmq/amqp-client@4.4.1 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 2687d928-5b18-4ce5-ab4c-8ef513f0b48c\n\n- Group: com.rabbitmq\n\n- Name: amqp-client\n\n- Version: 4.4.1\n\n- Description: The RabbitMQ Java client library allows Java applications to interface with RabbitMQ.\n\n- Licenses: [\n  {\n    license: {\n      id: MPL-1.1\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 2687d928-5b18-4ce5-ab4c-8ef513f0b48c\n\n- Group: com.rabbitmq\n\n- Name: amqp-client\n\n- Version: 4.4.1\n\n- Description: The RabbitMQ Java client library allows Java applications to interface with RabbitMQ.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"MPL-1.1\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3670,7 +3670,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.h2database/h2@1.4.197 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    license: {\n      name: MPL 2.0 or EPL 1.0,\n      url: http://h2database.com/html/license.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"MPL 2.0 or EPL 1.0\",\n      \"url\": \"http://h2database.com/html/license.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3715,13 +3715,13 @@
             {
               "status": "failed",
               "code_desc": "Component com.h2database/h2@1.4.197 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    license: {\n      name: MPL 2.0 or EPL 1.0,\n      url: http://h2database.com/html/license.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"MPL 2.0 or EPL 1.0\",\n      \"url\": \"http://h2database.com/html/license.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
         }
       ],
-      "sha256": "06574c20a58f48f045cf9aba2effceb9634cdd9cca107aaeae15a889cdf4794f"
+      "sha256": "53c9399539481b2d9a9b63e0a7edaf1dd2048d16e8af76e76e02dfa997bd4106"
     }
   ],
   "passthrough": {

@@ -498,15 +498,14 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                         'copyright'
                       ]
                     );
-                    let msg = '-Component Summary-';
-                    for (const item in selectComponentValues) {
-                      if (Array.isArray(_.get(selectComponentValues, item))) {
-                        msg += `\n\n- ${_.capitalize(item)}: ${JSON.stringify(_.get(selectComponentValues, item), null, 2).replace(/"/g, '')}`;
-                      } else {
-                        msg += `\n\n- ${_.capitalize(item)}: ${_.get(selectComponentValues, item)}`;
-                      }
-                    }
-                    return msg;
+                    const msg = Object.keys(selectComponentValues)
+                      .map((key) => {
+                        return Array.isArray(selectComponentValues[key])
+                          ? `\n\n- ${_.capitalize(key)}: ${JSON.stringify(selectComponentValues[key], null, 2)}`
+                          : `\n\n- ${_.capitalize(key)}: ${selectComponentValues[key]}`;
+                      })
+                      .join('');
+                    return `-Component Summary-${msg}`;
                   }
                 },
                 start_time: ''
