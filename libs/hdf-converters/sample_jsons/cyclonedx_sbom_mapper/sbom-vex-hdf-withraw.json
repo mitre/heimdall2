@@ -25,22 +25,20 @@
             "cwe": [
               "CWE-611"
             ],
+            "ratings": "NVD - high, SNYK - high, Acme Inc - none",
             "created": "2020-12-03T00:00:00.000Z",
             "published": "2020-12-03T00:00:00.000Z",
-            "updated": "2021-10-26T00:00:00.000Z"
+            "updated": "2021-10-26T00:00:00.000Z",
+            "credits": "Bartosz Baranowski"
           },
           "descriptions": [
             {
               "data": "XXE Injection is a type of attack against an application that parses XML input. XML is a markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable. By default, many XML processors allow specification of an external entity, a URI that is dereferenced and evaluated during XML processing. When an XML document is being parsed, the parser can make a request and include the content at the specified URI inside of the XML document.\n\nAttacks can include disclosing local files, which may contain sensitive data such as passwords or private user data, using file: schemes or relative paths in the system identifier.",
-              "label": "Detail"
+              "label": "rationale"
             },
             {
               "data": "Upgrade com.fasterxml.jackson.core:jackson-databind to version 2.6.7.4, 2.9.10.7, 2.10.5.1 or higher.",
-              "label": "Recommendation"
-            },
-            {
-              "data": "{\n  \"individuals\": [\n    {\n      \"name\": \"Bartosz Baranowski\"\n    }\n  ]\n}",
-              "label": "Credits"
+              "label": "fix"
             },
             {
               "data": "{\n  \"state\": \"not_affected\",\n  \"justification\": \"code_not_reachable\",\n  \"response\": [\n    \"will_not_fix\",\n    \"update\"\n  ],\n  \"detail\": \"Automated dataflow analysis and manual code review indicates that the vulnerable code is not reachable, either directly or indirectly.\"\n}",
@@ -102,7 +100,7 @@
           ]
         }
       ],
-      "sha256": "1fc25a62c2f831ebe656e348d1aa77c3d6515020aa67a84f73ce97211ba593a7"
+      "sha256": "80466705423821c0dce64f9d0781cbdc24c8bb7a95f55957a21ecc0077ac8f13"
     }
   ],
   "passthrough": {

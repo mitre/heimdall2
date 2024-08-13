@@ -5,7 +5,9 @@ import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {getCCIsForNISTTags} from './utils/global';
 import {
+  Credits,
   RatingRepository,
+  Source,
   Vulnerability,
   VulnerabilityRepository
 } from '@cyclonedx/cyclonedx-library/dist.d/models/vulnerability';
@@ -15,7 +17,8 @@ import {
   Component,
   ComponentRepository,
   OptionalBomProperties,
-  OptionalComponentProperties
+  OptionalComponentProperties,
+  ToolRepository
 } from '@cyclonedx/cyclonedx-library/dist.d/models';
 
 type IntermediaryComponent = Omit<OptionalComponentProperties, 'components'> & {
@@ -342,6 +345,18 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                 path: 'bom-ref',
                 transformer: filterString
               },
+              ratings: {
+                path: 'ratings',
+                transformer: (input: RatingRepository): string | undefined =>
+                  input
+                    ? [...input]
+                        .map(
+                          (rating) =>
+                            `${(rating.source as Source).name} - ${rating.severity}`
+                        )
+                        .join(', ')
+                    : undefined
+              },
               created: {
                 path: 'created',
                 transformer: filterString
@@ -357,23 +372,37 @@ export class CycloneDXSBOMMapper extends BaseConverter {
               rejected: {
                 path: 'rejected',
                 transformer: filterString
+              },
+              credits: {
+                path: 'credits',
+                transformer: (input: Credits): string | undefined =>
+                  input
+                    ? `${[...input.individuals].map((individual) => individual.name).join(', ')}`
+                    : undefined
+              },
+              tools: {
+                path: 'tools',
+                transformer: (input: ToolRepository): string | undefined =>
+                  input
+                    ? [...input].map((tool) => tool.name).join(', ')
+                    : undefined
               }
             },
             descriptions: [
               {
                 path: 'detail',
                 transformer: (input: string) =>
-                  input ? {data: input, label: 'Detail'} : undefined
+                  input ? {data: input, label: 'rationale'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'recommendation',
                 transformer: (input: string) =>
-                  input ? {data: input, label: 'Recommendation'} : undefined
+                  input ? {data: input, label: 'fix'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'workaround',
                 transformer: (input: string) =>
-                  input ? {data: input, label: 'Workaround'} : undefined
+                  input ? {data: input, label: 'workaround'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
                 path: 'proofOfConcept',
@@ -381,22 +410,8 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                   input
                     ? {
                         data: JSON.stringify(input, null, 2),
-                        label: 'Proof of concept'
+                        label: 'check'
                       }
-                    : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'credits',
-                transformer: (input: Record<string, unknown>) =>
-                  input
-                    ? {data: JSON.stringify(input, null, 2), label: 'Credits'}
-                    : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'tools',
-                transformer: (input: Record<string, unknown>) =>
-                  input
-                    ? {data: JSON.stringify(input, null, 2), label: 'Tools'}
                     : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
