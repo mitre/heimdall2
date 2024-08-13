@@ -193,7 +193,14 @@ export default class ComponentTable extends Vue {
     });
   }
 
+  headerIndex(str: string) {
+    return this.headerOptions.findIndex((option) => option.key === str);
+  }
+
   get headers() {
+    // ensure that the header columns are in a consistent order and not determined by 
+    // the order in which they are selected
+    this.headerColumns.sort((a, b) => this.headerIndex(a) - this.headerIndex(b))
     let h = this.headerColumns.map((v) => {
       return {value: v, class: 'header-box', text: _.startCase(v)};
     });
