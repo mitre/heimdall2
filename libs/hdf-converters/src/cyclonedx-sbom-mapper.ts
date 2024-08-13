@@ -67,7 +67,7 @@ function maxImpact(ratings: RatingRepository): number {
   let impact = 0;
   for (const rating of ratings) {
     // Prefer to use CVSS-based `score` field when possible
-    if (rating.score && _.get(rating, 'method') == 'CVSSv31') {
+    if (rating.score && _.get(rating, 'method') === 'CVSSv31') {
       impact = rating.score / 10 > impact ? rating.score / 10 : impact;
     } else {
       // Else interpret it from `severity` field
@@ -275,18 +275,19 @@ export class CycloneDXSBOMMapper extends BaseConverter {
         maintainer: {
           path: 'raw.metadata.component',
           transformer: (input: Component): string | undefined => {
+            // Find organization of authors if possible
+            const manufacturer = _.has(input, 'manufacturer')
+              ? ` (${(input.manufacturer as Record<string, unknown>).name})`
+              : '';
             // Check through every single possible field which may hold ownership over this component
-            if (input.author) {
-              // `author` is deprecated in v1.6 but may still appear
-              return `${input.author}`;
-            } else if (_.has(input, 'authors')) {
+            if (_.has(input, 'authors')) {
               // Join list of component authors
               return (input.authors as Record<string, unknown>[])
-                .map((author) => author.name)
+                .map((author) => `${author.name}${manufacturer}`)
                 .join(', ');
-            } else if (_.has(input, 'manufacturer')) {
-              // If we can't pinpoint the exact authors, resort to the organization
-              return `${(input.manufacturer as Record<string, unknown>).name}`;
+            } else if (input.author) {
+              // `author` is deprecated in v1.6 but may still appear
+              return `${input.author}${manufacturer}`;
             } else {
               return undefined;
             }
@@ -430,7 +431,24 @@ export class CycloneDXSBOMMapper extends BaseConverter {
               path: 'description',
               transformer: filterString
             },
-            impact: {path: 'ratings', transformer: maxImpact},
+            impact: {
+              transformer: (input: Vulnerability): number => {
+                // The `rejected` and `analysis` field may contain information on whether this vulnerability is impactful
+                if (
+                  _.has(input, 'rejected') ||
+                  [
+                    'resolved',
+                    'resolved_with_pedigree',
+                    'false_positive',
+                    'not_affected'
+                  ].includes(_.get(input.analysis, 'state') as string)
+                ) {
+                  return 0;
+                } else {
+                  return maxImpact(input.ratings);
+                }
+              }
+            },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
                 JSON.stringify(
