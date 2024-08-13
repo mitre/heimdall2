@@ -17,6 +17,10 @@
         @click:clear="searchTerm = ''"
       />
 
+      <v-btn :disabled="!can_clear" @click="clear">
+        <span class="d-none d-md-inline pr-2"> Clear </span>
+        <v-icon>mdi-filter-remove</v-icon>
+      </v-btn>
       <UploadButton />
       <div class="text-center">
         <v-menu>
@@ -66,6 +70,8 @@
                 <ComponentContent
                   :component="currentSbomMetadata.component"
                   :metadata="currentSbomMetadata"
+                  @show-components-in-tree="showComponentsInTree"
+                  @show-components-in-table="showComponentsInTable"
                 />
               </v-col>
             </v-row>
@@ -76,18 +82,25 @@
         <v-row>
           <v-col xs-12>
             <v-card elevation="2">
-              <v-tabs v-model="tab">
+              <v-tabs v-model="tab" height="75">
                 <v-tab key="componentTable">Component Table</v-tab>
                 <v-tab key="dependencyTree">Dependency Tree</v-tab>
+
+                <v-spacer />
+
+                <SbomSettingsSelector v-model="sbomSettings" />
               </v-tabs>
+
               <v-tabs-items v-model="tab">
                 <v-tab-item key="componentTable">
                   <!-- List of all components -->
                   <ComponentTable
                     :component-ref="$route.params.componentRef"
-                    :search-term="searchTerm"
-                    @show-component-in-tree="showComponentInTree"
-                    @show-component-in-table="showComponentInTable"
+                    :bom-ref-filter="bomRefFilter"
+                    :current-headers="sbomSettings.currentHeaders"
+                    :filter="all_filter"
+                    @show-components-in-tree="showComponentsInTree"
+                    @show-components-in-table="showComponentsInTable"
                   />
                 </v-tab-item>
                 <v-tab-item key="dependencyTree">
@@ -95,10 +108,10 @@
                   <template v-for="(sbom, i) in sbomData">
                     <DependencyTree
                       :key="i"
-                      :search-term="searchTerm"
-                      :target-component="treeRef"
+                      :target-components="treeRef"
                       :sbom-data="sbom"
-                      @show-component-in-table="showComponentInTable"
+                      :filter="all_filter"
+                      @show-components-in-table="showComponentsInTable"
                     />
                   </template>
                 </v-tab-item>
@@ -111,14 +124,19 @@
 
     <!-- No viewable files snackbar -->
     <v-snackbar
-      :value="file_filter.length === 0"
+      :value="filterSnackbar"
       class="mt-11"
       style="z-index: 2"
       :timeout="-1"
       color="warning"
       top
     >
-      <span v-if="no_files" class="subtitle-2">
+      <span v-if="file_filter.length" class="subtitle-2">
+        All results are filtered out. Use the
+        <v-icon>mdi-filter-remove</v-icon> button in the top right to clear
+        filters and show all.
+      </span>
+      <span v-else-if="no_files" class="subtitle-2">
         No files are currently loaded. Press the <strong>LOAD</strong>
         <v-icon class="mx-1"> mdi-cloud-upload</v-icon> button above to load
         some.
@@ -135,6 +153,7 @@
 
 <script lang="ts">
 import ComponentTable from '@/components/cards/sbomview/ComponentTable.vue';
+import SbomSettingsSelector from '@/components/cards/sbomview/SbomSettingsSelector.vue';
 import DependencyTree from '@/components/cards/sbomview/DependencyTree.vue';
 import EvaluationInfo from '@/components/cards/EvaluationInfo.vue';
 import ProfileInfo from '@/components/cards/ProfileInfo.vue';
@@ -142,7 +161,7 @@ import UploadButton from '@/components/generic/UploadButton.vue';
 import ExportJson from '@/components/global/ExportJson.vue';
 import PrintButton from '@/components/global/PrintButton.vue';
 import RouteMixin from '@/mixins/RouteMixin';
-import {FilteredDataModule} from '@/store/data_filters';
+import {FilteredDataModule, SBOMFilter} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {
   EvaluationFile,
@@ -161,8 +180,11 @@ import ComponentContent from '@/components/cards/sbomview/ComponentContent.vue';
 import {
   parseSbomPassthrough,
   SBOMData,
-  SBOMMetadata
+  SBOMMetadata,
+  SbomViewSettings
 } from '@/utilities/sbom_util';
+import {severities} from 'inspecjs';
+import _ from 'lodash';
 
 @Component({
   components: {
@@ -175,14 +197,42 @@ import {
     EvaluationInfo,
     UploadButton,
     ProfileInfo,
-    ProfileData
+    ProfileData,
+    SbomSettingsSelector
   }
 })
 export default class Sbom extends mixins(RouteMixin, ServerMixin) {
   searchTerm: string = '';
   currentSbomMetadata: SBOMMetadata | null = null;
   tab: number = 0; // open to componentTable
-  treeRef: string | null = null;
+
+  /** Model for if all-filtered snackbar should be showing */
+  filterSnackbar = false;
+  treeRef: string[] | null = null;
+  bomRefFilter: string[] | null = this.queryFilter;
+  sbomSettings: SbomViewSettings = {
+    severities: [...severities],
+    currentHeaders: [
+      'name',
+      'version',
+      'group',
+      'description',
+      'affectingVulnerabilities'
+    ]
+  };
+
+  get queryFilter(): string[] | null {
+    if (this.$route.query.componentRef) {
+      if (Array.isArray(this.$route.query.componentRef)) {
+        // remove all possibly null items
+        return this.$route.query.componentRef.flatMap((ref) =>
+          ref ? [ref] : []
+        );
+      }
+      return [this.$route.query.componentRef];
+    }
+    return null;
+  }
 
   /**
    * The currently selected file, if one exists.
@@ -242,14 +292,48 @@ export default class Sbom extends mixins(RouteMixin, ServerMixin) {
     }
   }
 
-  showComponentInTable(bomRef: string) {
-    this.searchTerm = bomRef;
+  showComponentsInTable(bomRefs: string[]) {
     this.tab = 0; // corresponds to componentTable
+    this.bomRefFilter = bomRefs;
   }
 
-  showComponentInTree(bomRef: string) {
-    this.treeRef = bomRef;
+  showComponentsInTree(bomRefs: string[]) {
+    this.treeRef = bomRefs;
     this.tab = 1; // corresponds to dependencyTree
+  }
+
+  get all_filter(): SBOMFilter {
+    return {
+      fromFile: FilteredDataModule.selected_sbom_ids,
+      severity: this.sbomSettings.severities,
+      'bom-refs': this.bomRefFilter || undefined
+    };
+  }
+
+  get can_clear(): boolean {
+    let result = false;
+    if (
+      this.all_filter.severity?.length !== severities.length ||
+      this.all_filter['bom-refs']?.length
+    ) {
+      result = true;
+    }
+
+    // Logic to check: are any files actually visible?
+    if (FilteredDataModule.components(this.all_filter).length === 0) {
+      this.filterSnackbar = true;
+    } else {
+      this.filterSnackbar = false;
+    }
+
+    return result;
+  }
+
+  clear() {
+    this.sbomSettings.severities = [...severities];
+    this.bomRefFilter = null;
+    this.searchTerm = '';
+    this.filterSnackbar = false;
   }
 }
 </script>

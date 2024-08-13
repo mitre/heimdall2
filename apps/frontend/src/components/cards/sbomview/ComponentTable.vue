@@ -6,7 +6,6 @@
         <v-data-table
           :items="components"
           :headers="headers"
-          :search="searchTerm"
           :expanded.sync="expanded"
           show-expand
           :items-per-page="-1"
@@ -16,61 +15,7 @@
           <!--           fixed-header
           height="calc(100vh - 250px)" -->
           <template #top>
-            <v-card-title>
-              Components
-              <v-spacer />
-
-              <!-- Table settings menu -->
-              <v-menu offset-y offset-overflow :close-on-content-click="false">
-                <template #activator="{on}">
-                  <v-btn fab small v-on="on">
-                    <v-icon> mdi-cog-outline </v-icon>
-                  </v-btn>
-                </template>
-                <v-card max-width="400" class="px-5">
-                  <v-card-title class="py-5">Column Select</v-card-title>
-                  <v-chip-group
-                    v-model="headerColumns"
-                    active-class="primary--text"
-                    center-active
-                    column
-                    multiple
-                  >
-                    <v-chip
-                      v-for="field in headerOptions"
-                      :key="field.key"
-                      :value="field.key"
-                    >
-                      {{ field.name }}
-                    </v-chip>
-                  </v-chip-group>
-                  <v-divider />
-                  <v-card-title class="py-2">Severity Filters</v-card-title>
-                  <v-chip-group
-                    v-model="severityFilter"
-                    active-class="primary--text"
-                    center-active
-                    column
-                    multiple
-                  >
-                    <v-chip
-                      v-for="severity in severities"
-                      :key="severity"
-                      :value="severity"
-                    >
-                      {{ severityName(severity) }}
-                    </v-chip>
-                  </v-chip-group>
-                </v-card>
-              </v-menu>
-            </v-card-title>
-          </template>
-
-          <template #[`item.name`]="{item}">
-            {{ item.name }}
-            <template v-if="componentRef == item['bom-ref']">
-              <a id="scroll-to" />
-            </template>
+            <v-card-title> Components </v-card-title>
           </template>
 
           <template #[`item.affectingVulnerabilities`]="{item}">
@@ -105,8 +50,8 @@
               <ComponentContent
                 :component="item"
                 :vulnerabilities="affectingVulns.get(item['bom-ref'])"
-                @show-component-in-table="showComponentInTable"
-                @show-component-in-tree="showComponentInTree"
+                @show-components-in-table="showComponentsInTable"
+                @show-components-in-tree="showComponentsInTree"
               />
             </td>
           </template>
@@ -117,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {FilteredDataModule, SBOMFilter} from '@/store/data_filters';
 import {SnackbarModule} from '@/store/snackbar';
 import {ContextualizedControl, severities, Severity} from 'inspecjs';
 import _ from 'lodash';
@@ -136,72 +81,16 @@ import {
   }
 })
 export default class ComponentTable extends Vue {
-  @Prop({type: String, required: false}) readonly searchTerm!: string;
+  @Prop({type: Object, required: true}) readonly filter!: SBOMFilter;
+  @Prop({type: Array, required: true}) currentHeaders!: string[];
 
   componentRef = this.$route.query.componentRef ?? null;
-  severityFilter: Severity[] = this.severities;
   expanded: ContextualizedSBOMComponent[] = [];
-  /** The list of columns that are currently displayed */
-  headerColumns = [
-    'name',
-    'version',
-    'group',
-    'type',
-    'description',
-    'affectingVulnerabilities'
-  ];
-
-  /**
-   * A list of options (selectable in the column select menu) for which
-   * headers to display
-   */
-  headerOptions = [
-    'name',
-    'version',
-    'description',
-    'author',
-    'affectingVulnerabilities',
-    'type',
-    'bom-ref',
-    'copyright',
-    'purl',
-    'cpe',
-    'group',
-    'publisher',
-    'scope',
-    'mime-type'
-  ].map((option) => ({name: _.startCase(option), key: option}));
-
-  mounted() {
-    this.$nextTick(() => {
-      if (!this.componentRef) return;
-      try {
-        this.$vuetify.goTo(`#scroll-to`, {duration: 300});
-      } catch (e) {
-        SnackbarModule.failure(
-          `The component you are trying to view is not currently loaded (bom-ref: ${this.componentRef})`
-        );
-        return;
-      }
-
-      const item = this.components.find(
-        (i) => i['bom-ref'] === this.componentRef
-      );
-      if (item) {
-        this.expanded = [item];
-      }
-    });
-  }
-
-  headerIndex(str: string) {
-    return this.headerOptions.findIndex((option) => option.key === str);
-  }
 
   get headers() {
-    // ensure that the header columns are in a consistent order and not determined by 
+    // ensure that the header columns are in a consistent order and not determined by
     // the order in which they are selected
-    this.headerColumns.sort((a, b) => this.headerIndex(a) - this.headerIndex(b))
-    let h = this.headerColumns.map((v) => {
+    let h = this.currentHeaders.map((v) => {
       return {value: v, class: 'header-box', text: _.startCase(v)};
     });
     h.push({value: 'data-table-expand', text: 'More', class: 'header-box'});
@@ -209,14 +98,8 @@ export default class ComponentTable extends Vue {
   }
 
   get components(): readonly ContextualizedSBOMComponent[] {
-    return FilteredDataModule.components(this.all_filter);
-  }
-
-  get all_filter(): Filter {
-    return {
-      fromFile: FilteredDataModule.selected_sbom_ids,
-      severity: this.severityFilter
-    };
+    // TODO: Change this to have a refernece to the source evaluation in some way. File name?? Like List ELT in result table
+    return FilteredDataModule.components(this.filter);
   }
 
   get affectingVulns(): Map<string, ContextualizedControl[]> {
@@ -224,7 +107,7 @@ export default class ComponentTable extends Vue {
     for (const c of this.components) {
       // get the component's affecting vulnerabilities
       const componentVulns = [];
-      const controls = FilteredDataModule.controls(this.all_filter);
+      const controls = FilteredDataModule.controls(this.filter);
       for (const vulnBomRef of c.affectingVulnerabilities || []) {
         let result = getVulnsFromBomRef(vulnBomRef, controls);
         if (result.ok) componentVulns.push(result.value); // TODO: show components with unloaded vulns as errors?
@@ -239,21 +122,12 @@ export default class ComponentTable extends Vue {
     return `severity${_.startCase(severity)}`;
   }
 
-  severityName(severity: string): string {
-    return _.startCase(severity);
+  showComponentsInTable(bomRefs: string[]) {
+    this.$emit('show-components-in-table', bomRefs);
   }
 
-  get severities(): Severity[] {
-    // returns the list of severities defined by inspecJS
-    return [...severities];
-  }
-
-  showComponentInTable(ref: string) {
-    this.$emit('show-component-in-table', ref);
-  }
-
-  showComponentInTree(ref: string) {
-    this.$emit('show-component-in-tree', ref);
+  showComponentsInTree(bomRefs: string[]) {
+    this.$emit('show-components-in-tree', bomRefs);
   }
 }
 </script>
@@ -274,6 +148,11 @@ export default class ComponentTable extends Vue {
 /* Blue bar on the left side of the row that is currently expanded */
 ::v-deep .v-data-table__expanded {
   border-left: 5px solid var(--v-primary-base);
+}
+
+/** Blue bar on the bottom to show where expanded content ends */
+::v-deep .v-data-table__expanded__content {
+  border-bottom: 5px solid var(--v-primary-base) !important;
 }
 
 /** Allows blue bar to be visible */

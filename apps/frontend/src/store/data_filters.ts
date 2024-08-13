@@ -90,6 +90,17 @@ export interface Filter {
   control_id?: string;
 }
 
+/** Contains common filters on SBOM components from the store */
+export interface SBOMFilter {
+  /** Which file these objects came from. */
+  fromFile: FileID[];
+
+  /** Each component has to have at least one of these severities.
+   * "none" allows controls with no vulnerabilities to appear */
+  severity?: Severity[];
+  'bom-refs'?: string[];
+}
+
 export type TreeMapState = string[]; // Representing the current path spec, from root
 
 /**
@@ -513,18 +524,27 @@ export class FilteredData extends VuexModule {
     };
   }
 
-  get components(): (filter: Filter) => readonly ContextualizedSBOMComponent[] {
-    return (filter: Filter) => {
+  get components(): (
+    filter: SBOMFilter
+  ) => readonly ContextualizedSBOMComponent[] {
+    return (filter: SBOMFilter) => {
       const sboms = this.sboms(filter.fromFile).map(parseSbomPassthrough);
-      const controls = this.controls(filter);
+      const controls = this.controls(filter); // gets all the controls in the SBOM files
 
       // grab every component from each SBOM and apply a filter if necessary
       return sboms.flatMap((sbom) =>
         sbom.components.filter((component) => {
-          return (
-            !filter.severity ||
-            componentFitsSeverityFilter(component, filter.severity, controls)
-          );
+          if (
+            filter.severity &&
+            !componentFitsSeverityFilter(component, filter.severity, controls)
+          )
+            return false;
+          if (
+            filter['bom-refs'] &&
+            !filter['bom-refs'].includes(component['bom-ref'])
+          )
+            return false;
+          return true;
         })
       );
     };

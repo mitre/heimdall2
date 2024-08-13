@@ -14,7 +14,7 @@
       <template #append="{item, active}">
         <v-chip
           v-if="active"
-          @click="$emit('show-component-in-table', item.ref)"
+          @click="$emit('show-component-in-table', item.component['bom-ref'])"
         >
           Open in Component Table
         </v-chip>
@@ -24,6 +24,7 @@
 </template>
 
 <script lang="ts">
+import {SBOMFilter} from '@/store/data_filters';
 import {ContextualizedSBOMComponent, SBOMData} from '@/utilities/sbom_util';
 import _ from 'lodash';
 import Vue from 'vue';
@@ -41,10 +42,10 @@ interface TreeNode {
   components: {}
 })
 export default class DependencyTree extends Vue {
+  @Prop({type: Object, required: true}) readonly filter!: SBOMFilter;
   @Prop({type: Object, required: true}) readonly sbomData!: SBOMData;
-  @Prop({type: String, required: false}) readonly searchTerm!: string;
-  @Prop({type: String, required: false}) readonly targetComponent!:
-    | string
+  @Prop({type: Array, required: false}) readonly targetComponents!:
+    | string[]
     | null;
 
   loadedDependencies: TreeNode[] = [];

@@ -56,8 +56,32 @@
               <tr>
                 <td>Name</td>
                 <td>Description</td>
-                <td />
-                <td />
+                <td>
+                  <v-chip
+                    small
+                    outlined
+                    @click="
+                      $emit(
+                        'show-components-in-table',
+                        tab.relatedComponents.map((c) => c['bom-ref'])
+                      )
+                    "
+                    >View All</v-chip
+                  >
+                </td>
+                <td>
+                  <v-chip
+                    small
+                    outlined
+                    @click="
+                      $emit(
+                        'show-components-in-tree',
+                        tab.relatedComponents.map((c) => c['bom-ref'])
+                      )
+                    "
+                    >View All</v-chip
+                  >
+                </td>
               </tr>
             </thead>
             <tbody>
@@ -69,7 +93,7 @@
                     small
                     outlined
                     @click="
-                      $emit('show-component-in-table', component['bom-ref'])
+                      $emit('show-components-in-table', [component['bom-ref']])
                     "
                     >Go to Component Table</v-chip
                   >
@@ -79,7 +103,7 @@
                     small
                     outlined
                     @click="
-                      $emit('show-component-in-tree', component['bom-ref'])
+                      $emit('show-components-in-tree', [component['bom-ref']])
                     "
                     >Go to Dependency Tree</v-chip
                   >

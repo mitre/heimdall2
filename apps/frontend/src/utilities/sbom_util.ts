@@ -55,6 +55,11 @@ export interface SBOMData {
   componentMap: Map<string, Readonly<ContextualizedSBOMComponent>>;
 }
 
+export interface SbomViewSettings {
+  severities: Severity[];
+  currentHeaders: string[];
+}
+
 /**
  * @param evaluation The evaluation to test
  * @returns true if the given evaluation contains SBOM data in the passthrough section
