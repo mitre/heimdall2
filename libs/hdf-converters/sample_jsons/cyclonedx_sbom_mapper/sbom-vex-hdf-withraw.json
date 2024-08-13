@@ -27,8 +27,7 @@
             ],
             "created": "2020-12-03T00:00:00.000Z",
             "published": "2020-12-03T00:00:00.000Z",
-            "updated": "2021-10-26T00:00:00.000Z",
-            "rejected": ""
+            "updated": "2021-10-26T00:00:00.000Z"
           },
           "descriptions": [
             {
@@ -103,7 +102,7 @@
           ]
         }
       ],
-      "sha256": "b49665f82538e2550edbdc5cb008df636fbf721891c517523017b9aab060b92e"
+      "sha256": "b15bd8e5f6b7f08dce1e8de61578c821e8b7a42d8d82dcaa8ebb3390667a0759"
     }
   ],
   "passthrough": {

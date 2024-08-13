@@ -80,6 +80,11 @@ function maxImpact(ratings: RatingRepository): number {
   return impact;
 }
 
+// Return original string if it exists, else return undefined
+function filterString(input: string): string | undefined {
+  return input ? input : undefined;
+}
+
 export class CycloneDXSBOMResults {
   data: DataStorage;
   withRaw: boolean;
@@ -247,8 +252,8 @@ export class CycloneDXSBOMMapper extends BaseConverter {
       {
         name: {
           path: 'raw.metadata.component',
-          transformer: (input: Record<string, unknown>): string =>
-            input['bom-ref']
+          transformer: (input: Component): string =>
+            _.has(input, 'bom-ref')
               ? `CycloneDX BOM Report: ${input.type}/${input['bom-ref']}`
               : 'CycloneDX BOM Report'
         },
@@ -265,24 +270,21 @@ export class CycloneDXSBOMMapper extends BaseConverter {
         },
         version: {
           path: 'raw.metadata.component.version',
-          transformer: (input: string): string | undefined =>
-            input ? `${input}` : undefined
+          transformer: filterString
         },
         maintainer: {
           path: 'raw.metadata.component',
-          transformer: (input: Record<string, unknown>): string | undefined => {
+          transformer: (input: Component): string | undefined => {
             // Check through every single possible field which may hold ownership over this component
             if (input.author) {
               // `author` is deprecated in v1.6 but may still appear
               return `${input.author}`;
-            } else if (input.authors) {
+            } else if (_.has(input, 'authors')) {
               // Join list of component authors
-              let msg = '';
-              for (const author of input.authors as Record<string, unknown>[]) {
-                msg += `${author.name}, `;
-              }
-              return msg.slice(0, -2);
-            } else if (input.manufacturer) {
+              return (input.authors as Record<string, unknown>[])
+                .map((author) => author.name)
+                .join(', ');
+            } else if (_.has(input, 'manufacturer')) {
               // If we can't pinpoint the exact authors, resort to the organization
               return `${(input.manufacturer as Record<string, unknown>).name}`;
             } else {
@@ -291,14 +293,12 @@ export class CycloneDXSBOMMapper extends BaseConverter {
           }
         },
         summary: {
-          path: 'raw.metadata.component',
-          transformer: (input: Component): string | undefined =>
-            input.description ? `${input.description}` : undefined
+          path: 'raw.metadata.component.description',
+          transformer: filterString
         },
         copyright: {
-          path: 'raw.metadata.component',
-          transformer: (input: Component): string | undefined =>
-            input.copyright ? `${input.copyright}` : undefined
+          path: 'raw.metadata.component.copyright',
+          transformer: filterString
         },
         license: {
           path: 'raw.metadata.component',
@@ -337,15 +337,31 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                   getCCIsForNISTTags(getNISTTags(input))
               },
               cwe: {path: 'cwes', transformer: formatCWETags},
-              created: {path: 'created'},
-              published: {path: 'published'},
-              updated: {path: 'updated'},
-              rejected: {path: 'rejected'}
+              'bom-ref': {
+                path: 'bom-ref',
+                transformer: filterString
+              },
+              created: {
+                path: 'created',
+                transformer: filterString
+              },
+              published: {
+                path: 'published',
+                transformer: filterString
+              },
+              updated: {
+                path: 'updated',
+                transformer: filterString
+              },
+              rejected: {
+                path: 'rejected',
+                transformer: filterString
+              }
             },
             descriptions: [
               {
                 path: 'detail',
-                transformer: (input: Record<string, unknown>) =>
+                transformer: (input: string) =>
                   input ? {data: input, label: 'Detail'} : undefined
               } as unknown as ExecJSON.ControlDescription,
               {
@@ -406,15 +422,13 @@ export class CycloneDXSBOMMapper extends BaseConverter {
             source_location: {},
             title: {
               // Give description as title if possible
-              transformer: (input: Record<string, unknown>): string =>
+              transformer: (input: Vulnerability): string =>
                 input.description ? `${input.description}` : `${input.id}`
             },
             id: {path: 'id'},
             desc: {
               path: 'description',
-              transformer: (
-                input: Record<string, unknown>
-              ): string | undefined => (input ? `${input}` : undefined)
+              transformer: filterString
             },
             impact: {path: 'ratings', transformer: maxImpact},
             code: {
@@ -468,7 +482,7 @@ export class CycloneDXSBOMMapper extends BaseConverter {
                     );
                     let msg = '-Component Summary-';
                     for (const item in selectComponentValues) {
-                      if (_.get(selectComponentValues, item) instanceof Array) {
+                      if (Array.isArray(_.get(selectComponentValues, item))) {
                         msg += `\n\n- ${_.capitalize(item)}: ${JSON.stringify(_.get(selectComponentValues, item), null, 2).replace(/"/g, '')}`;
                       } else {
                         msg += `\n\n- ${_.capitalize(item)}: ${_.get(selectComponentValues, item)}`;
