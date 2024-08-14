@@ -1,3 +1,33 @@
+v2.10.14
+
+## Bug Fixes
+
+- Twistlock Mapper Tweaks @charleshu-8 (#6054)
+
+## Dependency Updates
+
+- Bump tailwindcss from 3.4.9 to 3.4.10 @dependabot (#6099)
+- Bump axios from 1.7.3 to 1.7.4 @dependabot (#6100)
+- Bump @nestjs/testing from 10.4.0 to 10.4.1 @dependabot (#6096)
+- Bump @nestjs/platform-express from 10.3.10 to 10.4.1 @dependabot (#6095)
+- Bump @nestjs/common from 10.4.0 to 10.4.1 @dependabot (#6098)
+- Bump @nestjs/core from 10.4.0 to 10.4.1 @dependabot (#6097)
+- Bump @nestjs/testing from 10.3.10 to 10.4.0 @dependabot (#6089)
+- Bump @aws-sdk/client-s3 from 3.627.0 to 3.629.0 @dependabot (#6091)
+- Bump @nestjs/common from 10.3.10 to 10.4.0 @dependabot (#6090)
+- Bump @nestjs/core from 10.3.10 to 10.4.0 @dependabot (#6088)
+- Bump @aws-sdk/client-config-service from 3.624.0 to 3.629.0 @dependabot (#6094)
+- Bump eslint-plugin-cypress from 3.4.0 to 3.5.0 @dependabot (#6093)
+- Bump @aws-sdk/client-sts from 3.624.0 to 3.629.0 @dependabot (#6087)
+- Bump winston from 3.13.1 to 3.14.1 @dependabot (#6081)
+- Bump tsx from 4.16.5 to 4.17.0 @dependabot (#6080)
+- Bump @types/node from 22.1.0 to 22.2.0 @dependabot (#6084)
+- Bump @aws-sdk/client-s3 from 3.626.0 to 3.627.0 @dependabot (#6079)
+- Bump @nestjs/cli from 10.4.2 to 10.4.4 @dependabot (#6085)
+- Bump tailwindcss from 3.4.8 to 3.4.9 @dependabot (#6078)
+- Bump tailwindcss from 3.4.7 to 3.4.8 @dependabot (#6077)
+- Bump @aws-sdk/client-s3 from 3.624.0 to 3.626.0 @dependabot (#6076)
+
 v2.10.13
 
 - Docker improvements @Amndeep7 (#6075)
