@@ -146,12 +146,12 @@ function collapseDuplicates<T extends object>(
   return newArray;
 }
 
-export class BaseConverter {
-  data: Record<string, unknown>;
+export class BaseConverter<D = Record<string, unknown>> {
+  data: D;
   mappings?: MappedTransform<ExecJSON.Execution, ILookupPath>;
   collapseResults: boolean;
 
-  constructor(data: Record<string, unknown>, collapseResults = false) {
+  constructor(data: D, collapseResults = false) {
     this.data = data;
     this.collapseResults = collapseResults;
   }
@@ -166,7 +166,10 @@ export class BaseConverter {
     if (this.mappings === undefined) {
       throw new Error('Mappings must be provided');
     } else {
-      const v = this.convertInternal(this.data, this.mappings);
+      const v = this.convertInternal(
+        this.data as Record<string, unknown>,
+        this.mappings
+      );
       v.profiles.forEach((element) => {
         element.sha256 = generateHash(JSON.stringify(element));
       });

@@ -175,7 +175,7 @@ export class CycloneDXSBOMResults {
       for (const id of vulnerability.affects) {
         for (const component of data.components as IntermediaryComponent[]) {
           // Find every component that is affected via listed bom-refs
-          if (_.get(component, 'bom-ref') === id.ref.toString()) {
+          if (component['bom-ref'] === id.ref.toString()) {
             // Add the index of that affected component to the corresponding vulnerability object
             vulnerability.affectedComponents.push(
               (data.components as IntermediaryComponent[]).indexOf(component)
@@ -227,7 +227,7 @@ export class CycloneDXSBOMResults {
   }
 }
 
-export class CycloneDXSBOMMapper extends BaseConverter {
+export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
   withRaw: boolean;
 
   // Pull any keys from a given index for the stored components listing
