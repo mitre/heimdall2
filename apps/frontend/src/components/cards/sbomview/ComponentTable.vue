@@ -56,8 +56,11 @@
             </v-chip>
           </template>
 
-          <template #expanded-item="{headers, item}">
-            <td v-if="expanded.includes(item)" :colspan="headers.length">
+          <template #expanded-item="{item}">
+            <td
+              v-if="expanded.find((e) => e.key == item.key)"
+              :colspan="headers.length"
+            >
               <ComponentContent
                 :component="item"
                 :vulnerabilities="affectingVulns.get(item['bom-ref'])"
