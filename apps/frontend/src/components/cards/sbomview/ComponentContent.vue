@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-tabs v-model="tabs">
+    <v-tabs v-model="tabs" show-arrows>
       <v-tab v-for="tab in computedTabs" :key="tab.name">{{ tab.name }}</v-tab>
     </v-tabs>
     <v-tabs-items v-model="tabs">
@@ -66,8 +66,9 @@
                         tab.relatedComponents.map((c) => c['bom-ref'])
                       )
                     "
-                    >View All</v-chip
                   >
+                    View All {{ tab.relatedComponents.length }}
+                  </v-chip>
                 </td>
                 <td>
                   <v-chip
@@ -79,8 +80,9 @@
                         tab.relatedComponents.map((c) => c['bom-ref'])
                       )
                     "
-                    >View All</v-chip
                   >
+                    View All {{ tab.relatedComponents.length }}
+                  </v-chip>
                 </td>
               </tr>
             </thead>
@@ -121,7 +123,6 @@
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
-
 import _ from 'lodash';
 import {ContextualizedControl} from 'inspecjs';
 import {parseJson} from '@mitre/hdf-converters/src/utils/parseJson';
@@ -361,7 +362,7 @@ export default class ComponentContent extends Vue {
     // show components that this component depends on
     if (this.component.children.length) {
       tabs.push({
-        name: 'Dependencies',
+        name: this.metadata ? 'Component - Dependencies' : 'Dependencies',
         relatedComponents: this.component.children
       });
     }
@@ -369,7 +370,7 @@ export default class ComponentContent extends Vue {
     // show components that depend on this component
     if (this.component.parents.length) {
       tabs.push({
-        name: 'Parents',
+        name: this.metadata ? 'Component - Parents' : 'Parents',
         relatedComponents: this.component.parents
       });
     }

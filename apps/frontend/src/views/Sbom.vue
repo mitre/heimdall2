@@ -85,9 +85,7 @@
               <v-tabs v-model="tab" height="75">
                 <v-tab key="componentTable">Component Table</v-tab>
                 <v-tab key="dependencyTree">Dependency Tree</v-tab>
-
                 <v-spacer />
-
                 <SbomSettingsSelector v-model="sbomSettings" />
               </v-tabs>
 
@@ -108,7 +106,6 @@
                   <template v-for="(sbom, i) in sbomData">
                     <DependencyTree
                       :key="i"
-                      :target-components="treeRef"
                       :sbom-data="sbom"
                       :filter="all_filter"
                       @show-components-in-table="showComponentsInTable"
@@ -208,16 +205,17 @@ export default class Sbom extends mixins(RouteMixin, ServerMixin) {
 
   /** Model for if all-filtered snackbar should be showing */
   filterSnackbar = false;
-  treeRef: string[] | null = null;
   bomRefFilter: string[] | null = this.queryFilter;
   sbomSettings: SbomViewSettings = {
     severities: [...severities],
     currentHeaders: [
+      'fileName',
       'name',
       'version',
       'group',
       'description',
-      'affectingVulnerabilities'
+      'affectingVulnerabilities',
+      'treeView'
     ]
   };
 
@@ -295,11 +293,13 @@ export default class Sbom extends mixins(RouteMixin, ServerMixin) {
   showComponentsInTable(bomRefs: string[]) {
     this.tab = 0; // corresponds to componentTable
     this.bomRefFilter = bomRefs;
+    this.currentSbomMetadata = null; // hide the SBOM info panel
   }
 
   showComponentsInTree(bomRefs: string[]) {
-    this.treeRef = bomRefs;
     this.tab = 1; // corresponds to dependencyTree
+    this.bomRefFilter = bomRefs;
+    this.currentSbomMetadata = null; // hide the SBOM info panel
   }
 
   get all_filter(): SBOMFilter {

@@ -37,6 +37,8 @@ export interface ContextualizedSBOMComponent {
   children: ContextualizedSBOMComponent[];
   /** a list of components dependent on this component */
   parents: ContextualizedSBOMComponent[];
+  /** the file that the component originated from */
+  fileName: string;
 }
 
 /**
@@ -187,10 +189,6 @@ export function parseSbomPassthrough(
     []
   ).find(_.matchesProperty('name', 'SBOM'));
 
-  const componentKeyMap = new Map<
-    string,
-    Readonly<ContextualizedSBOMComponent>
-  >();
   const componentRefMap = new Map<
     string,
     Readonly<ContextualizedSBOMComponent>
@@ -198,17 +196,16 @@ export function parseSbomPassthrough(
   if (!passthroughSection) {
     return {
       components: [],
-      componentMap: componentKeyMap
+      componentMap: componentRefMap
     };
   }
 
-  const components = [];
-  let rawComponents;
-  const root = _.get(passthroughSection, 'data.metadata.component');
-  // ensure that the source object does not get modified
-  if (root)
-    rawComponents = _.get(passthroughSection, 'components', []).concat([root]);
-  else rawComponents = _.get(passthroughSection, 'components', []);
+  const rawRoot = _.get(passthroughSection, 'data.metadata.component');
+  const rawComponents = _.get(passthroughSection, 'components', []).concat(
+    rawRoot ? [rawRoot] : []
+  );
+  const fileName = evaluation.from_file.filename;
+  const components: ContextualizedSBOMComponent[] = [];
 
   for (const rawComponent of rawComponents) {
     const bomRef = _.get(rawComponent, 'bom-ref', 'BOM REF NOT FOUND');
@@ -228,38 +225,58 @@ export function parseSbomPassthrough(
         []
       ),
       key,
-      children: [], // will be added to later
-      parents: [] // will be added to later
+      children: [], // will be added to in later loop
+      parents: [], // will be added to in later loop
+      fileName
     };
     components.push(component);
-    componentKeyMap.set(key, component);
     componentRefMap.set(bomRef, component);
   }
 
   let metadata: SBOMMetadata = _.get(passthroughSection, 'data.metadata');
   const metadataRef = metadata.component?.['bom-ref'];
+  let root: ContextualizedSBOMComponent | undefined;
   if (metadataRef) {
     // ensure that component.metadata references the
     // single component instance generated in the above loop
-    metadata = {...metadata, component: componentRefMap.get(metadataRef)};
+    root = componentRefMap.get(metadataRef);
+    metadata = {...metadata, component: root};
   }
 
   for (const rawDependency of _.get(passthroughSection, 'dependencies', [])) {
     const ref = _.get(rawDependency, 'ref');
     const parentComponent = componentRefMap.get(ref);
-    if (!ref || !parentComponent) continue;
+    if (!ref || !parentComponent) {
+      continue;
+    }
     for (const childRef of _.get(rawDependency, 'dependsOn', [])) {
       const childComponent = componentRefMap.get(childRef);
-      if (!childComponent) continue;
+      if (!childComponent) {
+        continue;
+      }
 
       childComponent.parents.push(parentComponent);
       parentComponent.children.push(childComponent);
+    }
+  }
+  if (root) {
+    // take any components that are still not part of the dependency
+    // tree structure and place them as children of the root component
+    const parentlessComponents = components.filter(
+      (c) => c.parents.length === 0
+    );
+    for (const child of parentlessComponents) {
+      if (child === root) {
+        continue;
+      }
+      child.parents.push(root);
+      root.children.push(child);
     }
   }
 
   return {
     metadata,
     components,
-    componentMap: componentKeyMap
+    componentMap: componentRefMap
   };
 }

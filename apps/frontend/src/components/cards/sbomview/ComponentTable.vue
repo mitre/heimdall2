@@ -8,14 +8,14 @@
           :headers="headers"
           :expanded.sync="expanded"
           show-expand
-          :items-per-page="-1"
+          :items-per-page="100"
           item-key="key"
-          hide-default-footer
+          :footer-props="{'items-per-page-options': [25, 50, 100, 250, -1]}"
         >
           <!--           fixed-header
           height="calc(100vh - 250px)" -->
           <template #top>
-            <v-card-title> Components </v-card-title>
+            <v-card-title> Components ({{ components.length }})</v-card-title>
           </template>
 
           <template #[`item.affectingVulnerabilities`]="{item}">
@@ -45,6 +45,17 @@
             </v-chip-group>
           </template>
 
+          <template #[`item.treeView`]="{item}">
+            <v-chip
+              small
+              outlined
+              @click="$emit('show-components-in-tree', [item['bom-ref']])"
+            >
+              Go
+              <v-icon small class="ml-2">mdi-file-tree-outline</v-icon>
+            </v-chip>
+          </template>
+
           <template #expanded-item="{headers, item}">
             <td v-if="expanded.includes(item)" :colspan="headers.length">
               <ComponentContent
@@ -63,8 +74,7 @@
 
 <script lang="ts">
 import {FilteredDataModule, SBOMFilter} from '@/store/data_filters';
-import {SnackbarModule} from '@/store/snackbar';
-import {ContextualizedControl, severities, Severity} from 'inspecjs';
+import {ContextualizedControl} from 'inspecjs';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';

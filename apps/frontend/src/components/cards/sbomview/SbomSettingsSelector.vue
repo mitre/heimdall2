@@ -60,11 +60,12 @@ export default class SbomSettingsSelector extends Vue {
    * headers to display
    */
   headerOptions = [
+    'fileName',
     'name',
     'version',
-    'description',
     'author',
     'group',
+    'description',
     'publisher',
     'type',
     'bom-ref',
@@ -73,7 +74,8 @@ export default class SbomSettingsSelector extends Vue {
     'copyright',
     'scope',
     'mime-type',
-    'affectingVulnerabilities'
+    'affectingVulnerabilities',
+    'treeView'
   ].map((option) => ({name: _.startCase(option), key: option}));
 
   headerIndex(str: string) {
