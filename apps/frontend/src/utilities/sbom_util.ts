@@ -189,94 +189,99 @@ export function parseSbomPassthrough(
     []
   ).find(_.matchesProperty('name', 'SBOM'));
 
-  const componentRefMap = new Map<
-    string,
-    Readonly<ContextualizedSBOMComponent>
-  >();
+  const componentMap = new Map<string, Readonly<ContextualizedSBOMComponent>>();
   if (!passthroughSection) {
     return {
       components: [],
-      componentMap: componentRefMap
+      componentMap: componentMap
     };
   }
 
-  const rawRoot = _.get(passthroughSection, 'data.metadata.component');
-  const rawComponents = _.get(passthroughSection, 'components', []).concat(
-    rawRoot ? [rawRoot] : []
-  );
-  const fileName = evaluation.from_file.filename;
+  const rawMetadata = _.get(passthroughSection, 'data.metadata');
+
+  let rootComponent;
+  if (_.has(rawMetadata, 'component')) {
+    rootComponent = processRawComponent(
+      _.get(rawMetadata, 'component'),
+      evaluation
+    );
+    componentMap.set(rootComponent['bom-ref'], rootComponent);
+  }
+  const metadata: SBOMMetadata = {
+    ...(rawMetadata as Object),
+    component: rootComponent
+  };
+  const rawComponents = _.get(passthroughSection, 'components', []);
   const components: ContextualizedSBOMComponent[] = [];
 
   for (const rawComponent of rawComponents) {
-    const bomRef = _.get(rawComponent, 'bom-ref', 'BOM REF NOT FOUND');
-    const key = `${execution_unique_key(evaluation)}-${bomRef}`;
-
-    const component = {
-      ...(_.omit(rawComponent, [
-        'name',
-        'bom-ref',
-        'affectingVulnerabilities'
-      ]) as Object),
-      name: _.get(rawComponent, 'name', 'NAME NOT FOUND'),
-      'bom-ref': bomRef,
-      affectingVulnerabilities: _.get(
-        rawComponent,
-        'affectingVulnerabilities',
-        []
-      ),
-      key,
-      children: [], // will be added to in later loop
-      parents: [], // will be added to in later loop
-      fileName
-    };
+    const component: ContextualizedSBOMComponent = processRawComponent(
+      rawComponent,
+      evaluation
+    );
     components.push(component);
-    componentRefMap.set(bomRef, component);
-  }
-
-  let metadata: SBOMMetadata = _.get(passthroughSection, 'data.metadata');
-  const metadataRef = metadata.component?.['bom-ref'];
-  let root: ContextualizedSBOMComponent | undefined;
-  if (metadataRef) {
-    // ensure that component.metadata references the
-    // single component instance generated in the above loop
-    root = componentRefMap.get(metadataRef);
-    metadata = {...metadata, component: root};
+    componentMap.set(component['bom-ref'], component);
   }
 
   for (const rawDependency of _.get(passthroughSection, 'dependencies', [])) {
     const ref = _.get(rawDependency, 'ref');
-    const parentComponent = componentRefMap.get(ref);
+    const parentComponent = componentMap.get(ref);
     if (!ref || !parentComponent) {
       continue;
     }
     for (const childRef of _.get(rawDependency, 'dependsOn', [])) {
-      const childComponent = componentRefMap.get(childRef);
-      if (!childComponent) {
-        continue;
+      const childComponent = componentMap.get(childRef);
+      if (childComponent) {
+        childComponent.parents.push(parentComponent);
+        parentComponent.children.push(childComponent);
       }
-
-      childComponent.parents.push(parentComponent);
-      parentComponent.children.push(childComponent);
     }
   }
-  if (root) {
+  if (rootComponent) {
     // take any components that are still not part of the dependency
     // tree structure and place them as children of the root component
     const parentlessComponents = components.filter(
       (c) => c.parents.length === 0
     );
     for (const child of parentlessComponents) {
-      if (child === root) {
+      if (child === rootComponent) {
         continue;
       }
-      child.parents.push(root);
-      root.children.push(child);
+      child.parents.push(rootComponent);
+      rootComponent.children.push(child);
     }
   }
 
   return {
     metadata,
     components,
-    componentMap: componentRefMap
+    componentMap
+  };
+}
+
+function processRawComponent(
+  rawComponent: Object,
+  evaluation: SourcedContextualizedEvaluation
+): ContextualizedSBOMComponent {
+  // only generate UUID for bom-ref if needed
+  const bomRef = _.get(rawComponent, 'bom-ref') || _.uniqueId();
+  const key = `${execution_unique_key(evaluation)}-${bomRef}`;
+  return {
+    ...(_.omit(rawComponent, [
+      'name',
+      'bom-ref',
+      'affectingVulnerabilities'
+    ]) as Object),
+    name: _.get(rawComponent, 'name', ''),
+    'bom-ref': bomRef,
+    affectingVulnerabilities: _.get(
+      rawComponent,
+      'affectingVulnerabilities',
+      []
+    ),
+    key,
+    children: [], // will be populated later
+    parents: [], // will be populated later
+    fileName: evaluation.from_file.filename
   };
 }
