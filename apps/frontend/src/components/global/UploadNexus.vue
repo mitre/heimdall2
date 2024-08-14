@@ -138,8 +138,21 @@ export default class UploadNexus extends mixins(ServerMixin, RouteMixin) {
     const numProfiles = FilteredDataModule.selectedProfileIds.filter((prof) =>
       files.includes(prof)
     ).length;
+    const numSboms = FilteredDataModule.selected_sbom_ids.filter((sbom) =>
+      files.includes(sbom)
+    ).length;
     const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
-    if (numEvaluations >= numProfiles) {
+
+    if (numSboms > numProfiles && numSboms >= numEvaluations) {
+      if (this.current_route !== 'sbom-view') {
+        // some SBOMs can count as an evaluation and a result, so
+        // only navigate to SBOM view if there are no results to be loaded
+        // or they are not already on the results page.
+        if (numEvaluations === 0 || this.current_route !== 'results') {
+          this.navigateWithNoErrors(`/sbom-view/${loadedDatabaseIds}`);
+        }
+      }
+    } else if (numEvaluations >= numProfiles) {
       // Only navigate the user to the results page if they are not
       // already on the compare page.
       if (this.current_route === 'compare') {
