@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {getCCIsForNISTTags} from './utils/global';
+import {filterString, getCCIsForNISTTags} from './utils/global';
 import {
   Credits,
   RatingRepository,
@@ -34,8 +34,8 @@ type IntermediaryVulnerability = Vulnerability & {
 };
 
 type DataStorage = {
-  components?: IntermediaryComponent[];
-  vulnerabilities?: IntermediaryVulnerability[];
+  components: IntermediaryComponent[];
+  vulnerabilities: IntermediaryVulnerability[];
   raw: OptionalBomProperties;
 };
 
@@ -67,25 +67,20 @@ function getNISTTags(input: CweRepository): string[] {
 // A single SBOM vulnerability can contain multiple security ratings
 // Find the max of any existing ratings and then pass to `impact`
 function maxImpact(ratings: RatingRepository): number {
-  let impact = 0;
-  for (const rating of ratings) {
-    // Prefer to use CVSS-based `score` field when possible
-    if (rating.score && _.get(rating, 'method') === 'CVSSv31') {
-      impact = rating.score / 10 > impact ? rating.score / 10 : impact;
-    } else {
-      // Else interpret it from `severity` field
-      const severity = IMPACT_MAPPING.get(
-        (rating.severity as Severity).toLowerCase()
-      ) as number;
-      impact = severity > impact ? severity : impact;
-    }
-  }
-  return impact;
-}
-
-// Return original string if it exists, else return undefined
-function filterString(input: string): string | undefined {
-  return input ? input : undefined;
+  return [...ratings]
+    .map((rating) =>
+      rating.score && _.get(rating, 'method') === 'CVSSv31'
+        ? // Prefer to use CVSS-based `score` field when possible
+          rating.score / 10
+        : // Else interpret it from `severity` field
+          (IMPACT_MAPPING.get(
+            (rating.severity as Severity).toLowerCase()
+          ) as number)
+    )
+    .reduce((maxValue, newValue) =>
+      // Find max of existing ratings
+      maxValue > newValue ? maxValue : newValue
+    );
 }
 
 export class CycloneDXSBOMResults {
@@ -93,6 +88,8 @@ export class CycloneDXSBOMResults {
   withRaw: boolean;
   constructor(sbomJson: string, withRaw = false) {
     this.data = {
+      components: [],
+      vulnerabilities: [],
       raw: JSON.parse(sbomJson)
     };
     this.withRaw = withRaw;
@@ -126,9 +123,7 @@ export class CycloneDXSBOMResults {
       // Identify if subcomponents exist
       if (component.components) {
         // If so, pull out the subcomponents and push them to end of top level component list for further flattening
-        for (const subcomponent of component.components) {
-          data.components.push(subcomponent);
-        }
+        data.components.push(...component.components);
         delete component.components;
       }
     }
@@ -172,24 +167,27 @@ export class CycloneDXSBOMResults {
 
     for (const vulnerability of data.vulnerabilities) {
       vulnerability.affectedComponents = [];
-      for (const id of vulnerability.affects) {
-        for (const component of data.components as IntermediaryComponent[]) {
-          // Find every component that is affected via listed bom-refs
-          if (component['bom-ref'] === id.ref.toString()) {
-            // Add the index of that affected component to the corresponding vulnerability object
-            vulnerability.affectedComponents.push(
-              (data.components as IntermediaryComponent[]).indexOf(component)
-            );
 
-            if (!component.affectingVulnerabilities) {
-              component.affectingVulnerabilities = [];
-            }
-            // Also record the ID of the vulnerability in the component for use in bidirectional traversal
-            component.affectingVulnerabilities.push(
-              _.get(vulnerability, 'bom-ref') as unknown as string
-            );
-          }
+      vulnerability.affectedComponents.push(
+        ...Array.from(data.components.entries())
+          // Find every component that is affected via listed bom-refs
+          .filter((iteratorElement) =>
+            [...vulnerability.affects]
+              .map((id) => id.ref.toString())
+              .includes(iteratorElement[1]['bom-ref'] as string)
+          )
+          // Add the index of that affected component to the corresponding vulnerability object
+          .map((iteratorElement) => iteratorElement[0])
+      );
+
+      // Also record the ID of the vulnerability in the component for use in bidirectional traversal
+      for (const index of vulnerability.affectedComponents) {
+        if (!data.components[index].affectingVulnerabilities) {
+          data.components[index].affectingVulnerabilities = [];
         }
+        (data.components[index].affectingVulnerabilities as string[]).push(
+          _.get(vulnerability, 'bom-ref') as unknown as string
+        );
       }
     }
   }
@@ -201,8 +199,6 @@ export class CycloneDXSBOMResults {
     data.vulnerabilities = [
       ...(_.cloneDeep(data.raw.vulnerabilities) as VulnerabilityRepository)
     ] as unknown as IntermediaryVulnerability[];
-    // Have an empty components listing since this is a VEX
-    data.components = [];
 
     for (const vulnerability of data.vulnerabilities) {
       vulnerability.affectedComponents = [...vulnerability.affects].map(
@@ -214,9 +210,9 @@ export class CycloneDXSBOMResults {
             isDummy: true
           };
           // Add that component to the corresponding vulnerability object
-          (data.components as IntermediaryComponent[]).push(dummy);
+          data.components.push(dummy);
           // Return the index of that dummy object
-          return (data.components as IntermediaryComponent[]).indexOf(dummy);
+          return data.components.length - 1;
         }
       );
     }
@@ -235,10 +231,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
     index: number,
     keys: string[]
   ): Record<string, unknown> {
-    return _.pick(
-      (this.data.components as IntermediaryComponent[])[index],
-      keys
-    );
+    return _.pick(this.data.components[index], keys);
   }
 
   mappings: MappedTransform<
@@ -535,9 +528,9 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
       transformer: (input: DataStorage): Record<string, unknown> => {
         // VEX files will generate dummy components for control results
         // Filter them out for the proper components listing
-        const components = (
-          _.get(input, 'components') as IntermediaryComponent[]
-        ).filter((component) => !component.isDummy);
+        const components = input.components.filter(
+          (component) => !component.isDummy
+        );
         return {
           auxiliary_data: [
             {
