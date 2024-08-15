@@ -8,6 +8,7 @@ import {Result} from '@mitre/hdf-converters/src/utils/result';
 import {ContextualizedControl, Severity} from 'inspecjs';
 import _ from 'lodash';
 import {execution_unique_key} from './format_util';
+import {SBOMFilter} from '@/store/data_filters';
 
 export type SBOMProperty = {name: string; value: string};
 /**
@@ -284,4 +285,19 @@ function processRawComponent(
     parents: [], // will be populated later
     fileName: evaluation.from_file.filename
   };
+}
+
+export function matchesFilter(
+  component: ContextualizedSBOMComponent,
+  filter: SBOMFilter,
+  controls: readonly ContextualizedControl[] = []
+): boolean {
+  if (
+    filter.severity &&
+    !componentFitsSeverityFilter(component, filter.severity, controls)
+  )
+    return false;
+  if (filter['bom-refs'] && !filter['bom-refs'].includes(component['bom-ref']))
+    return false;
+  return true;
 }

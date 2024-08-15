@@ -108,6 +108,7 @@
                       :key="i"
                       :sbom-data="sbom"
                       :filter="all_filter"
+                      :filter-active="can_clear"
                       @show-components-in-table="showComponentsInTable"
                     />
                   </template>
@@ -181,7 +182,6 @@ import {
   SbomViewSettings
 } from '@/utilities/sbom_util';
 import {severities} from 'inspecjs';
-import _ from 'lodash';
 
 @Component({
   components: {

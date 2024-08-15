@@ -11,11 +11,11 @@ import {
 } from '@/store/report_intake';
 import Store from '@/store/store';
 import {
-  componentFitsSeverityFilter,
   isOnlySbomFileId,
   isSbomFileId,
   parseSbomPassthrough,
-  ContextualizedSBOMComponent
+  ContextualizedSBOMComponent,
+  matchesFilter
 } from '@/utilities/sbom_util';
 import {
   ContextualizedControl,
@@ -531,21 +531,11 @@ export class FilteredData extends VuexModule {
       const sboms = this.sboms(filter.fromFile).map(parseSbomPassthrough);
       const controls = this.controls(filter); // gets all the controls in the SBOM files
 
-      // grab every component from each SBOM and apply a filter if necessary
+      // aggregates every component from each SBOM and applys the current filter
       return sboms.flatMap((sbom) =>
-        sbom.components.filter((component) => {
-          if (
-            filter.severity &&
-            !componentFitsSeverityFilter(component, filter.severity, controls)
-          )
-            return false;
-          if (
-            filter['bom-refs'] &&
-            !filter['bom-refs'].includes(component['bom-ref'])
-          )
-            return false;
-          return true;
-        })
+        sbom.components.filter((component) =>
+          matchesFilter(component, filter, controls)
+        )
       );
     };
   }

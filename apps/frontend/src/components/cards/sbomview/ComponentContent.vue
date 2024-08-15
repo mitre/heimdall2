@@ -259,7 +259,9 @@ function generateTabs(
       generalProps.tableData!.rows.push([_.startCase(key), value]);
     }
   }
-  if (generalProps.tableData!.rows.length > 0) tabs.unshift(generalProps);
+  if (generalProps.tableData!.rows.length > 0) {
+    tabs.unshift(generalProps);
+  }
 
   const externalReferences = _.get(object, 'externalReferences');
   if (externalReferences) {

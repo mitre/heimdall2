@@ -74,6 +74,8 @@ export default class SbomSettingsSelector extends Vue {
     'copyright',
     'scope',
     'mime-type',
+    'children.length',
+    'parents.length',
     'affectingVulnerabilities',
     'treeView'
   ].map((option) => ({name: _.startCase(option), key: option}));
