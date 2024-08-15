@@ -32,10 +32,10 @@
               "CWE-378",
               "CWE-732"
             ],
-            "created": "",
+            "bom-ref": "b7a12947-7a8d-4031-b59d-640d33dbad6a",
+            "ratings": "GITHUB - low",
             "published": "2021-03-25T17:04:19Z",
-            "updated": "2023-11-09T18:44:38Z",
-            "rejected": ""
+            "updated": "2023-11-09T18:44:38Z"
           },
           "descriptions": [],
           "refs": [
@@ -60,7 +60,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.google.guava/guava@24.1.1-jre is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1a021b8e-d143-4072-84f0-0e18292f1967\n\n- Group: com.google.guava\n\n- Name: guava\n\n- Version: 24.1.1-jre\n\n- Description: Guava is a suite of core and expanded libraries that include utility classes, google's collections, io classes, and much much more.\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1a021b8e-d143-4072-84f0-0e18292f1967\n\n- Group: com.google.guava\n\n- Name: guava\n\n- Version: 24.1.1-jre\n\n- Description: Guava is a suite of core and expanded libraries that include utility classes, google's collections, io classes, and much much more.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -79,10 +79,10 @@
               "CWE-379",
               "CWE-552"
             ],
-            "created": "",
+            "bom-ref": "bb03c210-ea12-450d-85df-17d81a75ede2",
+            "ratings": "GITHUB - medium",
             "published": "2023-06-14T18:30:38Z",
-            "updated": "2024-02-13T21:49:15Z",
-            "rejected": ""
+            "updated": "2024-02-13T21:49:15Z"
           },
           "descriptions": [],
           "refs": [
@@ -107,7 +107,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.google.guava/guava@24.1.1-jre is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1a021b8e-d143-4072-84f0-0e18292f1967\n\n- Group: com.google.guava\n\n- Name: guava\n\n- Version: 24.1.1-jre\n\n- Description: Guava is a suite of core and expanded libraries that include utility classes, google's collections, io classes, and much much more.\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1a021b8e-d143-4072-84f0-0e18292f1967\n\n- Group: com.google.guava\n\n- Name: guava\n\n- Version: 24.1.1-jre\n\n- Description: Guava is a suite of core and expanded libraries that include utility classes, google's collections, io classes, and much much more.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -123,10 +123,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "d097e083-0b0a-4e3c-9f29-fc936f27ec6f",
+            "ratings": "GITHUB - critical",
             "published": "2020-04-23T21:08:40Z",
-            "updated": "2023-02-01T05:02:59Z",
-            "rejected": ""
+            "updated": "2023-02-01T05:02:59Z"
           },
           "descriptions": [],
           "refs": [
@@ -151,7 +151,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -167,10 +167,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "f57dc81d-6b2d-4060-8c15-7613c1a37981",
+            "ratings": "GITHUB - high",
             "published": "2020-05-15T18:58:44Z",
-            "updated": "2023-02-01T05:02:59Z",
-            "rejected": ""
+            "updated": "2023-02-01T05:02:59Z"
           },
           "descriptions": [],
           "refs": [
@@ -195,7 +195,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -211,10 +211,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "600ecfb9-66c7-4fc2-88e8-2bf9efe40628",
+            "ratings": "GITHUB - high",
             "published": "2020-06-10T21:12:41Z",
-            "updated": "2023-02-01T05:03:03Z",
-            "rejected": ""
+            "updated": "2023-02-01T05:03:03Z"
           },
           "descriptions": [],
           "refs": [
@@ -239,7 +239,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -255,10 +255,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "36dba0ba-dc6c-4f8a-822c-e51ca444d1bf",
+            "ratings": "GITHUB - high",
             "published": "2020-05-15T18:58:50Z",
-            "updated": "2023-02-01T05:03:05Z",
-            "rejected": ""
+            "updated": "2023-02-01T05:03:05Z"
           },
           "descriptions": [],
           "refs": [
@@ -283,7 +283,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -299,10 +299,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "e5cba611-d1ce-48a5-8fc2-ac68ba133947",
+            "ratings": "GITHUB - high",
             "published": "2020-04-23T20:19:02Z",
-            "updated": "2024-03-15T00:41:35Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:41:35Z"
           },
           "descriptions": [],
           "refs": [
@@ -327,7 +327,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -343,10 +343,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "9e292de9-f4f7-4d45-9ecb-846c4b972f6f",
+            "ratings": "GITHUB - high",
             "published": "2020-05-15T18:58:47Z",
-            "updated": "2024-03-15T00:48:55Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:48:55Z"
           },
           "descriptions": [],
           "refs": [
@@ -371,7 +371,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -387,10 +387,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "343cd240-f667-4770-aecf-ddc11f9d0172",
+            "ratings": "GITHUB - high",
             "published": "2020-05-15T18:58:54Z",
-            "updated": "2024-03-15T00:50:18Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:50:18Z"
           },
           "descriptions": [],
           "refs": [
@@ -415,7 +415,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -431,10 +431,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "0f7e16f6-f01e-4cc0-a835-08f3ba72625f",
+            "ratings": "GITHUB - high",
             "published": "2020-04-23T21:36:03Z",
-            "updated": "2024-06-25T13:46:45Z",
-            "rejected": ""
+            "updated": "2024-06-25T13:46:45Z"
           },
           "descriptions": [],
           "refs": [
@@ -459,7 +459,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -475,10 +475,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "c2e5f22d-f91f-4689-bdb1-782974d6fa7a",
+            "ratings": "GITHUB - high",
             "published": "2020-04-23T16:32:59Z",
-            "updated": "2024-07-03T21:10:50Z",
-            "rejected": ""
+            "updated": "2024-07-03T21:10:50Z"
           },
           "descriptions": [],
           "refs": [
@@ -503,7 +503,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -519,10 +519,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "49fa1888-bfa1-480a-8564-3b62b8bf5c3c",
+            "ratings": "GITHUB - high",
             "published": "2020-06-18T14:44:50Z",
-            "updated": "2023-02-01T05:04:14Z",
-            "rejected": ""
+            "updated": "2023-02-01T05:04:14Z"
           },
           "descriptions": [],
           "refs": [
@@ -547,7 +547,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -563,10 +563,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "97981cb2-9228-4b8b-a172-ad12f550a19f",
+            "ratings": "GITHUB - high",
             "published": "2020-06-18T14:44:43Z",
-            "updated": "2024-03-15T00:37:17Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:37:17Z"
           },
           "descriptions": [],
           "refs": [
@@ -591,7 +591,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -607,10 +607,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "941d2fac-724b-4a2c-a8ba-c5a434fa3bf7",
+            "ratings": "GITHUB - high",
             "published": "2020-06-18T14:44:46Z",
-            "updated": "2024-03-15T00:39:55Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:39:55Z"
           },
           "descriptions": [],
           "refs": [
@@ -635,7 +635,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -651,10 +651,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "7e3a7481-266e-4cb7-af3b-94dcaf462942",
+            "ratings": "GITHUB - high",
             "published": "2020-06-18T14:44:48Z",
-            "updated": "2024-06-25T13:46:04Z",
-            "rejected": ""
+            "updated": "2024-06-25T13:46:04Z"
           },
           "descriptions": [],
           "refs": [
@@ -679,7 +679,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -695,10 +695,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "db7cfe67-0b1d-4504-af8b-da26e12af73a",
+            "ratings": "GITHUB - critical",
             "published": "2020-03-04T20:52:14Z",
-            "updated": "2023-06-08T19:02:12Z",
-            "rejected": ""
+            "updated": "2023-06-08T19:02:12Z"
           },
           "descriptions": [],
           "refs": [
@@ -723,7 +723,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -739,10 +739,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "7c0af63e-ef57-43aa-9c91-d79c7e37ab20",
+            "ratings": "GITHUB - high",
             "published": "2022-07-15T19:41:47Z",
-            "updated": "2023-08-18T15:45:27Z",
-            "rejected": ""
+            "updated": "2023-08-18T15:45:27Z"
           },
           "descriptions": [],
           "refs": [
@@ -767,7 +767,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -783,10 +783,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "c037af59-a132-4727-8cc3-c6095c490df7",
+            "ratings": "GITHUB - critical",
             "published": "2019-11-13T00:32:27Z",
-            "updated": "2023-09-14T14:55:20Z",
-            "rejected": ""
+            "updated": "2023-09-14T14:55:20Z"
           },
           "descriptions": [],
           "refs": [
@@ -811,7 +811,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -827,10 +827,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "0b8d112a-b683-414d-93b6-48fa2cabb7c9",
+            "ratings": "GITHUB - critical",
             "published": "2019-11-13T00:32:38Z",
-            "updated": "2023-09-14T14:55:25Z",
-            "rejected": ""
+            "updated": "2023-09-14T14:55:25Z"
           },
           "descriptions": [],
           "refs": [
@@ -855,7 +855,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -871,10 +871,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "e8b21aeb-ce1d-4df2-8102-577b813e712f",
+            "ratings": "GITHUB - critical",
             "published": "2019-10-28T20:51:15Z",
-            "updated": "2024-03-15T00:57:37Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:57:37Z"
           },
           "descriptions": [],
           "refs": [
@@ -899,7 +899,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -915,10 +915,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "e141c668-bc18-4738-b3b6-e7ba1057d124",
+            "ratings": "GITHUB - critical",
             "published": "2020-05-15T18:59:10Z",
-            "updated": "2023-09-14T15:09:40Z",
-            "rejected": ""
+            "updated": "2023-09-14T15:09:40Z"
           },
           "descriptions": [],
           "refs": [
@@ -943,7 +943,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -959,10 +959,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "7aec5714-d04e-4e86-8f4c-51f5cf2568d9",
+            "ratings": "GITHUB - critical",
             "published": "2020-05-15T18:59:01Z",
-            "updated": "2024-03-15T00:20:09Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:20:09Z"
           },
           "descriptions": [],
           "refs": [
@@ -987,7 +987,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1004,10 +1004,10 @@
               "CWE-94",
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "6af6635c-bedd-40e5-88b8-324d3a80a33e",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:14:51Z",
-            "updated": "2023-09-14T15:44:55Z",
-            "rejected": ""
+            "updated": "2023-09-14T15:44:55Z"
           },
           "descriptions": [],
           "refs": [
@@ -1032,7 +1032,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1048,10 +1048,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "3ad04380-a25c-41d8-8fad-259c2561795b",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:15:36Z",
-            "updated": "2023-09-14T15:47:50Z",
-            "rejected": ""
+            "updated": "2023-09-14T15:47:50Z"
           },
           "descriptions": [],
           "refs": [
@@ -1076,7 +1076,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1092,10 +1092,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "86f78c35-adfb-48e4-9428-88084373e1c0",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:16:02Z",
-            "updated": "2023-09-14T15:52:49Z",
-            "rejected": ""
+            "updated": "2023-09-14T15:52:49Z"
           },
           "descriptions": [],
           "refs": [
@@ -1120,7 +1120,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1136,10 +1136,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "6d73d38a-3ff6-4fac-8c03-b09b64e9e537",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:16:26Z",
-            "updated": "2023-09-14T15:53:30Z",
-            "rejected": ""
+            "updated": "2023-09-14T15:53:30Z"
           },
           "descriptions": [],
           "refs": [
@@ -1164,7 +1164,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1180,10 +1180,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "00033bff-66dc-4a36-ab38-a10b0625409f",
+            "ratings": "GITHUB - high",
             "published": "2021-11-19T20:13:06Z",
-            "updated": "2023-09-14T15:59:33Z",
-            "rejected": ""
+            "updated": "2023-09-14T15:59:33Z"
           },
           "descriptions": [],
           "refs": [
@@ -1208,7 +1208,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1224,10 +1224,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "14e2856b-f78d-4a6d-99eb-470c8566df29",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:16:51Z",
-            "updated": "2023-09-14T16:01:31Z",
-            "rejected": ""
+            "updated": "2023-09-14T16:01:31Z"
           },
           "descriptions": [],
           "refs": [
@@ -1252,7 +1252,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1268,10 +1268,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "c224f923-be9a-4faa-a930-ef4db611bc2b",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:16:59Z",
-            "updated": "2023-09-14T16:04:22Z",
-            "rejected": ""
+            "updated": "2023-09-14T16:04:22Z"
           },
           "descriptions": [],
           "refs": [
@@ -1296,7 +1296,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1312,10 +1312,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "5201940b-1f04-4668-ae86-8261448d817d",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:16:42Z",
-            "updated": "2023-09-14T16:04:22Z",
-            "rejected": ""
+            "updated": "2023-09-14T16:04:22Z"
           },
           "descriptions": [],
           "refs": [
@@ -1340,7 +1340,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1356,10 +1356,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "b267fb08-27eb-4c71-a2a7-f17fe5fbf4fd",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:16:10Z",
-            "updated": "2023-09-14T16:07:00Z",
-            "rejected": ""
+            "updated": "2023-09-14T16:07:00Z"
           },
           "descriptions": [],
           "refs": [
@@ -1384,7 +1384,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1400,10 +1400,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "4fcb77a9-67b3-4b3f-bc01-684b8ba72294",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:15:54Z",
-            "updated": "2023-09-14T16:07:40Z",
-            "rejected": ""
+            "updated": "2023-09-14T16:07:40Z"
           },
           "descriptions": [],
           "refs": [
@@ -1428,7 +1428,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1444,10 +1444,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "950cff67-088e-4f41-9818-25943c9e17c0",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:15:46Z",
-            "updated": "2023-09-14T16:08:37Z",
-            "rejected": ""
+            "updated": "2023-09-14T16:08:37Z"
           },
           "descriptions": [],
           "refs": [
@@ -1472,7 +1472,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1488,10 +1488,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "53eda8c2-268a-4866-89ac-234bfe7f74ce",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:16:18Z",
-            "updated": "2023-09-14T16:13:01Z",
-            "rejected": ""
+            "updated": "2023-09-14T16:13:01Z"
           },
           "descriptions": [],
           "refs": [
@@ -1516,7 +1516,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1532,10 +1532,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "9edaa51d-929b-457e-aab5-0fffecdb4938",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:16:34Z",
-            "updated": "2023-09-14T16:15:44Z",
-            "rejected": ""
+            "updated": "2023-09-14T16:15:44Z"
           },
           "descriptions": [],
           "refs": [
@@ -1560,7 +1560,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1576,10 +1576,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "6d5189b4-d549-419a-b886-43a62cc43d40",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:15:24Z",
-            "updated": "2023-11-21T11:40:53Z",
-            "rejected": ""
+            "updated": "2023-11-21T11:40:53Z"
           },
           "descriptions": [],
           "refs": [
@@ -1604,7 +1604,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1620,10 +1620,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "135c6dab-529e-4855-ab72-a0138e2110c8",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:15:00Z",
-            "updated": "2024-03-15T00:28:08Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:28:08Z"
           },
           "descriptions": [],
           "refs": [
@@ -1648,7 +1648,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1665,10 +1665,10 @@
               "CWE-502",
               "CWE-913"
             ],
-            "created": "",
+            "bom-ref": "57f41366-73de-4a9c-ba15-4d09c9f60e33",
+            "ratings": "GITHUB - high",
             "published": "2021-12-09T19:15:11Z",
-            "updated": "2024-06-25T13:47:23Z",
-            "rejected": ""
+            "updated": "2024-06-25T13:47:23Z"
           },
           "descriptions": [],
           "refs": [
@@ -1693,7 +1693,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1710,10 +1710,10 @@
               "CWE-400",
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "ccd0ef88-c0fe-4a10-a648-c779ce82b888",
+            "ratings": "GITHUB - high",
             "published": "2022-10-03T00:00:31Z",
-            "updated": "2024-03-15T00:14:44Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:14:44Z"
           },
           "descriptions": [],
           "refs": [
@@ -1738,7 +1738,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1754,10 +1754,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "726a055c-f364-4cb7-a75a-d3c541dad0fa",
+            "ratings": "GITHUB - high",
             "published": "2021-01-20T21:20:15Z",
-            "updated": "2024-03-15T00:16:04Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:16:04Z"
           },
           "descriptions": [],
           "refs": [
@@ -1782,7 +1782,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1798,10 +1798,10 @@
             "cwe": [
               "CWE-787"
             ],
-            "created": "",
+            "bom-ref": "75d8b4d7-7c79-4627-b229-8d5e38fc5d8b",
+            "ratings": "GITHUB - high",
             "published": "2022-03-12T00:00:36Z",
-            "updated": "2024-03-15T00:24:56Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:24:56Z"
           },
           "descriptions": [],
           "refs": [
@@ -1826,7 +1826,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1842,10 +1842,10 @@
             "cwe": [
               "CWE-611"
             ],
-            "created": "",
+            "bom-ref": "cc0ff323-0529-4064-8a2d-1f7a8e2a1332",
+            "ratings": "GITHUB - high",
             "published": "2021-02-18T20:51:54Z",
-            "updated": "2024-03-15T00:31:24Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:31:24Z"
           },
           "descriptions": [],
           "refs": [
@@ -1870,7 +1870,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1886,10 +1886,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "7c4227e3-a0a9-4361-8eab-6ab5fa9550b2",
+            "ratings": "GITHUB - critical",
             "published": "2020-03-04T20:52:11Z",
-            "updated": "2024-03-15T00:52:59Z",
-            "rejected": ""
+            "updated": "2024-03-15T00:52:59Z"
           },
           "descriptions": [],
           "refs": [
@@ -1914,7 +1914,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1931,10 +1931,10 @@
               "CWE-400",
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "87742746-bd8b-423d-979d-d9aa81a8ccfd",
+            "ratings": "GITHUB - high",
             "published": "2022-10-03T00:00:31Z",
-            "updated": "2024-03-24T05:01:05Z",
-            "rejected": ""
+            "updated": "2024-03-24T05:01:05Z"
           },
           "descriptions": [],
           "refs": [
@@ -1959,7 +1959,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -1975,10 +1975,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "5c0b94e1-0577-42c9-8028-f244d68f61da",
+            "ratings": "GITHUB - high",
             "published": "2020-05-15T18:59:04Z",
-            "updated": "2024-07-03T21:10:31Z",
-            "rejected": ""
+            "updated": "2024-07-03T21:10:31Z"
           },
           "descriptions": [],
           "refs": [
@@ -2003,7 +2003,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.fasterxml.jackson.core/jackson-databind@2.9.10 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 1e0c53af-376a-4ca0-9d2e-38811dd17cba\n\n- Group: com.fasterxml.jackson.core\n\n- Name: jackson-databind\n\n- Version: 2.9.10\n\n- Description: General data-binding functionality for Jackson: works on core streaming API\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2021,10 +2021,10 @@
             "cwe": [
               "CWE-74"
             ],
-            "created": "",
+            "bom-ref": "f2fa9b19-418a-4901-9840-a8631227701e",
+            "ratings": "GITHUB - high",
             "published": "2020-04-10T18:42:20Z",
-            "updated": "2023-01-09T05:02:18Z",
-            "rejected": ""
+            "updated": "2023-01-09T05:02:18Z"
           },
           "descriptions": [],
           "refs": [
@@ -2067,10 +2067,10 @@
             "cwe": [
               "CWE-74"
             ],
-            "created": "",
+            "bom-ref": "00bc944f-fead-400b-8bbd-0c5b56ba2b14",
+            "ratings": "GITHUB - high",
             "published": "2020-02-24T17:27:27Z",
-            "updated": "2024-06-05T16:42:03Z",
-            "rejected": ""
+            "updated": "2024-06-05T16:42:03Z"
           },
           "descriptions": [],
           "refs": [
@@ -2113,10 +2113,10 @@
             "cwe": [
               "CWE-776"
             ],
-            "created": "",
+            "bom-ref": "210a5c45-88ac-4c1f-a5f4-f93c7af6f59e",
+            "ratings": "GITHUB - high",
             "published": "2021-06-04T21:37:45Z",
-            "updated": "2023-05-22T20:17:58Z",
-            "rejected": ""
+            "updated": "2023-05-22T20:17:58Z"
           },
           "descriptions": [],
           "refs": [
@@ -2141,7 +2141,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2158,10 +2158,10 @@
               "CWE-121",
               "CWE-787"
             ],
-            "created": "",
+            "bom-ref": "63a53dc7-5769-43dc-a053-50ccd5295d8b",
+            "ratings": "GITHUB - medium",
             "published": "2022-09-06T00:00:27Z",
-            "updated": "2024-03-15T12:30:36Z",
-            "rejected": ""
+            "updated": "2024-03-15T12:30:36Z"
           },
           "descriptions": [],
           "refs": [
@@ -2186,7 +2186,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2203,10 +2203,10 @@
               "CWE-121",
               "CWE-787"
             ],
-            "created": "",
+            "bom-ref": "5ab41975-23cc-45e0-9a13-be603ea00595",
+            "ratings": "GITHUB - medium",
             "published": "2022-11-11T19:00:31Z",
-            "updated": "2024-06-21T21:33:52Z",
-            "rejected": ""
+            "updated": "2024-06-21T21:33:52Z"
           },
           "descriptions": [],
           "refs": [
@@ -2231,7 +2231,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2248,10 +2248,10 @@
               "CWE-121",
               "CWE-787"
             ],
-            "created": "",
+            "bom-ref": "dff65990-715e-4f71-aace-60d4436af108",
+            "ratings": "GITHUB - medium",
             "published": "2022-09-06T00:00:27Z",
-            "updated": "2024-03-15T12:30:36Z",
-            "rejected": ""
+            "updated": "2024-03-15T12:30:36Z"
           },
           "descriptions": [],
           "refs": [
@@ -2276,7 +2276,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2293,10 +2293,10 @@
               "CWE-121",
               "CWE-787"
             ],
-            "created": "",
+            "bom-ref": "d55a9a55-cf82-483f-9a7c-8bf5395ce510",
+            "ratings": "GITHUB - medium",
             "published": "2022-09-06T00:00:27Z",
-            "updated": "2024-03-15T12:30:36Z",
-            "rejected": ""
+            "updated": "2024-03-15T12:30:36Z"
           },
           "descriptions": [],
           "refs": [
@@ -2321,7 +2321,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2338,10 +2338,10 @@
               "CWE-121",
               "CWE-787"
             ],
-            "created": "",
+            "bom-ref": "6c215a04-8ea0-421f-961b-d5cceb64fd13",
+            "ratings": "GITHUB - medium",
             "published": "2022-09-06T00:00:27Z",
-            "updated": "2024-03-15T12:30:36Z",
-            "rejected": ""
+            "updated": "2024-03-15T12:30:36Z"
           },
           "descriptions": [],
           "refs": [
@@ -2366,7 +2366,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2383,10 +2383,10 @@
               "CWE-400",
               "CWE-776"
             ],
-            "created": "",
+            "bom-ref": "38c08d91-3487-44c4-b258-d5a274a4ad05",
+            "ratings": "GITHUB - high",
             "published": "2022-08-31T00:00:24Z",
-            "updated": "2024-03-15T19:06:46Z",
-            "rejected": ""
+            "updated": "2024-03-15T19:06:46Z"
           },
           "descriptions": [],
           "refs": [
@@ -2411,7 +2411,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2428,10 +2428,10 @@
               "CWE-20",
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "da9ea5d3-a3c2-4d1b-8425-a799e47a804f",
+            "ratings": "GITHUB - high",
             "published": "2022-12-12T21:19:47Z",
-            "updated": "2024-06-24T21:22:59Z",
-            "rejected": ""
+            "updated": "2024-06-24T21:22:59Z"
           },
           "descriptions": [],
           "refs": [
@@ -2456,7 +2456,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.yaml/snakeyaml@1.23 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0f2c6b93-4dda-43b7-b7aa-f03f357c5dcd\n\n- Group: org.yaml\n\n- Name: snakeyaml\n\n- Version: 1.23\n\n- Description: YAML 1.1 parser and emitter for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2472,10 +2472,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "bdd3f85b-5284-4163-be5b-0dd84b9300ac",
+            "ratings": "GITHUB - medium",
             "published": "2021-12-17T20:00:50Z",
-            "updated": "2023-01-30T05:04:55Z",
-            "rejected": ""
+            "updated": "2023-01-30T05:04:55Z"
           },
           "descriptions": [],
           "refs": [
@@ -2500,7 +2500,7 @@
             {
               "status": "failed",
               "code_desc": "Component ch.qos.logback/logback-core@1.2.3 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 5e7cd916-704f-4746-83a0-ec3850bb3f49\n\n- Group: ch.qos.logback\n\n- Name: logback-core\n\n- Version: 1.2.3\n\n- Description: logback-core module\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0,\n      url: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 5e7cd916-704f-4746-83a0-ec3850bb3f49\n\n- Group: ch.qos.logback\n\n- Name: logback-core\n\n- Version: 1.2.3\n\n- Description: logback-core module\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\",\n      \"url\": \"http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2516,10 +2516,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "0d58391c-d0fe-4b46-8f8d-6a49db7fb354",
+            "ratings": "GITHUB - high",
             "published": "2023-11-29T12:30:16Z",
-            "updated": "2023-12-05T21:31:13Z",
-            "rejected": ""
+            "updated": "2023-12-05T21:31:13Z"
           },
           "descriptions": [],
           "refs": [
@@ -2544,13 +2544,13 @@
             {
               "status": "failed",
               "code_desc": "Component ch.qos.logback/logback-core@1.2.3 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 5e7cd916-704f-4746-83a0-ec3850bb3f49\n\n- Group: ch.qos.logback\n\n- Name: logback-core\n\n- Version: 1.2.3\n\n- Description: logback-core module\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0,\n      url: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 5e7cd916-704f-4746-83a0-ec3850bb3f49\n\n- Group: ch.qos.logback\n\n- Name: logback-core\n\n- Version: 1.2.3\n\n- Description: logback-core module\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\",\n      \"url\": \"http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\"\n    }\n  }\n]",
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "Component ch.qos.logback/logback-classic@1.2.3 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 6d8385bd-f9a9-4a97-9031-3a1c717209b7\n\n- Group: ch.qos.logback\n\n- Name: logback-classic\n\n- Version: 1.2.3\n\n- Description: logback-classic module\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0,\n      url: http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 6d8385bd-f9a9-4a97-9031-3a1c717209b7\n\n- Group: ch.qos.logback\n\n- Name: logback-classic\n\n- Version: 1.2.3\n\n- Description: logback-classic module\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\",\n      \"url\": \"http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2566,10 +2566,10 @@
             "cwe": [
               "CWE-400"
             ],
-            "created": "",
+            "bom-ref": "17d2faa1-cd26-4ac7-8c68-c4a44ec398a8",
+            "ratings": "GITHUB - medium",
             "published": "2021-03-10T03:46:47Z",
-            "updated": "2023-02-01T05:05:09Z",
-            "rejected": ""
+            "updated": "2023-02-01T05:05:09Z"
           },
           "descriptions": [],
           "refs": [
@@ -2594,7 +2594,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2610,10 +2610,10 @@
             "cwe": [
               "CWE-613"
             ],
-            "created": "",
+            "bom-ref": "f32ca540-f068-4392-bea0-c0d7b050b7d1",
+            "ratings": "GITHUB - low",
             "published": "2021-06-23T20:23:04Z",
-            "updated": "2023-02-01T05:05:59Z",
-            "rejected": ""
+            "updated": "2023-02-01T05:05:59Z"
           },
           "descriptions": [],
           "refs": [
@@ -2638,7 +2638,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2656,10 +2656,10 @@
               "CWE-551",
               "CWE-755"
             ],
-            "created": "",
+            "bom-ref": "6d35c4e5-f5ee-4572-af28-1ca71cf48158",
+            "ratings": "GITHUB - high",
             "published": "2021-04-06T17:31:30Z",
-            "updated": "2023-09-26T11:11:47Z",
-            "rejected": ""
+            "updated": "2023-09-26T11:11:47Z"
           },
           "descriptions": [],
           "refs": [
@@ -2684,7 +2684,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2700,10 +2700,10 @@
             "cwe": [
               "CWE-200"
             ],
-            "created": "",
+            "bom-ref": "d5c5815d-1742-46b6-953a-a4ed90fdd920",
+            "ratings": "GITHUB - low",
             "published": "2023-04-18T22:19:57Z",
-            "updated": "2023-11-06T05:01:53Z",
-            "rejected": ""
+            "updated": "2023-11-06T05:01:53Z"
           },
           "descriptions": [],
           "refs": [
@@ -2728,7 +2728,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2745,10 +2745,10 @@
               "CWE-400",
               "CWE-770"
             ],
-            "created": "",
+            "bom-ref": "f6ff72c7-6603-4627-899d-658f8f7c5f23",
+            "ratings": "GITHUB - medium",
             "published": "2023-04-19T18:15:45Z",
-            "updated": "2023-11-06T05:02:06Z",
-            "rejected": ""
+            "updated": "2023-11-06T05:02:06Z"
           },
           "descriptions": [],
           "refs": [
@@ -2773,7 +2773,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2789,10 +2789,10 @@
             "cwe": [
               "CWE-226"
             ],
-            "created": "",
+            "bom-ref": "ebc03317-a0b4-4b53-9cd0-7ae4281c02e6",
+            "ratings": "GITHUB - medium",
             "published": "2020-12-02T18:28:18Z",
-            "updated": "2024-02-21T17:23:14Z",
-            "rejected": ""
+            "updated": "2024-02-21T17:23:14Z"
           },
           "descriptions": [],
           "refs": [
@@ -2817,7 +2817,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 4e012695-d45a-4296-b37b-54a8b6893a50\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The core jetty server artifact.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2833,10 +2833,10 @@
             "cwe": [
               "CWE-20"
             ],
-            "created": "",
+            "bom-ref": "c19b779d-2699-44de-a189-a0d18d8dc953",
+            "ratings": "GITHUB - low",
             "published": "2022-07-07T20:55:34Z",
-            "updated": "2023-01-29T05:06:01Z",
-            "rejected": ""
+            "updated": "2023-01-29T05:06:01Z"
           },
           "descriptions": [],
           "refs": [
@@ -2861,7 +2861,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-http@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c1abfd09-121f-418c-befa-4d6b9e164769\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-http\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c1abfd09-121f-418c-befa-4d6b9e164769\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-http\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2879,10 +2879,10 @@
             "cwe": [
               "CWE-130"
             ],
-            "created": "",
+            "bom-ref": "a2897b13-bdeb-4a6c-802e-abf09fef10a9",
+            "ratings": "GITHUB - medium",
             "published": "2023-09-14T16:17:27Z",
-            "updated": "2023-11-06T05:01:59Z",
-            "rejected": ""
+            "updated": "2023-11-06T05:01:59Z"
           },
           "descriptions": [],
           "refs": [
@@ -2907,7 +2907,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-http@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c1abfd09-121f-418c-befa-4d6b9e164769\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-http\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c1abfd09-121f-418c-befa-4d6b9e164769\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-http\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2927,10 +2927,10 @@
               "CWE-379",
               "CWE-552"
             ],
-            "created": "",
+            "bom-ref": "4bb1fb03-b1bb-4ddf-bcf2-d5314c0c6442",
+            "ratings": "GITHUB - high",
             "published": "2020-11-04T17:50:24Z",
-            "updated": "2023-11-27T23:07:53Z",
-            "rejected": ""
+            "updated": "2023-11-27T23:07:53Z"
           },
           "descriptions": [],
           "refs": [
@@ -2955,7 +2955,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-webapp@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 71f396a0-0285-465e-8ce3-6eacb47be941\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-webapp\n\n- Version: 9.4.18.v20190429\n\n- Description: Jetty web application support\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 71f396a0-0285-465e-8ce3-6eacb47be941\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-webapp\n\n- Version: 9.4.18.v20190429\n\n- Description: Jetty web application support\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -2971,10 +2971,10 @@
             "cwe": [
               "CWE-611"
             ],
-            "created": "",
+            "bom-ref": "76910119-ee18-4144-855b-b2fdab20e33c",
+            "ratings": "GITHUB - low",
             "published": "2023-07-10T21:52:39Z",
-            "updated": "2023-09-05T22:39:32Z",
-            "rejected": ""
+            "updated": "2023-09-05T22:39:32Z"
           },
           "descriptions": [],
           "refs": [
@@ -2999,7 +2999,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-xml@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 39e5b7f2-b34e-4d46-8f70-841e0ef6a3b9\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-xml\n\n- Version: 9.4.18.v20190429\n\n- Description: The jetty xml utilities.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 39e5b7f2-b34e-4d46-8f70-841e0ef6a3b9\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-xml\n\n- Version: 9.4.18.v20190429\n\n- Description: The jetty xml utilities.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3015,10 +3015,10 @@
             "cwe": [
               "CWE-200"
             ],
-            "created": "",
+            "bom-ref": "d8add710-4eed-448d-b198-ecff8ffe86ea",
+            "ratings": "GITHUB - medium",
             "published": "2021-06-10T15:43:22Z",
-            "updated": "2023-02-01T05:05:51Z",
-            "rejected": ""
+            "updated": "2023-02-01T05:05:51Z"
           },
           "descriptions": [],
           "refs": [
@@ -3043,7 +3043,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-servlets@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-servlets\n\n- Version: 9.4.18.v20190429\n\n- Description: Utility Servlets from Jetty\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-servlets\n\n- Version: 9.4.18.v20190429\n\n- Description: Utility Servlets from Jetty\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3061,10 +3061,10 @@
             "cwe": [
               "CWE-149"
             ],
-            "created": "",
+            "bom-ref": "123b8eaf-5572-4945-975d-21ed3c2f101d",
+            "ratings": "GITHUB - low",
             "published": "2023-09-14T16:16:00Z",
-            "updated": "2023-11-06T05:01:59Z",
-            "rejected": ""
+            "updated": "2023-11-06T05:01:59Z"
           },
           "descriptions": [],
           "refs": [
@@ -3089,7 +3089,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty/jetty-servlets@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-servlets\n\n- Version: 9.4.18.v20190429\n\n- Description: Utility Servlets from Jetty\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 7f8bcab9-2ea2-4fde-bdc4-fc0840ce0bfc\n\n- Group: org.eclipse.jetty\n\n- Name: jetty-servlets\n\n- Version: 9.4.18.v20190429\n\n- Description: Utility Servlets from Jetty\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3108,10 +3108,10 @@
               "CWE-200",
               "CWE-732"
             ],
-            "created": "",
+            "bom-ref": "499117ae-d134-4505-8674-ed498531e7a9",
+            "ratings": "GITHUB - medium",
             "published": "2020-10-12T17:33:00Z",
-            "updated": "2023-02-01T05:04:50Z",
-            "rejected": ""
+            "updated": "2023-02-01T05:04:50Z"
           },
           "descriptions": [],
           "refs": [
@@ -3136,7 +3136,7 @@
             {
               "status": "failed",
               "code_desc": "Component junit/junit@4.12 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8005328c-f1b3-4ac3-8aa6-1e5013d8cef2\n\n- Group: junit\n\n- Name: junit\n\n- Version: 4.12\n\n- Description: JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0,\n      url: http://www.eclipse.org/legal/epl-v10.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8005328c-f1b3-4ac3-8aa6-1e5013d8cef2\n\n- Group: junit\n\n- Name: junit\n\n- Version: 4.12\n\n- Description: JUnit is a unit testing framework for Java, created by Erich Gamma and Kent Beck.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\",\n      \"url\": \"http://www.eclipse.org/legal/epl-v10.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3152,10 +3152,8 @@
               "CCI-001643"
             ],
             "cwe": [],
-            "created": "",
-            "published": "",
-            "updated": "",
-            "rejected": ""
+            "bom-ref": "4ad3464b-09c7-40fa-ab51-754f3f196cd4",
+            "ratings": "INTERNAL - high"
           },
           "descriptions": [],
           "refs": [
@@ -3178,7 +3176,7 @@
             {
               "status": "failed",
               "code_desc": "Component net.bytebuddy/byte-buddy@1.9.7 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0052b14c-fb6a-404e-89fb-48cad6d2535d\n\n- Group: net.bytebuddy\n\n- Name: byte-buddy\n\n- Version: 1.9.7\n\n- Description: Byte Buddy is a Java library for creating Java classes at run time. This artifact is a build of Byte Buddy with all ASM dependencies repackaged into its own name space.\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0052b14c-fb6a-404e-89fb-48cad6d2535d\n\n- Group: net.bytebuddy\n\n- Name: byte-buddy\n\n- Version: 1.9.7\n\n- Description: Byte Buddy is a Java library for creating Java classes at run time. This artifact is a build of Byte Buddy with all ASM dependencies repackaged into its own name space.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3194,10 +3192,8 @@
               "CCI-001643"
             ],
             "cwe": [],
-            "created": "",
-            "published": "",
-            "updated": "",
-            "rejected": ""
+            "bom-ref": "0cdbb69e-0ac6-4efd-ad09-2f8ead5b2aad",
+            "ratings": "INTERNAL - low"
           },
           "descriptions": [],
           "refs": [
@@ -3221,7 +3217,7 @@
             {
               "status": "failed",
               "code_desc": "Component net.bytebuddy/byte-buddy@1.9.7 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0052b14c-fb6a-404e-89fb-48cad6d2535d\n\n- Group: net.bytebuddy\n\n- Name: byte-buddy\n\n- Version: 1.9.7\n\n- Description: Byte Buddy is a Java library for creating Java classes at run time. This artifact is a build of Byte Buddy with all ASM dependencies repackaged into its own name space.\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 0052b14c-fb6a-404e-89fb-48cad6d2535d\n\n- Group: net.bytebuddy\n\n- Name: byte-buddy\n\n- Version: 1.9.7\n\n- Description: Byte Buddy is a Java library for creating Java classes at run time. This artifact is a build of Byte Buddy with all ASM dependencies repackaged into its own name space.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3237,10 +3233,10 @@
             "cwe": [
               "CWE-89"
             ],
-            "created": "",
+            "bom-ref": "1f182b73-afb8-424c-8e08-533a0f702076",
+            "ratings": "GITHUB - high",
             "published": "2022-02-09T22:57:29Z",
-            "updated": "2024-06-27T16:39:59Z",
-            "rejected": ""
+            "updated": "2024-06-27T16:39:59Z"
           },
           "descriptions": [],
           "refs": [
@@ -3265,7 +3261,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.hibernate/hibernate-core@5.2.18.Final is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8c0378f7-4c0e-4ee3-849d-740b0035c371\n\n- Group: org.hibernate\n\n- Name: hibernate-core\n\n- Version: 5.2.18.Final\n\n- Description: The core O/RM functionality as provided by Hibernate\n\n- Licenses: [\n  {\n    license: {\n      name: GNU Lesser General Public License,\n      url: http://www.gnu.org/licenses/lgpl-2.1.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8c0378f7-4c0e-4ee3-849d-740b0035c371\n\n- Group: org.hibernate\n\n- Name: hibernate-core\n\n- Version: 5.2.18.Final\n\n- Description: The core O/RM functionality as provided by Hibernate\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"GNU Lesser General Public License\",\n      \"url\": \"http://www.gnu.org/licenses/lgpl-2.1.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3281,10 +3277,10 @@
             "cwe": [
               "CWE-89"
             ],
-            "created": "",
+            "bom-ref": "8ba20df5-3877-4825-a8f2-b52e2d2f86d8",
+            "ratings": "GITHUB - medium",
             "published": "2022-02-10T23:05:04Z",
-            "updated": "2024-06-27T18:05:49Z",
-            "rejected": ""
+            "updated": "2024-06-27T18:05:49Z"
           },
           "descriptions": [],
           "refs": [
@@ -3309,7 +3305,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.hibernate/hibernate-core@5.2.18.Final is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8c0378f7-4c0e-4ee3-849d-740b0035c371\n\n- Group: org.hibernate\n\n- Name: hibernate-core\n\n- Version: 5.2.18.Final\n\n- Description: The core O/RM functionality as provided by Hibernate\n\n- Licenses: [\n  {\n    license: {\n      name: GNU Lesser General Public License,\n      url: http://www.gnu.org/licenses/lgpl-2.1.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 8c0378f7-4c0e-4ee3-849d-740b0035c371\n\n- Group: org.hibernate\n\n- Name: hibernate-core\n\n- Version: 5.2.18.Final\n\n- Description: The core O/RM functionality as provided by Hibernate\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"GNU Lesser General Public License\",\n      \"url\": \"http://www.gnu.org/licenses/lgpl-2.1.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3325,10 +3321,10 @@
             "cwe": [
               "CWE-611"
             ],
-            "created": "",
+            "bom-ref": "55ebe39e-12f6-4360-aeba-9913ef7efb68",
+            "ratings": "GITHUB - critical",
             "published": "2020-06-05T16:13:36Z",
-            "updated": "2023-01-27T05:02:30Z",
-            "rejected": ""
+            "updated": "2023-01-27T05:02:30Z"
           },
           "descriptions": [],
           "refs": [
@@ -3353,7 +3349,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.dom4j/dom4j@2.1.1 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 627bb70b-4b85-4801-8239-f03de04ca5db\n\n- Group: org.dom4j\n\n- Name: dom4j\n\n- Version: 2.1.1\n\n- Description: flexible XML framework for Java\n\n- Licenses: [\n  {\n    license: {\n      name: BSD 3-clause New License,\n      url: https://github.com/dom4j/dom4j/blob/master/LICENSE\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 627bb70b-4b85-4801-8239-f03de04ca5db\n\n- Group: org.dom4j\n\n- Name: dom4j\n\n- Version: 2.1.1\n\n- Description: flexible XML framework for Java\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"BSD 3-clause New License\",\n      \"url\": \"https://github.com/dom4j/dom4j/blob/master/LICENSE\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3369,10 +3365,10 @@
             "cwe": [
               "CWE-79"
             ],
-            "created": "",
+            "bom-ref": "8c0002e8-9326-40f7-9209-51020755ff02",
+            "ratings": "GITHUB - medium",
             "published": "2021-06-03T23:40:23Z",
-            "updated": "2023-02-01T05:05:30Z",
-            "rejected": ""
+            "updated": "2023-02-01T05:05:30Z"
           },
           "descriptions": [],
           "refs": [
@@ -3397,7 +3393,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.apache.httpcomponents/httpclient@4.5.7 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 893beba4-580b-4ada-a4cf-067fbe145507\n\n- Group: org.apache.httpcomponents\n\n- Name: httpclient\n\n- Version: 4.5.7\n\n- Description: Apache HttpComponents Client\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 893beba4-580b-4ada-a4cf-067fbe145507\n\n- Group: org.apache.httpcomponents\n\n- Name: httpclient\n\n- Version: 4.5.7\n\n- Description: Apache HttpComponents Client\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3413,10 +3409,10 @@
             "cwe": [
               "CWE-611"
             ],
-            "created": "",
+            "bom-ref": "7b0674fc-e326-47d0-b34b-b5bfb523784b",
+            "ratings": "GITHUB - critical",
             "published": "2022-03-05T00:00:45Z",
-            "updated": "2023-01-27T05:02:46Z",
-            "rejected": ""
+            "updated": "2023-01-27T05:02:46Z"
           },
           "descriptions": [],
           "refs": [
@@ -3441,7 +3437,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.liquibase/liquibase-core@3.6.3 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: ab3bfc00-8d35-4a4d-b314-86573681d910\n\n- Group: org.liquibase\n\n- Name: liquibase-core\n\n- Version: 3.6.3\n\n- Description: Liquibase is a tool for managing and executing database changes.\n\n- Licenses: [\n  {\n    license: {\n      id: Apache-2.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: ab3bfc00-8d35-4a4d-b314-86573681d910\n\n- Group: org.liquibase\n\n- Name: liquibase-core\n\n- Version: 3.6.3\n\n- Description: Liquibase is a tool for managing and executing database changes.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"Apache-2.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3458,10 +3454,10 @@
               "CWE-400",
               "CWE-410"
             ],
-            "created": "",
+            "bom-ref": "c3fdf61d-7886-423b-8a29-b6ab6790c127",
+            "ratings": "GITHUB - high",
             "published": "2022-07-07T20:55:40Z",
-            "updated": "2023-07-24T19:39:20Z",
-            "rejected": ""
+            "updated": "2023-07-24T19:39:20Z"
           },
           "descriptions": [],
           "refs": [
@@ -3486,7 +3482,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty.http2/http2-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 55521fe9-aed2-403e-9df2-75fc5af90f54\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 55521fe9-aed2-403e-9df2-75fc5af90f54\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3502,10 +3498,10 @@
             "cwe": [
               "CWE-400"
             ],
-            "created": "",
+            "bom-ref": "affa7af3-427f-4223-8028-d9ac45e80e08",
+            "ratings": "GITHUB - medium",
             "published": "2023-10-10T21:28:24Z",
-            "updated": "2024-06-21T21:34:00Z",
-            "rejected": ""
+            "updated": "2024-06-21T21:34:00Z"
           },
           "descriptions": [],
           "refs": [
@@ -3530,13 +3526,13 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty.http2/http2-server@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 55521fe9-aed2-403e-9df2-75fc5af90f54\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 55521fe9-aed2-403e-9df2-75fc5af90f54\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-server\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             },
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty.http2/http2-common@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: f4a06b14-3945-4381-b3dd-b46407b02b6b\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-common\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: f4a06b14-3945-4381-b3dd-b46407b02b6b\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-common\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3552,10 +3548,10 @@
             "cwe": [
               "CWE-400"
             ],
-            "created": "",
+            "bom-ref": "bc8ec43b-7cba-4167-9a9d-901fcb443ac8",
+            "ratings": "GITHUB - high",
             "published": "2024-02-26T20:13:46Z",
-            "updated": "2024-05-02T18:38:19Z",
-            "rejected": ""
+            "updated": "2024-05-02T18:38:19Z"
           },
           "descriptions": [],
           "refs": [
@@ -3580,7 +3576,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty.http2/http2-common@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: f4a06b14-3945-4381-b3dd-b46407b02b6b\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-common\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: f4a06b14-3945-4381-b3dd-b46407b02b6b\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-common\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3596,10 +3592,10 @@
             "cwe": [
               "CWE-190"
             ],
-            "created": "",
+            "bom-ref": "c8bd5d7e-e9be-459c-b6e2-05de86a00bb9",
+            "ratings": "GITHUB - high",
             "published": "2023-10-10T21:16:23Z",
-            "updated": "2024-06-21T21:33:57Z",
-            "rejected": ""
+            "updated": "2024-06-21T21:33:57Z"
           },
           "descriptions": [],
           "refs": [
@@ -3624,7 +3620,7 @@
             {
               "status": "failed",
               "code_desc": "Component org.eclipse.jetty.http2/http2-hpack@9.4.18.v20190429 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: d2a5e2bf-ead6-4768-866a-385166eb6709\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-hpack\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    license: {\n      id: EPL-1.0\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: d2a5e2bf-ead6-4768-866a-385166eb6709\n\n- Group: org.eclipse.jetty.http2\n\n- Name: http2-hpack\n\n- Version: 9.4.18.v20190429\n\n- Description: The Eclipse Jetty Project\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"EPL-1.0\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3642,10 +3638,10 @@
             "cwe": [
               "CWE-295"
             ],
-            "created": "",
+            "bom-ref": "f987bc98-65f5-402b-8b39-7e8e3e730ebe",
+            "ratings": "GITHUB - medium",
             "published": "2018-10-18T18:06:08Z",
-            "updated": "2023-01-09T05:03:38Z",
-            "rejected": ""
+            "updated": "2023-01-09T05:03:38Z"
           },
           "descriptions": [],
           "refs": [
@@ -3670,7 +3666,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.rabbitmq/amqp-client@4.4.1 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 2687d928-5b18-4ce5-ab4c-8ef513f0b48c\n\n- Group: com.rabbitmq\n\n- Name: amqp-client\n\n- Version: 4.4.1\n\n- Description: The RabbitMQ Java client library allows Java applications to interface with RabbitMQ.\n\n- Licenses: [\n  {\n    license: {\n      id: MPL-1.1\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 2687d928-5b18-4ce5-ab4c-8ef513f0b48c\n\n- Group: com.rabbitmq\n\n- Name: amqp-client\n\n- Version: 4.4.1\n\n- Description: The RabbitMQ Java client library allows Java applications to interface with RabbitMQ.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"MPL-1.1\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3686,10 +3682,10 @@
             "cwe": [
               "CWE-400"
             ],
-            "created": "",
+            "bom-ref": "5acc2eee-8433-4a66-b9c5-3dcc7be5b29a",
+            "ratings": "GITHUB - medium",
             "published": "2023-10-24T01:49:09Z",
-            "updated": "2023-11-05T05:04:23Z",
-            "rejected": ""
+            "updated": "2023-11-05T05:04:23Z"
           },
           "descriptions": [],
           "refs": [
@@ -3714,7 +3710,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.rabbitmq/amqp-client@4.4.1 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 2687d928-5b18-4ce5-ab4c-8ef513f0b48c\n\n- Group: com.rabbitmq\n\n- Name: amqp-client\n\n- Version: 4.4.1\n\n- Description: The RabbitMQ Java client library allows Java applications to interface with RabbitMQ.\n\n- Licenses: [\n  {\n    license: {\n      id: MPL-1.1\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: 2687d928-5b18-4ce5-ab4c-8ef513f0b48c\n\n- Group: com.rabbitmq\n\n- Name: amqp-client\n\n- Version: 4.4.1\n\n- Description: The RabbitMQ Java client library allows Java applications to interface with RabbitMQ.\n\n- Licenses: [\n  {\n    \"license\": {\n      \"id\": \"MPL-1.1\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3730,10 +3726,10 @@
             "cwe": [
               "CWE-502"
             ],
-            "created": "",
+            "bom-ref": "815a1358-2bd4-4028-bd3e-8219747c78f6",
+            "ratings": "GITHUB - critical",
             "published": "2022-01-06T23:55:09Z",
-            "updated": "2023-02-25T00:31:20Z",
-            "rejected": ""
+            "updated": "2023-02-25T00:31:20Z"
           },
           "descriptions": [],
           "refs": [
@@ -3758,7 +3754,7 @@
             {
               "status": "failed",
               "code_desc": "Component com.h2database/h2@1.4.197 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    license: {\n      name: MPL 2.0 or EPL 1.0,\n      url: http://h2database.com/html/license.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"MPL 2.0 or EPL 1.0\",\n      \"url\": \"http://h2database.com/html/license.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
@@ -3776,10 +3772,10 @@
             "cwe": [
               "CWE-88"
             ],
-            "created": "",
+            "bom-ref": "c8a50465-16df-44e0-84e9-7acff5870a51",
+            "ratings": "GITHUB - critical",
             "published": "2022-01-21T23:07:39Z",
-            "updated": "2023-08-18T15:47:05Z",
-            "rejected": ""
+            "updated": "2023-08-18T15:47:05Z"
           },
           "descriptions": [],
           "refs": [
@@ -3804,13 +3800,13 @@
             {
               "status": "failed",
               "code_desc": "Component com.h2database/h2@1.4.197 is vulnerable",
-              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    license: {\n      name: MPL 2.0 or EPL 1.0,\n      url: http://h2database.com/html/license.html\n    }\n  }\n]",
+              "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"MPL 2.0 or EPL 1.0\",\n      \"url\": \"http://h2database.com/html/license.html\"\n    }\n  }\n]",
               "start_time": ""
             }
           ]
         }
       ],
-      "sha256": "a2a9f29c527b6e627114bf5ca676805fe7920a9ad1e0d2d63f3444f0c35d1f69"
+      "sha256": "ea28e2b46ad51b20a477cf07159a7508c03ab784998b98901a8c5abdcc1f6bb9"
     }
   ],
   "passthrough": {

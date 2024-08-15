@@ -1,5 +1,5 @@
 {
   "packages": ["apps/*", "libs/*", "test"],
-  "version": "2.10.13",
+  "version": "2.10.14",
   "npmClient": "npx yarn"
 }
