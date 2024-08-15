@@ -77,9 +77,11 @@ function maxImpact(ratings: RatingRepository): number {
             (rating.severity as Severity).toLowerCase()
           ) as number)
     )
-    .reduce((maxValue, newValue) =>
-      // Find max of existing ratings
-      maxValue > newValue ? maxValue : newValue
+    .reduce(
+      (maxValue, newValue) =>
+        // Find max of existing ratings
+        maxValue > newValue ? maxValue : newValue,
+      0
     );
 }
 
@@ -343,10 +345,12 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                 transformer: (input: RatingRepository): string | undefined =>
                   input
                     ? [...input]
-                        .map(
-                          (rating) =>
-                            `${(rating.source as Source).name} - ${rating.severity}`
-                        )
+                        .map((rating) => {
+                          const ratingSource = (rating.source as Source).name
+                            ? `${(rating.source as Source).name} - `
+                            : 'Unidentified Source - ';
+                          return `${ratingSource}${rating.severity}`;
+                        })
                         .join(', ')
                     : undefined
               },
