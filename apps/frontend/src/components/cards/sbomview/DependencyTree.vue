@@ -1,18 +1,20 @@
 <template>
   <v-container fluid grid-list-md pa-2>
-    <!--     <v-card class="ma-3"> -->
-    <v-row no-gutters style="text-align: center">
-      <v-col :cols="2"
-        >Navigate between components that match current filter. See
-        <v-icon>mdi-filter</v-icon> for filter details.</v-col
-      >
+    <!-- A row with buttons to navigate between components that match the current filter and 
+     a display for the path to the current activated component -->
+    <v-row no-gutters>
+      <v-col :cols="2" ml-2>
+        Navigate between components that match current filter. See
+        <v-icon>mdi-filter-outline</v-icon> filter on the right for more
+        details.
+      </v-col>
       <v-col :cols="1" style="text-align: center">
-        <v-btn :disabled="!filterActive" @click="nextPath">
+        <v-btn :disabled="!filterActive" @click="changePath(false)">
           Next <v-icon>mdi-chevron-down</v-icon>
         </v-btn>
       </v-col>
       <v-col :cols="1" style="text-align: center">
-        <v-btn :disabled="!filterActive" @click="prevPath">
+        <v-btn :disabled="!filterActive" @click="changePath(true)">
           Prev <v-icon small right>mdi-chevron-up</v-icon>
         </v-btn>
       </v-col>
@@ -20,10 +22,13 @@
         <v-breadcrumbs :items="selectionPathBreadcrumbs" style="padding: 0px" />
       </v-col>
     </v-row>
+
     <v-row>
       <v-col :cols="12" pt-0>
+        <!-- The main component to show the tree structure -->
         <v-treeview
-          :items="root ? [root] : []"
+          v-if="root"
+          :items="[root]"
           :load-children="loadChildren"
           :active.sync="activeNodes"
           :open="openNodes"
@@ -33,12 +38,11 @@
           return-object
           @update:active="activateComponent"
         >
+          <!-- Show red star with tool tip on any components that match the filter 
+              Do not show red start if there is no filter active -->
           <template #prepend="{item}">
             <v-tooltip
-              v-if="
-                item.component &&
-                filter['bom-refs']?.includes(item.component['bom-ref'])
-              "
+              v-if="filterActive && componentMatchesFilter(item.component)"
               right
             >
               <template #activator="{on}">
@@ -48,9 +52,10 @@
             </v-tooltip>
           </template>
 
+          <!-- Label with component name, group, version, and dependency count -->
           <template #label="{item, leaf, active}">
             {{ item.name }}
-            <template v-if="!leaf && item.component" ml-5>
+            <template v-if="!leaf && item.component">
               <template
                 v-if="
                   item.children.length &&
@@ -84,6 +89,14 @@
             <v-chip
               v-if="active"
               @click="
+                $emit('show-components-in-tree', [item.component['bom-ref']])
+              "
+            >
+              Show all in Dependency Tree
+            </v-chip>
+            <v-chip
+              v-if="active"
+              @click="
                 $emit('show-components-in-table', [item.component['bom-ref']])
               "
             >
@@ -91,6 +104,14 @@
             </v-chip>
           </template>
         </v-treeview>
+
+        <!-- Show error message if trying to view SBOM with no root component-->
+        <v-card v-else>
+          <v-card-title> Error! </v-card-title>
+          <v-card-text>
+            The current SBOM has no root component to generate the tree from.
+          </v-card-text>
+        </v-card>
       </v-col>
     </v-row>
   </v-container>
@@ -123,16 +144,12 @@ export default class DependencyTree extends Vue {
   @Prop({type: Boolean, required: true}) readonly filterActive!: boolean;
   @Prop({type: Object, required: true}) readonly sbomData!: SBOMData;
 
+  /** A list of components that lead to a particular instance of a component in the dependency tree */
   selectionPath: ContextualizedSBOMComponent[] | undefined = [];
   root: TreeNode | null = null;
 
   mounted() {
-    // ensures that there is a root component
-    const root = this.sbomData.metadata?.component;
-    if (root) {
-      this.root = this.componentToTreeNode(root);
-      this.nextPath(); // activates the first component that matches the filter
-    }
+    this.openToFilter();
   }
 
   /** counter used to give every tree node a unique id */
@@ -144,13 +161,25 @@ export default class DependencyTree extends Vue {
   /** list of one node (due to type requirements) that is activated */
   activeNodes: TreeNode[] = [];
 
+  /** Opens up to the new filter that is being applied and clears
+   * the loaded TreeNodes so they don't clutter the view
+   */
+  openToFilter() {
+    const root = this.sbomData.metadata?.component;
+    if (root) {
+      this.root = this.componentToTreeNode(root); // overwrites previous TreeNodes
+      this.selectionPath = [];
+      this.changePath(false); // opens to and activates the first component that matches the filter
+    }
+  }
+
   /** Opens up all the tree nodes that are part of the selection path */
   openSelectionPath() {
     if (!this.selectionPath || !this.root?.component) {
       return;
     }
     let currentNode: TreeNode = this.root;
-    this.openNodes = [];
+    // traverse down the path and convert components into TreeNodes
     for (const component of this.selectionPath) {
       this.openNodes.push(currentNode);
       if (component === this.root.component) {
@@ -165,52 +194,49 @@ export default class DependencyTree extends Vue {
       }
       currentNode = nextNode;
     }
+    // activate the last node in the path
     this.activeNodes = [currentNode];
   }
 
-  nextPath() {
+  /**
+   * Navigates to the next or previous component that
+   * matches the filter
+   * @param reverse true if searching backwards from `this.selectionPath`
+   */
+  changePath(reverse: boolean) {
     if (!this.root?.component) {
       return;
     }
     this.selectionPath = this.recurseNextPath(
       this.root.component,
       this.selectionPath || [],
-      new Set()
-    );
-    if (!this.selectionPath) {
-      // loop around if no filter matches are found
-      this.recurseNextPath(this.root.component, [], new Set());
-    }
-    this.openSelectionPath();
-  }
-
-  prevPath() {
-    if (!this.root?.component) {
-      return;
-    }
-    this.selectionPath = this.recurseNextPath(
-      this.root.component,
-      this.selectionPath || this.endPath(this.root.component, new Set()),
       new Set(),
-      true
+      reverse
     );
     if (!this.selectionPath) {
       // loop around if no filter matches are found
-      this.recurseNextPath(
+      const startPath = reverse
+        ? this.endPath(this.root.component, new Set())
+        : [];
+      this.selectionPath = this.recurseNextPath(
         this.root.component,
-        this.endPath(this.root.component, new Set()),
+        startPath,
         new Set(),
-        true
+        reverse
       );
     }
     this.openSelectionPath();
   }
 
+  /**
+   * recursively finds a path (list of components) to
+   * components that match the current filter
+   */
   recurseNextPath(
     component: ContextualizedSBOMComponent,
     path: ContextualizedSBOMComponent[],
     visited: Set<string>,
-    reverse: boolean = false
+    reverse: boolean
   ): ContextualizedSBOMComponent[] | undefined {
     // prevent infinite loops from circular dependencies
     if (visited.has(component['bom-ref'])) {
@@ -226,27 +252,31 @@ export default class DependencyTree extends Vue {
       }
     }
 
-    // go through every component
-    let passedPath: boolean = false;
+    // go through every child component to see if they
+    // are a filter match or contain any filter matches
     let children = component.children;
     if (reverse) {
       children = [...component.children].reverse();
     }
+    let canTest = path.length <= 1;
     for (const child of children) {
-      if (path.length > 1 && !passedPath) {
-        if (child['bom-ref'] === path[1]['bom-ref']) {
-          passedPath = true;
-        }
+      // uses a pre-order traversal algorithm to maintain the
+      // ordering of the paths by ensuring that the path to the
+      // next found component comes "after" or "before" (dependig on `reverse`) 
+      // the current path
+      if (!canTest && child['bom-ref'] !== path[1]['bom-ref']) {
+        continue;
       }
-      if (path.length <= 1 || passedPath) {
-        const possiblePath = this.recurseNextPath(
-          child,
-          path.slice(1),
-          new Set([...visited, component['bom-ref']])
-        );
-        if (possiblePath) {
-          return [component, ...possiblePath];
-        }
+
+      const possiblePath = this.recurseNextPath(
+        child,
+        canTest ? [] : path.slice(1), // if `child` is part of path, we must pass `path` down
+        new Set([...visited, component['bom-ref']]),
+        reverse
+      );
+      canTest = true;
+      if (possiblePath) {
+        return [component, ...possiblePath];
       }
     }
   }
@@ -303,7 +333,9 @@ export default class DependencyTree extends Vue {
     };
   }
 
-  /** Computes the main name that will show for each component */
+  /**
+   * Computes the main name that will show for each component
+   */
   componentDisplayName(component: ContextualizedSBOMComponent): string {
     const group = _.get(component, 'group');
     const version = _.get(component, 'version');
@@ -350,12 +382,24 @@ export default class DependencyTree extends Vue {
     }
   }
 
-  /** recursively navigates the dependency structure to construct the path to a given TreeNode */
+  /**
+   * recursively navigates the dependency structure to construct the path to a given TreeNode
+   */
   getPath(node: TreeNode): ContextualizedSBOMComponent[] {
     if (node.parent) {
       return [...this.getPath(node.parent), node.component];
     }
     return [node.component];
+  }
+
+  /**
+   * determines if the given component matches the current filter
+   */
+  componentMatchesFilter(component?: ContextualizedSBOMComponent): boolean {
+    if (!component) {
+      return false;
+    }
+    return matchesFilter(component, this.filter);
   }
 }
 </script>

@@ -109,6 +109,7 @@
                     :sbom-data="sbomData[0]"
                     :filter="currentFilter"
                     :filter-active="can_clear"
+                    @show-components-in-tree="showComponentsInTree"
                     @show-components-in-table="showComponentsInTable"
                   />
                   <v-card v-if="sbomData.length > 1">
