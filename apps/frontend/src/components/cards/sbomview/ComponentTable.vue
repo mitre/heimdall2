@@ -110,7 +110,6 @@ export default class ComponentTable extends Vue {
   }
 
   get components(): readonly ContextualizedSBOMComponent[] {
-    // TODO: Change this to have a refernece to the source evaluation in some way. File name?? Like List ELT in result table
     return FilteredDataModule.components(this.filter);
   }
 
@@ -122,7 +121,7 @@ export default class ComponentTable extends Vue {
       const controls = FilteredDataModule.controls({fromFile: this.filter.fromFile});
       for (const vulnBomRef of c.affectingVulnerabilities || []) {
         let result = getVulnsFromBomRef(vulnBomRef, controls);
-        if (result.ok) componentVulns.push(result.value); // TODO: show components with unloaded vulns as errors?
+        if (result.ok) componentVulns.push(result.value);
       }
       // associate component bom-ref with vuln info
       if (c['bom-ref']) vulnMap.set(c['bom-ref'], componentVulns);
