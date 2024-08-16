@@ -52,7 +52,6 @@
               @click="$emit('show-components-in-tree', [item['bom-ref']])"
             >
               Go
-              <v-icon small class="ml-2">mdi-file-tree-outline</v-icon>
             </v-chip>
           </template>
 

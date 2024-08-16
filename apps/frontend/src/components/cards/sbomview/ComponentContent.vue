@@ -33,8 +33,9 @@
                         outlined
                         small
                         :to="{name: 'results', query: {id: value}}"
-                        >{{ value }}</router-link
                       >
+                        {{ value }}
+                      </router-link>
                     </template>
                     <template v-else>
                       {{ value }}
@@ -97,8 +98,9 @@
                     @click="
                       $emit('show-components-in-table', [component['bom-ref']])
                     "
-                    >Go to Component Table</v-chip
                   >
+                    Go to Component Table
+                  </v-chip>
                 </td>
                 <td>
                   <v-chip
@@ -107,8 +109,9 @@
                     @click="
                       $emit('show-components-in-tree', [component['bom-ref']])
                     "
-                    >Go to Dependency Tree</v-chip
                   >
+                    Go to Dependency Tree
+                  </v-chip>
                 </td>
               </tr>
             </tbody>
