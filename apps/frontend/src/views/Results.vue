@@ -295,7 +295,7 @@ export default class Results extends mixins(RouteMixin, ServerMixin) {
     // url can contain an optional id or list of ids to filter to
     // used when navigating from SBOM component to its associated
     // vulnerability
-    const id = this.$route.query?.id;
+    const id = this.$route?.query.id;
     if (!id) return;
 
     if (typeof id === 'string') {
