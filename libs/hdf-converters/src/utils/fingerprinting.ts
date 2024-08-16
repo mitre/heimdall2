@@ -9,9 +9,11 @@ export enum INPUT_TYPES {
   GOSEC = 'gosec',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
+  MSFT_SEC_SCORE = 'msft_secure_score',
   NIKTO = 'nikto',
   SARIF = 'sarif',
   SNYK = 'snyk',
+  TRUFFLEHOG = 'trufflehog',
   TWISTLOCK = 'twistlock',
   ZAP = 'zap',
   NESSUS = 'nessus',
@@ -36,6 +38,7 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
     'trigger_hash'
   ],
   [INPUT_TYPES.JFROG]: ['total_count', 'data'],
+  [INPUT_TYPES.MSFT_SEC_SCORE]: ['secureScore', 'profiles'],
   [INPUT_TYPES.NIKTO]: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
   [INPUT_TYPES.SARIF]: ['$schema', 'version', 'runs'],
   [INPUT_TYPES.SNYK]: [
@@ -44,6 +47,12 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
     'summary',
     'vulnerabilities',
     'vulnerabilities[0].identifiers'
+  ],
+  [INPUT_TYPES.TRUFFLEHOG]: [
+    'SourceName',
+    'DetectorType',
+    'DetectorName',
+    'DecoderName'
   ],
   [INPUT_TYPES.TWISTLOCK]: [
     'results[0].complianceDistribution',

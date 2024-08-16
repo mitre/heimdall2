@@ -1,6 +1,6 @@
 {
   "name": "inspecjs",
-  "version": "2.10.8",
+  "version": "2.10.13",
   "description": "Schema definitions, classes on top, and utilities to deal with HDF files",
   "files": [
     "lib"
@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.0",
-    "@types/node": "^20.1.0",
+    "@types/node": "^22.0.0",
     "jest": "^27.0.6",
     "quicktype": "^15.0.260",
     "ts-jest": "^29.1.0",

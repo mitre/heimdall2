@@ -27,12 +27,14 @@ export class TwistlockResults {
   constructor(twistlockJson: string, withRaw = false) {
     this.data = JSON.parse(twistlockJson);
     this.withRaw = withRaw;
-  }
 
-  toHdf(): ExecJSON.Execution {
+    // Add a wrapper to the data for the repository scan case which doesn't include the `results` key
     if (!_.has(this.data, 'results')) {
       this.data = {results: [this.data]};
     }
+  }
+
+  toHdf(): ExecJSON.Execution {
     return new TwistlockMapper(this.data, this.withRaw).toHdf();
   }
 }
@@ -107,9 +109,8 @@ export class TwistlockMapper extends BaseConverter {
               transformer: impactMapping(IMPACT_MAPPING)
             },
             code: {
-              transformer: (vulnerability: Record<string, unknown>): string => {
-                return JSON.stringify(vulnerability, null, 2);
-              }
+              transformer: (vulnerability: Record<string, unknown>): string =>
+                JSON.stringify(vulnerability, null, 2)
             },
             results: [
               {
