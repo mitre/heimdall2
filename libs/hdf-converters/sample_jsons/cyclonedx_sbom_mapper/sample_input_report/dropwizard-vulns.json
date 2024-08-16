@@ -12499,6 +12499,14 @@
           },
           "severity": "medium",
           "method": "other"
+        },
+        {
+          "source": {
+            "name": "GITHUB",
+            "url": "https://github.com/advisories"
+          },
+          "severity": "info",
+          "method": "other"
         }
       ],
       "cwes": [
@@ -12526,7 +12534,7 @@
             "name": "GITHUB",
             "url": "https://github.com/advisories"
           },
-          "severity": "critical",
+          "severity": "unknown",
           "method": "other"
         }
       ],
@@ -12555,7 +12563,7 @@
             "name": "GITHUB",
             "url": "https://github.com/advisories"
           },
-          "severity": "critical",
+          "severity": "info",
           "method": "other"
         }
       ],

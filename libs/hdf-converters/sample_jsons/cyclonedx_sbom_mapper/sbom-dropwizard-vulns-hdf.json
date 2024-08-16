@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.13"
+    "release": "2.10.14"
   },
-  "version": "2.10.13",
+  "version": "2.10.14",
   "statistics": {},
   "profiles": [
     {
@@ -37,7 +37,6 @@
             "published": "2021-03-25T17:04:19Z",
             "updated": "2023-11-09T18:44:38Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -84,7 +83,6 @@
             "published": "2023-06-14T18:30:38Z",
             "updated": "2024-02-13T21:49:15Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -128,7 +126,6 @@
             "published": "2020-04-23T21:08:40Z",
             "updated": "2023-02-01T05:02:59Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -172,7 +169,6 @@
             "published": "2020-05-15T18:58:44Z",
             "updated": "2023-02-01T05:02:59Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -216,7 +212,6 @@
             "published": "2020-06-10T21:12:41Z",
             "updated": "2023-02-01T05:03:03Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -260,7 +255,6 @@
             "published": "2020-05-15T18:58:50Z",
             "updated": "2023-02-01T05:03:05Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -304,7 +298,6 @@
             "published": "2020-04-23T20:19:02Z",
             "updated": "2024-03-15T00:41:35Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -348,7 +341,6 @@
             "published": "2020-05-15T18:58:47Z",
             "updated": "2024-03-15T00:48:55Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -392,7 +384,6 @@
             "published": "2020-05-15T18:58:54Z",
             "updated": "2024-03-15T00:50:18Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -436,7 +427,6 @@
             "published": "2020-04-23T21:36:03Z",
             "updated": "2024-06-25T13:46:45Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -480,7 +470,6 @@
             "published": "2020-04-23T16:32:59Z",
             "updated": "2024-07-03T21:10:50Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -524,7 +513,6 @@
             "published": "2020-06-18T14:44:50Z",
             "updated": "2023-02-01T05:04:14Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -568,7 +556,6 @@
             "published": "2020-06-18T14:44:43Z",
             "updated": "2024-03-15T00:37:17Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -612,7 +599,6 @@
             "published": "2020-06-18T14:44:46Z",
             "updated": "2024-03-15T00:39:55Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -656,7 +642,6 @@
             "published": "2020-06-18T14:44:48Z",
             "updated": "2024-06-25T13:46:04Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -700,7 +685,6 @@
             "published": "2020-03-04T20:52:14Z",
             "updated": "2023-06-08T19:02:12Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -744,7 +728,6 @@
             "published": "2022-07-15T19:41:47Z",
             "updated": "2023-08-18T15:45:27Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -788,7 +771,6 @@
             "published": "2019-11-13T00:32:27Z",
             "updated": "2023-09-14T14:55:20Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -832,7 +814,6 @@
             "published": "2019-11-13T00:32:38Z",
             "updated": "2023-09-14T14:55:25Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -876,7 +857,6 @@
             "published": "2019-10-28T20:51:15Z",
             "updated": "2024-03-15T00:57:37Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -920,7 +900,6 @@
             "published": "2020-05-15T18:59:10Z",
             "updated": "2023-09-14T15:09:40Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -964,7 +943,6 @@
             "published": "2020-05-15T18:59:01Z",
             "updated": "2024-03-15T00:20:09Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1009,7 +987,6 @@
             "published": "2021-12-09T19:14:51Z",
             "updated": "2023-09-14T15:44:55Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1053,7 +1030,6 @@
             "published": "2021-12-09T19:15:36Z",
             "updated": "2023-09-14T15:47:50Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1097,7 +1073,6 @@
             "published": "2021-12-09T19:16:02Z",
             "updated": "2023-09-14T15:52:49Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1141,7 +1116,6 @@
             "published": "2021-12-09T19:16:26Z",
             "updated": "2023-09-14T15:53:30Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1185,7 +1159,6 @@
             "published": "2021-11-19T20:13:06Z",
             "updated": "2023-09-14T15:59:33Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1229,7 +1202,6 @@
             "published": "2021-12-09T19:16:51Z",
             "updated": "2023-09-14T16:01:31Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1273,7 +1245,6 @@
             "published": "2021-12-09T19:16:59Z",
             "updated": "2023-09-14T16:04:22Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1317,7 +1288,6 @@
             "published": "2021-12-09T19:16:42Z",
             "updated": "2023-09-14T16:04:22Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1361,7 +1331,6 @@
             "published": "2021-12-09T19:16:10Z",
             "updated": "2023-09-14T16:07:00Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1405,7 +1374,6 @@
             "published": "2021-12-09T19:15:54Z",
             "updated": "2023-09-14T16:07:40Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1449,7 +1417,6 @@
             "published": "2021-12-09T19:15:46Z",
             "updated": "2023-09-14T16:08:37Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1493,7 +1460,6 @@
             "published": "2021-12-09T19:16:18Z",
             "updated": "2023-09-14T16:13:01Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1537,7 +1503,6 @@
             "published": "2021-12-09T19:16:34Z",
             "updated": "2023-09-14T16:15:44Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1581,7 +1546,6 @@
             "published": "2021-12-09T19:15:24Z",
             "updated": "2023-11-21T11:40:53Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1625,7 +1589,6 @@
             "published": "2021-12-09T19:15:00Z",
             "updated": "2024-03-15T00:28:08Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1670,7 +1633,6 @@
             "published": "2021-12-09T19:15:11Z",
             "updated": "2024-06-25T13:47:23Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1715,7 +1677,6 @@
             "published": "2022-10-03T00:00:31Z",
             "updated": "2024-03-15T00:14:44Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1759,7 +1720,6 @@
             "published": "2021-01-20T21:20:15Z",
             "updated": "2024-03-15T00:16:04Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1803,7 +1763,6 @@
             "published": "2022-03-12T00:00:36Z",
             "updated": "2024-03-15T00:24:56Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1847,7 +1806,6 @@
             "published": "2021-02-18T20:51:54Z",
             "updated": "2024-03-15T00:31:24Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1891,7 +1849,6 @@
             "published": "2020-03-04T20:52:11Z",
             "updated": "2024-03-15T00:52:59Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1936,7 +1893,6 @@
             "published": "2022-10-03T00:00:31Z",
             "updated": "2024-03-24T05:01:05Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -1980,7 +1936,6 @@
             "published": "2020-05-15T18:59:04Z",
             "updated": "2024-07-03T21:10:31Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2026,7 +1981,6 @@
             "published": "2020-04-10T18:42:20Z",
             "updated": "2023-01-09T05:02:18Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2072,7 +2026,6 @@
             "published": "2020-02-24T17:27:27Z",
             "updated": "2024-06-05T16:42:03Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2118,7 +2071,6 @@
             "published": "2021-06-04T21:37:45Z",
             "updated": "2023-05-22T20:17:58Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2163,7 +2115,6 @@
             "published": "2022-09-06T00:00:27Z",
             "updated": "2024-03-15T12:30:36Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2208,7 +2159,6 @@
             "published": "2022-11-11T19:00:31Z",
             "updated": "2024-06-21T21:33:52Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2253,7 +2203,6 @@
             "published": "2022-09-06T00:00:27Z",
             "updated": "2024-03-15T12:30:36Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2298,7 +2247,6 @@
             "published": "2022-09-06T00:00:27Z",
             "updated": "2024-03-15T12:30:36Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2343,7 +2291,6 @@
             "published": "2022-09-06T00:00:27Z",
             "updated": "2024-03-15T12:30:36Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2388,7 +2335,6 @@
             "published": "2022-08-31T00:00:24Z",
             "updated": "2024-03-15T19:06:46Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2433,7 +2379,6 @@
             "published": "2022-12-12T21:19:47Z",
             "updated": "2024-06-24T21:22:59Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2477,7 +2422,6 @@
             "published": "2021-12-17T20:00:50Z",
             "updated": "2023-01-30T05:04:55Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2521,7 +2465,6 @@
             "published": "2023-11-29T12:30:16Z",
             "updated": "2023-12-05T21:31:13Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2571,7 +2514,6 @@
             "published": "2021-03-10T03:46:47Z",
             "updated": "2023-02-01T05:05:09Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2615,7 +2557,6 @@
             "published": "2021-06-23T20:23:04Z",
             "updated": "2023-02-01T05:05:59Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2661,7 +2602,6 @@
             "published": "2021-04-06T17:31:30Z",
             "updated": "2023-09-26T11:11:47Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2705,7 +2645,6 @@
             "published": "2023-04-18T22:19:57Z",
             "updated": "2023-11-06T05:01:53Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2750,7 +2689,6 @@
             "published": "2023-04-19T18:15:45Z",
             "updated": "2023-11-06T05:02:06Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2794,7 +2732,6 @@
             "published": "2020-12-02T18:28:18Z",
             "updated": "2024-02-21T17:23:14Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2838,7 +2775,6 @@
             "published": "2022-07-07T20:55:34Z",
             "updated": "2023-01-29T05:06:01Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2884,7 +2820,6 @@
             "published": "2023-09-14T16:17:27Z",
             "updated": "2023-11-06T05:01:59Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2932,7 +2867,6 @@
             "published": "2020-11-04T17:50:24Z",
             "updated": "2023-11-27T23:07:53Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -2976,7 +2910,6 @@
             "published": "2023-07-10T21:52:39Z",
             "updated": "2023-09-05T22:39:32Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3020,7 +2953,6 @@
             "published": "2021-06-10T15:43:22Z",
             "updated": "2023-02-01T05:05:51Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3066,7 +2998,6 @@
             "published": "2023-09-14T16:16:00Z",
             "updated": "2023-11-06T05:01:59Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3113,7 +3044,6 @@
             "published": "2020-10-12T17:33:00Z",
             "updated": "2023-02-01T05:04:50Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3155,7 +3085,6 @@
             "bom-ref": "4ad3464b-09c7-40fa-ab51-754f3f196cd4",
             "ratings": "INTERNAL - high"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3195,7 +3124,6 @@
             "bom-ref": "0cdbb69e-0ac6-4efd-ad09-2f8ead5b2aad",
             "ratings": "INTERNAL - low"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3238,7 +3166,6 @@
             "published": "2022-02-09T22:57:29Z",
             "updated": "2024-06-27T16:39:59Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3282,7 +3209,6 @@
             "published": "2022-02-10T23:05:04Z",
             "updated": "2024-06-27T18:05:49Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3326,7 +3252,6 @@
             "published": "2020-06-05T16:13:36Z",
             "updated": "2023-01-27T05:02:30Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3370,7 +3295,6 @@
             "published": "2021-06-03T23:40:23Z",
             "updated": "2023-02-01T05:05:30Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3414,7 +3338,6 @@
             "published": "2022-03-05T00:00:45Z",
             "updated": "2023-01-27T05:02:46Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3459,7 +3382,6 @@
             "published": "2022-07-07T20:55:40Z",
             "updated": "2023-07-24T19:39:20Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3503,7 +3425,6 @@
             "published": "2023-10-10T21:28:24Z",
             "updated": "2024-06-21T21:34:00Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3553,7 +3474,6 @@
             "published": "2024-02-26T20:13:46Z",
             "updated": "2024-05-02T18:38:19Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3597,7 +3517,6 @@
             "published": "2023-10-10T21:16:23Z",
             "updated": "2024-06-21T21:33:57Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3643,7 +3562,6 @@
             "published": "2018-10-18T18:06:08Z",
             "updated": "2023-01-09T05:03:38Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3683,11 +3601,10 @@
               "CWE-400"
             ],
             "bom-ref": "5acc2eee-8433-4a66-b9c5-3dcc7be5b29a",
-            "ratings": "GITHUB - medium",
+            "ratings": "GITHUB - medium, GITHUB - info",
             "published": "2023-10-24T01:49:09Z",
             "updated": "2023-11-05T05:04:23Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3705,7 +3622,7 @@
           "id": "GHSA-mm8h-8587-p46h",
           "desc": "### Summary `maxBodyLebgth` was not used when receiving Message objects. Attackers could just send a very large Message causing a memory overflow and triggering an OOM Error. ### PoC #### RbbitMQ * Use RabbitMQ 3.11.16 as MQ and specify Message Body size 512M (here it only needs to be larger than the Consumer memory) * Start RabbitMQ #### Producer * Build a String of length 256M and send it to Consumer ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Producer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); String s = \"A\"; for(int i=0;i<28;++i){ s = s + s; System.out.println(i); } amqpTemplate.convertAndSend(s); System.out.println(\"Send Finish\"); } } ``` #### Consumer * First set the heap memory size to 128M * Read the message sent by the Producer from the MQ and print the length ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.amqp.core.Message; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Consumer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); Object o = amqpTemplate.receiveAndConvert(); if(o != null){ String s = o.toString(); System.out.println(\"Received Length : \" + s.length()); }else{ System.out.println(\"null\"); } } } ``` #### Results * Run the Producer first, then the Consumer * Consumer throws OOM Exception ### Impact Users of RabbitMQ may suffer from DoS attacks from RabbitMQ Java client which will ultimately exhaust the memory of the consumer.",
           "impact": 0.5,
-          "code": "{\n  \"bom-ref\": \"5acc2eee-8433-4a66-b9c5-3dcc7be5b29a\",\n  \"id\": \"GHSA-mm8h-8587-p46h\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"medium\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    400\n  ],\n  \"description\": \"### Summary `maxBodyLebgth` was not used when receiving Message objects. Attackers could just send a very large Message causing a memory overflow and triggering an OOM Error. ### PoC #### RbbitMQ * Use RabbitMQ 3.11.16 as MQ and specify Message Body size 512M (here it only needs to be larger than the Consumer memory) * Start RabbitMQ #### Producer * Build a String of length 256M and send it to Consumer ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Producer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); String s = \\\"A\\\"; for(int i=0;i<28;++i){ s = s + s; System.out.println(i); } amqpTemplate.convertAndSend(s); System.out.println(\\\"Send Finish\\\"); } } ``` #### Consumer * First set the heap memory size to 128M * Read the message sent by the Producer from the MQ and print the length ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.amqp.core.Message; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Consumer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); Object o = amqpTemplate.receiveAndConvert(); if(o != null){ String s = o.toString(); System.out.println(\\\"Received Length : \\\" + s.length()); }else{ System.out.println(\\\"null\\\"); } } } ``` #### Results * Run the Producer first, then the Consumer * Consumer throws OOM Exception ### Impact Users of RabbitMQ may suffer from DoS attacks from RabbitMQ Java client which will ultimately exhaust the memory of the consumer.\",\n  \"published\": \"2023-10-24T01:49:09Z\",\n  \"updated\": \"2023-11-05T05:04:23Z\",\n  \"affects\": [\n    {\n      \"ref\": \"2687d928-5b18-4ce5-ab4c-8ef513f0b48c\"\n    }\n  ]\n}",
+          "code": "{\n  \"bom-ref\": \"5acc2eee-8433-4a66-b9c5-3dcc7be5b29a\",\n  \"id\": \"GHSA-mm8h-8587-p46h\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"medium\",\n      \"method\": \"other\"\n    },\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"info\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    400\n  ],\n  \"description\": \"### Summary `maxBodyLebgth` was not used when receiving Message objects. Attackers could just send a very large Message causing a memory overflow and triggering an OOM Error. ### PoC #### RbbitMQ * Use RabbitMQ 3.11.16 as MQ and specify Message Body size 512M (here it only needs to be larger than the Consumer memory) * Start RabbitMQ #### Producer * Build a String of length 256M and send it to Consumer ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Producer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); String s = \\\"A\\\"; for(int i=0;i<28;++i){ s = s + s; System.out.println(i); } amqpTemplate.convertAndSend(s); System.out.println(\\\"Send Finish\\\"); } } ``` #### Consumer * First set the heap memory size to 128M * Read the message sent by the Producer from the MQ and print the length ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.amqp.core.Message; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Consumer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); Object o = amqpTemplate.receiveAndConvert(); if(o != null){ String s = o.toString(); System.out.println(\\\"Received Length : \\\" + s.length()); }else{ System.out.println(\\\"null\\\"); } } } ``` #### Results * Run the Producer first, then the Consumer * Consumer throws OOM Exception ### Impact Users of RabbitMQ may suffer from DoS attacks from RabbitMQ Java client which will ultimately exhaust the memory of the consumer.\",\n  \"published\": \"2023-10-24T01:49:09Z\",\n  \"updated\": \"2023-11-05T05:04:23Z\",\n  \"affects\": [\n    {\n      \"ref\": \"2687d928-5b18-4ce5-ab4c-8ef513f0b48c\"\n    }\n  ]\n}",
           "results": [
             {
               "status": "failed",
@@ -3727,11 +3644,10 @@
               "CWE-502"
             ],
             "bom-ref": "815a1358-2bd4-4028-bd3e-8219747c78f6",
-            "ratings": "GITHUB - critical",
+            "ratings": "GITHUB - unknown",
             "published": "2022-01-06T23:55:09Z",
             "updated": "2023-02-25T00:31:20Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3748,14 +3664,15 @@
           "title": "### Impact H2 Console in versions since 1.1.100 (2008-10-14) to 2.0.204 (2021-12-21) inclusive allows loading of custom classes from remote servers through JNDI. H2 Console doesn't accept remote connections by default. If remote access was enabled explicitly and some protection method (such as security constraint) wasn't set, an intruder can load own custom class and execute its code in a process with H2 Console (H2 Server process or a web server with H2 Console servlet). It is also possible to load them by creation a linked table in these versions, but it requires `ADMIN` privileges and user with `ADMIN` privileges has full access to the Java process by design. These privileges should never be granted to untrusted users. ### Patches Since version 2.0.206 H2 Console and linked tables explicitly forbid attempts to specify LDAP URLs for JNDI. Only local data sources can be used. ### Workarounds H2 Console should never be available to untrusted users. `-webAllowOthers` is a dangerous setting that should be avoided. H2 Console Servlet deployed on a web server can be protected with a security constraint: https://h2database.com/html/tutorial.html#usingH2ConsoleServlet If `webAllowOthers` is specified, you need to uncomment and edit `<security-role>` and `<security-constraint>` as necessary. See documentation of your web server for more details. ### References This issue was found and privately reported to H2 team by [JFrog Security](https://www.jfrog.com/)'s vulnerability research team with detailed information.",
           "id": "GHSA-h376-j262-vhq6",
           "desc": "### Impact H2 Console in versions since 1.1.100 (2008-10-14) to 2.0.204 (2021-12-21) inclusive allows loading of custom classes from remote servers through JNDI. H2 Console doesn't accept remote connections by default. If remote access was enabled explicitly and some protection method (such as security constraint) wasn't set, an intruder can load own custom class and execute its code in a process with H2 Console (H2 Server process or a web server with H2 Console servlet). It is also possible to load them by creation a linked table in these versions, but it requires `ADMIN` privileges and user with `ADMIN` privileges has full access to the Java process by design. These privileges should never be granted to untrusted users. ### Patches Since version 2.0.206 H2 Console and linked tables explicitly forbid attempts to specify LDAP URLs for JNDI. Only local data sources can be used. ### Workarounds H2 Console should never be available to untrusted users. `-webAllowOthers` is a dangerous setting that should be avoided. H2 Console Servlet deployed on a web server can be protected with a security constraint: https://h2database.com/html/tutorial.html#usingH2ConsoleServlet If `webAllowOthers` is specified, you need to uncomment and edit `<security-role>` and `<security-constraint>` as necessary. See documentation of your web server for more details. ### References This issue was found and privately reported to H2 team by [JFrog Security](https://www.jfrog.com/)'s vulnerability research team with detailed information.",
-          "impact": 1,
-          "code": "{\n  \"bom-ref\": \"815a1358-2bd4-4028-bd3e-8219747c78f6\",\n  \"id\": \"GHSA-h376-j262-vhq6\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"critical\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    502\n  ],\n  \"description\": \"### Impact H2 Console in versions since 1.1.100 (2008-10-14) to 2.0.204 (2021-12-21) inclusive allows loading of custom classes from remote servers through JNDI. H2 Console doesn't accept remote connections by default. If remote access was enabled explicitly and some protection method (such as security constraint) wasn't set, an intruder can load own custom class and execute its code in a process with H2 Console (H2 Server process or a web server with H2 Console servlet). It is also possible to load them by creation a linked table in these versions, but it requires `ADMIN` privileges and user with `ADMIN` privileges has full access to the Java process by design. These privileges should never be granted to untrusted users. ### Patches Since version 2.0.206 H2 Console and linked tables explicitly forbid attempts to specify LDAP URLs for JNDI. Only local data sources can be used. ### Workarounds H2 Console should never be available to untrusted users. `-webAllowOthers` is a dangerous setting that should be avoided. H2 Console Servlet deployed on a web server can be protected with a security constraint: https://h2database.com/html/tutorial.html#usingH2ConsoleServlet If `webAllowOthers` is specified, you need to uncomment and edit `<security-role>` and `<security-constraint>` as necessary. See documentation of your web server for more details. ### References This issue was found and privately reported to H2 team by [JFrog Security](https://www.jfrog.com/)'s vulnerability research team with detailed information.\",\n  \"published\": \"2022-01-06T23:55:09Z\",\n  \"updated\": \"2023-02-25T00:31:20Z\",\n  \"affects\": [\n    {\n      \"ref\": \"c19e7b95-5753-489e-b720-c9dd79f15cc8\"\n    }\n  ]\n}",
+          "impact": 0.5,
+          "code": "{\n  \"bom-ref\": \"815a1358-2bd4-4028-bd3e-8219747c78f6\",\n  \"id\": \"GHSA-h376-j262-vhq6\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"unknown\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    502\n  ],\n  \"description\": \"### Impact H2 Console in versions since 1.1.100 (2008-10-14) to 2.0.204 (2021-12-21) inclusive allows loading of custom classes from remote servers through JNDI. H2 Console doesn't accept remote connections by default. If remote access was enabled explicitly and some protection method (such as security constraint) wasn't set, an intruder can load own custom class and execute its code in a process with H2 Console (H2 Server process or a web server with H2 Console servlet). It is also possible to load them by creation a linked table in these versions, but it requires `ADMIN` privileges and user with `ADMIN` privileges has full access to the Java process by design. These privileges should never be granted to untrusted users. ### Patches Since version 2.0.206 H2 Console and linked tables explicitly forbid attempts to specify LDAP URLs for JNDI. Only local data sources can be used. ### Workarounds H2 Console should never be available to untrusted users. `-webAllowOthers` is a dangerous setting that should be avoided. H2 Console Servlet deployed on a web server can be protected with a security constraint: https://h2database.com/html/tutorial.html#usingH2ConsoleServlet If `webAllowOthers` is specified, you need to uncomment and edit `<security-role>` and `<security-constraint>` as necessary. See documentation of your web server for more details. ### References This issue was found and privately reported to H2 team by [JFrog Security](https://www.jfrog.com/)'s vulnerability research team with detailed information.\",\n  \"published\": \"2022-01-06T23:55:09Z\",\n  \"updated\": \"2023-02-25T00:31:20Z\",\n  \"affects\": [\n    {\n      \"ref\": \"c19e7b95-5753-489e-b720-c9dd79f15cc8\"\n    }\n  ]\n}",
           "results": [
             {
-              "status": "failed",
+              "status": "skipped",
               "code_desc": "Component com.h2database/h2@1.4.197 is vulnerable",
               "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"MPL 2.0 or EPL 1.0\",\n      \"url\": \"http://h2database.com/html/license.html\"\n    }\n  }\n]",
-              "start_time": ""
+              "start_time": "",
+              "skip_message": "Manual review required because a CycloneDX rating severity is set to `info` or `unknown`."
             }
           ]
         },
@@ -3773,11 +3690,10 @@
               "CWE-88"
             ],
             "bom-ref": "c8a50465-16df-44e0-84e9-7acff5870a51",
-            "ratings": "GITHUB - critical",
+            "ratings": "GITHUB - info",
             "published": "2022-01-21T23:07:39Z",
             "updated": "2023-08-18T15:47:05Z"
           },
-          "descriptions": [],
           "refs": [
             {
               "ref": [
@@ -3794,19 +3710,20 @@
           "title": "H2 Console before 2.1.210 allows remote attackers to execute arbitrary code via a jdbc:h2:mem JDBC URL containing the IGNORE_UNKNOWN_SETTINGS=TRUE;FORBID_CREATION=FALSE;INIT=RUNSCRIPT substring, a different vulnerability than CVE-2021-42392.",
           "id": "GHSA-45hx-wfhj-473x",
           "desc": "H2 Console before 2.1.210 allows remote attackers to execute arbitrary code via a jdbc:h2:mem JDBC URL containing the IGNORE_UNKNOWN_SETTINGS=TRUE;FORBID_CREATION=FALSE;INIT=RUNSCRIPT substring, a different vulnerability than CVE-2021-42392.",
-          "impact": 1,
-          "code": "{\n  \"bom-ref\": \"c8a50465-16df-44e0-84e9-7acff5870a51\",\n  \"id\": \"GHSA-45hx-wfhj-473x\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"critical\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    88\n  ],\n  \"description\": \"H2 Console before 2.1.210 allows remote attackers to execute arbitrary code via a jdbc:h2:mem JDBC URL containing the IGNORE_UNKNOWN_SETTINGS=TRUE;FORBID_CREATION=FALSE;INIT=RUNSCRIPT substring, a different vulnerability than CVE-2021-42392.\",\n  \"published\": \"2022-01-21T23:07:39Z\",\n  \"updated\": \"2023-08-18T15:47:05Z\",\n  \"affects\": [\n    {\n      \"ref\": \"c19e7b95-5753-489e-b720-c9dd79f15cc8\"\n    }\n  ]\n}",
+          "impact": 0.5,
+          "code": "{\n  \"bom-ref\": \"c8a50465-16df-44e0-84e9-7acff5870a51\",\n  \"id\": \"GHSA-45hx-wfhj-473x\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"info\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    88\n  ],\n  \"description\": \"H2 Console before 2.1.210 allows remote attackers to execute arbitrary code via a jdbc:h2:mem JDBC URL containing the IGNORE_UNKNOWN_SETTINGS=TRUE;FORBID_CREATION=FALSE;INIT=RUNSCRIPT substring, a different vulnerability than CVE-2021-42392.\",\n  \"published\": \"2022-01-21T23:07:39Z\",\n  \"updated\": \"2023-08-18T15:47:05Z\",\n  \"affects\": [\n    {\n      \"ref\": \"c19e7b95-5753-489e-b720-c9dd79f15cc8\"\n    }\n  ]\n}",
           "results": [
             {
-              "status": "failed",
+              "status": "skipped",
               "code_desc": "Component com.h2database/h2@1.4.197 is vulnerable",
               "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"MPL 2.0 or EPL 1.0\",\n      \"url\": \"http://h2database.com/html/license.html\"\n    }\n  }\n]",
-              "start_time": ""
+              "start_time": "",
+              "skip_message": "Manual review required because a CycloneDX rating severity is set to `info` or `unknown`."
             }
           ]
         }
       ],
-      "sha256": "ea28e2b46ad51b20a477cf07159a7508c03ab784998b98901a8c5abdcc1f6bb9"
+      "sha256": "e54441fe70f87286068bd155ef9542dd7e3e43a774d4d34eeaf95b816b547784"
     }
   ],
   "passthrough": {

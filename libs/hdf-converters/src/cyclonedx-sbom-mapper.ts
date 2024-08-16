@@ -12,7 +12,10 @@ import {
   VulnerabilityRepository
 } from '@cyclonedx/cyclonedx-library/dist.d/models/vulnerability';
 import {CweRepository} from '@cyclonedx/cyclonedx-library/dist.d/types';
-import {Severity} from '@cyclonedx/cyclonedx-library/dist.d/enums/vulnerability';
+import {
+  AnalysisResponseRepository,
+  Severity
+} from '@cyclonedx/cyclonedx-library/dist.d/enums/vulnerability';
 import {
   Component,
   ComponentRepository,
@@ -46,9 +49,9 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
   ['medium', 0.5],
   ['low', 0.3],
-  ['info', 0.0],
+  ['info', 0.5],
   ['none', 0.0],
-  ['unknown', 0.0]
+  ['unknown', 0.5]
 ]);
 
 // Convert object type to string[] and prepend `CWE` if used directly for tag display
@@ -83,6 +86,38 @@ function maxImpact(ratings: RatingRepository): number {
         maxValue > newValue ? maxValue : newValue,
       0
     );
+}
+
+// If the highest rating severity for a control is `info` or `unknown`, set the results to skipped and request a manual review
+function skipSeverityInfoOrUnknown(controls: unknown[]): unknown[] {
+  if (controls) {
+    (controls as ExecJSON.Control[])
+      // Filter to controls whose highest rating severity is either `info` or `unknown`
+      .filter((control) => {
+        const ratings = (_.get(control, 'tags.ratings', '') as string).split(
+          / - |, /
+        );
+        return (
+          (ratings.includes('info') || ratings.includes('unknown')) &&
+          !(
+            ratings.includes('critical') ||
+            ratings.includes('high') ||
+            ratings.includes('medium') ||
+            ratings.includes('low') ||
+            ratings.includes('none')
+          )
+        );
+      })
+      // For every result contained by that control, set the status to skipped and request a manual review
+      .map((control) =>
+        control.results.map((result) => {
+          result.status = ExecJSON.ControlResultStatus.Skipped;
+          result.skip_message =
+            'Manual review required because a CycloneDX rating severity is set to `info` or `unknown`.';
+        })
+      );
+  }
+  return controls;
 }
 
 export class CycloneDXSBOMResults {
@@ -383,42 +418,62 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   input
                     ? [...input].map((tool) => tool.name).join(', ')
                     : undefined
+              },
+              'analysis.state': {
+                path: 'analysis.state',
+                transformer: filterString
+              },
+              'analysis.justification': {
+                path: 'analysis.justification',
+                transformer: filterString
+              },
+              'analysis.response': {
+                path: 'analysis.response',
+                transformer: (
+                  input: AnalysisResponseRepository
+                ): string | undefined =>
+                  input && [...input].length > 0
+                    ? [...input].join(', ')
+                    : undefined
+              },
+              'analysis.detail': {
+                path: 'analysis.detail',
+                transformer: filterString
+              },
+              'analysis.firstIssued': {
+                path: 'analysis.firstIssued',
+                transformer: filterString
+              },
+              'analysis.lastUpdated': {
+                path: 'analysis.lastUpdated',
+                transformer: filterString
               }
             },
-            descriptions: [
-              {
-                path: 'detail',
-                transformer: (input: string) =>
-                  input ? {data: input, label: 'rationale'} : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'recommendation',
-                transformer: (input: string) =>
-                  input ? {data: input, label: 'fix'} : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'workaround',
-                transformer: (input: string) =>
-                  input ? {data: input, label: 'workaround'} : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'proofOfConcept',
-                transformer: (input: Record<string, unknown>) =>
-                  input
+            descriptions: {
+              transformer: (input: Vulnerability) => {
+                const descriptions = [
+                  _.has(input, 'recommendation') || _.has(input, 'workaround')
                     ? {
-                        data: JSON.stringify(input, null, 2),
+                        data: filterString(
+                          `${_.get(input, 'recommendation', '')}\n\n${_.get(input, 'workaround', '')}`.trim()
+                        ),
+                        label: 'fix'
+                      }
+                    : undefined,
+                  _.has(input, 'proofOfConcept')
+                    ? {
+                        data: JSON.stringify(
+                          _.get(input, 'proofOfConcept'),
+                          null,
+                          2
+                        ),
                         label: 'check'
                       }
                     : undefined
-              } as unknown as ExecJSON.ControlDescription,
-              {
-                path: 'analysis',
-                transformer: (input: Record<string, unknown>) =>
-                  input
-                    ? {data: JSON.stringify(input, null, 2), label: 'Analysis'}
-                    : undefined
-              } as unknown as ExecJSON.ControlDescription
-            ],
+                ].reduce((subdescription) => subdescription);
+                return descriptions ? descriptions : undefined;
+              }
+            } as unknown as ExecJSON.ControlDescription[],
             refs: [
               {
                 transformer: (
@@ -440,26 +495,14 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
             },
             id: {path: 'id'},
             desc: {
-              path: 'description',
-              transformer: filterString
+              transformer: (input: Vulnerability): string | undefined =>
+                filterString(
+                  `${_.get(input, 'description', '')}\n\n${_.get(input, 'detail', '')}`.trim()
+                )
             },
             impact: {
-              transformer: (input: Vulnerability): number => {
-                // The `rejected` and `analysis` field may contain information on whether this vulnerability is impactful
-                if (
-                  _.has(input, 'rejected') ||
-                  [
-                    'resolved',
-                    'resolved_with_pedigree',
-                    'false_positive',
-                    'not_affected'
-                  ].includes(_.get(input.analysis, 'state') as string)
-                ) {
-                  return 0;
-                } else {
-                  return maxImpact(input.ratings);
-                }
-              }
+              transformer: (input: Vulnerability): number =>
+                maxImpact(input.ratings)
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
@@ -469,6 +512,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   2
                 )
             },
+            arrayTransformer: skipSeverityInfoOrUnknown,
             results: [
               {
                 path: 'affectedComponents',

@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.13"
+    "release": "2.10.14"
   },
-  "version": "2.10.13",
+  "version": "2.10.14",
   "statistics": {},
   "profiles": [
     {
