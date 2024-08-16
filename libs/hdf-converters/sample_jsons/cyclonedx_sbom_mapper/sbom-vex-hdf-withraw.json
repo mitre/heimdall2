@@ -35,10 +35,12 @@
             "analysis.response": "will_not_fix, update",
             "analysis.detail": "Automated dataflow analysis and manual code review indicates that the vulnerable code is not reachable, either directly or indirectly."
           },
-          "descriptions": {
-            "data": "Upgrade com.fasterxml.jackson.core:jackson-databind to version 2.6.7.4, 2.9.10.7, 2.10.5.1 or higher.",
-            "label": "fix"
-          },
+          "descriptions": [
+            {
+              "data": "Upgrade com.fasterxml.jackson.core:jackson-databind to version 2.6.7.4, 2.9.10.7, 2.10.5.1 or higher.",
+              "label": "fix"
+            }
+          ],
           "refs": [
             {
               "ref": [
@@ -94,7 +96,7 @@
           ]
         }
       ],
-      "sha256": "af5191b5b0cf612521ae967c953aaa38a72d2e796d7c980bae73e15f227d4217"
+      "sha256": "fdac7ce337092379d47151be7f98cdd2179722273014faa8d29e4da235f8b46f"
     }
   ],
   "passthrough": {

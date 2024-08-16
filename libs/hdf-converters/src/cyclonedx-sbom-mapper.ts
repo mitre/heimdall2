@@ -451,7 +451,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
             },
             descriptions: {
               transformer: (input: Vulnerability) => {
-                const descriptions = [
+                return [
                   _.has(input, 'recommendation') || _.has(input, 'workaround')
                     ? {
                         data: filterString(
@@ -470,8 +470,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                         label: 'check'
                       }
                     : undefined
-                ].reduce((subdescription) => subdescription);
-                return descriptions ? descriptions : undefined;
+                ].filter((subdescription) => subdescription);
               }
             } as unknown as ExecJSON.ControlDescription[],
             refs: [
