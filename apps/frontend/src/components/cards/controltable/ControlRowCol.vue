@@ -28,9 +28,6 @@
         class="pa-2 mono pre-formatted"
         v-html="sanitize_html(result.code_desc.trim())"
       />
-      <v-btn v-if="componentRef" @click="goToComponent()"
-        >See component details <v-icon>mdi-view-list-outline</v-icon></v-btn
-      >
       <!-- eslint-enable vue/no-v-html -->
     </v-col>
     <v-col v-if="resultMessage" cols="12" sm="6" lg="5" class="left">
@@ -41,6 +38,10 @@
         class="pa-2 mono pre-formatted"
         v-html="sanitize_html(resultMessage.trim())"
       />
+      <v-chip v-if="componentRef" :to="{name: 'sbom', query: {componentRef}}">
+        See more component details
+        <v-icon right> mdi-view-list-outline </v-icon>
+      </v-chip>
       <!-- eslint-enable vue/no-v-html -->
     </v-col>
     <v-col v-if="result['backtrace'] !== undefined" cols="12" class="pa-2">
@@ -94,14 +95,6 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
     if (matches) {
       return matches.groups?.ref;
     }
-  }
-
-  goToComponent() {
-    if (this.componentRef)
-      this.$router.push({
-        name: 'sbom',
-        query: {componentRef: this.componentRef}
-      });
   }
 }
 </script>

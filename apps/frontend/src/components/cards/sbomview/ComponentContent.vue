@@ -21,7 +21,7 @@
                   <td v-for="(value, j) in row" :key="value">
                     <!-- Check if the column represents an alternate references
                     regex tests for if "url" is present as a single word -->
-                    <template v-if="(/\burl\b/i).test(tab.tableData.columns[j])">
+                    <template v-if="/\burl\b/i.test(tab.tableData.columns[j])">
                       <a :href="value" target="_blank">{{ value }}</a>
                     </template>
                     <!-- Render link in table to navigate back to results table view -->

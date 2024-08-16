@@ -8,7 +8,7 @@ import {Result} from '@mitre/hdf-converters/src/utils/result';
 import {ContextualizedControl, Severity} from 'inspecjs';
 import _ from 'lodash';
 import {execution_unique_key} from './format_util';
-import {SBOMFilter} from '@/store/data_filters';
+import {Filter, FilteredDataModule, SBOMFilter} from '@/store/data_filters';
 
 /**
  * A type to represent a component from an SBOM
@@ -160,6 +160,25 @@ export function getVulnsFromBomRef(
   });
   if (vuln) return {ok: true, value: vuln};
   return {ok: false, error: null};
+}
+
+export function createVulnMap(
+  components: readonly ContextualizedSBOMComponent[],
+  filter: Filter
+) {
+  const vulnMap: Map<string, ContextualizedControl[]> = new Map();
+  for (const c of components) {
+    // get the component's affecting vulnerabilities
+    const componentVulns = [];
+    const controls = FilteredDataModule.controls(filter);
+    for (const vulnBomRef of c.affectingVulnerabilities || []) {
+      const result = getVulnsFromBomRef(vulnBomRef, controls);
+      if (result.ok) componentVulns.push(result.value);
+    }
+    // associate component bom-ref with vuln info
+    if (c['bom-ref']) vulnMap.set(c['bom-ref'], componentVulns);
+  }
+  return vulnMap;
 }
 
 export function componentFitsSeverityFilter(
@@ -332,7 +351,9 @@ export function matchesFilter(
       .map((field) => _.get(component, field))
       .filter((data) => data);
     const result = allData.some(
-      (data) => filter.searchTerm && data.toLowerCase().includes(filter.searchTerm.toLowerCase())
+      (data) =>
+        filter.searchTerm &&
+        data.toLowerCase().includes(filter.searchTerm.toLowerCase())
     );
     if (!result) return false;
   }

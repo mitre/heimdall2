@@ -87,6 +87,18 @@
 
           <template #append="{item, active}">
             <v-chip
+              v-if="item.component.affectingVulnerabilities.length"
+              small
+              :to="{
+                name: 'results',
+                query: {id: item.component.affectingVulnerabilities}
+              }"
+            >
+              <v-icon small left> mdi-warn </v-icon>
+              {{ item.component.affectingVulnerabilities.length }}
+              Vulnerabilities!
+            </v-chip>
+            <v-chip
               v-if="active"
               @click="
                 $emit('show-components-in-tree', [item.component['bom-ref']])
@@ -121,9 +133,11 @@
 import {SBOMFilter} from '@/store/data_filters';
 import {
   ContextualizedSBOMComponent,
+  createVulnMap,
   matchesFilter,
   SBOMData
 } from '@/utilities/sbom_util';
+import {ContextualizedControl} from 'inspecjs';
 import _ from 'lodash';
 import Vue from 'vue';
 import Component from 'vue-class-component';
@@ -262,7 +276,7 @@ export default class DependencyTree extends Vue {
     for (const child of children) {
       // uses a pre-order traversal algorithm to maintain the
       // ordering of the paths by ensuring that the path to the
-      // next found component comes "after" or "before" (dependig on `reverse`) 
+      // next found component comes "after" or "before" (dependig on `reverse`)
       // the current path
       if (!canTest && child['bom-ref'] !== path[1]['bom-ref']) {
         continue;
@@ -279,6 +293,12 @@ export default class DependencyTree extends Vue {
         return [component, ...possiblePath];
       }
     }
+  }
+
+  get affectingVulns(): Map<string, ContextualizedControl[]> {
+    return createVulnMap(this.sbomData.components, {
+      fromFile: this.filter.fromFile
+    });
   }
 
   /** a representation of the selection path in a form that v-breadcrumbs can render */

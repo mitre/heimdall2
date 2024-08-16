@@ -83,8 +83,8 @@ import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 import ComponentContent from './ComponentContent.vue';
 import {
-  getVulnsFromBomRef,
-  ContextualizedSBOMComponent
+  ContextualizedSBOMComponent,
+  createVulnMap
 } from '@/utilities/sbom_util';
 
 @Component({
@@ -114,19 +114,7 @@ export default class ComponentTable extends Vue {
   }
 
   get affectingVulns(): Map<string, ContextualizedControl[]> {
-    let vulnMap: Map<string, ContextualizedControl[]> = new Map();
-    for (const c of this.components) {
-      // get the component's affecting vulnerabilities
-      const componentVulns = [];
-      const controls = FilteredDataModule.controls({fromFile: this.filter.fromFile});
-      for (const vulnBomRef of c.affectingVulnerabilities || []) {
-        let result = getVulnsFromBomRef(vulnBomRef, controls);
-        if (result.ok) componentVulns.push(result.value);
-      }
-      // associate component bom-ref with vuln info
-      if (c['bom-ref']) vulnMap.set(c['bom-ref'], componentVulns);
-    }
-    return vulnMap;
+    return createVulnMap(this.components, {fromFile: this.filter.fromFile});
   }
 
   severityColor(severity: string): string {
