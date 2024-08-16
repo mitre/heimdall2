@@ -208,13 +208,13 @@ export class CycloneDXSBOMResults {
       vulnerability.affectedComponents.push(
         ...Array.from(data.components.entries())
           // Find every component that is affected via listed bom-refs
-          .filter((iteratorElement) =>
+          .filter(([_index, component]) =>
             [...vulnerability.affects]
               .map((id) => id.ref.toString())
-              .includes(iteratorElement[1]['bom-ref'] as string)
+              .includes(component['bom-ref'] as string)
           )
           // Add the index of that affected component to the corresponding vulnerability object
-          .map((iteratorElement) => iteratorElement[0])
+          .map(([index, _component]) => index)
       );
 
       // Also record the ID of the vulnerability in the component for use in bidirectional traversal
@@ -401,6 +401,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                 path: 'updated',
                 transformer: filterString
               },
+              // Workflow items will not affect `impact`
               rejected: {
                 path: 'rejected',
                 transformer: filterString
@@ -419,6 +420,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                     ? [...input].map((tool) => tool.name).join(', ')
                     : undefined
               },
+              // Workflow items will not affect `impact`
               'analysis.state': {
                 path: 'analysis.state',
                 transformer: filterString
@@ -462,11 +464,11 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                     : undefined,
                   _.has(input, 'proofOfConcept')
                     ? {
-                        data: JSON.stringify(
+                        data: `Proof of concept: ${JSON.stringify(
                           _.get(input, 'proofOfConcept'),
                           null,
                           2
-                        ),
+                        )}`,
                         label: 'check'
                       }
                     : undefined
