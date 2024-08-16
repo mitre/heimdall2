@@ -88,13 +88,14 @@ export default class ControlRowCol extends mixins(HtmlSanitizeMixin) {
       : this.result.message || this.result.skip_message;
   }
 
-  get componentRef(): string | undefined {
+  get componentRef(): string | null {
     // Checks to see if the result represents a component
     // from an SBOM and contains a bom-ref
     const matches = this.result.message?.match(/- Bom-ref: (?<ref>.+)$/m);
-    if (matches) {
-      return matches.groups?.ref;
+    if (matches && matches.groups?.ref) {
+      return matches.groups.ref;
     }
+    return null;
   }
 }
 </script>

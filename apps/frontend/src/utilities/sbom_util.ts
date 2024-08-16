@@ -272,9 +272,6 @@ export function parseSbomPassthrough(
       (c) => c.parents.length === 0
     );
     for (const child of parentlessComponents) {
-      if (child === rootComponent) {
-        continue;
-      }
       child.parents.push(rootComponent);
       rootComponent.children.push(child);
     }

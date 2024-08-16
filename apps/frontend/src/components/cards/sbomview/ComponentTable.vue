@@ -12,8 +12,6 @@
           item-key="key"
           :footer-props="{'items-per-page-options': [25, 50, 100, 250, -1]}"
         >
-          <!--           fixed-header
-          height="calc(100vh - 250px)" -->
           <template #top>
             <v-card-title> Components ({{ components.length }})</v-card-title>
           </template>

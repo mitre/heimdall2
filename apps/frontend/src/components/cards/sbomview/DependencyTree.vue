@@ -15,7 +15,7 @@
       </v-col>
       <v-col :cols="1" style="text-align: center">
         <v-btn :disabled="!filterActive" @click="changePath(true)">
-          Prev <v-icon small right>mdi-chevron-up</v-icon>
+          Prev <v-icon right>mdi-chevron-up</v-icon>
         </v-btn>
       </v-col>
       <v-col :cols="8">
@@ -88,15 +88,20 @@
           <template #append="{item, active}">
             <v-chip
               v-if="item.component.affectingVulnerabilities.length"
-              small
               :to="{
                 name: 'results',
                 query: {id: item.component.affectingVulnerabilities}
               }"
             >
-              <v-icon small left> mdi-warn </v-icon>
               {{ item.component.affectingVulnerabilities.length }}
-              Vulnerabilities!
+
+              <template
+                v-if="item.component.affectingVulnerabilities.length === 1"
+              >
+                Vulnerability
+              </template>
+              <template v-else> Vulnerabilities </template>
+              <v-icon right> mdi-alert-outline </v-icon>
             </v-chip>
             <v-chip
               v-if="active"
@@ -323,10 +328,8 @@ export default class DependencyTree extends Vue {
         );
         if (existingNode) {
           children.push(existingNode);
-        } else {
-          if (!only || component === only) {
-            children.push(this.componentToTreeNode(component, item));
-          }
+        } else if (!only || component === only) {
+          children.push(this.componentToTreeNode(component, item));
         }
       }
       item.children = children;
@@ -423,5 +426,3 @@ export default class DependencyTree extends Vue {
   }
 }
 </script>
-
-<style scoped></style>
