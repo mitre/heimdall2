@@ -453,12 +453,17 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
             },
             descriptions: {
               transformer: (input: Vulnerability) => {
+                const recommendation = input.recommendation
+                  ? `Recommendation: ${input.recommendation}`
+                  : '';
+                // Workaround not defined by types? Use lodash for now until proper type is implemented
+                const workaround = _.has(input, 'workaround')
+                  ? `Workaround: ${input.workaround}`
+                  : '';
                 return [
-                  _.has(input, 'recommendation') || _.has(input, 'workaround')
+                  recommendation || workaround
                     ? {
-                        data: filterString(
-                          `${_.get(input, 'recommendation', '')}\n\n${_.get(input, 'workaround', '')}`.trim()
-                        ),
+                        data: `${recommendation}\n\n${workaround}`.trim(),
                         label: 'fix'
                       }
                     : undefined,
@@ -496,10 +501,13 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
             },
             id: {path: 'id'},
             desc: {
-              transformer: (input: Vulnerability): string | undefined =>
-                filterString(
-                  `${_.get(input, 'description', '')}\n\n${_.get(input, 'detail', '')}`.trim()
-                )
+              transformer: (input: Vulnerability): string | undefined => {
+                const description = input.description
+                  ? `Description: ${input.description}`
+                  : '';
+                const detail = input.detail ? `Detail: ${input.detail}` : '';
+                return filterString(`${description}\n\n${detail}`.trim());
+              }
             },
             impact: {
               transformer: (input: Vulnerability): number =>
