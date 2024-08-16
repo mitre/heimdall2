@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.13"
+    "release": "2.10.14"
   },
-  "version": "2.10.13",
+  "version": "2.10.14",
   "statistics": {},
   "profiles": [
     {
@@ -3683,7 +3683,7 @@
               "CWE-400"
             ],
             "bom-ref": "5acc2eee-8433-4a66-b9c5-3dcc7be5b29a",
-            "ratings": "GITHUB - medium",
+            "ratings": "GITHUB - medium, GITHUB - info",
             "published": "2023-10-24T01:49:09Z",
             "updated": "2023-11-05T05:04:23Z"
           },
@@ -3705,7 +3705,7 @@
           "id": "GHSA-mm8h-8587-p46h",
           "desc": "### Summary `maxBodyLebgth` was not used when receiving Message objects. Attackers could just send a very large Message causing a memory overflow and triggering an OOM Error. ### PoC #### RbbitMQ * Use RabbitMQ 3.11.16 as MQ and specify Message Body size 512M (here it only needs to be larger than the Consumer memory) * Start RabbitMQ #### Producer * Build a String of length 256M and send it to Consumer ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Producer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); String s = \"A\"; for(int i=0;i<28;++i){ s = s + s; System.out.println(i); } amqpTemplate.convertAndSend(s); System.out.println(\"Send Finish\"); } } ``` #### Consumer * First set the heap memory size to 128M * Read the message sent by the Producer from the MQ and print the length ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.amqp.core.Message; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Consumer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); Object o = amqpTemplate.receiveAndConvert(); if(o != null){ String s = o.toString(); System.out.println(\"Received Length : \" + s.length()); }else{ System.out.println(\"null\"); } } } ``` #### Results * Run the Producer first, then the Consumer * Consumer throws OOM Exception ### Impact Users of RabbitMQ may suffer from DoS attacks from RabbitMQ Java client which will ultimately exhaust the memory of the consumer.",
           "impact": 0.5,
-          "code": "{\n  \"bom-ref\": \"5acc2eee-8433-4a66-b9c5-3dcc7be5b29a\",\n  \"id\": \"GHSA-mm8h-8587-p46h\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"medium\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    400\n  ],\n  \"description\": \"### Summary `maxBodyLebgth` was not used when receiving Message objects. Attackers could just send a very large Message causing a memory overflow and triggering an OOM Error. ### PoC #### RbbitMQ * Use RabbitMQ 3.11.16 as MQ and specify Message Body size 512M (here it only needs to be larger than the Consumer memory) * Start RabbitMQ #### Producer * Build a String of length 256M and send it to Consumer ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Producer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); String s = \\\"A\\\"; for(int i=0;i<28;++i){ s = s + s; System.out.println(i); } amqpTemplate.convertAndSend(s); System.out.println(\\\"Send Finish\\\"); } } ``` #### Consumer * First set the heap memory size to 128M * Read the message sent by the Producer from the MQ and print the length ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.amqp.core.Message; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Consumer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); Object o = amqpTemplate.receiveAndConvert(); if(o != null){ String s = o.toString(); System.out.println(\\\"Received Length : \\\" + s.length()); }else{ System.out.println(\\\"null\\\"); } } } ``` #### Results * Run the Producer first, then the Consumer * Consumer throws OOM Exception ### Impact Users of RabbitMQ may suffer from DoS attacks from RabbitMQ Java client which will ultimately exhaust the memory of the consumer.\",\n  \"published\": \"2023-10-24T01:49:09Z\",\n  \"updated\": \"2023-11-05T05:04:23Z\",\n  \"affects\": [\n    {\n      \"ref\": \"2687d928-5b18-4ce5-ab4c-8ef513f0b48c\"\n    }\n  ]\n}",
+          "code": "{\n  \"bom-ref\": \"5acc2eee-8433-4a66-b9c5-3dcc7be5b29a\",\n  \"id\": \"GHSA-mm8h-8587-p46h\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"medium\",\n      \"method\": \"other\"\n    },\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"info\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    400\n  ],\n  \"description\": \"### Summary `maxBodyLebgth` was not used when receiving Message objects. Attackers could just send a very large Message causing a memory overflow and triggering an OOM Error. ### PoC #### RbbitMQ * Use RabbitMQ 3.11.16 as MQ and specify Message Body size 512M (here it only needs to be larger than the Consumer memory) * Start RabbitMQ #### Producer * Build a String of length 256M and send it to Consumer ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Producer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); String s = \\\"A\\\"; for(int i=0;i<28;++i){ s = s + s; System.out.println(i); } amqpTemplate.convertAndSend(s); System.out.println(\\\"Send Finish\\\"); } } ``` #### Consumer * First set the heap memory size to 128M * Read the message sent by the Producer from the MQ and print the length ``` package org.springframework.amqp.helloworld; import org.springframework.amqp.core.AmqpTemplate; import org.springframework.amqp.core.Message; import org.springframework.context.ApplicationContext; import org.springframework.context.annotation.AnnotationConfigApplicationContext; public class Consumer { public static void main(String[] args) { ApplicationContext context = new AnnotationConfigApplicationContext(HelloWorldConfiguration.class); AmqpTemplate amqpTemplate = context.getBean(AmqpTemplate.class); Object o = amqpTemplate.receiveAndConvert(); if(o != null){ String s = o.toString(); System.out.println(\\\"Received Length : \\\" + s.length()); }else{ System.out.println(\\\"null\\\"); } } } ``` #### Results * Run the Producer first, then the Consumer * Consumer throws OOM Exception ### Impact Users of RabbitMQ may suffer from DoS attacks from RabbitMQ Java client which will ultimately exhaust the memory of the consumer.\",\n  \"published\": \"2023-10-24T01:49:09Z\",\n  \"updated\": \"2023-11-05T05:04:23Z\",\n  \"affects\": [\n    {\n      \"ref\": \"2687d928-5b18-4ce5-ab4c-8ef513f0b48c\"\n    }\n  ]\n}",
           "results": [
             {
               "status": "failed",
@@ -3727,7 +3727,7 @@
               "CWE-502"
             ],
             "bom-ref": "815a1358-2bd4-4028-bd3e-8219747c78f6",
-            "ratings": "GITHUB - critical",
+            "ratings": "GITHUB - unknown",
             "published": "2022-01-06T23:55:09Z",
             "updated": "2023-02-25T00:31:20Z"
           },
@@ -3748,14 +3748,15 @@
           "title": "### Impact H2 Console in versions since 1.1.100 (2008-10-14) to 2.0.204 (2021-12-21) inclusive allows loading of custom classes from remote servers through JNDI. H2 Console doesn't accept remote connections by default. If remote access was enabled explicitly and some protection method (such as security constraint) wasn't set, an intruder can load own custom class and execute its code in a process with H2 Console (H2 Server process or a web server with H2 Console servlet). It is also possible to load them by creation a linked table in these versions, but it requires `ADMIN` privileges and user with `ADMIN` privileges has full access to the Java process by design. These privileges should never be granted to untrusted users. ### Patches Since version 2.0.206 H2 Console and linked tables explicitly forbid attempts to specify LDAP URLs for JNDI. Only local data sources can be used. ### Workarounds H2 Console should never be available to untrusted users. `-webAllowOthers` is a dangerous setting that should be avoided. H2 Console Servlet deployed on a web server can be protected with a security constraint: https://h2database.com/html/tutorial.html#usingH2ConsoleServlet If `webAllowOthers` is specified, you need to uncomment and edit `<security-role>` and `<security-constraint>` as necessary. See documentation of your web server for more details. ### References This issue was found and privately reported to H2 team by [JFrog Security](https://www.jfrog.com/)'s vulnerability research team with detailed information.",
           "id": "GHSA-h376-j262-vhq6",
           "desc": "### Impact H2 Console in versions since 1.1.100 (2008-10-14) to 2.0.204 (2021-12-21) inclusive allows loading of custom classes from remote servers through JNDI. H2 Console doesn't accept remote connections by default. If remote access was enabled explicitly and some protection method (such as security constraint) wasn't set, an intruder can load own custom class and execute its code in a process with H2 Console (H2 Server process or a web server with H2 Console servlet). It is also possible to load them by creation a linked table in these versions, but it requires `ADMIN` privileges and user with `ADMIN` privileges has full access to the Java process by design. These privileges should never be granted to untrusted users. ### Patches Since version 2.0.206 H2 Console and linked tables explicitly forbid attempts to specify LDAP URLs for JNDI. Only local data sources can be used. ### Workarounds H2 Console should never be available to untrusted users. `-webAllowOthers` is a dangerous setting that should be avoided. H2 Console Servlet deployed on a web server can be protected with a security constraint: https://h2database.com/html/tutorial.html#usingH2ConsoleServlet If `webAllowOthers` is specified, you need to uncomment and edit `<security-role>` and `<security-constraint>` as necessary. See documentation of your web server for more details. ### References This issue was found and privately reported to H2 team by [JFrog Security](https://www.jfrog.com/)'s vulnerability research team with detailed information.",
-          "impact": 1,
-          "code": "{\n  \"bom-ref\": \"815a1358-2bd4-4028-bd3e-8219747c78f6\",\n  \"id\": \"GHSA-h376-j262-vhq6\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"critical\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    502\n  ],\n  \"description\": \"### Impact H2 Console in versions since 1.1.100 (2008-10-14) to 2.0.204 (2021-12-21) inclusive allows loading of custom classes from remote servers through JNDI. H2 Console doesn't accept remote connections by default. If remote access was enabled explicitly and some protection method (such as security constraint) wasn't set, an intruder can load own custom class and execute its code in a process with H2 Console (H2 Server process or a web server with H2 Console servlet). It is also possible to load them by creation a linked table in these versions, but it requires `ADMIN` privileges and user with `ADMIN` privileges has full access to the Java process by design. These privileges should never be granted to untrusted users. ### Patches Since version 2.0.206 H2 Console and linked tables explicitly forbid attempts to specify LDAP URLs for JNDI. Only local data sources can be used. ### Workarounds H2 Console should never be available to untrusted users. `-webAllowOthers` is a dangerous setting that should be avoided. H2 Console Servlet deployed on a web server can be protected with a security constraint: https://h2database.com/html/tutorial.html#usingH2ConsoleServlet If `webAllowOthers` is specified, you need to uncomment and edit `<security-role>` and `<security-constraint>` as necessary. See documentation of your web server for more details. ### References This issue was found and privately reported to H2 team by [JFrog Security](https://www.jfrog.com/)'s vulnerability research team with detailed information.\",\n  \"published\": \"2022-01-06T23:55:09Z\",\n  \"updated\": \"2023-02-25T00:31:20Z\",\n  \"affects\": [\n    {\n      \"ref\": \"c19e7b95-5753-489e-b720-c9dd79f15cc8\"\n    }\n  ]\n}",
+          "impact": 0.5,
+          "code": "{\n  \"bom-ref\": \"815a1358-2bd4-4028-bd3e-8219747c78f6\",\n  \"id\": \"GHSA-h376-j262-vhq6\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"unknown\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    502\n  ],\n  \"description\": \"### Impact H2 Console in versions since 1.1.100 (2008-10-14) to 2.0.204 (2021-12-21) inclusive allows loading of custom classes from remote servers through JNDI. H2 Console doesn't accept remote connections by default. If remote access was enabled explicitly and some protection method (such as security constraint) wasn't set, an intruder can load own custom class and execute its code in a process with H2 Console (H2 Server process or a web server with H2 Console servlet). It is also possible to load them by creation a linked table in these versions, but it requires `ADMIN` privileges and user with `ADMIN` privileges has full access to the Java process by design. These privileges should never be granted to untrusted users. ### Patches Since version 2.0.206 H2 Console and linked tables explicitly forbid attempts to specify LDAP URLs for JNDI. Only local data sources can be used. ### Workarounds H2 Console should never be available to untrusted users. `-webAllowOthers` is a dangerous setting that should be avoided. H2 Console Servlet deployed on a web server can be protected with a security constraint: https://h2database.com/html/tutorial.html#usingH2ConsoleServlet If `webAllowOthers` is specified, you need to uncomment and edit `<security-role>` and `<security-constraint>` as necessary. See documentation of your web server for more details. ### References This issue was found and privately reported to H2 team by [JFrog Security](https://www.jfrog.com/)'s vulnerability research team with detailed information.\",\n  \"published\": \"2022-01-06T23:55:09Z\",\n  \"updated\": \"2023-02-25T00:31:20Z\",\n  \"affects\": [\n    {\n      \"ref\": \"c19e7b95-5753-489e-b720-c9dd79f15cc8\"\n    }\n  ]\n}",
           "results": [
             {
-              "status": "failed",
+              "status": "skipped",
               "code_desc": "Component com.h2database/h2@1.4.197 is vulnerable",
               "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"MPL 2.0 or EPL 1.0\",\n      \"url\": \"http://h2database.com/html/license.html\"\n    }\n  }\n]",
-              "start_time": ""
+              "start_time": "",
+              "skip_message": "Manual review required because a CycloneDX rating severity is set to `info` or `unknown`."
             }
           ]
         },
@@ -3773,7 +3774,7 @@
               "CWE-88"
             ],
             "bom-ref": "c8a50465-16df-44e0-84e9-7acff5870a51",
-            "ratings": "GITHUB - critical",
+            "ratings": "GITHUB - info",
             "published": "2022-01-21T23:07:39Z",
             "updated": "2023-08-18T15:47:05Z"
           },
@@ -3794,19 +3795,20 @@
           "title": "H2 Console before 2.1.210 allows remote attackers to execute arbitrary code via a jdbc:h2:mem JDBC URL containing the IGNORE_UNKNOWN_SETTINGS=TRUE;FORBID_CREATION=FALSE;INIT=RUNSCRIPT substring, a different vulnerability than CVE-2021-42392.",
           "id": "GHSA-45hx-wfhj-473x",
           "desc": "H2 Console before 2.1.210 allows remote attackers to execute arbitrary code via a jdbc:h2:mem JDBC URL containing the IGNORE_UNKNOWN_SETTINGS=TRUE;FORBID_CREATION=FALSE;INIT=RUNSCRIPT substring, a different vulnerability than CVE-2021-42392.",
-          "impact": 1,
-          "code": "{\n  \"bom-ref\": \"c8a50465-16df-44e0-84e9-7acff5870a51\",\n  \"id\": \"GHSA-45hx-wfhj-473x\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"critical\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    88\n  ],\n  \"description\": \"H2 Console before 2.1.210 allows remote attackers to execute arbitrary code via a jdbc:h2:mem JDBC URL containing the IGNORE_UNKNOWN_SETTINGS=TRUE;FORBID_CREATION=FALSE;INIT=RUNSCRIPT substring, a different vulnerability than CVE-2021-42392.\",\n  \"published\": \"2022-01-21T23:07:39Z\",\n  \"updated\": \"2023-08-18T15:47:05Z\",\n  \"affects\": [\n    {\n      \"ref\": \"c19e7b95-5753-489e-b720-c9dd79f15cc8\"\n    }\n  ]\n}",
+          "impact": 0.5,
+          "code": "{\n  \"bom-ref\": \"c8a50465-16df-44e0-84e9-7acff5870a51\",\n  \"id\": \"GHSA-45hx-wfhj-473x\",\n  \"source\": {\n    \"name\": \"GITHUB\",\n    \"url\": \"https://github.com/advisories\"\n  },\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"GITHUB\",\n        \"url\": \"https://github.com/advisories\"\n      },\n      \"severity\": \"info\",\n      \"method\": \"other\"\n    }\n  ],\n  \"cwes\": [\n    88\n  ],\n  \"description\": \"H2 Console before 2.1.210 allows remote attackers to execute arbitrary code via a jdbc:h2:mem JDBC URL containing the IGNORE_UNKNOWN_SETTINGS=TRUE;FORBID_CREATION=FALSE;INIT=RUNSCRIPT substring, a different vulnerability than CVE-2021-42392.\",\n  \"published\": \"2022-01-21T23:07:39Z\",\n  \"updated\": \"2023-08-18T15:47:05Z\",\n  \"affects\": [\n    {\n      \"ref\": \"c19e7b95-5753-489e-b720-c9dd79f15cc8\"\n    }\n  ]\n}",
           "results": [
             {
-              "status": "failed",
+              "status": "skipped",
               "code_desc": "Component com.h2database/h2@1.4.197 is vulnerable",
               "message": "-Component Summary-\n\n- Type: library\n\n- Bom-ref: c19e7b95-5753-489e-b720-c9dd79f15cc8\n\n- Group: com.h2database\n\n- Name: h2\n\n- Version: 1.4.197\n\n- Description: H2 Database Engine\n\n- Licenses: [\n  {\n    \"license\": {\n      \"name\": \"MPL 2.0 or EPL 1.0\",\n      \"url\": \"http://h2database.com/html/license.html\"\n    }\n  }\n]",
-              "start_time": ""
+              "start_time": "",
+              "skip_message": "Manual review required because a CycloneDX rating severity is set to `info` or `unknown`."
             }
           ]
         }
       ],
-      "sha256": "ea28e2b46ad51b20a477cf07159a7508c03ab784998b98901a8c5abdcc1f6bb9"
+      "sha256": "982d6fa2680d1e0da23e39a4fd331faae88ecfe2245dd1606020ea635146bbd4"
     }
   ],
   "passthrough": {
@@ -26490,6 +26492,14 @@
               },
               "severity": "medium",
               "method": "other"
+            },
+            {
+              "source": {
+                "name": "GITHUB",
+                "url": "https://github.com/advisories"
+              },
+              "severity": "info",
+              "method": "other"
             }
           ],
           "cwes": [
@@ -26517,7 +26527,7 @@
                 "name": "GITHUB",
                 "url": "https://github.com/advisories"
               },
-              "severity": "critical",
+              "severity": "unknown",
               "method": "other"
             }
           ],
@@ -26546,7 +26556,7 @@
                 "name": "GITHUB",
                 "url": "https://github.com/advisories"
               },
-              "severity": "critical",
+              "severity": "info",
               "method": "other"
             }
           ],
