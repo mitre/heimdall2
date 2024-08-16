@@ -10,7 +10,6 @@ import _ from 'lodash';
 import {execution_unique_key} from './format_util';
 import {SBOMFilter} from '@/store/data_filters';
 
-export type SBOMProperty = {name: string; value: string};
 /**
  * A type to represent a component from an SBOM
  * Other properties may be defined but are only determined at runtime
@@ -52,14 +51,24 @@ export interface SBOMMetadata {
   properties?: SBOMProperty[];
 }
 
+export type SBOMProperty = {name: string; value: string};
+
+/**
+ * data specific to an SBOM that has been extracted and organized
+ * for easy use
+ */
 export interface SBOMData {
+  /** a list of components from the given SBOM */
   components: Readonly<ContextualizedSBOMComponent>[];
+
+  /** metadata about the whole SBOM, including a root component */
   metadata?: Readonly<SBOMMetadata>;
-  componentMap: Map<string, Readonly<ContextualizedSBOMComponent>>;
 }
 
+/**
+ * a collection of settings for the SBOM view
+ */
 export interface SbomViewSettings {
-  severities: Severity[];
   currentHeaders: string[];
 }
 
@@ -193,8 +202,7 @@ export function parseSbomPassthrough(
   const componentMap = new Map<string, Readonly<ContextualizedSBOMComponent>>();
   if (!passthroughSection) {
     return {
-      components: [],
-      componentMap: componentMap
+      components: []
     };
   }
 
@@ -255,11 +263,17 @@ export function parseSbomPassthrough(
 
   return {
     metadata,
-    components,
-    componentMap
+    components
   };
 }
 
+/**
+ * converts a rawComponent from an OHDF file into a
+ * more reliable and structured object
+ * @param rawComponent
+ * @param evaluation
+ * @returns
+ */
 function processRawComponent(
   rawComponent: Object,
   evaluation: SourcedContextualizedEvaluation
@@ -287,6 +301,17 @@ function processRawComponent(
   };
 }
 
+/** a list of all the component fields that are checked for if they include a part of the search term */
+const searchTermChecks = [
+  'name',
+  'version',
+  'group',
+  'description',
+  'purl',
+  'cpe',
+  'bom-ref'
+];
+
 export function matchesFilter(
   component: ContextualizedSBOMComponent,
   filter: SBOMFilter,
@@ -297,7 +322,20 @@ export function matchesFilter(
     !componentFitsSeverityFilter(component, filter.severity, controls)
   )
     return false;
+
   if (filter['bom-refs'] && !filter['bom-refs'].includes(component['bom-ref']))
     return false;
+
+  if (filter.searchTerm) {
+    // gets all component's fields to check for if they include the search term
+    const allData: string[] = searchTermChecks
+      .map((field) => _.get(component, field))
+      .filter((data) => data);
+    const result = allData.some(
+      (data) => filter.searchTerm && data.includes(filter.searchTerm)
+    );
+    if (!result) return false;
+  }
+
   return true;
 }

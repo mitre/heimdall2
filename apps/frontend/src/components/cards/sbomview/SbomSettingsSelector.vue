@@ -8,7 +8,7 @@
     <v-card max-width="400" class="px-5">
       <v-card-title class="py-5">Column Select</v-card-title>
       <v-chip-group
-        v-model="currentHeaders"
+        v-model="headers"
         active-class="primary--text"
         center-active
         column
@@ -22,29 +22,11 @@
           {{ field.name }}
         </v-chip>
       </v-chip-group>
-      <v-divider />
-      <v-card-title class="py-2">Severity Filters</v-card-title>
-      <v-chip-group
-        v-model="value.severities"
-        active-class="primary--text"
-        center-active
-        column
-        multiple
-      >
-        <v-chip
-          v-for="severity in severities"
-          :key="severity"
-          :value="severity"
-        >
-          {{ severityName(severity) }}
-        </v-chip>
-      </v-chip-group>
     </v-card>
   </v-menu>
 </template>
 <script lang="ts">
 import {SbomViewSettings} from '@/utilities/sbom_util';
-import {severities, Severity} from 'inspecjs';
 import _ from 'lodash';
 import Component from 'vue-class-component';
 import {Prop, Vue} from 'vue-property-decorator';
@@ -53,7 +35,7 @@ import {Prop, Vue} from 'vue-property-decorator';
   components: {}
 })
 export default class SbomSettingsSelector extends Vue {
-  @Prop({type: Object, required: true}) readonly value!: SbomViewSettings;
+  @Prop({type: Object, required: true}) value!: SbomViewSettings;
 
   /**
    * A list of options (selectable in the column select menu) for which
@@ -84,21 +66,12 @@ export default class SbomSettingsSelector extends Vue {
     return this.headerOptions.findIndex((option) => option.key === str);
   }
 
-  set currentHeaders(value: string[]) {
+  set headers(value: string[]) {
     this.value.currentHeaders = _.sortBy(value, this.headerIndex);
   }
 
-  get currentHeaders() {
+  get headers() {
     return this.value.currentHeaders;
-  }
-
-  severityName(severity: string): string {
-    return _.startCase(severity);
-  }
-
-  get severities(): Severity[] {
-    // returns the list of severities defined by inspecJS
-    return [...severities];
   }
 }
 </script>

@@ -98,7 +98,13 @@ export interface SBOMFilter {
   /** Each component has to have at least one of these severities.
    * "none" allows controls with no vulnerabilities to appear */
   severity?: Severity[];
+
+  /** Only match components with the given bom-ref */
   'bom-refs'?: string[];
+
+  /** checks to see if the search term is included in the component's
+   * name, version, group, description, purl, cpe, or bom-ref */
+  searchTerm?: string;
 }
 
 export type TreeMapState = string[]; // Representing the current path spec, from root

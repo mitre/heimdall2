@@ -86,7 +86,8 @@
                 <v-tab key="componentTable">Component Table</v-tab>
                 <v-tab key="dependencyTree">Dependency Tree</v-tab>
                 <v-spacer />
-                <SbomSettingsSelector v-model="sbomSettings" />
+                <SbomFilterInfo v-model="filter" />
+                <SbomSettingsSelector v-model="settings" />
               </v-tabs>
 
               <v-tabs-items v-model="tab">
@@ -94,24 +95,32 @@
                   <!-- List of all components -->
                   <ComponentTable
                     :component-ref="$route.params.componentRef"
-                    :bom-ref-filter="bomRefFilter"
-                    :current-headers="sbomSettings.currentHeaders"
-                    :filter="all_filter"
+                    :current-headers="settings.currentHeaders"
+                    :filter="currentFilter"
                     @show-components-in-tree="showComponentsInTree"
                     @show-components-in-table="showComponentsInTable"
                   />
                 </v-tab-item>
                 <v-tab-item key="dependencyTree">
                   <!-- Show dependency relationships -->
-                  <template v-for="(sbom, i) in sbomData">
-                    <DependencyTree
-                      :key="i"
-                      :sbom-data="sbom"
-                      :filter="all_filter"
-                      :filter-active="can_clear"
-                      @show-components-in-table="showComponentsInTable"
-                    />
-                  </template>
+                  <DependencyTree
+                    v-if="sbomData.length === 1"
+                    ref="dependencyTree"
+                    :sbom-data="sbomData[0]"
+                    :filter="currentFilter"
+                    :filter-active="can_clear"
+                    @show-components-in-table="showComponentsInTable"
+                  />
+                  <v-card v-if="sbomData.length > 1">
+                    <v-card-title> Error! </v-card-title>
+                    <v-card-text
+                      >Too many SBOMs are enabled for viewing. Open the
+                      <v-icon class="mx-1">mdi-menu</v-icon> sidebar menu, and
+                      ensure that the only one SBOM file is
+                      <v-icon class="mx-1">mdi-checkbox-marked</v-icon>
+                      checked.</v-card-text
+                    >
+                  </v-card>
                 </v-tab-item>
               </v-tabs-items>
             </v-card>
@@ -182,6 +191,8 @@ import {
   SbomViewSettings
 } from '@/utilities/sbom_util';
 import {severities} from 'inspecjs';
+import {Ref} from 'vue-property-decorator';
+import SbomFilterInfo from '@/components/cards/sbomview/SbomFilterInfo.vue';
 
 @Component({
   components: {
@@ -195,19 +206,27 @@ import {severities} from 'inspecjs';
     UploadButton,
     ProfileInfo,
     ProfileData,
-    SbomSettingsSelector
+    SbomSettingsSelector,
+    SbomFilterInfo
   }
 })
 export default class Sbom extends mixins(RouteMixin, ServerMixin) {
+  @Ref('dependencyTree') readonly dependencyTree!: DependencyTree;
+
   searchTerm: string = '';
   currentSbomMetadata: SBOMMetadata | null = null;
   tab: number = 0; // open to componentTable
 
-  /** Model for if all-filtered snackbar should be showing */
+  /** model for if all-filtered snackbar should be showing */
   filterSnackbar = false;
-  bomRefFilter: string[] | null = this.queryFilter;
-  sbomSettings: SbomViewSettings = {
-    severities: [...severities],
+
+  filter: SBOMFilter = {
+    'bom-refs': this.queryFilter || undefined,
+    severity: [...severities],
+    fromFile: FilteredDataModule.selected_sbom_ids
+  };
+
+  settings: SbomViewSettings = {
     currentHeaders: [
       'fileName',
       'name',
@@ -248,6 +267,14 @@ export default class Sbom extends mixins(RouteMixin, ServerMixin) {
 
   get sbomData(): SBOMData[] {
     return this.sbomFiles.map(parseSbomPassthrough);
+  }
+
+  get currentFilter(): SBOMFilter {
+    return {
+      ...this.filter,
+      fromFile: this.file_filter,
+      searchTerm: this.searchTerm
+    };
   }
 
   getFile(fileID: FileID) {
@@ -292,35 +319,31 @@ export default class Sbom extends mixins(RouteMixin, ServerMixin) {
 
   showComponentsInTable(bomRefs: string[]) {
     this.tab = 0; // corresponds to componentTable
-    this.bomRefFilter = bomRefs;
+    this.filter['bom-refs'] = bomRefs;
     this.currentSbomMetadata = null; // hide the SBOM info panel
   }
 
   showComponentsInTree(bomRefs: string[]) {
     this.tab = 1; // corresponds to dependencyTree
-    this.bomRefFilter = bomRefs;
+    this.filter['bom-refs'] = bomRefs;
     this.currentSbomMetadata = null; // hide the SBOM info panel
-  }
-
-  get all_filter(): SBOMFilter {
-    return {
-      fromFile: FilteredDataModule.selected_sbom_ids,
-      severity: this.sbomSettings.severities,
-      'bom-refs': this.bomRefFilter || undefined
-    };
+    if (this.dependencyTree) {
+      this.dependencyTree.openToFilter();
+    }
   }
 
   get can_clear(): boolean {
     let result = false;
     if (
-      this.all_filter.severity?.length !== severities.length ||
-      this.all_filter['bom-refs']?.length
+      this.currentFilter.severity?.length !== severities.length ||
+      this.currentFilter['bom-refs']?.length ||
+      this.currentFilter.searchTerm
     ) {
       result = true;
     }
 
-    // Logic to check: are any files actually visible?
-    if (FilteredDataModule.components(this.all_filter).length === 0) {
+    // Logic to check: are any components actually visible?
+    if (FilteredDataModule.components(this.currentFilter).length === 0) {
       this.filterSnackbar = true;
     } else {
       this.filterSnackbar = false;
@@ -330,8 +353,8 @@ export default class Sbom extends mixins(RouteMixin, ServerMixin) {
   }
 
   clear() {
-    this.sbomSettings.severities = [...severities];
-    this.bomRefFilter = null;
+    this.filter.severity = [...severities];
+    this.filter['bom-refs'] = undefined;
     this.searchTerm = '';
     this.filterSnackbar = false;
   }
@@ -339,10 +362,6 @@ export default class Sbom extends mixins(RouteMixin, ServerMixin) {
 </script>
 
 <style scoped>
-.glow {
-  box-shadow: 0px 0px 8px 6px #5a5;
-}
-
 .bottom-right {
   position: absolute;
   bottom: 0;
