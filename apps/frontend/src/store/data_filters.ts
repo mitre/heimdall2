@@ -535,7 +535,7 @@ export class FilteredData extends VuexModule {
   ) => readonly ContextualizedSBOMComponent[] {
     return (filter: SBOMFilter) => {
       const sboms = this.sboms(filter.fromFile).map(parseSbomPassthrough);
-      const controls = this.controls(filter); // gets all the controls in the SBOM files
+      const controls = this.controls({fromFile: filter.fromFile}); // gets all the controls in the SBOM files
 
       // aggregates every component from each SBOM and applys the current filter
       return sboms.flatMap((sbom) =>

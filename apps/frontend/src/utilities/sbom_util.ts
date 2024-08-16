@@ -332,7 +332,7 @@ export function matchesFilter(
       .map((field) => _.get(component, field))
       .filter((data) => data);
     const result = allData.some(
-      (data) => filter.searchTerm && data.includes(filter.searchTerm)
+      (data) => filter.searchTerm && data.toLowerCase().includes(filter.searchTerm.toLowerCase())
     );
     if (!result) return false;
   }

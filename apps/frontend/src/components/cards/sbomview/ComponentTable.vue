@@ -119,7 +119,7 @@ export default class ComponentTable extends Vue {
     for (const c of this.components) {
       // get the component's affecting vulnerabilities
       const componentVulns = [];
-      const controls = FilteredDataModule.controls(this.filter);
+      const controls = FilteredDataModule.controls({fromFile: this.filter.fromFile});
       for (const vulnBomRef of c.affectingVulnerabilities || []) {
         let result = getVulnsFromBomRef(vulnBomRef, controls);
         if (result.ok) componentVulns.push(result.value); // TODO: show components with unloaded vulns as errors?
