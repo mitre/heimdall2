@@ -15,7 +15,7 @@ WORKDIR /src
 # python3/make/compiler is a requirement for node-gyp
 RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y python3 make gcc-c++ yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*
 
-COPY package.json yarn.lock lerna.json tsconfig.json postcss.config.js ./
+COPY package.json yarn.lock nx.json tsconfig.json ./
 COPY apps/frontend/package.json apps/frontend/tsconfig.json ./apps/frontend/
 COPY libs/hdf-converters/package.json libs/hdf-converters/tsconfig.* ./libs/hdf-converters/
 COPY libs/inspecjs/package.json libs/inspecjs/tsconfig.* ./libs/inspecjs/

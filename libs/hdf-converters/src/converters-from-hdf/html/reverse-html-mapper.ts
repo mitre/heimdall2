@@ -7,7 +7,6 @@ import {
   mdiEqualBox,
   mdiMinusCircle
 } from '@mdi/js';
-import axios from 'axios';
 import {
   ContextualizedControl,
   ContextualizedEvaluation,
@@ -24,6 +23,12 @@ import {
   IResultSeverity,
   IResultStatus
 } from './html-types';
+
+// template files used for generating the final HTML
+import tailwindStyles from './style.css';
+import htmlTemplate from './template.html';
+// this is ".js.txt" because it is to be treated as raw text and not as JavaScript
+import twElementsScript from './tw-elements.umd.min.js.txt';
 
 type InputData = {
   data: ContextualizedEvaluation | string;
@@ -519,27 +524,14 @@ export class FromHDFToHTMLMapper {
 
   // Prompt HTML generation from data pulled from file during constructor initialization
   // Requires path to prompt location of needed files relative to function call location
-  async toHTML(path: string): Promise<string> {
-    // Pull export template + styles and create outputData object containing data to fill template with
-    const templateRequest = axios.get<string>(`${path}template.html`);
-    const tailwindStylesRequest = axios.get<string>(`${path}style.css`);
-    const tailwindElementsRequest = axios.get<string>(
-      `${path}tw-elements.min.js`
-    );
-    const responses = await axios.all([
-      templateRequest,
-      tailwindStylesRequest,
-      tailwindElementsRequest
-    ]);
-
-    const template = responses[0].data;
-    this.outputData.tailwindStyles = responses[1].data;
+  async toHTML(): Promise<string> {
+    this.outputData.tailwindStyles = tailwindStyles;
     // Remove source map reference in TW Elements library
-    this.outputData.tailwindElements = responses[2].data.replace(
+    this.outputData.tailwindElements = twElementsScript.replace(
       '//# sourceMappingURL=tw-elements.umd.min.js.map',
       ''
     );
     // Render template and return generated HTML file
-    return Mustache.render(template, this.outputData);
+    return Mustache.render(htmlTemplate, this.outputData);
   }
 }

@@ -6,21 +6,23 @@
   "files": [
     "lib"
   ],
-  "main": "src/index.ts",
+  "types": "lib/hdf-converters/index.d.ts",
+  "main": "lib/bundle.js",
   "publishConfig": {
-    "main": "lib/index.js"
+    "main": "lib/bundle.js"
   },
   "scripts": {
     "prepack": "yarn build && node prepack.js",
     "postpack": "run-script-os",
     "postpack:darwin:linux": "mv package.json.orig package.json",
     "postpack:win32": "move package.json.orig package.json",
-    "build": "run-script-os",
-    "build:darwin:linux": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
-    "build:win32": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && xcopy data lib",
+    "build": "yarn build:tailwind && rollup --config && run-script-os",
+    "build:tailwind": "tailwindcss -i ./tailwind.css -o ./src/converters-from-hdf/html/style.css --minify",
+    "build:darwin:linux": "cp -R ./data ./lib",
+    "build:win32": "xcopy data lib",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
-    "test": "jest",
+    "test": "nx run test",
     "csv2json": "tsx data/converters/csv2json.ts",
     "xml2json": "tsx data/converters/xml2json.ts"
   },
@@ -30,8 +32,11 @@
     "@mdi/js": "^7.0.96",
     "@microsoft/microsoft-graph-types": "^2.40.0",
     "@mitre/jsonix": "^3.0.7",
+    "@rollup/plugin-html": "^1.0.3",
+    "@rollup/plugin-json": "^6.1.0",
     "@smithy/node-http-handler": "^3.0.0",
     "@types/csv2json": "^1.4.2",
+    "@types/lodash": "^4.14.161",
     "@types/ms": "^0.7.31",
     "@types/mustache": "^4.1.2",
     "@types/papaparse": "^5.3.2",
@@ -52,6 +57,9 @@
     "mustache": "^4.2.0",
     "papaparse": "^5.3.1",
     "revalidator": "^0.3.1",
+    "rollup": "^4.18.1",
+    "rollup-plugin-string": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.36.0",
     "run-script-os": "^1.1.6",
     "semver": "^7.6.0",
     "tailwindcss": "^3.3.3",
@@ -68,6 +76,7 @@
     "@types/lodash": "^4.14.161",
     "@types/node": "^22.0.0",
     "jest": "^27.0.6",
+    "jest-transform-stub": "^2.0.0",
     "quicktype": "^15.0.260",
     "ts-jest": "^29.1.0",
     "tsx": "^4.7.1",
@@ -80,7 +89,8 @@
     "rootDir": ".",
     "testTimeout": 10000000,
     "transform": {
-      "^.+\\.ts$": "ts-jest"
+      "^.+\\.ts$": "ts-jest",
+      "\\.(html|css|js\\.txt)$": "jest-transform-stub"
     }
   }
 }

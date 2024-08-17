@@ -1,0 +1,13 @@
+{
+    "name": "@mitre/hdf-converters", 
+    "targets": {
+        "test": {
+            "executor": "nx:run-commands",
+            "options": {
+                "cwd": "libs/hdf-converters",
+                "command": "jest"
+            },
+            "dependsOn": ["build:tailwind"]
+        }
+    }
+}
