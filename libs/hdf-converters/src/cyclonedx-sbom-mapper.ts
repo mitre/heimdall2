@@ -196,7 +196,6 @@ export class CycloneDXSBOMResults {
     ...
   }
   */
-  /*eslint no-unused-vars: ["error", { "argsIgnorePattern": "^_" }]*/
   generateIntermediary(data: DataStorage) {
     // Pull vulnerabilities from raw data
     data.vulnerabilities = [
@@ -209,12 +208,14 @@ export class CycloneDXSBOMResults {
       vulnerability.affectedComponents.push(
         ...Array.from(data.components.entries())
           // Find every component that is affected via listed bom-refs
+          /*eslint no-unused-vars: ["error", { "argsIgnorePattern": "^_" }]*/
           .filter(([_index, component]) =>
             [...vulnerability.affects]
               .map((id) => id.ref.toString())
               .includes(component['bom-ref'] as string)
           )
           // Add the index of that affected component to the corresponding vulnerability object
+          /*eslint no-unused-vars: ["error", { "argsIgnorePattern": "^_" }]*/
           .map(([index, _component]) => index)
       );
 
