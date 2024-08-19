@@ -30,6 +30,7 @@ export * from './src/netsparker-mapper';
 export * from './src/nikto-mapper';
 export * from './src/prisma-mapper';
 export * from './src/sarif-mapper';
+export * from './src/cyclonedx-sbom-mapper';
 export * from './src/scoutsuite-mapper';
 export * from './src/snyk-mapper';
 export * from './src/sonarqube-mapper';
