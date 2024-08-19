@@ -1,0 +1,163 @@
+{
+    platform: {
+      name,
+      release,
+      target_id
+    },
+    version,
+    statistics: {
+      duration
+    },
+    profiles: [
+      {
+        "name": "anchore - grype",
+        version,
+        sha256,
+        "title": "anchore grype matches",
+        maintainer,
+        "summary":
+        license,
+        copyright,
+        copyright_email,
+        supports,
+        attributes,
+        groups,
+        controls: [
+          {
+            "id": "Grype/CVE-2021-36159", //vulnerability -> id
+            "title": "Grype found a vulnerability to CVE-2021-36159", //vulnerability -> id
+            "desc": "libfetch before 2021-07-26, as used in apk-tools, xbps, and other products, mishandles numeric strings for the FTP and HTTP protocols. The FTP passive mode implementation allows an out-of-bounds read because strtol is used to parse the relevant numbers into address bytes. It does not check if the line ends prematurely. If it does, the for-loop condition checks for the '\\0' terminator one byte too late.", //related vulnerabilities -> description
+            "descriptions": [
+              "fix": {
+                "versions": [
+                 "2.10.7-r0"
+                ],
+                "state": "fixed"
+               } //make more readable. 
+               "artifact": {
+                "id": "1acb8fe52f3da542",
+                "name": "apk-tools",
+                "version": "2.10.4-r3",
+                "type": "apk",
+                "locations": [
+                {
+                  "path": "/lib/apk/db/installed",
+                  "layerID": "sha256:ccad0a45fab58237077eb38a0356a11b62854af2b99830dc1426bf04fa879b5b"
+                }
+                ],
+                "language": "",
+                "licenses": [
+                "GPL2"
+                ],
+                "cpes": [
+                "cpe:2.3:a:apk-tools:apk-tools:2.10.4-r3:*:*:*:*:*:*:*",
+                "cpe:2.3:a:apk-tools:apk_tools:2.10.4-r3:*:*:*:*:*:*:*",
+                "cpe:2.3:a:apk_tools:apk-tools:2.10.4-r3:*:*:*:*:*:*:*",
+                "cpe:2.3:a:apk_tools:apk_tools:2.10.4-r3:*:*:*:*:*:*:*",
+                "cpe:2.3:a:apk:apk-tools:2.10.4-r3:*:*:*:*:*:*:*",
+                "cpe:2.3:a:apk:apk_tools:2.10.4-r3:*:*:*:*:*:*:*"
+                ],
+                "purl": "pkg:apk/alpine/apk-tools@2.10.4-r3?arch=aarch64&distro=alpine-3.11.3",
+                "upstreams": [
+                {
+                  "name": "apk-tools"
+                }
+                ],
+                "metadataType": "ApkMetadata",
+                "metadata": {
+                "files": [
+                  {
+                  "path": "/etc"
+                  },
+                  {
+                  "path": "/etc/apk"
+                  },
+                  {
+                  "path": "/etc/apk/keys"
+                  },
+                  {
+                  "path": "/etc/apk/protected_paths.d"
+                  },
+                  {
+                  "path": "/sbin"
+                  },
+                  {
+                  "path": "/sbin/apk"
+                  },
+                  {
+                  "path": "/usr"
+                  },
+                  {
+                  "path": "/var"
+                  },
+                  {
+                  "path": "/var/lib"
+                  },
+                  {
+                  "path": "/var/lib/apk"
+                  },
+                  {
+                  "path": "/var/cache"
+                  },
+                  {
+                  "path": "/var/cache/misc"
+                  }
+                ]
+                }
+              }
+              } //artifact 
+            ],
+            "impact": 0.9, //vulnerability -> severtiy (use map to convert severity to impact)
+            "refs": [
+                "https://www.cve.org/CVERecord?id=CVE-2021-36159",
+                "https://nvd.nist.gov/vuln/detail/CVE-2021-36159",
+                "https://github.com/freebsd/freebsd-src/commits/main/lib/libfetch",
+                "https://gitlab.alpinelinux.org/alpine/apk-tools/-/issues/10749",
+                "https://lists.apache.org/thread.html/r61db8e7dcb56dc000a5387a88f7a473bacec5ee01b9ff3f55308aacc%40%3Cdev.kafka.apache.org%3E",
+                "https://lists.apache.org/thread.html/r61db8e7dcb56dc000a5387a88f7a473bacec5ee01b9ff3f55308aacc%40%3Cusers.kafka.apache.org%3E",
+                "https://lists.apache.org/thread.html/rbf4ce74b0d1fa9810dec50ba3ace0caeea677af7c27a97111c06ccb7%40%3Cdev.kafka.apache.org%3E",
+                "https://lists.apache.org/thread.html/rbf4ce74b0d1fa9810dec50ba3ace0caeea677af7c27a97111c06ccb7%40%3Cusers.kafka.apache.org%3E"
+                //vulnberability -> datasource, relatedVulnerabilities -> datasource, relatedVulnberabilities -> urls
+            ],
+            "tags": {
+                "nist": [
+                    "SA-11",
+                    "RA-5"
+                ],
+                "cveid": [
+                   "CVE-2021-36159" //vulnberability -> id 
+                ],
+                "cvss": [] //lets ask euguene 
+            },
+            code,
+            "source_location": 
+            results: [
+              {
+                status: "failed"
+                code_desc:, 
+                "message": " "package": {
+                        "name": "apk-tools",
+                        "version": "2.10.4-r3"
+                        }
+                      },
+                      "found": {
+                        "versionConstraint": "< 2.10.7-r0 (apk)",
+                        "vulnerabilityID": "CVE-2021-36159"
+                      }
+                      }", //matchDetails -> type, matcher
+                run_time,
+                start_time
+              }
+            ]
+          },
+        ],
+        status
+      },
+    ],
+    passthrough: {
+      auxiliary_data: [
+        
+      ],
+      raw
+    }
+  }

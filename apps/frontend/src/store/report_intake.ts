@@ -7,6 +7,7 @@ import Store from '@/store/store';
 import {Tag} from '@/types/models';
 import {read_file_async} from '@/utilities/async_util';
 import {
+  AnchoreGrypeMapper,
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   ChecklistResults,
@@ -274,6 +275,8 @@ export class InspecIntake extends VuexModule {
         return new GoSecMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.TRUFFLEHOG:
         return new TrufflehogMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.GRYPE:
+        return new AnchoreGrypeMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
