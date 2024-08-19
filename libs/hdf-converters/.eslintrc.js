@@ -29,5 +29,10 @@ module.exports = {
         ],
         'object-curly-spacing': 'warn',
         '@typescript-eslint/no-explicit-any': 'off',
+        "no-unused-vars": [
+            "error", {
+                "argsIgnorePattern": "^_"
+            }
+        ]
     },
 };
