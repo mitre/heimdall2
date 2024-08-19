@@ -9,6 +9,7 @@
           v-for="(file, i) in files"
           :key="i"
           :file="file"
+          :show-chips="showChips"
           @changed-files="$emit('changed-files')"
         />
 
@@ -84,6 +85,8 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 export default class DropdownContent extends Vue {
   @Prop({type: String, required: true}) readonly headerText!: string;
   @Prop({type: String, required: true}) readonly allSelected!: Trinary;
+  @Prop({default: () => [], type: Array, required: false})
+  readonly showChips!: string[];
 
   @Prop({type: Array, required: true}) readonly files!:
     | EvaluationFile[]
@@ -95,6 +98,9 @@ export default class DropdownContent extends Vue {
 
   @Prop({default: false, type: Boolean, required: false})
   readonly enableCompareView!: boolean;
+
+  @Prop({type: String, required: false})
+  readonly navigateBack?: string;
 
   @Prop({default: false, type: Boolean, required: false})
   readonly anySelected!: boolean;

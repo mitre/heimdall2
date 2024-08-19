@@ -11,6 +11,7 @@ import {
   BurpSuiteMapper,
   ChecklistResults,
   ConveyorResults as ConveyorResultsMapper,
+  CycloneDXSBOMResults,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -47,6 +48,7 @@ import {v4 as uuid} from 'uuid';
 import {Action, getModule, Module, VuexModule} from 'vuex-module-decorators';
 import {FilteredDataModule} from './data_filters';
 import {SnackbarModule} from './snackbar';
+import {isOnlySbom} from '@/utilities/sbom_util';
 
 /** Each FileID corresponds to a unique File in this store */
 export type FileID = string;
@@ -275,6 +277,8 @@ export class InspecIntake extends VuexModule {
         return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
         return new GosecMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.CYCLONEDX_SBOM:
+        return new CycloneDXSBOMResults(convertOptions.data).toHdf();
       case INPUT_TYPES.TRUFFLEHOG:
         return new TrufflehogResults(convertOptions.data).toHdf();
       default:
@@ -342,8 +346,14 @@ export class InspecIntake extends VuexModule {
       // Set and freeze
       evalFile.evaluation = evaluation;
       Object.freeze(evaluation);
-      InspecDataModule.addExecution(evalFile);
-      FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
+
+      if (isOnlySbom(evaluation)) {
+        InspecDataModule.addSbom(evalFile);
+        FilteredDataModule.toggle_sbom(evalFile.uniqueId);
+      } else {
+        InspecDataModule.addExecution(evalFile);
+        FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
+      }
     } else if (result['1_0_ProfileJson']) {
       // Handle as profile
       const profileFile = {
@@ -396,8 +406,14 @@ export class InspecIntake extends VuexModule {
     // Set and freeze
     evalFile.evaluation = evaluation;
     Object.freeze(evaluation);
-    InspecDataModule.addExecution(evalFile);
-    FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
+
+    if (isOnlySbom(evaluation)) {
+      InspecDataModule.addSbom(evalFile);
+      FilteredDataModule.toggle_sbom(evalFile.uniqueId);
+    } else {
+      InspecDataModule.addExecution(evalFile);
+      FilteredDataModule.toggle_evaluation(evalFile.uniqueId);
+    }
 
     return fileID;
   }
