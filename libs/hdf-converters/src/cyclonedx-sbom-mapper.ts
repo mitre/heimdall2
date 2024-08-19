@@ -205,6 +205,7 @@ export class CycloneDXSBOMResults {
     for (const vulnerability of data.vulnerabilities) {
       vulnerability.affectedComponents = [];
 
+      /*eslint no-unused-vars: ["error", { "argsIgnorePattern": "^_" }]*/
       vulnerability.affectedComponents.push(
         ...Array.from(data.components.entries())
           // Find every component that is affected via listed bom-refs
