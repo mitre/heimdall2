@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",
+    "@cyclonedx/cyclonedx-library": "^6.11.0",
     "@e965/xlsx": "^0.20.0",
     "@mdi/js": "^7.0.96",
     "@microsoft/microsoft-graph-types": "^2.40.0",
