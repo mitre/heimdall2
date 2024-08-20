@@ -1,3 +1,20 @@
+v2.10.15
+
+## Bug Fixes
+- Remove passport openid @Amndeep7 (#6112)
+- SBOM Mapper @charleshu-8 (#5986)
+
+## Dependency Updates
+- Bump @aws-sdk/client-s3 from 3.632.0 to 3.633.0 @dependabot (#6113)
+- Bump elliptic from 6.5.5 to 6.5.7 @dependabot (#6110)
+- Bump @aws-sdk/client-config-service from 3.629.0 to 3.632.0 @dependabot (#6108)
+- Bump @aws-sdk/client-s3 from 3.631.0 to 3.632.0 @dependabot (#6109)
+- Bump @aws-sdk/client-sts from 3.631.0 to 3.632.0 @dependabot (#6107)
+- Bump cypress from 13.13.2 to 13.13.3 @dependabot (#6105)
+- Bump @aws-sdk/client-s3 from 3.629.0 to 3.631.0 @dependabot (#6102)
+- Bump winston from 3.14.1 to 3.14.2 @dependabot (#6104)
+- Bump @types/node from 22.2.0 to 22.3.0 @dependabot (#6101)
+
 v2.10.14
 
 ## Bug Fixes
