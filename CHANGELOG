@@ -1,3 +1,78 @@
+v2.10.15
+
+## Bug Fixes
+- Remove passport openid @Amndeep7 (#6112)
+- SBOM Mapper @charleshu-8 (#5986)
+
+## Dependency Updates
+- Bump @aws-sdk/client-s3 from 3.632.0 to 3.633.0 @dependabot (#6113)
+- Bump elliptic from 6.5.5 to 6.5.7 @dependabot (#6110)
+- Bump @aws-sdk/client-config-service from 3.629.0 to 3.632.0 @dependabot (#6108)
+- Bump @aws-sdk/client-s3 from 3.631.0 to 3.632.0 @dependabot (#6109)
+- Bump @aws-sdk/client-sts from 3.631.0 to 3.632.0 @dependabot (#6107)
+- Bump cypress from 13.13.2 to 13.13.3 @dependabot (#6105)
+- Bump @aws-sdk/client-s3 from 3.629.0 to 3.631.0 @dependabot (#6102)
+- Bump winston from 3.14.1 to 3.14.2 @dependabot (#6104)
+- Bump @types/node from 22.2.0 to 22.3.0 @dependabot (#6101)
+
+v2.10.14
+
+## Bug Fixes
+
+- Twistlock Mapper Tweaks @charleshu-8 (#6054)
+
+## Dependency Updates
+
+- Bump tailwindcss from 3.4.9 to 3.4.10 @dependabot (#6099)
+- Bump axios from 1.7.3 to 1.7.4 @dependabot (#6100)
+- Bump @nestjs/testing from 10.4.0 to 10.4.1 @dependabot (#6096)
+- Bump @nestjs/platform-express from 10.3.10 to 10.4.1 @dependabot (#6095)
+- Bump @nestjs/common from 10.4.0 to 10.4.1 @dependabot (#6098)
+- Bump @nestjs/core from 10.4.0 to 10.4.1 @dependabot (#6097)
+- Bump @nestjs/testing from 10.3.10 to 10.4.0 @dependabot (#6089)
+- Bump @aws-sdk/client-s3 from 3.627.0 to 3.629.0 @dependabot (#6091)
+- Bump @nestjs/common from 10.3.10 to 10.4.0 @dependabot (#6090)
+- Bump @nestjs/core from 10.3.10 to 10.4.0 @dependabot (#6088)
+- Bump @aws-sdk/client-config-service from 3.624.0 to 3.629.0 @dependabot (#6094)
+- Bump eslint-plugin-cypress from 3.4.0 to 3.5.0 @dependabot (#6093)
+- Bump @aws-sdk/client-sts from 3.624.0 to 3.629.0 @dependabot (#6087)
+- Bump winston from 3.13.1 to 3.14.1 @dependabot (#6081)
+- Bump tsx from 4.16.5 to 4.17.0 @dependabot (#6080)
+- Bump @types/node from 22.1.0 to 22.2.0 @dependabot (#6084)
+- Bump @aws-sdk/client-s3 from 3.626.0 to 3.627.0 @dependabot (#6079)
+- Bump @nestjs/cli from 10.4.2 to 10.4.4 @dependabot (#6085)
+- Bump tailwindcss from 3.4.8 to 3.4.9 @dependabot (#6078)
+- Bump tailwindcss from 3.4.7 to 3.4.8 @dependabot (#6077)
+- Bump @aws-sdk/client-s3 from 3.624.0 to 3.626.0 @dependabot (#6076)
+
+v2.10.13
+
+- Docker improvements @Amndeep7 (#6075)
+- Convert Microsoft Secure Score to OHDF @meme112233 (#6007)
+
+## Dependency Updates
+
+- Bump core-js from 3.37.1 to 3.38.0 @dependabot (#6072)
+- Bump @aws-sdk/client-s3 from 3.623.0 to 3.624.0 @dependabot (#6071)
+- Bump luxon from 3.4.4 to 3.5.0 @dependabot (#6068)
+- Bump ts-jest from 29.2.3 to 29.2.4 @dependabot (#6058)
+- Bump @aws-sdk/client-config-service from 3.623.0 to 3.624.0 @dependabot (#6069)
+- Bump apexcharts from 3.51.0 to 3.52.0 @dependabot (#6073)
+- Bump lerna from 8.1.7 to 8.1.8 @dependabot (#6070)
+- Bump @aws-sdk/client-sts from 3.623.0 to 3.624.0 @dependabot (#6067)
+- Bump @aws-sdk/client-s3 from 3.622.0 to 3.623.0 @dependabot (#6063)
+- Bump @types/node from 22.0.2 to 22.1.0 @dependabot (#6065)
+- Bump tsx from 4.16.3 to 4.16.5 @dependabot (#6057)
+- Bump @aws-sdk/client-config-service from 3.621.0 to 3.623.0 @dependabot (#6062)
+- Bump cypress from 13.13.1 to 13.13.2 @dependabot (#6049)
+- Bump axios from 1.7.2 to 1.7.3 @dependabot (#6059)
+- Bump @aws-sdk/client-sts from 3.622.0 to 3.623.0 @dependabot (#6064)
+- Bump rexml from 3.2.8 to 3.3.3 in /libs/inspecjs @dependabot (#6061)
+- Bump @aws-sdk/client-s3 from 3.621.0 to 3.622.0 @dependabot (#6055)
+- Bump tsx from 4.16.2 to 4.16.3 @dependabot (#6051)
+- Bump @types/node from 22.0.0 to 22.0.2 @dependabot (#6050)
+- Bump @aws-sdk/client-s3 from 3.620.1 to 3.621.0 @dependabot (#6048)
+
 v2.10.12
 
 - Hdf2ckl severity @kemley76 (#5866)
