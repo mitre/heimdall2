@@ -48,9 +48,9 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
     'vulnerabilities[0].identifiers'
   ],
   [INPUT_TYPES.TRUFFLEHOG]: [
-    'SourceName', 
-    'DetectorType', 
-    'DetectorName', 
+    'SourceName',
+    'DetectorType',
+    'DetectorName',
     'DecoderName'
   ],
   [INPUT_TYPES.TWISTLOCK]: [
