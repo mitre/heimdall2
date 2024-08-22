@@ -11,6 +11,7 @@ import {
   BurpSuiteMapper,
   ChecklistResults,
   ConveyorResults as ConveyorResultsMapper,
+  CycloneDXSBOMResults,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -18,6 +19,7 @@ import {
   INPUT_TYPES,
   IonChannelMapper,
   JfrogXrayMapper,
+  MsftSecureScoreResults,
   NessusResults,
   NetsparkerMapper,
   NiktoMapper,
@@ -230,6 +232,8 @@ export class InspecIntake extends VuexModule {
     switch (typeGuess) {
       case INPUT_TYPES.JFROG:
         return new JfrogXrayMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.MSFT_SEC_SCORE:
+        return new MsftSecureScoreResults(convertOptions.data).toHdf();
       case INPUT_TYPES.ASFF:
         return Object.values(
           new ASFFResultsMapper(convertOptions.data).toHdf()
@@ -272,6 +276,8 @@ export class InspecIntake extends VuexModule {
         return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
         return new GosecMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.CYCLONEDX_SBOM:
+        return new CycloneDXSBOMResults(convertOptions.data).toHdf();
       case INPUT_TYPES.TRUFFLEHOG:
         return new TrufflehogResults(convertOptions.data).toHdf();
       default:
