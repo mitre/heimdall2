@@ -7,6 +7,7 @@ import {
   Mutation,
   VuexModule
 } from 'vuex-module-decorators';
+import {ServerModule} from './server';
 
 /** Configure this to match data set in vue.config.ts */
 declare const process: {
@@ -54,7 +55,7 @@ export class AppInfo extends VuexModule implements IAppInfoState {
 
   @Action
   public async CheckForUpdates() {
-    if (this.checkedForUpdates === false) {
+    if (!ServerModule.disableUpdateCheck && this.checkedForUpdates === false) {
       // Call axios.create() to skip the default interceptors setup in main.ts
       axios
         .create()

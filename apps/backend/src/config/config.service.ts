@@ -57,7 +57,8 @@ export class ConfigService {
       oidcName: this.get('OIDC_NAME') || '',
       ldap: this.get('LDAP_ENABLED')?.toLocaleLowerCase() === 'true' || false,
       registrationEnabled: this.isRegistrationAllowed(),
-      localLoginEnabled: this.isLocalLoginAllowed()
+      localLoginEnabled: this.isLocalLoginAllowed(),
+      disableUpdateCheck: !!this.get('DISABLE_UPDATE_CHECK')
     });
   }
 
