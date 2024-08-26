@@ -106,13 +106,18 @@ export class TenableUtil {
               rejectMsg = `Invalid SSL/TSL port number used: ${portNumber} must be 443.`;
             } else {
               rejectMsg =
-                'Access blocked by CORS, enable CORS on the browser and try again. See Help for additional instructions';
+                'Access blocked by CORS, enable CORS on the browser and try again. See Help for additional instructions.';
             }
           }
         } else {
           // The URL is not listed in the allows domains (CSP)
-          rejectMsg =
-            'The Content Security Policy directive environment variable "TENABLE_HOST_URL" not configured. See Help for additional instructions.';
+          if (ServerModule.serverMode) {
+            rejectMsg =
+              'The Content Security Policy directive environment variable "TENABLE_HOST_URL" not configured. See Help for additional instructions.';
+          } else {
+            rejectMsg =
+              'Access blocked by CORS, enable CORS on the browser and try again. See Help for additional instructions.';
+          }
         }
       } else if (error.code == 'ENOTFOUND') {
         rejectMsg = `Host: ${error.config.baseURL} not found, check the Hostname (URL) or the network.`;
