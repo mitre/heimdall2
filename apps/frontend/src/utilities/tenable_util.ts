@@ -74,7 +74,7 @@ export class TenableUtil {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  getRejectConnectionMessage(error: any): String {
+  getRejectConnectionMessage(error: any): string {
     let rejectMsg = '';
 
     if (error.response) {
@@ -153,7 +153,7 @@ export class TenableUtil {
             resolve(response.data.response.usable);
           })
           .catch((error) => {
-            reject(error.name + ': ' + error.message);
+            reject(`${error.name} : ${error.message}`);
           });
       } catch (e) {
         reject(e);
