@@ -109,15 +109,13 @@ export class TenableUtil {
                 'Access blocked by CORS, enable CORS on the browser and try again. See Help for additional instructions.';
             }
           }
+        } else if (ServerModule.serverMode) {
+          // The URL is not listed in the allows domains (CSP) and Heimdall instance is a server
+          rejectMsg =
+            'The Content Security Policy directive environment variable "TENABLE_HOST_URL" not configured. See Help for additional instructions.';
         } else {
-          // The URL is not listed in the allows domains (CSP)
-          if (ServerModule.serverMode) {
-            rejectMsg =
-              'The Content Security Policy directive environment variable "TENABLE_HOST_URL" not configured. See Help for additional instructions.';
-          } else {
-            rejectMsg =
-              'Access blocked by CORS, enable CORS on the browser and try again. See Help for additional instructions.';
-          }
+          rejectMsg =
+            'Access blocked by CORS, enable CORS on the browser and try again. See Help for additional instructions.';
         }
       } else if (error.code == 'ENOTFOUND') {
         rejectMsg = `Host: ${error.config.baseURL} not found, check the Hostname (URL) or the network.`;
