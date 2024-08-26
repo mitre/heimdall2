@@ -15,6 +15,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get<ConfigService>(ConfigService);
   app.enableShutdownHooks();
+  app.enableCors();
   app.use(helmet());
   app.use(
     helmet.contentSecurityPolicy({
@@ -40,7 +41,9 @@ async function bootstrap() {
         'connect-src': [
           "'self'",
           'https://api.github.com',
-          'https://sts.amazonaws.com'
+          'https://sts.amazonaws.com',
+          configService.getTenableHostUrl(),
+          configService.getSplunkHostUrl()
         ]
       }
     })
