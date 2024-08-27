@@ -35,8 +35,8 @@ export interface IServerState {
   ldap: boolean;
   localLoginEnabled: boolean;
   userInfo: IUser;
-  tenableHostUrl: string | undefined;
-  splunkHostUrl: string | undefined;
+  tenableHostUrl: string;
+  splunkHostUrl: string;
 }
 
 interface LoginData {

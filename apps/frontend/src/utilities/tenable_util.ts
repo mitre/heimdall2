@@ -50,7 +50,7 @@ export class TenableUtil {
         () =>
           reject(
             new Error(
-              'Login timed out. Please ensure the provided credentials, domain values are valid and try again.'
+              'Login timed out. Please ensure the provided credentials and domain/URL are valid and try again.'
             )
           ),
         5000
@@ -141,7 +141,7 @@ export class TenableUtil {
         () =>
           reject(
             new Error(
-              'Login timed out. Please ensure the provided credentials and domain values are valid.'
+              'Login timed out. Please ensure the provided credentials and domain/URL are valid and try again.'
             )
           ),
         5000
