@@ -93,6 +93,7 @@ export class TenableUtil {
 
       if (error.code == 'ERR_NETWORK') {
         // Check if the tenable url was provided - Content Security Policy (CSP)
+        const corsReject = `Access blocked by CORS or connection refused by the host: ${error.config.baseURL}. See Help for additional instructions.`;
         const tenableUrl = ServerModule.tenableHostUrl;
         if (tenableUrl) {
           // If the URL is listed in the allows domains
@@ -100,13 +101,12 @@ export class TenableUtil {
           if (!error.config.baseURL.includes(tenableUrl)) {
             rejectMsg = `Hostname: ${error.config.baseURL} violates the Content Security Policy (CSP). The host allowed by the CSP is: ${tenableUrl}`;
           } else {
-            // CSP url didn't match, check for port match - reject appropriately
+            // CSP url did match, check for port match - reject appropriately
             const portNumber = parseInt(this.hostConfig.host_url.split(':')[2]);
             if (portNumber != 443) {
               rejectMsg = `Invalid SSL/TSL port number used: ${portNumber} must be 443.`;
             } else {
-              rejectMsg =
-                'Access blocked by CORS, enable CORS on the browser and try again. See Help for additional instructions.';
+              rejectMsg = corsReject;
             }
           }
         } else if (ServerModule.serverMode) {
@@ -114,11 +114,12 @@ export class TenableUtil {
           rejectMsg =
             'The Content Security Policy directive environment variable "TENABLE_HOST_URL" not configured. See Help for additional instructions.';
         } else {
-          rejectMsg =
-            'Access blocked by CORS, enable CORS on the browser and try again. See Help for additional instructions.';
+          rejectMsg = corsReject;
         }
       } else if (error.code == 'ENOTFOUND') {
         rejectMsg = `Host: ${error.config.baseURL} not found, check the Hostname (URL) or the network.`;
+      } else if (error.code == 'ERR_CONNECTION_REFUSED') {
+        rejectMsg = `Received network connection refused by the host: ${error.config.baseURL}`;
       } else {
         rejectMsg = `${error.name} : ${error.message}`;
       }
