@@ -34,7 +34,104 @@
                 ],
                 "state": "fixed"
                } //make more readable. 
-               "artifact": {
+
+               cvss : "
+               {
+       "source": "nvd@nist.gov",
+       "type": "Primary",
+       "version": "2.0",
+       "vector": "AV:N/AC:L/Au:N/C:P/I:N/A:P",
+       "metrics": {
+        "baseScore": 6.4,
+        "exploitabilityScore": 10,
+        "impactScore": 4.9
+       },
+       "vendorMetadata": {}
+      },
+      {
+       "source": "nvd@nist.gov",
+       "type": "Primary",
+       "version": "3.1",
+       "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H",
+       "metrics": {
+        "baseScore": 9.1,
+        "exploitabilityScore": 3.9,
+        "impactScore": 5.2
+       },
+       "vendorMetadata": {}
+      }"
+              
+            ],
+            "impact": 0.9, //vulnerability -> severtiy (use map to convert severity to impact)
+            "refs": [
+                "https://www.cve.org/CVERecord?id=CVE-2021-36159",
+                "https://nvd.nist.gov/vuln/detail/CVE-2021-36159",
+                "https://github.com/freebsd/freebsd-src/commits/main/lib/libfetch",
+                "https://gitlab.alpinelinux.org/alpine/apk-tools/-/issues/10749",
+                "https://lists.apache.org/thread.html/r61db8e7dcb56dc000a5387a88f7a473bacec5ee01b9ff3f55308aacc%40%3Cdev.kafka.apache.org%3E",
+                "https://lists.apache.org/thread.html/r61db8e7dcb56dc000a5387a88f7a473bacec5ee01b9ff3f55308aacc%40%3Cusers.kafka.apache.org%3E",
+                "https://lists.apache.org/thread.html/rbf4ce74b0d1fa9810dec50ba3ace0caeea677af7c27a97111c06ccb7%40%3Cdev.kafka.apache.org%3E",
+                "https://lists.apache.org/thread.html/rbf4ce74b0d1fa9810dec50ba3ace0caeea677af7c27a97111c06ccb7%40%3Cusers.kafka.apache.org%3E"
+                //vulnberability -> datasource, relatedVulnerabilities -> datasource, relatedVulnberabilities -> urls
+            ],
+            "tags": {
+                "nist": [
+                    "SA-11",
+                    "RA-5"
+                ],
+                "cveid": [
+                   "CVE-2021-36159" //vulnberability -> id 
+                ] 
+          
+            },
+            code, //everything from vulnerability to relatedvulnerability 
+            "source_location": 
+            results: [
+              {
+                status: "failed"
+                code_desc: "source": {
+  "type": "image",
+  "target": {
+   "userInput": "cloudwatch_to_s3:latest",
+                "{
+     "type": "exact-indirect-match",
+     "matcher": "apk-matcher",
+     "searchedBy": {
+      "distro": {
+       "type": "alpine",
+       "version": "3.11.3"
+      },
+      "namespace": "alpine:distro:alpine:3.11",
+      "package": {
+       "name": "apk-tools",
+       "version": "2.10.4-r3"
+      }
+     },
+     "found": {
+      "versionConstraint": "< 2.10.7-r0 (apk)",
+      "vulnerabilityID": "CVE-2021-36159"
+     }
+    },
+    {
+     "type": "exact-direct-match",
+     "matcher": "apk-matcher",
+     "searchedBy": {
+      "distro": {
+       "type": "alpine",
+       "version": "3.11.3"
+      },
+      "namespace": "alpine:distro:alpine:3.11",
+      "package": {
+       "name": "apk-tools",
+       "version": "2.10.4-r3"
+      }
+     },
+     "found": {
+      "versionConstraint": "< 2.10.7-r0 (apk)",
+      "vulnerabilityID": "CVE-2021-36159"
+     }
+    }", 
+                "message": ""artifact": {
                 "id": "1acb8fe52f3da542",
                 "name": "apk-tools",
                 "version": "2.10.4-r3",
@@ -105,46 +202,7 @@
                 ]
                 }
               }
-              } //artifact 
-            ],
-            "impact": 0.9, //vulnerability -> severtiy (use map to convert severity to impact)
-            "refs": [
-                "https://www.cve.org/CVERecord?id=CVE-2021-36159",
-                "https://nvd.nist.gov/vuln/detail/CVE-2021-36159",
-                "https://github.com/freebsd/freebsd-src/commits/main/lib/libfetch",
-                "https://gitlab.alpinelinux.org/alpine/apk-tools/-/issues/10749",
-                "https://lists.apache.org/thread.html/r61db8e7dcb56dc000a5387a88f7a473bacec5ee01b9ff3f55308aacc%40%3Cdev.kafka.apache.org%3E",
-                "https://lists.apache.org/thread.html/r61db8e7dcb56dc000a5387a88f7a473bacec5ee01b9ff3f55308aacc%40%3Cusers.kafka.apache.org%3E",
-                "https://lists.apache.org/thread.html/rbf4ce74b0d1fa9810dec50ba3ace0caeea677af7c27a97111c06ccb7%40%3Cdev.kafka.apache.org%3E",
-                "https://lists.apache.org/thread.html/rbf4ce74b0d1fa9810dec50ba3ace0caeea677af7c27a97111c06ccb7%40%3Cusers.kafka.apache.org%3E"
-                //vulnberability -> datasource, relatedVulnerabilities -> datasource, relatedVulnberabilities -> urls
-            ],
-            "tags": {
-                "nist": [
-                    "SA-11",
-                    "RA-5"
-                ],
-                "cveid": [
-                   "CVE-2021-36159" //vulnberability -> id 
-                ],
-                "cvss": [] //lets ask euguene 
-            },
-            code,
-            "source_location": 
-            results: [
-              {
-                status: "failed"
-                code_desc:, 
-                "message": " "package": {
-                        "name": "apk-tools",
-                        "version": "2.10.4-r3"
-                        }
-                      },
-                      "found": {
-                        "versionConstraint": "< 2.10.7-r0 (apk)",
-                        "vulnerabilityID": "CVE-2021-36159"
-                      }
-                      }", //matchDetails -> type, matcher
+              } ", //matchDetails -> type, matcher
                 run_time,
                 start_time
               }
