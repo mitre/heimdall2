@@ -6036,9 +6036,9 @@ anymatch@^3.0.3, anymatch@~3.1.2:
     picomatch "^2.0.4"
 
 apexcharts@^3.10.1:
-  version "3.52.0"
-  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-3.52.0.tgz#55c19bda05e4be5305d28862d1e4ff5b0ec5d0f2"
-  integrity sha512-7dg0ADKs8AA89iYMZMe2sFDG0XK5PfqllKV9N+i3hKHm3vEtdhwz8AlXGm+/b0nJ6jKiaXsqci5LfVxNhtB+dA==
+  version "3.53.0"
+  resolved "https://registry.yarnpkg.com/apexcharts/-/apexcharts-3.53.0.tgz#9ea2b4d837d9faf2c0bff79d228db48e75b2220a"
+  integrity sha512-QESZHZY3w9LPQ64PGh1gEdfjYjJ5Jp+Dfy0D/CLjsLOPTpXzdxwlNMqRj+vPbTcP0nAHgjWv1maDqcEq6u5olw==
   dependencies:
     "@yr/monotone-cubic-spline" "^1.0.3"
     svg.draggable.js "^2.2.2"
