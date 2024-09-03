@@ -9150,10 +9150,15 @@ diff@5.1.0:
   resolved "https://registry.npmjs.org/diff/-/diff-5.1.0.tgz#bc52d298c5ea8df9194800224445ed43ffc87e40"
   integrity sha512-D+mk+qE8VC/PAUrlAU34N+VfXev0ghe5ywmpqrawphmVZc1bEfn56uo9qpyGp1p4xpzOHkSW4ztBd6L7Xx4ACw==
 
-diff@^5.0.0, diff@^5.2.0:
+diff@^5.2.0:
   version "5.2.0"
   resolved "https://registry.npmjs.org/diff/-/diff-5.2.0.tgz#26ded047cd1179b78b9537d5ef725503ce1ae531"
   integrity sha512-uIFDxqpRZGZ6ThOk84hEfqWoHx2devRFvpTZcTHur85vImfaxUbTW9Ryh4CpCuDnToOP1CEtXKIgytHBPVff5A==
+
+diff@^6.0.0:
+  version "6.0.0"
+  resolved "https://registry.yarnpkg.com/diff/-/diff-6.0.0.tgz#eb5931d25d073c41eb39285aa45f2970d01c6c7a"
+  integrity sha512-NbGtgPSw7il+jeajji1H6iKjCk3r/ANQKw3FFUhGV50+MH5MKIMeUmi53piTr7jlkWcq9eS858qbkRzkehwe+w==
 
 diffie-hellman@^5.0.0:
   version "5.0.3"
