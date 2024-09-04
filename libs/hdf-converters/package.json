@@ -14,6 +14,7 @@
     "build": "run-script-os",
     "build:darwin:linux": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
     "build:win32": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && xcopy data lib",
+    "postinstall": "rm -rf ../../node_modules/libxmljs2",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "prepack": "yarn build && node prepack.js",
