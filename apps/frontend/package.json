@@ -129,6 +129,7 @@
   },
   "resolutions": {
     "adm-zip": "0.5.12",
+    "@types/lru-cache/lru-cache@*": "^10.3.0",
     "prismjs": "1.29.0"
   },
   "engines": {
