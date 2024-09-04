@@ -127,6 +127,10 @@
     "ts-jest": "^29.1.0",
     "vue-jest": "^3.0.7"
   },
+  "resolutions": {
+    "adm-zip": "0.5.12",
+    "prismjs": "1.29.0"
+  },
   "engines": {
     "node": "^18.19.0"
   },

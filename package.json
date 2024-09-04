@@ -37,11 +37,6 @@
   "devDependencies": {
     "dotenv-cli": "^7.0.0"
   },
-  "resolutions": {
-    "prismjs": "1.29.0",
-    "vue": "^2.7.16",
-    "vue-template-compiler": "^2.7.16"
-  },
   "engines": {
     "node": "^18.19.0"
   },
