@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.1"
+    "release": "2.10.8"
   },
-  "version": "2.10.1",
+  "version": "2.10.8",
   "statistics": {},
   "profiles": [
     {
@@ -29,6 +29,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -69,6 +70,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -109,6 +111,7 @@
             "nist": [
               "AC-17 (2)"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -149,6 +152,7 @@
             "nist": [
               "SC-28"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -189,6 +193,7 @@
             "nist": [
               "AC-8 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -229,6 +234,7 @@
             "nist": [
               "AC-8 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -269,6 +275,7 @@
             "nist": [
               "AC-8 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -309,6 +316,7 @@
             "nist": [
               "AC-17 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -349,6 +357,7 @@
             "nist": [
               "IA-5 (2) (b) (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -389,6 +398,7 @@
             "nist": [
               "IA-5 (2) (a) (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -429,6 +439,7 @@
             "nist": [
               "IA-5 (1) (c)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -469,6 +480,7 @@
             "nist": [
               "IA-5 (1) (c)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -509,6 +521,7 @@
             "nist": [
               "IA-5 (1) (c)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -549,6 +562,7 @@
             "nist": [
               "AC-3"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -589,6 +603,7 @@
             "nist": [
               "AC-3"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -629,6 +644,7 @@
             "nist": [
               "AC-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -669,6 +685,7 @@
             "nist": [
               "IA-7"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -709,6 +726,7 @@
             "nist": [
               "IA-7"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -749,6 +767,7 @@
             "nist": [
               "IA-7"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -789,6 +808,7 @@
             "nist": [
               "SC-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -829,6 +849,7 @@
             "nist": [
               "SC-3"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -869,6 +890,7 @@
             "nist": [
               "SC-4"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -909,6 +931,7 @@
             "nist": [
               "SC-4"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -949,6 +972,7 @@
             "nist": [
               "SC-10"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -989,6 +1013,7 @@
             "nist": [
               "SI-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1029,6 +1054,7 @@
             "nist": [
               "SI-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1069,6 +1095,7 @@
             "nist": [
               "SI-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1109,6 +1136,7 @@
             "nist": [
               "SI-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1149,6 +1177,7 @@
             "nist": [
               "SI-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1189,6 +1218,7 @@
             "nist": [
               "SI-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1229,6 +1259,7 @@
             "nist": [
               "AC-17 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1269,6 +1300,7 @@
             "nist": [
               "AC-17 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1309,6 +1341,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1349,6 +1382,7 @@
             "nist": [
               "AC-17 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1389,6 +1423,7 @@
             "nist": [
               "AC-17 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1429,6 +1464,7 @@
             "nist": [
               "AC-17 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1469,6 +1505,7 @@
             "nist": [
               "CM-5 (6)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1509,6 +1546,7 @@
             "nist": [
               "CM-5 (6)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1549,6 +1587,7 @@
             "nist": [
               "CM-5 (6)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1589,6 +1628,7 @@
             "nist": [
               "CM-5 (6)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1629,6 +1669,7 @@
             "nist": [
               "CM-5 (6)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1669,6 +1710,7 @@
             "nist": [
               "CM-5 (6)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1709,6 +1751,7 @@
             "nist": [
               "CM-3 (5)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1749,6 +1792,7 @@
             "nist": [
               "CM-5 (3)"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1789,6 +1833,7 @@
             "nist": [
               "CM-5 (3)"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1829,6 +1874,7 @@
             "nist": [
               "CM-5 (3)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1869,6 +1915,7 @@
             "nist": [
               "AC-3 (4)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1909,6 +1956,7 @@
             "nist": [
               "AC-3 (4)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1949,6 +1997,7 @@
             "nist": [
               "SC-4"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -1989,6 +2038,7 @@
             "nist": [
               "SC-4"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2029,6 +2079,7 @@
             "nist": [
               "IA-11"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2069,6 +2120,7 @@
             "nist": [
               "IA-11"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2109,6 +2161,7 @@
             "nist": [
               "IA-2 (11)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2149,6 +2202,7 @@
             "nist": [
               "IA-2 (11)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2189,6 +2243,7 @@
             "nist": [
               "IA-2 (12)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2229,6 +2284,7 @@
             "nist": [
               "SI-16"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2269,6 +2325,7 @@
             "nist": [
               "SC-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2309,6 +2366,7 @@
             "nist": [
               "SC-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2349,6 +2407,7 @@
             "nist": [
               "SC-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2389,6 +2448,7 @@
             "nist": [
               "SI-16"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2429,6 +2489,7 @@
             "nist": [
               "SI-2 (6)"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2469,6 +2530,7 @@
             "nist": [
               "SI-6 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2509,6 +2571,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2549,6 +2612,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2589,6 +2653,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2629,6 +2694,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2669,6 +2735,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2709,6 +2776,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2749,6 +2817,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2789,6 +2858,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2829,6 +2899,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2869,6 +2940,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2909,6 +2981,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2949,6 +3022,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -2989,6 +3063,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3029,6 +3104,7 @@
             "nist": [
               "IA-2 (5)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3069,6 +3145,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3109,6 +3186,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3149,6 +3227,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3189,6 +3268,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3229,6 +3309,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3269,6 +3350,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3309,6 +3391,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3349,6 +3432,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3389,6 +3473,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3429,6 +3514,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3469,6 +3555,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3509,6 +3596,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3549,6 +3637,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3589,6 +3678,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3629,6 +3719,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3669,6 +3760,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3709,6 +3801,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3749,6 +3842,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3789,6 +3883,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3829,6 +3924,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3869,6 +3965,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3909,6 +4006,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3949,6 +4047,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -3989,6 +4088,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4029,6 +4129,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4069,6 +4170,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4109,6 +4211,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4149,6 +4252,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4189,6 +4293,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4229,6 +4334,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4269,6 +4375,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4309,6 +4416,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4349,6 +4457,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4389,6 +4498,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4429,6 +4539,7 @@
             "nist": [
               "AC-2 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4469,6 +4580,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4509,6 +4621,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4549,6 +4662,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4589,6 +4703,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4629,6 +4744,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4669,6 +4785,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4709,6 +4826,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4749,6 +4867,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4789,6 +4908,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4829,6 +4949,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4869,6 +4990,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4909,6 +5031,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4949,6 +5072,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -4989,6 +5113,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5029,6 +5154,7 @@
             "nist": [
               "AC-10"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5069,6 +5195,7 @@
             "nist": [
               "AC-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5109,6 +5236,7 @@
             "nist": [
               "AC-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5149,6 +5277,7 @@
             "nist": [
               "AC-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5189,6 +5318,7 @@
             "nist": [
               "AC-11 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5229,6 +5359,7 @@
             "nist": [
               "AC-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5269,6 +5400,7 @@
             "nist": [
               "AC-11 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5309,6 +5441,7 @@
             "nist": [
               "AC-11 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5349,6 +5482,7 @@
             "nist": [
               "AC-11 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5389,6 +5523,7 @@
             "nist": [
               "IA-5 (2) (a) (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5429,6 +5564,7 @@
             "nist": [
               "IA-5 (1) (a)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5469,6 +5605,7 @@
             "nist": [
               "IA-5 (1) (a)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5509,6 +5646,7 @@
             "nist": [
               "IA-5 (1) (a)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5549,6 +5687,7 @@
             "nist": [
               "IA-5 (1) (a)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5589,6 +5728,7 @@
             "nist": [
               "IA-5 (1) (b)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5629,6 +5769,7 @@
             "nist": [
               "IA-5 (1) (b)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5669,6 +5810,7 @@
             "nist": [
               "IA-5 (1) (b)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5709,6 +5851,7 @@
             "nist": [
               "IA-5 (1) (b)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5749,6 +5892,7 @@
             "nist": [
               "IA-5 (1) (d)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5789,6 +5933,7 @@
             "nist": [
               "IA-5 (1) (d)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5829,6 +5974,7 @@
             "nist": [
               "IA-5 (1) (d)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5869,6 +6015,7 @@
             "nist": [
               "IA-5 (1) (d)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5909,6 +6056,7 @@
             "nist": [
               "IA-5 (1) (e)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5949,6 +6097,7 @@
             "nist": [
               "IA-5 (1) (a)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -5989,6 +6138,7 @@
             "nist": [
               "IA-5 (1) (a)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6029,6 +6179,7 @@
             "nist": [
               "IA-2"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6069,6 +6220,7 @@
             "nist": [
               "IA-2 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6109,6 +6261,7 @@
             "nist": [
               "IA-4 e"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6149,6 +6302,7 @@
             "nist": [
               "AC-2 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6189,6 +6343,7 @@
             "nist": [
               "IA-5 (1) (a)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6229,6 +6384,7 @@
             "nist": [
               "IA-5 (13)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6269,6 +6425,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6309,6 +6466,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6349,6 +6507,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6389,6 +6548,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6429,6 +6589,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6469,6 +6630,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6509,6 +6671,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6549,6 +6712,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6589,6 +6753,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6629,6 +6794,7 @@
             "nist": [
               "AC-6 (8)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6669,6 +6835,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6709,6 +6876,7 @@
             "nist": [
               "AU-5 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6749,6 +6917,7 @@
             "nist": [
               "AU-5 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6789,6 +6958,7 @@
             "nist": [
               "AU-5 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6829,6 +6999,7 @@
             "nist": [
               "AU-5 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6869,6 +7040,7 @@
             "nist": [
               "AU-5 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6909,6 +7081,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6949,6 +7122,7 @@
             "nist": [
               "AU-4 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -6989,6 +7163,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7029,6 +7204,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7069,6 +7245,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7109,6 +7286,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7149,6 +7327,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7189,6 +7368,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7229,6 +7409,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7269,6 +7450,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7309,6 +7491,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7349,6 +7532,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7389,6 +7573,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7429,6 +7614,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7469,6 +7655,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7509,6 +7696,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7549,6 +7737,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7589,6 +7778,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7629,6 +7819,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7669,6 +7860,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7709,6 +7901,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7749,6 +7942,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7789,6 +7983,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7829,6 +8024,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7869,6 +8065,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7909,6 +8106,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7949,6 +8147,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -7989,6 +8188,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8029,6 +8229,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8069,6 +8270,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8109,6 +8311,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8149,6 +8352,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8189,6 +8393,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8229,6 +8434,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8269,6 +8475,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8309,6 +8516,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8349,6 +8557,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8389,6 +8598,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8429,6 +8639,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8469,6 +8680,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8509,6 +8721,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8549,6 +8762,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8589,6 +8803,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8629,6 +8844,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8669,6 +8885,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8709,6 +8926,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8749,6 +8967,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8789,6 +9008,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8829,6 +9049,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8869,6 +9090,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8909,6 +9131,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8949,6 +9172,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -8989,6 +9213,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9029,6 +9254,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9069,6 +9295,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9109,6 +9336,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9149,6 +9377,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9189,6 +9418,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9229,6 +9459,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9269,6 +9500,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9309,6 +9541,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9349,6 +9582,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9389,6 +9623,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9429,6 +9664,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9469,6 +9705,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9509,6 +9746,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9549,6 +9787,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9589,6 +9828,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9629,6 +9869,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9669,6 +9910,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9709,6 +9951,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9749,6 +9992,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9789,6 +10033,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9829,6 +10074,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9869,6 +10115,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9909,6 +10156,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9949,6 +10197,7 @@
             "nist": [
               "AU-4"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -9989,6 +10238,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10029,6 +10279,7 @@
             "nist": [
               "AU-12 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10069,6 +10320,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10109,6 +10361,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10149,6 +10402,7 @@
             "nist": [
               "AU-9 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10189,6 +10443,7 @@
             "nist": [
               "AU-9 (3)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10229,6 +10484,7 @@
             "nist": [
               "AU-4"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10269,6 +10525,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10309,6 +10566,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10349,6 +10607,7 @@
             "nist": [
               "AU-4 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10389,6 +10648,7 @@
             "nist": [
               "AU-4 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10429,6 +10689,7 @@
             "nist": [
               "AU-4 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10469,6 +10730,7 @@
             "nist": [
               "AU-4 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10509,6 +10771,7 @@
             "nist": [
               "AU-5 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10549,6 +10812,7 @@
             "nist": [
               "AU-8 (1) (a)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10589,6 +10853,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10629,6 +10894,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10669,6 +10935,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10709,6 +10976,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10749,6 +11017,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10789,6 +11058,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10829,6 +11099,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10869,6 +11140,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10909,6 +11181,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10949,6 +11222,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -10989,6 +11263,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11029,6 +11304,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11069,6 +11345,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11109,6 +11386,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11149,6 +11427,7 @@
             "nist": [
               "CM-7 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11189,6 +11468,7 @@
             "nist": [
               "IA-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11229,6 +11509,7 @@
             "nist": [
               "IA-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11269,6 +11550,7 @@
             "nist": [
               "AC-17 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11309,6 +11591,7 @@
             "nist": [
               "AC-17 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11349,6 +11632,7 @@
             "nist": [
               "AC-18 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11389,6 +11673,7 @@
             "nist": [
               "AC-18 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11429,6 +11714,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11469,6 +11755,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11509,6 +11796,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11549,6 +11837,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11589,6 +11878,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11629,6 +11919,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11669,6 +11960,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11709,6 +12001,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11749,6 +12042,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11789,6 +12083,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11829,6 +12124,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11869,6 +12165,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11909,6 +12206,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11949,6 +12247,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -11989,6 +12288,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12029,6 +12329,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12069,6 +12370,7 @@
             "nist": [
               "IA-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12109,6 +12411,7 @@
             "nist": [
               "SC-5 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12149,6 +12452,7 @@
             "nist": [
               "SC-8"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12189,6 +12493,7 @@
             "nist": [
               "AC-17 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12229,6 +12534,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12269,6 +12575,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12309,6 +12616,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12349,6 +12657,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12389,6 +12698,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12429,6 +12739,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12469,6 +12780,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12509,6 +12821,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12549,6 +12862,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12589,6 +12903,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12629,6 +12944,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12669,6 +12985,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12709,6 +13026,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12749,6 +13067,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12789,6 +13108,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12829,6 +13149,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12869,6 +13190,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12909,6 +13231,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12949,6 +13272,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -12989,6 +13313,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13029,6 +13354,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13069,6 +13395,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13109,6 +13436,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13149,6 +13477,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13189,6 +13518,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13229,6 +13559,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13269,6 +13600,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13309,6 +13641,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13349,6 +13682,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13389,6 +13723,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13429,6 +13764,7 @@
             "nist": [
               "CM-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13469,6 +13805,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13509,6 +13846,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13549,6 +13887,7 @@
             "nist": [
               "IA-7"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13589,6 +13928,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13629,6 +13969,7 @@
             "nist": [
               "AC-6 (5)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13669,6 +14010,7 @@
             "nist": [
               "IA-11"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13709,6 +14051,7 @@
             "nist": [
               "AC-8 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13749,6 +14092,7 @@
             "nist": [
               "IA-5 (1) (c)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13789,6 +14133,7 @@
             "nist": [
               "AC-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13829,6 +14174,7 @@
             "nist": [
               "AC-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13869,6 +14215,7 @@
             "nist": [
               "AC-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13909,6 +14256,7 @@
             "nist": [
               "IA-7"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13949,6 +14297,7 @@
             "nist": [
               "SC-10"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -13989,6 +14338,7 @@
             "nist": [
               "AC-17 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14029,6 +14379,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "low",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14069,6 +14420,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14109,6 +14461,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14149,6 +14502,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14189,6 +14543,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14229,6 +14584,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14269,6 +14625,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14309,6 +14666,7 @@
             "nist": [
               "AC-7 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14349,6 +14707,7 @@
             "nist": [
               "AC-11 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14389,6 +14748,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14429,6 +14789,7 @@
             "nist": [
               "AC-11 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14469,6 +14830,7 @@
             "nist": [
               "AC-11 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14509,6 +14871,7 @@
             "nist": [
               "AC-11 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14549,6 +14912,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14589,6 +14953,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "high",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14629,6 +14994,7 @@
             "nist": [
               "AU-12 a"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14669,6 +15035,7 @@
             "nist": [
               "AU-5 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14709,6 +15076,7 @@
             "nist": [
               "AC-17 (1)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14749,6 +15117,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14789,6 +15158,7 @@
             "nist": [
               "CM-7 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14829,6 +15199,7 @@
             "nist": [
               "IA-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14869,6 +15240,7 @@
             "nist": [
               "IA-3"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14909,6 +15281,7 @@
             "nist": [
               "SC-8"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14949,6 +15322,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -14989,6 +15363,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -15029,6 +15404,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -15069,6 +15445,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -15109,6 +15486,7 @@
             "nist": [
               "CM-6 b"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -15149,6 +15527,7 @@
             "nist": [
               "SI-2 (2)"
             ],
+            "severity": "medium",
             "weight": "10.0",
             "STIGRef": "Red Hat Enterprise Linux 8 Security Technical Implementation Guide :: Version 1, Release: 3 Benchmark Date: 23 Jul 2021"
           },
@@ -15178,7 +15557,7 @@
           ]
         }
       ],
-      "sha256": "26f379f219eaff4c05580e7e4524d88f106f588d65426733aeeebb4e1ff6b3f1"
+      "sha256": "08034dcfc6ba3541b6d167c9cbaa8e4b67683e70414542af441959d2ee3be74c"
     }
   ],
   "passthrough": {

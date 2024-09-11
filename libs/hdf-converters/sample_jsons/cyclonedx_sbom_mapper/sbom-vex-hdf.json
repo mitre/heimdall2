@@ -1,0 +1,114 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.10.15"
+  },
+  "version": "2.10.15",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "CycloneDX BOM Report",
+      "title": "CycloneDX BOM Report",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "nist": [
+              "SI-10"
+            ],
+            "cci": [
+              "CCI-001310"
+            ],
+            "cwe": [
+              "CWE-611"
+            ],
+            "ratings": "NVD - high, SNYK - high, Acme Inc - none",
+            "created": "2020-12-03T00:00:00.000Z",
+            "published": "2020-12-03T00:00:00.000Z",
+            "updated": "2021-10-26T00:00:00.000Z",
+            "credits": "Bartosz Baranowski",
+            "analysis.state": "not_affected",
+            "analysis.justification": "code_not_reachable",
+            "analysis.response": "will_not_fix, update",
+            "analysis.detail": "Automated dataflow analysis and manual code review indicates that the vulnerable code is not reachable, either directly or indirectly."
+          },
+          "descriptions": [
+            {
+              "data": "Recommendation: Upgrade com.fasterxml.jackson.core:jackson-databind to version 2.6.7.4, 2.9.10.7, 2.10.5.1 or higher.",
+              "label": "fix"
+            }
+          ],
+          "refs": [
+            {
+              "ref": [
+                {
+                  "source": {
+                    "name": "NVD",
+                    "url": "https://nvd.nist.gov/vuln/detail/CVE-2020-25649"
+                  }
+                },
+                {
+                  "references": [
+                    {
+                      "id": "SNYK-JAVA-COMFASTERXMLJACKSONCORE-1048302",
+                      "source": {
+                        "name": "SNYK",
+                        "url": "https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-1048302"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "advisories": [
+                    {
+                      "title": "GitHub Commit",
+                      "url": "https://github.com/FasterXML/jackson-databind/commit/612f971b78c60202e9cd75a299050c8f2d724a59"
+                    },
+                    {
+                      "title": "GitHub Issue",
+                      "url": "https://github.com/FasterXML/jackson-databind/issues/2589"
+                    },
+                    {
+                      "title": "RedHat Bugzilla Bug",
+                      "url": "https://bugzilla.redhat.com/show_bug.cgi?id=1887664"
+                    }
+                  ]
+                }
+              ]
+            }
+          ],
+          "source_location": {},
+          "title": "com.fasterxml.jackson.core:jackson-databind is a library which contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor.\n\nAffected versions of this package are vulnerable to XML External Entity (XXE) Injection. A flaw was found in FasterXML Jackson Databind, where it does not have entity expansion secured properly in the DOMDeserializer class. The highest threat from this vulnerability is data integrity.",
+          "id": "CVE-2020-25649",
+          "desc": "Description: com.fasterxml.jackson.core:jackson-databind is a library which contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor.\n\nAffected versions of this package are vulnerable to XML External Entity (XXE) Injection. A flaw was found in FasterXML Jackson Databind, where it does not have entity expansion secured properly in the DOMDeserializer class. The highest threat from this vulnerability is data integrity.\n\nDetail: XXE Injection is a type of attack against an application that parses XML input. XML is a markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable. By default, many XML processors allow specification of an external entity, a URI that is dereferenced and evaluated during XML processing. When an XML document is being parsed, the parser can make a request and include the content at the specified URI inside of the XML document.\n\nAttacks can include disclosing local files, which may contain sensitive data such as passwords or private user data, using file: schemes or relative paths in the system identifier.",
+          "impact": 0.82,
+          "code": "{\n  \"id\": \"CVE-2020-25649\",\n  \"source\": {\n    \"name\": \"NVD\",\n    \"url\": \"https://nvd.nist.gov/vuln/detail/CVE-2020-25649\"\n  },\n  \"references\": [\n    {\n      \"id\": \"SNYK-JAVA-COMFASTERXMLJACKSONCORE-1048302\",\n      \"source\": {\n        \"name\": \"SNYK\",\n        \"url\": \"https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-1048302\"\n      }\n    }\n  ],\n  \"ratings\": [\n    {\n      \"source\": {\n        \"name\": \"NVD\",\n        \"url\": \"https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N&version=3.1\"\n      },\n      \"score\": 7.5,\n      \"severity\": \"high\",\n      \"method\": \"CVSSv31\",\n      \"vector\": \"AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\"\n    },\n    {\n      \"source\": {\n        \"name\": \"SNYK\",\n        \"url\": \"https://security.snyk.io/vuln/SNYK-JAVA-COMFASTERXMLJACKSONCORE-1048302\"\n      },\n      \"score\": 8.2,\n      \"severity\": \"high\",\n      \"method\": \"CVSSv31\",\n      \"vector\": \"AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N\"\n    },\n    {\n      \"source\": {\n        \"name\": \"Acme Inc\",\n        \"url\": \"https://nvd.nist.gov/vuln-metrics/cvss/v3-calculator?vector=AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N/CR:X/IR:X/AR:X/MAV:X/MAC:X/MPR:X/MUI:X/MS:X/MC:N/MI:N/MA:N&version=3.1\"\n      },\n      \"score\": 0,\n      \"severity\": \"none\",\n      \"method\": \"CVSSv31\",\n      \"vector\": \"AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N/CR:X/IR:X/AR:X/MAV:X/MAC:X/MPR:X/MUI:X/MS:X/MC:N/MI:N/MA:N\"\n    }\n  ],\n  \"cwes\": [\n    611\n  ],\n  \"description\": \"com.fasterxml.jackson.core:jackson-databind is a library which contains the general-purpose data-binding functionality and tree-model for Jackson Data Processor.\\n\\nAffected versions of this package are vulnerable to XML External Entity (XXE) Injection. A flaw was found in FasterXML Jackson Databind, where it does not have entity expansion secured properly in the DOMDeserializer class. The highest threat from this vulnerability is data integrity.\",\n  \"detail\": \"XXE Injection is a type of attack against an application that parses XML input. XML is a markup language that defines a set of rules for encoding documents in a format that is both human-readable and machine-readable. By default, many XML processors allow specification of an external entity, a URI that is dereferenced and evaluated during XML processing. When an XML document is being parsed, the parser can make a request and include the content at the specified URI inside of the XML document.\\n\\nAttacks can include disclosing local files, which may contain sensitive data such as passwords or private user data, using file: schemes or relative paths in the system identifier.\",\n  \"recommendation\": \"Upgrade com.fasterxml.jackson.core:jackson-databind to version 2.6.7.4, 2.9.10.7, 2.10.5.1 or higher.\",\n  \"advisories\": [\n    {\n      \"title\": \"GitHub Commit\",\n      \"url\": \"https://github.com/FasterXML/jackson-databind/commit/612f971b78c60202e9cd75a299050c8f2d724a59\"\n    },\n    {\n      \"title\": \"GitHub Issue\",\n      \"url\": \"https://github.com/FasterXML/jackson-databind/issues/2589\"\n    },\n    {\n      \"title\": \"RedHat Bugzilla Bug\",\n      \"url\": \"https://bugzilla.redhat.com/show_bug.cgi?id=1887664\"\n    }\n  ],\n  \"created\": \"2020-12-03T00:00:00.000Z\",\n  \"published\": \"2020-12-03T00:00:00.000Z\",\n  \"updated\": \"2021-10-26T00:00:00.000Z\",\n  \"credits\": {\n    \"individuals\": [\n      {\n        \"name\": \"Bartosz Baranowski\"\n      }\n    ]\n  },\n  \"analysis\": {\n    \"state\": \"not_affected\",\n    \"justification\": \"code_not_reachable\",\n    \"response\": [\n      \"will_not_fix\",\n      \"update\"\n    ],\n    \"detail\": \"Automated dataflow analysis and manual code review indicates that the vulnerable code is not reachable, either directly or indirectly.\"\n  },\n  \"affects\": [\n    {\n      \"ref\": \"urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.0?type=jar\"\n    }\n  ]\n}",
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "Component urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.0?type=jar is vulnerable",
+              "message": "-Component Summary-\n\n- Type: application\n\n- Bom-ref: urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.0?type=jar\n\n- Name: urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.0?type=jar",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "11edd9546478812825f507e52fd640da19bd27f7370f43bfb90b455dbbe03fed"
+    }
+  ],
+  "passthrough": {
+    "auxiliary_data": [
+      {
+        "name": "SBOM",
+        "data": {
+          "bomFormat": "CycloneDX",
+          "specVersion": "1.4",
+          "version": 1
+        }
+      }
+    ]
+  }
+}

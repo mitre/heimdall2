@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--Heimdall Version :: 2.10.2-->
+<!--Heimdall Version :: 2.10.8-->
 <CHECKLIST>
 	<ASSET>
 		<ROLE>None</ROLE>
@@ -122,7 +122,11 @@
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -246,7 +250,11 @@ Following application CPE's matched on the remote system :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -403,7 +411,11 @@ Following application CPE's matched on the remote system :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -558,7 +570,11 @@ Scan duration : 388 sec</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -675,7 +691,11 @@ Please note the following :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -804,7 +824,11 @@ Protocol : LOCAL</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -917,7 +941,11 @@ Protocol : LOCAL</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -1038,7 +1066,11 @@ for all planned checks.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -1411,7 +1443,11 @@ remote host :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -1532,7 +1568,11 @@ Note that both support programs require vendor contracts.  Premier Support provi
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -1654,7 +1694,11 @@ Notes:
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -1787,7 +1831,11 @@ Notes:
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -1899,7 +1947,11 @@ Confidence level : 100</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -2017,7 +2069,11 @@ www.example.com[192.0.32.10]</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -2131,7 +2187,11 @@ Different web servers may be hosted on name-based virtual hosts. :: MESSAGE The 
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -2396,7 +2456,11 @@ certificate authority :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -2531,7 +2595,11 @@ certificate authority :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -2649,7 +2717,11 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -2782,7 +2854,11 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -2895,7 +2971,11 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -3011,7 +3091,11 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -3125,7 +3209,11 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -3239,7 +3327,11 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -3354,7 +3446,11 @@ There were no containers detected running on Docker.</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -3942,7 +4038,11 @@ root       17363  0.0  0.0  11496  3288 ?        R    14:56   0:00 /bin/ps auxww
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -4466,7 +4566,11 @@ Groups       : sssd</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -4578,7 +4682,11 @@ Groups       : sssd</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -6951,7 +7059,11 @@ Groups       : sssd</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -7062,7 +7174,11 @@ Groups       : sssd</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -7174,7 +7290,11 @@ Groups       : sssd</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -7297,7 +7417,11 @@ Runtime : 1.93133 seconds</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -7453,7 +7577,11 @@ The fields above are :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -7564,7 +7692,11 @@ The fields above are :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -7675,7 +7807,11 @@ The fields above are :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -7843,7 +7979,11 @@ The fields above are :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -8049,7 +8189,11 @@ MIIDrjCCApagAwIBAgICURkwDQYJKoZIhvcNAQELBQAwgZ0xHDAaBgNVBAoME05lc3N1cyBVc2VycyBV
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -8188,7 +8332,11 @@ MIIDrjCCApagAwIBAgICURkwDQYJKoZIhvcNAQELBQAwgZ0xHDAaBgNVBAoME05lc3N1cyBVc2VycyBV
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -8346,7 +8494,11 @@ Response Body :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -8459,7 +8611,11 @@ Response Body :
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -8575,7 +8731,11 @@ Strict-Transport-Security: max-age=31536000</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -8688,7 +8848,11 @@ NessusWWW</FINDING_DETAILS>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -8803,7 +8967,11 @@ This plugin attempts to discover mDNS used by hosts residing on the same network
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -8916,7 +9084,11 @@ failed :: TEST Nessus was able to identify the remote service by its banner or b
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -9027,7 +9199,11 @@ failed :: TEST Nessus was able to identify the remote service by its banner or b
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -9138,7 +9314,11 @@ failed :: TEST Nessus was able to identify the remote service by its banner or b
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -9306,7 +9486,11 @@ failed :: TEST By sending a DUMP request to the portmapper, it was possible to e
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -9419,7 +9603,11 @@ The portmapper allows someone to get the port number of each RPC service running
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>
@@ -9532,7 +9720,11 @@ The portmapper allows someone to get the port number of each RPC service running
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Third_Party_Tools</VULN_ATTRIBUTE>
-					<ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+					<ATTRIBUTE_DATA>{
+  "hdfSpecificData": {
+    "severity": "none"
+  }
+}</ATTRIBUTE_DATA>
 				</STIG_DATA>
 				<STIG_DATA>
 					<VULN_ATTRIBUTE>Mitigation_Control</VULN_ATTRIBUTE>

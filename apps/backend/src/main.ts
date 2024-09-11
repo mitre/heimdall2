@@ -40,8 +40,10 @@ async function bootstrap() {
         'connect-src': [
           "'self'",
           'https://api.github.com',
-          'https://sts.amazonaws.com'
-        ]
+          'https://sts.amazonaws.com',
+          configService.getTenableHostUrl(),
+          configService.getSplunkHostUrl()
+        ].filter((source) => source)
       }
     })
   );

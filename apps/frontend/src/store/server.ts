@@ -35,6 +35,8 @@ export interface IServerState {
   ldap: boolean;
   localLoginEnabled: boolean;
   userInfo: IUser;
+  tenableHostUrl: string;
+  splunkHostUrl: string;
 }
 
 interface LoginData {
@@ -63,6 +65,8 @@ class Server extends VuexModule implements IServerState {
   enabledOAuth: string[] = [];
   allUsers: ISlimUser[] = [];
   oidcName = '';
+  tenableHostUrl: string = '';
+  splunkHostUrl: string = '';
   /** Our currently granted JWT token */
   token = '';
   /** Provide a sane default for userInfo in order to avoid having to null check it all the time */
@@ -106,6 +110,8 @@ class Server extends VuexModule implements IServerState {
     this.oidcName = settings.oidcName;
     this.ldap = settings.ldap;
     this.localLoginEnabled = settings.localLoginEnabled;
+    this.tenableHostUrl = settings.tenableHostUrl;
+    this.splunkHostUrl = settings.splunkHostUrl;
   }
 
   @Mutation

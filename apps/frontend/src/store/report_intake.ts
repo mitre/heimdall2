@@ -5,19 +5,21 @@
 import {InspecDataModule} from '@/store/data_store';
 import Store from '@/store/store';
 import {Tag} from '@/types/models';
-import {read_file_async} from '@/utilities/async_util';
+import {readFileAsync} from '@/utilities/async_util';
 import {
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   ChecklistResults,
   ConveyorResults as ConveyorResultsMapper,
+  CycloneDXSBOMResults,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
-  GoSecMapper,
+  GosecMapper,
   INPUT_TYPES,
   IonChannelMapper,
   JfrogXrayMapper,
+  MsftSecureScoreResults,
   NessusResults,
   NetsparkerMapper,
   NiktoMapper,
@@ -25,6 +27,7 @@ import {
   SarifMapper,
   ScoutsuiteMapper,
   SnykResults,
+  TrufflehogResults,
   TwistlockResults,
   VeracodeMapper,
   XCCDFResultsMapper,
@@ -135,7 +138,7 @@ export class InspecIntake extends VuexModule {
     const filename =
       options.file?.name || options.filename || 'Missing Filename';
     if (options.file) {
-      read = await read_file_async(options.file);
+      read = await readFileAsync(options.file);
     } else if (options.data) {
       read = options.data;
     } else {
@@ -229,6 +232,8 @@ export class InspecIntake extends VuexModule {
     switch (typeGuess) {
       case INPUT_TYPES.JFROG:
         return new JfrogXrayMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.MSFT_SEC_SCORE:
+        return new MsftSecureScoreResults(convertOptions.data).toHdf();
       case INPUT_TYPES.ASFF:
         return Object.values(
           new ASFFResultsMapper(convertOptions.data).toHdf()
@@ -270,7 +275,11 @@ export class InspecIntake extends VuexModule {
       case INPUT_TYPES.CHECKLIST:
         return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
-        return new GoSecMapper(convertOptions.data).toHdf();
+        return new GosecMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.CYCLONEDX_SBOM:
+        return new CycloneDXSBOMResults(convertOptions.data).toHdf();
+      case INPUT_TYPES.TRUFFLEHOG:
+        return new TrufflehogResults(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`

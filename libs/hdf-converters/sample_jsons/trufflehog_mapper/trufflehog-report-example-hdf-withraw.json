@@ -1,0 +1,86 @@
+{
+  "platform": {
+    "name": "Heimdall Tools",
+    "release": "2.10.8"
+  },
+  "version": "2.10.8",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "Source ID: 1, Source Name: trufflehog - git",
+      "title": "trufflehog - git",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [
+        {
+          "tags": {
+            "nist": [
+              "IA-5(7)"
+            ],
+            "cci": [
+              "CCI-004069",
+              "CCI-000202",
+              "CCI-000203",
+              "CCI-002367"
+            ],
+            "severity": "medium"
+          },
+          "refs": [],
+          "source_location": {},
+          "title": "Found AWS secret using PLAIN decoder",
+          "id": "AWS PLAIN",
+          "impact": 0.5,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "{\n  \"Data\": {\n    \"Git\": {\n      \"commit\": \"0416560b1330d8ac42045813251d85c688717eaf\",\n      \"file\": \"new_key\",\n      \"email\": \"counter <hello@trufflesec.com>\",\n      \"repository\": \"https://github.com/trufflesecurity/test_keys\",\n      \"timestamp\": \"2023-10-19 02:56:37 +0000\",\n      \"line\": 2\n    }\n  }\n}",
+              "message": "{\n  \"Verified\": true,\n  \"Raw\": \"AKIAQYLPMN5HHHFPZAM2\",\n  \"RawV2\": \"AKIAQYLPMN5HHHFPZAM21tUm636uS1yOEcfP5pvfqJ/ml36mF7AkyHsEU0IU\",\n  \"Redacted\": \"AKIAQYLPMN5HHHFPZAM2\",\n  \"ExtraData\": {\n    \"account\": \"052310077262\",\n    \"arn\": \"arn:aws:iam::052310077262:user/canarytokens.com@@c20nnjzlioibnaxvt392i9ope\",\n    \"is_canary\": \"true\",\n    \"message\": \"This is an AWS canary token generated at canarytokens.org, and was not set off; learn more here: https://trufflesecurity.com/canaries\",\n    \"resource_type\": \"Access key\"\n  }\n}",
+              "start_time": ""
+            }
+          ]
+        }
+      ],
+      "sha256": "6c4514024338ac955d85cfd5a1073b5c662a20053bc0f9d200bcf144a9fff40d"
+    }
+  ],
+  "passthrough": {
+    "raw": {
+      "wrapper": [
+        {
+          "SourceMetadata": {
+            "Data": {
+              "Git": {
+                "commit": "0416560b1330d8ac42045813251d85c688717eaf",
+                "file": "new_key",
+                "email": "counter <hello@trufflesec.com>",
+                "repository": "https://github.com/trufflesecurity/test_keys",
+                "timestamp": "2023-10-19 02:56:37 +0000",
+                "line": 2
+              }
+            }
+          },
+          "SourceID": 1,
+          "SourceType": 16,
+          "SourceName": "trufflehog - git",
+          "DetectorType": 2,
+          "DetectorName": "AWS",
+          "DecoderName": "PLAIN",
+          "Verified": true,
+          "Raw": "AKIAQYLPMN5HHHFPZAM2",
+          "RawV2": "AKIAQYLPMN5HHHFPZAM21tUm636uS1yOEcfP5pvfqJ/ml36mF7AkyHsEU0IU",
+          "Redacted": "AKIAQYLPMN5HHHFPZAM2",
+          "ExtraData": {
+            "account": "052310077262",
+            "arn": "arn:aws:iam::052310077262:user/canarytokens.com@@c20nnjzlioibnaxvt392i9ope",
+            "is_canary": "true",
+            "message": "This is an AWS canary token generated at canarytokens.org, and was not set off; learn more here: https://trufflesecurity.com/canaries",
+            "resource_type": "Access key"
+          },
+          "StructuredData": null
+        }
+      ]
+    }
+  }
+}

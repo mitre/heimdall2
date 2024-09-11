@@ -1,13 +1,20 @@
 // Our foreign package API.
 
-// Export types
+// Export types and helper functions
 export {
   ControlStatus,
+  controlStatuses,
   HDFControl,
   HDFControlSegment,
   hdfWrapControl,
+  LowercasedControlStatus,
+  lowercasedControlStatuses,
   SegmentStatus,
-  Severity
+  severities,
+  Severity,
+  titleCasedSeverities,
+  TitleCasedSeverity,
+  convertImpactToSeverity
 } from './compat_wrappers';
 // Export Conversion functions
 export * from './context';

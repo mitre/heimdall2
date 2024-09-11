@@ -41,25 +41,22 @@ WORKDIR /app
 
 RUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*
 
-COPY --from=builder /src/package.json ./
-COPY --from=builder /src/apps/backend/package.json apps/backend/
+COPY --from=builder --chown=1001 /src/package.json ./
+COPY --from=builder --chown=1001 /src/apps/backend/package.json apps/backend/
 
-COPY --from=builder /src/apps/backend/node_modules apps/backend/node_modules
-COPY --from=builder /src/apps/backend/.sequelizerc apps/backend/
-COPY --from=builder /src/apps/backend/db apps/backend/db
-COPY --from=builder /src/apps/backend/config apps/backend/config
-COPY --from=builder /src/apps/backend/migrations apps/backend/migrations
-COPY --from=builder /src/apps/backend/seeders apps/backend/seeders
+COPY --from=builder --chown=1001 /src/apps/backend/node_modules apps/backend/node_modules
+COPY --from=builder --chown=1001 /src/apps/backend/.sequelizerc apps/backend/
+COPY --from=builder --chown=1001 /src/apps/backend/db apps/backend/db
+COPY --from=builder --chown=1001 /src/apps/backend/config apps/backend/config
+COPY --from=builder --chown=1001 /src/apps/backend/migrations apps/backend/migrations
+COPY --from=builder --chown=1001 /src/apps/backend/seeders apps/backend/seeders
 
-COPY --from=builder /src/libs/password-complexity/ libs/password-complexity
+COPY --from=builder --chown=1001 /src/libs/password-complexity/ libs/password-complexity
 
-COPY --from=builder /src/apps/backend/dist apps/backend/dist
-COPY --from=builder /src/dist/ dist/
+COPY --from=builder --chown=1001 /src/apps/backend/dist apps/backend/dist
+COPY --from=builder --chown=1001 /src/dist/ dist/
 
-RUN chown -R 1001 .
-
-COPY cmd.sh /usr/local/bin/
-RUN chmod 755 /usr/local/bin/cmd.sh
+COPY --chmod=755 cmd.sh /usr/local/bin/
 
 USER 1001
 

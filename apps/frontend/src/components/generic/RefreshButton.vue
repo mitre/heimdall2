@@ -5,8 +5,9 @@
     text="Refresh"
     icon="mdi-refresh"
     @click="refreshEvaluations"
-    >Refresh</IconLinkItem
   >
+    Refresh
+  </IconLinkItem>
 </template>
 
 <script lang="ts">

@@ -1,0 +1,161 @@
+{
+  "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#security/secureScores",
+  "value": [
+    {
+      "id": "12345678-1234-1234-1234-1234567890abcd_2024-01-01",
+      "azureTenantId": "12345678-1234-1234-1234-1234567890abcd",
+      "activeUserCount": 1,
+      "createdDateTime": "2024-01-01T00:00:00Z",
+      "currentScore": 128,
+      "enabledServices": [
+        "HasOCAS",
+        "HasCLB",
+        "HasMDOP1",
+        "HasMDOP2",
+        "HasEXOP2",
+        "HasSPOP2",
+        "HasAADFree"
+      ],
+      "licensedUserCount": 100,
+      "maxScore": 1000,
+      "vendorInformation": {
+        "provider": "SecureScore",
+        "providerVersion": null,
+        "subProvider": null,
+        "vendor": "Microsoft"
+      },
+      "averageComparativeScores": [
+        {
+          "basis": "AllTenants",
+          "averageScore": 54.65,
+          "appsScore": 29.65,
+          "appsScoreMax": 79,
+          "dataScore": 0.46,
+          "dataScoreMax": 3.27,
+          "deviceScore": 9.13,
+          "deviceScoreMax": 16.76,
+          "identityScore": 36.02,
+          "identityScoreMax": 59.42,
+          "infrastructureScore": 0,
+          "infrastructureScoreMax": 0
+        },
+        {
+          "basis": "TotalSeats",
+          "averageScore": 48.98,
+          "SeatSizeRangeLowerValue": "1",
+          "SeatSizeRangeUpperValue": "100",
+          "appsScore": 34.15,
+          "appsScoreMax": 94.46,
+          "dataScore": 0.5,
+          "dataScoreMax": 3.97,
+          "deviceScore": 6.87,
+          "deviceScoreMax": 12.65,
+          "identityScore": 34.16,
+          "identityScoreMax": 59.5,
+          "infrastructureScore": 0,
+          "infrastructureScoreMax": 0
+        }
+      ],
+      "controlScores": [
+        {
+          "controlCategory": "Apps",
+          "controlName": "spo_idle_session_timeout",
+          "description": "\n\t\t\tIdle session sign-out lets you specify a time at which users are warned and are later signed out of Microsoft 365 after a period of browser inactivity in SharePoint and OneDrive.\n            <br/>\n\t\t\tThis policy is one of several you can use with SharePoint and OneDrive to balance security and user productivity and help keep your data safe, regardless  of where users access the data from, what device they're working on, and how secure their network connection is.\n\t\t",
+          "score": 0,
+          "lastSynced": "2024-01-01T17:12:14Z",
+          "implementationStatus": "The setting is not compliant.",
+          "on": "false",
+          "scoreInPercentage": 0
+        },
+        {
+          "controlCategory": "Apps",
+          "controlName": "spo_legacy_auth",
+          "description": "\n\t\t\tModern authentication in Microsoft 365 enables authentication features like multifactor authentication (MFA) using smart cards, certificate-based authentication (CBA), and third-party SAML identity providers.\n\t\t\t<br/>\n\t\t\tStrong authentication controls, such as the use of multifactor authentication, may be circumvented if basic authentication is used by SharePoint applications. Requiring modern authentication for SharePoint applications ensures strong authentication mechanisms are used when establishing sessions between these applications, SharePoint, and connecting users.\n\t\t\t<br/>\n\t\t\t<i>This information was taken from Center for Internet Security (CIS).</i>\n\t\t",
+          "score": 0,
+          "lastSynced": "2024-01-01T17:12:14Z",
+          "implementationStatus": "The setting is not compliant.",
+          "on": "false",
+          "scoreInPercentage": 0
+        }
+      ]
+    },
+    {
+      "id": "12345678-1234-1234-1234-1234567890abcd_2024-01-02",
+      "azureTenantId": "12345678-1234-1234-1234-1234567890abcd",
+      "activeUserCount": 1,
+      "createdDateTime": "2024-01-01T00:00:00Z",
+      "currentScore": 128,
+      "enabledServices": [
+        "HasOCAS",
+        "HasCLB",
+        "HasMDOP1",
+        "HasMDOP2",
+        "HasEXOP2",
+        "HasSPOP2",
+        "HasAADFree"
+      ],
+      "licensedUserCount": 0,
+      "maxScore": 274,
+      "vendorInformation": {
+        "provider": "SecureScore",
+        "providerVersion": null,
+        "subProvider": null,
+        "vendor": "Microsoft"
+      },
+      "averageComparativeScores": [
+        {
+          "basis": "AllTenants",
+          "averageScore": 54.65,
+          "appsScore": 29.65,
+          "appsScoreMax": 79,
+          "dataScore": 0.46,
+          "dataScoreMax": 3.27,
+          "deviceScore": 9.13,
+          "deviceScoreMax": 16.76,
+          "identityScore": 36.02,
+          "identityScoreMax": 59.42,
+          "infrastructureScore": 0,
+          "infrastructureScoreMax": 0
+        },
+        {
+          "basis": "TotalSeats",
+          "averageScore": 48.98,
+          "SeatSizeRangeLowerValue": "1",
+          "SeatSizeRangeUpperValue": "100",
+          "appsScore": 34.15,
+          "appsScoreMax": 94.46,
+          "dataScore": 0.5,
+          "dataScoreMax": 3.97,
+          "deviceScore": 6.87,
+          "deviceScoreMax": 12.65,
+          "identityScore": 34.16,
+          "identityScoreMax": 59.5,
+          "infrastructureScore": 0,
+          "infrastructureScoreMax": 0
+        }
+      ],
+      "controlScores": [
+        {
+          "controlCategory": "Apps",
+          "controlName": "McasFirewallLogUpload",
+          "description": "Log collectors provide visibility into cloud app usage so you can identify if there are any apps that run without official approval, or if there is anomalous behavior. Log collectors automatically upload reports and parse the firewall/ proxy traffic logs to see if there is a match with your services in the Cloud App Catalog.",
+          "score": 0,
+          "lastSynced": "2024-01-01T04:34:13Z",
+          "implementationStatus": "Feature in place: false.",
+          "on": "false",
+          "scoreInPercentage": 0
+        },
+        {
+          "controlCategory": "Apps",
+          "controlName": "McasCutomActivityPolicy",
+          "description": "Activity policies help you monitor specific activities carried out by users, or follow unexpectedly high rates of certain types of activities. After you set an activity detection policy, it starts to generate alerts. Alerts are only generated on activities that occur after you create the policy.",
+          "score": 0,
+          "lastSynced": "2024-01-01T04:34:13Z",
+          "implementationStatus": "Policy in place: false.",
+          "on": "false",
+          "scoreInPercentage": 0
+        }
+      ]
+    }
+  ]
+}
