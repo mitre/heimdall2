@@ -11,22 +11,21 @@
     "main": "lib/index.js"
   },
   "scripts": {
-    "prepack": "yarn build && node prepack.js",
-    "postpack": "run-script-os",
-    "postpack:darwin:linux": "mv package.json.orig package.json",
-    "postpack:win32": "move package.json.orig package.json",
     "build": "run-script-os",
     "build:darwin:linux": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && cp -R ./data ./lib",
     "build:win32": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && xcopy data lib",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
+    "prepack": "yarn build && node prepack.js",
+    "postpack": "run-script-os",
+    "postpack:darwin:linux": "mv package.json.orig package.json",
+    "postpack:win32": "move package.json.orig package.json",
     "test": "jest",
     "csv2json": "tsx data/converters/csv2json.ts",
     "xml2json": "tsx data/converters/xml2json.ts"
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",
-    "@cyclonedx/cyclonedx-library": "^6.11.0",
     "@e965/xlsx": "^0.20.0",
     "@mdi/js": "^7.0.96",
     "@microsoft/microsoft-graph-types": "^2.40.0",
@@ -75,6 +74,13 @@
     "typedoc": "^0.26.2"
   },
   "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts",
+      "d.ts",
+      "node"
+    ],
     "moduleNameMapper": {
       "axios": "axios/dist/node/axios.cjs"
     },

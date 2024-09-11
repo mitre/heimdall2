@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.14"
+    "release": "2.10.15"
   },
-  "version": "2.10.14",
+  "version": "2.10.15",
   "statistics": {},
   "profiles": [
     {
@@ -90,13 +90,13 @@
             {
               "status": "failed",
               "code_desc": "Component urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.0?type=jar is vulnerable",
-              "message": "-Component Summary-\n\n- Bom-ref: urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.0?type=jar\n\n- Name: urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.0?type=jar",
+              "message": "-Component Summary-\n\n- Type: application\n\n- Bom-ref: urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.0?type=jar\n\n- Name: urn:cdx:3e671687-395b-41f5-a30f-a58921a69b79/1#pkg:maven/com.fasterxml.jackson.core/jackson-databind@2.10.0?type=jar",
               "start_time": ""
             }
           ]
         }
       ],
-      "sha256": "6e7fa4296080be8402cc3a052be4ef033a98f9520959b3ec5dce5c906651160f"
+      "sha256": "11edd9546478812825f507e52fd640da19bd27f7370f43bfb90b455dbbe03fed"
     }
   ],
   "passthrough": {
