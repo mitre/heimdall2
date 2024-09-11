@@ -5,41 +5,49 @@ import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {filterString, getCCIsForNISTTags} from './utils/global';
 import {
-  Credits,
-  RatingRepository,
-  Source,
-  Vulnerability,
-  VulnerabilityRepository
-} from '@cyclonedx/cyclonedx-library/dist.d/models/vulnerability';
-import {CweRepository} from '@cyclonedx/cyclonedx-library/dist.d/types';
-import {
-  AnalysisResponseRepository,
-  Severity
-} from '@cyclonedx/cyclonedx-library/dist.d/enums/vulnerability';
-import {
-  Component,
-  ComponentRepository,
-  OptionalBomProperties,
-  OptionalComponentProperties,
-  ToolRepository
-} from '@cyclonedx/cyclonedx-library/dist.d/models';
+  CycloneDXSoftwareBillOfMaterialSpecification,
+  CycloneDXSoftwareBillOfMaterialsStandard,
+  CycloneDXBillOfMaterialsStandardVulnerability,
+  CycloneDXSoftwareBillOfMaterialsStandardVulnerability,
+  FluffyCredits,
+  PurpleCredits,
+  FluffyRating,
+  PurpleRating,
+  MethodEnum,
+  Response,
+  CreationToolsLegacyElement,
+  ToolsTools,
+  ToolsToolsLegacy,
+  FluffyTools,
+  ComponentClass,
+  ComponentObject
+} from '../types/cyclonedx';
 
-type IntermediaryComponent = Omit<OptionalComponentProperties, 'components'> & {
+const cvssMethods = ['CVSSv2', 'CVSSv3', 'CVSSv31', 'CVSSv4'] as const;
+type CVSSMethodEnum = Extract<MethodEnum, (typeof cvssMethods)[number]>;
+
+type IntermediaryComponent = Omit<
+  ComponentClass | ComponentObject,
+  'components'
+> & {
   components?: IntermediaryComponent[];
   affectingVulnerabilities?: string[];
-  name: string;
-  'bom-ref'?: string;
   isDummy?: boolean;
 };
 
-type IntermediaryVulnerability = Vulnerability & {
+type IntermediaryVulnerability = (
+  | CycloneDXBillOfMaterialsStandardVulnerability
+  | CycloneDXSoftwareBillOfMaterialsStandardVulnerability
+) & {
   affectedComponents?: number[];
 };
 
 type DataStorage = {
   components: IntermediaryComponent[];
   vulnerabilities: IntermediaryVulnerability[];
-  raw: OptionalBomProperties;
+  raw:
+    | CycloneDXSoftwareBillOfMaterialSpecification
+    | CycloneDXSoftwareBillOfMaterialsStandard;
 };
 
 const CWE_NIST_MAPPING = new CweNistMapping();
@@ -55,12 +63,23 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
 ]);
 
 // Convert object type to string[] and prepend `CWE` if used directly for tag display
-function formatCWETags(input: CweRepository, addPrefix = true): string[] {
-  return [...input].map((cwe) => (addPrefix ? `CWE-${cwe}` : `${cwe}`));
+function formatCWETags(
+  input:
+    | CycloneDXBillOfMaterialsStandardVulnerability['cwes']
+    | CycloneDXSoftwareBillOfMaterialsStandardVulnerability['cwes'],
+  addPrefix = true
+): string[] {
+  return input && Array.isArray(input)
+    ? input.map((cwe) => (addPrefix ? `CWE-${cwe}` : `${cwe}`))
+    : [];
 }
 
 // Convert gathered CWEs to corresponding NIST 800-53s
-function getNISTTags(input: CweRepository): string[] {
+function getNISTTags(
+  input:
+    | CycloneDXBillOfMaterialsStandardVulnerability['cwes']
+    | CycloneDXSoftwareBillOfMaterialsStandardVulnerability['cwes']
+): string[] {
   return CWE_NIST_MAPPING.nistFilter(
     formatCWETags(input, false),
     DEFAULT_NIST_TAG
@@ -69,16 +88,16 @@ function getNISTTags(input: CweRepository): string[] {
 
 // A single SBOM vulnerability can contain multiple security ratings
 // Find the max of any existing ratings and then pass to `impact`
-function maxImpact(ratings: RatingRepository): number {
-  return [...ratings]
+function maxImpact(ratings: FluffyRating[] | PurpleRating[]): number {
+  return ratings
     .map((rating) =>
-      rating.score && _.get(rating, 'method') === 'CVSSv31'
+      rating.score &&
+      rating.method &&
+      cvssMethods.includes(rating.method as CVSSMethodEnum) // cast required since .includes expects the parameter to be a subtype
         ? // Prefer to use CVSS-based `score` field when possible
           rating.score / 10
-        : // Else interpret it from `severity` field
-          (IMPACT_MAPPING.get(
-            (rating.severity as Severity).toLowerCase()
-          ) as number)
+        : // Else interpret it from `severity` field, defaulting to medium/0.5
+          (IMPACT_MAPPING.get(rating.severity?.toLowerCase() ?? '') ?? 0.5)
     )
     .reduce(
       (maxValue, newValue) =>
@@ -151,9 +170,9 @@ export class CycloneDXSBOMResults {
   // Flatten any arbitrarily nested components list
   flattenComponents(data: DataStorage) {
     // Pull components from raw data
-    data.components = [
-      ...(_.cloneDeep(data.raw.components) as ComponentRepository)
-    ] as unknown as IntermediaryComponent[];
+    data.components = _.cloneDeep(
+      data.raw.components
+    ) as IntermediaryComponent[];
 
     // Look through every component at the top level of the list
     for (const component of data.components) {
@@ -198,9 +217,9 @@ export class CycloneDXSBOMResults {
   */
   generateIntermediary(data: DataStorage) {
     // Pull vulnerabilities from raw data
-    data.vulnerabilities = [
-      ...(_.cloneDeep(data.raw.vulnerabilities) as VulnerabilityRepository)
-    ] as unknown as IntermediaryVulnerability[];
+    data.vulnerabilities = _.cloneDeep(
+      data.raw.vulnerabilities
+    ) as IntermediaryVulnerability[];
 
     for (const vulnerability of data.vulnerabilities) {
       vulnerability.affectedComponents = [];
@@ -209,8 +228,8 @@ export class CycloneDXSBOMResults {
         ...Array.from(data.components.entries())
           // Find every component that is affected via listed bom-refs
           .filter(([_index, component]) =>
-            [...vulnerability.affects]
-              .map((id) => id.ref.toString())
+            vulnerability.affects
+              ?.map((id) => id.ref.toString())
               .includes(component['bom-ref'] as string)
           )
           // Add the index of that affected component to the corresponding vulnerability object
@@ -234,24 +253,25 @@ export class CycloneDXSBOMResults {
   formatVEX(data: DataStorage) {
     // Pull vulnerabilities from raw data
     data.vulnerabilities = [
-      ...(_.cloneDeep(data.raw.vulnerabilities) as VulnerabilityRepository)
+      ...(_.cloneDeep(data.raw.vulnerabilities) as
+        | CycloneDXBillOfMaterialsStandardVulnerability[]
+        | CycloneDXSoftwareBillOfMaterialsStandardVulnerability[])
     ] as unknown as IntermediaryVulnerability[];
 
     for (const vulnerability of data.vulnerabilities) {
-      vulnerability.affectedComponents = [...vulnerability.affects].map(
-        (id) => {
-          // Build a dummy component for each bom-ref identified as being affected by the vulnerability
-          const dummy: IntermediaryComponent = {
-            name: `${id.ref}`,
-            'bom-ref': `${id.ref}`,
-            isDummy: true
-          };
-          // Add that component to the corresponding vulnerability object
-          data.components.push(dummy);
-          // Return the index of that dummy object
-          return data.components.length - 1;
-        }
-      );
+      vulnerability.affectedComponents = vulnerability.affects?.map((id) => {
+        // Build a dummy component for each bom-ref identified as being affected by the vulnerability
+        const dummy: IntermediaryComponent = {
+          name: `${id.ref}`,
+          'bom-ref': `${id.ref}`,
+          isDummy: true,
+          type: 'application' // a type must be provided, and "application" is the default classification
+        };
+        // Add that component to the corresponding vulnerability object
+        data.components.push(dummy);
+        // Return the index of that dummy object
+        return data.components.length - 1;
+      });
     }
   }
 
@@ -285,14 +305,14 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
       {
         name: {
           path: 'raw.metadata.component',
-          transformer: (input: Component): string =>
+          transformer: (input: ComponentClass | ComponentObject): string =>
             _.has(input, 'bom-ref')
               ? `CycloneDX BOM Report: ${input.type}/${input['bom-ref']}`
               : 'CycloneDX BOM Report'
         },
         title: {
           path: 'raw.metadata.component',
-          transformer: (input: Component): string => {
+          transformer: (input: ComponentClass | ComponentObject): string => {
             if (input.name) {
               const group = input.group ? `${input.group}/` : '';
               return `${group}${input.name} CycloneDX BOM Report`;
@@ -307,7 +327,9 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
         },
         maintainer: {
           path: 'raw.metadata.component',
-          transformer: (input: Component): string | undefined => {
+          transformer: (
+            input: ComponentClass | ComponentObject
+          ): string | undefined => {
             // Find organization of authors if possible
             const manufacturer = _.has(input, 'manufacturer')
               ? ` (${(input.manufacturer as Record<string, unknown>).name})`
@@ -336,20 +358,22 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
         },
         license: {
           path: 'raw.metadata.component',
-          transformer: (input: Component): string | undefined => {
-            if (input.licenses) {
-              // Certain license reports only provide the license name in the `name` field
-              // Check there first and then default to `id`
-              return [...input.licenses]
-                .map((license) =>
-                  _.has(license, 'license.name')
-                    ? _.get(license, 'license.name')
-                    : _.get(license, 'license.id')
-                )
-                .join(', ');
+          transformer: (
+            input: ComponentClass | ComponentObject
+          ): string | undefined => {
+            if (!input.licenses) {
+              return undefined;
             }
-            // If there are no found licenses, remove field
-            return undefined;
+            // Certain license reports only provide the license name in the `name` field
+            // Check there first and then default to `id`
+            return input.licenses
+              ?.map((license) =>
+                license?.license?.name
+                  ? license.license.name
+                  : license?.license?.id
+              )
+              .filter((identifier) => identifier)
+              .join(', ');
           }
         },
         supports: [],
@@ -367,8 +391,11 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
               },
               cci: {
                 path: 'cwes',
-                transformer: (input: CweRepository): string[] =>
-                  getCCIsForNISTTags(getNISTTags(input))
+                transformer: (
+                  input:
+                    | CycloneDXBillOfMaterialsStandardVulnerability['cwes']
+                    | CycloneDXSoftwareBillOfMaterialsStandardVulnerability['cwes']
+                ): string[] => getCCIsForNISTTags(getNISTTags(input))
               },
               cwe: {path: 'cwes', transformer: formatCWETags},
               'bom-ref': {
@@ -377,12 +404,14 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
               },
               ratings: {
                 path: 'ratings',
-                transformer: (input: RatingRepository): string | undefined =>
+                transformer: (
+                  input: FluffyRating[] | PurpleRating[]
+                ): string | undefined =>
                   input
                     ? [...input]
                         .map((rating) => {
-                          const ratingSource = (rating.source as Source).name
-                            ? `${(rating.source as Source).name} - `
+                          const ratingSource = rating.source?.name
+                            ? `${rating.source?.name} - `
                             : 'Unidentified Source - ';
                           return `${ratingSource}${rating.severity}`;
                         })
@@ -408,17 +437,41 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
               },
               credits: {
                 path: 'credits',
-                transformer: (input: Credits): string | undefined =>
+                transformer: (
+                  input: FluffyCredits | PurpleCredits
+                ): string | undefined =>
                   input
-                    ? `${[...input.individuals].map((individual) => individual.name).join(', ')}`
+                    ? `${input.individuals
+                        ?.map((individual) => individual.name)
+                        .filter((name) => name)
+                        .join(', ')}`
                     : undefined
               },
               tools: {
                 path: 'tools',
-                transformer: (input: ToolRepository): string | undefined =>
-                  input
-                    ? [...input].map((tool) => tool.name).join(', ')
-                    : undefined
+                transformer: (
+                  input:
+                    | CreationToolsLegacyElement[]
+                    | ToolsToolsLegacy[]
+                    | ToolsTools
+                    | FluffyTools
+                ): string | undefined => {
+                  if (!input) {
+                    return undefined;
+                  }
+                  if (Array.isArray(input)) {
+                    return input
+                      .map((tool) => tool.name)
+                      .filter((name) => name)
+                      .join(', ');
+                  }
+                  return [
+                    ...(input.components?.map((component) => component.name) ??
+                      []),
+                    ...(input.services?.map((component) => component.name) ??
+                      [])
+                  ].join(', ');
+                }
               },
               // Workflow items will not affect `impact`
               'analysis.state': {
@@ -431,12 +484,8 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
               },
               'analysis.response': {
                 path: 'analysis.response',
-                transformer: (
-                  input: AnalysisResponseRepository
-                ): string | undefined =>
-                  input && [...input].length > 0
-                    ? [...input].join(', ')
-                    : undefined
+                transformer: (input: Response[]): string | undefined =>
+                  input && input.length > 0 ? input.join(', ') : undefined
               },
               'analysis.detail': {
                 path: 'analysis.detail',
@@ -452,7 +501,11 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
               }
             },
             descriptions: {
-              transformer: (input: Vulnerability) => {
+              transformer: (
+                input:
+                  | CycloneDXBillOfMaterialsStandardVulnerability
+                  | CycloneDXSoftwareBillOfMaterialsStandardVulnerability
+              ) => {
                 const recommendation = input.recommendation
                   ? `Recommendation: ${input.recommendation}`
                   : '';
@@ -496,12 +549,20 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
             source_location: {},
             title: {
               // Give description as title if possible
-              transformer: (input: Vulnerability): string =>
+              transformer: (
+                input:
+                  | CycloneDXBillOfMaterialsStandardVulnerability
+                  | CycloneDXSoftwareBillOfMaterialsStandardVulnerability
+              ): string =>
                 input.description ? `${input.description}` : `${input.id}`
             },
             id: {path: 'id'},
             desc: {
-              transformer: (input: Vulnerability): string | undefined => {
+              transformer: (
+                input:
+                  | CycloneDXBillOfMaterialsStandardVulnerability
+                  | CycloneDXSoftwareBillOfMaterialsStandardVulnerability
+              ): string | undefined => {
                 const description = input.description
                   ? `Description: ${input.description}`
                   : '';
@@ -510,8 +571,11 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
               }
             },
             impact: {
-              transformer: (input: Vulnerability): number =>
-                maxImpact(input.ratings)
+              transformer: (
+                input:
+                  | CycloneDXBillOfMaterialsStandardVulnerability
+                  | CycloneDXSoftwareBillOfMaterialsStandardVulnerability
+              ): number => maxImpact(input.ratings ?? [])
             },
             code: {
               transformer: (vulnerability: Record<string, unknown>): string =>
