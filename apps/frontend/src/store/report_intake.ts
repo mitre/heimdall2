@@ -136,7 +136,7 @@ export class InspecIntake extends VuexModule {
   @Action
   async loadFile(options: FileLoadOptions): Promise<FileID | FileID[]> {
     let read: string;
-    let filename =
+    const filename =
       options.file?.name || options.filename || 'Missing Filename';
     if (options.file) {
       read = await readFileAsync(options.file);

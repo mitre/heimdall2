@@ -152,9 +152,8 @@ export class AnchoreGrypeMapper extends BaseConverter {
               } as unknown as ExecJSON.Reference[],
               source_location: {},
               title: {
-                path: 'vulnerability',
                 transformer: (data: Record<string, unknown>): string =>
-                  `Grype found a vulnerability to ${_.get(data, 'id')} in container ${_.get(data, 'source.target.userInput')}`
+                  `Grype found a vulnerability to ${_.get(data, 'vulnerability.id')} in container ${_.get(data, 'source.target.userInput')}`
               },
               id: {
                 transformer: (data: Record<string, unknown>): string =>
@@ -184,7 +183,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
                   status: ExecJSON.ControlResultStatus.Failed,
                   code_desc: {
                     transformer: (data: Record<string, unknown>): string =>
-                      `${_.get(this.metadata, 'source.target.userInput')}\n${JSON.stringify(_.get(data, 'matchDetails'), null, 2)}`
+                      `${JSON.stringify(_.get(data, 'matchDetails'), null, 2)}`
                   },
                   message: {
                     transformer: (data: Record<string, unknown>): string =>

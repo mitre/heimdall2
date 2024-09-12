@@ -79,7 +79,14 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.VERACODE]: [],
   [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues'],
   [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion'],
-  [INPUT_TYPES.GRYPE]: ['matches.vulnerability', 'matches.relatedVulnerabilities', 'matches.matchDetails', 'matches.artifact', 'distro', 'descriptor']
+  [INPUT_TYPES.GRYPE]: [
+    'matches.vulnerability',
+    'matches.relatedVulnerabilities',
+    'matches.matchDetails',
+    'matches.artifact',
+    'distro',
+    'descriptor'
+  ]
 };
 
 export function fingerprint(guessOptions: {
