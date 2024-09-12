@@ -154,11 +154,11 @@ export class AnchoreGrypeMapper extends BaseConverter {
               title: {
                 path: 'vulnerability',
                 transformer: (data: Record<string, unknown>): string =>
-                  `Grype found a vulnerability to ${_.get(data, 'id')}`
+                  `Grype found a vulnerability to ${_.get(data, 'id')} in container ${_.get(data, 'source.target.userInput')}`
               },
               id: {
                 transformer: (data: Record<string, unknown>): string =>
-                  `${_.get(this.metadata, 'source.target.userInput')}/${_.get(data, 'vulnerability.id')}`
+                  `Grype/${_.get(data, 'vulnerability.id')}`
               },
               desc: {
                 transformer: description

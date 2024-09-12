@@ -136,7 +136,7 @@ export class InspecIntake extends VuexModule {
   @Action
   async loadFile(options: FileLoadOptions): Promise<FileID | FileID[]> {
     let read: string;
-    const filename =
+    let filename =
       options.file?.name || options.filename || 'Missing Filename';
     if (options.file) {
       read = await readFileAsync(options.file);
@@ -155,39 +155,6 @@ export class InspecIntake extends VuexModule {
         fileOptions: options,
         data: read
       });
-      const filetype = fingerprint({
-        data: read,
-        filename: filename
-      });
-      if (filetype === INPUT_TYPES.GRYPE) {
-        console.log('FILETYPE IS GRYPE');
-        if (Array.isArray(converted)) {
-          const originalFileSplit = filename.split('.');
-          // Default to .json if not found
-          let originalFileType = '.json';
-          if (originalFileSplit.length > 1) {
-            originalFileType = originalFileSplit[originalFileSplit.length - 1];
-          }
-          return Promise.all(
-            converted.map((evaluation) => {
-              return this.loadExecJson({
-                data: evaluation,
-                filename: `${filename}-${_.get(
-                  evaluation,
-                  'profiles[0].controls[0].tags.containerName'
-                )}.${originalFileType}`
-              });
-            })
-          );
-        } else if (converted) {
-          return this.loadExecJson({
-            data: converted,
-            filename: filename
-          });
-        } else {
-          return [];
-        }
-      }
       if (Array.isArray(converted)) {
         const originalFileSplit = filename.split('.');
         // Default to .json if not found
