@@ -35,6 +35,15 @@
           <v-col cols="3" md="auto" class="text-right pb-0">
             <v-switch v-model="expandAll" label="Expand All" class="mr-5" />
           </v-col>
+          <v-col cols="3" md="auto" class="text-right pb-0">
+            <v-checkbox
+              label="Mark All As Viewed"
+              :indeterminate="isIndeterminate"
+              :input-value="allViewedValue"
+              class="mr-5"
+              @change="selectAllControls"
+            />
+          </v-col>
         </v-row>
       </v-row>
 
@@ -148,6 +157,7 @@ import ControlRowDetails from '@/components/cards/controltable/ControlRowDetails
 import ControlRowHeader from '@/components/cards/controltable/ControlRowHeader.vue';
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import ColumnHeader, {Sort} from '@/components/generic/ColumnHeader.vue';
+import {Trinary} from '@/enums/Trinary';
 import {Filter, FilteredDataModule} from '@/store/data_filters';
 import {HeightsModule} from '@/store/heights';
 import {getControlRunTime} from '@/utilities/delta_util';
@@ -204,6 +214,7 @@ export default class ControlTable extends Vue {
   // Used for viewed/unviewed controls.
   viewedControlIds: string[] = [];
   displayUnviewedControls = true;
+  allViewed: Trinary = Trinary.Off;
 
   get numOfViewed() {
     return this.raw_items.filter((elem) =>
@@ -212,6 +223,9 @@ export default class ControlTable extends Vue {
   }
 
   toggleControlViewed(control: ContextualizedControl) {
+    if (this.allViewed === Trinary.Off) {
+      this.allViewed = Trinary.Mixed;
+    }
     const alreadyViewed = this.viewedControlIds.indexOf(control.data.id);
     // If the control hasn't been marked as viewed yet, mark it as viewed.
     if (alreadyViewed === -1) {
@@ -220,6 +234,20 @@ export default class ControlTable extends Vue {
     // Else, remove it from the view controls array.
     else {
       this.viewedControlIds.splice(alreadyViewed, 1);
+    }
+  }
+
+  selectAllControls() {
+    if (this.allViewedValue) {
+      this.viewedControlIds = [];
+      this.allViewed = Trinary.Off;
+    } else {
+      this.items.forEach((item) => {
+        if (!this.viewedControlIds.includes(item.control.data.id)) {
+          this.viewedControlIds.push(item.control.data.id);
+        }
+      });
+      this.allViewed = Trinary.On;
     }
   }
 
@@ -274,6 +302,14 @@ export default class ControlTable extends Vue {
     } else {
       this.expanded = [];
     }
+  }
+
+  get allViewedValue(): boolean {
+    return this.allViewed === Trinary.On;
+  }
+
+  get isIndeterminate() {
+    return this.allViewed === Trinary.Mixed;
   }
 
   get controlTableTitleStyle() {
