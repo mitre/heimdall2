@@ -99,7 +99,6 @@ export class AnchoreGrypeMapper extends BaseConverter {
                 nist: ['SA-11', 'RA-5'],
                 cveid: {path: 'vulnerability.id'},
                 severity: {path: 'vulnerability.severity'},
-                containerName: {path: 'source.target.userInput'}
               },
               descriptions: [
                 {
@@ -153,7 +152,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
               source_location: {},
               title: {
                 transformer: (data: Record<string, unknown>): string =>
-                  `Grype found a vulnerability to ${_.get(data, 'vulnerability.id')} in container ${_.get(data, 'source.target.userInput')}`
+                  `Grype found a vulnerability to ${_.get(data, 'vulnerability.id')} in container ${_.get(data, 'source.type')}`
               },
               id: {
                 transformer: (data: Record<string, unknown>): string =>
