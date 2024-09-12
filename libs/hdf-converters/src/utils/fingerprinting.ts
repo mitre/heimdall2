@@ -78,7 +78,8 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.NOT_FOUND]: [],
   [INPUT_TYPES.VERACODE]: [],
   [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues'],
-  [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion']
+  [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion'],
+  [INPUT_TYPES.GRYPE]: []
 };
 
 export function fingerprint(guessOptions: {

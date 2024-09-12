@@ -155,6 +155,39 @@ export class InspecIntake extends VuexModule {
         fileOptions: options,
         data: read
       });
+      const filetype = fingerprint({
+        data: read,
+        filename: filename
+      });
+      if (filetype === INPUT_TYPES.GRYPE) {
+        console.log('FILETYPE IS GRYPE');
+        if (Array.isArray(converted)) {
+          const originalFileSplit = filename.split('.');
+          // Default to .json if not found
+          let originalFileType = '.json';
+          if (originalFileSplit.length > 1) {
+            originalFileType = originalFileSplit[originalFileSplit.length - 1];
+          }
+          return Promise.all(
+            converted.map((evaluation) => {
+              return this.loadExecJson({
+                data: evaluation,
+                filename: `${filename}-${_.get(
+                  evaluation,
+                  'profiles[0].controls[0].tags.containerName'
+                )}.${originalFileType}`
+              });
+            })
+          );
+        } else if (converted) {
+          return this.loadExecJson({
+            data: converted,
+            filename: filename
+          });
+        } else {
+          return [];
+        }
+      }
       if (Array.isArray(converted)) {
         const originalFileSplit = filename.split('.');
         // Default to .json if not found
@@ -281,6 +314,8 @@ export class InspecIntake extends VuexModule {
         return new CycloneDXSBOMResults(convertOptions.data).toHdf();
       case INPUT_TYPES.TRUFFLEHOG:
         return new TrufflehogResults(convertOptions.data).toHdf();
+      case INPUT_TYPES.GRYPE:
+        return new AnchoreGrypeMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
