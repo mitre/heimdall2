@@ -1,3 +1,53 @@
+v2.10.16
+
+- Replace @cyclonedx/cyclonedx-library's internal types with cyclonedx specification types @Amndeep7 (#6155)
+- updateTenableContentSecurityPolicy @georgedias (#6135)
+
+## Dependency Updates
+
+- Bump @aws-sdk/client-s3 from 3.645.0 to 3.649.0 @dependabot (#6170)
+- Bump @aws-sdk/client-config-service from 3.645.0 to 3.649.0 @dependabot (#6166)
+- Bump @aws-sdk/client-sts from 3.645.0 to 3.649.0 @dependabot (#6168)
+- Bump sinon from 18.0.0 to 18.0.1 @dependabot (#6169)
+- Bump typedoc from 0.26.6 to 0.26.7 @dependabot (#6164)
+- Bump express from 4.19.2 to 4.20.0 @dependabot (#6171)
+- Bump express from 4.19.2 to 4.20.0 @dependabot (#6167)
+- Bump @aws-sdk/client-s3 from 3.637.0 to 3.645.0 @dependabot (#6157)
+- Bump @smithy/node-http-handler from 3.1.4 to 3.2.0 @dependabot (#6165)
+- Bump @types/node from 22.5.2 to 22.5.4 @dependabot (#6160)
+- Bump eslint-plugin-import from 2.29.1 to 2.30.0 @dependabot (#6153)
+- Bump cypress from 13.14.1 to 13.14.2 @dependabot (#6158)
+- Bump diff from 6.0.0 to 7.0.0 @dependabot (#6161)
+- Bump yaml from 2.5.0 to 2.5.1 @dependabot (#6152)
+- Bump @aws-sdk/client-config-service from 3.637.0 to 3.645.0 @dependabot (#6159)
+- Bump @aws-sdk/client-sts from 3.637.0 to 3.645.0 @dependabot (#6156)
+- Bump eslint-plugin-vue from 9.27.0 to 9.28.0 @dependabot (#6154)
+- Bump fast-xml-parser from 4.4.1 to 4.5.0 @dependabot (#6151)
+- Bump @nestjs/cli from 10.4.4 to 10.4.5 @dependabot (#6147)
+- Bump diff from 5.2.0 to 6.0.0 @dependabot (#6150)
+- Bump @types/node from 22.5.1 to 22.5.2 @dependabot (#6149)
+- Bump axios from 1.7.6 to 1.7.7 @dependabot (#6148)
+- Bump axios from 1.7.5 to 1.7.6 @dependabot (#6146)
+- Bump apexcharts from 3.52.0 to 3.53.0 @dependabot (#6144)
+- Bump cypress from 13.14.0 to 13.14.1 @dependabot (#6143)
+- Bump rexml from 3.3.3 to 3.3.6 in /libs/inspecjs @dependabot (#6128)
+- Bump @types/diff from 5.2.1 to 5.2.2 @dependabot (#6142)
+- Bump cypress from 13.13.3 to 13.14.0 @dependabot (#6139)
+- Bump tsx from 4.18.0 to 4.19.0 @dependabot (#6141)
+- Bump @types/node from 22.5.0 to 22.5.1 @dependabot (#6140)
+- Bump @types/validator from 13.12.0 to 13.12.1 @dependabot (#6137)
+- Bump tsx from 4.17.0 to 4.18.0 @dependabot (#6136)
+- Bump @types/multer from 1.4.11 to 1.4.12 @dependabot (#6134)
+- Bump axios from 1.7.4 to 1.7.5 @dependabot (#6132)
+- Bump @aws-sdk/client-config-service from 3.635.0 to 3.637.0 @dependabot (#6131)
+- Bump ts-jest from 29.2.4 to 29.2.5 @dependabot (#6133)
+- Bump @aws-sdk/client-s3 from 3.635.0 to 3.637.0 @dependabot (#6130)
+- Bump @aws-sdk/client-sts from 3.635.0 to 3.637.0 @dependabot (#6129)
+- Bump @types/node from 22.4.1 to 22.5.0 @dependabot (#6126)
+- Bump @aws-sdk/client-config-service from 3.632.0 to 3.635.0 @dependabot (#6123)
+- Bump core-js from 3.38.0 to 3.38.1 @dependabot (#6122)
+- Bump @aws-sdk/client-s3 from 3.633.0 to 3.635.0 @dependabot (#6124)
+
 v2.10.15
 
 ## Bug Fixes
