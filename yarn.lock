@@ -295,9 +295,9 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-s3@^3.425.0":
-  version "3.650.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.650.0.tgz#9e8c441afa25575f960ca8b9c44b71c586f38f13"
-  integrity sha512-6ZfkDu2FMOtYPV1ah5vWMqFKNKEqlBQ3/NOVvLGscU1dR0ybbOwwm4ywWofZmz72uOts5NGqe12kzohb/AsGAA==
+  version "3.651.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.651.0.tgz#289c92c7f7c31733503eeb857c6a5f951e0d9335"
+  integrity sha512-37+kxxjnlOAUCb1aHpoLakW4XRG23HrkX8X3cEjxaFLQxorPUiMvfAYQEQQkYD5yggaG+5aM5GAhxkTUTqA5xw==
   dependencies:
     "@aws-crypto/sha1-browser" "5.2.0"
     "@aws-crypto/sha256-browser" "5.2.0"
@@ -308,7 +308,7 @@
     "@aws-sdk/credential-provider-node" "3.650.0"
     "@aws-sdk/middleware-bucket-endpoint" "3.649.0"
     "@aws-sdk/middleware-expect-continue" "3.649.0"
-    "@aws-sdk/middleware-flexible-checksums" "3.649.0"
+    "@aws-sdk/middleware-flexible-checksums" "3.651.0"
     "@aws-sdk/middleware-host-header" "3.649.0"
     "@aws-sdk/middleware-location-constraint" "3.649.0"
     "@aws-sdk/middleware-logger" "3.649.0"
@@ -626,15 +626,16 @@
     "@smithy/types" "^3.4.0"
     tslib "^2.6.2"
 
-"@aws-sdk/middleware-flexible-checksums@3.649.0":
-  version "3.649.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-flexible-checksums/-/middleware-flexible-checksums-3.649.0.tgz#cc1da37cea5c9a3ce52af63e9e5a7ff994116dc8"
-  integrity sha512-8mzMBEA+Tk6rbrS8iqnXX119C6z+Id84cuzvUc6dAiYcbnOVbus8M4XKKsAFzGGXHCRc2gMwYhKdnoVz2ijaFA==
+"@aws-sdk/middleware-flexible-checksums@3.651.0":
+  version "3.651.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-flexible-checksums/-/middleware-flexible-checksums-3.651.0.tgz#94bd1266d0416351176d9c7a351c9ec4ec7e8424"
+  integrity sha512-mGAOIjhNDcBK5+JD+W+Ky5YJL98jTNFTENJV/GiQ9t3CdqK3p02MNr/T6VwzEpzsJvJD23amogiEZeiqSQiibg==
   dependencies:
     "@aws-crypto/crc32" "5.2.0"
     "@aws-crypto/crc32c" "5.2.0"
     "@aws-sdk/types" "3.649.0"
     "@smithy/is-array-buffer" "^3.0.0"
+    "@smithy/node-config-provider" "^3.1.5"
     "@smithy/protocol-http" "^4.1.1"
     "@smithy/types" "^3.4.0"
     "@smithy/util-utf8" "^3.0.0"
