@@ -13,7 +13,7 @@
     "@types/jest": "^27.0.0",
     "@types/node": "^22.0.0",
     "jest": "^27.0.6",
-    "quicktype": "^15.0.260",
+    "quicktype": "^23.0.170",
     "ts-jest": "^29.1.0",
     "typedoc": "^0.26.2"
   },
@@ -29,7 +29,7 @@
     "build": "tsc -p ./tsconfig.build.json",
     "docs": "typedoc --out docs ./src",
     "gen-types": "bash scripts/update_schema.sh",
-    "validate-types": "git diff --quiet HEAD -- schemas/ src/generated_parsers/",
+    "validate-types": "git diff HEAD -- schemas/ src/generated_parsers/",
     "lint": "eslint \"**/*.ts\" --fix",
     "lint:ci": "eslint \"**/*.ts\" --max-warnings 0",
     "test": "jest --silent"
