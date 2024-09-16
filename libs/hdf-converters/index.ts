@@ -1,4 +1,5 @@
 export {ASFFResults} from './src/asff-mapper/asff-mapper';
+export * from './src/anchore-grype-mapper';
 export * from './src/aws-config-mapper';
 export * from './src/burpsuite-mapper';
 export * from './src/ckl-mapper/checklist-mapper';
