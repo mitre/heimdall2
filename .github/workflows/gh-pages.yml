@@ -28,7 +28,7 @@ jobs:
         run: 'echo "heimdall-lite.mitre.org" > ./dist/frontend/CNAME'
 
       - name: deploy
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist/frontend
