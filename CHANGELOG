@@ -1,3 +1,18 @@
+v2.10.17
+
+- Anchore Grype Mapper @andytang99 (#6117)
+
+## Dependency Updates
+
+- Bump sinon from 19.0.0 to 19.0.2 @dependabot (#6183)
+- Bump @aws-sdk/client-config-service from 3.650.0 to 3.651.1 @dependabot (#6185)
+- Bump connect-pg-simple from 9.0.1 to 10.0.0 @dependabot (#6181)
+- Bump @smithy/node-http-handler from 3.2.0 to 3.2.2 @dependabot (#6180)
+- Bump @aws-sdk/client-s3 from 3.651.0 to 3.651.1 @dependabot (#6182)
+- Bump sinon from 18.0.1 to 19.0.0 @dependabot (#6179)
+- Bump @aws-sdk/client-s3 from 3.650.0 to 3.651.0 @dependabot (#6177)
+- Bump tsx from 4.19.0 to 4.19.1 @dependabot (#6178)
+
 v2.10.16
 
 - Replace @cyclonedx/cyclonedx-library's internal types with cyclonedx specification types @Amndeep7 (#6155)
