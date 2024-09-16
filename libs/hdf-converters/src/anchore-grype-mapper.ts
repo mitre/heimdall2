@@ -27,9 +27,6 @@ function skipSeverityNegligibleOrUnknown(controls: unknown[]): unknown[] {
         //console.log(rating)
         return rating === 'Negligible' || rating === 'Unknown';
       })
-      .map((control) => {
-        return control;
-      })
       // For every result contained by that control, set the status to skipped and request a manual review
       .map((control) =>
         control.results.map((result) => {
@@ -44,10 +41,7 @@ function skipSeverityNegligibleOrUnknown(controls: unknown[]): unknown[] {
 
 function description(data: Record<string, unknown>): string {
   const vulnerability = data.vulnerability as Record<string, unknown>;
-  const relatedVulnerabilities = data.relatedVulnerabilities as Record<
-    string,
-    unknown
-  >[];
+  const relatedVulnerabilities = data.relatedVulnerabilities as Record<string,unknown>[];
   if (!vulnerability.description && relatedVulnerabilities.length > 0) {
     return relatedVulnerabilities.filter(
       (relatedVulnerability) => relatedVulnerability.id === vulnerability.id
@@ -58,9 +52,118 @@ function description(data: Record<string, unknown>): string {
   return 'no description found';
 }
 
+
 export class AnchoreGrypeMapper extends BaseConverter {
   withRaw: boolean;
   metadata: Record<string, unknown>;
+  
+  controlMatches(matchesPath: string, idTransformer: (value: any) => unknown, impactTransformer: (value: any) => unknown, resultMessageTransformer: (value: any) => unknown): MappedTransform<
+  ExecJSON.Control & ILookupPath,
+  ILookupPath
+> {
+  return {
+      path: matchesPath,
+      key: 'id',
+      tags: {
+        nist: ['SA-11', 'RA-5'],
+        cveid: {path: 'vulnerability.id'},
+        severity: {path: 'vulnerability.severity'}
+      },
+      descriptions: [
+        {
+          data: {
+            path: 'vulnerability.fix',
+            transformer: (data: Record<string, unknown>): string =>
+              data.state == 'fixed'
+                ? `vulnerability is ${_.get(data, 'state')} for versions ${(_.get(data, 'versions') as string[]).join(', ')}`
+                : `vulnerability is not known to be fixed in any versions`
+          },
+          label: 'fix'
+        },
+        {
+          data: {
+            path: 'relatedVulnerabilities',
+            transformer: (data: Record<string, unknown>): string =>
+              `${JSON.stringify(_.get(data, 'cvss'), null, 2)}`
+          },
+          label: 'check'
+        }
+      ],
+      refs: {
+        transformer: (data: Record<string, unknown>) => {
+          const vuln_urls = _.get(data, 'vulnerability.urls') as Record<
+            string,
+            unknown
+          >[];
+          const relatedVulnerabilities = _.get(
+            data,
+            'relatedVulnerabilities'
+          );
+          let relatedVulnerabilitiesUrls = [] as unknown as Record<
+            string,
+            unknown
+          >[];
+          if (relatedVulnerabilities) {
+            relatedVulnerabilitiesUrls = (
+              relatedVulnerabilities as Record<string, unknown>[]
+            ).map((element) => element.urls) as Record<
+              string,
+              unknown
+            >[];
+          }
+          return (
+            vuln_urls.concat(
+              ...relatedVulnerabilitiesUrls
+            ) as unknown as Record<string, unknown>[]
+          ).map((element) => ({url: element}));
+        }
+      } as unknown as ExecJSON.Reference[],
+      source_location: {},
+      title: {
+        transformer: (data: Record<string, unknown>): string =>
+          `Grype found a vulnerability to ${_.get(data, 'vulnerability.id')} in ${_.get(this.metadata, 'source.target.userInput') as string}`
+      },
+      id: {
+        transformer: idTransformer
+      },
+      desc: {
+        transformer: description
+      },
+      impact: {
+        path: 'vulnerability.severity',
+        transformer: impactTransformer
+      },
+      code: {
+        transformer: (data: Record<string, unknown>): string =>
+          `${JSON.stringify(
+            _.omitBy(
+              _.pick(data, ['vulnerability', 'relatedVulnerabilities']),
+              (value) => value === null || value === ''
+            ),
+            null,
+            2
+          )}`
+      },
+      arrayTransformer: skipSeverityNegligibleOrUnknown,
+      results: [
+        {
+          status: ExecJSON.ControlResultStatus.Failed,
+          code_desc: {
+            transformer: (data: Record<string, unknown>): string =>
+              `${JSON.stringify(_.get(data, 'matchDetails'), null, 2)}`
+          },
+          message: {
+            transformer: resultMessageTransformer
+          },
+          start_time: _.get(
+            this.metadata,
+            'descriptor.timestamp'
+          ) as string
+        }
+      ]
+    }
+  }
+
 
   mapping(): MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -93,107 +196,14 @@ export class AnchoreGrypeMapper extends BaseConverter {
           status: 'loaded',
           controls: [
             {
-              path: 'wrapper',
-              key: 'id',
-              tags: {
-                nist: ['SA-11', 'RA-5'],
-                cveid: {path: 'vulnerability.id'},
-                severity: {path: 'vulnerability.severity'}
-              },
-              descriptions: [
-                {
-                  data: {
-                    path: 'vulnerability.fix',
-                    transformer: (data: Record<string, unknown>): string =>
-                      data.state == 'fixed'
-                        ? `vulnerability is ${_.get(data, 'state')} for versions ${(_.get(data, 'versions') as string[]).join(', ')}`
-                        : `vulnerability is not known to be fixed in any versions`
-                  },
-                  label: 'fix'
-                },
-                {
-                  data: {
-                    path: 'relatedVulnerabilities',
-                    transformer: (data: Record<string, unknown>): string =>
-                      `${JSON.stringify(_.get(data, 'cvss'), null, 2)}`
-                  },
-                  label: 'check'
-                }
-              ],
-              refs: {
-                transformer: (data: Record<string, unknown>) => {
-                  const vuln_urls = _.get(data, 'vulnerability.urls') as Record<
-                    string,
-                    unknown
-                  >[];
-                  const relatedVulnerabilities = _.get(
-                    data,
-                    'relatedVulnerabilities'
-                  );
-                  let relatedVulnerabilitiesUrls = [] as unknown as Record<
-                    string,
-                    unknown
-                  >[];
-                  if (relatedVulnerabilities) {
-                    relatedVulnerabilitiesUrls = (
-                      relatedVulnerabilities as Record<string, unknown>[]
-                    ).map((element) => element.urls) as Record<
-                      string,
-                      unknown
-                    >[];
-                  }
-                  return (
-                    vuln_urls.concat(
-                      ...relatedVulnerabilitiesUrls
-                    ) as unknown as Record<string, unknown>[]
-                  ).map((element) => ({url: element}));
-                }
-              } as unknown as ExecJSON.Reference[],
-              source_location: {},
-              title: {
-                transformer: (data: Record<string, unknown>): string =>
-                  `Grype found a vulnerability to ${_.get(data, 'vulnerability.id')} in container ${_.get(this.metadata, 'source.target.userInput') as string}`
-              },
-              id: {
-                transformer: (data: Record<string, unknown>): string =>
-                  `Grype/${_.get(data, 'vulnerability.id')}`
-              },
-              desc: {
-                transformer: description
-              },
-              impact: {
-                path: 'vulnerability.severity',
-                transformer: impactMapping(IMPACT_MAPPING)
-              },
-              code: {
-                transformer: (data: Record<string, unknown>): string =>
-                  `${JSON.stringify(
-                    _.omitBy(
-                      _.pick(data, ['vulnerability', 'relatedVulnerabilities']),
-                      (value) => value === null || value === ''
-                    ),
-                    null,
-                    2
-                  )}`
-              },
-              arrayTransformer: skipSeverityNegligibleOrUnknown,
-              results: [
-                {
-                  status: ExecJSON.ControlResultStatus.Failed,
-                  code_desc: {
-                    transformer: (data: Record<string, unknown>): string =>
-                      `${JSON.stringify(_.get(data, 'matchDetails'), null, 2)}`
-                  },
-                  message: {
-                    transformer: (data: Record<string, unknown>): string =>
-                      `${JSON.stringify(_.get(data, 'artifact'), null, 2)}`
-                  },
-                  start_time: _.get(
-                    this.metadata,
-                    'descriptor.timestamp'
-                  ) as string
-                }
-              ]
+              ...this.controlMatches('wrapper.matches', (data: Record<string, unknown>): string =>
+                `Grype/${_.get(data, 'vulnerability.id')}`, impactMapping(IMPACT_MAPPING), (data: Record<string, unknown>): string =>
+                  `${JSON.stringify(_.get(data, 'artifact'), null, 2)}`)  
+            },
+            {
+              ...this.controlMatches('wrapper.ignoredMatches', (data: Record<string, unknown>): string =>
+                `Grype-Ignored-Match/${_.get(data, 'vulnerability.id')}`, ()=>0, (data: Record<string, unknown>): string =>
+                `This finding is ignored due to the following applied ignored rules:\n${JSON.stringify(_.get(data, 'appliedIgnoreRules'), null, 2)}\nArtifact Information:\n${JSON.stringify(_.get(data, 'artifact'), null, 2)}`)
             }
           ],
           sha256: ''
@@ -211,8 +221,8 @@ export class AnchoreGrypeMapper extends BaseConverter {
   }
   constructor(exportJson: string, withRaw = false) {
     const temp = JSON.parse(exportJson);
-    super({wrapper: _.get(temp, 'matches')});
-    this.metadata = _.omit(temp, 'matches');
+    super({wrapper: _.pick(temp, ['matches', 'ignoredMatches'])});
+    this.metadata = _.omit(temp, ['matches', 'ignoredMatches']);
     this.withRaw = withRaw;
     this.setMappings(this.mapping());
   }
