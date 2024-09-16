@@ -7,6 +7,7 @@ export enum INPUT_TYPES {
   CONVEYOR = 'conveyor',
   FORTIFY = 'fortify',
   GOSEC = 'gosec',
+  GRYPE = 'grype',
   IONCHANNEL = 'ionchannel',
   JFROG = 'jfrog',
   MSFT_SEC_SCORE = 'msft_secure_score',
@@ -77,7 +78,15 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.NOT_FOUND]: [],
   [INPUT_TYPES.VERACODE]: [],
   [INPUT_TYPES.GOSEC]: ['Golang errors', 'Issues'],
-  [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion']
+  [INPUT_TYPES.CYCLONEDX_SBOM]: ['bomFormat', 'metadata', 'specVersion'],
+  [INPUT_TYPES.GRYPE]: [
+    'matches.vulnerability',
+    'matches.relatedVulnerabilities',
+    'matches.matchDetails',
+    'matches.artifact',
+    'distro',
+    'descriptor'
+  ]
 };
 
 export function fingerprint(guessOptions: {
