@@ -30,6 +30,7 @@
               <v-card-text class="text-h7">
                 <ul>
                   <li>InSpec/Heimdall Data Format</li>
+                  <li>Anchore Grype</li>
                   <li>AWS Security Finding Format (ASFF)</li>
                   <li>Burp Suite</li>
                   <li>Checklist</li>

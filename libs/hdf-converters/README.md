@@ -6,33 +6,34 @@ OHDF Converters supplies several methods to convert various types of security to
 
 ## Supported Formats
 
-1.  [**asff-mapper**] - AWS Security Finding Format JSON file, Prowler-derived AWS Security Finding Format results from concatenated JSON blobs, and Trivy-derived AWS Security Finding Format results from concatenated JSON blobs
-2.  [**aws-config-mapper**] - AWS Config
-3.  [**burpsuite-mapper**] - BurpSuite Pro XML file
-4.  [**caat-mapper**] - Compliance Assessment and Audit Tracking (CAAT) file
-5.  [**checklist-mapper**] - Checlist Mapper format
-6.  [**conveyor-mapper**] - Conveyor JSON file
-7.  [**cyclonedx-sbom-mapper**] - CycloneDX SBOM JSON file
-8.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
-9.  [**fortify-mapper**] - Fortify results FVDL file
-10. [**gosec-mapper**] - gosec results JSON file
-11. [**ionchannel-mapper**] - SBOM data from Ion Channel
-12. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
-13. [**msft-secure-mapper**] - Microsoft Secure Score results file
-14. [**nessus-mapper**] - Nessus XML results file
-15. [**netsparker-mapper**] - Netsparker XML results file
-16. [**nikto-mapper**] - Nikto results JSON file
-17. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
-18. [**sarif-mapper**] - SARIF JSON file
-19. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
-20. [**snyk-mapper**] - Snyk results JSON file
-21. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
-22. [**splunk-mapper**] - Splunk instance
-23. [**trufflehog-mapper**] - Trufflehog results json file
-24. [**twistlock-mapper**] - Twistlock CLI output file
-25. [**veracode-mapper**] - Veracode Scan Results XML file
-26. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
-27. [**zap-mapper**] - OWASP ZAP results JSON
+1.  [**anchore-grype-mapper**] - Anchore Grype container security scanning results file
+2.  [**asff-mapper**] - AWS Security Finding Format JSON file, Prowler-derived AWS Security Finding Format results from concatenated JSON blobs, and Trivy-derived AWS Security Finding Format results from concatenated JSON blobs
+3.  [**aws-config-mapper**] - AWS Config
+4.  [**burpsuite-mapper**] - BurpSuite Pro XML file
+5.  [**caat-mapper**] - Compliance Assessment and Audit Tracking (CAAT) file
+6.  [**checklist-mapper**] - Checlist Mapper format
+7.  [**conveyor-mapper**] - Conveyor JSON file
+8.  [**cyclonedx-sbom-mapper**] - CycloneDX SBOM JSON file
+9.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
+10. [**fortify-mapper**] - Fortify results FVDL file
+11. [**gosec-mapper**] - gosec results JSON file
+12. [**ionchannel-mapper**] - SBOM data from Ion Channel
+13. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
+14. [**msft-secure-mapper**] - Microsoft Secure Score results file
+15. [**nessus-mapper**] - Nessus XML results file
+16. [**netsparker-mapper**] - Netsparker XML results file
+17. [**nikto-mapper**] - Nikto results JSON file
+18. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
+19. [**sarif-mapper**] - SARIF JSON file
+20. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
+21. [**snyk-mapper**] - Snyk results JSON file
+22. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
+23. [**splunk-mapper**] - Splunk instance
+24. [**trufflehog-mapper**] - Trufflehog results json file
+25. [**twistlock-mapper**] - Twistlock CLI output file
+26. [**veracode-mapper**] - Veracode Scan Results XML file
+27. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+28. [**zap-mapper**] - OWASP ZAP results JSON
 
 ### NOTICE
 
