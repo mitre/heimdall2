@@ -41,7 +41,10 @@ function skipSeverityNegligibleOrUnknown(controls: unknown[]): unknown[] {
 
 function description(data: Record<string, unknown>): string {
   const vulnerability = data.vulnerability as Record<string, unknown>;
-  const relatedVulnerabilities = data.relatedVulnerabilities as Record<string,unknown>[];
+  const relatedVulnerabilities = data.relatedVulnerabilities as Record<
+    string,
+    unknown
+  >[];
   if (!vulnerability.description && relatedVulnerabilities.length > 0) {
     return relatedVulnerabilities.filter(
       (relatedVulnerability) => relatedVulnerability.id === vulnerability.id
@@ -52,16 +55,17 @@ function description(data: Record<string, unknown>): string {
   return 'no description found';
 }
 
-
 export class AnchoreGrypeMapper extends BaseConverter {
   withRaw: boolean;
   metadata: Record<string, unknown>;
-  
-  controlMatches(matchesPath: string, idTransformer: (value: any) => unknown, impactTransformer: (value: any) => unknown, resultMessageTransformer: (value: any) => unknown): MappedTransform<
-  ExecJSON.Control & ILookupPath,
-  ILookupPath
-> {
-  return {
+
+  controlMatches(
+    matchesPath: string,
+    idTransformer: (value: any) => unknown,
+    impactTransformer: (value: any) => unknown,
+    resultMessageTransformer: (value: any) => unknown
+  ): MappedTransform<ExecJSON.Control & ILookupPath, ILookupPath> {
+    return {
       path: matchesPath,
       key: 'id',
       tags: {
@@ -95,10 +99,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
             string,
             unknown
           >[];
-          const relatedVulnerabilities = _.get(
-            data,
-            'relatedVulnerabilities'
-          );
+          const relatedVulnerabilities = _.get(data, 'relatedVulnerabilities');
           let relatedVulnerabilitiesUrls = [] as unknown as Record<
             string,
             unknown
@@ -106,10 +107,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
           if (relatedVulnerabilities) {
             relatedVulnerabilitiesUrls = (
               relatedVulnerabilities as Record<string, unknown>[]
-            ).map((element) => element.urls) as Record<
-              string,
-              unknown
-            >[];
+            ).map((element) => element.urls) as Record<string, unknown>[];
           }
           return (
             vuln_urls.concat(
@@ -155,15 +153,11 @@ export class AnchoreGrypeMapper extends BaseConverter {
           message: {
             transformer: resultMessageTransformer
           },
-          start_time: _.get(
-            this.metadata,
-            'descriptor.timestamp'
-          ) as string
+          start_time: _.get(this.metadata, 'descriptor.timestamp') as string
         }
       ]
-    }
+    };
   }
-
 
   mapping(): MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -196,14 +190,24 @@ export class AnchoreGrypeMapper extends BaseConverter {
           status: 'loaded',
           controls: [
             {
-              ...this.controlMatches('wrapper.matches', (data: Record<string, unknown>): string =>
-                `Grype/${_.get(data, 'vulnerability.id')}`, impactMapping(IMPACT_MAPPING), (data: Record<string, unknown>): string =>
-                  `${JSON.stringify(_.get(data, 'artifact'), null, 2)}`)  
+              ...this.controlMatches(
+                'wrapper.matches',
+                (data: Record<string, unknown>): string =>
+                  `Grype/${_.get(data, 'vulnerability.id')}`,
+                impactMapping(IMPACT_MAPPING),
+                (data: Record<string, unknown>): string =>
+                  `${JSON.stringify(_.get(data, 'artifact'), null, 2)}`
+              )
             },
             {
-              ...this.controlMatches('wrapper.ignoredMatches', (data: Record<string, unknown>): string =>
-                `Grype-Ignored-Match/${_.get(data, 'vulnerability.id')}`, ()=>0, (data: Record<string, unknown>): string =>
-                `This finding is ignored due to the following applied ignored rules:\n${JSON.stringify(_.get(data, 'appliedIgnoreRules'), null, 2)}\nArtifact Information:\n${JSON.stringify(_.get(data, 'artifact'), null, 2)}`)
+              ...this.controlMatches(
+                'wrapper.ignoredMatches',
+                (data: Record<string, unknown>): string =>
+                  `Grype-Ignored-Match/${_.get(data, 'vulnerability.id')}`,
+                () => 0,
+                (data: Record<string, unknown>): string =>
+                  `This finding is ignored due to the following applied ignored rules:\n${JSON.stringify(_.get(data, 'appliedIgnoreRules'), null, 2)}\nArtifact Information:\n${JSON.stringify(_.get(data, 'artifact'), null, 2)}`
+              )
             }
           ],
           sha256: ''
