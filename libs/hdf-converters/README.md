@@ -5,29 +5,35 @@
 OHDF Converters supplies several methods to convert various types of security tool data to and from the OHDF standard. OHDF Converters can be used in a variety of tools, and is currently well integrated with Heimdall itself, and the [SAF CLI](https://github.com/mitre/saf).
 
 ## Supported Formats
-1.  [**asff-mapper**] - AWS Security Finding Format JSON file, Prowler-derived AWS Security Finding Format results from concatenated JSON blobs, and Trivy-derived AWS Security Finding Format results from concatenated JSON blobs
-2.  [**aws-config-mapper**] - AWS Config
-3.  [**burpsuite-mapper**] - BurpSuite Pro XML file
-4.  [**caat-mapper**] - Compliance Assessment and Audit Tracking (CAAT) file
-5.  [**checklist-mapper**] - Checlist Mapper format
-6.  [**conveyor-mapper**] - Conveyor JSON file
-7.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
-8.  [**fortify-mapper**] - Fortify results FVDL file
-9.  [**ionchannel-mapper**] - SBOM data from Ion Channel
-10. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
-11. [**nessus-mapper**] - Nessus XML results file
-12. [**netsparker-mapper**] - Netsparker XML results file
-13. [**nikto-mapper**] - Nikto results JSON file
-14. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
-15. [**sarif-mapper**] - SARIF JSON file
-16. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
-17. [**snyk-mapper**] - Snyk results JSON file
-18. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
-19. [**splunk-mapper**] - Splunk instance
-20. [**twistlock-mapper**] - Twistlock CLI output file
-21. [**veracode-mapper**] - Veracode Scan Results XML file
-22. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
-23. [**zap-mapper**] - OWASP ZAP results JSON
+
+1.  [**anchore-grype-mapper**] - Anchore Grype container security scanning results file
+2.  [**asff-mapper**] - AWS Security Finding Format JSON file, Prowler-derived AWS Security Finding Format results from concatenated JSON blobs, and Trivy-derived AWS Security Finding Format results from concatenated JSON blobs
+3.  [**aws-config-mapper**] - AWS Config
+4.  [**burpsuite-mapper**] - BurpSuite Pro XML file
+5.  [**caat-mapper**] - Compliance Assessment and Audit Tracking (CAAT) file
+6.  [**checklist-mapper**] - Checlist Mapper format
+7.  [**conveyor-mapper**] - Conveyor JSON file
+8.  [**cyclonedx-sbom-mapper**] - CycloneDX SBOM JSON file
+9.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
+10. [**fortify-mapper**] - Fortify results FVDL file
+11. [**gosec-mapper**] - gosec results JSON file
+12. [**ionchannel-mapper**] - SBOM data from Ion Channel
+13. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
+14. [**msft-secure-mapper**] - Microsoft Secure Score results file
+15. [**nessus-mapper**] - Nessus XML results file
+16. [**netsparker-mapper**] - Netsparker XML results file
+17. [**nikto-mapper**] - Nikto results JSON file
+18. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
+19. [**sarif-mapper**] - SARIF JSON file
+20. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
+21. [**snyk-mapper**] - Snyk results JSON file
+22. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
+23. [**splunk-mapper**] - Splunk instance
+24. [**trufflehog-mapper**] - Trufflehog results json file
+25. [**twistlock-mapper**] - Twistlock CLI output file
+26. [**veracode-mapper**] - Veracode Scan Results XML file
+27. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+28. [**zap-mapper**] - OWASP ZAP results JSON
 
 ### NOTICE
 
@@ -45,4 +51,4 @@ This software was produced for the U. S. Government under Contract Number HHSM-5
 
 No other use other than that granted to the U. S. Government, or to those acting on behalf of the U. S. Government under that Clause is authorized without the express written permission of The MITRE Corporation.
 
-For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA  22102-7539, (703) 983-6000.
+For further information, please contact The MITRE Corporation, Contracts Management Office, 7515 Colshire Drive, McLean, VA 22102-7539, (703) 983-6000.

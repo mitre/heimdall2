@@ -30,14 +30,17 @@
               <v-card-text class="text-h7">
                 <ul>
                   <li>InSpec/Heimdall Data Format</li>
+                  <li>Anchore Grype</li>
                   <li>AWS Security Finding Format (ASFF)</li>
                   <li>Burp Suite</li>
                   <li>Checklist</li>
+                  <li>CycloneDX Software Bill of Materials (SBOM)</li>
                   <li>DBProtect</li>
                   <li>Fortify</li>
-                  <li>Golang Security Checker (GoSec)</li>
+                  <li>Golang Security Checker (gosec)</li>
                   <li>Ion Channel</li>
                   <li>JFrog Xray</li>
+                  <li>Microsoft Secure Score</li>
                   <li>Nessus</li>
                   <li>Netsparker</li>
                   <li>Nikto</li>
@@ -47,6 +50,7 @@
                   <li>Scoutsuite</li>
                   <li>Snyk</li>
                   <li>Tenable (API)</li>
+                  <li>Trufflehog</li>
                   <li>Twistlock</li>
                   <li>Veracode</li>
                   <li>XCCDF Results (native OpenSCAP and SCC outputs)</li>
