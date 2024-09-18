@@ -33,7 +33,7 @@ import {
   TwistlockResults,
   VeracodeMapper,
   XCCDFResultsMapper,
-  ZapMapper,
+  ZapMapper
 } from '@mitre/hdf-converters';
 import axios from 'axios';
 import {
@@ -284,8 +284,8 @@ export class InspecIntake extends VuexModule {
         return new TrufflehogResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GRYPE:
         return new AnchoreGrypeMapper(convertOptions.data).toHdf();
-        case INPUT_TYPES.NEUVECTOR:
-          return new NeuvectorMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.NEUVECTOR:
+        return new NeuvectorMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
