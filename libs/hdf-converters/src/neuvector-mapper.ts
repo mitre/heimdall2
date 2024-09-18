@@ -41,14 +41,18 @@ export class NeuvectorMapper extends BaseConverter {
         status: 'loaded', //Insert data
         controls: [
           {
+            path: 'report.Vulnerabilities',
             key: 'id',
-            tags: {}, //Insert data
+            tags: {
+              nist: ['RA-5', 'SA-10'],
+              cve: {path: 'name'}
+            }, //Insert data
             descriptions: [], //Insert data
             refs: [], //Insert data
             source_location: {}, //Insert data
             title: null, //Insert data
-            id: '', //Insert data
-            desc: null, //Insert data
+            id: {path: 'name'}, //Insert data
+            desc: {path: 'description'}, //Insert data
             impact: 0, //Insert data
             code: null, //Insert data
             results: [
