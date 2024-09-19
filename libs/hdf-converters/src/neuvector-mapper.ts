@@ -22,6 +22,12 @@ function nistTags(cweTags: string[]): string[] {
   return CWE_NIST_MAPPING.nistFilter(cweTags, DEFAULT_NIST_TAGS);
 }
 
+function cvssTag(vectors: string): string[] {
+  const regex = /CVSS:(\d+.\d)/;
+  const tag = vectors.match(regex)?.[1];
+  return tag ? [tag] : [];
+}
+
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
   ['high', 0.7],
@@ -74,11 +80,15 @@ export class NeuvectorMapper extends BaseConverter {
                 path: 'description',
                 transformer: (description: string) =>
                   nistTags(cweTag(description))
+              },
+              cvss: {
+                path: 'vectors_v3',
+                transformer: cvssTag
               }
             }, //Insert data
             descriptions: [], //Insert data
             refs: [], //Insert data
-            source_location: {}, //Insert data
+            source_location: {ref: {path: 'file_name'}}, //Insert data
             title: null, //Insert data
             id: {path: 'name'}, //Insert data
             desc: {path: 'description'}, //Insert data
