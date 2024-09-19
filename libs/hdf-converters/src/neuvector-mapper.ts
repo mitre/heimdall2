@@ -93,7 +93,11 @@ export class NeuvectorMapper extends BaseConverter {
                 code_desc: '', //Insert data
                 message: {
                   transformer: (data: Record<string, any>) => {
-                    return `Vulnerable package ${data.package_name} is at version ${data.package_version}. Update to fixed version ${data.fixed_version}.`;
+                    const {package_name, package_version, fixed_version} = data;
+                    if (!fixed_version) {
+                      return `Vulnerable package ${package_name} is at version ${package_version}. No fixed version available.`;
+                    }
+                    return `Vulnerable package ${package_name} is at version ${package_version}. Update to fixed version ${fixed_version}.`;
                   }
                 }, //Insert data
                 run_time: null, //Insert data
