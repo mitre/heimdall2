@@ -7,6 +7,27 @@ import {
   impactMapping,
   MappedTransform
 } from './base-converter';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './utils/global';
+import {CweNistMapping} from './mappings/CweNistMapping';
+
+const CWE_NIST_MAPPING = new CweNistMapping();
+const DEFAULT_NIST_TAGS = ['SI-10', 'RA-5'];
+
+function cweTag(description: string): string[] {
+  const regex = /CWE-\d{3}}/g;
+  return description.match(regex) || [];
+}
+
+function nistTags(cweTags: string[]): string[] {
+  return CWE_NIST_MAPPING.nistFilter(cweTags, DEFAULT_NIST_TAGS);
+}
+
+const IMPACT_MAPPING: Map<string, number> = new Map([
+  ['Critical', 0.9],
+  ['High', 0.7],
+  ['Medium', 0.5],
+  ['Low', 0.3]
+]);
 
 export class NeuvectorMapper extends BaseConverter {
   withRaw: boolean;
@@ -41,11 +62,19 @@ export class NeuvectorMapper extends BaseConverter {
         status: 'loaded', //Insert data
         controls: [
           {
-            path: 'report.Vulnerabilities',
+            path: 'report.vulnerabilities',
             key: 'id',
             tags: {
-              nist: ['RA-5', 'SA-10'],
-              cve: {path: 'name'}
+              cve: {path: 'name'},
+              cwe: {
+                path: 'description',
+                transformer: cweTag
+              },
+              nist: {
+                path: 'description',
+                transformer: (description: string) =>
+                  nistTags(cweTag(description))
+              }
             }, //Insert data
             descriptions: [], //Insert data
             refs: [], //Insert data
@@ -53,7 +82,10 @@ export class NeuvectorMapper extends BaseConverter {
             title: null, //Insert data
             id: {path: 'name'}, //Insert data
             desc: {path: 'description'}, //Insert data
-            impact: 0, //Insert data
+            impact: {
+              path: 'severity',
+              transformer: impactMapping(IMPACT_MAPPING)
+            }, //Insert data
             code: null, //Insert data
             results: [
               {
