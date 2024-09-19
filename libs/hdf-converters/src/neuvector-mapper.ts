@@ -23,10 +23,10 @@ function nistTags(cweTags: string[]): string[] {
 }
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
-  ['Critical', 0.9],
-  ['High', 0.7],
-  ['Medium', 0.5],
-  ['Low', 0.3]
+  ['critical', 0.9],
+  ['high', 0.7],
+  ['medium', 0.5],
+  ['low', 0.3]
 ]);
 
 export class NeuvectorMapper extends BaseConverter {
@@ -91,7 +91,11 @@ export class NeuvectorMapper extends BaseConverter {
               {
                 status: ExecJSON.ControlResultStatus.Failed, //Insert data
                 code_desc: '', //Insert data
-                message: null, //Insert data
+                message: {
+                  transformer: (data: Record<string, any>) => {
+                    return `Vulnerable package ${data.package_name} is at version ${data.package_version}. Update to fixed version ${data.fixed_version}.`;
+                  }
+                }, //Insert data
                 run_time: null, //Insert data
                 start_time: '' //Insert data
               }
