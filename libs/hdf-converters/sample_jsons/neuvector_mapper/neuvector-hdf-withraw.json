@@ -31,7 +31,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -60,7 +61,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -89,7 +91,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -118,7 +121,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -147,7 +151,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -176,7 +181,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -205,7 +211,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -234,7 +241,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -263,7 +271,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -292,7 +301,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -321,7 +331,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -350,7 +361,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -379,7 +391,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -408,7 +421,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -437,7 +451,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -466,7 +481,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -495,7 +511,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -524,7 +541,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -553,7 +571,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -582,7 +601,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -611,7 +631,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -640,7 +661,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -669,7 +691,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -698,7 +721,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -727,7 +751,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -756,7 +781,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -785,7 +811,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -814,7 +841,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -843,7 +871,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -872,7 +901,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -901,7 +931,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -930,7 +961,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -959,7 +991,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -988,7 +1021,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1017,7 +1051,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1046,7 +1081,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1075,7 +1111,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1104,7 +1141,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1133,7 +1171,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1162,7 +1201,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1191,7 +1231,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1220,7 +1261,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1249,7 +1291,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1278,7 +1321,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1307,7 +1351,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1336,7 +1381,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1365,7 +1411,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1394,7 +1441,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1423,7 +1471,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1452,7 +1501,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1481,7 +1531,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1510,7 +1561,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1539,7 +1591,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1568,7 +1621,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1597,7 +1651,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1626,7 +1681,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1655,7 +1711,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1684,7 +1741,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1713,7 +1771,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1742,7 +1801,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1771,7 +1831,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1800,7 +1861,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1829,7 +1891,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1858,7 +1921,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1887,7 +1951,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1916,7 +1981,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1945,7 +2011,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1974,7 +2041,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2003,7 +2071,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2032,7 +2101,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2061,7 +2131,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2090,7 +2161,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2119,7 +2191,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2148,7 +2221,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2177,7 +2251,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2206,7 +2281,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2235,7 +2311,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2264,7 +2341,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2293,7 +2371,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2322,7 +2401,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2351,7 +2431,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2380,7 +2461,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2409,7 +2491,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2438,7 +2521,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2467,7 +2551,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2496,7 +2581,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2525,7 +2611,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2554,7 +2641,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2583,7 +2671,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2612,7 +2701,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2641,7 +2731,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2670,7 +2761,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2699,7 +2791,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2728,7 +2821,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2757,7 +2851,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2786,7 +2881,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2815,7 +2911,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2844,7 +2941,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2873,7 +2971,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2902,7 +3001,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2931,7 +3031,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2960,7 +3061,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2989,7 +3091,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3018,7 +3121,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3047,7 +3151,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3076,7 +3181,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3105,7 +3211,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3134,7 +3241,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3163,7 +3271,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3192,7 +3301,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3221,7 +3331,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3250,7 +3361,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3279,7 +3391,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3308,7 +3421,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3337,7 +3451,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3366,7 +3481,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3395,7 +3511,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3424,7 +3541,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3453,7 +3571,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3482,7 +3601,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3511,7 +3631,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3540,7 +3661,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3569,7 +3691,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3598,7 +3721,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3627,7 +3751,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3656,7 +3781,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3685,7 +3811,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3714,7 +3841,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3743,7 +3871,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3772,7 +3901,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3801,7 +3931,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3830,7 +3961,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3859,7 +3991,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3888,7 +4021,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3917,7 +4051,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3946,7 +4081,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -3975,7 +4111,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4004,7 +4141,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4033,7 +4171,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4062,7 +4201,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4091,7 +4231,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4120,7 +4261,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4145,11 +4287,13 @@
         {
           "tags": {
             "cve": "CVE-2022-24839",
-            "cwe": [],
+            "cwe": [
+              "CWE-400"
+            ],
             "nist": [
-              "SI-10",
-              "RA-5"
-            ]
+              "SI-10"
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4178,7 +4322,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4207,7 +4352,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4236,7 +4382,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -4265,7 +4412,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -4294,7 +4442,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4323,7 +4472,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4352,7 +4502,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4381,7 +4532,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4410,7 +4562,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4439,7 +4592,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4468,7 +4622,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4493,11 +4648,13 @@
         {
           "tags": {
             "cve": "CVE-2020-25613",
-            "cwe": [],
+            "cwe": [
+              "CWE-444"
+            ],
             "nist": [
-              "SI-10",
-              "RA-5"
-            ]
+              "SI-10"
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4526,7 +4683,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4555,7 +4713,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4584,7 +4743,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4613,7 +4773,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4642,7 +4803,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4671,7 +4833,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4700,7 +4863,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4729,7 +4893,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4758,7 +4923,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4787,7 +4953,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4816,7 +4983,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4845,7 +5013,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4874,7 +5043,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -4903,7 +5073,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -4932,7 +5103,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -4961,7 +5133,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": "3.1"
           },
           "descriptions": [],
           "refs": [],
@@ -4990,7 +5163,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5019,7 +5193,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5048,7 +5223,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5077,7 +5253,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5106,7 +5283,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5135,7 +5313,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5164,7 +5343,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5193,7 +5373,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5222,7 +5403,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5251,7 +5433,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5280,7 +5463,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5309,7 +5493,8 @@
             "nist": [
               "SI-10",
               "RA-5"
-            ]
+            ],
+            "cvss": ""
           },
           "descriptions": [],
           "refs": [],
@@ -5332,7 +5517,7 @@
           ]
         }
       ],
-      "sha256": "79085d7247a5e42f858d2bd5f4f8f317fd282e79df582a542fa61a3b53873fd8"
+      "sha256": "102698d23b3875700a7a82e2d79e12c9d116983f551e382127d598784bbf94b5"
     }
   ],
   "passthrough": {
