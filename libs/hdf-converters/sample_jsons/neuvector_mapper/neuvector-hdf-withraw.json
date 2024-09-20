@@ -32,7 +32,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -62,7 +63,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -92,7 +94,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -122,7 +125,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -152,7 +156,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -182,7 +187,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -212,7 +218,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -242,7 +249,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -272,7 +280,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -302,7 +311,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -332,7 +342,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -362,7 +373,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -392,7 +404,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -422,7 +435,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -452,7 +466,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -482,7 +497,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -512,7 +528,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -542,7 +559,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -572,7 +590,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -602,7 +621,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -632,7 +652,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -662,7 +683,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -692,7 +714,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -722,7 +745,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -752,7 +776,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -782,7 +807,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -812,7 +838,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -842,7 +869,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -872,7 +900,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -902,7 +931,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -932,7 +962,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -962,7 +993,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -992,7 +1024,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1022,7 +1055,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1052,7 +1086,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1082,7 +1117,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1112,7 +1148,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1142,7 +1179,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1172,7 +1210,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1202,7 +1241,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1232,7 +1272,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1262,7 +1303,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1292,7 +1334,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1322,7 +1365,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1352,7 +1396,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1382,7 +1427,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1412,7 +1458,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1442,7 +1489,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1472,7 +1520,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1502,7 +1551,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1532,7 +1582,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1562,7 +1613,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1592,7 +1644,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1622,7 +1675,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1652,7 +1706,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1682,7 +1737,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1712,7 +1768,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1742,7 +1799,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1772,7 +1830,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1802,7 +1861,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1832,7 +1892,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1862,7 +1923,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1892,7 +1954,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1922,7 +1985,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1952,7 +2016,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -1982,7 +2047,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2012,7 +2078,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2042,7 +2109,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2072,7 +2140,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2102,7 +2171,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2132,7 +2202,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2162,7 +2233,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2192,7 +2264,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2222,7 +2295,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2252,7 +2326,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2282,7 +2357,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2312,7 +2388,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -2342,7 +2419,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2372,7 +2450,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2402,7 +2481,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2432,7 +2512,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2462,7 +2543,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2492,7 +2574,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2522,7 +2605,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2552,7 +2636,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2582,7 +2667,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2612,7 +2698,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2642,7 +2729,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2672,7 +2760,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2702,7 +2791,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2732,7 +2822,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2762,7 +2853,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2792,7 +2884,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2822,7 +2915,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2852,7 +2946,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2882,7 +2977,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2912,7 +3008,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2942,7 +3039,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -2972,7 +3070,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3002,7 +3101,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3032,7 +3132,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3062,7 +3163,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3092,7 +3194,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3122,7 +3225,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3152,7 +3256,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3182,7 +3287,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3212,7 +3318,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3242,7 +3349,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3272,7 +3380,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3302,7 +3411,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3332,7 +3442,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -3362,7 +3473,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -3392,7 +3504,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -3422,7 +3535,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -3452,7 +3566,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -3482,7 +3597,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -3512,7 +3628,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -3542,7 +3659,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -3572,7 +3690,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -3602,7 +3721,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -3632,7 +3752,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Critical"
           },
           "descriptions": [],
           "refs": [],
@@ -3662,7 +3783,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3692,7 +3814,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3722,7 +3845,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3752,7 +3876,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3782,7 +3907,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3812,7 +3938,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3842,7 +3969,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3872,7 +4000,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3902,7 +4031,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3932,7 +4062,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3962,7 +4093,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -3992,7 +4124,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4022,7 +4155,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4052,7 +4186,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4082,7 +4217,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4112,7 +4248,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4142,7 +4279,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4172,7 +4310,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4202,7 +4341,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4232,7 +4372,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4262,7 +4403,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4293,7 +4435,8 @@
             "nist": [
               "SI-10"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4323,7 +4466,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4353,7 +4497,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4383,7 +4528,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4413,7 +4559,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4443,7 +4590,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4473,7 +4621,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4503,7 +4652,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4533,7 +4683,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4563,7 +4714,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4593,7 +4745,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4623,7 +4776,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4654,7 +4808,8 @@
             "nist": [
               "SI-10"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "High"
           },
           "descriptions": [],
           "refs": [],
@@ -4684,7 +4839,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -4714,7 +4870,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -4744,7 +4901,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -4774,7 +4932,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -4804,7 +4963,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -4834,7 +4994,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -4864,7 +5025,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -4894,7 +5056,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -4924,7 +5087,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -4954,7 +5118,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -4984,7 +5149,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5014,7 +5180,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5044,7 +5211,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5074,7 +5242,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5104,7 +5273,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5134,7 +5304,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": "3.1"
+            "cvss": "3.1",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5164,7 +5335,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5194,7 +5366,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5224,7 +5397,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5254,7 +5428,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5284,7 +5459,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5314,7 +5490,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5344,7 +5521,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5374,7 +5552,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5404,7 +5583,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5434,7 +5614,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5464,7 +5645,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Medium"
           },
           "descriptions": [],
           "refs": [],
@@ -5494,7 +5676,8 @@
               "SI-10",
               "RA-5"
             ],
-            "cvss": ""
+            "cvss": "",
+            "severity": "Low"
           },
           "descriptions": [],
           "refs": [],
@@ -5517,7 +5700,7 @@
           ]
         }
       ],
-      "sha256": "102698d23b3875700a7a82e2d79e12c9d116983f551e382127d598784bbf94b5"
+      "sha256": "4bbc293450d19f26c7e3649fe6476646e0595ef10d005a9ade17dd24383757f4"
     }
   ],
   "passthrough": {
