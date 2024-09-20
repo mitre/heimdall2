@@ -156,6 +156,10 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3]
 ]);
 
+function cveIdMatches(cveName: string): (value: RESTModuleCve) => boolean {
+  return (cve: RESTModuleCve) => cve.name === cveName;
+}
+
 export class NeuvectorMapper extends BaseConverter {
   withRaw: boolean;
   rawData: NeuvectorScanJson;
@@ -202,7 +206,7 @@ export class NeuvectorMapper extends BaseConverter {
             path: 'report.vulnerabilities',
             key: 'id',
             tags: {
-              cve: {path: 'cves'},
+              cve: {path: 'name'},
               cwe: {
                 path: 'description',
                 transformer: cweTags
@@ -223,6 +227,13 @@ export class NeuvectorMapper extends BaseConverter {
                 path: 'package_name',
                 transformer: (packageName: string) =>
                   this.getModule(packageName)?.source
+              },
+              cve_status: {
+                path: 'name',
+                transformer: (name: string) =>
+                  this.rawData.report.modules
+                    ?.find((module) => module.cves?.find(cveIdMatches(name)))
+                    ?.cves?.find(cveIdMatches(name))?.status
               }
             }, //Insert data
             descriptions: [], //Insert data
