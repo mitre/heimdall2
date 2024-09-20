@@ -10,6 +10,7 @@ import {
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from './utils/global';
 
+/* Types are generated with Tygo, from original Golang source code to TypeScript. */
 type RESTVulnerability = {
   name: string;
   score: number /* float32 */;
@@ -120,7 +121,7 @@ type RESTScanLayer = {
   size: number /* int64 */;
 };
 
-type NeuvectorScanJson = {
+export type NeuvectorScanJson = {
   report: RESTScanRepoReport;
   error_message: string;
 };
