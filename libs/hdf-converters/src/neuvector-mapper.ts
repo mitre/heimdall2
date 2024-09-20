@@ -10,7 +10,7 @@ import {
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from './utils/global';
 
-/* Types are generated with Tygo, from original Golang source code to TypeScript. */
+/* Types are generated with Tygo, from original Golang source code to TypeScript, and tweaked to reflect actual outputted JSON. */
 type RESTVulnerability = {
   name: string;
   score: number /* float32 */;
