@@ -7,14 +7,10 @@ import {
   impactMapping,
   MappedTransform
 } from './base-converter';
-import {
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  filterString
-} from './utils/global';
 import {CweNistMapping} from './mappings/CweNistMapping';
+import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from './utils/global';
 
 const CWE_NIST_MAPPING = new CweNistMapping();
-const DEFAULT_NIST_TAGS = ['SI-10', 'RA-5'];
 
 function cweTags(description: string): string[] {
   const regex = /CWE-\d{3}/g;
@@ -25,7 +21,10 @@ function nistTags(cweTags: string[]): string[] {
   const identifiers = cweTags
     .map((tag) => tag.match(/\d{3}/g)?.[0] || [])
     .flat();
-  return CWE_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAGS);
+  return CWE_NIST_MAPPING.nistFilter(
+    identifiers,
+    DEFAULT_UPDATE_REMEDIATION_NIST_TAGS
+  );
 }
 
 function cvssTag(vectors: string): string {
@@ -90,6 +89,9 @@ export class NeuvectorMapper extends BaseConverter {
               cvss: {
                 path: 'vectors_v3',
                 transformer: cvssTag
+              },
+              severity: {
+                path: 'severity'
               }
             }, //Insert data
             descriptions: [], //Insert data
