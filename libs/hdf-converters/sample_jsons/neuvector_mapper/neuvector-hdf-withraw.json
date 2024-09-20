@@ -26,14 +26,17 @@
       "controls": [
         {
           "tags": {
-            "cve": "CVE-2021-36159",
+            "cve": [
+              "CVE-2021-36159"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -57,14 +60,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-25235",
+            "cve": [
+              "CVE-2022-25235"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -88,14 +94,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-22824",
+            "cve": [
+              "CVE-2022-22824"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -119,14 +128,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-45960",
+            "cve": [
+              "CVE-2021-45960"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -150,14 +162,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-25236",
+            "cve": [
+              "CVE-2022-25236"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -181,14 +196,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-22823",
+            "cve": [
+              "CVE-2022-22823"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -212,14 +230,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-25315",
+            "cve": [
+              "CVE-2022-25315"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -243,14 +264,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-22822",
+            "cve": [
+              "CVE-2022-22822"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -274,14 +298,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23852",
+            "cve": [
+              "CVE-2022-23852"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -305,14 +332,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-27404",
+            "cve": [
+              "CVE-2022-27404"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -336,14 +366,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-15900",
+            "cve": [
+              "CVE-2020-15900"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -367,14 +400,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-20232",
+            "cve": [
+              "CVE-2021-20232"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -398,14 +434,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-20231",
+            "cve": [
+              "CVE-2021-20231"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -429,14 +468,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-31535",
+            "cve": [
+              "CVE-2021-31535"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -460,14 +502,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-7774",
+            "cve": [
+              "CVE-2020-7774"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -491,14 +536,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22931",
+            "cve": [
+              "CVE-2021-22931"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -522,14 +570,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22930",
+            "cve": [
+              "CVE-2021-22930"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -553,14 +604,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3711",
+            "cve": [
+              "CVE-2021-3711"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -584,14 +638,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-37434",
+            "cve": [
+              "CVE-2022-37434"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -615,14 +672,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-30139",
+            "cve": [
+              "CVE-2021-30139"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -646,14 +706,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-42378",
+            "cve": [
+              "CVE-2021-42378"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -677,14 +740,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-42379",
+            "cve": [
+              "CVE-2021-42379"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -708,14 +774,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-42381",
+            "cve": [
+              "CVE-2021-42381"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -739,14 +808,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-42384",
+            "cve": [
+              "CVE-2021-42384"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -770,14 +842,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-42385",
+            "cve": [
+              "CVE-2021-42385"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -801,14 +876,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-42383",
+            "cve": [
+              "CVE-2021-42383"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -832,14 +910,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-42386",
+            "cve": [
+              "CVE-2021-42386"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -863,14 +944,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-28831",
+            "cve": [
+              "CVE-2021-28831"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -894,14 +978,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-42380",
+            "cve": [
+              "CVE-2021-42380"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -925,14 +1012,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-28391",
+            "cve": [
+              "CVE-2022-28391"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -956,14 +1046,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-42382",
+            "cve": [
+              "CVE-2021-42382"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -987,14 +1080,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-35492",
+            "cve": [
+              "CVE-2020-35492"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1018,14 +1114,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-24407",
+            "cve": [
+              "CVE-2022-24407"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1049,14 +1148,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-46143",
+            "cve": [
+              "CVE-2021-46143"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1080,14 +1182,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-22825",
+            "cve": [
+              "CVE-2022-22825"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1111,14 +1216,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-22826",
+            "cve": [
+              "CVE-2022-22826"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1142,14 +1250,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-22827",
+            "cve": [
+              "CVE-2022-22827"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1173,14 +1284,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-25314",
+            "cve": [
+              "CVE-2022-25314"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1204,14 +1318,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23990",
+            "cve": [
+              "CVE-2022-23990"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1235,14 +1352,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-27406",
+            "cve": [
+              "CVE-2022-27406"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1266,14 +1386,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-27405",
+            "cve": [
+              "CVE-2022-27405"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1297,14 +1420,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-20240",
+            "cve": [
+              "CVE-2021-20240"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1328,14 +1454,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-43618",
+            "cve": [
+              "CVE-2021-43618"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1359,14 +1488,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-29599",
+            "cve": [
+              "CVE-2020-29599"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1390,14 +1522,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3518",
+            "cve": [
+              "CVE-2021-3518"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1421,14 +1556,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3517",
+            "cve": [
+              "CVE-2021-3517"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1452,14 +1590,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23308",
+            "cve": [
+              "CVE-2022-23308"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1483,14 +1624,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-39537",
+            "cve": [
+              "CVE-2021-39537"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1514,14 +1658,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3580",
+            "cve": [
+              "CVE-2021-3580"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1545,14 +1692,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-39135",
+            "cve": [
+              "CVE-2021-39135"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1576,14 +1726,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-8277",
+            "cve": [
+              "CVE-2020-8277"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1607,14 +1760,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-21824",
+            "cve": [
+              "CVE-2022-21824"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1638,14 +1794,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-39134",
+            "cve": [
+              "CVE-2021-39134"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1669,14 +1828,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-37713",
+            "cve": [
+              "CVE-2021-37713"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1700,14 +1862,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22883",
+            "cve": [
+              "CVE-2021-22883"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1731,14 +1896,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-8265",
+            "cve": [
+              "CVE-2020-8265"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1762,14 +1930,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-44531",
+            "cve": [
+              "CVE-2021-44531"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1793,14 +1964,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-37701",
+            "cve": [
+              "CVE-2021-37701"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1824,14 +1998,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-37712",
+            "cve": [
+              "CVE-2021-37712"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1855,14 +2032,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22884",
+            "cve": [
+              "CVE-2021-22884"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1886,14 +2066,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-25692",
+            "cve": [
+              "CVE-2020-25692"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1917,14 +2100,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-25709",
+            "cve": [
+              "CVE-2020-25709"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1948,14 +2134,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-25710",
+            "cve": [
+              "CVE-2020-25710"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -1979,14 +2168,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-27212",
+            "cve": [
+              "CVE-2021-27212"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2010,14 +2202,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-23840",
+            "cve": [
+              "CVE-2021-23840"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2041,14 +2236,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-0778",
+            "cve": [
+              "CVE-2022-0778"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2072,14 +2270,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3450",
+            "cve": [
+              "CVE-2021-3450"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2103,14 +2304,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3712",
+            "cve": [
+              "CVE-2021-3712"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2134,14 +2338,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-29363",
+            "cve": [
+              "CVE-2020-29363"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2165,14 +2372,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-29361",
+            "cve": [
+              "CVE-2020-29361"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2196,14 +2406,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-25696",
+            "cve": [
+              "CVE-2020-25696"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2227,14 +2440,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-25695",
+            "cve": [
+              "CVE-2020-25695"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2258,14 +2474,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-23214",
+            "cve": [
+              "CVE-2021-23214"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2289,14 +2508,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-25694",
+            "cve": [
+              "CVE-2020-25694"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2320,14 +2542,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-32027",
+            "cve": [
+              "CVE-2021-32027"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2351,14 +2576,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-1271",
+            "cve": [
+              "CVE-2022-1271"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2382,14 +2610,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2018-25032",
+            "cve": [
+              "CVE-2018-25032"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2413,14 +2644,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-36217",
+            "cve": [
+              "CVE-2021-36217"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2444,14 +2678,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3468",
+            "cve": [
+              "CVE-2021-3468"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2475,14 +2712,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-42374",
+            "cve": [
+              "CVE-2021-42374"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2506,14 +2746,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3672",
+            "cve": [
+              "CVE-2021-3672"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2537,14 +2780,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2019-6462",
+            "cve": [
+              "CVE-2019-6462"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2568,14 +2814,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-25313",
+            "cve": [
+              "CVE-2022-25313"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2599,14 +2848,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-29385",
+            "cve": [
+              "CVE-2020-29385"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2630,14 +2882,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-27560",
+            "cve": [
+              "CVE-2020-27560"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2661,14 +2916,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-20205",
+            "cve": [
+              "CVE-2021-20205"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2692,14 +2950,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-29824",
+            "cve": [
+              "CVE-2022-29824"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2723,14 +2984,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3537",
+            "cve": [
+              "CVE-2021-3537"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2754,14 +3018,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3541",
+            "cve": [
+              "CVE-2021-3541"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2785,14 +3052,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-28928",
+            "cve": [
+              "CVE-2020-28928"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2816,14 +3086,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22960",
+            "cve": [
+              "CVE-2021-22960"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2847,14 +3120,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22959",
+            "cve": [
+              "CVE-2021-22959"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2878,14 +3154,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-44533",
+            "cve": [
+              "CVE-2021-44533"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2909,14 +3188,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-44532",
+            "cve": [
+              "CVE-2021-44532"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2940,14 +3222,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22939",
+            "cve": [
+              "CVE-2021-22939"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -2971,14 +3256,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-8287",
+            "cve": [
+              "CVE-2020-8287"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3002,14 +3290,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22918",
+            "cve": [
+              "CVE-2021-22918"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3033,14 +3324,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3449",
+            "cve": [
+              "CVE-2021-3449"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3064,14 +3358,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-23839",
+            "cve": [
+              "CVE-2021-23839"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3095,14 +3392,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-1971",
+            "cve": [
+              "CVE-2020-1971"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3126,14 +3426,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-23841",
+            "cve": [
+              "CVE-2021-23841"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3157,14 +3460,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-29362",
+            "cve": [
+              "CVE-2020-29362"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3188,14 +3494,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-32028",
+            "cve": [
+              "CVE-2021-32028"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3219,14 +3528,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-20229",
+            "cve": [
+              "CVE-2021-20229"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3250,14 +3562,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3393",
+            "cve": [
+              "CVE-2021-3393"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3281,14 +3596,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-32029",
+            "cve": [
+              "CVE-2021-32029"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3312,14 +3630,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3677",
+            "cve": [
+              "CVE-2021-3677"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3343,14 +3664,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-23222",
+            "cve": [
+              "CVE-2021-23222"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3374,14 +3698,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-0563",
+            "cve": [
+              "CVE-2022-0563"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3405,14 +3732,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3995",
+            "cve": [
+              "CVE-2021-3995"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3436,14 +3766,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-3996",
+            "cve": [
+              "CVE-2021-3996"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "alpine:3.12.1"
           },
           "descriptions": [],
           "refs": [],
@@ -3467,14 +3800,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-32224",
+            "cve": [
+              "CVE-2022-32224"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3498,14 +3834,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-21831",
+            "cve": [
+              "CVE-2022-21831"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3529,14 +3868,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-36327",
+            "cve": [
+              "CVE-2020-36327"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3560,14 +3902,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-43809",
+            "cve": [
+              "CVE-2021-43809"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3591,14 +3936,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2016-7954",
+            "cve": [
+              "CVE-2016-7954"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3622,14 +3970,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-32511",
+            "cve": [
+              "CVE-2022-32511"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3653,14 +4004,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-25765",
+            "cve": [
+              "CVE-2022-25765"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3684,14 +4038,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-24790",
+            "cve": [
+              "CVE-2022-24790"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3715,14 +4072,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-30123",
+            "cve": [
+              "CVE-2022-30123"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3746,14 +4106,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-27280",
+            "cve": [
+              "CVE-2024-27280"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Critical"
+            "severity": "Critical",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3777,14 +4140,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22885",
+            "cve": [
+              "CVE-2021-22885"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3808,14 +4174,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22904",
+            "cve": [
+              "CVE-2021-22904"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3839,14 +4208,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2023-22795",
+            "cve": [
+              "CVE-2023-22795"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3870,14 +4242,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23633",
+            "cve": [
+              "CVE-2022-23633"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3901,14 +4276,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2023-22792",
+            "cve": [
+              "CVE-2023-22792"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3932,14 +4310,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2023-23913",
+            "cve": [
+              "CVE-2023-23913"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3963,14 +4344,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-44566",
+            "cve": [
+              "CVE-2022-44566"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -3994,14 +4378,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2023-22796",
+            "cve": [
+              "CVE-2023-22796"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4025,14 +4412,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-32740",
+            "cve": [
+              "CVE-2021-32740"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4056,14 +4446,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2019-3881",
+            "cve": [
+              "CVE-2019-3881"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4087,14 +4480,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-21305",
+            "cve": [
+              "CVE-2021-21305"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4118,14 +4514,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-41817",
+            "cve": [
+              "CVE-2021-41817"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4149,14 +4548,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2023-22799",
+            "cve": [
+              "CVE-2023-22799"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4180,14 +4582,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-10663",
+            "cve": [
+              "CVE-2020-10663"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4211,14 +4616,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23514",
+            "cve": [
+              "CVE-2022-23514"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4242,14 +4650,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23516",
+            "cve": [
+              "CVE-2022-23516"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4273,14 +4684,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-24836",
+            "cve": [
+              "CVE-2022-24836"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4304,14 +4718,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23437",
+            "cve": [
+              "CVE-2022-23437"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4335,14 +4752,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-29181",
+            "cve": [
+              "CVE-2022-29181"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4366,14 +4786,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-30560",
+            "cve": [
+              "CVE-2021-30560"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4397,14 +4820,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-41098",
+            "cve": [
+              "CVE-2021-41098"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4428,7 +4854,9 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-24839",
+            "cve": [
+              "CVE-2022-24839"
+            ],
             "cwe": [
               "CWE-400"
             ],
@@ -4436,7 +4864,8 @@
               "SI-10"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4460,14 +4889,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23634",
+            "cve": [
+              "CVE-2022-23634"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4491,14 +4923,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-29509",
+            "cve": [
+              "CVE-2021-29509"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4522,14 +4957,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-44571",
+            "cve": [
+              "CVE-2022-44571"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4553,14 +4991,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-44572",
+            "cve": [
+              "CVE-2022-44572"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4584,14 +5025,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2023-27530",
+            "cve": [
+              "CVE-2023-27530"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4615,14 +5059,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-44570",
+            "cve": [
+              "CVE-2022-44570"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4646,14 +5093,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-30122",
+            "cve": [
+              "CVE-2022-30122"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4677,14 +5127,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23517",
+            "cve": [
+              "CVE-2022-23517"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4708,14 +5161,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-31799",
+            "cve": [
+              "CVE-2021-31799"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4739,14 +5195,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-28965",
+            "cve": [
+              "CVE-2021-28965"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4770,14 +5229,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-31163",
+            "cve": [
+              "CVE-2022-31163"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4801,7 +5263,9 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-25613",
+            "cve": [
+              "CVE-2020-25613"
+            ],
             "cwe": [
               "CWE-444"
             ],
@@ -4809,7 +5273,8 @@
               "SI-10"
             ],
             "cvss": "",
-            "severity": "High"
+            "severity": "High",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4833,14 +5298,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-22577",
+            "cve": [
+              "CVE-2022-22577"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4864,14 +5332,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-27777",
+            "cve": [
+              "CVE-2022-27777"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4895,14 +5366,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-15169",
+            "cve": [
+              "CVE-2020-15169"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4926,14 +5400,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-22880",
+            "cve": [
+              "CVE-2021-22880"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4957,14 +5434,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-26144",
+            "cve": [
+              "CVE-2024-26144"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -4988,14 +5468,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-21288",
+            "cve": [
+              "CVE-2021-21288"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5019,14 +5502,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2023-49090",
+            "cve": [
+              "CVE-2023-49090"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5050,14 +5536,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-29034",
+            "cve": [
+              "CVE-2024-29034"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5081,14 +5570,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23515",
+            "cve": [
+              "CVE-2022-23515"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5112,14 +5604,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2020-26247",
+            "cve": [
+              "CVE-2020-26247"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5143,14 +5638,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2023-40175",
+            "cve": [
+              "CVE-2023-40175"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5174,14 +5672,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-21647",
+            "cve": [
+              "CVE-2024-21647"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5205,14 +5706,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-26141",
+            "cve": [
+              "CVE-2024-26141"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5236,14 +5740,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2023-27539",
+            "cve": [
+              "CVE-2023-27539"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5267,14 +5774,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-25126",
+            "cve": [
+              "CVE-2024-25126"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5298,14 +5808,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-26146",
+            "cve": [
+              "CVE-2024-26146"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "3.1",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5329,14 +5842,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2014-0081",
+            "cve": [
+              "CVE-2014-0081"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5360,14 +5876,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23518",
+            "cve": [
+              "CVE-2022-23518"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5391,14 +5910,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-32209",
+            "cve": [
+              "CVE-2022-32209"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5422,14 +5944,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23519",
+            "cve": [
+              "CVE-2022-23519"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5453,14 +5978,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2022-23520",
+            "cve": [
+              "CVE-2022-23520"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5484,14 +6012,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-27281",
+            "cve": [
+              "CVE-2024-27281"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5515,14 +6046,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-39908",
+            "cve": [
+              "CVE-2024-39908"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5546,14 +6080,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-35176",
+            "cve": [
+              "CVE-2024-35176"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5577,14 +6114,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-43398",
+            "cve": [
+              "CVE-2024-43398"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5608,14 +6148,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-41123",
+            "cve": [
+              "CVE-2024-41123"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5639,14 +6182,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2024-41946",
+            "cve": [
+              "CVE-2024-41946"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Medium"
+            "severity": "Medium",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5670,14 +6216,17 @@
         },
         {
           "tags": {
-            "cve": "CVE-2021-41136",
+            "cve": [
+              "CVE-2021-41136"
+            ],
             "cwe": [],
             "nist": [
-              "SI-10",
+              "SI-2",
               "RA-5"
             ],
             "cvss": "",
-            "severity": "Low"
+            "severity": "Low",
+            "source": "ruby"
           },
           "descriptions": [],
           "refs": [],
@@ -5700,7 +6249,7 @@
           ]
         }
       ],
-      "sha256": "4bbc293450d19f26c7e3649fe6476646e0595ef10d005a9ade17dd24383757f4"
+      "sha256": "90a0a26518c271eb6ab57f8c841915b79b9f449de8d5b31f4801bc79db4b1b6e"
     }
   ],
   "passthrough": {
