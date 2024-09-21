@@ -3762,9 +3762,9 @@
     tslib "^2.6.2"
 
 "@smithy/node-http-handler@^3.0.0", "@smithy/node-http-handler@^3.2.2":
-  version "3.2.2"
-  resolved "https://registry.yarnpkg.com/@smithy/node-http-handler/-/node-http-handler-3.2.2.tgz#1e659d52ba4d27123efc7b8a5c1abe76f97ea915"
-  integrity sha512-42Cy4/oT2O+00aiG1iQ7Kd7rE6q8j7vI0gFfnMlUiATvyo8vefJkhb7O10qZY0jAqo5WZdUzfl9IV6wQ3iMBCg==
+  version "3.2.3"
+  resolved "https://registry.yarnpkg.com/@smithy/node-http-handler/-/node-http-handler-3.2.3.tgz#6d10ece149b441f5417d34db45ddb76407d5c186"
+  integrity sha512-/gcm5DJ3k1b1zEInzBGAZC8ntJ+jwrz1NcSIu+9dSXd1FfG0G6QgkDI40tt8/WYUbHtLyo8fEqtm2v29koWo/w==
   dependencies:
     "@smithy/abort-controller" "^3.1.4"
     "@smithy/protocol-http" "^4.1.3"
