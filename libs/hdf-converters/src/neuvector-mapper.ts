@@ -149,6 +149,17 @@ function cveIdMatches(cveName: string): (value: RESTModuleCve) => boolean {
   return (cve: RESTModuleCve) => cve.name === cveName;
 }
 
+function universalTags(): MappedTransform<
+  {[key: string]: any} & ILookupPath,
+  ILookupPath
+> {
+  return {
+    // Heimdall currently doesn't have a way to display passthrough data, and this information would be useful to view per vulnerability.
+    envs: {path: '$.report.envs'},
+    cmds: {path: '$.report.cmds'}
+  };
+}
+
 export class NeuvectorMapper extends BaseConverter {
   withRaw: boolean;
   rawData: NeuvectorScanJson;
@@ -206,11 +217,12 @@ export class NeuvectorMapper extends BaseConverter {
                   nistTags(cweTags(description))
               },
               // `score` is confirmed to be CVSS v2 in https://github.com/neuvector/scanner/blob/765fb1db2cf678ea6c6d386f3eb0f720311d745a/cvetools/cvesearch.go#L1416
-              cvss_v2_score: {path: 'score'},
-              cvss_v2_vector: {path: 'vectors'},
+              score: {path: 'score'},
+              vectors: {path: 'vectors'},
               // In the neuvector/scanner dashboard, the CVSS v2 and v3 scores are selectable by a dropdown.
-              cvss_v3_vector: {path: 'vectors_v3'},
-              cvss_v3_score: {path: 'score_v3'},
+              vectors_v3: {path: 'vectors_v3'},
+              score_v3: {path: 'score_v3'},
+              // Appears to be CVSS v3, since info for v2 and v4 doesn't always exist for CVEs.
               severity: {path: 'severity'},
               source: {
                 path: 'package_name',
@@ -224,9 +236,7 @@ export class NeuvectorMapper extends BaseConverter {
                     ?.find((module) => module.cves?.find(cveIdMatches(name)))
                     ?.cves?.find(cveIdMatches(name))?.status
               },
-              // Heimdall currently doesn't have a way to display passthrough data, and this information would be useful to view per vulnerability.
-              envs: {path: '$.report.envs'},
-              cmds: {path: '$.report.cmds'}
+              ...universalTags()
             },
             descriptions: [],
             refs: [],
@@ -278,10 +288,18 @@ export class NeuvectorMapper extends BaseConverter {
               category: {path: 'category'},
               type: {path: 'type'},
               profile: {path: 'profile'},
-              scored: {path: 'scored'},
-              automated: {path: 'automated'},
+              scored: {
+                path: 'scored',
+                transformer: (scored: boolean) => Boolean(scored).toString()
+              },
+              automated: {
+                path: 'automated',
+                transformer: (automated: boolean) =>
+                  Boolean(automated).toString()
+              },
               remediation: {path: 'remediation'}, // This field is always an empty string due to what seems to be a bug with Neuvector's reported JSON, which comes from a copy-pasted test script from docker/docker-security-bench.
-              level: {path: 'level'}
+              level: {path: 'level'},
+              ...universalTags()
             },
             descriptions: [],
             refs: [],
@@ -301,14 +319,15 @@ export class NeuvectorMapper extends BaseConverter {
             code: null,
             results: [
               {
-                status: ExecJSON.ControlResultStatus.Failed,
-                code_desc: '',
+                status: ExecJSON.ControlResultStatus.Skipped,
+                code_desc: 'Requires manual review.',
                 message: {
                   path: 'message',
                   transformer: (message: string[]) => message.join('\n')
                 },
                 run_time: null,
-                start_time: ''
+                start_time: '',
+                skip_message: 'Requires manual review.'
               }
             ]
           }
