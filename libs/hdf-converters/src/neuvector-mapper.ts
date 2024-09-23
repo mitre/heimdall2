@@ -162,27 +162,27 @@ export class NeuvectorMapper extends BaseConverter {
     platform: {
       name: 'Heimdall Tools',
       release: HeimdallToolsVersion,
-      target_id: null //Insert data
+      target_id: null
     },
     version: HeimdallToolsVersion,
     statistics: {
-      duration: null //Insert data
+      duration: null
     },
     profiles: [
       {
-        name: 'Neuvector', //Insert data
-        title: null, //Insert data
-        version: null, //Insert data
-        maintainer: null, //Insert data
-        summary: null, //Insert data
-        license: null, //Insert data
-        copyright: null, //Insert data
-        copyright_email: null, //Insert data
-        supports: [], //Insert data
-        attributes: [], //Insert data
-        depends: [], //Insert data
-        groups: [], //Insert data
-        status: 'loaded', //Insert data
+        name: 'Neuvector',
+        title: null,
+        version: null,
+        maintainer: null,
+        summary: null,
+        license: null,
+        copyright: null,
+        copyright_email: null,
+        supports: [],
+        attributes: [],
+        depends: [],
+        groups: [],
+        status: 'loaded',
         controls: [
           {
             path: 'report.vulnerabilities',
@@ -218,22 +218,22 @@ export class NeuvectorMapper extends BaseConverter {
                     ?.find((module) => module.cves?.find(cveIdMatches(name)))
                     ?.cves?.find(cveIdMatches(name))?.status
               }
-            }, //Insert data
-            descriptions: [], //Insert data
-            refs: [], //Insert data
-            source_location: {ref: {path: 'file_name'}}, //Insert data
-            title: null, //Insert data
-            id: {path: 'name'}, //Insert data
-            desc: {path: 'description'}, //Insert data
+            },
+            descriptions: [],
+            refs: [],
+            source_location: {ref: {path: 'file_name'}},
+            title: null,
+            id: {path: 'name'},
+            desc: {path: 'description'},
             impact: {
               path: 'score',
               transformer: (score: number) => Number((score / 10).toFixed(1))
-            }, //Insert data
-            code: null, //Insert data
+            },
+            code: null,
             results: [
               {
-                status: ExecJSON.ControlResultStatus.Failed, //Insert data
-                code_desc: '', //Insert data
+                status: ExecJSON.ControlResultStatus.Failed,
+                code_desc: '',
                 message: {
                   transformer: (data: Record<string, any>) => {
                     const {package_name, package_version, fixed_version} = data;
@@ -242,9 +242,9 @@ export class NeuvectorMapper extends BaseConverter {
                     }
                     return `Vulnerable package ${package_name} is at version ${package_version}. Update to fixed version ${fixed_version}.`;
                   }
-                }, //Insert data
-                run_time: null, //Insert data
-                start_time: '' //Insert data
+                },
+                run_time: null,
+                start_time: ''
               }
             ]
           },
@@ -259,28 +259,28 @@ export class NeuvectorMapper extends BaseConverter {
               automated: {path: 'automated'},
               remediation: {path: 'remediation'},
               level: {path: 'level'}
-            }, //Insert data
-            descriptions: [], //Insert data
-            refs: [], //Insert data
-            source_location: {}, //Insert data
-            title: null, //Insert data
-            id: {path: 'test_number'}, //Insert data
-            desc: {path: 'description'}, //Insert data
+            },
+            descriptions: [],
+            refs: [],
+            source_location: {},
+            title: null,
+            id: {path: 'test_number'},
+            desc: {path: 'description'},
             impact: {
               path: 'level',
               transformer: (level: string) => (level === 'WARN' ? 0 : 1)
-            }, //Insert data
-            code: null, //Insert data
+            },
+            code: null,
             results: [
               {
-                status: ExecJSON.ControlResultStatus.Failed, //Insert data
-                code_desc: '', //Insert data
+                status: ExecJSON.ControlResultStatus.Failed,
+                code_desc: '',
                 message: {
                   path: 'message',
                   transformer: (message: string[]) => message.join('\n')
-                }, //Insert data
-                run_time: null, //Insert data
-                start_time: '' //Insert data
+                },
+                run_time: null,
+                start_time: ''
               }
             ]
           }
