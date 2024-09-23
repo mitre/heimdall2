@@ -195,11 +195,6 @@ export class NeuvectorMapper extends BaseConverter {
             path: 'report.vulnerabilities',
             key: 'id',
             tags: {
-              // Security Risk Score as shown in the Neuvector dashboard.
-              security_risk_score: {
-                path: 'score',
-                transformer: (score: number) => score * 10
-              },
               cve: {path: 'name'},
               cwe: {
                 path: 'description',
@@ -210,7 +205,10 @@ export class NeuvectorMapper extends BaseConverter {
                 transformer: (description: string) =>
                   nistTags(cweTags(description))
               },
-              cvss_vector: {path: 'vectors'},
+              // `score` is confirmed to be CVSS v2 in https://github.com/neuvector/scanner/blob/765fb1db2cf678ea6c6d386f3eb0f720311d745a/cvetools/cvesearch.go#L1416
+              cvss_v2_score: {path: 'score'},
+              cvss_v2_vector: {path: 'vectors'},
+              // In the neuvector/scanner dashboard, the CVSS v2 and v3 scores are selectable by a dropdown.
               cvss_v3_vector: {path: 'vectors_v3'},
               cvss_v3_score: {path: 'score_v3'},
               severity: {path: 'severity'},
@@ -225,17 +223,25 @@ export class NeuvectorMapper extends BaseConverter {
                   this.rawData.report.modules
                     ?.find((module) => module.cves?.find(cveIdMatches(name)))
                     ?.cves?.find(cveIdMatches(name))?.status
-              }
+              },
+              // Heimdall currently doesn't have a way to display passthrough data, and this information would be useful to view per vulnerability.
+              envs: {path: '$.report.envs'},
+              cmds: {path: '$.report.cmds'}
             },
             descriptions: [],
             refs: [],
             source_location: {ref: {path: 'file_name'}},
             title: null,
-            id: {path: 'name'},
+            id: {
+              transformer: (data: Record<string, any>) =>
+                `${data.name}/${data.package_name}/${data.package_version}`
+            },
             desc: {path: 'description'},
             impact: {
-              path: 'score',
-              transformer: (score: number) => Number((score / 10).toFixed(1))
+              transformer: (data: Record<string, any>) => {
+                const score = data.score_v3 ?? data.score;
+                return Number((score / 10).toFixed(1));
+              }
             },
             code: null,
             results: [
