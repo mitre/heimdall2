@@ -210,6 +210,7 @@ export class NeuvectorMapper extends BaseConverter {
                 transformer: (description: string) =>
                   nistTags(cweTags(description))
               },
+              cvss_vector: {path: 'vectors'},
               cvss_v3_vector: {path: 'vectors_v3'},
               cvss_v3_score: {path: 'score_v3'},
               severity: {path: 'severity'},
@@ -250,8 +251,17 @@ export class NeuvectorMapper extends BaseConverter {
                     return `Vulnerable package ${package_name} is at version ${package_version}. Update to fixed version ${fixed_version}.`;
                   }
                 },
-                run_time: null,
-                start_time: ''
+                // This is almost always going to be the number 0.
+                // Looks like Unix epoch timestamps, which are in seconds.
+                run_time: {
+                  transformer: (data: Record<string, any>) =>
+                    data.last_modified_timestamp - data.published_timestamp
+                },
+                // Unix epoch timestamp, in seconds.
+                start_time: {
+                  path: 'published_timestamp',
+                  transformer: (startTime: number) => `${startTime}`
+                }
               }
             ]
           },

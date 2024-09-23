@@ -33,6 +33,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:H",
             "cvss_v3_score": 9.1,
             "severity": "Critical",
@@ -54,8 +55,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package apk-tools is at version 2.10.5-r1. Update to fixed version 2.10.7-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328203"
             }
           ]
         },
@@ -68,6 +69,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -89,8 +91,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328684"
             }
           ]
         },
@@ -103,6 +105,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -124,8 +127,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665067653"
             }
           ]
         },
@@ -138,6 +141,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:C/I:C/A:C",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "Critical",
@@ -159,8 +163,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665083283"
             }
           ]
         },
@@ -173,6 +177,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -194,8 +199,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328685"
             }
           ]
         },
@@ -208,6 +213,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -229,8 +235,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665067662"
             }
           ]
         },
@@ -243,6 +249,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -264,8 +271,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328685"
             }
           ]
         },
@@ -278,6 +285,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -299,8 +307,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665070188"
             }
           ]
         },
@@ -313,6 +321,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -334,8 +343,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1667011473"
             }
           ]
         },
@@ -348,6 +357,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -369,8 +379,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package freetype is at version 2.10.4-r0. Update to fixed version 2.10.4-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1709170463"
             }
           ]
         },
@@ -383,6 +393,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -404,8 +415,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ghostscript is at version 9.52-r0. Update to fixed version 9.52-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327076"
             }
           ]
         },
@@ -418,6 +429,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -439,8 +451,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package gnutls is at version 3.6.15-r0. Update to fixed version 3.6.15-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327741"
             }
           ]
         },
@@ -453,6 +465,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -474,8 +487,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package gnutls is at version 3.6.15-r0. Update to fixed version 3.6.15-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327741"
             }
           ]
         },
@@ -488,6 +501,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -509,8 +523,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package libx11 is at version 1.6.12-r0. Update to fixed version 1.6.12-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328098"
             }
           ]
         },
@@ -523,6 +537,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -544,8 +559,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.1-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1670010049"
             }
           ]
         },
@@ -558,6 +573,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -579,8 +595,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.5-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1704449709"
             }
           ]
         },
@@ -593,6 +609,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -614,8 +631,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.4-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1704449707"
             }
           ]
         },
@@ -628,6 +645,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -649,8 +667,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openssl is at version 1.1.1g-r0. Update to fixed version 1.1.1l-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718997320"
             }
           ]
         },
@@ -663,6 +681,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -684,8 +703,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package zlib is at version 1.2.11-r3. Update to fixed version 1.2.12-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1689728206"
             }
           ]
         },
@@ -698,6 +717,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -719,8 +739,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package apk-tools is at version 2.10.5-r1. Update to fixed version 2.10.6-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1619115707"
             }
           ]
         },
@@ -733,6 +753,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.2,
             "severity": "High",
@@ -754,8 +775,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r21.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328350"
             }
           ]
         },
@@ -768,6 +789,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.2,
             "severity": "High",
@@ -789,8 +811,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r21.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328350"
             }
           ]
         },
@@ -803,6 +825,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.2,
             "severity": "High",
@@ -824,8 +847,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r21.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328350"
             }
           ]
         },
@@ -838,6 +861,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.2,
             "severity": "High",
@@ -859,8 +883,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r21.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328350"
             }
           ]
         },
@@ -873,6 +897,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.2,
             "severity": "High",
@@ -894,8 +919,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r21.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328350"
             }
           ]
         },
@@ -908,6 +933,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.2,
             "severity": "High",
@@ -929,8 +955,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r21.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328350"
             }
           ]
         },
@@ -943,6 +969,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.2,
             "severity": "High",
@@ -964,8 +991,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r21.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328350"
             }
           ]
         },
@@ -978,6 +1005,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -999,8 +1027,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r20.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327943"
             }
           ]
         },
@@ -1013,6 +1041,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.2,
             "severity": "High",
@@ -1034,8 +1063,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r21.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328350"
             }
           ]
         },
@@ -1048,6 +1077,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -1069,8 +1099,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r22.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1660243490"
             }
           ]
         },
@@ -1083,6 +1113,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.2,
             "severity": "High",
@@ -1104,8 +1135,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r21.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328350"
             }
           ]
         },
@@ -1118,6 +1149,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.8,
             "severity": "High",
@@ -1139,8 +1171,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package cairo is at version 1.16.0-r2. Update to fixed version 1.16.0-r3.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1683116115"
             }
           ]
         },
@@ -1153,6 +1185,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -1174,8 +1207,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package cyrus-sasl is at version 2.1.27-r6. Update to fixed version 2.1.28-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328669"
             }
           ]
         },
@@ -1188,6 +1221,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.8,
             "severity": "High",
@@ -1209,8 +1243,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665083514"
             }
           ]
         },
@@ -1223,6 +1257,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -1244,8 +1279,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665067638"
             }
           ]
         },
@@ -1258,6 +1293,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -1279,8 +1315,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665060268"
             }
           ]
         },
@@ -1293,6 +1329,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -1314,8 +1351,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665060737"
             }
           ]
         },
@@ -1328,6 +1365,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -1349,8 +1387,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328685"
             }
           ]
         },
@@ -1363,6 +1401,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -1384,8 +1423,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328661"
             }
           ]
         },
@@ -1398,6 +1437,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -1419,8 +1459,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package freetype is at version 2.10.4-r0. Update to fixed version 2.10.4-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1709170463"
             }
           ]
         },
@@ -1433,6 +1473,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -1454,8 +1495,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package freetype is at version 2.10.4-r0. Update to fixed version 2.10.4-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1709170463"
             }
           ]
         },
@@ -1468,6 +1509,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:C",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -1489,8 +1531,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package gdk-pixbuf is at version 2.40.0-r2. Update to fixed version 2.40.0-r3.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327741"
             }
           ]
         },
@@ -1503,6 +1545,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -1524,8 +1567,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package gmp is at version 6.2.0-r0. Update to fixed version 6.2.1-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1696000510"
             }
           ]
         },
@@ -1538,6 +1581,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.8,
             "severity": "High",
@@ -1559,8 +1603,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package imagemagick6 is at version 6.9.11.25-r0. Update to fixed version 6.9.11.42-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1678576516"
             }
           ]
         },
@@ -1573,6 +1617,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -1594,15 +1639,15 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package libxml2 is at version 2.9.10-r5. Update to fixed version 2.9.10-r6.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328284"
             },
             {
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.11.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328284"
             }
           ]
         },
@@ -1615,6 +1660,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:H",
             "cvss_v3_score": 8.6,
             "severity": "High",
@@ -1636,15 +1682,15 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package libxml2 is at version 2.9.10-r5. Update to fixed version 2.9.10-r6.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328283"
             },
             {
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.11.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328283"
             }
           ]
         },
@@ -1657,6 +1703,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -1678,8 +1725,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package libxml2 is at version 2.9.10-r5. Update to fixed version 2.9.13-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328648"
             }
           ]
         },
@@ -1692,6 +1739,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -1713,8 +1761,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ncurses is at version 6.2_p20200523-r0. Update to fixed version 6.2_p20200523-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1701634506"
             }
           ]
         },
@@ -1727,6 +1775,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -1748,8 +1797,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nettle is at version 3.5.1-r1. Update to fixed version 3.5.1-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1705418108"
             }
           ]
         },
@@ -1762,6 +1811,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.8,
             "severity": "High",
@@ -1783,8 +1833,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.6-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328252"
             }
           ]
         },
@@ -1797,6 +1847,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -1818,8 +1869,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.20.1-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327579"
             }
           ]
         },
@@ -1832,6 +1883,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:H",
             "cvss_v3_score": 8.2,
             "severity": "High",
@@ -1853,8 +1905,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1668052108"
             }
           ]
         },
@@ -1867,6 +1919,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.8,
             "severity": "High",
@@ -1888,8 +1941,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.6-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328252"
             }
           ]
         },
@@ -1902,6 +1955,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
             "cvss_v3_score": 8.6,
             "severity": "High",
@@ -1923,8 +1977,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.6-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1650912030"
             }
           ]
         },
@@ -1937,6 +1991,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:C",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -1958,8 +2013,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.21.0-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327827"
             }
           ]
         },
@@ -1972,6 +2027,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.1,
             "severity": "High",
@@ -1993,8 +2049,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.20.1-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327579"
             }
           ]
         },
@@ -2007,6 +2063,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
             "cvss_v3_score": 7.4,
             "severity": "High",
@@ -2028,8 +2085,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1664978184"
             }
           ]
         },
@@ -2042,6 +2099,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
             "cvss_v3_score": 8.6,
             "severity": "High",
@@ -2063,8 +2121,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.6-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1674159108"
             }
           ]
         },
@@ -2077,6 +2135,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:H/I:H/A:H",
             "cvss_v3_score": 8.6,
             "severity": "High",
@@ -2098,8 +2157,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.6-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1677119291"
             }
           ]
         },
@@ -2112,6 +2171,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:H/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2133,8 +2193,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.21.0-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327827"
             }
           ]
         },
@@ -2147,6 +2207,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2168,8 +2229,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openldap is at version 2.4.50-r0. Update to fixed version 2.4.50-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665584848"
             }
           ]
         },
@@ -2182,6 +2243,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2203,8 +2265,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openldap is at version 2.4.50-r0. Update to fixed version 2.4.50-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327223"
             }
           ]
         },
@@ -2217,6 +2279,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2238,8 +2301,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openldap is at version 2.4.50-r0. Update to fixed version 2.4.50-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327223"
             }
           ]
         },
@@ -2252,6 +2315,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2273,8 +2337,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openldap is at version 2.4.50-r0. Update to fixed version 2.4.50-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327915"
             }
           ]
         },
@@ -2287,6 +2351,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2308,8 +2373,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openssl is at version 1.1.1g-r0. Update to fixed version 1.1.1j-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718997317"
             }
           ]
         },
@@ -2322,6 +2387,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2343,8 +2409,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openssl is at version 1.1.1g-r0. Update to fixed version 1.1.1n-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718997321"
             }
           ]
         },
@@ -2357,6 +2423,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:N",
             "cvss_v3_score": 7.4,
             "severity": "High",
@@ -2378,8 +2445,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openssl is at version 1.1.1g-r0. Update to fixed version 1.1.1k-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328280"
             }
           ]
         },
@@ -2392,6 +2459,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:H",
             "cvss_v3_score": 7.4,
             "severity": "High",
@@ -2413,8 +2481,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openssl is at version 1.1.1g-r0. Update to fixed version 1.1.1l-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718997320"
             }
           ]
         },
@@ -2427,6 +2495,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2448,8 +2517,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package p11-kit is at version 0.23.20-r5. Update to fixed version 0.23.22-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1652366868"
             }
           ]
         },
@@ -2462,6 +2531,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2483,8 +2553,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package p11-kit is at version 0.23.20-r5. Update to fixed version 0.23.22-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327286"
             }
           ]
         },
@@ -2497,6 +2567,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:H/Au:N/C:C/I:C/A:C",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:R/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2518,8 +2589,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.5-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327222"
             }
           ]
         },
@@ -2532,6 +2603,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -2553,8 +2625,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.5-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1666191668"
             }
           ]
         },
@@ -2567,6 +2639,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:H/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.1,
             "severity": "High",
@@ -2588,8 +2661,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.9-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327849"
             }
           ]
         },
@@ -2602,6 +2675,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.1,
             "severity": "High",
@@ -2623,8 +2697,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.5-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1666191616"
             }
           ]
         },
@@ -2637,6 +2711,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -2658,8 +2733,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.7-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328112"
             }
           ]
         },
@@ -2672,6 +2747,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -2693,8 +2769,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package xz is at version 5.2.5-r0. Update to fixed version 5.2.5-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1724669239"
             }
           ]
         },
@@ -2707,6 +2783,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -2728,15 +2805,15 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package zlib is at version 1.2.11-r3. Update to fixed version 1.2.12-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699325786"
             },
             {
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.13.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699325786"
             }
           ]
         },
@@ -2749,6 +2826,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 6.2,
             "severity": "Medium",
@@ -2770,8 +2848,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package avahi is at version 0.8-r0. Update to fixed version 0.8-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328204"
             }
           ]
         },
@@ -2784,6 +2862,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 5.5,
             "severity": "Medium",
@@ -2805,8 +2884,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package avahi is at version 0.8-r0. Update to fixed version 0.8-r1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1687400148"
             }
           ]
         },
@@ -2819,6 +2898,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:M/Au:N/C:P/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:H/PR:L/UI:N/S:U/C:L/I:N/A:H",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -2840,8 +2920,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package busybox is at version 1.31.1-r19. Update to fixed version 1.31.1-r21.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328349"
             }
           ]
         },
@@ -2854,6 +2934,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:L/I:L/A:L",
             "cvss_v3_score": 5.6,
             "severity": "Medium",
@@ -2875,15 +2956,15 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package c-ares is at version 1.16.1-r0. Update to fixed version 1.17.2-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1704449710"
             },
             {
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.5-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1704449710"
             }
           ]
         },
@@ -2896,6 +2977,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -2917,8 +2999,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package cairo is at version 1.16.0-r2. Update to fixed version 1.16.0-r5.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699326789"
             }
           ]
         },
@@ -2931,6 +3013,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -2952,8 +3035,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package expat is at version 2.2.9-r1. Update to fixed version 2.2.10-r2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328685"
             }
           ]
         },
@@ -2966,6 +3049,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 5.5,
             "severity": "Medium",
@@ -2987,8 +3071,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package gdk-pixbuf is at version 2.40.0-r2. Update to fixed version 2.40.0-r4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327287"
             }
           ]
         },
@@ -3001,6 +3085,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:L",
             "cvss_v3_score": 3.3,
             "severity": "Medium",
@@ -3022,8 +3107,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package imagemagick6 is at version 6.9.11.25-r0. Update to fixed version 6.9.11.35-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1678576511"
             }
           ]
         },
@@ -3036,6 +3121,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -3057,8 +3143,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package libjpeg-turbo is at version 2.0.5-r0. Update to fixed version 2.1.0-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327740"
             }
           ]
         },
@@ -3071,6 +3157,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -3092,8 +3179,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package libxml2 is at version 2.9.10-r5. Update to fixed version 2.9.14-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328765"
             }
           ]
         },
@@ -3106,6 +3193,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 5.9,
             "severity": "Medium",
@@ -3127,15 +3215,15 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package libxml2 is at version 2.9.10-r5. Update to fixed version 2.9.10-r6.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328285"
             },
             {
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.11.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328285"
             }
           ]
         },
@@ -3148,6 +3236,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -3169,8 +3258,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package libxml2 is at version 2.9.10-r5. Update to fixed version 2.9.12-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1646159133"
             }
           ]
         },
@@ -3183,6 +3272,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 5.5,
             "severity": "Medium",
@@ -3204,8 +3294,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package musl is at version 1.1.24-r9. Update to fixed version 1.1.24-r10.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327284"
             }
           ]
         },
@@ -3218,6 +3308,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -3239,8 +3330,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1674180257"
             }
           ]
         },
@@ -3253,6 +3344,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -3274,8 +3366,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1670602488"
             }
           ]
         },
@@ -3288,6 +3380,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -3309,8 +3402,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665023299"
             }
           ]
         },
@@ -3323,6 +3416,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -3344,8 +3438,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.10-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1664978439"
             }
           ]
         },
@@ -3358,6 +3452,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:L/A:N",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -3379,8 +3474,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.5-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1704449709"
             }
           ]
         },
@@ -3393,6 +3488,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:L/A:N",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -3414,8 +3510,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.20.1-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327579"
             }
           ]
         },
@@ -3428,6 +3524,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -3449,8 +3546,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.2-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1705410907"
             }
           ]
         },
@@ -3463,6 +3560,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 5.9,
             "severity": "Medium",
@@ -3484,8 +3582,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openssl is at version 1.1.1g-r0. Update to fixed version 1.1.1k-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718997319"
             }
           ]
         },
@@ -3498,6 +3596,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:L/A:N",
             "cvss_v3_score": 3.7,
             "severity": "Medium",
@@ -3519,8 +3618,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openssl is at version 1.1.1g-r0. Update to fixed version 1.1.1j-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718997316"
             }
           ]
         },
@@ -3533,6 +3632,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 5.9,
             "severity": "Medium",
@@ -3554,8 +3654,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openssl is at version 1.1.1g-r0. Update to fixed version 1.1.1i-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718997316"
             }
           ]
         },
@@ -3568,6 +3668,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 5.9,
             "severity": "Medium",
@@ -3589,8 +3690,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package openssl is at version 1.1.1g-r0. Update to fixed version 1.1.1j-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718997317"
             }
           ]
         },
@@ -3603,6 +3704,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:N/A:N",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -3624,8 +3726,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package p11-kit is at version 0.23.20-r5. Update to fixed version 0.23.22-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1610383831"
             }
           ]
         },
@@ -3638,6 +3740,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -3659,8 +3762,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.7-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1675186140"
             }
           ]
         },
@@ -3673,6 +3776,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
             "cvss_v3_score": 4.3,
             "severity": "Medium",
@@ -3694,8 +3798,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.6-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1623250884"
             }
           ]
         },
@@ -3708,6 +3812,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:S/C:P/I:N/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:N/A:N",
             "cvss_v3_score": 4.3,
             "severity": "Medium",
@@ -3729,8 +3834,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.6-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1622833465"
             }
           ]
         },
@@ -3743,6 +3848,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -3764,8 +3870,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.7-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1659702153"
             }
           ]
         },
@@ -3778,6 +3884,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -3799,8 +3906,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.8-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1675186169"
             }
           ]
         },
@@ -3813,6 +3920,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:H/PR:N/UI:N/S:U/C:H/I:N/A:N",
             "cvss_v3_score": 5.9,
             "severity": "Medium",
@@ -3834,8 +3942,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package postgresql is at version 12.4-r0. Update to fixed version 12.9-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327849"
             }
           ]
         },
@@ -3848,6 +3956,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:M/Au:N/C:P/I:N/A:N",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:H/I:N/A:N",
             "cvss_v3_score": 5.5,
             "severity": "Medium",
@@ -3869,8 +3978,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package util-linux is at version 2.35.2-r0. Update to fixed version 2.37.4-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1704618908"
             }
           ]
         },
@@ -3883,6 +3992,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 5.5,
             "severity": "Medium",
@@ -3904,8 +4014,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package util-linux is at version 2.35.2-r0. Update to fixed version 2.37.3-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1704618908"
             }
           ]
         },
@@ -3918,6 +4028,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 5.5,
             "severity": "Medium",
@@ -3939,8 +4050,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package util-linux is at version 2.35.2-r0. Update to fixed version 2.37.3-r0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1704618908"
             }
           ]
         },
@@ -3953,6 +4064,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -3974,8 +4086,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:activerecord is at version 5.2.4.3. Update to fixed version >=5.2.8.1,5.2; OR >=6.0.5.1,6.0; OR >=6.1.6.1,6.1; OR >=7.0.3.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1670505613"
             }
           ]
         },
@@ -3988,6 +4100,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -4009,8 +4122,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:activestorage is at version 5.2.4.3. Update to fixed version >=5.2.6.3,5.2; OR >=6.0.4.7,6.0; OR >=6.1.4.7,6.1; OR >=7.0.2.3.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1678781712"
             }
           ]
         },
@@ -4023,6 +4136,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:C/I:C/A:C",
             "cvss_v3_vector": "",
             "cvss_v3_score": 8.8,
             "severity": "Critical",
@@ -4044,22 +4158,22 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:bundler is at version 2.1.4. Update to fixed version =2.2.10; OR >=2.2.18.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327334"
             },
             {
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:bundler is at version 2.1.4. Update to fixed version =2.2.10; OR >=2.2.18.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327334"
             },
             {
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:bundler is at version 1.17.2. Update to fixed version =2.2.10; OR >=2.2.18.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327334"
             }
           ]
         },
@@ -4072,6 +4186,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:C/I:C/A:C",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.7,
             "severity": "Critical",
@@ -4093,22 +4208,22 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:bundler is at version 2.1.4. Update to fixed version >=2.2.33.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1700103891"
             },
             {
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:bundler is at version 2.1.4. Update to fixed version >=2.2.33.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1700103891"
             },
             {
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:bundler is at version 1.17.2. Update to fixed version >=2.2.33.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1700103891"
             }
           ]
         },
@@ -4121,6 +4236,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -4142,8 +4258,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:bundler is at version 1.17.2. Update to fixed version >=2.0.0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1562079357"
             }
           ]
         },
@@ -4156,6 +4272,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -4177,8 +4294,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:jmespath is at version 1.4.0. Update to fixed version >=1.6.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328870"
             }
           ]
         },
@@ -4191,6 +4308,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -4212,8 +4330,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:pdfkit is at version 0.8.4.1. Update to fixed version >=0.8.7.2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328689"
             }
           ]
         },
@@ -4226,6 +4344,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 9.1,
             "severity": "Critical",
@@ -4247,8 +4366,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:puma is at version 3.12.6. Update to fixed version >=4.3.12,4.3; OR >=5.6.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328677"
             }
           ]
         },
@@ -4261,6 +4380,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 10,
             "severity": "Critical",
@@ -4282,8 +4402,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rack is at version 2.2.3. Update to fixed version >=2.0.9.1,2.0; OR >=2.1.4.1,2.1; OR >=2.2.3.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1702073707"
             }
           ]
         },
@@ -4296,6 +4416,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 9.8,
             "severity": "Critical",
@@ -4317,8 +4438,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:stringio is at version 0.0.2. Update to fixed version >=3.0.1.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1719971429"
             }
           ]
         },
@@ -4331,6 +4452,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4352,8 +4474,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:actionpack is at version 5.2.4.3. Update to fixed version >=5.2.4.6,5.2; OR >=5.2.6,5.2; OR >=6.0.3.7,6.0; OR >=6.1.3.2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1649264313"
             }
           ]
         },
@@ -4366,6 +4488,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4387,8 +4510,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:actionpack is at version 5.2.4.3. Update to fixed version >=5.2.4.6,5.2; OR >=5.2.6,5.2; OR >=6.0.3.7,6.0; OR >=6.1.3.2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1632145908"
             }
           ]
         },
@@ -4401,6 +4524,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4422,8 +4546,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:actionpack is at version 5.2.4.3. Update to fixed version >=5.2.8.15,5.2; OR >=6.1.7.1,6.1; OR >=7.0.4.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706883353"
             }
           ]
         },
@@ -4436,6 +4560,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.4,
             "severity": "High",
@@ -4457,8 +4582,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:actionpack is at version 5.2.4.3. Update to fixed version >=5.2.6.2,5.2; OR >=6.0.4.6,6.0; OR >=6.1.4.6,6.1; OR >=7.0.2.2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1705680908"
             }
           ]
         },
@@ -4471,6 +4596,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4492,8 +4618,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:actionpack is at version 5.2.4.3. Update to fixed version >=5.2.8.15,5.2; OR >=6.1.7.1,6.1; OR >=7.0.4.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706883353"
             }
           ]
         },
@@ -4506,6 +4632,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4527,8 +4654,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:actionview is at version 5.2.4.3. Update to fixed version >=6.1.7.3,6.1; OR >=7.0.4.3.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1695859200"
             }
           ]
         },
@@ -4541,6 +4668,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4562,8 +4690,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:activerecord is at version 5.2.4.3. Update to fixed version >=5.2.8.15,5.2; OR >=6.1.7.1,6.1; OR >=7.0.4.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1687544970"
             }
           ]
         },
@@ -4576,6 +4704,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4597,8 +4726,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:activesupport is at version 5.2.4.3. Update to fixed version >=5.2.8.15,5.2; OR >=6.1.7.1,6.1; OR >=7.0.4.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706883353"
             }
           ]
         },
@@ -4611,6 +4740,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4632,8 +4762,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:addressable is at version 2.6.0. Update to fixed version >=2.8.0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328125"
             }
           ]
         },
@@ -4646,6 +4776,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7,
             "severity": "High",
@@ -4667,8 +4798,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:bundler is at version 1.17.2. Update to fixed version >=2.1.0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1667937001"
             }
           ]
         },
@@ -4681,6 +4812,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.4,
             "severity": "High",
@@ -4702,8 +4834,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:carrierwave is at version 1.3.1. Update to fixed version >=1.3.2,1.3; OR >=2.1.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1650988768"
             }
           ]
         },
@@ -4716,6 +4848,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4737,8 +4870,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:date is at version 2.0.0. Update to fixed version >=2.0.1,2.0; OR >=3.0.2,3.0; OR >=3.1.2,3.1; OR >=3.2.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706073311"
             }
           ]
         },
@@ -4751,6 +4884,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4772,8 +4906,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:globalid is at version 0.4.2. Update to fixed version >=1.0.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1676578682"
             }
           ]
         },
@@ -4786,6 +4920,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4807,8 +4942,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:json is at version 2.1.0. Update to fixed version >=2.3.0.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699326851"
             }
           ]
         },
@@ -4821,6 +4956,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4842,8 +4978,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:loofah is at version 2.5.0. Update to fixed version >=2.19.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1694625307"
             }
           ]
         },
@@ -4856,6 +4992,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4877,8 +5014,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:loofah is at version 2.5.0. Update to fixed version >=2.19.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1694625308"
             }
           ]
         },
@@ -4891,6 +5028,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -4912,8 +5050,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.13.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328678"
             }
           ]
         },
@@ -4926,6 +5064,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:N/A:C",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.5,
             "severity": "High",
@@ -4947,8 +5086,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.13.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1691504544"
             }
           ]
         },
@@ -4961,6 +5100,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:N/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 8.2,
             "severity": "High",
@@ -4982,8 +5122,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.13.6.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1676514675"
             }
           ]
         },
@@ -4996,6 +5136,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 8.8,
             "severity": "High",
@@ -5017,8 +5158,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.13.2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1711550752"
             }
           ]
         },
@@ -5031,6 +5172,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:P/I:N/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5052,8 +5194,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.12.5.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1633551428"
             }
           ]
         },
@@ -5067,6 +5209,7 @@
             "nist": [
               "SI-10"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5088,8 +5231,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.13.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1677183565"
             }
           ]
         },
@@ -5102,6 +5245,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:P/I:N/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 8,
             "severity": "High",
@@ -5123,8 +5267,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:puma is at version 3.12.6. Update to fixed version >=4.3.11,4.3; OR >=5.6.2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699328656"
             }
           ]
         },
@@ -5137,6 +5281,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5158,8 +5303,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:puma is at version 3.12.6. Update to fixed version >=4.3.8,4.3; OR >=5.3.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1666874390"
             }
           ]
         },
@@ -5172,6 +5317,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5193,8 +5339,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rack is at version 2.2.3. Update to fixed version >=2.0.9.2,2.0; OR >=2.1.4.2,2.1; OR >=2.2.6.1,2.2; OR >=3.0.4.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1702073707"
             }
           ]
         },
@@ -5207,6 +5353,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5228,8 +5375,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rack is at version 2.2.3. Update to fixed version >=2.0.9.2,2.0; OR >=2.1.4.2,2.1; OR >=2.2.6.1,2.2; OR >=3.0.4.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1702073707"
             }
           ]
         },
@@ -5242,6 +5389,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5263,8 +5411,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rack is at version 2.2.3. Update to fixed version >=2.0.9.3,2.0; OR >=2.1.4.3,2.1; OR >=2.2.6.3,2.2; OR >=3.0.4.2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1702073707"
             }
           ]
         },
@@ -5277,6 +5425,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5298,8 +5447,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rack is at version 2.2.3. Update to fixed version >=2.0.9.2,2.0; OR >=2.1.4.2,2.1; OR >=2.2.6.2,2.2; OR >=3.0.4.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1702073707"
             }
           ]
         },
@@ -5312,6 +5461,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5333,8 +5483,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rack is at version 2.2.3. Update to fixed version >=2.0.9.1,2.0; OR >=2.1.4.1,2.1; OR >=2.2.3.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1703041325"
             }
           ]
         },
@@ -5347,6 +5497,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5368,8 +5519,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rails-html-sanitizer is at version 1.3.0. Update to fixed version >=1.4.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706804681"
             }
           ]
         },
@@ -5382,6 +5533,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:L/AC:M/Au:N/C:P/I:P/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7,
             "severity": "High",
@@ -5403,8 +5555,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rdoc is at version 6.1.2. Update to fixed version >=6.1.2.1,6.1; OR >=6.2.1.1,6.2; OR >=6.3.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1704464146"
             }
           ]
         },
@@ -5417,6 +5569,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5438,8 +5591,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rexml is at version 3.1.9. Update to fixed version >=3.1.9.1,3.1; OR >=3.2.3.1,3.2; OR >=3.2.5.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327945"
             }
           ]
         },
@@ -5452,6 +5605,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5473,8 +5627,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:tzinfo is at version 1.2.7. Update to fixed version >=0.3.61,0.3; OR >=1.2.10.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1666810845"
             }
           ]
         },
@@ -5488,6 +5642,7 @@
             "nist": [
               "SI-10"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 7.5,
             "severity": "High",
@@ -5509,8 +5664,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:webrick is at version 1.4.2. Update to fixed version >=1.6.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706073308"
             }
           ]
         },
@@ -5523,6 +5678,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.1,
             "severity": "Medium",
@@ -5544,8 +5700,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:actionpack is at version 5.2.4.3. Update to fixed version >=5.2.7.1,5.2; OR >=6.0.4.8,6.0; OR >=6.1.5.1,6.1; OR >=7.0.2.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1678781712"
             }
           ]
         },
@@ -5558,6 +5714,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.1,
             "severity": "Medium",
@@ -5579,8 +5736,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:actionview is at version 5.2.4.3. Update to fixed version >=5.2.7.1,5.2; OR >=6.0.4.8,6.0; OR >=6.1.5.1,6.1; OR >=7.0.2.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1678781712"
             }
           ]
         },
@@ -5593,6 +5750,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 5.4,
             "severity": "Medium",
@@ -5614,8 +5772,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:actionview is at version 5.2.4.3. Update to fixed version >=5.2.4.4,5.2; OR >=6.0.3.3.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327046"
             }
           ]
         },
@@ -5628,6 +5786,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:N/C:N/I:N/A:P",
             "cvss_v3_vector": "",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -5649,8 +5808,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:activerecord is at version 5.2.4.3. Update to fixed version >=5.2.4.5,5.2; OR >=6.0.3.5,6.0; OR >=6.1.2.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1699327827"
             }
           ]
         },
@@ -5663,6 +5822,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -5684,8 +5844,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:activestorage is at version 5.2.4.3. Update to fixed version >=6.1.7.7,6.1; OR >=7.0.8.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718036112"
             }
           ]
         },
@@ -5698,6 +5858,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 4.3,
             "severity": "Medium",
@@ -5719,8 +5880,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:carrierwave is at version 1.3.1. Update to fixed version >=1.3.2,1.3; OR >=2.1.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1613147433"
             }
           ]
         },
@@ -5733,6 +5894,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.8,
             "severity": "Medium",
@@ -5754,8 +5916,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:carrierwave is at version 1.3.1. Update to fixed version >=2.2.5,2.2; OR >=3.0.5.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1701793558"
             }
           ]
         },
@@ -5768,6 +5930,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.8,
             "severity": "Medium",
@@ -5789,8 +5952,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:carrierwave is at version 1.3.1. Update to fixed version >=2.2.6,2.2; OR >=3.0.7.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1711331461"
             }
           ]
         },
@@ -5803,6 +5966,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.1,
             "severity": "Medium",
@@ -5824,8 +5988,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:loofah is at version 2.5.0. Update to fixed version >=2.19.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706803915"
             }
           ]
         },
@@ -5838,6 +6002,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:L/Au:S/C:P/I:N/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 2.6,
             "severity": "Medium",
@@ -5859,8 +6024,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.11.0.rc4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1666205589"
             }
           ]
         },
@@ -5873,6 +6038,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.5,
             "severity": "Medium",
@@ -5894,8 +6060,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:puma is at version 3.12.6. Update to fixed version >=5.6.7,5.6; OR >=6.3.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1692902909"
             }
           ]
         },
@@ -5908,6 +6074,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 5.9,
             "severity": "Medium",
@@ -5929,8 +6096,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:puma is at version 3.12.6. Update to fixed version >=5.6.8,5.6; OR >=6.4.2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1704994314"
             }
           ]
         },
@@ -5943,6 +6110,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:N/A:L",
             "cvss_v3_score": 5.8,
             "severity": "Medium",
@@ -5964,8 +6132,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rack is at version 2.2.3. Update to fixed version >=2.2.8.1,2.2; OR >=3.0.9.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718039782"
             }
           ]
         },
@@ -5978,6 +6146,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -5999,8 +6168,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rack is at version 2.2.3. Update to fixed version >=2.2.6.4,2.0; OR >=3.0.6.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1683590400"
             }
           ]
         },
@@ -6013,6 +6182,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -6034,8 +6204,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rack is at version 2.2.3. Update to fixed version >=2.2.8.1,2.2; OR >=3.0.9.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718043327"
             }
           ]
         },
@@ -6048,6 +6218,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:L",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -6069,8 +6240,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rack is at version 2.2.3. Update to fixed version >=2.0.9.4,2.0; OR >=2.1.4.4,2.1; OR >=2.2.8.1,2.2; OR >=3.0.9.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1718043327"
             }
           ]
         },
@@ -6083,6 +6254,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 4,
             "severity": "Medium",
@@ -6104,8 +6276,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rails is at version 5.2.4.3. Update to fixed version >=3.2.17,3.2; OR >=4.0.3,4.0; OR >=4.1.0; OR >=4.1.0.beta2,4.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1565278965"
             }
           ]
         },
@@ -6118,6 +6290,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.1,
             "severity": "Medium",
@@ -6139,8 +6312,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rails-html-sanitizer is at version 1.3.0. Update to fixed version >=1.4.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706803618"
             }
           ]
         },
@@ -6153,6 +6326,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:M/Au:N/C:N/I:P/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.1,
             "severity": "Medium",
@@ -6174,8 +6348,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rails-html-sanitizer is at version 1.3.0. Update to fixed version >=1.4.3.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706804535"
             }
           ]
         },
@@ -6188,6 +6362,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.1,
             "severity": "Medium",
@@ -6209,8 +6384,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rails-html-sanitizer is at version 1.3.0. Update to fixed version >=1.4.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706803144"
             }
           ]
         },
@@ -6223,6 +6398,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 6.1,
             "severity": "Medium",
@@ -6244,8 +6420,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rails-html-sanitizer is at version 1.3.0. Update to fixed version >=1.4.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1706806343"
             }
           ]
         },
@@ -6258,6 +6434,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 4.5,
             "severity": "Medium",
@@ -6279,8 +6456,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rdoc is at version 6.1.2. Update to fixed version >=6.3.4.1,6.3; OR >=6.4.1.1,6.4.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1724164505"
             }
           ]
         },
@@ -6293,6 +6470,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 4.3,
             "severity": "Medium",
@@ -6314,8 +6492,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rexml is at version 3.1.9. Update to fixed version >=3.3.2.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1721223260"
             }
           ]
         },
@@ -6328,6 +6506,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -6349,8 +6528,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rexml is at version 3.1.9. Update to fixed version >=3.2.7.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1715970991"
             }
           ]
         },
@@ -6363,6 +6542,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 5.9,
             "severity": "Medium",
@@ -6384,8 +6564,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rexml is at version 3.1.9. Update to fixed version >=3.3.6.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1724429908"
             }
           ]
         },
@@ -6398,6 +6578,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -6419,8 +6600,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rexml is at version 3.1.9. Update to fixed version >=3.3.3.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1722530725"
             }
           ]
         },
@@ -6433,6 +6614,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "",
             "cvss_v3_vector": "",
             "cvss_v3_score": 5.3,
             "severity": "Medium",
@@ -6454,8 +6636,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:rexml is at version 3.1.9. Update to fixed version >=3.3.3.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1722530725"
             }
           ]
         },
@@ -6468,6 +6650,7 @@
               "SI-2",
               "RA-5"
             ],
+            "cvss_vector": "AV:N/AC:H/Au:S/C:P/I:P/A:N",
             "cvss_v3_vector": "",
             "cvss_v3_score": 3.7,
             "severity": "Low",
@@ -6489,8 +6672,8 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:puma is at version 3.12.6. Update to fixed version >=4.3.9,4.3; OR >=5.5.1.",
-              "run_time": null,
-              "start_time": ""
+              "run_time": 0,
+              "start_time": "1665581451"
             }
           ]
         },
@@ -6551,7 +6734,7 @@
           ]
         }
       ],
-      "sha256": "835ff0d466c9bd785881ce5dc4109bc61afc1ba2fa7bd590ef32e998929705f5"
+      "sha256": "5a30709ae3fc6cad66081a4ad3c2b75c39887951a78920b08804b9094c9c4952"
     }
   ],
   "passthrough": {
