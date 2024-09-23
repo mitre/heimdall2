@@ -1,12 +1,7 @@
 import {ExecJSON} from 'inspecjs';
-import _, {floor} from 'lodash';
+import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
-import {
-  BaseConverter,
-  ILookupPath,
-  impactMapping,
-  MappedTransform
-} from './base-converter';
+import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from './utils/global';
 
@@ -135,7 +130,7 @@ function cweTags(description: string): string[] {
 
 function nistTags(cweTags: string[]): string[] {
   const identifiers = cweTags
-    .map((tag) => tag.match(/\d{3}/g)?.[0] || [])
+    .map((tag) => tag.match(/\d{3}/g)?.[0] ?? [])
     .flat();
   return CWE_NIST_MAPPING.nistFilter(
     identifiers,
@@ -268,8 +263,7 @@ export class NeuvectorMapper extends BaseConverter {
   };
   constructor(exportJson: string, withRaw = false) {
     const rawParams = JSON.parse(exportJson);
-    // TODO or to-answer: does it matter that collapseResults is true or false?
-    super(rawParams, true);
+    super(rawParams);
     this.withRaw = withRaw;
     this.rawData = rawParams;
     this.getModule = this.memoizedGetModule();
