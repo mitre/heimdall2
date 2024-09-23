@@ -247,6 +247,42 @@ export class NeuvectorMapper extends BaseConverter {
                 start_time: '' //Insert data
               }
             ]
+          },
+          {
+            path: 'report.checks',
+            key: 'id',
+            tags: {
+              category: {path: 'category'},
+              type: {path: 'type'},
+              profile: {path: 'profile'},
+              scored: {path: 'scored'},
+              automated: {path: 'automated'},
+              remediation: {path: 'remediation'},
+              level: {path: 'level'}
+            }, //Insert data
+            descriptions: [], //Insert data
+            refs: [], //Insert data
+            source_location: {}, //Insert data
+            title: null, //Insert data
+            id: {path: 'test_number'}, //Insert data
+            desc: {path: 'description'}, //Insert data
+            impact: {
+              path: 'level',
+              transformer: (level: string) => (level === 'WARN' ? 0 : 1)
+            }, //Insert data
+            code: null, //Insert data
+            results: [
+              {
+                status: ExecJSON.ControlResultStatus.Failed, //Insert data
+                code_desc: '', //Insert data
+                message: {
+                  path: 'message',
+                  transformer: (message: string[]) => message.join('\n')
+                }, //Insert data
+                run_time: null, //Insert data
+                start_time: '' //Insert data
+              }
+            ]
           }
         ],
         sha256: ''

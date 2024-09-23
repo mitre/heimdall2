@@ -6493,9 +6493,65 @@
               "start_time": ""
             }
           ]
+        },
+        {
+          "tags": {
+            "category": "image",
+            "type": "image",
+            "profile": "Level 1",
+            "scored": true,
+            "automated": "",
+            "remediation": "",
+            "level": "WARN"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": null,
+          "id": "I.4.1",
+          "desc": "Ensure a user for the container has been created",
+          "impact": 0,
+          "code": null,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "",
+              "run_time": null,
+              "start_time": ""
+            }
+          ]
+        },
+        {
+          "tags": {
+            "category": "image",
+            "type": "image",
+            "profile": "Level 1",
+            "scored": "",
+            "automated": "",
+            "remediation": "",
+            "level": "WARN"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": null,
+          "id": "I.4.6",
+          "desc": "Ensure that HEALTHCHECK instructions have been added to container images",
+          "impact": 0,
+          "code": null,
+          "results": [
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "",
+              "run_time": null,
+              "start_time": ""
+            }
+          ]
         }
       ],
-      "sha256": "2a87e028d3adb762e7dd88dc784481ecefa1036932f65e4f41223f694aac11f2"
+      "sha256": "6905f704c552c787af33cb1901e68448f8380043d27198f86cd881ac78e93edd"
     }
   ],
   "passthrough": {
