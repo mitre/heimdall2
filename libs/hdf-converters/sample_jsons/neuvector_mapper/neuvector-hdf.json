@@ -1596,6 +1596,13 @@
               "message": "Vulnerable package libxml2 is at version 2.9.10-r5. Update to fixed version 2.9.10-r6.",
               "run_time": null,
               "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.11.4.",
+              "run_time": null,
+              "start_time": ""
             }
           ]
         },
@@ -1629,6 +1636,13 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package libxml2 is at version 2.9.10-r5. Update to fixed version 2.9.10-r6.",
+              "run_time": null,
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.11.4.",
               "run_time": null,
               "start_time": ""
             }
@@ -2716,6 +2730,13 @@
               "message": "Vulnerable package zlib is at version 1.2.11-r3. Update to fixed version 1.2.12-r0.",
               "run_time": null,
               "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.13.4.",
+              "run_time": null,
+              "start_time": ""
             }
           ]
         },
@@ -2854,6 +2875,13 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package c-ares is at version 1.16.1-r0. Update to fixed version 1.17.2-r0.",
+              "run_time": null,
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "Vulnerable package nodejs is at version 12.18.4-r0. Update to fixed version 12.22.5-r0.",
               "run_time": null,
               "start_time": ""
             }
@@ -3099,6 +3127,13 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package libxml2 is at version 2.9.10-r5. Update to fixed version 2.9.10-r6.",
+              "run_time": null,
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "Vulnerable package ruby:nokogiri is at version 1.10.9. Update to fixed version >=1.11.4.",
               "run_time": null,
               "start_time": ""
             }
@@ -4011,6 +4046,20 @@
               "message": "Vulnerable package ruby:bundler is at version 2.1.4. Update to fixed version =2.2.10; OR >=2.2.18.",
               "run_time": null,
               "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "Vulnerable package ruby:bundler is at version 2.1.4. Update to fixed version =2.2.10; OR >=2.2.18.",
+              "run_time": null,
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "Vulnerable package ruby:bundler is at version 1.17.2. Update to fixed version =2.2.10; OR >=2.2.18.",
+              "run_time": null,
+              "start_time": ""
             }
           ]
         },
@@ -4044,6 +4093,20 @@
               "status": "failed",
               "code_desc": "",
               "message": "Vulnerable package ruby:bundler is at version 2.1.4. Update to fixed version >=2.2.33.",
+              "run_time": null,
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "Vulnerable package ruby:bundler is at version 2.1.4. Update to fixed version >=2.2.33.",
+              "run_time": null,
+              "start_time": ""
+            },
+            {
+              "status": "failed",
+              "code_desc": "",
+              "message": "Vulnerable package ruby:bundler is at version 1.17.2. Update to fixed version >=2.2.33.",
               "run_time": null,
               "start_time": ""
             }
@@ -6432,7 +6495,7 @@
           ]
         }
       ],
-      "sha256": "f0393ed317bf15174f5e56c2ff340a5bed5e542d602b2a752e8dcb313ee01f21"
+      "sha256": "2a87e028d3adb762e7dd88dc784481ecefa1036932f65e4f41223f694aac11f2"
     }
   ],
   "passthrough": {
