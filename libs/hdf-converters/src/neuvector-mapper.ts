@@ -121,6 +121,13 @@ export type NeuvectorScanJson = {
   error_message: string;
 };
 
+enum DockerSecurityBenchCheckResult {
+  Pass = 'PASS',
+  Warn = 'WARN',
+  Note = 'NOTE',
+  Info = 'INFO'
+}
+
 const CWE_NIST_MAPPING = new CweNistMapping();
 
 function cweTags(description: string): string[] {
@@ -257,18 +264,23 @@ export class NeuvectorMapper extends BaseConverter {
               profile: {path: 'profile'},
               scored: {path: 'scored'},
               automated: {path: 'automated'},
-              remediation: {path: 'remediation'},
+              remediation: {path: 'remediation'}, // This field is always an empty string due to what seems to be a bug with Neuvector's reported JSON, which comes from a copy-pasted test script from docker/docker-security-bench.
               level: {path: 'level'}
             },
             descriptions: [],
             refs: [],
             source_location: {},
-            title: null,
+            title: {
+              path: 'test_number',
+              transformer: (testNumber: string) =>
+                `Docker Security Benchmark ${testNumber}`
+            },
             id: {path: 'test_number'},
             desc: {path: 'description'},
             impact: {
               path: 'level',
-              transformer: (level: string) => (level === 'WARN' ? 0 : 1)
+              transformer: (level: DockerSecurityBenchCheckResult) =>
+                level === DockerSecurityBenchCheckResult.Warn ? 1 : 0
             },
             code: null,
             results: [
