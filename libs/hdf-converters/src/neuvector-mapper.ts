@@ -1,5 +1,5 @@
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import _, {floor} from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
   BaseConverter,
@@ -143,19 +143,6 @@ function nistTags(cweTags: string[]): string[] {
   );
 }
 
-function cvssTag(vectors: string): string {
-  const regex = /CVSS:(\d+.\d)/;
-  const tag = vectors.match(regex)?.[1];
-  return tag || '';
-}
-
-const IMPACT_MAPPING: Map<string, number> = new Map([
-  ['critical', 0.9],
-  ['high', 0.7],
-  ['medium', 0.5],
-  ['low', 0.3]
-]);
-
 function cveIdMatches(cveName: string): (value: RESTModuleCve) => boolean {
   return (cve: RESTModuleCve) => cve.name === cveName;
 }
@@ -206,6 +193,11 @@ export class NeuvectorMapper extends BaseConverter {
             path: 'report.vulnerabilities',
             key: 'id',
             tags: {
+              // Security Risk Score as shown in the Neuvector dashboard.
+              security_risk_score: {
+                path: 'score',
+                transformer: (score: number) => score * 10
+              },
               cve: {path: 'name'},
               cwe: {
                 path: 'description',
@@ -216,13 +208,9 @@ export class NeuvectorMapper extends BaseConverter {
                 transformer: (description: string) =>
                   nistTags(cweTags(description))
               },
-              cvss: {
-                path: 'vectors_v3',
-                transformer: cvssTag
-              },
-              severity: {
-                path: 'severity'
-              },
+              cvss_v3_vector: {path: 'vectors_v3'},
+              cvss_v3_score: {path: 'score_v3'},
+              severity: {path: 'severity'},
               source: {
                 path: 'package_name',
                 transformer: (packageName: string) =>
@@ -243,8 +231,8 @@ export class NeuvectorMapper extends BaseConverter {
             id: {path: 'name'}, //Insert data
             desc: {path: 'description'}, //Insert data
             impact: {
-              path: 'severity',
-              transformer: impactMapping(IMPACT_MAPPING)
+              path: 'score',
+              transformer: (score: number) => Number((score / 10).toFixed(1))
             }, //Insert data
             code: null, //Insert data
             results: [
