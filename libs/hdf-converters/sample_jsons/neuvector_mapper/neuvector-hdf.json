@@ -6507,10 +6507,10 @@
           "descriptions": [],
           "refs": [],
           "source_location": {},
-          "title": null,
+          "title": "Docker Security Benchmark I.4.1",
           "id": "I.4.1",
           "desc": "Ensure a user for the container has been created",
-          "impact": 0,
+          "impact": 1,
           "code": null,
           "results": [
             {
@@ -6535,10 +6535,10 @@
           "descriptions": [],
           "refs": [],
           "source_location": {},
-          "title": null,
+          "title": "Docker Security Benchmark I.4.6",
           "id": "I.4.6",
           "desc": "Ensure that HEALTHCHECK instructions have been added to container images",
-          "impact": 0,
+          "impact": 1,
           "code": null,
           "results": [
             {
@@ -6551,7 +6551,7 @@
           ]
         }
       ],
-      "sha256": "6905f704c552c787af33cb1901e68448f8380043d27198f86cd881ac78e93edd"
+      "sha256": "835ff0d466c9bd785881ce5dc4109bc61afc1ba2fa7bd590ef32e998929705f5"
     }
   ],
   "passthrough": {
