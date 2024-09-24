@@ -4,6 +4,7 @@ import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from './utils/global';
+import {cp} from 'fs';
 
 /* Types are generated with Tygo, from original Golang source code to TypeScript, and tweaked to reflect actual outputted JSON. */
 type RESTVulnerability = {
@@ -132,7 +133,7 @@ const CWE_NIST_MAPPING = new CweNistMapping();
 
 function cweTags(description: string): string[] | undefined {
   const regex = /CWE-\d{3}/g;
-  return description.match(regex)?.flat();
+  return description?.match(regex)?.flat();
 }
 
 function nistTags(cweTags: string[] | undefined): string[] {
@@ -146,6 +147,11 @@ function nistTags(cweTags: string[] | undefined): string[] {
 
 function ghsaTag(name: string): string | undefined {
   const regex = /GHSA-[a-z|0-9]{4}-[a-z|0-9]{4}-[a-z|0-9]{4}/;
+  return name.match(regex)?.[0];
+}
+
+function rhsaTag(name: string): string | undefined {
+  const regex = /RHSA-[a-z|0-9]{4}:[a-z|0-9]{4}/;
   return name.match(regex)?.[0];
 }
 
@@ -217,6 +223,10 @@ export class NeuvectorMapper extends BaseConverter {
             key: 'id',
             tags: {
               cves: {path: 'cves'},
+              cpes: {
+                path: 'cpes',
+                transformer: (cpes: string[]) => (!cpes ? undefined : cpes)
+              },
               cwe: {
                 path: 'description',
                 transformer: cweTags
@@ -227,6 +237,7 @@ export class NeuvectorMapper extends BaseConverter {
                   nistTags(cweTags(description))
               },
               ghsa: {path: 'name', transformer: ghsaTag},
+              rhsa: {path: 'name', transformer: rhsaTag},
               // `score` is confirmed to be CVSS v2 in https://github.com/neuvector/scanner/blob/765fb1db2cf678ea6c6d386f3eb0f720311d745a/cvetools/cvesearch.go#L1416
               score: {path: 'score'},
               vectors: {path: 'vectors'},

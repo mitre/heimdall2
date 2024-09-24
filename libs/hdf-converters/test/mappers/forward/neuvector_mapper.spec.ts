@@ -2,7 +2,7 @@ import fs from 'fs';
 import {NeuvectorMapper} from '../../../src/neuvector-mapper';
 import {omitVersions} from '../../utils';
 
-const INPUT_FILE_INDICES = [1, 2, 3];
+const INPUT_FILE_INDICES = [1, 2, 3, 4];
 
 describe('neuvector_mapper', () => {
   it('Successfully converts neuvector targeted at a local/cloned repository data', () => {
