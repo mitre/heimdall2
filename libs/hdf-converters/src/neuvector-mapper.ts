@@ -4,7 +4,6 @@ import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from './utils/global';
-import {cp} from 'fs';
 
 /* Types are generated with Tygo, from original Golang source code to TypeScript, and tweaked to reflect actual outputted JSON. */
 type RESTVulnerability = {
@@ -68,7 +67,7 @@ type RESTScanSecret = {
   type: string; // the secret description
   evidence: string; // found in a cloaked string
   path: string; // file path
-  suggestion: string; // Todo:
+  suggestion: string;
 };
 
 type RESTScanSetIdPerm = {
@@ -147,12 +146,12 @@ function nistTags(cweTags: string[] | undefined): string[] {
 
 function ghsaTag(name: string): string | undefined {
   const regex = /GHSA-[a-z|0-9]{4}-[a-z|0-9]{4}-[a-z|0-9]{4}/;
-  return name.match(regex)?.[0];
+  return regex.exec(name)?.[0];
 }
 
 function rhsaTag(name: string): string | undefined {
   const regex = /RHSA-[a-z|0-9]{4}:[a-z|0-9]{4}/;
-  return name.match(regex)?.[0];
+  return regex.exec(name)?.[0];
 }
 
 function cveIdMatches(cveName: string): (value: RESTModuleCve) => boolean {
