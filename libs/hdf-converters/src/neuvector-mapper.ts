@@ -130,19 +130,23 @@ enum DockerSecurityBenchCheckResult {
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 
-function cweTags(description: string): string[] {
+function cweTags(description: string): string[] | undefined {
   const regex = /CWE-\d{3}/g;
-  return description.match(regex)?.flat() || [];
+  return description.match(regex)?.flat();
 }
 
-function nistTags(cweTags: string[]): string[] {
-  const identifiers = cweTags
-    .map((tag) => tag.match(/\d{3}/g)?.[0] ?? [])
-    .flat();
+function nistTags(cweTags: string[] | undefined): string[] {
+  const identifiers =
+    cweTags?.map((tag: string) => tag.match(/\d{3}/g)?.[0] ?? [])?.flat() ?? [];
   return CWE_NIST_MAPPING.nistFilter(
     identifiers,
     DEFAULT_UPDATE_REMEDIATION_NIST_TAGS
   );
+}
+
+function ghsaTag(name: string): string | undefined {
+  const regex = /GHSA-[a-z|0-9]{4}-[a-z|0-9]{4}-[a-z|0-9]{4}/;
+  return name.match(regex)?.[0];
 }
 
 function cveIdMatches(cveName: string): (value: RESTModuleCve) => boolean {
@@ -153,10 +157,16 @@ function universalTags(): MappedTransform<
   {[key: string]: any} & ILookupPath,
   ILookupPath
 > {
+  // Heimdall currently doesn't have a way to display passthrough data, and this information would be useful to view per vulnerability.
   return {
-    // Heimdall currently doesn't have a way to display passthrough data, and this information would be useful to view per vulnerability.
-    envs: {path: '$.report.envs'},
-    cmds: {path: '$.report.cmds'}
+    envs: {
+      path: '$.report.envs',
+      transformer: (envs: string[]) => (!envs ? undefined : envs)
+    },
+    cmds: {
+      path: '$.report.cmds',
+      transformer: (cmds: string[]) => (!cmds ? undefined : cmds)
+    }
   };
 }
 
@@ -206,7 +216,7 @@ export class NeuvectorMapper extends BaseConverter {
             path: 'report.vulnerabilities',
             key: 'id',
             tags: {
-              cve: {path: 'name'},
+              cves: {path: 'cves'},
               cwe: {
                 path: 'description',
                 transformer: cweTags
@@ -216,6 +226,7 @@ export class NeuvectorMapper extends BaseConverter {
                 transformer: (description: string) =>
                   nistTags(cweTags(description))
               },
+              ghsa: {path: 'name', transformer: ghsaTag},
               // `score` is confirmed to be CVSS v2 in https://github.com/neuvector/scanner/blob/765fb1db2cf678ea6c6d386f3eb0f720311d745a/cvetools/cvesearch.go#L1416
               score: {path: 'score'},
               vectors: {path: 'vectors'},
@@ -229,19 +240,22 @@ export class NeuvectorMapper extends BaseConverter {
                 transformer: (packageName: string) =>
                   this.getModule(packageName)?.source
               },
-              cve_status: {
+              status: {
                 path: 'name',
                 transformer: (name: string) =>
                   this.rawData.report.modules
                     ?.find((module) => module.cves?.find(cveIdMatches(name)))
                     ?.cves?.find(cveIdMatches(name))?.status
               },
+              feed_rating: {path: 'feed_rating'},
+              link: {path: 'link'},
+              // Both fields are Unix epoch timestamps, in seconds.
+              published_timestamp: {path: 'published_timestamp'},
+              last_modified_timestamp: {path: 'last_modified_timestamp'},
               ...universalTags()
             },
-            descriptions: [],
             refs: [],
             source_location: {ref: {path: 'file_name'}},
-            title: null,
             id: {
               transformer: (data: Record<string, any>) =>
                 `${data.name}/${data.package_name}/${data.package_version}`
@@ -267,17 +281,7 @@ export class NeuvectorMapper extends BaseConverter {
                     return `Vulnerable package ${package_name} is at version ${package_version}. Update to fixed version ${fixed_version}.`;
                   }
                 },
-                // This is almost always going to be the number 0.
-                // Looks like Unix epoch timestamps, which are in seconds.
-                run_time: {
-                  transformer: (data: Record<string, any>) =>
-                    data.last_modified_timestamp - data.published_timestamp
-                },
-                // Unix epoch timestamp, in seconds.
-                start_time: {
-                  path: 'published_timestamp',
-                  transformer: (startTime: number) => `${startTime}`
-                }
+                start_time: ''
               }
             ]
           },
@@ -323,7 +327,8 @@ export class NeuvectorMapper extends BaseConverter {
                 code_desc: 'Requires manual review.',
                 message: {
                   path: 'message',
-                  transformer: (message: string[]) => message.join('\n')
+                  transformer: (message: string[]) =>
+                    !message.length ? undefined : message.join('\n')
                 },
                 run_time: null,
                 start_time: '',
