@@ -211,18 +211,7 @@ export class NeuvectorMapper extends BaseConverter {
         license: null,
         copyright: null,
         copyright_email: null,
-        supports: [
-          {
-            'platform-name': {
-              path: 'base_os',
-              transformer: (baseOs: string) => /(\w+):\d.\d/.exec(baseOs)?.[0]
-            },
-            release: {
-              path: 'base_os',
-              transformer: (baseOs: string) => /\w+:(\d.\d)/.exec(baseOs)?.[0]
-            }
-          }
-        ],
+        supports: [],
         attributes: [],
         depends: [],
         groups: [],
@@ -303,57 +292,6 @@ export class NeuvectorMapper extends BaseConverter {
                   }
                 },
                 start_time: ''
-              }
-            ]
-          },
-          {
-            path: 'report.checks',
-            key: 'id',
-            tags: {
-              category: {path: 'category'},
-              type: {path: 'type'},
-              profile: {path: 'profile'},
-              scored: {
-                path: 'scored',
-                transformer: (scored: boolean) => Boolean(scored).toString()
-              },
-              automated: {
-                path: 'automated',
-                transformer: (automated: boolean) =>
-                  Boolean(automated).toString()
-              },
-              remediation: {path: 'remediation'}, // This field is always an empty string due to what seems to be a bug with Neuvector's reported JSON, which comes from a copy-pasted test script from docker/docker-security-bench.
-              level: {path: 'level'},
-              ...universalTags()
-            },
-            descriptions: [],
-            refs: [],
-            source_location: {},
-            title: {
-              path: 'test_number',
-              transformer: (testNumber: string) =>
-                `CIS Docker Benchmark ${testNumber}`
-            },
-            id: {path: 'test_number'},
-            desc: {path: 'description'},
-            impact: {
-              path: 'level',
-              transformer: (level: DockerSecurityBenchCheckResult) =>
-                level === DockerSecurityBenchCheckResult.Warn ? 1 : 0
-            },
-            code: null,
-            results: [
-              {
-                status: ExecJSON.ControlResultStatus.Skipped,
-                code_desc: 'Requires manual review.',
-                message: {
-                  path: 'message',
-                  transformer: (message: string[]) =>
-                    !message.length ? undefined : message.join('\n')
-                },
-                run_time: null,
-                start_time: '',
-                skip_message: 'Requires manual review.'
               }
             ]
           }
