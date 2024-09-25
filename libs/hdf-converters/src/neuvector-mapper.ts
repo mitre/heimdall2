@@ -211,7 +211,18 @@ export class NeuvectorMapper extends BaseConverter {
         license: null,
         copyright: null,
         copyright_email: null,
-        supports: [],
+        supports: [
+          {
+            'platform-name': {
+              path: 'base_os',
+              transformer: (baseOs: string) => /(\w+):\d.\d/.exec(baseOs)?.[0]
+            },
+            release: {
+              path: 'base_os',
+              transformer: (baseOs: string) => /\w+:(\d.\d)/.exec(baseOs)?.[0]
+            }
+          }
+        ],
         attributes: [],
         depends: [],
         groups: [],
@@ -321,7 +332,7 @@ export class NeuvectorMapper extends BaseConverter {
             title: {
               path: 'test_number',
               transformer: (testNumber: string) =>
-                `Docker Security Benchmark ${testNumber}`
+                `CIS Docker Benchmark ${testNumber}`
             },
             id: {path: 'test_number'},
             desc: {path: 'description'},
