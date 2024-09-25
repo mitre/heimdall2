@@ -121,13 +121,6 @@ export type NeuvectorScanJson = {
   error_message: string;
 };
 
-enum DockerSecurityBenchCheckResult {
-  Pass = 'PASS',
-  Warn = 'WARN',
-  Note = 'NOTE',
-  Info = 'INFO'
-}
-
 const CWE_NIST_MAPPING = new CweNistMapping();
 
 function cweTags(description: string): string[] | undefined {
