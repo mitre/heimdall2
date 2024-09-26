@@ -19,10 +19,10 @@ describe('neuvector_mapper', () => {
         )
       );
 
-      // fs.writeFileSync(
-      //   `sample_jsons/neuvector_mapper/neuvector-hdf-${name}.json`,
-      //   JSON.stringify(mapper.toHdf(), null, 2)
-      // );
+      fs.writeFileSync(
+        `sample_jsons/neuvector_mapper/neuvector-hdf-${name}.json`,
+        JSON.stringify(mapper.toHdf(), null, 2)
+      );
 
       expect(omitVersions(mapper.toHdf())).toEqual(
         omitVersions(
@@ -51,10 +51,10 @@ describe('neuvector_mapper_withraw', () => {
         true
       );
 
-      // fs.writeFileSync(
-      //   `sample_jsons/neuvector_mapper/neuvector-hdf-withraw-${name}.json`,
-      //   JSON.stringify(mapper.toHdf(), null, 2)
-      // );
+      fs.writeFileSync(
+        `sample_jsons/neuvector_mapper/neuvector-hdf-withraw-${name}.json`,
+        JSON.stringify(mapper.toHdf(), null, 2)
+      );
 
       expect(omitVersions(mapper.toHdf())).toEqual(
         omitVersions(

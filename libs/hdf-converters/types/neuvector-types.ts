@@ -1,9 +1,11 @@
 export type RESTVulnerability = {
+  // This can be a CVE, GHSA, or RHSA.
   name: string;
   // `score` is possibly CVSS v2 based on https://github.com/neuvector/scanner/blob/765fb1db2cf678ea6c6d386f3eb0f720311d745a/cvetools/cvesearch.go#L1416.
   score: number /* Tygo: float32 */;
   // Could be CVSS v3, since info for v2 and v4 doesn't always exist for CVEs.
   severity: string;
+  // Could be the CVSS v2 vector.
   vectors: string;
   description: string;
   file_name: string;
@@ -11,8 +13,9 @@ export type RESTVulnerability = {
   package_version: string;
   fixed_version: string;
   link: string;
-  // In the NeuVector Scanning & Compliance documentation, Score (V3) is selectable by a dropdown. This score is possibly CVSS v3.
+  // In the NeuVector Scanning & Compliance documentation, Score (V3) is selectable by a dropdown. This could be the CVSS v3 score.
   score_v3: number /* Tygo: float32 */;
+  // Could be the CVSS v3 vector.
   vectors_v3: string;
   // Both timestamp fields are Unix epoch timestamps, in seconds.
   published_timestamp: number /* Tygo: int64 */;
@@ -84,8 +87,10 @@ type RESTScanReport = {
   checks?: RESTBenchItem[];
   secrets?: RESTScanSecret[];
   setid_perms?: RESTScanSetIdPerm[];
+  // Environment variables used within the Docker image
   envs?: string[];
   labels?: Record<string, string>;
+  // Dockerfile CMDs
   cmds?: string[];
   signature_data?: RESTScanSignatureInfo;
 };

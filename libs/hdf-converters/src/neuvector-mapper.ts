@@ -192,21 +192,11 @@ export class NeuVectorMapper extends BaseConverter {
               last_modified_timestamp: {path: 'last_modified_timestamp'},
               envs: {
                 path: '$.report.envs',
-                transformer: (envs: string[]) =>
-                  conditionallyProvideAttribute(
-                    'envs',
-                    envs,
-                    envs?.length !== 0
-                  )
+                transformer: (envs: string[]) => (!envs ? undefined : envs)
               },
               cmds: {
                 path: '$.report.cmds',
-                transformer: (cmds: string[]) =>
-                  conditionallyProvideAttribute(
-                    'cmds',
-                    cmds,
-                    cmds?.length !== 0
-                  )
+                transformer: (cmds: string[]) => (!cmds ? undefined : cmds)
               }
             },
             refs: [],
