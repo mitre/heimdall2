@@ -216,6 +216,7 @@ export class AnchoreGrypeMapper extends BaseConverter {
       passthrough: {
         transformer: (data: Record<string, any>): Record<string, unknown> => {
           return {
+            auxiliary_data: [{name: '', data: _.omit([])}], //Insert service name and mapped fields to be removed
             ...(this.withRaw && {raw: data})
           };
         }

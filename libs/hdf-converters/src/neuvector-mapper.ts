@@ -34,6 +34,23 @@ function cveIdMatches(cveName: string): (value: RESTModuleCve) => boolean {
 export class NeuVectorMapper extends BaseConverter {
   withRaw: boolean;
   rawData: NeuVectorScanJson;
+  getModules: (moduleName: string) => RESTScanModule['source'] | undefined;
+
+  memoizedGetModules(): (
+    moduleName: string
+  ) => RESTScanModule['source'] | undefined {
+    const cache: Record<string, RESTScanModule['source'] | undefined> = {};
+
+    return (moduleName: string) => {
+      if (Object.prototype.hasOwnProperty.call(cache, moduleName)) {
+        return cache[moduleName];
+      }
+      cache[moduleName] = (this.data as NeuVectorScanJson).report.modules?.find(
+        (value) => value.name === moduleName
+      )?.source;
+      return cache[moduleName];
+    };
+  }
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -81,7 +98,7 @@ export class NeuVectorMapper extends BaseConverter {
               source: {
                 path: 'package_name',
                 transformer: (packageName: string) =>
-                  this.getModule(packageName)?.source
+                  this.getModules(packageName)
               },
               status: {
                 path: 'name',
@@ -163,11 +180,6 @@ export class NeuVectorMapper extends BaseConverter {
     super(rawParams);
     this.withRaw = withRaw;
     this.rawData = rawParams;
-  }
-
-  getModule(moduleName: string): RESTScanModule | undefined {
-    return this.rawData.report.modules?.find(
-      (value: RESTScanModule) => value.name === moduleName
-    );
+    this.getModules = this.memoizedGetModules();
   }
 }
