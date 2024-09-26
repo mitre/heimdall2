@@ -3,96 +3,60 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from './utils/global';
+import {
+  conditionallyProvideAttribute,
+  DEFAULT_UPDATE_REMEDIATION_NIST_TAGS
+} from './utils/global';
+import {
+  NeuVectorScanJson,
+  RESTModuleCve,
+  RESTScanModule,
+  RESTVulnerability
+} from '../types/neuvector-types';
 
-/* Types are generated with Tygo, from original Golang source code to TypeScript, and tweaked to reflect actual outputted JSON. */
-type RESTVulnerability = {
-  name: string;
-  score: number /* float32 */;
-  severity: string;
-  vectors: string;
-  description: string;
-  file_name: string;
-  package_name: string;
-  package_version: string;
-  fixed_version: string;
-  link: string;
-  score_v3: number /* float32 */;
-  vectors_v3: string;
-  published_timestamp: number /* int64 */;
-  last_modified_timestamp: number /* int64 */;
-  cpes?: string[];
-  cves?: string[];
-  feed_rating: string;
-  in_base_image?: boolean;
-  tags?: string[];
-};
+/* Types are generated with Tygo, from original Golang source code to TypeScript, and tweaked to reflect actual outputted JSON. 
 
-type RESTScanModule = {
-  name: string;
-  file: string;
-  version: string;
-  source: string;
-  cves?: RESTModuleCve[];
-  cpes?: string[];
-};
+// Dockerfile
+```
+FROM alpine:3.12 AS clone
+# If using a VPN, install certificates for `git clone` to work
+ADD <URLs to CA certificates>
+RUN update-ca-certificates
+git clone https://github.com/neuvector/neuvector.git
+FROM golang:1.23.0 AS build
+# If using a VPN, install certificates for `go install` to work
+ADD <URLs to CA certificates>
+RUN update-ca-certificates
+go install github.com/gzuidhof/tygo@latest
+WORKDIR /go/neuvector
+COPY --from=clone /neuvector .
+COPY tygo.yaml .
+```
 
-type RESTModuleCve = {
-  name: string;
-  status: string;
-};
+// tygo.yaml
+```
+packages:
+  - path: 'github.com/neuvector/neuvector/controller/api'
+    output_path: '/go/output/neuvector-generated-types.ts'
+```
 
-type RESTBenchItem = {
-  level: string;
-  evidence?: string;
-  location?: string;
-  message: string[];
-  group?: string;
-} & RESTBenchCheck;
+// docker-compose.yml
+```
+services:
+  # Generates neuvector/scanner TypeScript types from its Golang source code
+  go2ts:
+    container_name: tygo
+    volumes:
+      - './tygo-output/:/go/output/'
+    build:
+      dockerfile: Dockerfile
+    tty: true
+    command: tygo generate
+```
 
-type RESTBenchCheck = {
-  test_number: string;
-  category: string;
-  type: string;
-  profile: string;
-  scored: boolean;
-  automated: boolean;
-  description: string;
-  remediation: string;
-  tags?: string[]; // Tags provide list of compliance that related to the cis test item.
-  tags_v2?: Record<string, any /* share.TagDetails */>; // TagsV2 provide compliance details for each compliance tag
-};
-
-type RESTScanSecret = {
-  type: string; // the secret description
-  evidence: string; // found in a cloaked string
-  path: string; // file path
-  suggestion: string;
-};
-
-type RESTScanSetIdPerm = {
-  type: string; // the set id descriptions
-  evidence: string; // file attributes
-  path: string; // file path
-};
-
-type RESTScanSignatureInfo = {
-  verifiers?: string[];
-  verification_timestamp: string;
-};
-
-type RESTScanReport = {
-  vulnerabilities: RESTVulnerability[];
-  modules?: RESTScanModule[];
-  checks?: RESTBenchItem[];
-  secrets?: RESTScanSecret[];
-  setid_perms?: RESTScanSetIdPerm[];
-  envs?: string[];
-  labels?: Record<string, string>;
-  cmds?: string[];
-  signature_data?: RESTScanSignatureInfo;
-};
-
+// `docker compose` command to regenerate Tygo types: `docker compose up --build go2ts`. Output file will be `./tygo-output/neuvector-generated-types.ts`. 
+Some of the generated types are copied into and defined in `heimdall2/libs/hdf-converters/types/neuvector-types.ts`. The currently-used generated types begin with `REST`, and some of the generated types are tweaked such that when they have a field beginning with `REST`, the field is intersected instead. For example: 
+```
 type RESTScanRepoReport = {
   verdict?: string;
   image_id: string;
@@ -100,7 +64,7 @@ type RESTScanRepoReport = {
   repository: string;
   tag: string;
   digest: string;
-  size: number /* int64 */;
+  size: number;
   author: string;
   base_os: string;
   created_at: string;
@@ -108,78 +72,51 @@ type RESTScanRepoReport = {
   cvedb_create_time: string;
   layers: RESTScanLayer[];
 } & RESTScanReport;
-
-type RESTScanLayer = {
+```
+was tweaked from the generated
+```
+export interface RESTScanRepoReport {
+  verdict?: string;
+  image_id: string;
+  registry: string;
+  repository: string;
+  tag: string;
   digest: string;
-  cmds: string;
-  vulnerabilities: RESTVulnerability[];
-  size: number /* int64 */;
-};
-
-export type NeuvectorScanJson = {
-  report: RESTScanRepoReport;
-  error_message: string;
-};
+  size: number;
+  author: string;
+  base_os: string;
+  created_at: string;
+  cvedb_version: string;
+  cvedb_create_time: string;
+  layers: (RESTScanLayer | undefined)[];
+  RESTScanReport: RESTScanReport;
+}
+```
+. In the original Golang RESTScanRepoReport struct at https://github.com/neuvector/neuvector/blob/15496f08f7c445acd4901105fa9e73637b72cdf7/controller/api/apis.go#L2444-L2459, RESTScanReport is composed within RESTScanRepoReport. In Golang, this allows RESTScanRepoReport to use RESTScanReport's members. Tygo embeds RESTScanReport inside of RESTScanRepoReport, but when comparing the actual NeuVector JSON output to the struct definitions, RESTScanReport is not a field of the output's `report` field. In TypeScript, the equivalent of a type accessing another type's members is type intersection. Additionally, NeuVectorScanJson is handcrafted, as its equivalent type doesn't exist in `neuvector-generated-types.ts`.
+*/
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 
 function cweTags(description: string): string[] | undefined {
   const regex = /CWE-\d{3}/g;
-  return description?.match(regex)?.flat();
+  return description.match(regex) ?? undefined;
 }
 
 function nistTags(cweTags: string[] | undefined): string[] {
-  const identifiers =
-    cweTags?.map((tag: string) => tag.match(/\d{3}/g)?.[0] ?? [])?.flat() ?? [];
+  const identifiers = cweTags?.map((tag: string) => tag.slice(-3)) ?? [];
   return CWE_NIST_MAPPING.nistFilter(
     identifiers,
     DEFAULT_UPDATE_REMEDIATION_NIST_TAGS
   );
 }
 
-function ghsaTag(name: string): string | undefined {
-  const regex = /GHSA-[a-z|0-9]{4}-[a-z|0-9]{4}-[a-z|0-9]{4}/;
-  return regex.exec(name)?.[0];
-}
-
-function rhsaTag(name: string): string | undefined {
-  const regex = /RHSA-[a-z|0-9]{4}:[a-z|0-9]{4}/;
-  return regex.exec(name)?.[0];
-}
-
 function cveIdMatches(cveName: string): (value: RESTModuleCve) => boolean {
   return (cve: RESTModuleCve) => cve.name === cveName;
 }
 
-function universalTags(): MappedTransform<
-  {[key: string]: any} & ILookupPath,
-  ILookupPath
-> {
-  // Heimdall currently doesn't have a way to display passthrough data, and this information would be useful to view per vulnerability.
-  return {
-    envs: {
-      path: '$.report.envs',
-      transformer: (envs: string[]) => (!envs ? undefined : envs)
-    },
-    cmds: {
-      path: '$.report.cmds',
-      transformer: (cmds: string[]) => (!cmds ? undefined : cmds)
-    }
-  };
-}
-
-export class NeuvectorMapper extends BaseConverter {
+export class NeuVectorMapper extends BaseConverter {
   withRaw: boolean;
-  rawData: NeuvectorScanJson;
-  getModule: (moduleName: string) => RESTScanModule | undefined;
-
-  memoizedGetModule(): (moduleName: string) => RESTScanModule | undefined {
-    return (moduleName: string) => {
-      return this.rawData.report.modules?.find(
-        (value: RESTScanModule) => value.name === moduleName
-      );
-    };
-  }
+  rawData: NeuVectorScanJson;
 
   mappings: MappedTransform<
     ExecJSON.Execution & {passthrough: unknown},
@@ -187,8 +124,7 @@ export class NeuvectorMapper extends BaseConverter {
   > = {
     platform: {
       name: 'Heimdall Tools',
-      release: HeimdallToolsVersion,
-      target_id: null
+      release: HeimdallToolsVersion
     },
     version: HeimdallToolsVersion,
     statistics: {
@@ -196,7 +132,7 @@ export class NeuvectorMapper extends BaseConverter {
     },
     profiles: [
       {
-        name: 'Neuvector',
+        name: 'NeuVector Scan',
         title: null,
         version: null,
         maintainer: null,
@@ -217,7 +153,12 @@ export class NeuvectorMapper extends BaseConverter {
               cves: {path: 'cves'},
               cpes: {
                 path: 'cpes',
-                transformer: (cpes: string[]) => (!cpes ? undefined : cpes)
+                transformer: (cpes: string[]) =>
+                  conditionallyProvideAttribute(
+                    'cpes',
+                    cpes,
+                    cpes?.length !== 0
+                  )
               },
               cwe: {
                 path: 'description',
@@ -228,15 +169,10 @@ export class NeuvectorMapper extends BaseConverter {
                 transformer: (description: string) =>
                   nistTags(cweTags(description))
               },
-              ghsa: {path: 'name', transformer: ghsaTag},
-              rhsa: {path: 'name', transformer: rhsaTag},
-              // `score` is confirmed to be CVSS v2 in https://github.com/neuvector/scanner/blob/765fb1db2cf678ea6c6d386f3eb0f720311d745a/cvetools/cvesearch.go#L1416
               score: {path: 'score'},
               vectors: {path: 'vectors'},
-              // In the neuvector/scanner dashboard, the CVSS v2 and v3 scores are selectable by a dropdown.
               vectors_v3: {path: 'vectors_v3'},
               score_v3: {path: 'score_v3'},
-              // Appears to be CVSS v3, since info for v2 and v4 doesn't always exist for CVEs.
               severity: {path: 'severity'},
               source: {
                 path: 'package_name',
@@ -252,20 +188,36 @@ export class NeuvectorMapper extends BaseConverter {
               },
               feed_rating: {path: 'feed_rating'},
               link: {path: 'link'},
-              // Both fields are Unix epoch timestamps, in seconds.
               published_timestamp: {path: 'published_timestamp'},
               last_modified_timestamp: {path: 'last_modified_timestamp'},
-              ...universalTags()
+              envs: {
+                path: '$.report.envs',
+                transformer: (envs: string[]) =>
+                  conditionallyProvideAttribute(
+                    'envs',
+                    envs,
+                    envs?.length !== 0
+                  )
+              },
+              cmds: {
+                path: '$.report.cmds',
+                transformer: (cmds: string[]) =>
+                  conditionallyProvideAttribute(
+                    'cmds',
+                    cmds,
+                    cmds?.length !== 0
+                  )
+              }
             },
             refs: [],
             source_location: {ref: {path: 'file_name'}},
             id: {
-              transformer: (data: Record<string, any>) =>
+              transformer: (data: RESTVulnerability) =>
                 `${data.name}/${data.package_name}/${data.package_version}`
             },
             desc: {path: 'description'},
             impact: {
-              transformer: (data: Record<string, any>) => {
+              transformer: (data: RESTVulnerability) => {
                 const score = data.score_v3 ?? data.score;
                 return Number((score / 10).toFixed(1));
               }
@@ -276,7 +228,7 @@ export class NeuvectorMapper extends BaseConverter {
                 status: ExecJSON.ControlResultStatus.Failed,
                 code_desc: '',
                 message: {
-                  transformer: (data: Record<string, any>) => {
+                  transformer: (data: RESTVulnerability) => {
                     const {package_name, package_version, fixed_version} = data;
                     if (!fixed_version) {
                       return `Vulnerable package ${package_name} is at version ${package_version}. No fixed version available.`;
@@ -293,7 +245,11 @@ export class NeuvectorMapper extends BaseConverter {
       }
     ],
     passthrough: {
-      transformer: (data: Record<string, any>): Record<string, unknown> => {
+      transformer: (
+        data: NeuVectorScanJson
+      ): {
+        auxiliary_data: {name: string; data: Pick<never[], keyof never[]>}[];
+      } & {raw?: NeuVectorScanJson} => {
         return {
           auxiliary_data: [{name: '', data: _.omit([])}], //Insert service name and mapped fields to be removed
           ...(this.withRaw && {raw: data})
@@ -306,6 +262,11 @@ export class NeuvectorMapper extends BaseConverter {
     super(rawParams);
     this.withRaw = withRaw;
     this.rawData = rawParams;
-    this.getModule = this.memoizedGetModule();
+  }
+
+  getModule(moduleName: string): RESTScanModule | undefined {
+    return this.rawData.report.modules?.find(
+      (value: RESTScanModule) => value.name === moduleName
+    );
   }
 }

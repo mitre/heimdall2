@@ -1,21 +1,26 @@
 import fs from 'fs';
-import {NeuvectorMapper} from '../../../src/neuvector-mapper';
+import {NeuVectorMapper} from '../../../src/neuvector-mapper';
 import {omitVersions} from '../../utils';
 
-const INPUT_FILE_INDICES = [1, 2, 3, 4];
+const INPUT_REPOSITORY_NAMES = [
+  'mitre-caldera',
+  'mitre-heimdall',
+  'mitre-heimdall2',
+  'mitre-vulcan'
+];
 
 describe('neuvector_mapper', () => {
-  it('Successfully converts neuvector targeted at a local/cloned repository data', () => {
-    INPUT_FILE_INDICES.forEach((index) => {
-      const mapper = new NeuvectorMapper(
+  it('Successfully converts NeuVector targeted at a local/cloned repository data', () => {
+    for (const name of INPUT_REPOSITORY_NAMES) {
+      const mapper = new NeuVectorMapper(
         fs.readFileSync(
-          `sample_jsons/neuvector_mapper/sample_input_report/neuvector-${index}.json`,
+          `sample_jsons/neuvector_mapper/sample_input_report/neuvector-${name}.json`,
           {encoding: 'utf-8'}
         )
       );
 
       // fs.writeFileSync(
-      //   `sample_jsons/neuvector_mapper/neuvector-hdf-${index}.json`,
+      //   `sample_jsons/neuvector_mapper/neuvector-hdf-${name}.json`,
       //   JSON.stringify(mapper.toHdf(), null, 2)
       // );
 
@@ -23,7 +28,7 @@ describe('neuvector_mapper', () => {
         omitVersions(
           JSON.parse(
             fs.readFileSync(
-              `sample_jsons/neuvector_mapper/neuvector-hdf-${index}.json`,
+              `sample_jsons/neuvector_mapper/neuvector-hdf-${name}.json`,
               {
                 encoding: 'utf-8'
               }
@@ -31,23 +36,23 @@ describe('neuvector_mapper', () => {
           )
         )
       );
-    });
+    }
   });
 });
 
 describe('neuvector_mapper_withraw', () => {
-  it('Successfully converts withraw flagged neuvector targeted at a local/cloned repository data', () => {
-    INPUT_FILE_INDICES.forEach((index) => {
-      const mapper = new NeuvectorMapper(
+  it('Successfully converts withraw flagged NeuVector targeted at a local/cloned repository data', () => {
+    for (const name of INPUT_REPOSITORY_NAMES) {
+      const mapper = new NeuVectorMapper(
         fs.readFileSync(
-          `sample_jsons/neuvector_mapper/sample_input_report/neuvector-${index}.json`,
+          `sample_jsons/neuvector_mapper/sample_input_report/neuvector-${name}.json`,
           {encoding: 'utf-8'}
         ),
         true
       );
 
       // fs.writeFileSync(
-      //   `sample_jsons/neuvector_mapper/neuvector-hdf-withraw-${index}.json`,
+      //   `sample_jsons/neuvector_mapper/neuvector-hdf-withraw-${name}.json`,
       //   JSON.stringify(mapper.toHdf(), null, 2)
       // );
 
@@ -55,12 +60,12 @@ describe('neuvector_mapper_withraw', () => {
         omitVersions(
           JSON.parse(
             fs.readFileSync(
-              `sample_jsons/neuvector_mapper/neuvector-hdf-withraw-${index}.json`,
+              `sample_jsons/neuvector_mapper/neuvector-hdf-withraw-${name}.json`,
               {encoding: 'utf-8'}
             )
           )
         )
       );
-    });
+    }
   });
 });

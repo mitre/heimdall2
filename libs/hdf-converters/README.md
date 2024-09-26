@@ -22,7 +22,7 @@ OHDF Converters supplies several methods to convert various types of security to
 14. [**msft-secure-mapper**] - Microsoft Secure Score results file
 15. [**nessus-mapper**] - Nessus XML results file
 16. [**netsparker-mapper**] - Netsparker XML results file
-17. [**neuvector-mapper**] - Neuvector JSON results file
+17. [**neuvector-mapper**] - NeuVector JSON results file
 18. [**nikto-mapper**] - Nikto results JSON file
 19. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
 20. [**sarif-mapper**] - SARIF JSON file

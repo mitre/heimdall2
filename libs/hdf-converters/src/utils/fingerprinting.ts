@@ -53,11 +53,13 @@ const fileTypeFingerprints: Record<INPUT_TYPES, string[]> = {
   [INPUT_TYPES.JFROG]: ['total_count', 'data'],
   [INPUT_TYPES.MSFT_SEC_SCORE]: ['secureScore', 'profiles'],
   [INPUT_TYPES.NEUVECTOR]: [
-    'report.signature_data',
-    'report.signature_data.verification_timestamp',
-    'report.vulnerabilities[0].feed_rating',
+    'report.base_os',
+    'report.cvedb_create_time',
     'report.cvedb_version',
-    'report.cvedb_create_time'
+    'report.modules',
+    'report.repository',
+    'report.signature_data',
+    'report.vulnerabilities'
   ],
   [INPUT_TYPES.NIKTO]: ['banner', 'host', 'ip', 'port', 'vulnerabilities'],
   [INPUT_TYPES.SARIF]: ['$schema', 'version', 'runs'],
