@@ -1,5 +1,5 @@
 import {ExecJSON} from 'inspecjs';
-import _ from 'lodash';
+import _, {transform} from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
@@ -116,11 +116,23 @@ export class NeuVectorMapper extends BaseConverter {
                 path: 'tags',
                 transformer: (tags: string[]) => JSON.stringify(tags, null, 2)
               },
-              envs: {path: '$.report.envs'},
-              cmds: {path: '$.report.cmds'}
+              envs: {
+                path: '$.report.envs',
+                transformer: (envs?: string[]) =>
+                  envs ? envs.join('\n') : undefined
+              },
+              cmds: {
+                path: '$.report.cmds',
+                transformer: (cmds?: string[]) =>
+                  cmds ? cmds.join('\n') : undefined
+              }
             },
             refs: [],
             source_location: {ref: {path: 'file_name'}},
+            title: {
+              transformer: (data: RESTVulnerability) =>
+                `NeuVector found a vulnerability to ${data.name} in ${data.package_name}/${data.package_version}.`
+            },
             id: {
               transformer: (data: RESTVulnerability) =>
                 `${data.name}/${data.package_name}/${data.package_version}`

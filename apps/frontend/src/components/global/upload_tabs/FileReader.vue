@@ -43,7 +43,7 @@
                   <li>Microsoft Secure Score</li>
                   <li>Nessus</li>
                   <li>Netsparker</li>
-                  <li>NeuVector</li>
+                  <li>NeuVector (Vulnerabilities Only)</li>
                   <li>Nikto</li>
                   <li>OWASP ZAP</li>
                   <li>Prisma</li>
