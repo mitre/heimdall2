@@ -3,10 +3,7 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {
-  conditionallyProvideAttribute,
-  DEFAULT_UPDATE_REMEDIATION_NIST_TAGS
-} from './utils/global';
+import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from './utils/global';
 import {
   NeuVectorScanJson,
   RESTModuleCve,
@@ -66,15 +63,7 @@ export class NeuVectorMapper extends BaseConverter {
             key: 'id',
             tags: {
               cves: {path: 'cves'},
-              cpes: {
-                path: 'cpes',
-                transformer: (cpes: string[]) =>
-                  conditionallyProvideAttribute(
-                    'cpes',
-                    cpes,
-                    cpes?.length !== 0
-                  )
-              },
+              cpes: {path: 'cpes'},
               cwe: {
                 path: 'description',
                 transformer: cweTags
@@ -105,14 +94,13 @@ export class NeuVectorMapper extends BaseConverter {
               link: {path: 'link'},
               published_timestamp: {path: 'published_timestamp'},
               last_modified_timestamp: {path: 'last_modified_timestamp'},
-              envs: {
-                path: '$.report.envs',
-                transformer: (envs: string[]) => (!envs ? undefined : envs)
+              in_base_image: {path: 'in_base_image'},
+              tags: {
+                path: 'tags',
+                transformer: (tags: string[]) => JSON.stringify(tags, null, 2)
               },
-              cmds: {
-                path: '$.report.cmds',
-                transformer: (cmds: string[]) => (!cmds ? undefined : cmds)
-              }
+              envs: {path: '$.report.envs'},
+              cmds: {path: '$.report.cmds'}
             },
             refs: [],
             source_location: {ref: {path: 'file_name'}},
@@ -122,10 +110,7 @@ export class NeuVectorMapper extends BaseConverter {
             },
             desc: {path: 'description'},
             impact: {
-              transformer: (data: RESTVulnerability) => {
-                const score = data.score_v3 ?? data.score;
-                return Number((score / 10).toFixed(1));
-              }
+              transformer: (data: RESTVulnerability) => data.score_v3 / 10
             },
             results: [
               {
@@ -151,11 +136,23 @@ export class NeuVectorMapper extends BaseConverter {
     passthrough: {
       transformer: (
         data: NeuVectorScanJson
-      ): {
-        auxiliary_data: {name: string; data: Pick<never[], keyof never[]>}[];
-      } & {raw?: NeuVectorScanJson} => {
+      ): Record<string, unknown> & {raw?: NeuVectorScanJson} => {
         return {
-          auxiliary_data: [{name: '', data: _.omit([])}], //Insert service name and mapped fields to be removed
+          auxiliary_data: [
+            {
+              name: 'NeuVector',
+              data: _.omit([
+                'reports.vulnerabilities',
+                'reports.cmds',
+                'reports.envs',
+                'reports.registry',
+                'reports.repository',
+                'reports.tag',
+                'reports.digest',
+                'reports.image_id'
+              ])
+            }
+          ],
           ...(this.withRaw && {raw: data})
         };
       }
