@@ -2,13 +2,6 @@ import fs from 'fs';
 import {NeuVectorMapper} from '../../../src/neuvector-mapper';
 import {omitVersions} from '../../utils';
 
-const INPUT_REPOSITORY_NAMES = [
-  'mitre-caldera',
-  'mitre-heimdall',
-  'mitre-heimdall2',
-  'mitre-vulcan'
-];
-
 describe('neuvector_mapper', () => {
   it('Successfully converts NeuVector targeted at mitre/caldera', () => {
     const mapper = new NeuVectorMapper(
