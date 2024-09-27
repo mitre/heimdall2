@@ -1,6 +1,6 @@
 {
   "name": "@heimdall/cypress-tests",
-  "version": "2.10.16",
+  "version": "2.10.19",
   "private": true,
   "description": "",
   "scripts": {
