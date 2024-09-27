@@ -23,6 +23,7 @@ import {
   MsftSecureScoreResults,
   NessusResults,
   NetsparkerMapper,
+  NeuVectorMapper,
   NiktoMapper,
   PrismaMapper,
   SarifMapper,
@@ -283,6 +284,8 @@ export class InspecIntake extends VuexModule {
         return new TrufflehogResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GRYPE:
         return new AnchoreGrypeMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.NEUVECTOR:
+        return new NeuVectorMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`
