@@ -234,8 +234,8 @@ export class AuthnService {
           updateUserDto.currentPassword || '',
           user.encryptedPassword,
           !(
-            configService?.get('USE_NEW_ENCRYPTION_STRATEGY')
-              ?.toLowerCase() === 'true'
+            configService?.get('USE_NEW_ENCRYPTION_STRATEGY')?.toLowerCase() ===
+            'true'
           )
         ))
       ) {
