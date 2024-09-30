@@ -79,7 +79,8 @@ export class UsersService {
       await AuthnService.prototype.testPassword(updateUserDto, userToUpdate);
     }
     if (
-      (updateUserDto.password === undefined || updateUserDto.password === null) &&
+      (updateUserDto.password === undefined ||
+        updateUserDto.password === null) &&
       userToUpdate.forcePasswordChange &&
       !abac.can('skip-force-password-change', userToUpdate)
     ) {
