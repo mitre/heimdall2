@@ -68,12 +68,12 @@ export class EvaluationsService {
        to the list of accepted types in OrderItem.
 
        Hence the reason the order option is being initialized with array indices.
-    
+
     3: Not using sequelize findAndCountAll method because the count returned is
        for all records found which includes multiple entries (due to JOIN) for
        each record if evaluations have multiple Groups that belong to different
        users.
-      
+
        Using the findAll and calling specific queries to determine the total records.
 
     4: Using ORDER BY on top-level and nested columns, for that reason we need 
@@ -84,15 +84,15 @@ export class EvaluationsService {
        params.order values are as follows () represent index):
        length       (0)           (1)               (2)
          2      field name  order (asc/desc)
-         3      table name  field name         order (asc/desc)    
+         3      table name  field name         order (asc/desc)
 
   */
 
   /*
     NOTE: Hack to overcome the inability to retrieve the desire
           number of evaluation (see note 1 above). Pad the 
-          requested number of records by an estimated number of 
-          group members (20 per group). 
+          requested number of records by an estimated number of
+          group members (20 per group).
   */
   totalGroupMembers = 20;
 
