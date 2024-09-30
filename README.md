@@ -316,28 +316,23 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    Ubuntu:
 
-   - The installation scripts setup_XX.x are no longer supported and are not needed anymore, as the installation process is straightforward for any RPM and DEB distro.
-   - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) nodesource for nodejs supported version and additional installation information
+   - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) provided by NodeSource for details on supported Node.js versions and additional installation information
    - ```bash
-     # grab nodesource for recent version of nodejs (see note about scripts setup_XX.x above)
+     # add NodeSource's Node.js distribution to /etc/apt/sources.list
      sudo curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
      sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
      sudo apt install postgresql nodejs git
-     sudo apt install nano                        # recommended installation
+     sudo apt install nano # or preferred terminal-based editor
      sudo npm install -g yarn
      ```
 
-   **NOTES** 
-
-     - The installation scripts setup_XX.x are no longer supported and are not needed anymore, as the installation process is straightforward for any RPM and DEB distro.
-     - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) nodesource for nodejs supported version and additional installation information.
    OSX:
 
    - ```bash
      brew install postgresql node@18 git      
-     brew install nano                        # recommended installation
+     brew install nano # or preferred terminal-based editor
      sudo npm install -g yarn
      ```
    WINDOWS:
