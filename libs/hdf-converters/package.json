@@ -7,9 +7,6 @@
     "lib"
   ],
   "main": "src/index.ts",
-  "publishConfig": {
-    "main": "lib/index.js"
-  },
   "scripts": {
     "build": "run-script-os",
     "build:darwin:linux": "../../node_modules/.bin/tsc -p ./tsconfig.build.json && cp -R ./data ./lib",

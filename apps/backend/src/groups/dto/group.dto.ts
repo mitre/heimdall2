@@ -1,4 +1,4 @@
-import {IGroup} from '@heimdall/interfaces';
+import {IGroup} from '@heimdall/common/interfaces';
 import {GroupUser} from '../../group-users/group-user.model';
 import {SlimUserDto} from '../../users/dto/slim-user.dto';
 import {Group} from '../group.model';

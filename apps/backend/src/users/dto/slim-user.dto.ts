@@ -1,4 +1,4 @@
-import {ISlimUser} from '@heimdall/interfaces';
+import {ISlimUser} from '@heimdall/common/interfaces';
 import {IsOptional, IsString} from 'class-validator';
 import {User} from '../user.model';
 

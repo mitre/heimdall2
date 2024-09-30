@@ -60,7 +60,7 @@
       <ActionDialog
         v-model="dialogDelete"
         type="user"
-        message="Any ownerless groups left by this user will be transfered to an admin."
+        message="Any ownerless groups left by this user will be transferred to an admin."
         @cancel="closeActionDialog"
         @confirm="deleteUserConfirm"
       />
@@ -74,7 +74,7 @@ import RegistrationModal from '@/components/global/RegistrationModal.vue';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import UserModal from '@/components/global/UserModal.vue';
 import {SnackbarModule} from '@/store/snackbar';
-import {IUser} from '@heimdall/interfaces';
+import {IUser} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import Vue from 'vue';
 import Component from 'vue-class-component';
