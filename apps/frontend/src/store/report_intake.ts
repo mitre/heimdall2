@@ -7,10 +7,12 @@ import Store from '@/store/store';
 import {Tag} from '@/types/models';
 import {readFileAsync} from '@/utilities/async_util';
 import {
+  AnchoreGrypeMapper,
   ASFFResults as ASFFResultsMapper,
   BurpSuiteMapper,
   ChecklistResults,
   ConveyorResults as ConveyorResultsMapper,
+  CycloneDXSBOMResults,
   DBProtectMapper,
   fingerprint,
   FortifyMapper,
@@ -21,6 +23,7 @@ import {
   MsftSecureScoreResults,
   NessusResults,
   NetsparkerMapper,
+  NeuVectorMapper,
   NiktoMapper,
   PrismaMapper,
   SarifMapper,
@@ -275,8 +278,14 @@ export class InspecIntake extends VuexModule {
         return new ChecklistResults(convertOptions.data).toHdf();
       case INPUT_TYPES.GOSEC:
         return new GosecMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.CYCLONEDX_SBOM:
+        return new CycloneDXSBOMResults(convertOptions.data).toHdf();
       case INPUT_TYPES.TRUFFLEHOG:
         return new TrufflehogResults(convertOptions.data).toHdf();
+      case INPUT_TYPES.GRYPE:
+        return new AnchoreGrypeMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.NEUVECTOR:
+        return new NeuVectorMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`

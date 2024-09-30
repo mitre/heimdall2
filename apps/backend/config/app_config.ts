@@ -34,6 +34,24 @@ export default class AppConfig {
     return process.env[key] || this.envConfig[key];
   }
 
+  getSplunkHostUrl(): string {
+    const splunk_host_url = this.get('SPLUNK_HOST_URL');
+    if (splunk_host_url !== undefined) {
+      return splunk_host_url;
+    } else {
+      return '';
+    }
+  }
+
+  getTenableHostUrl(): string {
+    const tenable_host_url = this.get('TENABLE_HOST_URL');
+    if (tenable_host_url !== undefined) {
+      return tenable_host_url;
+    } else {
+      return '';
+    }
+  }
+
   getDatabaseName(): string {
     const databaseName = this.get('DATABASE_NAME');
     const nodeEnvironment = this.get('NODE_ENV');
