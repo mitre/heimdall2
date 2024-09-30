@@ -316,49 +316,46 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    Ubuntu:
 
+   - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) provided by NodeSource for details on supported Node.js versions and additional installation information
    - ```bash
-     # grab nodesource for recent version of nodejs
+     # add NodeSource's Node.js distribution to /etc/apt/sources.list
      sudo curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
      sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
      sudo apt install postgresql nodejs git
-     sudo apt install nano                        # recommended installation
+     sudo apt install nano # or preferred terminal-based editor
      sudo npm install -g yarn
      ```
 
-   **NOTES** 
-
-     - The installation scripts setup_XX.x are no longer supported and are not needed anymore, as the installation process is straightforward for any RPM and DEB distro.
-    
-     - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) nodesource for nodejs supported version and additional installation information
-  
    OSX:
-   
+
    - ```bash
      brew install postgresql node@18 git      
-     brew install nano                        # recommended installation
+     brew install nano # or preferred terminal-based editor
      sudo npm install -g yarn
      ```
-
    WINDOWS:
-    - Install Node.js via MSI Installer
-      - Download the node release 18.xx installer (msi) from the [nodejs site](https://nodejs.org/en/blog/release)
-      - Open and run (double-click) the .msi file, the installation process begins, follow the installation instructions
-      - Node.js offers you options to install tools for native modules, we recommend checking the Automatically install the necessary tools check box.
-      - Verify the Node and npm version
-      ```shell
-      node --version 
-      npm --version
-      ```
 
-    - Install Yarn via MSI Installer
-      - Download the Yarn installation file from [GitHub](https://github.com/yarnpkg/yarn/releases/)
-      - Open and run the installation file, follow the installation instructions
-      - Run the following command in the PowerShell to verify the installation:
-      ```shell
-      yarn --version
-      ```
+   - Use `Windows Subsystem for Linux (WSL)` - (use Ubuntu as the distro, and then follow the instructions listed for Ubuntu); alternatively you could do the following steps:
+
+   - Install Node.js via MSI Installer
+     - Download the node release 18.xx installer (msi) from the [nodejs site](https://nodejs.org/en/blog/release)
+     - Open and run (double-click) the .msi file, the installation process begins, follow the installation instructions
+     - Node.js offers you options to install tools for native modules, we recommend checking the Automatically install the necessary tools check box.
+     - Verify the Node and npm version
+     ```shell
+     node --version 
+     npm --version
+     ```
+
+   - Install Yarn via MSI Installer
+     - Download the Yarn installation file from [GitHub](https://github.com/yarnpkg/yarn/releases/)
+     - Open and run the installation file, follow the installation instructions
+     - Run the following command in the PowerShell to verify the installation:
+     ```shell
+     yarn --version
+     ```
 
 2. Clone this repository:
 
@@ -369,14 +366,14 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 3. Setup the PostgreSQL server:
 
    Ubuntu:
-   
+
    - ```sql
      # Switch to the OS postgres user
      sudo -u postgres -i
 
      # Start the Postgres terminal
      psql postgres
-  
+
      # Create the database user
      CREATE USER <username> with encrypted password '<password>';
      ALTER USER <username> CREATEDB;
@@ -397,7 +394,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
       # Start the Postgres terminal
       psql postgres
-  
+
       # Create the database user
       CREATE USER <username> with encrypted password '<password>';
       ALTER USER <username> CREATEDB;
@@ -405,8 +402,12 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
       # Switch back to your original OS user
       exit
-      ```   
+      ```
+
    WINDOWS:
+
+   - Use `Windows Subsystem for Linux (WSL)` - (use Ubuntu as the distro, and then follow the instructions listed for Ubuntu); alternatively you could do the following steps:
+
    - Start the postgres server base on the installation method
      - Starting Postgres Server Using `net start`
        ```sql
@@ -420,18 +421,19 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
        - Press the `win key + R` to launch the `Run` window.
        - Type `services.msc` and hit the `OK` button to open the Services Manager:
        - Search for `Postgresql-[x32 or x64]-[version]`, select the service, and hit the `Start/play` button to start
-   - Create the database user 
+
+   - Create the database user
      - Recommend using pgAdmin and follow instruction listed here 
      - Open a postgres shell terminal (path to postgres executable directory must be set)
        ```sql
        # Start the terminal
-       psql -U postgres  
+       psql -U postgres
        # Create the database user
        CREATE USER <username> with encrypted password '<password>';
        ALTER USER <username> CREATEDB;
        \q
        ```
-   
+
 4. Install project dependencies:
 
    - ```bash
@@ -439,9 +441,15 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      yarn install  # you may need to run yarn install --registry https://registry.npmjs.org
      ```
 
-5. Edit or generate the database environment configuration file (apps/backend/.env) using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set the DATABASE_USERNAME and DATABASE_PASSWORD variables with values used in step 3.
+5. Edit or generate the `apps/backend/.env` file using the provided `setup-dev-env.sh or setup-dev-env.bat` script.
+   - Make sure that the script is executed in the root directory of the repository. Use one of the following commands:
+     ```bash
+     ./setup-dev-env.sh # bash
+     setup-dev-env.bat  # Windows
+     ```
+   - Make sure to set the DATABASE_USERNAME and DATABASE_PASSWORD fields with the values you set for PostgresDB in step 3.
 
-You can also edit, if exists, the apps/backend/.env file using a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
+   You can also manually edit the `apps/backend/.env` file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
 > [!NOTE]
 > The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory for the database configurations.
@@ -460,7 +468,7 @@ You can also edit, if exists, the apps/backend/.env file using a text editor and
      yarn backend sequelize-cli db:seed:all
      ```
 
-6. Start Heimdall:
+7. Start Heimdall:
 
    - ```bash
      yarn start:dev
