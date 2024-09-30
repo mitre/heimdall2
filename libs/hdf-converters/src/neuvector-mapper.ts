@@ -12,6 +12,13 @@ import {
   RESTVulnerability
 } from '../types/neuvector-types';
 
+enum DockerSecurityBenchCheckResult {
+  Pass = 'PASS',
+  Warn = 'WARN',
+  Note = 'NOTE',
+  Info = 'INFO'
+}
+
 const CWE_NIST_MAPPING = new CweNistMapping();
 
 function cweTags(description: string): string[] | undefined {
@@ -29,6 +36,23 @@ function nistTags(cweTags: string[] | undefined): string[] {
 
 function cveIdMatches(cveName: string): (value: RESTModuleCve) => boolean {
   return (cve: RESTModuleCve) => cve.name === cveName;
+}
+
+function universalTags(): MappedTransform<
+  {[key: string]: any} & ILookupPath,
+  ILookupPath
+> {
+  // Heimdall currently doesn't have a way to display passthrough data, and this information would be useful to view per vulnerability.
+  return {
+    envs: {
+      path: '$.report.envs',
+      transformer: (envs?: string[]) => (envs ? envs.join('\n') : undefined)
+    },
+    cmds: {
+      path: '$.report.cmds',
+      transformer: (cmds?: string[]) => (cmds ? cmds.join('\n') : undefined)
+    }
+  };
 }
 
 export class NeuVectorMapper extends BaseConverter {
@@ -70,7 +94,18 @@ export class NeuVectorMapper extends BaseConverter {
           transformer: (data: RESTScanRepoReport) =>
             `${data.registry}/${data.repository}:${data.tag} - Digest: ${data.digest} - Image ID: ${data.image_id}`
         },
-        supports: [],
+        supports: [
+          {
+            'platform-name': {
+              path: 'report.base_os',
+              transformer: (baseOs: string) => /(\w+):\d+/.exec(baseOs)?.[1]
+            },
+            release: {
+              path: 'report.base_os',
+              transformer: (baseOs: string) => /\w+:(\d+)/.exec(baseOs)?.[1]
+            }
+          }
+        ],
         attributes: [],
         groups: [],
         status: 'loaded',
@@ -116,16 +151,7 @@ export class NeuVectorMapper extends BaseConverter {
                 path: 'tags',
                 transformer: (tags: string[]) => JSON.stringify(tags, null, 2)
               },
-              envs: {
-                path: '$.report.envs',
-                transformer: (envs?: string[]) =>
-                  envs ? envs.join('\n') : undefined
-              },
-              cmds: {
-                path: '$.report.cmds',
-                transformer: (cmds?: string[]) =>
-                  cmds ? cmds.join('\n') : undefined
-              }
+              ...universalTags()
             },
             refs: [],
             source_location: {ref: {path: 'file_name'}},
@@ -155,6 +181,57 @@ export class NeuVectorMapper extends BaseConverter {
                   }
                 },
                 start_time: ''
+              }
+            ]
+          },
+          {
+            path: 'report.checks',
+            key: 'id',
+            tags: {
+              category: {path: 'category'},
+              type: {path: 'type'},
+              profile: {path: 'profile'},
+              scored: {
+                path: 'scored',
+                transformer: (scored: boolean) => Boolean(scored).toString()
+              },
+              automated: {
+                path: 'automated',
+                transformer: (automated: boolean) =>
+                  Boolean(automated).toString()
+              },
+              remediation: {path: 'remediation'}, // This field is always an empty string due to what seems to be a bug with Neuvector's reported JSON, which comes from a copy-pasted test script from docker/docker-security-bench.
+              level: {path: 'level'},
+              ...universalTags()
+            },
+            descriptions: [],
+            refs: [],
+            source_location: {},
+            title: {
+              path: 'test_number',
+              transformer: (testNumber: string) =>
+                `CIS Docker Benchmark ${testNumber}`
+            },
+            id: {path: 'test_number'},
+            desc: {path: 'description'},
+            impact: {
+              path: 'level',
+              transformer: (level: DockerSecurityBenchCheckResult) =>
+                level === DockerSecurityBenchCheckResult.Warn ? 1 : 0
+            },
+            code: null,
+            results: [
+              {
+                status: ExecJSON.ControlResultStatus.Skipped,
+                code_desc: 'Requires manual review.',
+                message: {
+                  path: 'message',
+                  transformer: (message: string[]) =>
+                    !message.length ? undefined : message.join('\n')
+                },
+                run_time: null,
+                start_time: '',
+                skip_message: 'Requires manual review.'
               }
             ]
           }
