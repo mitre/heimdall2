@@ -1,15 +1,20 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.18"
+    "release": "2.10.19"
   },
-  "version": "2.10.18",
+  "version": "2.10.19",
   "statistics": {},
   "profiles": [
     {
       "name": "NeuVector Scan",
       "title": "https://registry.hub.docker.com/mitre/heimdall:latest - Digest: sha256:54cbfb34a9a8fe00c9a60d722aa1c12f25bec825c505139cfffaeabc91fb10e6 - Image ID: 65785cbf46647c77caf8d7c40485900b013fca1290d1a7ab06c9039c3b29761c",
-      "supports": [],
+      "supports": [
+        {
+          "platform-name": "alpine",
+          "release": "3"
+        }
+      ],
       "attributes": [],
       "groups": [],
       "status": "loaded",
@@ -8201,9 +8206,69 @@
               "start_time": ""
             }
           ]
+        },
+        {
+          "tags": {
+            "category": "image",
+            "type": "image",
+            "profile": "Level 1",
+            "scored": "true",
+            "automated": "false",
+            "remediation": "",
+            "level": "WARN",
+            "envs": "PATH=/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nLANG=C.UTF-8\nRUBY_MAJOR=2.6\nRUBY_VERSION=2.6.6\nRUBY_DOWNLOAD_SHA256=5db187882b7ac34016cd48d7032e197f07e4968f406b0690e20193b9b424841f\nGEM_HOME=/usr/local/bundle\nBUNDLE_SILENCE_ROOT_WARNING=1\nBUNDLE_APP_CONFIG=/usr/local/bundle\nRAILS_ROOT=/var/www/heimdall",
+            "cmds": "CMD [\"rails\" \"server\" \"-p\" \"3000\" \"-b\" \"0.0.0.0\"]\nENTRYPOINT [\"bundle\" \"exec\"]\nEXPOSE 3000\nRUN apk --no-cache --update add nodejs imagemagick6 postgresql-dev tzdata && gem install bundler &&     bundle install --deployment --without development test\nCOPY dir:cfd6c107e9db5e6d3eb7fdfdc1d993d14c924a53fcb20069ea23e383c8c2967d in /var/www/heimdall\nWORKDIR /var/www/heimdall\nRUN mkdir -p $RAILS_ROOT\nENV RAILS_ROOT=/var/www/heimdall\nCMD [\"irb\"]\nRUN mkdir -p \"$GEM_HOME\" && chmod 777 \"$GEM_HOME\"\nENV PATH=/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nENV BUNDLE_SILENCE_ROOT_WARNING=1 BUNDLE_APP_CONFIG=/usr/local/bundle\nENV GEM_HOME=/usr/local/bundle\nRUN set -eux; \t\tapk add --no-cache --virtual .ruby-builddeps \t\tautoconf \t\tbison \t\tbzip2 \t\tbzip2-dev \t\tca-certificates \t\tcoreutils \t\tdpkg-dev dpkg \t\tgcc \t\tgdbm-dev \t\tglib-dev \t\tlibc-dev \t\tlibffi-dev \t\tlibxml2-dev \t\tlibxslt-dev \t\tlinux-headers \t\tmake \t\tncurses-dev \t\topenssl \t\topenssl-dev \t\tpatch \t\tprocps \t\treadline-dev \t\truby \t\ttar \t\txz \t\tyaml-dev \t\tzlib-dev \t; \t\twget -O ruby.tar.xz \"https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz\"; \techo \"$RUBY_DOWNLOAD_SHA256 *ruby.tar.xz\" | sha256sum --check --strict; \t\tmkdir -p /usr/src/ruby; \ttar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1; \trm ruby.tar.xz; \t\tcd /usr/src/ruby; \t\twget -O 'thread-stack-fix.patch' 'https://bugs.ruby-lang.org/attachments/download/7081/0001-thread_pthread.c-make-get_main_stack-portable-on-lin.patch'; \techo '3ab628a51d92fdf0d2b5835e93564857aea73e0c1de00313864a94a6255cb645 *thread-stack-fix.patch' | sha256sum --check --strict; \tpatch -p1 -i thread-stack-fix.patch; \trm thread-stack-fix.patch; \t\t{ \t\techo '#define ENABLE_PATH_CHECK 0'; \t\techo; \t\tcat file.c; \t} > file.c.new; \tmv file.c.new file.c; \t\tautoconf; \tgnuArch=\"$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)\"; \texport ac_cv_func_isnan=yes ac_cv_func_isinf=yes; \t./configure \t\t--build=\"$gnuArch\" \t\t--disable-install-doc \t\t--enable-shared \t; \tmake -j \"$(nproc)\"; \tmake install; \t\trunDeps=\"$( \t\tscanelf --needed --nobanner --format '%n#p' --recursive /usr/local \t\t\t| tr ',' '\\n' \t\t\t| sort -u \t\t\t| awk 'system(\"[ -e /usr/local/lib/\" $1 \" ]\") == 0 { next } { print \"so:\" $1 }' \t)\"; \tapk add --no-network --virtual .ruby-rundeps \t\t$runDeps \t\tbzip2 \t\tca-certificates \t\tlibffi-dev \t\tprocps \t\tyaml-dev \t\tzlib-dev \t; \tapk del --no-network .ruby-builddeps; \t\tcd /; \trm -r /usr/src/ruby; \t! apk --no-network list --installed \t\t| grep -v '^[.]ruby-rundeps' \t\t| grep -i ruby \t; \t[ \"$(command -v ruby)\" = '/usr/local/bin/ruby' ]; \truby --version; \tgem --version; \tbundle --version\nENV RUBY_DOWNLOAD_SHA256=5db187882b7ac34016cd48d7032e197f07e4968f406b0690e20193b9b424841f\nENV RUBY_VERSION=2.6.6\nENV RUBY_MAJOR=2.6\nENV LANG=C.UTF-8\nRUN set -eux; \tmkdir -p /usr/local/etc; \t{ \t\techo 'install: --no-document'; \t\techo 'update: --no-document'; \t} >> /usr/local/etc/gemrc\nRUN apk add --no-cache \t\tgmp-dev\nCMD [\"/bin/sh\"]\nADD file:f17f65714f703db9012f00e5ec98d0b2541ff6147c2633f7ab9ba659d0c507f4 in /"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "CIS Docker Benchmark I.4.1",
+          "id": "I.4.1",
+          "desc": "Ensure a user for the container has been created",
+          "impact": 1,
+          "code": null,
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "Requires manual review.",
+              "run_time": null,
+              "start_time": "",
+              "skip_message": "Requires manual review."
+            }
+          ]
+        },
+        {
+          "tags": {
+            "category": "image",
+            "type": "image",
+            "profile": "Level 1",
+            "scored": "false",
+            "automated": "false",
+            "remediation": "",
+            "level": "WARN",
+            "envs": "PATH=/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nLANG=C.UTF-8\nRUBY_MAJOR=2.6\nRUBY_VERSION=2.6.6\nRUBY_DOWNLOAD_SHA256=5db187882b7ac34016cd48d7032e197f07e4968f406b0690e20193b9b424841f\nGEM_HOME=/usr/local/bundle\nBUNDLE_SILENCE_ROOT_WARNING=1\nBUNDLE_APP_CONFIG=/usr/local/bundle\nRAILS_ROOT=/var/www/heimdall",
+            "cmds": "CMD [\"rails\" \"server\" \"-p\" \"3000\" \"-b\" \"0.0.0.0\"]\nENTRYPOINT [\"bundle\" \"exec\"]\nEXPOSE 3000\nRUN apk --no-cache --update add nodejs imagemagick6 postgresql-dev tzdata && gem install bundler &&     bundle install --deployment --without development test\nCOPY dir:cfd6c107e9db5e6d3eb7fdfdc1d993d14c924a53fcb20069ea23e383c8c2967d in /var/www/heimdall\nWORKDIR /var/www/heimdall\nRUN mkdir -p $RAILS_ROOT\nENV RAILS_ROOT=/var/www/heimdall\nCMD [\"irb\"]\nRUN mkdir -p \"$GEM_HOME\" && chmod 777 \"$GEM_HOME\"\nENV PATH=/usr/local/bundle/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nENV BUNDLE_SILENCE_ROOT_WARNING=1 BUNDLE_APP_CONFIG=/usr/local/bundle\nENV GEM_HOME=/usr/local/bundle\nRUN set -eux; \t\tapk add --no-cache --virtual .ruby-builddeps \t\tautoconf \t\tbison \t\tbzip2 \t\tbzip2-dev \t\tca-certificates \t\tcoreutils \t\tdpkg-dev dpkg \t\tgcc \t\tgdbm-dev \t\tglib-dev \t\tlibc-dev \t\tlibffi-dev \t\tlibxml2-dev \t\tlibxslt-dev \t\tlinux-headers \t\tmake \t\tncurses-dev \t\topenssl \t\topenssl-dev \t\tpatch \t\tprocps \t\treadline-dev \t\truby \t\ttar \t\txz \t\tyaml-dev \t\tzlib-dev \t; \t\twget -O ruby.tar.xz \"https://cache.ruby-lang.org/pub/ruby/${RUBY_MAJOR%-rc}/ruby-$RUBY_VERSION.tar.xz\"; \techo \"$RUBY_DOWNLOAD_SHA256 *ruby.tar.xz\" | sha256sum --check --strict; \t\tmkdir -p /usr/src/ruby; \ttar -xJf ruby.tar.xz -C /usr/src/ruby --strip-components=1; \trm ruby.tar.xz; \t\tcd /usr/src/ruby; \t\twget -O 'thread-stack-fix.patch' 'https://bugs.ruby-lang.org/attachments/download/7081/0001-thread_pthread.c-make-get_main_stack-portable-on-lin.patch'; \techo '3ab628a51d92fdf0d2b5835e93564857aea73e0c1de00313864a94a6255cb645 *thread-stack-fix.patch' | sha256sum --check --strict; \tpatch -p1 -i thread-stack-fix.patch; \trm thread-stack-fix.patch; \t\t{ \t\techo '#define ENABLE_PATH_CHECK 0'; \t\techo; \t\tcat file.c; \t} > file.c.new; \tmv file.c.new file.c; \t\tautoconf; \tgnuArch=\"$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)\"; \texport ac_cv_func_isnan=yes ac_cv_func_isinf=yes; \t./configure \t\t--build=\"$gnuArch\" \t\t--disable-install-doc \t\t--enable-shared \t; \tmake -j \"$(nproc)\"; \tmake install; \t\trunDeps=\"$( \t\tscanelf --needed --nobanner --format '%n#p' --recursive /usr/local \t\t\t| tr ',' '\\n' \t\t\t| sort -u \t\t\t| awk 'system(\"[ -e /usr/local/lib/\" $1 \" ]\") == 0 { next } { print \"so:\" $1 }' \t)\"; \tapk add --no-network --virtual .ruby-rundeps \t\t$runDeps \t\tbzip2 \t\tca-certificates \t\tlibffi-dev \t\tprocps \t\tyaml-dev \t\tzlib-dev \t; \tapk del --no-network .ruby-builddeps; \t\tcd /; \trm -r /usr/src/ruby; \t! apk --no-network list --installed \t\t| grep -v '^[.]ruby-rundeps' \t\t| grep -i ruby \t; \t[ \"$(command -v ruby)\" = '/usr/local/bin/ruby' ]; \truby --version; \tgem --version; \tbundle --version\nENV RUBY_DOWNLOAD_SHA256=5db187882b7ac34016cd48d7032e197f07e4968f406b0690e20193b9b424841f\nENV RUBY_VERSION=2.6.6\nENV RUBY_MAJOR=2.6\nENV LANG=C.UTF-8\nRUN set -eux; \tmkdir -p /usr/local/etc; \t{ \t\techo 'install: --no-document'; \t\techo 'update: --no-document'; \t} >> /usr/local/etc/gemrc\nRUN apk add --no-cache \t\tgmp-dev\nCMD [\"/bin/sh\"]\nADD file:f17f65714f703db9012f00e5ec98d0b2541ff6147c2633f7ab9ba659d0c507f4 in /"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "CIS Docker Benchmark I.4.6",
+          "id": "I.4.6",
+          "desc": "Ensure that HEALTHCHECK instructions have been added to container images",
+          "impact": 1,
+          "code": null,
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "Requires manual review.",
+              "run_time": null,
+              "start_time": "",
+              "skip_message": "Requires manual review."
+            }
+          ]
         }
       ],
-      "sha256": "95a11366a386c5ab6fc6c2413947d863d92061ae923164e4f7cb35cda9d2c3ee"
+      "sha256": "e6e4f54fcc973a939dc821d63f6d3841019e9ab626d779de26cc3ec6d6d9bbeb"
     }
   ],
   "passthrough": {
