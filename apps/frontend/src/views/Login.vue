@@ -28,14 +28,16 @@
                   v-if="anyAuthProvidersAvailable"
                   id="select-tab-standard-login"
                   href="#login-standard"
-                  >Heimdall Login (Local Authorization)</v-tab
                 >
+                  Heimdall Login (Local Authentication)
+                </v-tab>
                 <v-tab
                   v-if="ldapenabled"
                   id="select-tab-ldap-login"
                   href="#login-ldap"
-                  >Organization Login (LDAP Authorization)</v-tab
                 >
+                  Organization Login (LDAP Authentication)
+                </v-tab>
 
                 <v-tab-item value="login-standard">
                   <LocalLogin />
