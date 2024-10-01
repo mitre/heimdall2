@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
     "declaration": true,
+    "downlevelIteration": true,
     "emitDecoratorMetadata": true,
     "esModuleInterop": true,
     "experimentalDecorators": true,
+    "importHelpers": true,
     "module": "node16",
     "moduleResolution": "node16",
     "noImplicitAny": true,
