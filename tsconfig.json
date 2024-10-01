@@ -1,16 +1,15 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
     "declaration": true,
-    "removeComments": true,
     "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "moduleResolution": "node",
-    "sourceMap": true,
-    "target": "ES2019",
     "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "module": "node16",
+    "moduleResolution": "node16",
     "noImplicitAny": true,
+    "removeComments": true,
     "resolveJsonModule": true,
+    "sourceMap": true,
     "useUnknownInCatchVariables": false
   },
   "include": [
