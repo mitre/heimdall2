@@ -16,29 +16,55 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Github Advanced Security CLI # TODO: we can apparently run into issues with rate limits if we hit the gh api too much.  once we get rid of all the spurious ones, it should probably be fine but if not we might need to restrict it to just run against master or even just release.
-      - name: Install Github CLI SBOM extension
+      # Anchore Syft Github Action
+      - name: Build the Docker image
         if: always()
-        run: gh ext install advanced-security/gh-sbom
-        env: 
-          GITHUB_TOKEN: ${{ github.token }}
+        run: docker build -f Dockerfile -t mitre/heimdall2:throwaway .
+        
+      - name: Syft directory spdx
+        if: always()
+        uses: anchore/sbom-action@v0
+        with:
+          artifact-name: syft_directory.spdx.json
+          output-file: /tmp/syft_directory.spdx.json
+          format: spdx-json
 
-      - name: Run Github Advanced Security CLI CDX
+      - name: Syft directory spdx converted
         if: always()
-        run: gh sbom -c -l | jq '.' > /tmp/ghas_cli_sbom.cdx.json
-        env: 
-          GITHUB_TOKEN: ${{ github.token }}
+        run: docker run -t -v /tmp/syft_directory.spdx.json:/tmp/syft_directory.spdx.json -v /tmp/syft_directory_spdx.cdx.json:/tmp/syft_directory_spdx.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/syft_directory.spdx.json --output-file /tmp/syft_directory_spdx.cdx.json  --input-format spdxjson --output-format json 
+          
+      - name: Syft directory cyclonedx
+        if: always()
+        uses: anchore/sbom-action@v0
+        with:
+          artifact-name: syft_directory.cdx.json
+          output-file: /tmp/syft_directory.cdx.json
+          format: cyclonedx-json
+
+      - name: Syft image spdx
+        if: always()
+        uses: anchore/sbom-action@v0
+        with:
+          image: "mitre/heimdall2:throwaway"
+          artifact-name: syft_image.spdx.json
+          output-file: /tmp/syft_image.spdx.json
+          format: spdx-json
+          
+      - name: Syft image spdx converted
+        if: always()
+        run: docker run -t -v /tmp/syft_image.spdx.json:/tmp/syft_image.spdx.json -v /tmp/syft_image_spdx.cdx.json:/tmp/syft_image_spdx.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/syft_image.spdx.json --output-file /tmp/syft_image_spdx.cdx.json  --input-format spdxjson --output-format json 
+   
+      - name: Syft image cyclonedx
+        if: always()
+        uses: anchore/sbom-action@v0
+        with:
+          image: "mitre/heimdall2:throwaway"
+          artifact-name: syft_image.cdx.json
+          output-file: /tmp/syft_image.cdx.json
+          format: cyclonedx-json
 
       - uses: actions/upload-artifact@v4
         if: always()
         with: 
-          path: /tmp/ghas_cli_sbom.cdx.json
-          name: "Github SBOM CLI.cdx.json"
-
-      # Anchore Syft Github Action
-
-      - run: ls
-        if: always()
-
-      - run: tree
-        if: always()
+          path: /tmp/syft*
+          name: "Syft SBOM experiments"
