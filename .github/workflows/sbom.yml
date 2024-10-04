@@ -16,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Github Advanced Security Github Action
+      # Github Advanced Security Github Action # TODO: remove, output was not high quality
       - name: Run Github Advanced Security Github Action
         if: always()
         uses: advanced-security/sbom-generator-action@v0.0.1
@@ -30,7 +30,7 @@ jobs:
           path: ${{steps.sbom.outputs.fileName }}
           name: "Github SBOM Generator Action.spdx.json"
           
-      - name: Convert it into CycloneDX format
+      - name: Convert it into CycloneDX format # TODO: remove, fails when trying to convert the previous output since it didn't follow spec
         if: always()
         run: docker run -t -v "${{steps.sbom.outputs.fileName }}":/tmp/sbom.spdx.json -v /tmp/ghas_action_sbom.cdx.json:/tmp/ghas_action_sbom.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbom.spdx.json --output-file /tmp/ghas_action_sbom.cdx.json  --input-format spdxjson --output-format json
         
@@ -40,7 +40,7 @@ jobs:
           path: /tmp/ghas_action_sbom.cdx.json
           name: "Github SBOM Generator Action SPDX.cdx.json"
 
-      # Github Advanced Security CLI
+      # Github Advanced Security CLI # TODO: we can apparently run into issues with rate limits if we hit the gh api too much.  once we get rid of all the spurious ones, it should probably be fine but if not we might need to restrict it to just run against master or even just release.
       - name: Install Github CLI SBOM extension
         if: always()
         run: gh ext install advanced-security/gh-sbom
@@ -84,5 +84,7 @@ jobs:
       # Anchore Syft Github Action
 
       - run: ls
+        if: always()
 
       - run: tree
+        if: always()
