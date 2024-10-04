@@ -16,55 +16,36 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          check-latest: true
+          cache: 'yarn'
+
+      - name: Install project dependencies
+        run: yarn install --frozen-lockfile --production
+
       # Anchore Syft Github Action
-      - name: Build the Docker image
-        if: always()
-        run: docker build -f Dockerfile -t mitre/heimdall2:throwaway .
         
-      - name: Syft directory spdx
+      - name: Syft directory installed spdx
         if: always()
         uses: anchore/sbom-action@v0
         with:
-          artifact-name: syft_directory.spdx.json
-          output-file: /tmp/syft_directory.spdx.json
-          format: spdx-json
-
-      - name: Syft directory spdx converted
-        if: always()
-        run: docker run -t -v /tmp/syft_directory.spdx.json:/tmp/syft_directory.spdx.json -v /tmp/syft_directory_spdx.cdx.json:/tmp/syft_directory_spdx.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/syft_directory.spdx.json --output-file /tmp/syft_directory_spdx.cdx.json  --input-format spdxjson --output-format json 
-          
-      - name: Syft directory cyclonedx
-        if: always()
-        uses: anchore/sbom-action@v0
-        with:
-          artifact-name: syft_directory.cdx.json
-          output-file: /tmp/syft_directory.cdx.json
-          format: cyclonedx-json
-
-      - name: Syft image spdx
-        if: always()
-        uses: anchore/sbom-action@v0
-        with:
-          image: "mitre/heimdall2:throwaway"
-          artifact-name: syft_image.spdx.json
-          output-file: /tmp/syft_image.spdx.json
+          artifact-name: syft_directory_installed.spdx.json
+          output-file: /tmp/syft_directory_installed.spdx.json
           format: spdx-json
           
-      - name: Syft image spdx converted
-        if: always()
-        run: docker run -t -v /tmp/syft_image.spdx.json:/tmp/syft_image.spdx.json -v /tmp/syft_image_spdx.cdx.json:/tmp/syft_image_spdx.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/syft_image.spdx.json --output-file /tmp/syft_image_spdx.cdx.json  --input-format spdxjson --output-format json 
-   
-      - name: Syft image cyclonedx
+      - name: Syft directory installed cyclonedx
         if: always()
         uses: anchore/sbom-action@v0
         with:
-          image: "mitre/heimdall2:throwaway"
-          artifact-name: syft_image.cdx.json
-          output-file: /tmp/syft_image.cdx.json
+          artifact-name: syft_directory_installed.cdx.json
+          output-file: /tmp/syft_directory_installed.cdx.json
           format: cyclonedx-json
 
       - uses: actions/upload-artifact@v4
         if: always()
         with: 
           path: /tmp/syft*
-          name: "Syft SBOM experiments"
+          name: "Syft SBOM experiments - just directory - installed"
