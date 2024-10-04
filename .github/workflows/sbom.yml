@@ -44,10 +44,14 @@ jobs:
       - name: Install Github CLI SBOM extension
         if: always()
         run: gh ext install advanced-security/gh-sbom
+        env: 
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Run Github Advanced Security CLI SPDX
         if: always()
         run: gh sbom | jq '.' > /tmp/ghas_cli_sbom.spdx.json
+        env: 
+          GITHUB_TOKEN: ${{ github.token }}
 
       - uses: actions/upload-artifact@v4
         if: always()
@@ -68,6 +72,8 @@ jobs:
       - name: Run Github Advanced Security CLI CDX
         if: always()
         run: gh sbom -c -l | jq '.' > /tmp/ghas_cli_sbom.cdx.json
+        env: 
+          GITHUB_TOKEN: ${{ github.token }}
 
       - uses: actions/upload-artifact@v4
         if: always()
