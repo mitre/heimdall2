@@ -1,0 +1,71 @@
+name: SBOM Generator
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      # Github Advanced Security Github Action
+      - name: Run Github Advanced Security Github Action
+        uses: advanced-security/sbom-generator-action@v0.0.1
+        id: sbom
+        env: 
+          GITHUB_TOKEN: ${{ github.token }}
+          
+      - uses: actions/upload-artifact@v4
+        with: 
+          path: ${{steps.sbom.outputs.fileName }}
+          name: "Github SBOM Generator Action.spdx.json"
+          
+      - name: Convert it into CycloneDX format
+        run: docker run -t -v "${{steps.sbom.outputs.fileName }}":/tmp/sbom.spdx.json -v /tmp/ghas_action_sbom.cdx.json:/tmp/ghas_action_sbom.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbom.spdx.json --output-file /tmp/ghas_action_sbom.cdx.json  --input-format spdxjson --output-format json
+        
+      - uses: actions/upload-artifact@v4
+        with: 
+          path: /tmp/ghas_action_sbom.cdx.json
+          name: "Github SBOM Generator Action SPDX.cdx.json"
+
+      # Github Advanced Security CLI
+      - name: Install Github CLI SBOM extension
+        run: gh ext install advanced-security/gh-sbom
+
+      - name: Run Github Advanced Security CLI SPDX
+        run: gh sbom | jq '.' > /tmp/ghas_cli_sbom.spdx.json
+
+      - uses: actions/upload-artifact@v4
+        with: 
+          path: /tmp/ghas_cli_sbom.spdx.json
+          name: "Github SBOM CLI.spdx.json"
+          
+      - name: Convert it into CycloneDX format
+        run: docker run -t -v /tmp/ghas_cli_sbom.spdx.json:/tmp/ghas_cli_sbom.spdx.json -v /tmp/ghas_cli_sbom_spdx.cdx.json:/tmp/ghas_cli_sbom_spdx.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/ghas_cli_sbom.spdx.json --output-file /tmp/ghas_cli_sbom_spdx.cdx.json  --input-format spdxjson --output-format json
+        
+      - uses: actions/upload-artifact@v4
+        with: 
+          path: /tmp/ghas_cli_sbom_spdx.cdx.json
+          name: "Github SBOM CLI SPDX.cdx.json"
+
+      - name: Run Github Advanced Security CLI CDX
+        run: gh sbom -c -l | jq '.' > /tmp/ghas_cli_sbom.cdx.json
+
+      - uses: actions/upload-artifact@v4
+        with: 
+          path: /tmp/ghas_cli_sbom.cdx.json
+          name: "Github SBOM CLI.cdx.json"
+
+      # Anchore Syft Github Action
+
+      - run: ls
+
+      - run: tree
