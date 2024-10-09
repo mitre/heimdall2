@@ -5,19 +5,13 @@ import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from './utils/global';
 import {
+  DockerSecurityBenchCheckResult,
   NeuVectorScanJson,
   RESTModuleCve,
   RESTScanModule,
   RESTScanRepoReport,
   RESTVulnerability
 } from '../types/neuvector-types';
-
-enum DockerSecurityBenchCheckResult {
-  Pass = 'PASS',
-  Warn = 'WARN',
-  Note = 'NOTE',
-  Info = 'INFO'
-}
 
 const CWE_NIST_MAPPING = new CweNistMapping();
 
