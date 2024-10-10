@@ -1,0 +1,51 @@
+name: SBOM Generator
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          check-latest: true
+          cache: 'yarn'
+
+      - name: Install project dependencies
+        run: yarn install --frozen-lockfile --production
+
+      # Anchore Syft Github Action
+        
+      - name: Syft directory installed spdx
+        if: always()
+        uses: anchore/sbom-action@v0
+        with:
+          artifact-name: syft_directory_installed.spdx.json
+          output-file: /tmp/syft_directory_installed.spdx.json
+          format: spdx-json
+          
+      - name: Syft directory installed cyclonedx
+        if: always()
+        uses: anchore/sbom-action@v0
+        with:
+          artifact-name: syft_directory_installed.cdx.json
+          output-file: /tmp/syft_directory_installed.cdx.json
+          format: cyclonedx-json
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: 
+          path: /tmp/syft*
+          name: "Syft SBOM experiments - just directory - installed"
