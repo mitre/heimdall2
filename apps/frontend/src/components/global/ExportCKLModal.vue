@@ -61,20 +61,37 @@
                     <v-text-field
                       v-model="file.hostip"
                       label="Host IP"
-                      :rules="[validateIpAddress]"
+                      :error-messages="
+                        validateFormat(
+                          $v.files.$each[index].hostip,
+                          '###.###.###.###'
+                        )
+                      "
                       hint="###.###.###.###"
                       class="pr-2"
                     />
                     <v-text-field
                       v-model="file.hostmac"
                       label="Host MAC"
-                      :rules="[validateMacAddress]"
+                      :error-messages="
+                        validateFormat(
+                          $v.files.$each[index].hostmac,
+                          'XX:XX:XX:XX:XX:XX'
+                        )
+                      "
                       hint="XX:XX:XX:XX:XX:XX"
                       class="pr-2"
                     />
                     <v-text-field
                       v-model="file.hostfqdn"
                       label="Host FQDN"
+                      :error-messages="
+                        validateFormat(
+                          $v.files.$each[index].hostfqdn,
+                          '[hostname].[domain].[tld]'
+                        )
+                      "
+                      hint="[hostname].[domain].[tld]"
                       class="pr-2"
                     />
                     <v-text-field
@@ -107,7 +124,7 @@
                       label="Vul ID Mapping"
                       class="pr-2"
                     >
-                      <v-tooltip slot="append" color="#332E2E" bottom>
+                      <v-tooltip slot="prepend-inner" color="#332E2E" bottom>
                         <template #activator="{on}">
                           <v-icon color="primary" v-on="on"
                             >mdi-information-variant-circle</v-icon
@@ -177,14 +194,14 @@
                         class="pr-2"
                       />
                       <v-text-field
-                        v-model="profile.version"
+                        v-model.number="profile.version"
                         label="Version"
                         type="number"
                         :placeholder="profile.versionplaceholder"
                         class="pr-2"
                       />
                       <v-text-field
-                        v-model="profile.releasenumber"
+                        v-model.number="profile.releasenumber"
                         label="Release Number"
                         type="number"
                         :placeholder="profile.releasenumberplaceholder"
@@ -253,7 +270,7 @@
         <v-btn
           color="primary"
           text
-          :disabled="!selected.length"
+          :disabled="!selected.length || $v.$invalid"
           @click="exportCKL"
         >
           Export
@@ -280,7 +297,8 @@ import {
   StigMetadata,
   Assettype,
   Role,
-  Techarea
+  Techarea,
+  validateChecklistMetadata
 } from '@mitre/hdf-converters';
 import {ExecJSON} from 'inspecjs';
 import {Dependency} from 'inspecjs/src/generated_parsers/v_1_0/exec-json';
@@ -290,6 +308,10 @@ import Component from 'vue-class-component';
 import {Prop, Watch} from 'vue-property-decorator';
 import {DateTime} from 'luxon';
 import {coerce} from 'semver';
+import {validationMixin} from 'vuelidate';
+import {or, CustomRule} from 'vuelidate/lib/validators';
+import ValidationProperties from 'vue/types/vue';
+import {Result} from '@mitre/hdf-converters/src/utils/result';
 
 type ExtendedEvaluationFile = (EvaluationFile | ProfileFile) &
   ChecklistMetadata & {
@@ -303,9 +325,31 @@ type FileData = {
   data: string;
 };
 
+const isNotSelected: CustomRule = (_, file) => !file.selected;
+function validateField(prop: string): CustomRule {
+  return (_, file: ExtendedEvaluationFile) => {
+    let results = validateChecklistMetadata(file);
+    return results.ok || !results.error.invalid.includes(prop);
+  };
+}
+
 @Component({
-  components: {
-    LinkItem
+  mixins: [validationMixin],
+  components: {LinkItem},
+  validations: {
+    files: {
+      $each: {
+        hostip: {
+          ipAddress: or(validateField('hostip'), isNotSelected)
+        },
+        hostmac: {
+          macAddress: or(validateField('hostmac'), isNotSelected)
+        },
+        hostfqdn: {
+          fqdn: or(validateField('hostfqdn'), isNotSelected)
+        }
+      }
+    }
   }
 })
 export default class ExportCKLModal extends Vue {
@@ -543,20 +587,17 @@ export default class ExportCKLModal extends Vue {
     return results;
   }
 
-  validateIpAddress(value: string): boolean | string {
-    if (!value) {
-      return true;
+  /**
+   * Checks the input field and generates a formatted error message if necessary
+   *
+   * @param field the validation state of the input field
+   * @param name name of the field that will show up in error message
+   */
+  validateFormat(field: typeof ValidationProperties, hint: string): string[] {
+    if (_.get(field, '$invalid')) {
+      return [hint];
     }
-    const ipPattern = /^(\d{1,3}\.){3}\d{1,3}$/;
-    return ipPattern.test(value) || 'Invalid IP Address Format';
-  }
-
-  validateMacAddress(value: string): boolean | string {
-    if (!value) {
-      return true;
-    }
-    const macPattern = /^([0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}$/;
-    return macPattern.test(value) || 'Invalid MAC Address Format';
+    return [];
   }
 
   setProperName(name: string, fileIndex: number, profileIndex: number): string {
@@ -682,6 +723,15 @@ export default class ExportCKLModal extends Vue {
     for (const selected of this.selected) {
       this.addMetadataToPassthrough(selected);
       if ('evaluation' in selected) {
+        // validate checklist metadata input from user
+        const result = this.validateInputMetadata(selected);
+
+        // display error message upon any invalid user inputs
+        if (!result.ok) {
+          SnackbarModule.failure(result.error);
+          return;
+        }
+
         const data = new ChecklistResults(selected.evaluation.data).toCkl();
         const filename = `${cleanUpFilename(selected.filename)}.ckl`;
         fileData.push({
@@ -692,6 +742,12 @@ export default class ExportCKLModal extends Vue {
     }
     saveSingleOrMultipleFiles(fileData, 'ckl');
     this.closeModal();
+  }
+
+  validateInputMetadata(metadata: ChecklistMetadata): Result<true, string> {
+    const result = validateChecklistMetadata(metadata);
+    if (result.ok) return {ok: true, value: true};
+    return {ok: false, error: result.error.message};
   }
 }
 </script>

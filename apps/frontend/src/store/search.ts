@@ -47,6 +47,7 @@ export const statusTypes = [...controlStatuses, 'Waived'];
 })
 class Search extends VuexModule {
   searchTerm = ''; // Value entered into the top search bar
+  tagFilter: string[] = [];
 
   /** Current value of the parsed query string
    * Standard format for the condition array:

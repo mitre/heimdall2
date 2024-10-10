@@ -36,6 +36,9 @@
           <li class="pb-1">
             <h3>Inputs: <code>input:disable_slow_controls</code></h3>
           </li>
+          <li class="pb-1">
+            <h3>Tags: <code>tags:severityoverride</code></h3>
+          </li>
         </ul>
         <br />
         <h2>Joining Queries</h2>
@@ -47,16 +50,15 @@
         <br />
         <h3>
           <code>
-            status:Failed,"Not reviewed" severity:High,Low title:"Ensure IAM"
-            "instance roles"</code
-          >
+            status:"Failed,Not reviewed" severity:High title:"Ensure IAM"
+          </code>
         </h3>
       </v-card-text>
       <v-divider />
       <v-card-actions>
-        <v-btn color="primary" text @click="$emit('close-modal')"
-          >Close Window</v-btn
-        >
+        <v-btn color="primary" text @click="$emit('close-modal')">
+          Close Window
+        </v-btn>
       </v-card-actions>
     </v-card>
   </Modal>

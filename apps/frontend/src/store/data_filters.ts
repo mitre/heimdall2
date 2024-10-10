@@ -124,6 +124,9 @@ export interface ControlsFilter {
   /** Control IDs to search for */
   ids?: SearchEntry<ControlIdSearchTerm>[];
 
+  /** Tags to search for */
+  tagFilter?: string[];
+
   /** A search term string, case insensitive
    * We look for this in
    * - control ID
@@ -728,8 +731,22 @@ export class FilteredData extends VuexModule {
         ),
         keywords: filter.keywordsSearchTerms
       };
-
       controls = filterControlsBy(controls, controlFilters);
+
+      // Filter by tags
+      if (filter.tagFilter && filter.tagFilter.length > 0) {
+        controls = controls.filter((control) => {
+          if (filter.tagFilter) {
+            // every tag in the filter must be contained in the control's tags
+            const tags = Object.keys(control.data.tags).map((t) =>
+              t.toLowerCase()
+            );
+            return filter.tagFilter.every((tag) => {
+              return tags.includes(tag);
+            });
+          }
+        });
+      }
 
       // Filter by overlay
       if (filter.omit_overlayed_controls) {
