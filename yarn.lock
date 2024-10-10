@@ -17912,6 +17912,11 @@ search-query-parser@^1.5.5:
   resolved "https://registry.npmjs.org/search-query-parser/-/search-query-parser-1.6.0.tgz#d69ade33f3685cae25613a70189b7b18970b46f1"
   integrity sha512-bhf+phLlKF38nuniwLcVHWPArHGdzenlPhPi955CR3vm1QQifXIuPHwAffhjapojdVVzmv4hgIJ6NOX1d/w+Uw==
 
+search-string@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/search-string/-/search-string-3.1.0.tgz#3f111c6919a33de33a8e304fd5f8395c3d806ffb"
+  integrity sha512-yY3b0VlaXfKi2B//34PN5AFF+GQvwme6Kj4FjggmoSBOa7B8AHfS1nYZbsrYu+IyGeYOAkF8ywL9LN9dkrOo6g==
+
 seek-bzip@^1.0.5:
   version "1.0.6"
   resolved "https://registry.npmjs.org/seek-bzip/-/seek-bzip-1.0.6.tgz#35c4171f55a680916b52a07859ecf3b5857f21c4"
