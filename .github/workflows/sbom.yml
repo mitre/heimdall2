@@ -44,9 +44,13 @@ jobs:
 
       - run: ls -lah /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest.spdx.json
 
+      - name: bug in cyclonedxcli spdx converter causes a valid field to throw an error, applying a workaround
+        if: always()
+        run: sed 's/PACKAGE-MANAGER/PACKAGE_MANAGER/g' /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest.spdx.json > /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json
+
       - name: sbomtool directory spdx converted
         if: always()
-        run: docker run -t -v /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest.spdx.json:/tmp/sbomtool_directory.spdx.json -v /tmp/sbomtool/directory.cdx.json:/tmp/sbomtool_directory.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_directory.spdx.json --output-file /tmp/sbomtool_directory.cdx.json  --input-format spdxjson --output-format json 
+        run: docker run -t -v /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json:/tmp/sbomtool_directory.spdx.json -v /tmp/sbomtool/directory.cdx.json:/tmp/sbomtool_directory.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_directory.spdx.json --output-file /tmp/sbomtool_directory.cdx.json  --input-format spdxjson --output-format json 
 
       - name: Build the Docker image
         if: always()
@@ -56,9 +60,13 @@ jobs:
         if: always()
         run: /tmp/sbom-tool generate -di mitre/heimdall2:throwaway -li true -pm true -m /tmp/sbomtool/image -pn Heimdall2 -pv 2.10.19 -ps MITRE -nsb https://saf.mitre.org -V Verbose
 
+      - name: bug in cyclonedxcli spdx converter causes a valid field to throw an error, applying a workaround
+        if: always()
+        run: sed 's/PACKAGE-MANAGER/PACKAGE_MANAGER/g' /tmp/sbomtool/image/_manifest/spdx_2.2/manifest.spdx.json > /tmp/sbomtool/image/_manifest/spdx_2.2/manifest_fixed.spdx.json
+
       - name: sbomtool image spdx converted
         if: always()
-        run: docker run -t -v /tmp/sbomtool/image/_manifest/spdx_2.2/manifest.spdx.json:/tmp/sbomtool_image.spdx.json -v /tmp/sbomtool/image.cdx.json:/tmp/sbomtool_image.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_image.spdx.json --output-file /tmp/sbomtool_image.cdx.json  --input-format spdxjson --output-format json 
+        run: docker run -t -v /tmp/sbomtool/image/_manifest/spdx_2.2/manifest_fixed.spdx.json:/tmp/sbomtool_image.spdx.json -v /tmp/sbomtool/image.cdx.json:/tmp/sbomtool_image.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_image.spdx.json --output-file /tmp/sbomtool_image.cdx.json  --input-format spdxjson --output-format json 
 
       - uses: actions/upload-artifact@v4
         if: always()
