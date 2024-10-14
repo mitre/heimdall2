@@ -45,10 +45,14 @@ jobs:
         run: sed 's/PACKAGE-MANAGER/PACKAGE_MANAGER/g' /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest.spdx.json > /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json
 
       - run: tree /tmp/sbomtool
-      
-      - run: ls -lah /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json
 
       - run: chmod 777 /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json
+
+      - run: ls -lah /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json
+            
+      - name: sbomtool check permissions in container
+        if: always()
+        run: docker run -t -v /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json:/tmp/sbomtool_directory.spdx.json -v /tmp/sbomtool/directory.cdx.json:/tmp/sbomtool_directory.cdx.json --entrypoint /bin/sh cyclonedx/cyclonedx-cli:latest -- tree /tmp && ls -lah /tmp/sbomtool_directory.spdx.json
 
       - name: sbomtool directory spdx converted
         if: always()
