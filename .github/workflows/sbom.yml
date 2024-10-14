@@ -42,9 +42,11 @@ jobs:
 
       - run: tree /tmp/sbomtool
 
+      - run: ls -lah /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest.spdx.json
+
       - name: sbomtool directory spdx converted
         if: always()
-        run: docker run -t -v /tmp/sbomtool/directory/*:/tmp/sbomtool_directory.spdx.json -v /tmp/sbomtool/directory.cdx.json:/tmp/sbomtool_directory.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_directory.spdx.json --output-file /tmp/sbomtool_directory.cdx.json  --input-format spdxjson --output-format json 
+        run: docker run -t -v /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest.spdx.json:/tmp/sbomtool_directory.spdx.json -v /tmp/sbomtool/directory.cdx.json:/tmp/sbomtool_directory.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_directory.spdx.json --output-file /tmp/sbomtool_directory.cdx.json  --input-format spdxjson --output-format json 
 
       - name: Build the Docker image
         if: always()
@@ -56,7 +58,7 @@ jobs:
 
       - name: sbomtool image spdx converted
         if: always()
-        run: docker run -t -v /tmp/sbomtool/image/*:/tmp/sbomtool_image.spdx.json -v /tmp/sbomtool/image.cdx.json:/tmp/sbomtool_image.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_image.spdx.json --output-file /tmp/sbomtool_image.cdx.json  --input-format spdxjson --output-format json 
+        run: docker run -t -v /tmp/sbomtool/image/_manifest/spdx_2.2/manifest.spdx.json:/tmp/sbomtool_image.spdx.json -v /tmp/sbomtool/image.cdx.json:/tmp/sbomtool_image.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_image.spdx.json --output-file /tmp/sbomtool_image.cdx.json  --input-format spdxjson --output-format json 
 
       - uses: actions/upload-artifact@v4
         if: always()
