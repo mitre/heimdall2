@@ -48,7 +48,7 @@ jobs:
       
       - run: ls -lah /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json
 
-      - run: chmod 755 /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json
+      - run: chmod 777 /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json
 
       - name: sbomtool directory spdx converted
         if: always()
