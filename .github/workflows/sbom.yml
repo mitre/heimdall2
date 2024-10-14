@@ -31,13 +31,20 @@ jobs:
       - name: Install project dependencies
         run: yarn install --frozen-lockfile --production
 
+      - name: sbomtool expects a directory to exist to place results in
+        run: |
+          mkdir -p /tmp/sbomtool/directory
+          mkdir -p /tmp/sbomtool/image
+
       - name: sbomtool directory spdx
         if: always()
-        run: /tmp/sbom-tool generate -b . -bc . -li true -pm true -m /tmp/sbomtool_directory.spdx.json -pn Heimdall2 -pv 2.10.19 -ps MITRE -nsb https://saf.mitre.org -V Verbose
+        run: /tmp/sbom-tool generate -b . -bc . -li true -pm true -m /tmp/sbomtool/directory -pn Heimdall2 -pv 2.10.19 -ps MITRE -nsb https://saf.mitre.org -V Verbose
+
+      - run: tree /tmp/sbomtool
 
       - name: sbomtool directory spdx converted
         if: always()
-        run: docker run -t -v /tmp/sbomtool_directory.spdx.json:/tmp/sbomtool_directory.spdx.json -v /tmp/sbomtool_directory.cdx.json:/tmp/sbomtool_directory.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_directory.spdx.json --output-file /tmp/sbomtool_directory.cdx.json  --input-format spdxjson --output-format json 
+        run: docker run -t -v /tmp/sbomtool/directory/*:/tmp/sbomtool_directory.spdx.json -v /tmp/sbomtool/directory.cdx.json:/tmp/sbomtool_directory.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_directory.spdx.json --output-file /tmp/sbomtool_directory.cdx.json  --input-format spdxjson --output-format json 
 
       - name: Build the Docker image
         if: always()
@@ -45,14 +52,14 @@ jobs:
 
       - name: sbomtool image spdx
         if: always()
-        run: /tmp/sbom-tool generate -di mitre/heimdall2:throwaway -li true -pm true -m /tmp/sbomtool_image.spdx.json -pn Heimdall2 -pv 2.10.19 -ps MITRE -nsb https://saf.mitre.org -V Verbose
+        run: /tmp/sbom-tool generate -di mitre/heimdall2:throwaway -li true -pm true -m /tmp/sbomtool/image -pn Heimdall2 -pv 2.10.19 -ps MITRE -nsb https://saf.mitre.org -V Verbose
 
       - name: sbomtool image spdx converted
         if: always()
-        run: docker run -t -v /tmp/sbomtool_image.spdx.json:/tmp/sbomtool_image.spdx.json -v /tmp/sbomtool_image.cdx.json:/tmp/sbomtool_image.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_image.spdx.json --output-file /tmp/sbomtool_image.cdx.json  --input-format spdxjson --output-format json 
+        run: docker run -t -v /tmp/sbomtool/image/*:/tmp/sbomtool_image.spdx.json -v /tmp/sbomtool/image.cdx.json:/tmp/sbomtool_image.cdx.json cyclonedx/cyclonedx-cli:latest convert --input-file /tmp/sbomtool_image.spdx.json --output-file /tmp/sbomtool_image.cdx.json  --input-format spdxjson --output-format json 
 
       - uses: actions/upload-artifact@v4
         if: always()
         with: 
-          path: /tmp/sbomtool*
+          path: /tmp/sbomtool
           name: "MS SBOM Tool experiments"
