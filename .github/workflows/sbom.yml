@@ -52,7 +52,7 @@ jobs:
             
       - name: sbomtool check permissions in container
         if: always()
-        run: docker run -t -v /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json:/tmp/sbomtool_directory.spdx.json -v /tmp/sbomtool/directory.cdx.json:/tmp/sbomtool_directory.cdx.json --entrypoint /bin/sh cyclonedx/cyclonedx-cli:latest -- tree /tmp && ls -lah /tmp/sbomtool_directory.spdx.json
+        run: docker run -t -v /tmp/sbomtool/directory/_manifest/spdx_2.2/manifest_fixed.spdx.json:/tmp/sbomtool_directory.spdx.json -v /tmp/sbomtool/directory.cdx.json:/tmp/sbomtool_directory.cdx.json --entrypoint /bin/sh cyclonedx/cyclonedx-cli:latest -- ls -lah /tmp
 
       - name: sbomtool directory spdx converted
         if: always()
