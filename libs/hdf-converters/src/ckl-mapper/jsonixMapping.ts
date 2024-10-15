@@ -291,7 +291,7 @@ export const jsonixMapping = {
           values: ['NotAFinding', 'Open', 'Not_Applicable', 'Not_Reviewed']
         },
         {
-          name: 'findingDetails',
+          name: 'findingdetails',
           required: true,
           elementName: {
             localPart: 'FINDING_DETAILS'

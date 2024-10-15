@@ -525,7 +525,7 @@
             "required":[
                 "stigdata",
                 "status",
-                "findingDetails",
+                "findingdetails",
                 "comments",
                 "severityoverride",
                 "severityjustification"
@@ -573,8 +573,8 @@
                         "namespaceURI":""
                     }
                 },
-                "findingDetails":{
-                    "title":"findingDetails",
+                "findingdetails":{
+                    "title":"findingdetails",
                     "allOf":[
                         {
                             "$ref":"XMLSchema.jsonschema#/definitions/string"
@@ -642,7 +642,7 @@
             "propertiesOrder":[
                 "stigdata",
                 "status",
-                "findingDetails",
+                "findingdetails",
                 "comments",
                 "severityoverride",
                 "severityjustification"

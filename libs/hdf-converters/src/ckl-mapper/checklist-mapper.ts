@@ -529,7 +529,7 @@ export class ChecklistMapper extends BaseConverter {
                   path: 'status',
                   transformer: getStatus
                 },
-                code_desc: {path: 'findingDetails'},
+                code_desc: {path: 'findingdetails'},
                 start_time: ''
               }
             ]

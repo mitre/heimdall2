@@ -53,7 +53,7 @@ export type Stigdata = {
   attributedata?: null | string;
   vulnattribute?: Vulnattribute;
   comments?: null | string;
-  findingDetails?: null | string;
+  findingdetails?: null | string;
   severityjustification?: null | string;
   severityoverride?: Severity;
   status?: Status;
