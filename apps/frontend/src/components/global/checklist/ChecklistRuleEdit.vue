@@ -74,7 +74,7 @@ export default class ChecklistRuleInfoBody extends Vue {
     {name: 'Not Reviewed', value: 'Not Reviewed'}
   ];
 
-  severityoverrideItems: {name: string; value: Severity}[] = [
+  severityOverrideItems: {name: string; value: Severity}[] = [
     {name: 'High', value: Severity.High},
     {name: 'Medium', value: Severity.Medium},
     {name: 'Low', value: Severity.Low}
@@ -83,7 +83,7 @@ export default class ChecklistRuleInfoBody extends Vue {
   ];
 
   checkPossibleOverrides(severity: Severity) {
-    const newArr = this.severityoverrideItems.filter(
+    const newArr = this.severityOverrideItems.filter(
       (item) => item.value !== severity
     );
     // Check if it is not an empty rule
@@ -101,7 +101,7 @@ export default class ChecklistRuleInfoBody extends Vue {
 
   promptSeverityJustification() {
     if (
-      this.selectedRule.severityOverride.valueOf() ===
+      this.selectedRule.severityOverride?.valueOf() ===
       this.selectedRule.severity.valueOf()
     ) {
       this.selectedRule.severityJustification =
