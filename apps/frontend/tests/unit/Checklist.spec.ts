@@ -79,8 +79,12 @@ describe('Datatable', () => {
         }
       ).allRules
         .map((item: ChecklistVuln) => item.ruleId)
-        .sort()
-    ).toEqual(rules.map((item: ChecklistVuln) => item.ruleId).sort());
+        .sort((a, b) => a.localeCompare(b))
+    ).toEqual(
+      rules
+        .map((item: ChecklistVuln) => item.ruleId)
+        .sort((a, b) => a.localeCompare(b))
+    );
   });
 
   it('displays correct number of rules with loaded checklist and filter', async () => {

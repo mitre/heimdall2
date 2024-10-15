@@ -111,7 +111,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   }
 
   containsChecklist(file: EvaluationFile | ProfileFile): boolean {
-    return _.get(file, 'evaluation.data.passthrough.checklist') ? true : false;
+    return _.get(file, 'evaluation.data.passthrough.checklist', false);
   }
 
   //removes uploaded file from the currently observed files
