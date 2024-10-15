@@ -375,10 +375,10 @@ export class FilteredData extends VuexModule {
   /** For Checklist Viewer */
   readonly emptyRule: ChecklistVuln = {
     status: StatusMapping.Not_Reviewed,
-    findingDetails: '',
+    findingdetails: '',
     comments: '',
-    severityOverride: ChecklistSeverity.Empty,
-    severityJustification: '',
+    severityoverride: ChecklistSeverity.Empty,
+    severityjustification: '',
     vulnNum: '',
     severity: ChecklistSeverity.Empty,
     groupTitle: '',

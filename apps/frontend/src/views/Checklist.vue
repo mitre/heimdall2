@@ -176,10 +176,10 @@ export default class Checklist extends RouteMixin {
   sheet = false;
 
   /** State variable to track severity justification */
-  newJustification = this.selectedRule.severityJustification;
+  newJustification = this.selectedRule.severityjustification;
 
   /** State variable to track severity override */
-  severityOverrideSelection = this.selectedRule.severityOverride ?? '';
+  severityOverrideSelection = this.selectedRule.severityoverride ?? '';
 
   setSeverityOverrideSelection(value: Severity) {
     this.severityOverrideSelection = value;

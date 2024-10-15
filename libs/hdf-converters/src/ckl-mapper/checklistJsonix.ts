@@ -166,9 +166,9 @@ export enum Sidname {
 
 export type Vuln = {
   comments: null | string;
-  findingDetails: null | string;
-  severityJustification: null | string;
-  severityOverride: Severity;
+  findingdetails: null | string;
+  severityjustification: null | string;
+  severityoverride: Severity;
   status: Status;
   stigdata: StigdatumElement[];
 };

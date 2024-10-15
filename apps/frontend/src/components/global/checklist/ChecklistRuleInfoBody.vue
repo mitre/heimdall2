@@ -83,19 +83,19 @@
         </div>
         <!-- Severity Override -->
         <div
-          v-if="selectedRule.severityOverride"
+          v-if="selectedRule.severityoverride"
           class="my-3 d-flex flex-column"
         >
           <span>Severity Override:</span>
-          <span>{{ selectedRule.severityOverride }}</span>
+          <span>{{ selectedRule.severityoverride }}</span>
         </div>
         <!-- Severity Override Justification -->
         <div
-          v-if="selectedRule.severityJustification"
+          v-if="selectedRule.severityjustification"
           class="my-3 d-flex flex-column"
         >
           <span>Severity Override Justification:</span>
-          <span>{{ selectedRule.severityJustification }}</span>
+          <span>{{ selectedRule.severityjustification }}</span>
           <v-btn class="mt-2" dark @click="$emit('enable-sheet')"
             >Edit Justification<v-icon data-cy="edit" title="Edit" class="ml-3">
               mdi-pencil
@@ -143,8 +143,8 @@ export default class ChecklistRuleInfoBody extends Vue {
       this.selectedRule.potentialImpact ||
       this.selectedRule.thirdPartyTools ||
       this.selectedRule.mitigationControl ||
-      this.selectedRule.severityOverride ||
-      this.selectedRule.severityJustification
+      this.selectedRule.severityoverride ||
+      this.selectedRule.severityjustification
     );
   }
 }
