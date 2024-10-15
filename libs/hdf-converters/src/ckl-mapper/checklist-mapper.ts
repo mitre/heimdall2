@@ -83,7 +83,7 @@ function findSeverity(vuln: ChecklistVuln): string {
  * @returns - severityoverride
  */
 function findSeverityOverride(vuln: ChecklistVuln): string {
-  let severityOverride: string = vuln.severityoverride;
+  let severityOverride: string = vuln.severityOverride;
   const hdfExistingData = parseJson(vuln.thirdPartyTools);
   if (hdfExistingData.ok) {
     severityOverride = _.get(

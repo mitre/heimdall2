@@ -28,7 +28,7 @@
         <v-col>
           <strong>Finding Details: </strong><br />
           <v-textarea
-            v-model="selectedRule.findingdetails"
+            v-model="selectedRule.findingDetails"
             solo
             outlined
             dense
@@ -63,8 +63,8 @@ export default class ChecklistRuleInfoBody extends Vue {
   @Prop({type: Object, required: true}) selectedRule!: ChecklistVuln;
   @Prop({type: Boolean, required: true}) sheet!: boolean;
 
-  newOverride = this.selectedRule.severityoverride
-    ? this.selectedRule.severityoverride
+  newOverride = this.selectedRule.severityOverride
+    ? this.selectedRule.severityOverride
     : '';
 
   statusItems: {name: ControlStatus; value: ControlStatus}[] = [
@@ -89,7 +89,7 @@ export default class ChecklistRuleInfoBody extends Vue {
     // Check if it is not an empty rule
     if (
       this.selectedRule.severity !== Severity.Empty &&
-      this.selectedRule.severityoverride != Severity.Empty
+      this.selectedRule.severityOverride != Severity.Empty
     ) {
       newArr.push({
         name: `${_.capitalize(this.selectedRule.severity)} (Default)`,
@@ -101,10 +101,10 @@ export default class ChecklistRuleInfoBody extends Vue {
 
   promptSeverityJustification() {
     if (
-      this.selectedRule.severityoverride.valueOf() ===
+      this.selectedRule.severityOverride.valueOf() ===
       this.selectedRule.severity.valueOf()
     ) {
-      this.selectedRule.severityjustification =
+      this.selectedRule.severityJustification =
         'Returning to default severity.';
     }
     this.$emit('update-override', this.newOverride);

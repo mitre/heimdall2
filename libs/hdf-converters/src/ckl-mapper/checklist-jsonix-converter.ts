@@ -186,9 +186,9 @@ export const EmptyChecklistObject: ChecklistObject = {
           legacyId: '',
           cciRef: '',
           comments: null,
-          findingdetails: null,
-          severityjustification: null,
-          severityoverride: Severity.Empty
+          findingDetails: null,
+          severityJustification: null,
+          severityOverride: Severity.Empty
         }
       ]
     }
@@ -346,10 +346,10 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         const stigdata: Stigdata[] = _.get(vuln, 'stigdata');
         const checklistVuln: ChecklistVuln = {
           status: StatusMapping[_.get(vuln, 'status')],
-          findingdetails: _.get(vuln, 'findingdetails'),
+          findingDetails: _.get(vuln, 'findingDetails'),
           comments: _.get(vuln, 'comments'),
-          severityoverride: _.get(vuln, 'severityoverride'),
-          severityjustification: _.get(vuln, 'severityjustification'),
+          severityOverride: _.get(vuln, 'severityOverride'),
+          severityJustification: _.get(vuln, 'severityJustification'),
           vulnNum: this.getValueFromAttributeName<Stigdata>(
             stigdata,
             'Vuln_Num'
@@ -521,9 +521,9 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
       const stigdata: StigdatumElement[] = this.expandVulns(checklistVuln);
       const vuln: Vuln = {
         comments: checklistVuln.comments,
-        findingdetails: checklistVuln.findingdetails,
-        severityjustification: checklistVuln.severityjustification,
-        severityoverride: checklistVuln.severityoverride,
+        findingDetails: checklistVuln.findingDetails,
+        severityJustification: checklistVuln.severityJustification,
+        severityOverride: checklistVuln.severityOverride,
         status: Object.keys(StatusMapping)[
           Object.values(StatusMapping).indexOf(checklistVuln.status)
         ] as Status,
@@ -797,13 +797,13 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         comments: this.getComments(
           control.descriptions as ExecJSON.ControlDescription[]
         ),
-        findingdetails: this.getFindingDetails(control.results) ?? '',
-        severityjustification: _.get(
+        findingDetails: this.getFindingDetails(control.results) ?? '',
+        severityJustification: _.get(
           control.tags,
           'severityjustification',
           Severity.Empty
         ),
-        severityoverride: _.get(
+        severityOverride: _.get(
           control.tags,
           'severityoverride',
           Severity.Empty

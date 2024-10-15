@@ -63,14 +63,14 @@
             <strong>{{ shortStatus(item.status) }}</strong>
           </v-chip>
         </template>
-        <template #[`item.ruleversion`]="{item}">
-          {{ shortStigId(item.ruleversion) }}
+        <template #[`item.ruleVer`]="{item}">
+          {{ shortStigId(item.ruleVer) }}
         </template>
-        <template #[`item.ruleid`]="{item}">
-          {{ shortRuleId(item.ruleid) }}
+        <template #[`item.ruleId`]="{item}">
+          {{ shortRuleId(item.ruleId) }}
         </template>
-        <template #[`item.cciref`]="{item}">
-          {{ shortRuleId(item.cciref) }}
+        <template #[`item.cciRef`]="{item}">
+          {{ shortRuleId(item.cciRef) }}
         </template>
       </v-data-table>
     </v-card-text>
@@ -155,22 +155,30 @@ export default class ChecklistRulesTable extends Vue {
     });
   }
 
-  selectedHeaders: {text: string; value: string; width?: string}[] = [
+  selectedHeaders: {
+    text: string;
+    value: keyof ChecklistVuln;
+    width?: string;
+  }[] = [
     {text: 'Status', value: 'status', width: '100px'},
-    {text: 'STIG ID', value: 'ruleversion', width: '170px'},
-    {text: 'Rule ID', value: 'ruleid', width: '170px'},
-    {text: 'Vul ID', value: 'vulnnum', width: '100px'},
-    {text: 'Group Name', value: 'grouptitle', width: '150px'},
-    {text: 'CCIs', value: 'cciref', width: '120px'}
+    {text: 'STIG ID', value: 'ruleVer', width: '170px'},
+    {text: 'Rule ID', value: 'ruleId', width: '170px'},
+    {text: 'Vul ID', value: 'vulnNum', width: '100px'},
+    {text: 'Group Name', value: 'groupTitle', width: '150px'},
+    {text: 'CCIs', value: 'cciRef', width: '120px'}
   ];
 
-  headersList = [
+  headersList: {
+    text: string;
+    value: keyof ChecklistVuln;
+    width?: string;
+  }[] = [
     {text: 'Status', value: 'status', width: '100px'},
-    {text: 'STIG ID', value: 'ruleversion', width: '170px'},
-    {text: 'Rule ID', value: 'ruleid', width: '170px'},
-    {text: 'Vul ID', value: 'vulnnum', width: '100px'},
-    {text: 'Group Name', value: 'grouptitle', width: '150px'},
-    {text: 'CCIs', value: 'cciref', width: '120px'}
+    {text: 'STIG ID', value: 'ruleVer', width: '170px'},
+    {text: 'Rule ID', value: 'ruleId', width: '170px'},
+    {text: 'Vul ID', value: 'vulnNum', width: '100px'},
+    {text: 'Group Name', value: 'groupTitle', width: '150px'},
+    {text: 'CCIs', value: 'cciRef', width: '120px'}
   ];
 }
 </script>

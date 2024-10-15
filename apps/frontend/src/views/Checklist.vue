@@ -79,7 +79,7 @@
             <ChecklistSeverityOverride
               :selected-rule="selectedRule"
               :sheet="sheet"
-              :severityoverride-selection="severityoverrideSelection"
+              :severityoverride-selection="severityOverrideSelection"
               @disable-sheet="sheet = false"
               @enable-sheet="sheet = true"
             />
@@ -176,13 +176,13 @@ export default class Checklist extends RouteMixin {
   sheet = false;
 
   /** State variable to track severity justification */
-  newJustification = this.selectedRule.severityjustification;
+  newJustification = this.selectedRule.severityJustification;
 
   /** State variable to track severity override */
-  severityoverrideSelection = this.selectedRule.severityoverride ?? '';
+  severityOverrideSelection = this.selectedRule.severityOverride ?? '';
 
   setSeverityOverrideSelection(value: Severity) {
-    this.severityoverrideSelection = value;
+    this.severityOverrideSelection = value;
   }
 
   /** State variable to track "Short ID" switch */
