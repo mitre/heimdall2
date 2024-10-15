@@ -30,9 +30,9 @@
         <div v-for="item in selectedRule.cciRef.split('; ')" :key="item">
           {{ item }}: {{ cciDescription(item) }}
           <div>
-            NIST 800-53 Rev 4:
+            NIST 800-53 Rev 5.1.1:
             <v-chip :href="nistUrl(item)" target="_blank" small>
-              {{ nistTag(item)[2] || 'None' }}
+              {{ nistTag(item) || 'None' }}
             </v-chip>
           </div>
         </div>
@@ -119,15 +119,20 @@ import {Component, Prop, Vue} from 'vue-property-decorator';
 export default class ChecklistRuleInfoBody extends Vue {
   @Prop({type: Object, required: true}) readonly selectedRule!: ChecklistVuln;
 
-  nistTag(cci: string): string[] {
-    return CCI_DESCRIPTIONS[cci].nist;
+  nistTag(cci: string): string {
+    return CCI_DESCRIPTIONS[cci].nist.slice(-1)[0];
   }
 
   nistUrl(nist: string): string {
+    const tag = this.nistTag(nist).split(' ')[0];
+    const deconstructedTag = /([A-Z]{2}-)(\d{1,2})/.exec(tag);
+    const prefix = deconstructedTag?.[1] || '';
+    const number = deconstructedTag?.[2] || '';
+    const possiblyPaddedNumber = number.length === 1 ? '0' + number : number;
+    const reconstructedTag = prefix + possiblyPaddedNumber;
     return (
-      'https://csrc.nist.gov/Projects/risk-management/sp800-53-controls/release-search#/control?version=5.1&number=' +
-      this.nistTag(nist).slice(-1)[0].split(' ')[0] + // Seems like all the ChecklistRuleInfoBody.nist entries begin with the same space-separated prefix and not all arrays are long enough to have an entry at index 2. Does it matter what index we even subscript by?
-      '#active-release-version'
+      'https://csrc.nist.gov/projects/cprt/catalog#/cprt/framework/version/SP_800_53_5_1_1/home?element=' +
+      reconstructedTag
     );
   }
 
