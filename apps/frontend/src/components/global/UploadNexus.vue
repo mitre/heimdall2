@@ -11,6 +11,7 @@
       </v-banner>
       <v-tabs
         :vertical="$vuetify.breakpoint.mdAndUp"
+        class="left-justify-tabs"
         :value="activeTab"
         color="primary-visible"
         show-arrows
