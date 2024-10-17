@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import {Filter, FilteredDataModule} from '@/store/data_filters';
+import {ControlsFilter, FilteredDataModule} from '@/store/data_filters';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
@@ -49,7 +49,7 @@ interface CardProps {
 
 @Component
 export default class InfoCardRow extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
 
   get severityOverrideProps(): CardProps {
     const filter = {
