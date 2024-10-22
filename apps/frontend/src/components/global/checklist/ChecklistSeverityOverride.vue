@@ -35,7 +35,9 @@ export default class ChecklistSeverityOverride extends Vue {
   @Prop({type: Object, required: true}) readonly selectedRule!: ChecklistVuln;
   @Prop({type: Boolean, required: true}) sheet!: boolean;
   @Prop({type: String, required: true})
-  severityOverrideSelection!: Severity;
+
+  // Casing is preserved relative to the checklist file
+  severityoverrideSelection!: Severity;
 
   newJustification = this.selectedRule.severityjustification
     ? this.selectedRule.severityjustification
@@ -45,7 +47,7 @@ export default class ChecklistSeverityOverride extends Vue {
   validateSecurityJustification() {
     if (this.newJustification !== '') {
       this.validJustification = true;
-      this.selectedRule.severityoverride = this.severityOverrideSelection;
+      this.selectedRule.severityoverride = this.severityoverrideSelection;
       this.selectedRule.severityjustification = this.newJustification;
       this.$emit('disable-sheet');
       return true;
