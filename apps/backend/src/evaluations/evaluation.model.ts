@@ -25,47 +25,47 @@ export class Evaluation extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: string;
+  declare id: string;
 
   @AllowNull(false)
   @Column
-  filename!: string;
+  declare filename: string;
 
   @AllowNull(false)
   @Column(DataType.JSON)
-  data!: Record<string, unknown>;
+  declare data: Record<string, unknown>;
 
   @AllowNull(false)
   @Default(false)
   @Column(DataType.BOOLEAN)
-  public!: boolean;
+  declare public: boolean;
 
   @ForeignKey(() => User)
   @Column(DataType.BIGINT)
-  userId!: string;
+  declare userId: string;
 
   @ForeignKey(() => Group)
   @Column(DataType.BIGINT)
-  groupId!: string;
+  declare groupId: string;
 
   @BelongsTo(() => User, {
     constraints: false
   })
-  user!: User;
+  declare user: User;
 
   @CreatedAt
   @AllowNull(false)
   @Column
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column
-  updatedAt!: Date;
+  declare updatedAt: Date;
 
   @HasMany(() => EvaluationTag)
-  evaluationTags!: EvaluationTag[];
+  declare evaluationTags: EvaluationTag[];
 
   @BelongsToMany(() => Group, () => GroupEvaluation)
-  groups!: Array<Group & {GroupEvaluation: GroupEvaluation}>;
+  declare groups: Array<Group & {GroupEvaluation: GroupEvaluation}>;
 }

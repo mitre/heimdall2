@@ -175,9 +175,15 @@ Heimdall's frontend container image is distributed on [DockerHub](https://hub.do
 
 5. Run the following commands in a terminal window from the Heimdall source directory. For more information on the .env file, visit [Environment Variables Configuration.](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration)
    ```bash
+   # For Linux or Mac
    ./setup-docker-env.sh
-   # If you would like to further configure your Heimdall instance, edit the .env file generated after running the previous line
+   
+   # For Windows
+   ./setup-docker-env.bat
    ```
+
+> [!TIP]
+> If you would like to further configure your Docker-based Heimdall deployment, edit the .env file located in the root directory generated after running the `setup-docker-env.sh` or `setup-docker-env.bat` scripts
 
 6. Heimdall might need certificates to access the open internet or internal resources (ex. an LDAP server).  Please convert any certificates into PEM files and place them in `./certs/` where they will be automatically ingested.  Alternatively, you can place a shell script that will retrieve those certs in that directory, and modify the `command` attribute underneath the `certs` service in the `docker-compose.yml` to run that script.
   ```bash
@@ -310,49 +316,46 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
    Ubuntu:
 
+   - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) provided by NodeSource for details on supported Node.js versions and additional installation information
    - ```bash
-     # grab nodesource for recent version of nodejs
+     # add NodeSource's Node.js distribution to /etc/apt/sources.list
      sudo curl -sL https://deb.nodesource.com/setup_18.x -o /tmp/nodesource_setup.sh
      sudo bash /tmp/nodesource_setup.sh
 
      # use apt to install dependencies
      sudo apt install postgresql nodejs git
-     sudo apt install nano                        # recommended installation
+     sudo apt install nano # or preferred terminal-based editor
      sudo npm install -g yarn
      ```
 
-   **NOTES** 
-
-     - The installation scripts setup_XX.x are no longer supported and are not needed anymore, as the installation process is straightforward for any RPM and DEB distro.
-    
-     - See the [Debian and Ubuntu based distributions](https://github.com/nodesource/distributions#debian-and-ubuntu-based-distributions) nodesource for nodejs supported version and additional installation information
-  
    OSX:
-   
+
    - ```bash
      brew install postgresql node@18 git      
-     brew install nano                        # recommended installation
+     brew install nano # or preferred terminal-based editor
      sudo npm install -g yarn
      ```
-
    WINDOWS:
-    - Install Node.js via MSI Installer
-      - Download the node release 18.xx installer (msi) from the [nodejs site](https://nodejs.org/en/blog/release)
-      - Open and run (double-click) the .msi file, the installation process begins, follow the installation instructions
-      - Node.js offers you options to install tools for native modules, we recommend checking the Automatically install the necessary tools check box.
-      - Verify the Node and npm version
-      ```shell
-      node --version 
-      npm --version
-      ```
 
-    - Install Yarn via MSI Installer
-      - Download the Yarn installation file from [GitHub](https://github.com/yarnpkg/yarn/releases/)
-      - Open and run the installation file, follow the installation instructions
-      - Run the following command in the PowerShell to verify the installation:
-      ```shell
-      yarn --version
-      ```
+   - Use `Windows Subsystem for Linux (WSL)` - (use Ubuntu as the distro, and then follow the instructions listed for Ubuntu); alternatively you could do the following steps:
+
+   - Install Node.js via MSI Installer
+     - Download the node release 18.xx installer (msi) from the [nodejs site](https://nodejs.org/en/blog/release)
+     - Open and run (double-click) the .msi file, the installation process begins, follow the installation instructions
+     - Node.js offers you options to install tools for native modules, we recommend checking the Automatically install the necessary tools check box.
+     - Verify the Node and npm version
+     ```shell
+     node --version 
+     npm --version
+     ```
+
+   - Install Yarn via MSI Installer
+     - Download the Yarn installation file from [GitHub](https://github.com/yarnpkg/yarn/releases/)
+     - Open and run the installation file, follow the installation instructions
+     - Run the following command in the PowerShell to verify the installation:
+     ```shell
+     yarn --version
+     ```
 
 2. Clone this repository:
 
@@ -360,17 +363,17 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
      git clone https://github.com/mitre/heimdall2
      ```
 
-3. Run the PostgreSQL server:
+3. Setup the PostgreSQL server:
 
    Ubuntu:
-   
+
    - ```sql
      # Switch to the OS postgres user
      sudo -u postgres -i
 
      # Start the Postgres terminal
      psql postgres
-  
+
      # Create the database user
      CREATE USER <username> with encrypted password '<password>';
      ALTER USER <username> CREATEDB;
@@ -391,7 +394,7 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
       # Start the Postgres terminal
       psql postgres
-  
+
       # Create the database user
       CREATE USER <username> with encrypted password '<password>';
       ALTER USER <username> CREATEDB;
@@ -399,8 +402,12 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
 
       # Switch back to your original OS user
       exit
-      ```   
+      ```
+
    WINDOWS:
+
+   - Use `Windows Subsystem for Linux (WSL)` - (use Ubuntu as the distro, and then follow the instructions listed for Ubuntu); alternatively you could do the following steps:
+
    - Start the postgres server base on the installation method
      - Starting Postgres Server Using `net start`
        ```sql
@@ -414,30 +421,40 @@ If you would like to change Heimdall to your needs, you can use Heimdall's 'Deve
        - Press the `win key + R` to launch the `Run` window.
        - Type `services.msc` and hit the `OK` button to open the Services Manager:
        - Search for `Postgresql-[x32 or x64]-[version]`, select the service, and hit the `Start/play` button to start
-   - Create the database user 
+
+   - Create the database user
      - Recommend using pgAdmin and follow instruction listed here 
      - Open a postgres shell terminal (path to postgres executable directory must be set)
        ```sql
        # Start the terminal
-       psql -U postgres  
+       psql -U postgres
        # Create the database user
        CREATE USER <username> with encrypted password '<password>';
        ALTER USER <username> CREATEDB;
        \q
        ```
-   
+
 4. Install project dependencies:
 
    - ```bash
      cd heimdall2
-     yarn install      # you may need to run yarn install --registry https://registry.npmjs.org
+     yarn install  # you may need to run yarn install --registry https://registry.npmjs.org
      ```
 
-5. Edit your apps/backend/.env file using the provided `setup-dev-env.sh or setup-dev-env.bat` script. Make sure to set a DATABASE_USERNAME and DATABASE_PASSWORD that match what you set for the PostgresDB in step 3.
+5. Edit or generate the `apps/backend/.env` file using the provided `setup-dev-env.sh or setup-dev-env.bat` script.
+   - Make sure that the script is executed in the root directory of the repository. Use one of the following commands:
+     ```bash
+     ./setup-dev-env.sh # bash
+     setup-dev-env.bat  # Windows
+     ```
+   - Make sure to set the DATABASE_USERNAME and DATABASE_PASSWORD fields with the values you set for PostgresDB in step 3.
 
-You can also open the apps/backend/.env file in a text editor and set additional optional configuration values. For more info on configuration values see [Environment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
+   You can also manually edit the `apps/backend/.env` file in a text editor and set additional optional configuration values. For more info on configuration values see [Enviroment Variables Configuration](https://github.com/mitre/heimdall2/wiki/Environment-Variables-Configuration).
 
-6. Create the database:
+> [!NOTE]
+> The .env file in the root repository is for the Docker deployment of the Heimdall application. Running a local build will use the .env file in the `apps/backend` directory for the database configurations.
+
+6. Create and seed the database:
 
    - ```bash
      # Windows
@@ -451,7 +468,7 @@ You can also open the apps/backend/.env file in a text editor and set additional
      yarn backend sequelize-cli db:seed:all
      ```
 
-6. Start Heimdall:
+7. Start Heimdall:
 
    - ```bash
      yarn start:dev
@@ -512,7 +529,8 @@ The application includes an End-to-End (E2E) frontend and Backend tests (built u
 
 The first command will start an instance of Heimdall Server and exposes additional routes required to allow the tests to run. The second will open the Cypress UI which will run the tests any time code changes are made.
 
-_NOTE: When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes._
+> [!NOTE] 
+> When running the tests locally, tests that integrate with external services such as LDAP or Splunk will fail without having that external service running and configured. If these failures occur locally and local development does not impact the code relevant to those tests, you may consider permitting these failing tests locally and check that they pass in the pipeline in lieu of standing up local services only for testing purposes.
 
 ### Creating a Release
 

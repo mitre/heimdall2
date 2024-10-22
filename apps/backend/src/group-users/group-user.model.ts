@@ -20,28 +20,28 @@ export class GroupUser extends Model {
   @AutoIncrement
   @AllowNull(false)
   @Column(DataType.BIGINT)
-  id!: string;
+  declare id: string;
 
   @AllowNull(false)
   @Default('member')
   @Column(DataType.STRING)
-  role!: string;
+  declare role: string;
 
   @ForeignKey(() => Group)
   @Column(DataType.BIGINT)
-  groupId!: string;
+  declare groupId: string;
 
   @ForeignKey(() => User)
   @Column(DataType.BIGINT)
-  userId!: string;
+  declare userId: string;
 
   @CreatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  createdAt!: Date;
+  declare createdAt: Date;
 
   @UpdatedAt
   @AllowNull(false)
   @Column(DataType.DATE)
-  updatedAt!: Date;
+  declare updatedAt: Date;
 }

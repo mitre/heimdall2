@@ -1,6 +1,7 @@
 import fs from 'fs';
 import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
-import {version as hdfConvertersVersion} from '../../../package.json';
+import {replaceCKLVersion} from '../../utils';
+import {InvalidChecklistMetadataException} from '../../../src/ckl-mapper/checklist-metadata-utils';
 
 describe('previously_checklist_converted_hdf_to_checklist', () => {
   it('Successfully converts HDF to Checklist', () => {
@@ -24,9 +25,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     );
     const converted = mapper.toCkl();
 
-    expect(converted).toEqual(
-      expected.replace(/2\.10\.1/gi, hdfConvertersVersion)
-    );
+    expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
 
@@ -52,9 +51,7 @@ describe('previously_checklist_converted_hdf_to_checklist', () => {
     );
     const converted = mapper.toCkl();
 
-    expect(converted).toEqual(
-      expected.replace(/2\.10\.2/gi, hdfConvertersVersion)
-    );
+    expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
 
@@ -79,12 +76,7 @@ describe('non_checklist_converted_hdf_to_checklist', () => {
     );
     const converted = mapper.toCkl();
 
-    expect(converted).toEqual(
-      expected.replace(
-        /Heimdall Version :: 2\.10\.2/gi,
-        `Heimdall Version :: ${hdfConvertersVersion}`
-      )
-    );
+    expect(converted).toEqual(replaceCKLVersion(expected));
   });
 });
 
@@ -112,8 +104,64 @@ describe('Small RHEL8 HDF file', () => {
     );
     const converted = mapper.toCkl();
 
-    expect(converted).toEqual(
-      expected.replace(/2\.10\.1/gi, hdfConvertersVersion)
+    expect(converted).toEqual(replaceCKLVersion(expected));
+  });
+});
+
+describe('Small RHEL 7 with severity and severity override tags', () => {
+  it('can be successfully converted from HDF to Checklist', () => {
+    const mapper = new ChecklistResults(
+      JSON.parse(
+        fs.readFileSync(
+          'sample_jsons/checklist_mapper/sample_input_report/RHEL7_overrides_hdf.json',
+          {
+            encoding: 'utf-8'
+          }
+        )
+      )
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/checklist_mapper/converted-rhel7_overrides.ckl',
+    //   mapper.toCkl()
+    // );
+
+    const expected = fs.readFileSync(
+      'sample_jsons/checklist_mapper/converted-rhel7_overrides.ckl',
+      'utf-8'
+    );
+    const converted = mapper.toCkl();
+
+    expect(converted).toEqual(replaceCKLVersion(expected));
+  });
+});
+
+describe('hdf_profile_with_invalid_metadata', () => {
+  it('Throws InvalidChecklistFormatException when trying to convert to checklist with invalid metadata', () => {
+    // ensures that checklist metadata is being validated
+    const fileContents = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/checklist_mapper/sample_input_report/invalid_metadata.json',
+        {encoding: 'utf-8'}
+      )
+    );
+    expect(() => new ChecklistResults(fileContents)).toThrowError(
+      InvalidChecklistMetadataException
+    );
+  });
+});
+
+describe('hdf_profile_with_invalid_metadata', () => {
+  it('Throws InvalidChecklistFormatException when trying to convert to checklist with invalid metadata', () => {
+    // ensures that checklist metadata is being validated
+    const fileContents = JSON.parse(
+      fs.readFileSync(
+        'sample_jsons/checklist_mapper/sample_input_report/invalid_metadata.json',
+        {encoding: 'utf-8'}
+      )
+    );
+    expect(() => new ChecklistResults(fileContents)).toThrowError(
+      InvalidChecklistMetadataException
     );
   });
 });
