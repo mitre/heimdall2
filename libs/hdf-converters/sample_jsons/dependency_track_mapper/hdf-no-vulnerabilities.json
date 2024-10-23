@@ -1,0 +1,24 @@
+{
+  "platform": {
+    "name": "Dependency-Track",
+    "release": "1.2 4.10.1",
+    "target_id": ""
+  },
+  "version": "2.10.3",
+  "statistics": {},
+  "profiles": [
+    {
+      "name": "d0646cf1-2415-4edd-a787-3c11d04f983d",
+      "version": "1.0",
+      "title": "laravel",
+      "summary": "",
+      "supports": [],
+      "attributes": [],
+      "groups": [],
+      "status": "loaded",
+      "controls": [],
+      "sha256": "fb6daf2c4cf58a0e4b8110781af700cc0c8d8e9bd2fd9d7879eb0d74f9ac09de"
+    }
+  ],
+  "passthrough": {}
+}
