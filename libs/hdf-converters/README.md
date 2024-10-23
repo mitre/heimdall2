@@ -15,26 +15,27 @@ OHDF Converters supplies several methods to convert various types of security to
 7.  [**conveyor-mapper**] - Conveyor JSON file
 8.  [**cyclonedx-sbom-mapper**] - CycloneDX SBOM JSON file
 9.  [**dbprotect-mapper**] - DBProtect report in "Check Results Details" XML format
-10. [**fortify-mapper**] - Fortify results FVDL file
-11. [**gosec-mapper**] - gosec results JSON file
-12. [**ionchannel-mapper**] - SBOM data from Ion Channel
-13. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
-14. [**msft-secure-mapper**] - Microsoft Secure Score results file
-15. [**nessus-mapper**] - Nessus XML results file
-16. [**netsparker-mapper**] - Netsparker XML results file
-17. [**neuvector-mapper**] - NeuVector JSON results file
-18. [**nikto-mapper**] - Nikto results JSON file
-19. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
-20. [**sarif-mapper**] - SARIF JSON file
-21. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
-22. [**snyk-mapper**] - Snyk results JSON file
-23. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
-24. [**splunk-mapper**] - Splunk instance
-25. [**trufflehog-mapper**] - Trufflehog results json file
-26. [**twistlock-mapper**] - Twistlock CLI output file
-27. [**veracode-mapper**] - Veracode Scan Results XML file
-28. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
-29. [**zap-mapper**] - OWASP ZAP results JSON
+10. [**dependency-track-mapper**] - OWASP Dependency-Track Finding Packaging Format (FPF)
+11. [**fortify-mapper**] - Fortify results FVDL file
+12. [**gosec-mapper**] - gosec results JSON file
+13. [**ionchannel-mapper**] - SBOM data from Ion Channel
+14. [**jfrog-xray-mapper**] - JFrog Xray results JSON file
+15. [**msft-secure-mapper**] - Microsoft Secure Score results file
+16. [**nessus-mapper**] - Nessus XML results file
+17. [**netsparker-mapper**] - Netsparker XML results file
+18. [**neuvector-mapper**] - NeuVector JSON results file
+19. [**nikto-mapper**] - Nikto results JSON file
+20. [**prisma-mapper**] - Prisma Cloud Scan Report CSV file
+21. [**sarif-mapper**] - SARIF JSON file
+22. [**scoutsuite-mapper**] - ScoutSuite results from a Javascript object
+23. [**snyk-mapper**] - Snyk results JSON file
+24. [**sonarqube-mapper**] - SonarQube vulnerabilities for the specified project name and optional branch or pull/merge request ID name from an API
+25. [**splunk-mapper**] - Splunk instance
+26. [**trufflehog-mapper**] - Trufflehog results json file
+27. [**twistlock-mapper**] - Twistlock CLI output file
+28. [**veracode-mapper**] - Veracode Scan Results XML file
+29. [**xccdf-results-mapper**] - SCAP client XCCDF-Results XML report
+30. [**zap-mapper**] - OWASP ZAP results JSON
 
 ### NOTICE
 
