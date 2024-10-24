@@ -23,7 +23,7 @@ export interface ICCIList {
 }
 
 if (!pathToInfile || !pathToOutfile) {
-  console.error(`You must provide the path to both an input and ouput file.`);
+  console.error(`You must provide the path to both an input and output file.`);
 } else {
   fs.readFile(pathToInfile, function (readFileError, data) {
     if (readFileError) {
