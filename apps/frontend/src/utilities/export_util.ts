@@ -1,10 +1,18 @@
-import ZipFile from 'adm-zip';
 import {saveAs} from 'file-saver';
+let zip: any;
+try {
+  (async () => {
+    zip = await import('@zip.js/zip.js');
+  })();
+} catch (e) {
+  console.log(`zip module import failed: ${e}`);
+}
 
 type File = {
   filename: string;
   data: string;
 };
+
 export async function saveSingleOrMultipleFiles(
   files: File[],
   filetype: string
@@ -13,13 +21,13 @@ export async function saveSingleOrMultipleFiles(
     const blob = new Blob([files[0].data]);
     saveAs(blob, cleanUpFilename(`${files[0]?.filename}`));
   } else {
-    const zipfile = new ZipFile();
-    files.forEach((file) => {
-      const buffer = Buffer.from(file.data);
-      zipfile.addFile(file.filename, buffer);
-    });
-    const blob = new Blob([zipfile.toBuffer()]);
-    saveAs(blob, `exported_${filetype}s.zip`);
+    const zipWriter = new zip.ZipWriter(new zip.BlobWriter());
+    await Promise.all(
+      files.map((file) =>
+        zipWriter.add(file.filename, new zip.TextReader(file.data))
+      )
+    );
+    saveAs(await zipWriter.close(), `exported_${filetype}s.zip`);
   }
 }
 
