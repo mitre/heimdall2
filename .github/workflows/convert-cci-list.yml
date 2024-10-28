@@ -1,0 +1,59 @@
+name: Convert CCI List XML to JSON
+
+on:
+  push:
+    branches: ['master']
+
+  # Run this workflow every month
+  schedule:
+    - cron: '* * * 1 *'
+
+jobs:
+  Convert-CCI-List:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          check-latest: true
+          cache: 'yarn'
+
+      - name: Install project dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Prepare environment
+        run: apt update && apt install -y unzip
+
+      - name: Download CCI List
+        run: curl -o U_CCI_List.zip https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CCI_List.zip && unzip U_CCI_List.zip
+
+      - name: Convert CCI List XML to two JSON files
+        run: yarn workspace @mitre/hdf-converters cciListXml2json /U_CCI_List/U_CCI_List.xml U_CCI_List.nist.json U_CCI_List.defs.json
+
+      - name: Update CciNistMappingData.ts
+        run: |
+          touch tmp.ts
+          echo "export const CCI_TO_NIST: Record<string, string> = " >> tmp.ts
+          cat U_CCI_List.nist.json >> tmp.ts
+          echo ";" >> tmp.ts
+          echo "export const CCI_TO_DEFINITION: Record<string, string> = " >> tmp.ts
+          cat U_CCI_List.defs.json >> tmp.ts
+          echo ";" >> tmp.ts
+          cat tmp.ts > libs/hdf-converters/src/mappings/CciNistMappingData.ts
+
+      - name: Commit changes to CciNistMappingData.ts
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add libs/hdf-converters/src/mappings/CciNistMappingData.ts
+          git commit -sm "Update CCI List to NIST and definition mappings"
+
+      - name: Push changes to repository
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{secrets.GITHUB_TOKEN}}
+          branch: ${{github.ref}}
