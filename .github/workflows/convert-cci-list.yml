@@ -9,7 +9,7 @@ on:
     - cron: '0 0 1 * *'
 
 jobs:
-  Convert-CCI-List:
+  convert-cci-list:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout the code
@@ -57,3 +57,17 @@ jobs:
         with:
           github_token: ${{secrets.GITHUB_TOKEN}}
           branch: ${{github.ref}}
+  prettier:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{github.head_ref}}
+          fetch-depth: 0
+
+      - name: Prettify code
+        uses: creyD/prettier_action@v4.3
+        with:
+          only_changed: True
