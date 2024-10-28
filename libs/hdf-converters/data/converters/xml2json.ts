@@ -12,7 +12,7 @@ export interface ICCIList {
     cci_items: {
       cci_item: {
         $: Record<string, string>;
-        references: {
+        references?: {
           reference: {
             $: Record<string, string>;
           }[];
@@ -40,7 +40,7 @@ if (!pathToInfile || !pathToOutfile) {
           converted.cci_list.cci_items[0].cci_item.forEach((cciItem) => {
             // Get the latest reference
             const newestReference = _.maxBy(
-              cciItem.references[0].reference,
+              cciItem.references?.[0].reference,
               (item) => _.get(item, '$.version')
             );
             if (newestReference) {
