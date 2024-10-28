@@ -2,6 +2,7 @@ import fs from 'fs';
 import * as _ from 'lodash';
 import xml2js from 'xml2js';
 
+// Documentation is located at https://github.com/mitre/heimdall2/wiki/Control-Correlation-Identifier-(CCI)-Converter.
 const parser = new xml2js.Parser();
 const pathToInfile = process.argv[2];
 const pathToCci2NistOutfile = process.argv[3];
