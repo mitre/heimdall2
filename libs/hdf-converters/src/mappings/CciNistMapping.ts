@@ -1,7 +1,7 @@
 import {XMLParser} from 'fast-xml-parser';
 import _ from 'lodash';
 import {CCI_List} from '../utils/CCI_List';
-import {data} from './CciNistMappingData';
+import {CCI_TO_NIST} from './CciNistMappingData';
 import {CciNistMappingItem} from './CciNistMappingItem';
 
 type Reference = {
@@ -156,8 +156,8 @@ export class CciNistMapping {
   constructor() {
     this.data = [];
 
-    if (typeof data === 'object') {
-      Object.entries(data).forEach((item) => {
+    if (typeof CCI_TO_NIST === 'object') {
+      Object.entries(CCI_TO_NIST).forEach((item) => {
         this.data.push(new CciNistMappingItem(item[0], item[1]));
       });
     }
