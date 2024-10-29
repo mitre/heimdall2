@@ -36,10 +36,10 @@
     "@jridgewell/gen-mapping" "^0.3.5"
     "@jridgewell/trace-mapping" "^0.3.24"
 
-"@angular-devkit/core@17.3.10":
-  version "17.3.10"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-17.3.10.tgz#c259052a891ad0bd1a7708d1081571683b3fa814"
-  integrity sha512-czdl54yxU5DOAGy/uUPNjJruoBDTgwi/V+eOgLNybYhgrc+TsY0f7uJ11yEk/pz5sCov7xIiS7RdRv96waS7vg==
+"@angular-devkit/core@17.3.11":
+  version "17.3.11"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/core/-/core-17.3.11.tgz#a74b042ec06cf626d5a2f6a3971b156c6759fe09"
+  integrity sha512-vTNDYNsLIWpYk2I969LMQFH29GTsLzxNk/0cLw5q56ARF0v5sIWfHYwGTS88jdDqIpuuettcSczbxeA7EuAmqQ==
   dependencies:
     ajv "8.12.0"
     ajv-formats "2.1.1"
@@ -72,12 +72,12 @@
     symbol-observable "4.0.0"
     yargs-parser "21.1.1"
 
-"@angular-devkit/schematics@17.3.10":
-  version "17.3.10"
-  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-17.3.10.tgz#a3d62b33f82fd1fa51246d00ada92efe82a00ae7"
-  integrity sha512-FHcNa1ktYRd0SKExCsNJpR75RffsyuPIV8kvBXzXnLHmXMqvl25G2te3yYJ9yYqy9OLy/58HZznZTxWRyUdHOg==
+"@angular-devkit/schematics@17.3.11":
+  version "17.3.11"
+  resolved "https://registry.yarnpkg.com/@angular-devkit/schematics/-/schematics-17.3.11.tgz#37095fb08b0ab0343c7c0dde57ca81115178714f"
+  integrity sha512-I5wviiIqiFwar9Pdk30Lujk8FczEEc18i22A5c6Z9lbmhPQdTroDnEQdsfXjy404wPe8H62s0I15o4pmMGfTYQ==
   dependencies:
-    "@angular-devkit/core" "17.3.10"
+    "@angular-devkit/core" "17.3.11"
     jsonc-parser "3.2.1"
     magic-string "0.30.8"
     ora "5.4.1"
@@ -2897,12 +2897,12 @@
     tslib "2.7.0"
 
 "@nestjs/schematics@^10.0.1", "@nestjs/schematics@^10.0.2":
-  version "10.2.2"
-  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-10.2.2.tgz#917a9c1cbaff54003827ec10abb1a83e6f8c5799"
-  integrity sha512-D4pJ46E8llCA7WPr3cV6sfRqDlvnTjQWnF1fLyKYD3Ldl+KPtlLyIcxaqlLTB0YR9ItKNKIZTJzUehRxR7UUsQ==
+  version "10.2.3"
+  resolved "https://registry.yarnpkg.com/@nestjs/schematics/-/schematics-10.2.3.tgz#6053f43c5065b9e825cd08c4db1bf6bcbc9a6a62"
+  integrity sha512-4e8gxaCk7DhBxVUly2PjYL4xC2ifDFexCqq1/u4TtivLGXotVk0wHdYuPYe1tHTHuR1lsOkRbfOCpkdTnigLVg==
   dependencies:
-    "@angular-devkit/core" "17.3.10"
-    "@angular-devkit/schematics" "17.3.10"
+    "@angular-devkit/core" "17.3.11"
+    "@angular-devkit/schematics" "17.3.11"
     comment-json "4.2.5"
     jsonc-parser "3.3.1"
     pluralize "8.0.0"
