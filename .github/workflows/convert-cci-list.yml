@@ -47,8 +47,8 @@ jobs:
 
       - name: Commit changes to CciNistMappingData.ts
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "saf@groups.mitre.org"
+          git config --local user.name "MITRE SAF Automation"
           git add libs/hdf-converters/src/mappings/CciNistMappingData.ts
           git commit -sm "Update CCI List to NIST and definition mappings"
 
