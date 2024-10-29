@@ -32,7 +32,7 @@
           <div>
             NIST 800-53 Rev 5.1.1:
             <v-chip :href="nistUrl(item)" target="_blank" small>
-              {{ nistTag(item) || 'None' }}
+              {{ nistDisplay(item) || 'None' }}
             </v-chip>
           </div>
         </div>
@@ -111,33 +111,77 @@
 </template>
 
 <script lang="ts">
-import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
+import {
+  CCI_TO_DEFINITION,
+  CCI_TO_NIST
+} from '@mitre/hdf-converters/src/mappings/CciNistMappingData';
 import {ChecklistVuln} from '@mitre/hdf-converters';
 import {Component, Prop, Vue} from 'vue-property-decorator';
+import {is_control, NistControl, parse_nist} from 'inspecjs';
 
 @Component
 export default class ChecklistRuleInfoBody extends Vue {
   @Prop({type: Object, required: true}) readonly selectedRule!: ChecklistVuln;
 
   nistTag(cci: string): string {
-    return CCI_DESCRIPTIONS[cci].nist.slice(-1)[0];
+    return CCI_TO_NIST[cci];
   }
 
-  nistUrl(nist: string): string {
-    const tag = this.nistTag(nist).split(' ')[0];
-    const deconstructedTag = /([A-Z]{2}-)(\d{1,2})/.exec(tag);
-    const prefix = deconstructedTag?.[1] || '';
-    const number = deconstructedTag?.[2] || '';
-    const possiblyPaddedNumber = number.length === 1 ? '0' + number : number;
-    const reconstructedTag = prefix + possiblyPaddedNumber;
+  nistUrl(cci: string): string {
+    const control = [this.nistTag(cci)].map(parse_nist).filter(is_control)[0];
+    const url = control.canonize({
+      pad_zeros: true,
+      add_periods: false,
+      add_spaces: false,
+      max_specifiers: 2
+    });
+    const hash = this.urlAnchor(control);
+
     return (
       'https://csrc.nist.gov/projects/cprt/catalog#/cprt/framework/version/SP_800_53_5_1_1/home?element=' +
-      reconstructedTag
+      url +
+      hash
     );
   }
 
+  urlAnchor(control: NistControl): string {
+    const isAlphabetical = (anchor: string) => /[a-z]/.test(anchor);
+    const isNumerical = (anchor: string) => /[0-9]/.test(anchor);
+
+    const hash = control.subSpecifiers[2];
+
+    // Control Statement
+    if (isAlphabetical(hash)) {
+      // Convert 'a' to 0, 'b' to 1, etc.
+      const statement = hash.toLowerCase().charCodeAt(0) - 97;
+      return `#child0-${statement}`;
+    }
+
+    // Control Enhancement
+    if (isNumerical(hash)) {
+      const enhancement = control.canonize({
+        pad_zeros: true,
+        add_periods: false,
+        add_spaces: false,
+        add_parens: true,
+        max_specifiers: 3
+      });
+      return `#${enhancement}`;
+    }
+
+    // While it is possible to grab the hash for a control like IA-5 (2) a. (1), the resulting hash would be #child0-0, but that would be the equivalent hash for IA-5 (a).
+
+    return '';
+  }
+
+  nistDisplay(cci: string): string {
+    const tag = [this.nistTag(cci)].map(parse_nist).filter(is_control)[0];
+    const display = tag.canonize();
+    return display;
+  }
+
   cciDescription(cci: string): string {
-    return CCI_DESCRIPTIONS[cci].def;
+    return CCI_TO_DEFINITION[cci];
   }
 
   miscDataPresent() {
