@@ -44,6 +44,7 @@ jobs:
           cat U_CCI_List.defs.json >> tmp.ts
           echo ";" >> tmp.ts
           cat tmp.ts > libs/hdf-converters/src/mappings/CciNistMappingData.ts
+          rm tmp.ts
 
       - name: Commit changes to CciNistMappingData.ts
         run: |
