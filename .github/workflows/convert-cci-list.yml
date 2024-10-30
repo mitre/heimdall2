@@ -41,7 +41,7 @@ jobs:
         uses: mavrosxristoforos/get-xml-info@2.0
         with:
           xml-file: 'U_CCI_List.xml'
-          xpath: '/cci_list/metadata/publishdate'
+          xpath: '//metadata/publishdate'
           namespaces: '{"ns": "http://iase.disa.mil/cci"}'
 
       - name: Convert CCI List XML to two JSON files
