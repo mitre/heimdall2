@@ -41,7 +41,7 @@ if (!pathToInfile || !pathToCci2NistOutfile || !pathToCci2DefinitionsOutfile) {
           const nists: Record<string, string> = {};
           const definitions: Record<string, string> = {};
           // For all CCI items
-          converted.cci_list.cci_items[0].cci_item.forEach((cciItem) => {
+          for (const cciItem of converted.cci_list.cci_items[0].cci_item) {
             // Get the latest reference
             const newestReference = _.maxBy(
               cciItem.references?.[0].reference,
@@ -53,8 +53,11 @@ if (!pathToInfile || !pathToCci2NistOutfile || !pathToCci2DefinitionsOutfile) {
             } else {
               console.error(`No NIST Controls found for ${cciItem.$.id}`);
             }
-          });
-          fs.writeFileSync(pathToCci2NistOutfile, JSON.stringify(nists));
+          }
+          fs.writeFileSync(
+            pathToCci2NistOutfile,
+            JSON.stringify(nists, null, 2)
+          );
           fs.writeFileSync(
             pathToCci2DefinitionsOutfile,
             JSON.stringify(definitions)
