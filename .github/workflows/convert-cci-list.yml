@@ -37,7 +37,7 @@ jobs:
         id: publish-date
         uses: mavrosxristoforos/get-xml-info@2.0
         with:
-          xml-file: '/U_CCI_List/U_CCI_List.xml'
+          xml-file: 'U_CCI_List.xml'
           xpath: '/cci_list/metadata/publishdate'
 
       - name: Convert CCI List XML to two JSON files
