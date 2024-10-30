@@ -6,8 +6,8 @@ on:
     branches: ['add-convert-cci-list-workflow']
 
   # Run this workflow at 00:00 every month
-  schedule:
-    - cron: '0 0 1 * *'
+  # schedule:
+  # - cron: '0 0 1 * *'
 
 env:
   # This URL is super brittle with how links constantly get changed.
