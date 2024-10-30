@@ -30,9 +30,6 @@ jobs:
       - name: Install project dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Prepare environment
-        run: apt update
-
       - name: Download CCI List
         run: curl -o U_CCI_List.zip $CCI_LIST_ZIP_URL && unzip U_CCI_List.zip
 
