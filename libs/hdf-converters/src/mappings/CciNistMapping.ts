@@ -157,9 +157,9 @@ export class CciNistMapping {
     this.data = [];
 
     if (typeof CCI_TO_NIST === 'object') {
-      Object.entries(CCI_TO_NIST).forEach((item) => {
+      for (const item of Object.entries(CCI_TO_NIST)) {
         this.data.push(new CciNistMappingItem(item[0], item[1]));
-      });
+      }
     }
   }
 

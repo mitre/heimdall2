@@ -2,11 +2,16 @@ name: Convert CCI List XML to JSON
 
 on:
   push:
-    branches: ['master']
+    # branches: ['master']
+    branches: ['add-convert-cci-list-workflow']
 
   # Run this workflow at 00:00 every month
   schedule:
     - cron: '0 0 1 * *'
+
+env:
+  # This URL is super brittle with how links constantly get changed.
+  CCI_LIST_ZIP_URL: https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CCI_List.zip
 
 jobs:
   convert-cci-list:
@@ -26,49 +31,32 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Prepare environment
-        run: apt update && apt install -y unzip
+        run: apt update
 
       - name: Download CCI List
-        run: curl -o U_CCI_List.zip https://dl.dod.cyber.mil/wp-content/uploads/stigs/zip/U_CCI_List.zip && unzip U_CCI_List.zip
+        run: curl -o U_CCI_List.zip $CCI_LIST_ZIP_URL && unzip U_CCI_List.zip
+
+      - name: Get publish date of CCI List
+        id: publish-date
+        uses: mavrosxristoforos/get-xml-info@2.0
+        with:
+          xml-file: '/U_CCI_List/U_CCI_List.xml'
+          xpath: '/cci_list/metadata/publishdate'
 
       - name: Convert CCI List XML to two JSON files
         run: yarn workspace @mitre/hdf-converters cciListXml2json /U_CCI_List/U_CCI_List.xml U_CCI_List.nist.json U_CCI_List.defs.json
 
-      - name: Update CciNistMappingData.ts
+      - name: Update CCI to NIST and CCI to Definition mappings
         run: |
-          touch tmp.ts
-          echo "export const CCI_TO_NIST: Record<string, string> = " >> tmp.ts
-          cat U_CCI_List.nist.json >> tmp.ts
-          echo ";" >> tmp.ts
-          echo "export const CCI_TO_DEFINITION: Record<string, string> = " >> tmp.ts
-          cat U_CCI_List.defs.json >> tmp.ts
-          echo ";" >> tmp.ts
-          cat tmp.ts > libs/hdf-converters/src/mappings/CciNistMappingData.ts
-          rm tmp.ts
+          mv U_CCI_List.nist.json libs/hdf-converters/src/mappings/
+          mv U_CCI_List.defs.json libs/hdf-converters/src/mappings/
 
       - name: Commit changes to CciNistMappingData.ts
+        env:
+          DATETIME: ${{steps.publish-date.outputs}}
         run: |
           git config --local user.email "saf@groups.mitre.org"
           git config --local user.name "MITRE SAF Automation"
           git add libs/hdf-converters/src/mappings/CciNistMappingData.ts
-          git commit -sm "Update CCI List to NIST and definition mappings"
-
-      - name: Push changes to repository
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{secrets.GITHUB_TOKEN}}
-          branch: ${{github.ref}}
-  prettier:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout the code
-        uses: actions/checkout@v4
-        with:
-          ref: ${{github.head_ref}}
-          fetch-depth: 0
-
-      - name: Prettify code
-        uses: creyD/prettier_action@v4.3
-        with:
-          only_changed: True
+          git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
+          git push

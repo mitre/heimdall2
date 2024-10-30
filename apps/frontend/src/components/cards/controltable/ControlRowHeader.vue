@@ -227,7 +227,10 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
       if (found) {
         return found;
       }
-    } else if (CCI_TO_NIST[tag.toUpperCase()]) {
+    } else if (
+      CCI_TO_NIST[tag.toUpperCase()] &&
+      CCI_TO_DEFINITION[tag.toUpperCase()]
+    ) {
       return CCI_TO_DEFINITION[tag.toUpperCase()];
     }
     return 'Unrecognized Tag';
