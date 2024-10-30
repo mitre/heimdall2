@@ -31,7 +31,10 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Download CCI List
-        run: curl -o U_CCI_List.zip $CCI_LIST_ZIP_URL && unzip U_CCI_List.zip
+        run: |
+          curl -o U_CCI_List.zip $CCI_LIST_ZIP_URL && unzip U_CCI_List.zip
+          ls -lta
+          pwd
 
       - name: Get publish date of CCI List
         id: publish-date
@@ -39,6 +42,7 @@ jobs:
         with:
           xml-file: 'U_CCI_List.xml'
           xpath: '/cci_list/metadata/publishdate'
+          namespaces: '{"ns": "http://iase.disa.mil/cci"}'
 
       - name: Convert CCI List XML to two JSON files
         run: yarn workspace @mitre/hdf-converters cciListXml2json /U_CCI_List/U_CCI_List.xml U_CCI_List.nist.json U_CCI_List.defs.json
@@ -51,9 +55,11 @@ jobs:
       - name: Commit changes to CciNistMappingData.ts
         env:
           DATETIME: ${{steps.publish-date.outputs}}
+        # run: |
+        # git config --local user.email "saf@groups.mitre.org"
+        # git config --local user.name "MITRE SAF Automation"
+        # git add libs/hdf-converters/src/mappings/CciNistMappingData.ts
+        # git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
+        # git push
         run: |
-          git config --local user.email "saf@groups.mitre.org"
-          git config --local user.name "MITRE SAF Automation"
-          git add libs/hdf-converters/src/mappings/CciNistMappingData.ts
-          git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
-          git push
+          echo $DATETIME
