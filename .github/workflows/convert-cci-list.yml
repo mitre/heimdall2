@@ -2,11 +2,12 @@ name: Convert CCI List XML to JSON
 
 on:
   push:
-    branches: ['master']
+    # branches: ['master']
+    branches: ['add-convert-cci-list-workflow']
 
   # Run this workflow on the 1st day at 00:00 every month
-  schedule:
-    - cron: '0 0 1 * *'
+  # schedule:
+  #   - cron: '0 0 1 * *'
 
 env:
   # This URL is super brittle with how links constantly get changed.
@@ -45,19 +46,21 @@ jobs:
         run: echo "ROOT_DIRECTORY=$(pwd)" >> $GITHUB_ENV
 
       - name: Convert CCI List XML to two JSON files
-        run: yarn workspace @mitre/hdf-converters cciListXml2json $ROOT_DIRECTORY/U_CCI_List.xml $ROOT_DIRECTORY/U_CCI_List.nist.json $ROOT_DIRECTORY/U_CCI_List.defs.json
+        run: yarn workspace @mitre/hdf-converters cciListXml2json $ROOT_DIRECTORY/U_CCI_List.xml $ROOT_DIRECTORY/U_CCI_List.nist.json $ROOT_DIRECTORY/U_CCI_List.defs.json $ROOT_DIRECTORY/U_CCI_List.cci.json
 
       - name: Update CCI to NIST and CCI to Definition mappings
         run: |
           mv $ROOT_DIRECTORY/U_CCI_List.nist.json $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
           mv $ROOT_DIRECTORY/U_CCI_List.defs.json $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
+          mv $ROOT_DIRECTORY/U_CCI_List.cci.json $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
 
       - name: Commit changes to CciNistMappingData.ts
-        run: |
-          git config --local user.email "saf@groups.mitre.org"
-          git config --local user.name "MITRE SAF Automation"
-          git add $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/CciNistMappingData.ts
-          git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
-          git push
+        # run: |
+        #   git config --local user.email "saf@groups.mitre.org"
+        #   git config --local user.name "MITRE SAF Automation"
+        #   git add $ROOT_DIRECTORY/U_CCI_List.nist.json $ROOT_DIRECTORY/U_CCI_List.defs.json $ROOT_DIRECTORY/U_CCI_List.cci.json
+        #   git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
+        #   git push
+        run: echo $DATETIME && git status
         env:
           DATETIME: ${{steps.publish-date.outputs.info}}
