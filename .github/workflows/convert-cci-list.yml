@@ -42,10 +42,11 @@ jobs:
           xpath: '//*[local-name()="metadata"]/*[local-name()="publishdate"]'
           namespaces: '{"ns": "http://iase.disa.mil/cci"}'
 
+      - name: Set root directory path for produced XML file
+        run: echo "ROOT_DIRECTORY=$(pwd)" >> $GITHUB_ENV
+
       - name: Convert CCI List XML to two JSON files
-        run: |
-          ROOT_DIRECTORY=$(pwd)
-          yarn workspace @mitre/hdf-converters cciListXml2json $ROOT_DIRECTORY/U_CCI_List.xml U_CCI_List.nist.json U_CCI_List.defs.json
+        run: yarn workspace @mitre/hdf-converters cciListXml2json $ROOT_DIRECTORY/U_CCI_List.xml U_CCI_List.nist.json U_CCI_List.defs.json
 
       - name: Update CCI to NIST and CCI to Definition mappings
         run: |
@@ -55,5 +56,11 @@ jobs:
       - name: Commit changes to CciNistMappingData.ts
         env:
           DATETIME: ${{steps.publish-date.outputs}}
+        # run: |
+        # git config --local user.email "saf@groups.mitre.org"
+        # git config --local user.name "MITRE SAF Automation"
+        # git add libs/hdf-converters/src/mappings/CciNistMappingData.ts
+        # git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
+        # git push
         run: |
           echo $DATETIME
