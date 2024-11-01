@@ -8,7 +8,7 @@ import {
   parseXml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {getCCIsForNISTTags} from './utils/global';
+import {getCCIsForNISTTags} from './mappings/CciNistMapping';
 const STATIC_FLAWS = 'staticflaws.flaw';
 const SEVERITY = 'detailedreport.severity';
 const FILE_PATH_VALUE = 'file_paths.file_path.@_.value';

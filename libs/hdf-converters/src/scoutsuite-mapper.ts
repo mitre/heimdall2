@@ -8,7 +8,7 @@ import {
   MappedTransform
 } from './base-converter';
 import {ScoutsuiteNistMapping} from './mappings/ScoutsuiteNistMapping';
-import {getCCIsForNISTTags} from './utils/global';
+import {getCCIsForNISTTags} from './mappings/CciNistMapping';
 
 const INSPEC_INPUTS_MAPPING = {
   string: 'String',

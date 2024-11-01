@@ -7,10 +7,8 @@ import {
   impactMapping,
   MappedTransform
 } from './base-converter';
-import {
-  DEFAULT_UPDATE_REMEDIATION_NIST_TAGS,
-  getCCIsForNISTTags
-} from './utils/global';
+import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from './utils/global';
+import {getCCIsForNISTTags} from './mappings/CciNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
