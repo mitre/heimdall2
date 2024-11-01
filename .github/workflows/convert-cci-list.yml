@@ -43,8 +43,6 @@ jobs:
           namespaces: '{"ns": "http://iase.disa.mil/cci"}'
 
       - name: Convert CCI List XML to two JSON files
-        env:
-          DATETIME: ${{steps.publish-date.outputs}}
         run: |
           ROOT_DIRECTORY=$(pwd)
           yarn workspace @mitre/hdf-converters cciListXml2json $ROOT_DIRECTORY/U_CCI_List.xml U_CCI_List.nist.json U_CCI_List.defs.json
