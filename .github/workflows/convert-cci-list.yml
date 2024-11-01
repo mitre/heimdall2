@@ -54,8 +54,6 @@ jobs:
           mv $ROOT_DIRECTORY/U_CCI_List.defs.json $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
 
       - name: Commit changes to CciNistMappingData.ts
-        env:
-          DATETIME: ${{steps.publish-date.outputs}}
         # run: |
         # git config --local user.email "saf@groups.mitre.org"
         # git config --local user.name "MITRE SAF Automation"
@@ -64,3 +62,5 @@ jobs:
         # git push
         run: |
           echo $DATETIME
+        env:
+          DATETIME: ${{steps.publish-date.outputs}}
