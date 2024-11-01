@@ -46,12 +46,12 @@ jobs:
         run: echo "ROOT_DIRECTORY=$(pwd)" >> $GITHUB_ENV
 
       - name: Convert CCI List XML to two JSON files
-        run: yarn workspace @mitre/hdf-converters cciListXml2json $ROOT_DIRECTORY/U_CCI_List.xml U_CCI_List.nist.json U_CCI_List.defs.json
+        run: yarn workspace @mitre/hdf-converters cciListXml2json $ROOT_DIRECTORY/U_CCI_List.xml $ROOT_DIRECTORY/U_CCI_List.nist.json $ROOT_DIRECTORY/U_CCI_List.defs.json
 
       - name: Update CCI to NIST and CCI to Definition mappings
         run: |
-          mv U_CCI_List.nist.json libs/hdf-converters/src/mappings/
-          mv U_CCI_List.defs.json libs/hdf-converters/src/mappings/
+          mv $ROOT_DIRECTORY/U_CCI_List.nist.json $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
+          mv $ROOT_DIRECTORY/U_CCI_List.defs.json $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
 
       - name: Commit changes to CciNistMappingData.ts
         env:
