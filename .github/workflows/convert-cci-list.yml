@@ -2,12 +2,11 @@ name: Convert CCI List XML to JSON
 
 on:
   push:
-    # branches: ['master']
-    branches: ['add-convert-cci-list-workflow']
+    branches: ['master']
 
   # Run this workflow on the 1st day at 00:00 every month
-  # schedule:
-  # - cron: '0 0 1 * *'
+  schedule:
+    - cron: '0 0 1 * *'
 
 env:
   # This URL is super brittle with how links constantly get changed.
@@ -54,13 +53,11 @@ jobs:
           mv $ROOT_DIRECTORY/U_CCI_List.defs.json $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
 
       - name: Commit changes to CciNistMappingData.ts
-        # run: |
-        # git config --local user.email "saf@groups.mitre.org"
-        # git config --local user.name "MITRE SAF Automation"
-        # git add libs/hdf-converters/src/mappings/CciNistMappingData.ts
-        # git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
-        # git push
         run: |
-          echo $DATETIME
+          git config --local user.email "saf@groups.mitre.org"
+          git config --local user.name "MITRE SAF Automation"
+          git add $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/CciNistMappingData.ts
+          git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
+          git push
         env:
           DATETIME: ${{steps.publish-date.outputs.info}}
