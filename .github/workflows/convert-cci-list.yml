@@ -45,14 +45,10 @@ jobs:
       - name: Set root directory path for produced XML file
         run: echo "ROOT_DIRECTORY=$(pwd)" >> $GITHUB_ENV
 
-      - name: Convert CCI List XML to two JSON files
-        run: yarn workspace @mitre/hdf-converters cciListXml2json $ROOT_DIRECTORY/U_CCI_List.xml $ROOT_DIRECTORY/U_CCI_List.nist.json $ROOT_DIRECTORY/U_CCI_List.defs.json $ROOT_DIRECTORY/U_CCI_List.cci.json
-
-      - name: Update CCI to NIST and CCI to Definition mappings
-        run: |
-          mv $ROOT_DIRECTORY/U_CCI_List.nist.json $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
-          mv $ROOT_DIRECTORY/U_CCI_List.defs.json $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
-          mv $ROOT_DIRECTORY/U_CCI_List.cci.json $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
+      - name: Convert CCI List XML to CCI->NIST, CCI->Definitions, and NIST->CCI JSON files
+        run: yarn workspace @mitre/hdf-converters cciListXml2json $ROOT_DIRECTORY/U_CCI_List.xml $OUTPUT_DIRECTORY/U_CCI_List.nist.json $OUTPUT_DIRECTORY/U_CCI_List.defs.json $OUTPUT_DIRECTORY/U_CCI_List.cci.json
+        env:
+          OUTPUT_DIRECTORY: $ROOT_DIRECTORY/libs/hdf-converters/src/mappings/
 
       - name: Commit changes to CciNistMappingData.ts
         # run: |
