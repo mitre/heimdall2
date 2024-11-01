@@ -5,7 +5,7 @@ on:
     # branches: ['master']
     branches: ['add-convert-cci-list-workflow']
 
-  # Run this workflow at 00:00 every month
+  # Run this workflow on the 1st day at 00:00 every month
   # schedule:
   # - cron: '0 0 1 * *'
 
@@ -61,4 +61,6 @@ jobs:
         # git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
         # git push
         run: |
-          echo ${{steps.publish-date.outputs}}
+          echo $DATETIME
+        env:
+          DATETIME: ${{steps.publish-date.outputs.info}}
