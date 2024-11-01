@@ -11,10 +11,8 @@ import {
 import {Project} from '../types/ionchannelProjects';
 import {Team} from '../types/ionchannelTeams';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
-import {
-  DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS,
-  getCCIsForNISTTags
-} from './utils/global';
+import {DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS} from './utils/global';
+import {getCCIsForNISTTags} from './mappings/CciNistMapping';
 
 // Extracts all levels of dependencies from any dependency (including sub-dependencies)
 function extractAllDependencies(

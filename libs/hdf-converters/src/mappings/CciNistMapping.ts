@@ -3,6 +3,7 @@ import _ from 'lodash';
 import {CCI_List} from '../utils/CCI_List';
 import {CCI_TO_NIST} from './CciNistMappingData';
 import {CciNistMappingItem} from './CciNistMappingItem';
+import {data as NistCciMappingData} from '../mappings/NistCciMappingData';
 
 type Reference = {
   '@_creator': string;
@@ -187,4 +188,19 @@ export class CciNistMapping {
     }
     return matches;
   }
+}
+
+export function getCCIsForNISTTags(nistTags: string[]): string[] {
+  const cciTags: string[] = [];
+  for (const nistTag of nistTags) {
+    const baseTag = /\w\w-\d\d?\d?/g.exec(nistTag);
+    if (
+      Array.isArray(baseTag) &&
+      baseTag.length > 0 &&
+      baseTag[0] in NistCciMappingData
+    ) {
+      cciTags.push(...NistCciMappingData[baseTag[0]]);
+    }
+  }
+  return cciTags;
 }

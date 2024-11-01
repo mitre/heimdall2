@@ -3,7 +3,7 @@ import _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {filterString, getCCIsForNISTTags} from './utils/global';
+import {filterString} from './utils/global';
 import {
   CycloneDXSoftwareBillOfMaterialSpecification,
   CycloneDXSoftwareBillOfMaterialsStandard,
@@ -22,6 +22,7 @@ import {
   ComponentClass,
   ComponentObject
 } from '../types/cyclonedx';
+import {getCCIsForNISTTags} from './mappings/CciNistMapping';
 
 const cvssMethods = ['CVSSv2', 'CVSSv3', 'CVSSv31', 'CVSSv4'] as const;
 type CVSSMethodEnum = Extract<MethodEnum, (typeof cvssMethods)[number]>;

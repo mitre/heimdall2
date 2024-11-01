@@ -9,7 +9,7 @@ import {
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
-import {getCCIsForNISTTags} from './utils/global';
+import {getCCIsForNISTTags} from './mappings/CciNistMapping';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type Issue = {

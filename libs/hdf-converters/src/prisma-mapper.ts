@@ -9,9 +9,9 @@ import {
 } from './base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  DEFAULT_UPDATE_REMEDIATION_NIST_TAGS,
-  getCCIsForNISTTags
+  DEFAULT_UPDATE_REMEDIATION_NIST_TAGS
 } from './utils/global';
+import {getCCIsForNISTTags} from './mappings/CciNistMapping';
 
 export type PrismaControl = {
   Packages: string;

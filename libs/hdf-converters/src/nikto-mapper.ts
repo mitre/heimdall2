@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {NiktoNistMapping} from './mappings/NiktoNistMapping';
-import {getCCIsForNISTTags} from './utils/global';
+import {getCCIsForNISTTags} from './mappings/CciNistMapping';
 
 const NIKTO_NIST_MAPPING = new NiktoNistMapping();
 

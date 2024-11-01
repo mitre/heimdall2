@@ -8,7 +8,7 @@ import {
   parseHtml,
   parseXml
 } from './base-converter';
-import {getCCIsForNISTTags} from './utils/global';
+import {getCCIsForNISTTags} from './mappings/CciNistMapping';
 
 const NIST_REFERENCE_NAME =
   'Standards Mapping - NIST Special Publication 800-53 Revision 4';

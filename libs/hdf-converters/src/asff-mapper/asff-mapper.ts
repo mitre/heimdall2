@@ -7,10 +7,7 @@ import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from '../base-converter';
-import {
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  getCCIsForNISTTags
-} from '../utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
 import {getCMSInSpec} from './case-cms-inspec';
 import {getFirewallManager} from './case-firewall-manager';
 import {getGuardDuty} from './case-guardduty';
@@ -19,6 +16,7 @@ import {getPreviouslyHDF} from './case-previously-hdf';
 import {getProwler} from './case-prowler';
 import {getSecurityHub} from './case-security-hub';
 import {getTrivy} from './case-trivy';
+import {getCCIsForNISTTags} from '../mappings/CciNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['CRITICAL', 0.9],
