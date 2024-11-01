@@ -38,7 +38,7 @@ jobs:
         uses: mavrosxristoforos/get-xml-info@2.0
         with:
           xml-file: 'U_CCI_List.xml'
-          xpath: '//*[local-name()="metadata"]/*[local-name()="publishdate"]'
+          xpath: '/*[local-name()="cci_list"]/*[local-name()="metadata"]/*[local-name()="publishdate"]'
           namespaces: '{"ns": "http://iase.disa.mil/cci"}'
 
       - name: Set root directory path for produced XML file
