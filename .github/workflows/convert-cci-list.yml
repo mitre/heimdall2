@@ -61,6 +61,4 @@ jobs:
         # git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
         # git push
         run: |
-          echo $DATETIME
-        env:
-          DATETIME: ${{steps.publish-date.outputs}}
+          echo ${{steps.publish-date.outputs}}
