@@ -7,6 +7,7 @@ const parser = new xml2js.Parser();
 const pathToInfile = process.argv[2];
 const pathToCci2NistOutfile = process.argv[3];
 const pathToCci2DefinitionsOutfile = process.argv[4];
+const pathToNist2CciOutfile = process.argv[5];
 
 // XML Structure after conversion
 export interface ICCIList {
@@ -25,7 +26,12 @@ export interface ICCIList {
   };
 }
 
-if (!pathToInfile || !pathToCci2NistOutfile || !pathToCci2DefinitionsOutfile) {
+if (
+  !pathToInfile ||
+  !pathToCci2NistOutfile ||
+  !pathToCci2DefinitionsOutfile ||
+  !pathToNist2CciOutfile
+) {
   console.error(`You must provide the path to the input and two output files.`);
 } else {
   fs.readFile(pathToInfile, function (readFileError, data) {
@@ -37,9 +43,11 @@ if (!pathToInfile || !pathToCci2NistOutfile || !pathToCci2DefinitionsOutfile) {
         if (parseFileError) {
           console.error(`Failed to parse ${pathToInfile}: ${parseFileError}`);
         } else {
-          // These store our CCI->NIST names and definitions mappings
+          // These store our CCI->NIST names, CCI->definitions, and NIST->CCI mappings
           const nists: Record<string, string> = {};
           const definitions: Record<string, string> = {};
+          const ccis: Record<string, string[]> = {};
+
           // For all CCI items
           for (const cciItem of converted.cci_list.cci_items[0].cci_item) {
             // Get the latest reference
@@ -49,6 +57,11 @@ if (!pathToInfile || !pathToCci2NistOutfile || !pathToCci2DefinitionsOutfile) {
             );
             if (newestReference) {
               nists[cciItem.$.id] = newestReference.$.index;
+              if (ccis[newestReference.$.index] === undefined) {
+                ccis[newestReference.$.index] = [cciItem.$.id];
+              } else {
+                ccis[newestReference.$.index].push(cciItem.$.id);
+              }
               definitions[cciItem.$.id] = cciItem.definition[0];
             } else {
               console.error(`No NIST Controls found for ${cciItem.$.id}`);
@@ -60,7 +73,11 @@ if (!pathToInfile || !pathToCci2NistOutfile || !pathToCci2DefinitionsOutfile) {
           );
           fs.writeFileSync(
             pathToCci2DefinitionsOutfile,
-            JSON.stringify(definitions)
+            JSON.stringify(definitions, null, 2)
+          );
+          fs.writeFileSync(
+            pathToNist2CciOutfile,
+            JSON.stringify(ccis, null, 2)
           );
         }
       });
