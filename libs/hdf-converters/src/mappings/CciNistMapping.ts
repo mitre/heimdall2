@@ -2,7 +2,11 @@ import _ from 'lodash';
 import {NIST_TO_CCI} from '../mappings/NistCciMappingData';
 import {is_control, parse_nist} from 'inspecjs';
 import {CCI_TO_NIST} from './CciNistMappingData';
-import {removeParentheses} from '../../data/converters/cciListXml2json';
+import {
+  CCIS_KEY,
+  DELIMITER,
+  removeParentheses
+} from '../../data/converters/cciListXml2json';
 
 export function CCI2NIST(
   identifiers: string[],
@@ -29,7 +33,7 @@ export function NIST2CCI(
   collapse = true
 ): string[] {
   const DEFAULT_CCI_TAGS = defaultNist2Cci || [];
-  const createPath = (nist: string) => [...nist.split(' '), 'ccis'];
+  const createPath = (nist: string) => [...nist.split(DELIMITER), CCIS_KEY];
   const nists = identifiers.map(parse_nist);
   const controls = nists.filter(is_control);
   const paths = controls.map((control) =>
