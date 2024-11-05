@@ -42,19 +42,19 @@ jobs:
           xpath: '/*[local-name()="cci_list"]/*[local-name()="metadata"]/*[local-name()="publishdate"]'
           namespaces: '{"ns": "http://iase.disa.mil/cci"}'
 
-      - name: Set root directory path for produced XML file
+      - name: Set directory environment variables for next step
         run: |
           echo "ROOT_DIRECTORY=$(pwd)" >> $GITHUB_ENV
-          echo "OUTPUT_DIRECTORY=$ROOT_DIRECTORY/libs/hdf-converters/src/mappings" >> $GITHUB_ENV
+          echo "OUTPUT_DIRECTORY=$(pwd)/libs/hdf-converters/src/mappings" >> $GITHUB_ENV
 
       - name: Convert CCI List XML to CCI->NIST, CCI->Definitions, and NIST->CCI JSON files
         run: yarn workspace @mitre/hdf-converters cciListXml2json -i $ROOT_DIRECTORY/U_CCI_List.xml -n $OUTPUT_DIRECTORY/U_CCI_List.nist.json -d $OUTPUT_DIRECTORY/U_CCI_List.defs.json -c $OUTPUT_DIRECTORY/U_CCI_List.cci.json
 
-      - name: Commit changes to CciNistMappingData.ts
+      - name: Commit changes to produced JSON files
         # run: |
         #   git config --local user.email "saf@groups.mitre.org"
         #   git config --local user.name "MITRE SAF Automation"
-        #   git add $ROOT_DIRECTORY/U_CCI_List.nist.json $ROOT_DIRECTORY/U_CCI_List.defs.json $ROOT_DIRECTORY/U_CCI_List.cci.json
+        #   git add $OUTPUT_DIRECTORY/U_CCI_List.nist.json $OUTPUT_DIRECTORY/U_CCI_List.defs.json $OUTPUT_DIRECTORY/U_CCI_List.cci.json
         #   git commit -sm "Update CCI List to the current NIST and definition mappings as of $DATETIME"
         #   git push
         run: echo $DATETIME && git status
