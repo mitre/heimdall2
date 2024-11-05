@@ -115,7 +115,8 @@ if (scriptIsCalled) {
   }
 }
 
-const CCIS_KEY = 'ccis';
+export const CCIS_KEY = 'ccis';
+export const DELIMITER = ' ';
 
 type Leaf = {
   [CCIS_KEY]?: string[];
@@ -134,7 +135,6 @@ export function removeParentheses(key: string): string {
 }
 
 function unflatten(fullNistPathToListOfCcis: Record<string, string[]>): Trie {
-  const DELIMITER = ' ';
   const result = {};
   const keys = _.keys(fullNistPathToListOfCcis);
   for (const key of keys) {
