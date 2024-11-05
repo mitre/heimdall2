@@ -4,10 +4,10 @@ import * as _ from 'lodash';
 import {ILookupPath, MappedTransform} from '../base-converter';
 import {
   conditionallyProvideAttribute,
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   FROM_ASFF_TYPES_SLASH_REPLACEMENT
 } from '../utils/global';
 import {ASFFMapper, consolidate, SpecialCasing} from './asff-mapper';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../mappings/CciNistMappingData';
 
 function replaceTypesSlashes<T>(type: T): T | string {
   if (!_.isString(type)) {

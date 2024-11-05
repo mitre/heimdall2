@@ -8,8 +8,7 @@ import {
   ILookupPath,
   MappedTransform
 } from '../base-converter';
-import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
+import {CCI2NIST} from '../mappings/CciNistMapping';
 import {
   ChecklistJsonixConverter,
   ChecklistObject,
@@ -21,14 +20,13 @@ import {Checklist} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
 import {throwIfInvalidAssetMetadata} from './checklist-metadata-utils';
 import {parseJson} from '../utils/parseJson';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../mappings/CciNistMappingData';
 
 enum ImpactMapping {
   high = 0.7,
   medium = 0.5,
   low = 0.3
 }
-
-const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
 
 /**
  * Tranformer function that splits a string and return array
@@ -47,10 +45,7 @@ function cciRef(input: string): string[] {
  */
 function nistTag(input: string): string[] {
   const identifiers: string[] = cciRef(input);
-  return CCI_NIST_TWO_WAY_MAPPER.nistFilter(
-    identifiers,
-    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
-  );
+  return CCI2NIST(identifiers, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS);
 }
 
 /**

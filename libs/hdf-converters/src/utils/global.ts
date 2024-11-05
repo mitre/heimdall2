@@ -5,23 +5,6 @@ import {
 } from 'inspecjs';
 import * as _ from 'lodash';
 import {createLogger, format, transports} from 'winston';
-import {data as NistCciMappingData} from '../mappings/NistCciMappingData';
-
-// DEFAULT_NIST_TAG is applicable to all automated configuration tests.
-// SA-11 (DEVELOPER SECURITY TESTING AND EVALUATION) - RA-5 (VULNERABILITY SCANNING)
-export const DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS = ['SA-11', 'RA-5'];
-
-export const DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS =
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS.map((tag) => NistCciMappingData[tag]);
-
-// REMEDIATION_NIST_TAG the set of default applicable NIST 800-53 controls for ensuring up-to-date packages.
-// SI-2 (FLAW REMEDIATION) - 	RA-5 (VULNERABILITY SCANNING)
-export const DEFAULT_UPDATE_REMEDIATION_NIST_TAGS = ['SI-2', 'RA-5'];
-
-// Applicable to dependency management
-export const DEFAULT_INFORMATION_SYSTEM_COMPONENT_MANAGEMENT_NIST_TAGS = [
-  'CM-8'
-];
 
 // The "Types" field of ASFF only supports a maximum of 2 slashes, and will get replaced with this text. Note that the default AWS CLI doesn't support UTF-8 encoding
 export const FROM_ASFF_TYPES_SLASH_REPLACEMENT = /{{{SLASH}}}/gi;

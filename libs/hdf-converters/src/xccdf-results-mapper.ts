@@ -9,11 +9,9 @@ import {
   parseHtml,
   parseXml
 } from './base-converter';
-import {CciNistMapping} from './mappings/CciNistMapping';
-import {
-  conditionallyProvideAttribute,
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
-} from './utils/global';
+import {conditionallyProvideAttribute} from './utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './mappings/CciNistMappingData';
+import {NIST2CCI} from './mappings/CciNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -21,8 +19,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['medium', 0.5],
   ['low', 0.3]
 ]);
-
-const CCI_NIST_MAPPING = new CciNistMapping();
 
 function asArray<T>(arg: T | T[]): T[] {
   if (Array.isArray(arg)) {
@@ -151,21 +147,7 @@ function extractCci(input: IIdent | IIdent[]): string[] {
 }
 
 function nistTag(input: IIdent | IIdent[]): string[] {
-  return _.uniq(
-    CCI_NIST_MAPPING.nistFilter(
-      extractCci(input),
-      DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-      false
-    ).concat(
-      asArray(input)
-        .filter((x) => !!x)
-        .map((x) => x.text)
-        .map(parse_nist)
-        .filter((x) => !!x)
-        .filter(is_control)
-        .map((x) => x.canonize())
-    )
-  );
+  return NIST2CCI(extractCci(input), DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS);
 }
 
 /**

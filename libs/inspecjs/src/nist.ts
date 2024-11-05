@@ -36,7 +36,7 @@ function default_partial_config(
   return {...DEFAULT_CANONIZATION_CONFIG, ...c};
 }
 
-/** Represents a single nist control, or group of controls if the sub specs are vague enoug. */
+/** Represents a single nist control, or group of controls if the sub specs are vague enough. */
 export class NistControl {
   /** The sequence of sub-specifiers making up the "parts" of the nist tags
    * E.g.  in "SI-7 (14)(b)", we would have ["SI", "7", "14", "b"]
@@ -113,7 +113,7 @@ export class NistControl {
   }
 
   /**
-   * Quick accessor to the leading family letters for the nsit control
+   * Quick accessor to the leading family letters for the nist control
    */
   get family(): string | undefined {
     if (this.subSpecifiers.length) {

@@ -5,7 +5,7 @@ import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS,
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
-} from './utils/global';
+} from './mappings/CciNistMappingData';
 const CONVEYOR_MAX_SCORE = 1000;
 enum scannerType {
   ClamAV = 'Clamav',
@@ -188,7 +188,7 @@ function controlMappingConveyor(): MappedTransform<
       size: {path: 'size'},
       type: {path: 'type'},
       nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS.flat()
+      cci: DEFAULT_STATIC_CODE_ANALYSIS_CCI_TAGS
     },
     source_location: {},
     results: [

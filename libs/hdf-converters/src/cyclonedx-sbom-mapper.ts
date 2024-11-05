@@ -22,7 +22,7 @@ import {
   ComponentClass,
   ComponentObject
 } from '../types/cyclonedx';
-import {getCCIsForNISTTags} from './mappings/CciNistMapping';
+import {NIST2CCI} from './mappings/CciNistMapping';
 
 const cvssMethods = ['CVSSv2', 'CVSSv3', 'CVSSv31', 'CVSSv4'] as const;
 type CVSSMethodEnum = Extract<MethodEnum, (typeof cvssMethods)[number]>;
@@ -396,7 +396,7 @@ export class CycloneDXSBOMMapper extends BaseConverter<DataStorage> {
                   input:
                     | CycloneDXBillOfMaterialsStandardVulnerability['cwes']
                     | CycloneDXSoftwareBillOfMaterialsStandardVulnerability['cwes']
-                ): string[] => getCCIsForNISTTags(getNISTTags(input))
+                ): string[] => NIST2CCI(getNISTTags(input))
               },
               cwe: {path: 'cwes', transformer: formatCWETags},
               'bom-ref': {

@@ -7,10 +7,8 @@ import {ExecJSON} from 'inspecjs';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import * as _ from 'lodash';
-import {
-  conditionallyProvideAttribute,
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
-} from './utils/global';
+import {conditionallyProvideAttribute} from './utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './mappings/CciNistMappingData';
 
 export type ProfileResponse = {
   '@odata.context': string;
