@@ -7,11 +7,11 @@ import {
   MappedTransform,
   parseCsv
 } from './base-converter';
+import {NIST2CCI} from './mappings/CciNistMapping';
 import {
   DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
   DEFAULT_UPDATE_REMEDIATION_NIST_TAGS
-} from './utils/global';
-import {getCCIsForNISTTags} from './mappings/CciNistMapping';
+} from './mappings/CciNistMappingData';
 
 export type PrismaControl = {
   Packages: string;
@@ -76,7 +76,7 @@ export class PrismaControlMapper extends BaseConverter {
             tags: {
               cci: {
                 path: 'CVE ID',
-                transformer: (cve: string) => getCCIsForNISTTags(nistTag(cve))
+                transformer: (cve: string) => NIST2CCI(nistTag(cve))
               },
               nist: {
                 path: 'CVE ID',

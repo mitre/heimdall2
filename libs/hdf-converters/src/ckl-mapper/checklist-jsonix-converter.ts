@@ -1,7 +1,7 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {JsonixIntermediateConverter} from '../jsonix-intermediate-converter';
-import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
+import {NIST2CCI} from '../mappings/CciNistMapping';
 import {getDescription} from '../utils/global';
 import {
   Asset,
@@ -632,10 +632,9 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   matchNistToCcis(nistRefs: string[]): string[] {
     if (!nistRefs) {
-      return [''];
+      return [];
     }
-    const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
-    return CCI_NIST_TWO_WAY_MAPPER.cciFilter(nistRefs, ['']);
+    return NIST2CCI(nistRefs);
   }
 
   getComments(descriptions: ExecJSON.ControlDescription[]): string {

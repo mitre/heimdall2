@@ -1,206 +1,44 @@
-import {XMLParser} from 'fast-xml-parser';
 import _ from 'lodash';
-import {CCI_List} from '../utils/CCI_List';
+import {NIST_TO_CCI} from '../mappings/NistCciMappingData';
+import {is_control, parse_nist} from 'inspecjs';
 import {CCI_TO_NIST} from './CciNistMappingData';
-import {CciNistMappingItem} from './CciNistMappingItem';
-import {data as NistCciMappingData} from '../mappings/NistCciMappingData';
+import {removeParentheses} from '../../data/converters/cciListXml2json';
 
-type Reference = {
-  '@_creator': string;
-  '@_title': string;
-  '@_version': string;
-  '@_location': string;
-  '@_index': string;
-};
-
-type CciItem = {
-  status: string;
-  publishdate: string;
-  contributor: string;
-  definition: string;
-  type: string;
-  references: {
-    reference: Reference[];
-  };
-  '@_id': string;
-};
-type CciItems = {
-  cci_item: CciItem[];
-};
-
-type Metadata = {
-  version: string;
-  publishdate: string;
-};
-
-type CciList = {
-  metadata: Metadata;
-  cci_items: CciItems;
-};
-
-type CciNistData = {
-  '?xml': {
-    '@_version': string;
-    '@_encoding': string;
-  };
-  '?xml-stylesheet': {
-    '@_type': string;
-    '@_href': string;
-  };
-  cci_list: CciList;
-};
-
-export class CciNistTwoWayMapper {
-  data: CciNistData;
-
-  constructor() {
-    const alwaysArray = ['cci_item', 'reference'];
-    const options = {
-      ignoreAttributes: false,
-      isArray: (tagName: string) => {
-        if (alwaysArray.includes(tagName)) {
-          return true;
-        } else {
-          return false;
-        }
-      }
-    };
-    const parser = new XMLParser(options);
-    this.data = parser.parse(CCI_List);
-  }
-
-  nistFilter(
-    identifiers: string[],
-    defaultNist: string[],
-    collapse = true
-  ): string[] {
-    const DEFAULT_NIST_TAGS = defaultNist;
-    let matches: string[] = [];
-    for (const id of identifiers) {
-      const nistRef = this.findHighestVersionNistControlByCci(id);
-      if (nistRef) {
-        matches.push(nistRef);
-      }
+export function CCI2NIST(
+  identifiers: string[],
+  defaultCci2Nist: string[],
+  collapse = true
+): string[] {
+  const DEFAULT_NIST_TAGS = defaultCci2Nist;
+  let matches: string[] = [];
+  for (const id of identifiers) {
+    const nistRef = CCI_TO_NIST[id];
+    if (nistRef) {
+      matches.push(nistRef);
     }
-    if (collapse) {
-      matches = _.uniq(matches);
-    }
-    return matches ?? DEFAULT_NIST_TAGS;
   }
-
-  cciFilter(identifiers: string[], defaultCci: string[]): string[] {
-    const matches: string[] = [];
-    for (const id of identifiers) {
-      matches.push(...this.findMatchingCciIdsByNistControl(id));
-    }
-    return matches ?? defaultCci;
+  if (collapse) {
+    matches = _.uniq(matches);
   }
-
-  private findHighestVersionNistControlByCci(targetId: string): string | null {
-    let highestVersionControl: string | null = null;
-    let highestVersion = -1;
-
-    const {cci_item} = this.data.cci_list.cci_items;
-    const targetItem = cci_item.find((item) => item['@_id'] === targetId);
-
-    if (targetItem) {
-      for (const reference of targetItem.references.reference) {
-        const version = parseFloat(reference['@_version']);
-        if (version > highestVersion) {
-          highestVersion = version;
-          highestVersionControl = reference['@_index'];
-        }
-      }
-    }
-    return highestVersionControl;
-  }
-
-  private findMatchingCciIdsByNistControl(pattern: string): string[] {
-    const matchingIds: string[] = [];
-
-    const {cci_item} = this.data.cci_list.cci_items;
-
-    for (const item of cci_item) {
-      for (const reference of item.references.reference) {
-        // first try the pattern as is
-        const regexPattern = new RegExp(`^${pattern}`);
-        if (
-          RegExp(regexPattern).exec(reference['@_index']) &&
-          item.type === 'technical'
-        ) {
-          matchingIds.push(item['@_id']);
-          break;
-        }
-        // if there were no matches using the original pattern, try using only 2 letters hyphen followed by one or two numbers
-        if (matchingIds.length === 0) {
-          const regexEditedPattern = new RegExp(
-            `${/\w\w-\d\d?\d?/g.exec(pattern)}`
-          );
-          if (
-            RegExp(regexEditedPattern).exec(reference['@_index']) &&
-            item.type === 'technical'
-          ) {
-            matchingIds.push(item['@_id']);
-            break;
-          }
-        }
-      }
-    }
-
-    return matchingIds;
-  }
+  return matches.length > 0 ? matches : DEFAULT_NIST_TAGS;
 }
 
-export class CciNistMapping {
-  data: CciNistMappingItem[];
-
-  constructor() {
-    this.data = [];
-
-    if (typeof CCI_TO_NIST === 'object') {
-      for (const item of Object.entries(CCI_TO_NIST)) {
-        this.data.push(new CciNistMappingItem(item[0], item[1]));
-      }
-    }
+export function NIST2CCI(
+  identifiers: string[],
+  defaultNist2Cci?: string[],
+  collapse = true
+): string[] {
+  const DEFAULT_CCI_TAGS = defaultNist2Cci || [];
+  const createPath = (nist: string) => [...nist.split(' '), 'ccis'];
+  const nists = identifiers.map(parse_nist);
+  const controls = nists.filter(is_control);
+  const paths = controls.map((control) =>
+    createPath(removeParentheses(control.canonize({add_spaces: true})))
+  );
+  const ccis = paths.flatMap((path) => _.get(NIST_TO_CCI, path, []));
+  if (collapse) {
+    const uniques = _.uniq(ccis);
+    return uniques.length > 0 ? uniques : DEFAULT_CCI_TAGS;
   }
-
-  nistFilter(
-    identifiers: string[],
-    defaultNist: string[],
-    collapse = true
-  ): string[] {
-    const DEFAULT_NIST_TAG = defaultNist;
-    const matches: string[] = [];
-    identifiers.forEach((id) => {
-      const item = this.data.find((element) => element.cci === id);
-      if (item && item.nistId) {
-        if (collapse) {
-          if (matches.indexOf(item.nistId) === -1) {
-            matches.push(item.nistId);
-          }
-        } else {
-          matches.push(item.nistId);
-        }
-      }
-    });
-    if (matches.length === 0) {
-      return DEFAULT_NIST_TAG;
-    }
-    return matches;
-  }
-}
-
-export function getCCIsForNISTTags(nistTags: string[]): string[] {
-  const cciTags: string[] = [];
-  for (const nistTag of nistTags) {
-    const baseTag = /\w\w-\d\d?\d?/g.exec(nistTag);
-    if (
-      Array.isArray(baseTag) &&
-      baseTag.length > 0 &&
-      baseTag[0] in NistCciMappingData
-    ) {
-      cciTags.push(...NistCciMappingData[baseTag[0]]);
-    }
-  }
-  return cciTags;
+  return ccis.length > 0 ? ccis : DEFAULT_CCI_TAGS;
 }
