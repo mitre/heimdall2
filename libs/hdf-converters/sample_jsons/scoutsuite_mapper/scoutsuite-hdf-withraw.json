@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.29",
+    "release": "2.10.20",
     "target_id": "default ruleset:Amazon Web Services:916481805664"
   },
-  "version": "2.6.29",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -143,7 +143,9 @@
               "SI-4(2)"
             ],
             "cci": [
-              "CCI-000172"
+              "CCI-000172",
+              "CCI-001260",
+              "CCI-004968"
             ]
           },
           "refs": [
@@ -491,7 +493,7 @@
           ]
         }
       ],
-      "sha256": "bf3fe3a8edcf7a2118c9eaffcc8bee5110454d8db2df851d3ba673d8f6e65e00"
+      "sha256": "16c8bc1f4e9277a9e064aa90f76c690164a612293a2df4f119e3b4610447d1b6"
     }
   ],
   "passthrough": {

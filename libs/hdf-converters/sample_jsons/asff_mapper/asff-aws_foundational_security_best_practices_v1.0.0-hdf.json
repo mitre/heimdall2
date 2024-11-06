@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.29",
+    "release": "2.10.20",
     "target_id": "AWS Foundational Security Best Practices v1.0.0"
   },
-  "version": "2.6.29",
+  "version": "2.10.20",
   "statistics": {
     "duration": null
   },
@@ -64,7 +64,14 @@
               "CCI-000213",
               "CCI-001368",
               "CCI-001414",
-              "CCI-000225"
+              "CCI-001548",
+              "CCI-001549",
+              "CCI-001550",
+              "CCI-001551",
+              "CCI-000225",
+              "CCI-001471",
+              "CCI-001472",
+              "CCI-001101"
             ],
             "nist": [
               "AC-3",
@@ -95,7 +102,7 @@
           ]
         }
       ],
-      "sha256": "7a54e62e4326166cd6eba7a73a9b887cec5d0eef872295f205ba7be251ec6d68"
+      "sha256": "9bb8b59f9a8d2d8552a55ea0e03cfd14058fef27a0fbda60144fbeda57ea9aaf"
     }
   ]
 }

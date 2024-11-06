@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.8"
+    "release": "2.10.20"
   },
-  "version": "2.10.8",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -27,7 +27,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -68,7 +68,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -191,7 +191,7 @@
               "CCI-000048"
             ],
             "nist": [
-              "AC-8 a"
+              "AC-8 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -232,7 +232,7 @@
               "CCI-000048"
             ],
             "nist": [
-              "AC-8 a"
+              "AC-8 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -273,7 +273,7 @@
               "CCI-000048"
             ],
             "nist": [
-              "AC-8 a"
+              "AC-8 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -355,7 +355,7 @@
               "CCI-000185"
             ],
             "nist": [
-              "IA-5 (2) (b) (1)"
+              "IA-5 (2) b. (1)"
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -396,7 +396,7 @@
               "CCI-000186"
             ],
             "nist": [
-              "IA-5 (2) (a) (1)"
+              "IA-5 (2) a. (1)"
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -437,7 +437,7 @@
               "CCI-000196"
             ],
             "nist": [
-              "IA-5 (1) (c)"
+              "IA-5 (1) c."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -478,7 +478,7 @@
               "CCI-000196"
             ],
             "nist": [
-              "IA-5 (1) (c)"
+              "IA-5 (1) c."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -519,7 +519,7 @@
               "CCI-000196"
             ],
             "nist": [
-              "IA-5 (1) (c)"
+              "IA-5 (1) c."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -1011,7 +1011,7 @@
               "CCI-001314"
             ],
             "nist": [
-              "SI-11 b"
+              "SI-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -1052,7 +1052,7 @@
               "CCI-001314"
             ],
             "nist": [
-              "SI-11 b"
+              "SI-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -1093,7 +1093,7 @@
               "CCI-001314"
             ],
             "nist": [
-              "SI-11 b"
+              "SI-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -1134,7 +1134,7 @@
               "CCI-001314"
             ],
             "nist": [
-              "SI-11 b"
+              "SI-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -1175,7 +1175,7 @@
               "CCI-001314"
             ],
             "nist": [
-              "SI-11 b"
+              "SI-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -1216,7 +1216,7 @@
               "CCI-001314"
             ],
             "nist": [
-              "SI-11 b"
+              "SI-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -1339,7 +1339,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -2528,7 +2528,7 @@
               "CCI-002696"
             ],
             "nist": [
-              "SI-6 a"
+              "SI-6 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -2569,7 +2569,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -2610,7 +2610,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -2651,7 +2651,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -2692,7 +2692,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -2733,7 +2733,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -2774,7 +2774,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -2815,7 +2815,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -2856,7 +2856,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -2897,7 +2897,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -2938,7 +2938,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -2979,7 +2979,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -3020,7 +3020,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -3061,7 +3061,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3143,7 +3143,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3184,7 +3184,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3225,7 +3225,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3266,7 +3266,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3307,7 +3307,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3348,7 +3348,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3389,7 +3389,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3430,7 +3430,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3471,7 +3471,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3512,7 +3512,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3553,7 +3553,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3594,7 +3594,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3635,7 +3635,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3676,7 +3676,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3717,7 +3717,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3758,7 +3758,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3799,7 +3799,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3840,7 +3840,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3881,7 +3881,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3922,7 +3922,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -3963,7 +3963,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4004,7 +4004,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4045,7 +4045,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4086,7 +4086,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4127,7 +4127,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4168,7 +4168,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4209,7 +4209,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4250,7 +4250,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4291,7 +4291,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4332,7 +4332,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4373,7 +4373,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4414,7 +4414,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4455,7 +4455,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -4496,7 +4496,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4578,7 +4578,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4619,7 +4619,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4660,7 +4660,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4701,7 +4701,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4742,7 +4742,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4783,7 +4783,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4824,7 +4824,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4865,7 +4865,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4906,7 +4906,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4947,7 +4947,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -4988,7 +4988,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5029,7 +5029,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5070,7 +5070,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5111,7 +5111,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5193,7 +5193,7 @@
               "CCI-000056"
             ],
             "nist": [
-              "AC-11 b"
+              "AC-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5234,7 +5234,7 @@
               "CCI-000056"
             ],
             "nist": [
-              "AC-11 b"
+              "AC-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5275,7 +5275,7 @@
               "CCI-000056"
             ],
             "nist": [
-              "AC-11 b"
+              "AC-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5316,7 +5316,7 @@
               "CCI-000056"
             ],
             "nist": [
-              "AC-11 b"
+              "AC-11 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -5357,7 +5357,7 @@
               "CCI-000056"
             ],
             "nist": [
-              "AC-11 b"
+              "AC-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5398,7 +5398,7 @@
               "CCI-000057"
             ],
             "nist": [
-              "AC-11 a"
+              "AC-11 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5439,7 +5439,7 @@
               "CCI-000057"
             ],
             "nist": [
-              "AC-11 a"
+              "AC-11 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5480,7 +5480,7 @@
               "CCI-000057"
             ],
             "nist": [
-              "AC-11 a"
+              "AC-11 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5521,7 +5521,7 @@
               "CCI-000187"
             ],
             "nist": [
-              "IA-5 (2) (a) (2)"
+              "IA-5 (2) a. (2)"
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5562,7 +5562,7 @@
               "CCI-000192"
             ],
             "nist": [
-              "IA-5 (1) (a)"
+              "IA-5 (1) a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5603,7 +5603,7 @@
               "CCI-000192"
             ],
             "nist": [
-              "IA-5 (1) (a)"
+              "IA-5 (1) a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5644,7 +5644,7 @@
               "CCI-000193"
             ],
             "nist": [
-              "IA-5 (1) (a)"
+              "IA-5 (1) a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5685,7 +5685,7 @@
               "CCI-000194"
             ],
             "nist": [
-              "IA-5 (1) (a)"
+              "IA-5 (1) a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5726,7 +5726,7 @@
               "CCI-000195"
             ],
             "nist": [
-              "IA-5 (1) (b)"
+              "IA-5 (1) b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5767,7 +5767,7 @@
               "CCI-000195"
             ],
             "nist": [
-              "IA-5 (1) (b)"
+              "IA-5 (1) b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5808,7 +5808,7 @@
               "CCI-000195"
             ],
             "nist": [
-              "IA-5 (1) (b)"
+              "IA-5 (1) b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5849,7 +5849,7 @@
               "CCI-000195"
             ],
             "nist": [
-              "IA-5 (1) (b)"
+              "IA-5 (1) b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5890,7 +5890,7 @@
               "CCI-000198"
             ],
             "nist": [
-              "IA-5 (1) (d)"
+              "IA-5 (1) d."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5931,7 +5931,7 @@
               "CCI-000198"
             ],
             "nist": [
-              "IA-5 (1) (d)"
+              "IA-5 (1) d."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -5972,7 +5972,7 @@
               "CCI-000199"
             ],
             "nist": [
-              "IA-5 (1) (d)"
+              "IA-5 (1) d."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6013,7 +6013,7 @@
               "CCI-000199"
             ],
             "nist": [
-              "IA-5 (1) (d)"
+              "IA-5 (1) d."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6054,7 +6054,7 @@
               "CCI-000200"
             ],
             "nist": [
-              "IA-5 (1) (e)"
+              "IA-5 (1) e."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6095,7 +6095,7 @@
               "CCI-000205"
             ],
             "nist": [
-              "IA-5 (1) (a)"
+              "IA-5 (1) a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6136,7 +6136,7 @@
               "CCI-000205"
             ],
             "nist": [
-              "IA-5 (1) (a)"
+              "IA-5 (1) a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6259,7 +6259,7 @@
               "CCI-000795"
             ],
             "nist": [
-              "IA-4 e"
+              "IA-4 e."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6341,7 +6341,7 @@
               "CCI-001619"
             ],
             "nist": [
-              "IA-5 (1) (a)"
+              "IA-5 (1) a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6423,7 +6423,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6464,7 +6464,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6505,7 +6505,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6546,7 +6546,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -6587,7 +6587,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -6628,7 +6628,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6669,7 +6669,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6710,7 +6710,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6751,7 +6751,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6833,7 +6833,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6874,7 +6874,7 @@
               "CCI-000139"
             ],
             "nist": [
-              "AU-5 a"
+              "AU-5 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6915,7 +6915,7 @@
               "CCI-000139"
             ],
             "nist": [
-              "AU-5 a"
+              "AU-5 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6956,7 +6956,7 @@
               "CCI-000140"
             ],
             "nist": [
-              "AU-5 b"
+              "AU-5 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -6997,7 +6997,7 @@
               "CCI-000140"
             ],
             "nist": [
-              "AU-5 b"
+              "AU-5 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7038,7 +7038,7 @@
               "CCI-000140"
             ],
             "nist": [
-              "AU-5 b"
+              "AU-5 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7079,7 +7079,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7161,7 +7161,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -7202,7 +7202,7 @@
               "CCI-000162"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7243,7 +7243,7 @@
               "CCI-000162"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7284,7 +7284,7 @@
               "CCI-000162"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7325,7 +7325,7 @@
               "CCI-000162"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7366,7 +7366,7 @@
               "CCI-000162"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7407,7 +7407,7 @@
               "CCI-000162"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7448,7 +7448,7 @@
               "CCI-000162"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7489,7 +7489,7 @@
               "CCI-000162"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7530,7 +7530,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7571,7 +7571,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7612,7 +7612,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7653,7 +7653,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7694,7 +7694,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7735,7 +7735,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7776,7 +7776,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7817,7 +7817,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7858,7 +7858,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7899,7 +7899,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7940,7 +7940,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -7981,7 +7981,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8022,7 +8022,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8063,7 +8063,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8104,7 +8104,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8145,7 +8145,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8186,7 +8186,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8227,7 +8227,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8268,7 +8268,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8309,7 +8309,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8350,7 +8350,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8391,7 +8391,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8432,7 +8432,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8473,7 +8473,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8514,7 +8514,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8555,7 +8555,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8596,7 +8596,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8637,7 +8637,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8678,7 +8678,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8719,7 +8719,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8760,7 +8760,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8801,7 +8801,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8842,7 +8842,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8883,7 +8883,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8924,7 +8924,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -8965,7 +8965,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9006,7 +9006,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9047,7 +9047,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9088,7 +9088,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9129,7 +9129,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9170,7 +9170,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9211,7 +9211,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9252,7 +9252,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9293,7 +9293,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9334,7 +9334,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9375,7 +9375,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9416,7 +9416,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9457,7 +9457,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9498,7 +9498,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9539,7 +9539,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9580,7 +9580,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9621,7 +9621,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9662,7 +9662,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9703,7 +9703,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9744,7 +9744,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9785,7 +9785,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9826,7 +9826,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9867,7 +9867,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9908,7 +9908,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9949,7 +9949,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -9990,7 +9990,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10031,7 +10031,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10072,7 +10072,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10113,7 +10113,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10154,7 +10154,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -10236,7 +10236,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -10277,7 +10277,7 @@
               "CCI-000171"
             ],
             "nist": [
-              "AU-12 b"
+              "AU-12 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10318,7 +10318,7 @@
               "CCI-001493"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10359,7 +10359,7 @@
               "CCI-001493"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10400,7 +10400,7 @@
               "CCI-001493"
             ],
             "nist": [
-              "AU-9 a"
+              "AU-9 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10523,7 +10523,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10564,7 +10564,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10810,7 +10810,7 @@
               "CCI-001891"
             ],
             "nist": [
-              "AU-8 (1) (a)"
+              "AU-8 (1) a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -10851,7 +10851,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -10892,7 +10892,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -10933,7 +10933,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -10974,7 +10974,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -11015,7 +11015,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -11056,7 +11056,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -11097,7 +11097,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -11138,7 +11138,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -11179,7 +11179,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -11220,7 +11220,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -11261,7 +11261,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -11302,7 +11302,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -11343,7 +11343,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -11384,7 +11384,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -11425,7 +11425,7 @@
               "CCI-000382"
             ],
             "nist": [
-              "CM-7 b"
+              "CM-7 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -12409,7 +12409,7 @@
               "CCI-002385"
             ],
             "nist": [
-              "SC-5 a"
+              "SC-5 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -12532,7 +12532,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -12573,7 +12573,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -12614,7 +12614,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -12655,7 +12655,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -12696,7 +12696,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -12737,7 +12737,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -12778,7 +12778,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -12819,7 +12819,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -12860,7 +12860,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -12901,7 +12901,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -12942,7 +12942,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -12983,7 +12983,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13024,7 +13024,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13065,7 +13065,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13106,7 +13106,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13147,7 +13147,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13188,7 +13188,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13229,7 +13229,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13270,7 +13270,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13311,7 +13311,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13352,7 +13352,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13393,7 +13393,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13434,7 +13434,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -13475,7 +13475,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -13516,7 +13516,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13557,7 +13557,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13598,7 +13598,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13639,7 +13639,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13680,7 +13680,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13721,7 +13721,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -13762,7 +13762,7 @@
               "CCI-000381"
             ],
             "nist": [
-              "CM-7 a"
+              "CM-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13803,7 +13803,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13844,7 +13844,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -13926,7 +13926,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14049,7 +14049,7 @@
               "CCI-000048"
             ],
             "nist": [
-              "AC-8 a"
+              "AC-8 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14090,7 +14090,7 @@
               "CCI-000196"
             ],
             "nist": [
-              "IA-5 (1) (c)"
+              "IA-5 (1) c."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14377,7 +14377,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -14418,7 +14418,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14459,7 +14459,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14500,7 +14500,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14541,7 +14541,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14582,7 +14582,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14623,7 +14623,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14664,7 +14664,7 @@
               "CCI-000044"
             ],
             "nist": [
-              "AC-7 a"
+              "AC-7 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14705,7 +14705,7 @@
               "CCI-000057"
             ],
             "nist": [
-              "AC-11 a"
+              "AC-11 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14746,7 +14746,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14787,7 +14787,7 @@
               "CCI-000056"
             ],
             "nist": [
-              "AC-11 b"
+              "AC-11 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14828,7 +14828,7 @@
               "CCI-000057"
             ],
             "nist": [
-              "AC-11 a"
+              "AC-11 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14869,7 +14869,7 @@
               "CCI-000057"
             ],
             "nist": [
-              "AC-11 a"
+              "AC-11 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -14910,7 +14910,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -14951,7 +14951,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -14992,7 +14992,7 @@
               "CCI-000169"
             ],
             "nist": [
-              "AU-12 a"
+              "AU-12 a."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -15320,7 +15320,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -15361,7 +15361,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -15402,7 +15402,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -15443,7 +15443,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -15484,7 +15484,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -15557,7 +15557,7 @@
           ]
         }
       ],
-      "sha256": "08034dcfc6ba3541b6d167c9cbaa8e4b67683e70414542af441959d2ee3be74c"
+      "sha256": "06ac3e62acd99da09cef87659fcd8819db58c0f4b750d3eee4d1ac6fba68372a"
     }
   ],
   "passthrough": {
