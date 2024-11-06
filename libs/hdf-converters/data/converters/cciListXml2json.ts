@@ -4,9 +4,6 @@ import xml2js from 'xml2js';
 import {parseArgs} from 'node:util';
 import {is_control, parse_nist} from 'inspecjs/src/nist';
 
-export const CCIS_KEY = 'ccis';
-export const DELIMITER = ' ';
-
 // Documentation is located at https://github.com/mitre/heimdall2/wiki/Control-Correlation-Identifier-(CCI)-Converter.
 const parser = new xml2js.Parser();
 
@@ -123,50 +120,11 @@ if (scriptIsCalled) {
             );
             fs.writeFileSync(
               pathToNist2CciOutfile,
-              JSON.stringify(unflatten(ccis), null, 2)
+              JSON.stringify(ccis, null, 2)
             );
           }
         });
       }
     });
   }
-}
-
-type Leaf = {
-  [CCIS_KEY]?: string[];
-};
-
-type Branch = Leaf & {
-  [key: string]: Branch | string[] | undefined;
-};
-
-export type Trie = {
-  [key: string]: Branch;
-};
-
-export function removeParentheses(key: string): string {
-  return key.replace(/[()]/g, '');
-}
-
-function unflatten(fullNistPathToListOfCcis: Record<string, string[]>): Trie {
-  const result = {};
-
-  const keys = _.keys(fullNistPathToListOfCcis);
-  const nists = keys.map(parse_nist);
-
-  const paths = nists
-    .filter(is_control)
-    .map((control) => [
-      control.subSpecifiers.slice(0, 2).join('-'),
-      ...control.subSpecifiers.slice(2)
-    ]);
-
-  for (let i = 0; i < keys.length; i++) {
-    const key = keys[i];
-    const path = [...paths[i], CCIS_KEY];
-    const value = fullNistPathToListOfCcis[key];
-    _.setWith(result, path, value, Object);
-  }
-
-  return result;
 }
