@@ -81,7 +81,7 @@ function pluginNistTag(item: unknown): string[] {
 }
 function cciNistTag(input: string): string[] {
   const identifiers: string[] = parseRef(input, 'CCI');
-  return CCI2NIST(identifiers, DEFAULT_NIST_TAG, false);
+  return CCI2NIST(identifiers, DEFAULT_NIST_TAG);
 }
 
 function parseRef(input: string, key: string): string[] {

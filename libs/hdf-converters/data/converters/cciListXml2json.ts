@@ -2,6 +2,10 @@ import fs from 'fs';
 import * as _ from 'lodash';
 import xml2js from 'xml2js';
 import {parseArgs} from 'node:util';
+import {is_control, parse_nist} from 'inspecjs/src/nist';
+
+export const CCIS_KEY = 'ccis';
+export const DELIMITER = ' ';
 
 // Documentation is located at https://github.com/mitre/heimdall2/wiki/Control-Correlation-Identifier-(CCI)-Converter.
 const parser = new xml2js.Parser();
@@ -73,7 +77,7 @@ if (scriptIsCalled) {
             console.error(`Failed to parse ${pathToInfile}: ${parseFileError}`);
           } else {
             // These store our CCI->NIST names, CCI->definitions, and NIST->CCI mappings
-            const nists: Record<string, string> = {};
+            const nists: Record<string, string[]> = {};
             const definitions: Record<string, string> = {};
             const ccis: Record<string, string[]> = {};
 
@@ -84,16 +88,29 @@ if (scriptIsCalled) {
                 cciItem.references?.[0].reference,
                 (item) => _.get(item, '$.version')
               );
+              const cciId = cciItem.$.id;
+
               if (newestReference) {
-                nists[cciItem.$.id] = newestReference.$.index;
-                if (ccis[newestReference.$.index] === undefined) {
-                  ccis[newestReference.$.index] = [cciItem.$.id];
-                } else {
-                  ccis[newestReference.$.index].push(cciItem.$.id);
+                /* There's 1 out of the 2000+ CCI controls where this index string is composed of at 
+                least 2 comma-and-space-separated controls found in the latest revision. */
+                const nistIds = newestReference.$.index
+                  .split(/,\s*/)
+                  .map(parse_nist)
+                  .filter(is_control)
+                  .map((n) => n.canonize());
+
+                _.set(nists, cciId, nistIds);
+                _.set(definitions, cciId, cciItem.definition[0]);
+
+                for (const nistId of nistIds) {
+                  if (ccis[nistId] === undefined) {
+                    ccis[nistId] = [cciId];
+                  } else {
+                    ccis[nistId].push(cciId);
+                  }
                 }
-                definitions[cciItem.$.id] = cciItem.definition[0];
               } else {
-                console.error(`No NIST Controls found for ${cciItem.$.id}`);
+                console.error(`No NIST Controls found for ${cciId}`);
               }
             }
             fs.writeFileSync(
@@ -115,9 +132,6 @@ if (scriptIsCalled) {
   }
 }
 
-export const CCIS_KEY = 'ccis';
-export const DELIMITER = ' ';
-
 type Leaf = {
   [CCIS_KEY]?: string[];
 };
@@ -136,12 +150,23 @@ export function removeParentheses(key: string): string {
 
 function unflatten(fullNistPathToListOfCcis: Record<string, string[]>): Trie {
   const result = {};
+
   const keys = _.keys(fullNistPathToListOfCcis);
-  for (const key of keys) {
-    const path = key.split(DELIMITER).map(removeParentheses);
-    path.push(CCIS_KEY);
+  const nists = keys.map(parse_nist);
+
+  const paths = nists
+    .filter(is_control)
+    .map((control) => [
+      control.subSpecifiers.slice(0, 2).join('-'),
+      ...control.subSpecifiers.slice(2)
+    ]);
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i];
+    const path = [...paths[i], CCIS_KEY];
     const value = fullNistPathToListOfCcis[key];
     _.setWith(result, path, value, Object);
   }
+
   return result;
 }

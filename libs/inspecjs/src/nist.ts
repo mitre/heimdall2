@@ -4,10 +4,10 @@ import {ALL_NIST_CONTROL_NUMBERS, ALL_NIST_FAMILIES} from './raw_nist';
 // Regexes.
 // Matches against only currently existing NIST Control families instead of allowing any two adjacent uppercase letters
 const NIST_FAMILY_RE =
-  /^(?:A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])$/;
+  /^(?:A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMST]|RA|S[ACEIR]|TR|U[LM])$/;
 // Limit length of children to avoid potential DoS on malicious NIST Control strings
 const NIST_CONTROL_RE =
-  /^(A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMS]|RA|S[ACEI]|TR|U[LM])-(\d+)(.{0,60})$/;
+  /^(A[CPRTU]|C[AMP]|D[IM]|I[APR]|M[AP]|P[ELMST]|RA|S[ACEIR]|TR|U[LM])-(\d+)(.{0,60})$/;
 const SPEC_SPLITTER = /[\s\(\)\.]+/; // Includes all whitespace, periods, and parenthesis
 const REV_RE = /^rev[\s_.]+(\d+)$/i; // Matches Rev_5 etc
 type ParseNist = NistControl | NistRevision | null;
