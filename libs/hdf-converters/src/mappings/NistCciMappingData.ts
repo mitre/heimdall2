@@ -1,7 +1,6 @@
-import {Trie} from '../../data/converters/cciListXml2json';
 import nistToCciData from './U_CCI_List.cci.json';
 
-export const NIST_TO_CCI: Trie = nistToCciData;
+export const NIST_TO_CCI: Record<string, string[]> = nistToCciData;
 
 export const HANDCRAFTED_DEFAULT_NIST_TO_CCI = {
   'AC-7': ['CCI-000044'],
