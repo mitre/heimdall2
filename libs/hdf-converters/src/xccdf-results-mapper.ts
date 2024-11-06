@@ -11,7 +11,7 @@ import {
 } from './base-converter';
 import {conditionallyProvideAttribute} from './utils/global';
 import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './mappings/CciNistMappingData';
-import {NIST2CCI} from './mappings/CciNistMapping';
+import {CCI2NIST} from './mappings/CciNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -147,7 +147,7 @@ function extractCci(input: IIdent | IIdent[]): string[] {
 }
 
 function nistTag(input: IIdent | IIdent[]): string[] {
-  return NIST2CCI(extractCci(input), DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS);
+  return CCI2NIST(extractCci(input), DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS);
 }
 
 /**
