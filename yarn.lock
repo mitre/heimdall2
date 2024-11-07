@@ -5024,11 +5024,11 @@
   integrity sha512-6SlHBzUW8Jhf3liqrGGXyTJSIFe4nqlJ5A5KaMZ2l/vbM3Wh3KSybots/wfWVzNLK4D1NZluDlSQIbIEPx6oyA==
 
 "@types/vuelidate@^0.7.13":
-  version "0.7.21"
-  resolved "https://registry.npmjs.org/@types/vuelidate/-/vuelidate-0.7.21.tgz#e447f5c39f831cddbfae945aeffc7dea0931b0e4"
-  integrity sha512-vC+BysDb5JGUrPAL67GeIuw0eF4jdgg/piS2wc5AxosNillT9H8wKvsN5FfbSogcVWbiyuXb3ArXpE/amqsrSw==
+  version "0.7.22"
+  resolved "https://registry.yarnpkg.com/@types/vuelidate/-/vuelidate-0.7.22.tgz#ecd0d1f2a200d72e89af87815dd1fe5c5a960eec"
+  integrity sha512-bD3pP9FgL3pxMVQ9NJ3d8BbV8Ij6xsrDKdCO4l1Wq/AksXxRRmQ9lmYjRJwn/hLMcgWO/k0QdULfZWpRz13adw==
   dependencies:
-    vue "^2.6.11"
+    vue "^2.7.15"
 
 "@types/webpack-env@^1.15.2":
   version "1.18.4"
@@ -20411,7 +20411,7 @@ vue-template-es2015-compiler@^1.6.0, vue-template-es2015-compiler@^1.9.0:
   resolved "https://registry.npmjs.org/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
 
-vue@^2.6.11, vue@^2.6.14, vue@~2.7.16:
+vue@^2.6.11, vue@^2.6.14, vue@^2.7.15, vue@~2.7.16:
   version "2.7.16"
   resolved "https://registry.npmjs.org/vue/-/vue-2.7.16.tgz#98c60de9def99c0e3da8dae59b304ead43b967c9"
   integrity sha512-4gCtFXaAA3zYZdTp5s4Hl2sozuySsgz4jy1EnpBHNfpMa9dK1ZCG7viqBPCwXtmgc8nHqUsAu3G4gtmXkkY3Sw==
