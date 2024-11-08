@@ -1,4 +1,4 @@
-import {ExecJSON, is_control, NistControl, parse_nist} from 'inspecjs';
+import {ExecJSON, is_control, parse_nist} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
