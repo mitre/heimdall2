@@ -1,4 +1,4 @@
-import {ExecJSON} from 'inspecjs';
+import {ExecJSON, is_control, NistControl, parse_nist} from 'inspecjs';
 import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {
@@ -146,8 +146,31 @@ function extractCci(input: IIdent | IIdent[]): string[] {
   return output;
 }
 
+function extractNist(input: IIdent | IIdent[]): string[] {
+  const inputArray = asArray(input);
+  return inputArray
+    .map((element) =>
+      _.get(
+        element,
+        'text',
+        '' // Rules may not always contain references.
+      )
+    )
+    .map(parse_nist)
+    .filter(is_control)
+    .flatMap((c) => c.canonize() || []);
+}
+
 function nistTag(input: IIdent | IIdent[]): string[] {
-  return CCI2NIST(extractCci(input), DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS);
+  // The XCCDF results input file might already contain some NIST tags.
+  const existingNists = extractNist(input);
+
+  // It might also have CCI tags adjacent to the NIST tags.
+  const ccis = extractCci(input);
+  const nistsFromMappedCcis = CCI2NIST(ccis, []);
+
+  const nists = _.uniq([...existingNists, ...nistsFromMappedCcis]);
+  return nists.length > 0 ? nists : DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS;
 }
 
 /**
@@ -307,7 +330,7 @@ export class XCCDFResultsMapper extends BaseConverter {
                 transformer: extractCci
               },
               nist: {
-                path: ['ident', 'reference'],
+                path: ['ident', 'reference'], // WIP: figure out why reference isn't being pulled
                 transformer: nistTag
               },
               severity: {path: 'severity'},
