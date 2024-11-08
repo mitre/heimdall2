@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.29",
+    "release": "2.10.20",
     "target_id": "my-fake-host-4.somewhere.cloud"
   },
-  "version": "2.6.29",
+  "version": "2.10.20",
   "statistics": {
     "duration": null
   },
