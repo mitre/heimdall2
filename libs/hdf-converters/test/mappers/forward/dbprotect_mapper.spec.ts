@@ -12,7 +12,7 @@ describe('dbprotect_mapper_check', () => {
     );
 
     // fs.writeFileSync(
-    //   'sample_jsons/dbprotect_mapper/sample_input_report/dbprotect-check-hdf.json',
+    //   'sample_jsons/dbprotect_mapper/dbprotect-check-hdf.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 
