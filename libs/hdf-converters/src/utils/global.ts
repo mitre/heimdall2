@@ -99,3 +99,8 @@ export function ensureContextualizedEvaluation(
     return contextualizeEvaluation(data, [""]);
   }
 }
+
+// Return original string if it exists, else return undefined
+export function filterString(input: string): string | undefined {
+  return input || undefined;
+}

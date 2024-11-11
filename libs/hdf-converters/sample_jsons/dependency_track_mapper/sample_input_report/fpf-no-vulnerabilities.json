@@ -1,0 +1,14 @@
+{
+    "meta": {
+        "application": "Dependency-Track",
+        "version": "4.10.1",
+        "timestamp": "2024-04-04T03:42:24Z"
+    },
+    "findings": [],
+    "project": {
+        "name": "laravel",
+        "uuid": "d0646cf1-2415-4edd-a787-3c11d04f983d",
+        "version": "1.0"
+    },
+    "version": "1.2"
+}
