@@ -295,9 +295,9 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-s3@^3.425.0":
-  version "3.688.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.688.0.tgz#4326e6e7cc6d792bb085b6da7d45b80eeb394e83"
-  integrity sha512-bLyF7gT0RTWrsJPxbaslg1xP1gUdw3BJVvgfWM/63BDBpVCqIk9YlrXfJwjImcKguxGp8sCTdttywmfdPwQEfg==
+  version "3.689.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.689.0.tgz#50d57f13f3932f6332a6247f479f62143520728a"
+  integrity sha512-qYD1GJEPeLM6H3x8BuAAMXZltvVce5vGiwtZc9uMkBBo3HyFnmPitIPTPfaD1q8LOn/7KFdkY4MJ4e8D3YpV9g==
   dependencies:
     "@aws-crypto/sha1-browser" "5.2.0"
     "@aws-crypto/sha256-browser" "5.2.0"
@@ -308,7 +308,7 @@
     "@aws-sdk/credential-provider-node" "3.687.0"
     "@aws-sdk/middleware-bucket-endpoint" "3.686.0"
     "@aws-sdk/middleware-expect-continue" "3.686.0"
-    "@aws-sdk/middleware-flexible-checksums" "3.688.0"
+    "@aws-sdk/middleware-flexible-checksums" "3.689.0"
     "@aws-sdk/middleware-host-header" "3.686.0"
     "@aws-sdk/middleware-location-constraint" "3.686.0"
     "@aws-sdk/middleware-logger" "3.686.0"
@@ -633,10 +633,10 @@
     "@smithy/types" "^3.6.0"
     tslib "^2.6.2"
 
-"@aws-sdk/middleware-flexible-checksums@3.688.0":
-  version "3.688.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-flexible-checksums/-/middleware-flexible-checksums-3.688.0.tgz#6246dd7aba8c36135ea3e962386824e26c1cf476"
-  integrity sha512-diIBWLpM5eg3sRggKSKGUJGBh8VyFo/wZLq80GSq1kxGlmJOMvwT6YvE+Z51xhEbYTKIjX9IH/NhO7W4pA3MNw==
+"@aws-sdk/middleware-flexible-checksums@3.689.0":
+  version "3.689.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/middleware-flexible-checksums/-/middleware-flexible-checksums-3.689.0.tgz#46786a782c15558e3753808408859d7f0fb94adb"
+  integrity sha512-6VxMOf3mgmAgg6SMagwKj5pAe+putcx2F2odOAWviLcobFpdM/xK9vNry7p6kY+RDNmSlBvcji9wnU59fjV74Q==
   dependencies:
     "@aws-crypto/crc32" "5.2.0"
     "@aws-crypto/crc32c" "5.2.0"
