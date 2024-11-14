@@ -13,6 +13,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import {config} from 'vuex-module-decorators';
 import {IHeightsState} from './heights';
+import selectedTags from './selected_tags';
+import mappings from './saved_mappings';
 
 config.rawError = true;
 
@@ -45,6 +47,10 @@ export interface StoreType {
   groups: IGroupState;
   spinner: ISpinnerState;
 }
-const store = new Vuex.Store<StoreType>({});
-
+const store = new Vuex.Store<StoreType>({
+  modules: {
+    selectedTags,
+    mappings
+  }
+});
 export default store;
