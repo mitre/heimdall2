@@ -264,6 +264,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     const results = data.filter((attribute: T) => {
       return _.get(attribute, keyName) == tag;
     });
+    // This produces a string that looks like '' or /(w+); (w+)/.
     return results.map((result: T) => _.get(result, dataName)).join('; ');
   }
 
