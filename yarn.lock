@@ -9727,9 +9727,9 @@ dot-prop@^5.1.0:
     is-obj "^2.0.0"
 
 dotenv-cli@^7.0.0:
-  version "7.4.2"
-  resolved "https://registry.yarnpkg.com/dotenv-cli/-/dotenv-cli-7.4.2.tgz#c158a818de08e1fbc51d310f628cbace9075b734"
-  integrity sha512-SbUj8l61zIbzyhIbg0FwPJq6+wjbzdn9oEtozQpZ6kW2ihCcapKVZj49oCT3oPM+mgQm+itgvUQcG5szxVrZTA==
+  version "7.4.3"
+  resolved "https://registry.yarnpkg.com/dotenv-cli/-/dotenv-cli-7.4.3.tgz#3f54cbf57d463896cf82e391a5c1598bf92ac9fd"
+  integrity sha512-lf1E+TL1xFeoOHy2hSO3kLkx3KX8CDi17ccn5z5dVCnk2PuWqUKAnBVgQmhfS0BPuzFbptTEHVcIKFsGF0NAcg==
   dependencies:
     cross-spawn "^7.0.3"
     dotenv "^16.3.0"
