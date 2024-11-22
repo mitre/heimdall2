@@ -1,17 +1,13 @@
 queue_rules:
   - name: default
-    conditions:
+    queue_conditions:
+      - label=ready-to-merge
+    merge_conditions:
       - "#approved-reviews-by>=1"
       - base=master
+    merge_method: squash
 
 pull_request_rules:
-  - name: automatic merge for master when reviewed and CI passes
-    conditions:
-      - label=ready-to-merge
-    actions:
-      queue:
-        name: default
-        method: squash
   - name: delete head branch after merge
     conditions:
       - merged
@@ -22,5 +18,9 @@ pull_request_rules:
       - conflict
       - -author~=^dependabot(|-preview)\[bot\]$
     actions:
-        comment:
-          message: This pull request has a conflict. Could you fix it @{{author}}?
+      comment:
+        message: This pull request has a conflict. Could you fix it @{{author}}?
+  - name: refactored queue action rule
+    conditions: []
+    actions:
+      queue:
