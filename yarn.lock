@@ -10298,7 +10298,7 @@ express-urlrewrite@^1.4.0:
     debug "*"
     path-to-regexp "^1.0.3"
 
-express@4.21.1, express@^4.17.1, express@^4.17.3, express@^4.18.2:
+express@4.21.1, express@^4.17.1, express@^4.17.3, express@^4.21.1:
   version "4.21.1"
   resolved "https://registry.yarnpkg.com/express/-/express-4.21.1.tgz#9dae5dda832f16b4eec941a4e44aa89ec481b281"
   integrity sha512-YSFlK1Ee0/GC8QaO91tHcDxJiE/X4FbpAyQWkxAvG6AXCuR65YzK8ua6D9hvi/TzUfZMpc+BwuM1IPw8fmQBiQ==
@@ -13502,10 +13502,10 @@ joi@^17.4.0:
     "@sideway/formula" "^3.0.1"
     "@sideway/pinpoint" "^2.0.0"
 
-jose@^5.3.0:
-  version "5.3.0"
-  resolved "https://registry.yarnpkg.com/jose/-/jose-5.3.0.tgz#61dadf6399e0141d621ad18c1b36a0d6ab17a972"
-  integrity sha512-IChe9AtAE79ru084ow8jzkN2lNrG3Ntfiv65Cvj9uOCE2m5LNsdHG+9EbxWxAoWRF9TgDOqLN5jm08++owDVRg==
+jose@^5.9.6:
+  version "5.9.6"
+  resolved "https://registry.yarnpkg.com/jose/-/jose-5.9.6.tgz#77f1f901d88ebdc405e57cce08d2a91f47521883"
+  integrity sha512-AMlnetc9+CV9asI19zHmrgS/WYsWUwCn2R7RzlbJWD7F9eWYUTGyBmU9o6PxngtLGOiDGPRu+Uc4fhKzbpteZQ==
 
 js-base64@^2.4.3:
   version "2.6.4"
@@ -15541,15 +15541,15 @@ nwsapi@^2.2.0:
     "@nx/nx-win32-x64-msvc" "20.0.7"
 
 oauth2-mock-server@^7.0.0:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-7.1.2.tgz#10924b18e9ea380d128f6bef9b2a0a593b839663"
-  integrity sha512-xUg/YOTcMRe8W+q2jphecq1fB1BAjlAPbeeA9lvqwGaQSPJKxI2e8JUnDXHrrKGNJAVXQdHgE/9h4RpCtOfYOA==
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/oauth2-mock-server/-/oauth2-mock-server-7.2.0.tgz#cd7a620baec07dda01974c1a32bdcce7be38a1ed"
+  integrity sha512-3M74brZTGsosmpKMhxSRjzYjphGah0vDDdXbszccZa0UtpvX2uGa3cHPlRt5urcO5XP04hsB+JoKC83Pe9TtPA==
   dependencies:
     basic-auth "^2.0.1"
     cors "^2.8.5"
-    express "^4.18.2"
+    express "^4.21.1"
     is-plain-object "^5.0.0"
-    jose "^5.3.0"
+    jose "^5.9.6"
 
 oauth@0.10.x:
   version "0.10.0"
