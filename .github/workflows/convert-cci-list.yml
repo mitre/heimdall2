@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Checkout the code
         uses: actions/checkout@v4
-
+      - run: git fetch --prune --unshallow
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
