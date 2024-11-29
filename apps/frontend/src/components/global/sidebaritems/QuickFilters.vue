@@ -1,39 +1,38 @@
 <template>
-  <div>
-    <h4 class="my-4">Quick Filters:</h4>
-    <v-row class="my-4">
-      <v-col v-for="item in controlStatusSwitches" :key="item.name" :cols="3">
-        {{ item.name }}
-      </v-col>
-    </v-row>
-    <v-row class="mt-n10">
-      <v-col v-for="item in controlStatusSwitches" :key="item.name" :cols="3">
-        <v-switch
-          dense
-          inset
-          :color="item.color"
-          :input-value="item.enabled"
-          @change="changeStatusToggle(item.value)"
-        />
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
-        {{ item.name }}
-      </v-col>
-    </v-row>
-    <v-row class="mt-n10">
-      <v-col v-for="item in severitySwitches" :key="item.name" :cols="3">
-        <v-switch
-          dense
-          inset
-          :color="item.color"
-          :input-value="item.enabled"
-          @change="changeSeverityToggle(item.value)"
-        />
-      </v-col>
-    </v-row>
-  </div>
+  <v-card>
+    <v-container>
+      <h4>Common Filter Options:</h4>
+      <p>For all types of scans (Results, Profiles, and Checklists)</p>
+
+      <h5>Control Status</h5>
+      <v-row>
+        <v-col v-for="item in controlStatusSwitches" :key="item.name">
+          <p>{{ item.name }}</p>
+          <v-switch
+            dense
+            inset
+            :color="item.color"
+            :input-value="item.enabled"
+            @change="changeStatusToggle(item.value)"
+          />
+        </v-col>
+      </v-row>
+
+      <h5>Severity</h5>
+      <v-row>
+        <v-col v-for="item in severitySwitches" :key="item.name">
+          <p>{{ item.name }}</p>
+          <v-switch
+            dense
+            inset
+            :color="item.color"
+            :input-value="item.enabled"
+            @change="changeSeverityToggle(item.value)"
+          />
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-card>
 </template>
 
 <script lang="ts">
