@@ -34,7 +34,12 @@ export interface ICCIList {
         $: Record<string, string>;
         references?: {
           reference: {
-            $: Record<string, string>;
+            $: {
+              creator: string;
+              title: string;
+              version: string;
+              index: string;
+            };
           }[];
         }[];
         definition: string[];
@@ -42,6 +47,13 @@ export interface ICCIList {
     }[];
   };
 }
+
+export type NistReference = {
+  version: string;
+  creator: string;
+  title: string;
+  nist: string;
+};
 
 // Check that we're not doing `npm test`; it will look for the arguments to the input and output files.
 const scriptIsCalled = process.argv[1].includes('cciListXml2json');
@@ -98,11 +110,11 @@ if (scriptIsCalled) {
 }
 
 function produceConversions(cciList: ICCIList): {
-  nists: Record<string, string[]>;
+  nists: Record<string, NistReference[]>;
   definitions: Record<string, string>;
   ccis: Record<string, string[]>;
 } {
-  const nists: Record<string, string[]> = {};
+  const nists: Record<string, NistReference[]> = {};
   const definitions: Record<string, string> = {};
   const ccis: Record<string, string[]> = {};
 
@@ -117,13 +129,18 @@ function produceConversions(cciList: ICCIList): {
     if (newestReference) {
       /* There's 1 out of the 2000+ CCI controls where this index string is composed of at
       least 2 comma-and-space-separated controls found in the latest revision. */
-      const nistIds = newestReference.$.index
+      const {version, creator, index, title} = newestReference.$;
+      const nistIds = index
         .split(/,\s*/)
         .map(parse_nist)
         .filter(is_control)
         .map((n) => n.canonize());
 
-      _.set(nists, cciId, nistIds);
+      _.set(
+        nists,
+        cciId,
+        nistIds.map((nist) => ({version, creator, title, nist}))
+      );
       _.set(definitions, cciId, cciItem.definition[0]);
 
       for (const nistId of nistIds) {

@@ -26,7 +26,7 @@ const DEFAULT_CCI_TAGS = [
   'CCI-000366'
 ];
 
-const DEFAULT_NIST_TAGS = CCI2NIST(DEFAULT_CCI_TAGS, []);
+const DEFAULT_NIST_TAGS = CCI2NIST(DEFAULT_CCI_TAGS, []).map(({nist}) => nist);
 
 function asArray<T>(arg: T | T[]): T[] {
   if (Array.isArray(arg)) {
@@ -182,7 +182,9 @@ function cciAndNistTags(input: IIdent | IIdent[]): {
   const existingNists = extractNist(input);
 
   if (existingCcis.length > 0) {
-    const nistsFromMappedCcis = CCI2NIST(existingCcis, []);
+    const nistsFromMappedCcis = CCI2NIST(existingCcis, []).map(
+      ({nist}) => nist
+    );
     output.nist.push(...nistsFromMappedCcis);
     output.cci.push(...existingCcis);
     return output;
