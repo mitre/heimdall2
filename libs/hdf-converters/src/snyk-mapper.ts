@@ -8,10 +8,8 @@ import {
   MappedTransform
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  getCCIsForNISTTags
-} from './utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './mappings/CciNistMappingData';
+import {NIST2CCI} from './mappings/CciNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -117,8 +115,7 @@ export class SnykMapper extends BaseConverter {
             tags: {
               cci: {
                 path: CWE_PATH,
-                transformer: (cwe: unknown[]) =>
-                  getCCIsForNISTTags(nistTag(cwe))
+                transformer: (cwe: unknown[]) => NIST2CCI(nistTag(cwe))
               },
               nist: {path: CWE_PATH, transformer: nistTag},
               cweid: {path: CWE_PATH, transformer: parseIdentifier},

@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.9.4",
+    "release": "2.10.20",
     "target_id": "https://foo.bar/"
   },
-  "version": "2.9.4",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -19,7 +19,8 @@
         {
           "tags": {
             "cci": [
-              "CCI-002450",
+              "CCI-001144",
+              "CCI-002449",
               "CCI-000366"
             ],
             "nist": [
@@ -128,7 +129,7 @@
           ]
         }
       ],
-      "sha256": "72c3de0658489130b7996db42000ae1175d2b7ddd4d7f866e40d06af7050d6a3"
+      "sha256": "033b227e42a3d104b4bc5cddd97c2a92c757022fa440e56c0287569c881464c0"
     }
   ],
   "passthrough": {
