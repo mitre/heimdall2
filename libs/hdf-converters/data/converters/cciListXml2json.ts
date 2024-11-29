@@ -49,10 +49,9 @@ export interface ICCIList {
 }
 
 export type NistReference = {
-  version: string;
-  creator: string;
   title: string;
   nist: string;
+  version: string;
 };
 
 // Check that we're not doing `npm test`; it will look for the arguments to the input and output files.
@@ -130,24 +129,26 @@ function produceConversions(cciList: ICCIList): {
       /* There's 1 out of the 2000+ CCI controls where this index string is composed of at
       least 2 comma-and-space-separated controls found in the latest revision. */
       const {version, creator, index, title} = newestReference.$;
-      const nistIds = index
-        .split(/,\s*/)
-        .map(parse_nist)
-        .filter(is_control)
-        .map((n) => n.canonize());
+      if (creator === 'NIST') {
+        const nistIds = index
+          .split(/,\s*/)
+          .map(parse_nist)
+          .filter(is_control)
+          .map((n) => n.canonize());
 
-      _.set(
-        nists,
-        cciId,
-        nistIds.map((nist) => ({version, creator, title, nist}))
-      );
-      _.set(definitions, cciId, cciItem.definition[0]);
+        _.set(
+          nists,
+          cciId,
+          nistIds.map((nist) => ({version, title, nist}))
+        );
+        _.set(definitions, cciId, cciItem.definition[0]);
 
-      for (const nistId of nistIds) {
-        if (ccis[nistId] === undefined) {
-          ccis[nistId] = [cciId];
-        } else {
-          ccis[nistId].push(cciId);
+        for (const nistId of nistIds) {
+          if (ccis[nistId] === undefined) {
+            ccis[nistId] = [cciId];
+          } else {
+            ccis[nistId].push(cciId);
+          }
         }
       }
     } else {

@@ -7,7 +7,6 @@ export const CCI_TO_NIST: Record<string, NistReference[]> = cciToNistData;
 export const CCI_TO_DEFINITION: Record<string, string> = cciToDefinitionData;
 export const DEFAULT_NIST_REFERENCE: Omit<NistReference, 'nist'> = {
   version: '5',
-  creator: 'NIST',
   title: 'NIST SP 800-53 Revision 5'
 };
 
