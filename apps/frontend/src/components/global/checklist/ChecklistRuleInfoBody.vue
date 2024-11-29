@@ -28,9 +28,13 @@
       <div class="my-3 d-flex flex-column">
         <span class="text-overline white--text">References: </span>
         <div v-for="cci in selectedRule.cciRef.split('; ')" :key="cci">
-          {{ cci }}: {{ cciDescription(cci) }}
-          <div v-for="{version, nist, title} in nistReference(cci)" :key="nist">
-            {{ title }}, version {{ version }}
+          <span>{{ cci }}: {{ cciDescription(cci) }}</span>
+          <div
+            v-for="{version, nist, title} in nistReference(cci)"
+            :key="nist"
+            class="d-flex align-center"
+          >
+            <span class="mr-2">{{ title }}, version {{ version }}:</span>
             <v-chip :href="nistUrl(nist)" target="_blank" small>
               {{ nist || 'None' }}
             </v-chip>
