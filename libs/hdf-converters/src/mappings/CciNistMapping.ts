@@ -4,15 +4,20 @@ import {
   NIST_TO_CCI
 } from '../mappings/NistCciMappingData';
 import {is_control, parse_nist} from 'inspecjs';
-import {CCI_TO_NIST} from './CciNistMappingData';
+import {CCI_TO_NIST, DEFAULT_NIST_REFERENCE} from './CciNistMappingData';
+import {NistReference} from '../../data/converters/cciListXml2json';
 
 export function CCI2NIST(
   identifiers: string[],
   defaultCci2Nist: string[]
-): string[] {
-  const DEFAULT_NIST_TAGS = defaultCci2Nist;
-  const nists: string[] = _.uniq(
-    identifiers.flatMap((cci) => _.get(CCI_TO_NIST, cci, []))
+): NistReference[] {
+  const DEFAULT_NIST_TAGS = defaultCci2Nist.map((nist) => ({
+    nist,
+    ...DEFAULT_NIST_REFERENCE
+  }));
+  const nists: NistReference[] = _.uniqBy(
+    identifiers.flatMap((cci) => _.get(CCI_TO_NIST, cci, [])),
+    (ref) => ref.nist
   );
   return nists.length > 0 ? nists : DEFAULT_NIST_TAGS;
 }

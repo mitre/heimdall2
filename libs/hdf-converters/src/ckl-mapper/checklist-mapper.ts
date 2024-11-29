@@ -54,7 +54,9 @@ function cciRef(input: string): string[] {
  */
 function nistTag(input: string): string[] {
   const identifiers: string[] = cciRef(input);
-  return CCI2NIST(identifiers, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS);
+  return CCI2NIST(identifiers, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS).map(
+    ({nist}) => nist
+  );
 }
 
 /**
