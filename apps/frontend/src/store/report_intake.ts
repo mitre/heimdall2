@@ -14,6 +14,7 @@ import {
   ConveyorResults as ConveyorResultsMapper,
   CycloneDXSBOMResults,
   DBProtectMapper,
+  DependencyTrackMapper,
   fingerprint,
   FortifyMapper,
   GosecMapper,
@@ -286,6 +287,8 @@ export class InspecIntake extends VuexModule {
         return new AnchoreGrypeMapper(convertOptions.data).toHdf();
       case INPUT_TYPES.NEUVECTOR:
         return new NeuVectorMapper(convertOptions.data).toHdf();
+      case INPUT_TYPES.DEPENDENCY_TRACK:
+        return new DependencyTrackMapper(convertOptions.data).toHdf();
       default:
         return SnackbarModule.failure(
           `Invalid file uploaded (${filename}), no fingerprints matched.`

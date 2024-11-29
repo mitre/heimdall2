@@ -1,6 +1,6 @@
 {
   "name": "heimdall-server",
-  "version": "2.10.19",
+  "version": "2.10.20",
   "description": "",
   "license": "Apache-2.0",
   "author": "",
@@ -105,7 +105,7 @@
     "sequelize-typescript": "^2.0.0",
     "ts-loader": "^9.1.0",
     "tsx": "^4.7.1",
-    "uuid": "^10.0.0",
+    "uuid": "^11.0.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {
