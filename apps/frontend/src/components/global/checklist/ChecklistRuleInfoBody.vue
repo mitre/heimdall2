@@ -27,12 +27,12 @@
       <!-- Rule References -->
       <div class="my-3 d-flex flex-column">
         <span class="text-overline white--text">References: </span>
-        <div v-for="item in selectedRule.cciRef.split('; ')" :key="item">
-          {{ item }}: {{ cciDescription(item) }}
-          <div>
-            NIST 800-53 Rev 5.1.1:
-            <v-chip :href="nistUrl(item)" target="_blank" small>
-              {{ nistDisplay(item) || 'None' }}
+        <div v-for="cci in selectedRule.cciRef.split('; ')" :key="cci">
+          {{ cci }}: {{ cciDescription(cci) }}
+          <div v-for="{version, nist, title} in nistReference(cci)" :key="nist">
+            {{ title }}, version {{ version }}
+            <v-chip :href="nistUrl(nist)" target="_blank" small>
+              {{ nist || 'None' }}
             </v-chip>
           </div>
         </div>
@@ -118,17 +118,18 @@ import {
 import {ChecklistVuln} from '@mitre/hdf-converters';
 import {Component, Prop, Vue} from 'vue-property-decorator';
 import {is_control, NistControl, parse_nist} from 'inspecjs';
+import {NistReference} from '@mitre/hdf-converters/data/converters/cciListXml2json';
 
 @Component
 export default class ChecklistRuleInfoBody extends Vue {
   @Prop({type: Object, required: true}) readonly selectedRule!: ChecklistVuln;
 
-  nistTag(cci: string): string {
+  nistReference(cci: string): NistReference[] {
     return CCI_TO_NIST[cci];
   }
 
-  nistUrl(cci: string): string {
-    const control = [this.nistTag(cci)].map(parse_nist).filter(is_control)[0];
+  nistUrl(nist: string): string {
+    const control = [nist].map(parse_nist).filter(is_control)[0];
     const url = control.canonize({
       pad_zeros: true,
       add_periods: false,
@@ -174,10 +175,8 @@ export default class ChecklistRuleInfoBody extends Vue {
     return '';
   }
 
-  nistDisplay(cci: string): string {
-    const tag = [this.nistTag(cci)].map(parse_nist).filter(is_control)[0];
-    const display = tag.canonize();
-    return display;
+  nistDisplay(reference: NistReference): string {
+    return reference.nist;
   }
 
   cciDescription(cci: string): string {
