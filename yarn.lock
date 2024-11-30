@@ -2896,15 +2896,15 @@
   integrity sha512-znJ9Y4S8ZDVY+j4doWAJ8EuuVO7SkQN3yOBmzxbGaXbvcSwFDAdGJ+OMCg52NdzIO4tQoN4pYKx8W6M0ArfFRQ==
 
 "@nestjs/platform-express@^10.2.1":
-  version "10.4.11"
-  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-10.4.11.tgz#5c80ae93dda45c3bac146bc560e0307747661b9a"
-  integrity sha512-YjhoIOdCbpxy3p5Em2pqYsUY+5cpyocguCzMI91qh41/jTAUzBD25K+hAiMyENZXEkDyscoF8OajyZvWm1ihdQ==
+  version "10.4.12"
+  resolved "https://registry.yarnpkg.com/@nestjs/platform-express/-/platform-express-10.4.12.tgz#2a9c3ee053b29083e154d6622b8ded4e284da894"
+  integrity sha512-+m8BQas9mnY29Y6rZv8EUqIYwcta99/dTiGIUy48LB/+YoAyDTEHpsLd2+rpetk54niGgKJYclCZRUwRcjrYYA==
   dependencies:
     body-parser "1.20.3"
     cors "2.8.5"
     express "4.21.1"
     multer "1.4.4-lts.1"
-    tslib "2.7.0"
+    tslib "2.8.1"
 
 "@nestjs/schematics@^10.0.1", "@nestjs/schematics@^10.0.2":
   version "10.2.3"
