@@ -133,7 +133,7 @@
     "prismjs": "1.29.0"
   },
   "engines": {
-    "node": "^18.19.0"
+    "node": ">=22"
   },
   "branch": "/blob/master/",
   "changelog": "/releases",
