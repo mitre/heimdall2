@@ -43,6 +43,8 @@ services:
       - NODE_ENV=production
       - DATABASE_HOST=database
       - DATABASE_PASSWORD_FILE=/run/secrets/db_password
+      - JWT_SECRET=${JWT_SECRET}
+      - API_KEY_SECRET=${API_KEY_SECRET}
     env_file: .env
     ports:
       - "3000:3000"
@@ -92,7 +94,15 @@ secrets:
 #
 # 2. Ensure that the './secrets/db_password.txt' file is located in the 'secrets' directory relative to your 'docker-compose.yml' file.
 #
-# 3. The 'POSTGRES_PASSWORD_FILE' and 'DATABASE_PASSWORD_FILE' environment variables are used to point to the secret file within the container.
+# 3. Define the following environment variables in a '.env' file or export them in your shell:
+#    - JWT_SECRET: The secret key for JWT.
+#    - API_KEY_SECRET: The secret key for API keys.
+#    - NGINX_HOST: The hostname or IP address for the Nginx server.
+#
+#    Example content of '.env':
+#    JWT_SECRET=your_jwt_secret
+#    API_KEY_SECRET=your_api_key_secret
+#    NGINX_HOST=your_nginx_host
 #
 # 4. Use named volumes ('cert_bundles') for better management.
 #
