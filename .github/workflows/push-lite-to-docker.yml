@@ -27,4 +27,4 @@ jobs:
           file: Dockerfile.lite
           push: false # revert
           platforms: linux/amd64
-          tags: mitre/heimdall-lite:${{ github.sha }}
+          tags: mitre/heimdall-lite:${{ github.event.pull_request.head.sha }} # should be ${{ github.sha }} but pull requests are weird
