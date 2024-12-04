@@ -3,11 +3,23 @@ name: Push Heimdall Lite to Docker Hub on every merge to master and tag as lates
 on:
   push:
     branches: [master]
+  pull_request: # remove
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Docker tag'
+        required: false
 
 jobs:
   docker:
     runs-on: ubuntu-22.04
     steps:
+      - name: testing envvar
+        run: |
+          echo "var: $TAG :var"
+        env:
+          TAG: ${{ inputs.tag }}
       - name: Checkout the Heimdall Repository
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
