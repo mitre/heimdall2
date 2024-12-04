@@ -5,21 +5,11 @@ on:
     branches: [master]
   pull_request: # remove
     branches: [master]
-  workflow_dispatch:
-    inputs:
-      tag:
-        description: 'Docker tag'
-        required: false
 
 jobs:
   docker:
     runs-on: ubuntu-22.04
     steps:
-      - name: testing envvar
-        run: |
-          echo "var: $TAG :var"
-        env:
-          TAG: ${{ inputs.tag }}
       - name: Checkout the Heimdall Repository
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
@@ -37,4 +27,4 @@ jobs:
           file: Dockerfile.lite
           push: false # revert
           platforms: linux/amd64
-          tags: mitre/heimdall-lite:latest
+          tags: mitre/heimdall-lite:${{ github.sha }}
