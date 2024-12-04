@@ -4,7 +4,7 @@
     "release": "1.2 4.10.1",
     "target_id": ""
   },
-  "version": "2.10.3",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -101,7 +101,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "2d964faa-c9c3-4669-900e-0ea3de1a9282",
             "componentName": "angular",
@@ -387,7 +388,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "8d710299-44a4-4d86-8aeb-511a6f0bb50c",
             "componentName": "codemirror",
@@ -601,7 +603,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "3cbb9655-3c9f-4ebf-8e10-cc6cd166d518",
             "componentName": "dompurify",
@@ -671,7 +674,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "13a557b0-e268-4ad3-ab9f-08e6b885f3ac",
             "componentName": "jquery",
@@ -741,7 +745,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "13a557b0-e268-4ad3-ab9f-08e6b885f3ac",
             "componentName": "jquery",
@@ -811,7 +816,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "13a557b0-e268-4ad3-ab9f-08e6b885f3ac",
             "componentName": "jquery",
@@ -949,7 +955,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "b9b0c5c7-2425-44ba-b72c-e9090a9b6c78",
             "componentName": "jszip",
@@ -1163,7 +1170,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "0e429e88-cb90-48a4-a6f1-28141d661444",
             "componentName": "request",
@@ -1517,7 +1525,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "23ffe3f7-3ac3-4cef-a143-3919ac6fb649",
             "componentName": "lodash",
@@ -1661,7 +1670,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "c3c79e99-aa70-4ebb-a2eb-415617d1ce9f",
             "componentName": "moment",
@@ -1943,7 +1953,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "cbae89b8-3853-445f-ab70-c0e74161bda8",
             "componentName": "decode-uri-component",
@@ -2653,7 +2664,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "e597b5b7-66de-4529-8ea4-b2a5df60b09d",
             "componentName": "ws",
@@ -2795,7 +2807,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "4edc556b-e582-4e58-bce7-9661a6c3d6e5",
             "componentName": "node-notifier",
@@ -3005,7 +3018,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "df458bf7-3124-415c-9288-13371a43c913",
             "componentName": "shell-quote",
@@ -3219,6 +3233,7 @@
               "SC-8"
             ],
             "cci": [
+              "CCI-001127",
               "CCI-002418"
             ],
             "componentUuid": "37957277-2819-48d5-a22e-9e8749d0ccf9",
@@ -3361,7 +3376,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "cfe26516-46ec-40ef-9e7a-ac04c9a09553",
             "componentName": "tar",
@@ -3433,7 +3449,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "cfe26516-46ec-40ef-9e7a-ac04c9a09553",
             "componentName": "tar",
@@ -3505,7 +3522,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "cfe26516-46ec-40ef-9e7a-ac04c9a09553",
             "componentName": "tar",
@@ -3859,7 +3877,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "c89698f4-0d08-444d-9023-5d20bb7513c4",
             "componentName": "urijs",
@@ -3997,7 +4016,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "c89698f4-0d08-444d-9023-5d20bb7513c4",
             "componentName": "urijs",
@@ -4067,7 +4087,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "c89698f4-0d08-444d-9023-5d20bb7513c4",
             "componentName": "urijs",
@@ -4345,6 +4366,7 @@
               "SC-8"
             ],
             "cci": [
+              "CCI-001127",
               "CCI-002418"
             ],
             "componentUuid": "ab9b556b-ce53-49fe-8310-ebe933e8eb14",
@@ -4559,7 +4581,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "e68a28e6-bd81-4650-8877-b37e0b6e5d7d",
             "componentName": "ua-parser-js",
@@ -4758,7 +4781,7 @@
           ]
         }
       ],
-      "sha256": "f683db98bbff5073a9d20faf859676144c66d271436d88fae863704e55a3c933"
+      "sha256": "545c64ba1b5b74685c59884e321b6575ea5cd449848e453125ae633c9cbd1481"
     }
   ],
   "passthrough": {}

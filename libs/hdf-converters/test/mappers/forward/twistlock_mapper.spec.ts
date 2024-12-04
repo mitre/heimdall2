@@ -12,7 +12,7 @@ describe('twistlock_mapper', () => {
     );
 
     // fs.writeFileSync(
-    //   'sample_jsons/twistlock_mapper/twistlock-twistcli-sample-1-hdf.json',
+    // 'sample_jsons/twistlock_mapper/twistlock-hdf.json',
     //   JSON.stringify(mapper.toHdf(), null, 2)
     // );
 

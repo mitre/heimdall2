@@ -22,7 +22,7 @@
     "postpack:win32": "move package.json.orig package.json",
     "test": "jest",
     "csv2json": "tsx data/converters/csv2json.ts",
-    "xml2json": "tsx data/converters/xml2json.ts"
+    "cciListXml2json": "tsx data/converters/cciListXml2json.ts"
   },
   "dependencies": {
     "@aws-sdk/client-config-service": "^3.95.0",

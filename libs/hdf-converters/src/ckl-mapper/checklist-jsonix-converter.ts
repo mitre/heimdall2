@@ -1,7 +1,7 @@
 import {ExecJSON} from 'inspecjs';
 import _ from 'lodash';
 import {JsonixIntermediateConverter} from '../jsonix-intermediate-converter';
-import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
+import {NIST2CCI} from '../mappings/CciNistMapping';
 import {getDescription} from '../utils/global';
 import {
   Asset,
@@ -11,7 +11,7 @@ import {
   LocalPartEnum,
   Name,
   Role,
-  Severityoverride,
+  Severity,
   Sidata,
   Sidname,
   Status,
@@ -30,7 +30,7 @@ export type ChecklistObject = {
   jsonixData?: Checklist;
 };
 
-type ChecklistAsset = Asset;
+export type ChecklistAsset = Asset;
 
 export type ChecklistStig = {
   header: StigHeader;
@@ -87,7 +87,7 @@ export type ChecklistVuln = Omit<Vuln, 'stigdata' | 'status'> & {
 };
 
 // Status mapping for going to and from checklist
-enum StatusMapping {
+export enum StatusMapping {
   NotAFinding = 'Passed',
   Open = 'Failed',
   Not_Applicable = 'Not Applicable',
@@ -101,13 +101,6 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3],
   ['none', 0.0]
 ]);
-
-export enum Severity {
-  Empty = '',
-  High = 'high',
-  Low = 'low',
-  Medium = 'medium'
-}
 
 export type ChecklistMetadata = {
   marking: string;
@@ -195,7 +188,7 @@ export const EmptyChecklistObject: ChecklistObject = {
           comments: null,
           findingdetails: null,
           severityjustification: null,
-          severityoverride: Severityoverride.Empty
+          severityoverride: Severity.Empty
         }
       ]
     }
@@ -264,6 +257,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
     const results = data.filter((attribute: T) => {
       return _.get(attribute, keyName) == tag;
     });
+    // This produces a string that looks like '' or /(w+); (w+)/.
     return results.map((result: T) => _.get(result, dataName)).join('; ');
   }
 
@@ -632,10 +626,9 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
 
   matchNistToCcis(nistRefs: string[]): string[] {
     if (!nistRefs) {
-      return [''];
+      return [];
     }
-    const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
-    return CCI_NIST_TWO_WAY_MAPPER.cciFilter(nistRefs, ['']);
+    return NIST2CCI(nistRefs);
   }
 
   getComments(descriptions: ExecJSON.ControlDescription[]): string {
@@ -808,12 +801,12 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
         severityjustification: _.get(
           control.tags,
           'severityjustification',
-          Severityoverride.Empty
+          Severity.Empty
         ),
         severityoverride: _.get(
           control.tags,
           'severityoverride',
-          Severityoverride.Empty
+          Severity.Empty
         )
       };
       vulns.push(vuln);
