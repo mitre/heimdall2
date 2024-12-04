@@ -35,6 +35,6 @@ jobs:
         with:
           context: .
           file: Dockerfile.lite
-          push: true
+          push: false # revert
           platforms: linux/amd64
           tags: mitre/heimdall-lite:latest
