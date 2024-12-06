@@ -1,15 +1,20 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.18"
+    "release": "2.10.19"
   },
-  "version": "2.10.18",
+  "version": "2.10.19",
   "statistics": {},
   "profiles": [
     {
       "name": "NeuVector Scan",
       "title": "https://registry.hub.docker.com/mitre/heimdall2:latest - Digest: sha256:ae8e58548bb13f1aa5df8aeea51cddf118e163fbe0163165d04552de0bf0ac0a - Image ID: 756f9a308b59ec6a0812ba49f958f2a3f4f0833afc9a3df23afe58f502db10aa",
-      "supports": [],
+      "supports": [
+        {
+          "platform-name": "rhel",
+          "release": "8"
+        }
+      ],
       "attributes": [],
       "groups": [],
       "status": "loaded",
@@ -4936,9 +4941,67 @@
               "start_time": ""
             }
           ]
+        },
+        {
+          "tags": {
+            "category": "image",
+            "type": "image",
+            "profile": "Level 1",
+            "scored": "false",
+            "automated": "false",
+            "remediation": "",
+            "level": "WARN",
+            "cmds": "CMD [\"/usr/local/bin/cmd.sh\"]\nUSER 1001\nCOPY --chmod=755 cmd.sh /usr/local/bin/ # buildkit\nCOPY --chown=1001 /src/dist/ dist/ # buildkit\nCOPY --chown=1001 /src/apps/backend/dist apps/backend/dist # buildkit\nCOPY --chown=1001 /src/libs/password-complexity/ libs/password-complexity # buildkit\nCOPY --chown=1001 /src/apps/backend/seeders apps/backend/seeders # buildkit\nCOPY --chown=1001 /src/apps/backend/migrations apps/backend/migrations # buildkit\nCOPY --chown=1001 /src/apps/backend/config apps/backend/config # buildkit\nCOPY --chown=1001 /src/apps/backend/db apps/backend/db # buildkit\nCOPY --chown=1001 /src/apps/backend/.sequelizerc apps/backend/ # buildkit\nCOPY --chown=1001 /src/apps/backend/node_modules apps/backend/node_modules # buildkit\nCOPY --chown=1001 /src/apps/backend/package.json apps/backend/ # buildkit\nCOPY --chown=1001 /src/package.json ./ # buildkit\nRUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.* # buildkit\nWORKDIR /app\nUSER 0\nENV NODE_ENV=production\nARG NODE_ENV=production\nEXPOSE map[3000/tcp:{}]\nUSER 1001\nRUN mv -fZ /tmp/ubi.repo /etc/yum.repos.d/ubi.repo || :\nUSER root\nUSER 1001\nRUN rm -f /tmp/tls-ca-bundle.pem\nRUN rm -f '/etc/yum.repos.d/odcs-3442251-e7456.repo'\nUSER root\nLABEL \"release\"=\"128.1725330794\" \"distribution-scope\"=\"public\" \"vendor\"=\"Red Hat, Inc.\" \"build-date\"=\"2024-09-03T02:34:03\" \"architecture\"=\"x86_64\" \"vcs-type\"=\"git\" \"vcs-ref\"=\"ed55a1e31785cb589887885082e15145666bd573\" \"url\"=\"https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8/nodejs-18-minimal/images/1-128.1725330794\"\nADD file:eaeb5130bea91aca8b8f0adb9c562241193d2429da656d379517ea596a339ce9 in /root/buildinfo/Dockerfile-ubi8-nodejs-18-minimal-1-128.1725330794\nADD file:5da8a8bde7c7afbcec865e4c3047eccc1d38cb8b75042f1b3adb8d6572f1f730 in /root/buildinfo/content_manifests/nodejs-18-minimal-container-1-128.1725330794.json\nADD file:3009d1d727725ea9fb6e44f08cc76721d4ff04918aa725b34847fcde963b7154 in /help.1\nUSER 1001\nWORKDIR \"$HOME\"\nRUN mkdir -p \"$HOME\" && chown -R 1001:0 \"$APP_ROOT\" && chmod -R ug+rwx \"$APP_ROOT\"\nCOPY dir:fe4e9034259501521ced258ae36b98bc6cc475e0e34364c8a17e53447c145be1 in /\nCOPY dir:b5a1f1317e0040e7a730c0b1d8cf8a9fa419afa1662d666632dac699455512f1 in /usr/libexec/s2i\nRUN INSTALL_PKGS=\"nodejs nodejs-nodemon nodejs-full-i18n npm findutils tar which\" &&     microdnf -y module disable nodejs &&     microdnf -y module enable nodejs:$NODEJS_VERSION &&     microdnf --nodocs --setopt=install_weak_deps=0 install $INSTALL_PKGS &&     node -v | grep -qe \"^v$NODEJS_VERSION\\.\" && echo \"Found VERSION $NODEJS_VERSION\" &&     microdnf clean all &&     rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*\nLABEL summary=\"$SUMMARY\"       description=\"$DESCRIPTION\"       io.k8s.description=\"$DESCRIPTION\"       io.k8s.display-name=\"Node.js $NODEJS_VERSION Minimal\"       io.openshift.expose-services=\"8080:http\"       io.openshift.tags=\"builder,$NAME,${NAME}${NODEJS_VERSION}\"       io.openshift.s2i.scripts-url=\"image:///usr/libexec/s2i\"       io.s2i.scripts-url=\"image:///usr/libexec/s2i\"       com.redhat.dev-mode=\"DEV_MODE:false\"       com.redhat.deployments-dir=\"${APP_ROOT}/src\"       com.redhat.dev-mode.port=\"DEBUG_PORT:5858\"       com.redhat.component=\"${NAME}-${NODEJS_VERSION}-minimal-container\"       name=\"ubi8/$NAME-$NODEJS_VERSION-minimal\"       version=\"1\"       com.redhat.license_terms=\"https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI\"       maintainer=\"SoftwareCollections.org <sclorg@redhat.com>\"       help=\"For more information visit https://github.com/sclorg/s2i-nodejs-container\"\nENV SUMMARY=\"Minimal image for running Node.js $NODEJS_VERSION applications\"     DESCRIPTION=\"Node.js $NODEJS_VERSION available as container is a base platform for running various Node.js $NODEJS_VERSION applications and frameworks. Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.\"     NPM_CONFIG_PREFIX=$HOME/.npm-global     PATH=$HOME/node_modules/.bin/:$HOME/.npm-global/bin/:$PATH\nENV APP_ROOT=/opt/app-root     HOME=/opt/app-root/src     NPM_RUN=start     PLATFORM=\"el8\"     NODEJS_VERSION=18     NPM_RUN=start     NAME=nodejs\nEXPOSE 8080\nADD file:2660c1111176153e62928ea72cad5f0074133db91f3e296cbaf71f765f1f7bfd in /etc/yum.repos.d/\nADD file:5b1f650e1376d79fa3a65df4a154ea5166def95154b52c1c1097dfd8fc7d58eb in /tmp/tls-ca-bundle.pem\nRUN mv -f /etc/yum.repos.d/ubi.repo /tmp || :\nRUN mv -fZ /tmp/ubi.repo /etc/yum.repos.d/ubi.repo || :\nRUN rm -f /tmp/tls-ca-bundle.pem\nRUN rm -f '/etc/yum.repos.d/odcs-3398671-876ba.repo' '/etc/yum.repos.d/rhel-8.10-compose-0e878.repo'\nLABEL \"release\"=\"1052.1724178568\" \"distribution-scope\"=\"public\" \"vendor\"=\"Red Hat, Inc.\" \"build-date\"=\"2024-08-20T18:30:35\" \"architecture\"=\"x86_64\" \"vcs-type\"=\"git\" \"vcs-ref\"=\"4f8da2b64a13f2a264bd802d8909bf803211fb20\" \"io.k8s.description\"=\"The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.\" \"url\"=\"https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8-minimal/images/8.10-1052.1724178568\"\nADD file:849b71c9f9737769080a3214428c39267a1aa9f20785f4c781f1778b56b956e6 in /root/buildinfo/Dockerfile-ubi8-minimal-8.10-1052.1724178568\nADD file:c8ca5f484763321cd5e7b342c283d53c3b929c2eacba0494bcd589c978dc2fe1 in /root/buildinfo/content_manifests/ubi8-minimal-container-8.10-1052.1724178568.json\nRUN rm -rf /var/log/*\nCMD [\"/bin/bash\"]\nENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nENV container oci\nLABEL io.openshift.tags=\"minimal rhel8\"\nLABEL io.openshift.expose-services=\"\"\nLABEL io.k8s.display-name=\"Red Hat Universal Base Image 8 Minimal\"\nLABEL description=\"The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.\"\nLABEL summary=\"Provides the latest release of the minimal Red Hat Universal Base Image 8.\"\nLABEL com.redhat.license_terms=\"https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI\"\nLABEL com.redhat.component=\"ubi8-minimal-container\"       name=\"ubi8-minimal\"       version=\"8.10\"\nLABEL maintainer=\"Red Hat, Inc.\"\nADD multi:d43053580c8e29293fe7178a18c2e44f1578d681ef94e964f4e0e14ef093ace4 in /etc/yum.repos.d/\nADD file:5b1f650e1376d79fa3a65df4a154ea5166def95154b52c1c1097dfd8fc7d58eb in /tmp/tls-ca-bundle.pem\nRUN mv -f /etc/yum.repos.d/ubi.repo /tmp || :\nADD file:0198ad3c1b345f6da74b55236cbce4779329b401acb32e81092e46f6ec5b87d0 in /"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "CIS Docker Benchmark I.4.9",
+          "id": "I.4.9",
+          "desc": "Ensure that COPY is used instead of ADD in Dockerfiles",
+          "impact": 1,
+          "code": null,
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "Requires manual review.",
+              "run_time": null,
+              "start_time": "",
+              "skip_message": "Requires manual review."
+            }
+          ]
+        },
+        {
+          "tags": {
+            "category": "image",
+            "type": "image",
+            "profile": "Level 1",
+            "scored": "false",
+            "automated": "false",
+            "remediation": "",
+            "level": "WARN",
+            "cmds": "CMD [\"/usr/local/bin/cmd.sh\"]\nUSER 1001\nCOPY --chmod=755 cmd.sh /usr/local/bin/ # buildkit\nCOPY --chown=1001 /src/dist/ dist/ # buildkit\nCOPY --chown=1001 /src/apps/backend/dist apps/backend/dist # buildkit\nCOPY --chown=1001 /src/libs/password-complexity/ libs/password-complexity # buildkit\nCOPY --chown=1001 /src/apps/backend/seeders apps/backend/seeders # buildkit\nCOPY --chown=1001 /src/apps/backend/migrations apps/backend/migrations # buildkit\nCOPY --chown=1001 /src/apps/backend/config apps/backend/config # buildkit\nCOPY --chown=1001 /src/apps/backend/db apps/backend/db # buildkit\nCOPY --chown=1001 /src/apps/backend/.sequelizerc apps/backend/ # buildkit\nCOPY --chown=1001 /src/apps/backend/node_modules apps/backend/node_modules # buildkit\nCOPY --chown=1001 /src/apps/backend/package.json apps/backend/ # buildkit\nCOPY --chown=1001 /src/package.json ./ # buildkit\nRUN curl -sL https://dl.yarnpkg.com/rpm/yarn.repo -o /etc/yum.repos.d/yarn.repo && microdnf install -y yarn && microdnf clean all && rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.* # buildkit\nWORKDIR /app\nUSER 0\nENV NODE_ENV=production\nARG NODE_ENV=production\nEXPOSE map[3000/tcp:{}]\nUSER 1001\nRUN mv -fZ /tmp/ubi.repo /etc/yum.repos.d/ubi.repo || :\nUSER root\nUSER 1001\nRUN rm -f /tmp/tls-ca-bundle.pem\nRUN rm -f '/etc/yum.repos.d/odcs-3442251-e7456.repo'\nUSER root\nLABEL \"release\"=\"128.1725330794\" \"distribution-scope\"=\"public\" \"vendor\"=\"Red Hat, Inc.\" \"build-date\"=\"2024-09-03T02:34:03\" \"architecture\"=\"x86_64\" \"vcs-type\"=\"git\" \"vcs-ref\"=\"ed55a1e31785cb589887885082e15145666bd573\" \"url\"=\"https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8/nodejs-18-minimal/images/1-128.1725330794\"\nADD file:eaeb5130bea91aca8b8f0adb9c562241193d2429da656d379517ea596a339ce9 in /root/buildinfo/Dockerfile-ubi8-nodejs-18-minimal-1-128.1725330794\nADD file:5da8a8bde7c7afbcec865e4c3047eccc1d38cb8b75042f1b3adb8d6572f1f730 in /root/buildinfo/content_manifests/nodejs-18-minimal-container-1-128.1725330794.json\nADD file:3009d1d727725ea9fb6e44f08cc76721d4ff04918aa725b34847fcde963b7154 in /help.1\nUSER 1001\nWORKDIR \"$HOME\"\nRUN mkdir -p \"$HOME\" && chown -R 1001:0 \"$APP_ROOT\" && chmod -R ug+rwx \"$APP_ROOT\"\nCOPY dir:fe4e9034259501521ced258ae36b98bc6cc475e0e34364c8a17e53447c145be1 in /\nCOPY dir:b5a1f1317e0040e7a730c0b1d8cf8a9fa419afa1662d666632dac699455512f1 in /usr/libexec/s2i\nRUN INSTALL_PKGS=\"nodejs nodejs-nodemon nodejs-full-i18n npm findutils tar which\" &&     microdnf -y module disable nodejs &&     microdnf -y module enable nodejs:$NODEJS_VERSION &&     microdnf --nodocs --setopt=install_weak_deps=0 install $INSTALL_PKGS &&     node -v | grep -qe \"^v$NODEJS_VERSION\\.\" && echo \"Found VERSION $NODEJS_VERSION\" &&     microdnf clean all &&     rm -rf /mnt/rootfs/var/cache/* /mnt/rootfs/var/log/dnf* /mnt/rootfs/var/log/yum.*\nLABEL summary=\"$SUMMARY\"       description=\"$DESCRIPTION\"       io.k8s.description=\"$DESCRIPTION\"       io.k8s.display-name=\"Node.js $NODEJS_VERSION Minimal\"       io.openshift.expose-services=\"8080:http\"       io.openshift.tags=\"builder,$NAME,${NAME}${NODEJS_VERSION}\"       io.openshift.s2i.scripts-url=\"image:///usr/libexec/s2i\"       io.s2i.scripts-url=\"image:///usr/libexec/s2i\"       com.redhat.dev-mode=\"DEV_MODE:false\"       com.redhat.deployments-dir=\"${APP_ROOT}/src\"       com.redhat.dev-mode.port=\"DEBUG_PORT:5858\"       com.redhat.component=\"${NAME}-${NODEJS_VERSION}-minimal-container\"       name=\"ubi8/$NAME-$NODEJS_VERSION-minimal\"       version=\"1\"       com.redhat.license_terms=\"https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI\"       maintainer=\"SoftwareCollections.org <sclorg@redhat.com>\"       help=\"For more information visit https://github.com/sclorg/s2i-nodejs-container\"\nENV SUMMARY=\"Minimal image for running Node.js $NODEJS_VERSION applications\"     DESCRIPTION=\"Node.js $NODEJS_VERSION available as container is a base platform for running various Node.js $NODEJS_VERSION applications and frameworks. Node.js is a platform built on Chrome's JavaScript runtime for easily building fast, scalable network applications. Node.js uses an event-driven, non-blocking I/O model that makes it lightweight and efficient, perfect for data-intensive real-time applications that run across distributed devices.\"     NPM_CONFIG_PREFIX=$HOME/.npm-global     PATH=$HOME/node_modules/.bin/:$HOME/.npm-global/bin/:$PATH\nENV APP_ROOT=/opt/app-root     HOME=/opt/app-root/src     NPM_RUN=start     PLATFORM=\"el8\"     NODEJS_VERSION=18     NPM_RUN=start     NAME=nodejs\nEXPOSE 8080\nADD file:2660c1111176153e62928ea72cad5f0074133db91f3e296cbaf71f765f1f7bfd in /etc/yum.repos.d/\nADD file:5b1f650e1376d79fa3a65df4a154ea5166def95154b52c1c1097dfd8fc7d58eb in /tmp/tls-ca-bundle.pem\nRUN mv -f /etc/yum.repos.d/ubi.repo /tmp || :\nRUN mv -fZ /tmp/ubi.repo /etc/yum.repos.d/ubi.repo || :\nRUN rm -f /tmp/tls-ca-bundle.pem\nRUN rm -f '/etc/yum.repos.d/odcs-3398671-876ba.repo' '/etc/yum.repos.d/rhel-8.10-compose-0e878.repo'\nLABEL \"release\"=\"1052.1724178568\" \"distribution-scope\"=\"public\" \"vendor\"=\"Red Hat, Inc.\" \"build-date\"=\"2024-08-20T18:30:35\" \"architecture\"=\"x86_64\" \"vcs-type\"=\"git\" \"vcs-ref\"=\"4f8da2b64a13f2a264bd802d8909bf803211fb20\" \"io.k8s.description\"=\"The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.\" \"url\"=\"https://access.redhat.com/containers/#/registry.access.redhat.com/ubi8-minimal/images/8.10-1052.1724178568\"\nADD file:849b71c9f9737769080a3214428c39267a1aa9f20785f4c781f1778b56b956e6 in /root/buildinfo/Dockerfile-ubi8-minimal-8.10-1052.1724178568\nADD file:c8ca5f484763321cd5e7b342c283d53c3b929c2eacba0494bcd589c978dc2fe1 in /root/buildinfo/content_manifests/ubi8-minimal-container-8.10-1052.1724178568.json\nRUN rm -rf /var/log/*\nCMD [\"/bin/bash\"]\nENV PATH /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\nENV container oci\nLABEL io.openshift.tags=\"minimal rhel8\"\nLABEL io.openshift.expose-services=\"\"\nLABEL io.k8s.display-name=\"Red Hat Universal Base Image 8 Minimal\"\nLABEL description=\"The Universal Base Image Minimal is a stripped down image that uses microdnf as a package manager. This base image is freely redistributable, but Red Hat only supports Red Hat technologies through subscriptions for Red Hat products. This image is maintained by Red Hat and updated regularly.\"\nLABEL summary=\"Provides the latest release of the minimal Red Hat Universal Base Image 8.\"\nLABEL com.redhat.license_terms=\"https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI\"\nLABEL com.redhat.component=\"ubi8-minimal-container\"       name=\"ubi8-minimal\"       version=\"8.10\"\nLABEL maintainer=\"Red Hat, Inc.\"\nADD multi:d43053580c8e29293fe7178a18c2e44f1578d681ef94e964f4e0e14ef093ace4 in /etc/yum.repos.d/\nADD file:5b1f650e1376d79fa3a65df4a154ea5166def95154b52c1c1097dfd8fc7d58eb in /tmp/tls-ca-bundle.pem\nRUN mv -f /etc/yum.repos.d/ubi.repo /tmp || :\nADD file:0198ad3c1b345f6da74b55236cbce4779329b401acb32e81092e46f6ec5b87d0 in /"
+          },
+          "descriptions": [],
+          "refs": [],
+          "source_location": {},
+          "title": "CIS Docker Benchmark I.4.6",
+          "id": "I.4.6",
+          "desc": "Ensure that HEALTHCHECK instructions have been added to container images",
+          "impact": 1,
+          "code": null,
+          "results": [
+            {
+              "status": "skipped",
+              "code_desc": "Requires manual review.",
+              "run_time": null,
+              "start_time": "",
+              "skip_message": "Requires manual review."
+            }
+          ]
         }
       ],
-      "sha256": "237f37b61123b607780c10aaf577950e044f69e6292ac0b3e32fbb3704dc5701"
+      "sha256": "ccffe941d11d6afa77d45ca20c401daa067f29fd02d887c8948c036a53af803e"
     }
   ],
   "passthrough": {
