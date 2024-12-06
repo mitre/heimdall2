@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.8"
+    "release": "2.10.20"
   },
-  "version": "2.10.8",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -27,7 +27,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "high",
             "weight": "10.0",
@@ -70,7 +70,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -118,10 +118,10 @@
               "CCI-001388"
             ],
             "nist": [
-              "AC-8 a",
-              "AC-8 c 1",
-              "AC-8 c 2",
-              "AC-8 c 3"
+              "AC-8 a.",
+              "AC-8 c. (1)",
+              "AC-8 c. (2)",
+              "AC-8 c. (3)"
             ],
             "severity": "critical",
             "weight": "10.0",
@@ -205,7 +205,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "medium",
             "weight": "10.0",
@@ -246,7 +246,7 @@
               "CCI-000366"
             ],
             "nist": [
-              "CM-6 b"
+              "CM-6 b."
             ],
             "severity": "low",
             "weight": "10.0",
@@ -329,7 +329,7 @@
               "CCI-002235"
             ],
             "nist": [
-              "CM-6 b",
+              "CM-6 b.",
               "AC-6 (10)"
             ],
             "severity": "high",
@@ -372,7 +372,7 @@
               "CCI-002235"
             ],
             "nist": [
-              "CM-6 b",
+              "CM-6 b.",
               "AC-6 (10)"
             ],
             "severity": "high",
@@ -415,7 +415,7 @@
               "CCI-002235"
             ],
             "nist": [
-              "CM-6 b",
+              "CM-6 b.",
               "AC-6 (10)"
             ],
             "severity": "medium",
@@ -489,7 +489,7 @@
           ]
         }
       ],
-      "sha256": "cd0150021884813f964483b2e543dd6458e106d0c6fa125852991525a9c1e0f8"
+      "sha256": "46bc529603dc54e516c81e1ab622090acf3740b896d02fffaaafd088dc762aaa"
     }
   ],
   "passthrough": {

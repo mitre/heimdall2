@@ -10,10 +10,8 @@ import {
   parseXml
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  getCCIsForNISTTags
-} from './utils/global';
+import {NIST2CCI} from './mappings/CciNistMapping';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './mappings/CciNistMappingData';
 
 // Constant
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -109,7 +107,7 @@ export class BurpSuiteMapper extends BaseConverter {
               },
               cci: {
                 path: 'vulnerabilityClassifications',
-                transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
+                transformer: (data: string) => NIST2CCI(nistTag(data))
               },
               confidence: {path: 'confidence'}
             },
