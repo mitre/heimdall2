@@ -8,8 +8,7 @@ import {
   ILookupPath,
   MappedTransform
 } from '../base-converter';
-import {CciNistTwoWayMapper} from '../mappings/CciNistMapping';
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
+import {CCI2NIST} from '../mappings/CciNistMapping';
 import {
   ChecklistJsonixConverter,
   ChecklistObject,
@@ -21,6 +20,7 @@ import {Checklist} from './checklistJsonix';
 import {jsonixMapping} from './jsonixMapping';
 import {throwIfInvalidAssetMetadata} from './checklist-metadata-utils';
 import {parseJson} from '../utils/parseJson';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../mappings/CciNistMappingData';
 
 enum ImpactMapping {
   high = 0.7,
@@ -28,15 +28,22 @@ enum ImpactMapping {
   low = 0.3
 }
 
-const CCI_NIST_TWO_WAY_MAPPER = new CciNistTwoWayMapper();
-
 /**
- * Tranformer function that splits a string and return array
+ * Transformer function that splits a string and return array
  * @param input - string of CCI references
  * @returns ref - array of CCI references
  */
 function cciRef(input: string): string[] {
-  return input.split('; ');
+  /* Input string from CKL->jsonix could look like '' or 'CCI-001234; CCI-005678'.
+  The former comes from this tag in the originating CKL:
+  <STIG_DATA>
+    <VULN_ATTRIBUTE>CCI_REF</VULN_ATTRIBUTE>
+    <ATTRIBUTE_DATA></ATTRIBUTE_DATA>
+  </STIG_DATA>
+  */
+  const CCI_REGEX = /CCI-(\d*)/g;
+  const foundCcis = input.match(CCI_REGEX);
+  return foundCcis || [];
 }
 
 /**
@@ -47,9 +54,8 @@ function cciRef(input: string): string[] {
  */
 function nistTag(input: string): string[] {
   const identifiers: string[] = cciRef(input);
-  return CCI_NIST_TWO_WAY_MAPPER.nistFilter(
-    identifiers,
-    DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
+  return CCI2NIST(identifiers, DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS).map(
+    ({nist}) => nist
   );
 }
 
