@@ -8457,10 +8457,10 @@ cypress-wait-until@^3.0.2:
   resolved "https://registry.yarnpkg.com/cypress-wait-until/-/cypress-wait-until-3.0.2.tgz#c90dddfa4c46a2c422f5b91d486531c560bae46e"
   integrity sha512-iemies796dD5CgjG5kV0MnpEmKSH+s7O83ZoJLVzuVbZmm4lheMsZqAVT73hlMx4QlkwhxbyUzhOBUOZwoOe0w==
 
-cypress@13.16.1:
-  version "13.16.1"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-13.16.1.tgz#82e776f6ad2037ccce6b6feabed768615c476258"
-  integrity sha512-17FtCaz0cx7ssWYKXzGB0Vub8xHwpVPr+iPt2fHhLMDhVAPVrplD+rTQsZUsfb19LVBn5iwkEUFjQ1yVVJXsLA==
+cypress@13.17.0:
+  version "13.17.0"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-13.17.0.tgz#34c3d68080c4497eace0f353bd1629587a5f600d"
+  integrity sha512-5xWkaPurwkIljojFidhw8lFScyxhtiFHl/i/3zov+1Z5CmY4t9tjIdvSXfu82Y3w7wt0uR9KkucbhkVvJZLQSA==
   dependencies:
     "@cypress/request" "^3.0.6"
     "@cypress/xvfb" "^1.2.4"
