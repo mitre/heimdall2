@@ -3,6 +3,8 @@ name: Push Heimdall Lite to Docker Hub on every merge to master and tag as lates
 on:
   push:
     branches: [master]
+  pull_request: # remove
+    branches: [master]
 
 jobs:
   docker:
@@ -23,6 +25,6 @@ jobs:
         with:
           context: .
           file: Dockerfile.lite
-          push: true
+          push: false # revert
           platforms: linux/amd64
-          tags: mitre/heimdall-lite:latest
+          tags: mitre/heimdall-lite:latest,mitre/heimdall-lite:${{ github.event.pull_request.head.sha }} # should be ${{ github.sha }} but pull requests are weird
