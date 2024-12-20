@@ -3,10 +3,8 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  getCCIsForNISTTags
-} from './utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './mappings/CciNistMappingData';
+import {NIST2CCI} from './mappings/CciNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['error', 0.7],
@@ -76,8 +74,8 @@ export class SarifMapper extends BaseConverter {
             key: 'id',
             tags: {
               cci: {
-                path: 'vulnerabilityClassifications',
-                transformer: (data: string) => getCCIsForNISTTags(nistTag(data))
+                path: MESSAGE_TEXT,
+                transformer: (data: string) => NIST2CCI(nistTag(data))
               },
               nist: {path: MESSAGE_TEXT, transformer: nistTag},
               cwe: {

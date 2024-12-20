@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.29",
+    "release": "2.10.20",
     "target_id": "Host: zero.webappsecurity.com Port: 443"
   },
-  "version": "2.6.29",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -28,7 +28,7 @@
               "CCI-003173",
               "CCI-001643"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -57,7 +57,7 @@
               "CCI-003173",
               "CCI-001643"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -86,7 +86,7 @@
               "CCI-003173",
               "CCI-001643"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -115,7 +115,7 @@
               "CCI-003173",
               "CCI-001643"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -144,7 +144,7 @@
               "CCI-003173",
               "CCI-001643"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -173,7 +173,7 @@
               "CCI-003173",
               "CCI-001643"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -202,7 +202,7 @@
               "CCI-003173",
               "CCI-001643"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -227,7 +227,7 @@
             "cci": [
               "CCI-002605"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -252,7 +252,7 @@
             "cci": [
               "CCI-002605"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -277,7 +277,7 @@
             "cci": [
               "CCI-002605"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -302,7 +302,7 @@
             "cci": [
               "CCI-002605"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -325,9 +325,10 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -356,7 +357,7 @@
               "CCI-003173",
               "CCI-001643"
             ],
-            "ösvdb": "0"
+            "osvdb": "0"
           },
           "refs": [],
           "source_location": {},
@@ -385,7 +386,7 @@
               "CCI-003173",
               "CCI-001643"
             ],
-            "ösvdb": "877"
+            "osvdb": "877"
           },
           "refs": [],
           "source_location": {},
@@ -403,7 +404,7 @@
           ]
         }
       ],
-      "sha256": "2fc562d0d6cb427168348a5bda0e9b8dd1cac0365a1f171b40c1c92ac23cbf27"
+      "sha256": "0ba662adf97800e8cf18a21831648b0e4a209cfa52e36e21720580db91fdc07a"
     }
   ],
   "passthrough": {
