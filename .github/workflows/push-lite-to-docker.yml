@@ -28,3 +28,7 @@ jobs:
           push: false # revert
           platforms: linux/amd64
           tags: mitre/heimdall-lite:latest,mitre/heimdall-lite:${{ github.event.pull_request.head.sha }} # should be ${{ github.sha }} but pull requests are weird
+      - name: Get Docker SHA
+        shell: bash
+        id: get-docker-sha
+        run: echo "DOCKER_SHA=$(docker pull mitre/heimdall2:${{ github.event.pull_request.head.sha }} > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ github.event.pull_request.head.sha }} | cut -d '@' -f 2)" >> $GITHUB_ENV # this line will need to be changed too to get rid of the pull request stuff
