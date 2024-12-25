@@ -10,8 +10,8 @@ jobs:
   docker:
     runs-on: ubuntu-22.04
     steps:
-      # - name: Checkout the Heimdall Repository
-      #   uses: actions/checkout@v4
+      - name: Checkout the Heimdall Repository
+        uses: actions/checkout@v4
       # - name: Set up Docker Buildx
       #   uses: docker/setup-buildx-action@v3
       # - name: Login to DockerHub
@@ -32,6 +32,13 @@ jobs:
       #   shell: bash
       #   id: get-docker-sha
       #   run: echo "DOCKER_SHA=$(docker pull mitre/heimdall2:${{ github.event.pull_request.head.sha }} > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ github.event.pull_request.head.sha }} | cut -d '@' -f 2)" >> $GITHUB_ENV # this line will need to be changed too to get rid of the pull request stuff
+
+      - name: directory structure
+        run: |
+          pwd
+          ls
+          ls ../
+          echo $GITHUB_WORKSPACE
 
       - name: Clone Iron Bank repo
         run: |
