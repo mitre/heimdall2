@@ -33,14 +33,12 @@ jobs:
       #   id: get-docker-sha
       #   run: echo "DOCKER_SHA=$(docker pull mitre/heimdall2:${{ github.event.pull_request.head.sha }} > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ github.event.pull_request.head.sha }} | cut -d '@' -f 2)" >> $GITHUB_ENV # this line will need to be changed too to get rid of the pull request stuff
 
-      - name: directory structure
-        working-directory: ../ironbank_heimdall
-        run: |
-          pwd
-          echo "does this actually make the dir?"
+      - name: Make working dir for Iron Bank changes
+        run: mkdir ../ironbank_heimdall
 
       - name: Clone Iron Bank repo
+        working-directory: ../ironbank_heimdall
         run: |
-          # cd ../
-          # mkdir ironbank_heimdall
-          docker run -e GITLAB_HOST=repo1.dso.mil -e GITLAB_USERNAME=amann -e GITLAB_TOKEN="{{ secrets.REPO1_PAT_AMANN_MAXIMAL }}" -v ironbank_heimdall:/ironbank_heimdall gitlab/glab glab repo clone https://amann:{{ secrets.REPO1_PAT_AMANN_MAXIMAL }}@repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git /ironbank_heimdall
+          git clone https://repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git .
+          ls
+          pwd
