@@ -36,4 +36,4 @@ jobs:
       - name: Clone Iron Bank repo
         run: |
           mkdir ironbank_heimdall
-          docker run -e GITLAB_HOST=repo1.dso.mil -v ironbank_heimdall:/ironbank_heimdall gitlab/glab glab repo clone https://amann:{{ secrets.REPO1_PAT_AMANN_MINIMAL }}@repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git /ironbank_heimdall
+          docker run -e GITLAB_HOST=repo1.dso.mil -e GITLAB_USERNAME=amann -e GITLAB_TOKEN={{ secrets.REPO1_PAT_AMANN_MINIMAL }} -v ironbank_heimdall:/ironbank_heimdall gitlab/glab glab repo clone https://amann:{{ secrets.REPO1_PAT_AMANN_MINIMAL }}@repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git /ironbank_heimdall
