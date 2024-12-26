@@ -27,18 +27,25 @@ jobs:
       #     file: Dockerfile.lite
       #     push: false # revert
       #     platforms: linux/amd64
-      #     tags: mitre/heimdall-lite:latest,mitre/heimdall-lite:${{ github.event.pull_request.head.sha }} # should be ${{ github.sha }} but pull requests are weird
-      # - name: Get Docker SHA
-      #   shell: bash
-      #   id: get-docker-sha
-      #   run: echo "DOCKER_SHA=$(docker pull mitre/heimdall2:${{ github.event.pull_request.head.sha }} > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ github.event.pull_request.head.sha }} | cut -d '@' -f 2)" >> $GITHUB_ENV # this line will need to be changed too to get rid of the pull request stuff
+      #     tags: mitre/heimdall-lite:latest # ,mitre/heimdall-lite:${{ github.event.pull_request.head.sha }} # should be ${{ github.sha }} but pull requests are weird
+      - name: Get Docker SHA
+        shell: bash
+        id: get-docker-sha
+        run: echo "DOCKER_SHA=$(docker pull mitre/heimdall-lite:latest > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall-lite:latest | cut -d '@' -f 2)" >> $GITHUB_ENV
 
-      - name: Make working dir for Iron Bank changes
+      - name: Make working directory for Iron Bank changes
         run: mkdir ../ironbank_heimdall
 
       - name: Clone Iron Bank repo
         working-directory: ../ironbank_heimdall
         run: |
-          git clone https://repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git .
-          ls
-          pwd
+          git clone https://repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git . # need to swap to right repo
+
+      - name: Update Iron Bank repo to have the latest tags
+        working-directory: ../ironbank_heimdall
+        run: |
+          git switch -c "${{ github.event.pull_request.head.sha }}" # swap to sha
+          yq e -i '.resources[1].url="docker://docker.io/mitre/heimdall2@${{ env.DOCKER_SHA }}"' hardening_manifest.yaml # need to swap to right image
+          git diff
+          git add hardening_manifest.yaml
+          git -c "user.name=Automated Heimdall Release" -c "user.email=amann@mitre.org" commit -s -m "updating Heimdall to ${{ github.event.pull_request.head.sha }}" # swap to sha
