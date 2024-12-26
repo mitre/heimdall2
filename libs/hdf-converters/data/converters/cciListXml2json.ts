@@ -125,34 +125,38 @@ function produceConversions(cciList: ICCIList): {
     );
     const cciId = cciItem.$.id;
 
-    if (newestReference) {
-      /* There's 1 out of the 2000+ CCI controls where this index string is composed of at
-      least 2 comma-and-space-separated controls found in the latest revision. */
-      const {version, creator, index, title} = newestReference.$;
-      if (creator === 'NIST') {
-        const nistIds = index
-          .split(/,\s*/)
-          .map(parse_nist)
-          .filter(is_control)
-          .map((n) => n.canonize());
-
-        _.set(
-          nists,
-          cciId,
-          nistIds.map((nist) => ({version, title, nist}))
-        );
-        _.set(definitions, cciId, cciItem.definition[0]);
-
-        for (const nistId of nistIds) {
-          if (ccis[nistId] === undefined) {
-            ccis[nistId] = [cciId];
-          } else {
-            ccis[nistId].push(cciId);
-          }
-        }
-      }
-    } else {
+    if (!newestReference) {
       console.error(`No NIST Controls found for ${cciId}`);
+      continue;
+    }
+
+    /* There's 1 out of the 2000+ CCI controls where this index string is composed of at
+      least 2 comma-and-space-separated controls found in the latest revision. */
+    const {version, creator, index, title} = newestReference.$;
+    if (creator !== 'NIST') {
+      console.error(`Creator is ${creator} and not NIST, skipping`);
+      continue;
+    }
+
+    const nistIds = index
+      .split(/,\s*/)
+      .map(parse_nist)
+      .filter(is_control)
+      .map((n) => n.canonize());
+
+    _.set(
+      nists,
+      cciId,
+      nistIds.map((nist) => ({version, title, nist}))
+    );
+    _.set(definitions, cciId, cciItem.definition[0]);
+
+    for (const nistId of nistIds) {
+      if (ccis[nistId] === undefined) {
+        ccis[nistId] = [cciId];
+      } else {
+        ccis[nistId].push(cciId);
+      }
     }
   }
   return {nists, definitions, ccis};
