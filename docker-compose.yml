@@ -18,7 +18,7 @@ services:
       - "5432"
 
   certs:
-    image: registry.access.redhat.com/ubi8/ubi:latest
+    image: registry.access.redhat.com/ubi9/ubi:latest
     restart: unless-stopped
     command: sh -c "sh /etc/pki/ca-trust/source/anchors/dodcerts.sh && update-ca-trust && tail -f /dev/null"
     volumes:
