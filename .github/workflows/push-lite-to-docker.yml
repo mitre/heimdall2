@@ -58,4 +58,4 @@ jobs:
         run: |
           # ISSUE=$(glab issue create -t "Update Heimdall to $1" -d="" --no-editor -y | cut -d/ -f10)
           # MR_NUMBER=$(glab mr create --allow-collaboration --fill --copy-issue-labels -i $ISSUE --push -y --squash-before-merge | awk -F '/' 'NR==2 {print $NF}')
-          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MAXIMAL }}" --header "Content-Type: application/json" --data '{"title": "DRAFT: TESTTING ONLY DO NOT MERGE Update Heimdall to ${{ github.event.pull_request.head.sha }}"}' "https://repo1.dso.mil/api/v4/projects/{{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues"
+          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MAXIMAL }}" --header "Content-Type: application/json" --data '{"title": "DRAFT: TESTTING ONLY DO NOT MERGE Update Heimdall to ${{ github.event.pull_request.head.sha }}"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues"
