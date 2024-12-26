@@ -6,6 +6,9 @@ on:
   pull_request: # remove
     branches: [master]
 
+env:
+  IRONBANK_HEIMDALL_PROJECT_ID: 5450 # this is for heimdall, not heimdall-lite (mainline) - I think these can be in-line envs instead of supplied by github repo/org level secrets/values since each push/release workflow will have a unique ironbank id due to the mainline vs release + heimdalllite vs heimdall matrix
+
 jobs:
   docker:
     runs-on: ubuntu-22.04
@@ -54,4 +57,5 @@ jobs:
         working-directory: ../ironbank_heimdall
         run: |
           # ISSUE=$(glab issue create -t "Update Heimdall to $1" -d="" --no-editor -y | cut -d/ -f10)
-          curl -X GET --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MAXIMAL }}" "https://repo1.dso.mil/api/v4/projects/5450/issues?state=opened"
+          # MR_NUMBER=$(glab mr create --allow-collaboration --fill --copy-issue-labels -i $ISSUE --push -y --squash-before-merge | awk -F '/' 'NR==2 {print $NF}')
+          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MAXIMAL }}" --header "Content-Type: application/json" --data '{"title": "DRAFT: TESTTING ONLY DO NOT MERGE Update Heimdall to ${{ github.event.pull_request.head.sha }}"}' "https://repo1.dso.mil/api/v4/projects/{{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues"
