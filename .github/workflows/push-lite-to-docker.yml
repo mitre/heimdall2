@@ -41,7 +41,7 @@ jobs:
         run: |
           git clone https://repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git . # need to swap to right repo
 
-      - name: Update Iron Bank repo to have the latest tags
+      - name: Update Iron Bank repo to have the latest digest
         working-directory: ../ironbank_heimdall
         run: |
           git switch -c "${{ github.event.pull_request.head.sha }}" # swap to sha
@@ -49,3 +49,9 @@ jobs:
           git diff
           git add hardening_manifest.yaml
           git -c "user.name=Automated Heimdall Release" -c "user.email=amann@mitre.org" commit -s -m "updating Heimdall to ${{ github.event.pull_request.head.sha }}" # swap to sha
+
+      - name: Create issue and merge request for Iron Bank repo
+        working-directory: ../ironbank_heimdall
+        run: |
+          # ISSUE=$(glab issue create -t "Update Heimdall to $1" -d="" --no-editor -y | cut -d/ -f10)
+          curl -X GET --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MAXIMAL }}" "https://repo1.dso.mil/api/v4/projects/5450/issues?state=opened"
