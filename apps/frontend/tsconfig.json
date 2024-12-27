@@ -1,16 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "resolveJsonModule": true,
     "strict": true,
     "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "sourceMap": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
-    "types": ["jest", "chai", "vuetify", "node"],
+    "types": ["jest", "chai", "vue", "vuetify", "node"],
     "paths": {
       "@/*": ["src/*"]
     },

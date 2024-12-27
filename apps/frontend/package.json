@@ -41,7 +41,6 @@
     "@types/diff": "^5.0.0",
     "@types/file-saver": "^2.0.1",
     "@types/lodash": "^4.14.161",
-    "@types/lru-cache": "^7.10.10",
     "@types/luxon": "^3.3.1",
     "@types/mustache": "^4.1.1",
     "@types/node": "^22.0.0",
