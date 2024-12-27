@@ -11,10 +11,10 @@ describe('neuvector_mapper', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-caldera.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-caldera.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -36,10 +36,10 @@ describe('neuvector_mapper', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-heimdall.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-heimdall.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -61,10 +61,10 @@ describe('neuvector_mapper', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-heimdall2.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-heimdall2.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -86,10 +86,10 @@ describe('neuvector_mapper', () => {
       )
     );
 
-    fs.writeFileSync(
-      'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-vulcan.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/neuvector_mapper/neuvector-hdf-mitre-vulcan.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -114,10 +114,10 @@ describe('neuvector_mapper_withraw', () => {
       true
     );
 
-    fs.writeFileSync(
-      'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-caldera.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-caldera.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -140,10 +140,10 @@ describe('neuvector_mapper_withraw', () => {
       true
     );
 
-    fs.writeFileSync(
-      'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-heimdall.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-heimdall.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -166,10 +166,10 @@ describe('neuvector_mapper_withraw', () => {
       true
     );
 
-    fs.writeFileSync(
-      'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-heimdall2.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-heimdall2.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
@@ -192,10 +192,10 @@ describe('neuvector_mapper_withraw', () => {
       true
     );
 
-    fs.writeFileSync(
-      'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-vulcan.json',
-      JSON.stringify(mapper.toHdf(), null, 2)
-    );
+    // fs.writeFileSync(
+    //   'sample_jsons/neuvector_mapper/neuvector-hdf-withraw-mitre-vulcan.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
 
     expect(omitVersions(mapper.toHdf())).toEqual(
       omitVersions(
