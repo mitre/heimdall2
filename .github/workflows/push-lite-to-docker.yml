@@ -51,11 +51,12 @@ jobs:
           yq e -i '.resources[1].url="docker://docker.io/mitre/heimdall2@${{ env.DOCKER_SHA }}"' hardening_manifest.yaml # need to swap to right image
           git diff
           git add hardening_manifest.yaml
-          git -c "user.name=Automated Heimdall Release" -c "user.email=amann@mitre.org" commit -s -m "updating Heimdall to ${{ github.event.pull_request.head.sha }}" # swap to sha
+          git -c "user.name=Automated Heimdall Release" -c "user.email=amann@mitre.org" commit -s -m "updating Heimdall to ${{ github.event.pull_request.head.sha }}" # swap to sha, wonder if it's possible to grab the email address of the person who is actually doing the release instead of using mine
 
       - name: Create issue and merge request for Iron Bank repo
         working-directory: ../ironbank_heimdall
         run: |
           # ISSUE=$(glab issue create -t "Update Heimdall to $1" -d="" --no-editor -y | cut -d/ -f10)
           # MR_NUMBER=$(glab mr create --allow-collaboration --fill --copy-issue-labels -i $ISSUE --push -y --squash-before-merge | awk -F '/' 'NR==2 {print $NF}')
-          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MAXIMAL }}" --header "Content-Type: application/json" --data '{"title": "DRAFT: TESTTING ONLY DO NOT MERGE Update Heimdall to ${{ github.event.pull_request.head.sha }}"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues"
+          ISSUE=$(curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MAXIMAL }}" --header "Content-Type: application/json" --data '{"title": "DRAFT: TESTTING ONLY DO NOT MERGE Update Heimdall to ${{ github.event.pull_request.head.sha }}"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues" | jq ".iid") # need to fix the title here and also swap out the commit hash
+          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MAXIMAL }}" --header "Content-Type: application/json" --data '{"allow_collaboration": true, "squash": true, "source_branch": "${{ github.event.pull_request.head.sha }}", "target_branch": "$ISSUE-update-heimdall-to-${{ github.event.pull_request.head.sha }}", "title": "Resolve \"DRAFT: TESTTING ONLY DO NOT MERGE Update Heimdall to ${{ github.event.pull_request.head.sha }}\"", "description": "Closes #$ISSUE"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/merge_requests" # gitsha doesn't need changing but when we want to convert a semver to replace periods with hyphens will probably need to replace the sha variable with this command `$(echo "$however_we_get_the_semver" | sed 's/[\. ]/-/g')`
