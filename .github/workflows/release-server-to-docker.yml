@@ -9,11 +9,16 @@ on:
         description: 'Version'     
         required: true
 
+env:
+  IRONBANK_HEIMDALL_PROJECT_ID: 5450 # this is for heimdall (non mainline) - I think these can be in-line envs instead of supplied by github repo/org level secrets/values since each push/release workflow will have a unique ironbank id due to the mainline vs release + heimdalllite vs heimdall matrix
+
+# pull request sha: ${{ github.event.pull_request.head.sha }} - will only be used during testing | on push sha: ${{ github.sha }} - will likely be used with mainline | new tag: ${{ steps.format-tag.outputs.replaced }} or underscored version: ${{ env.VERSION_UNDERSCORED }} - will be used during releases
+
 jobs:
   docker:
     runs-on: ubuntu-22.04
     steps:
-      - name: Run string replace # remove the v from the version number before using it in the docker tag
+      - name: Run string replace to remove the v from the version number before using it in the docker tag
         uses: frabert/replace-string-action@v2
         id: format-tag
         with:
@@ -21,6 +26,10 @@ jobs:
           string: '${{ github.event.release.tag_name || github.event.inputs.version}}'
           replace-with: ''
           flags: 'g'
+      - name: Convert periods to underscores in version string
+        shell: bash
+        run: |
+          echo "VERSION_UNDERSCORED=$(echo ${{ steps.format-tag.outputs.replaced }} | sed 's/\./-/g')" >> $GITHUB_ENV
       - name: Checkout the Heimdall Repository
         uses: actions/checkout@v4
       - name: Set up Docker Buildx
@@ -37,20 +46,28 @@ jobs:
           context: .
           push: true
           platforms: linux/amd64
-          tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced }}
+          tags: mitre/heimdall2:release-latest,mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} # mainline can stay at 'latest' and only update the digest instead of tags and digest
       - name: Get Docker SHA
         shell: bash
         id: get-docker-sha
-        run: echo "DOCKER_SHA=$(docker pull mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} | cut -d '@' -f 2)" >> $GITHUB_ENV
-      - name: Sophos Factory pipeline
-        uses: sophos/factory-run-pipeline@v2
-        with:
-          project_id: 601c48ad71a5df94e698a9ad
-          job_id: 644185303992f67e1d9412f2
-          api_token: ${{ secrets.SOPHOS_FACTORY_TOKEN }}
-          variables: |
-            {
-              "gitlabHost": "repo1.dso.mil",
-              "heimdallVersion": "${{ steps.format-tag.outputs.replaced }}",
-              "heimdallDockerURL": "docker://docker.io/mitre/heimdall2@${{ env.DOCKER_SHA }}"
-            }
+        run: |
+          echo "DOCKER_SHA=$(docker pull mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall2:${{ steps.format-tag.outputs.replaced }} | cut -d '@' -f 2)" >> $GITHUB_ENV
+      - name: Make working directory for Iron Bank changes
+        run: mkdir ../ironbank_heimdall
+      - name: Clone and update local copy of Iron Bank repo to have the latest tags and digest
+        working-directory: ../ironbank_heimdall
+        run: |
+          git clone https://repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git .
+          git switch -c "${{ env.VERSION_UNDERSCORED }}" # swap to sha for mainline
+          yq e -i '.args.HEIMDALL_VERSION="${{ steps.format-tag.outputs.replaced }}" | .tags[0]="${{ steps.format-tag.outputs.replaced }}" | .labels."org.opencontainers.image.version"="${{ steps.format-tag.outputs.replaced }}" | .resources[1].tag="mitre/heimdall2:${{ steps.format-tag.outputs.replaced }}" | .resources[1].url="docker://docker.io/mitre/heimdall2@${{ env.DOCKER_SHA }}"' hardening_manifest.yaml
+          sed -i s/HEIMDALL_VERSION=\.\*/HEIMDALL_VERSION=${{ steps.format-tag.outputs.replaced }}/ Dockerfile
+          git diff
+          git add hardening_manifest.yaml Dockerfile
+          git -c "user.name=Automated Heimdall Release" -c "user.email=amann@mitre.org" commit -s -m "Updating Heimdall to ${{ steps.format-tag.outputs.replaced }}" # TODO: wonder if it's possible to grab the email address of the person who is actually doing the release instead of hardcoding it - for mainline, does dependabot have an associated email address?
+      - name: Create issue, branch, and merge request for Iron Bank repo
+        working-directory: ../ironbank_heimdall
+        run: |
+          ISSUE=$(curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data '{"title": "Update Heimdall to ${{ steps.format-tag.outputs.replaced }}"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues" | jq ".iid")
+          DEFAULT_BRANCH=$(curl --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}" | jq -r ".default_branch") # likely 'development'
+          git push 'https://amann:${{ secrets.SAF_IRONBANK_REPO1_PAT }}@repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git' "${{ env.VERSION_UNDERSCORED }}":"${ISSUE}-update-heimdall-to-${{ env.VERSION_UNDERSCORED }}"
+          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.SAF_IRONBANK_REPO1_PAT }}" --header "Content-Type: application/json" --data "{\"allow_collaboration\": true, \"squash\": true, \"remove_source_branch\": true, \"source_branch\": \"${ISSUE}-update-heimdall-to-${{ env.VERSION_UNDERSCORED }}\", \"target_branch\": \"${DEFAULT_BRANCH}\", \"title\": \"Resolve \\\"Update Heimdall to ${{ steps.format-tag.outputs.replaced }}\\\"\", \"description\": \"Closes #${ISSUE}\"}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/merge_requests"

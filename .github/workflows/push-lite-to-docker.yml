@@ -3,11 +3,6 @@ name: Push Heimdall Lite to Docker Hub on every merge to master and tag as lates
 on:
   push:
     branches: [master]
-  pull_request: # remove
-    branches: [master]
-
-env:
-  IRONBANK_HEIMDALL_PROJECT_ID: 5450 # this is for heimdall, not heimdall-lite (mainline) - I think these can be in-line envs instead of supplied by github repo/org level secrets/values since each push/release workflow will have a unique ironbank id due to the mainline vs release + heimdalllite vs heimdall matrix
 
 jobs:
   docker:
@@ -15,49 +10,19 @@ jobs:
     steps:
       - name: Checkout the Heimdall Repository
         uses: actions/checkout@v4
-      # - name: Set up Docker Buildx
-      #   uses: docker/setup-buildx-action@v3
-      # - name: Login to DockerHub
-      #   uses: docker/login-action@v3
-      #   with:
-      #     username: ${{ secrets.DOCKERHUB_USERNAME }}
-      #     password: ${{ secrets.DOCKERHUB_TOKEN }}
-      # - name: Build and push
-      #   id: docker_build
-      #   uses: docker/build-push-action@v6
-      #   with:
-      #     context: .
-      #     file: Dockerfile.lite
-      #     push: false # revert
-      #     platforms: linux/amd64
-      #     tags: mitre/heimdall-lite:latest # ,mitre/heimdall-lite:${{ github.event.pull_request.head.sha }} # should be ${{ github.sha }} but pull requests are weird
-      - name: Get Docker SHA
-        shell: bash
-        id: get-docker-sha
-        run: echo "DOCKER_SHA=$(docker pull mitre/heimdall-lite:latest > /dev/null 2>&1 && docker inspect --format='{{index .RepoDigests 0}}' mitre/heimdall-lite:latest | cut -d '@' -f 2)" >> $GITHUB_ENV
-
-      - name: Make working directory for Iron Bank changes
-        run: mkdir ../ironbank_heimdall
-
-      - name: Clone Iron Bank repo
-        working-directory: ../ironbank_heimdall
-        run: |
-          git clone https://repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git . # need to swap to right repo
-
-      - name: Update local copy of Iron Bank repo to have the latest digest
-        working-directory: ../ironbank_heimdall
-        run: |
-          git switch -c "${{ github.event.pull_request.head.sha }}" # swap to sha
-          yq e -i '.resources[1].url="docker://docker.io/mitre/heimdall2@${{ env.DOCKER_SHA }}"' hardening_manifest.yaml # need to swap to right image
-          git diff
-          git add hardening_manifest.yaml
-          git -c "user.name=Automated Heimdall Release" -c "user.email=amann@mitre.org" commit -s -m "updating Heimdall to ${{ github.event.pull_request.head.sha }}" # swap to sha, wonder if it's possible to grab the email address of the person who is actually doing the release instead of using mine
-
-      - name: Create issue, branch, and merge request for Iron Bank repo
-        working-directory: ../ironbank_heimdall
-        run: |
-          ISSUE=$(curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MINIMAL }}" --header "Content-Type: application/json" --data '{"title": "DRAFT: TESTING ONLY DO NOT MERGE Update Heimdall to ${{ github.event.pull_request.head.sha }}"}' "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/issues" | jq ".iid") # need to fix the title here and also swap out the commit hash
-          DEFAULT_BRANCH=$(curl --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MINIMAL }}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}" | jq -r ".default_branch") # probably 'development'
-          git push 'https://amann:${{ secrets.REPO1_PAT_AMANN_MINIMAL }}@repo1.dso.mil/dsop/mitre/security-automation-framework/heimdall2.git' "${{ github.event.pull_request.head.sha }}":"${ISSUE}-update-heimdall-to-${{ github.event.pull_request.head.sha }}"
-          curl -X POST --header "PRIVATE-TOKEN: ${{ secrets.REPO1_PAT_AMANN_MINIMAL }}" --header "Content-Type: application/json" --data "{\"allow_collaboration\": true, \"squash\": true, \"remove_source_branch\": true, \"source_branch\": \"${ISSUE}-update-heimdall-to-${{ github.event.pull_request.head.sha }}\", \"target_branch\": \"${DEFAULT_BRANCH}\", \"title\": \"Resolve \\\"DRAFT: TESTING ONLY DO NOT MERGE Update Heimdall to ${{ github.event.pull_request.head.sha }}\\\"\", \"description\": \"Closes #${ISSUE}\"}" "https://repo1.dso.mil/api/v4/projects/${{ env.IRONBANK_HEIMDALL_PROJECT_ID }}/merge_requests" # gitsha doesn't need changing but when we want to convert a semver to replace periods with hyphens will probably need to replace the sha variable with this command `$(echo "$however_we_get_the_semver" | sed 's/[\. ]/-/g')`
-          # need to 3) make the target branch exactly equal to 'development' but maybe i can use the api to get the default branch name which might be development?, 5) test what are the minimum perms necessary on the pat
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Login to DockerHub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Build and push
+        id: docker_build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.lite
+          push: true
+          platforms: linux/amd64
+          tags: mitre/heimdall-lite:latest
