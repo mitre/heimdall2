@@ -1,5 +1,5 @@
 queue_rules:
-  - name: default
+  - name: default # automatic merge for master when reviewed and CI passes
     queue_conditions:
       - label=ready-to-merge
     merge_conditions:
@@ -20,7 +20,3 @@ pull_request_rules:
     actions:
       comment:
         message: This pull request has a conflict. Could you fix it @{{author}}?
-  - name: automatic merge for master when reviewed and CI passes
-    conditions: []
-    actions:
-      queue:
