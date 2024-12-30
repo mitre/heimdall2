@@ -7,18 +7,11 @@ import {
 } from '@nestjs/common';
 
 export function validatePassword(password?: string): string[] {
-  const errors = [];
   if (typeof password !== 'string') {
-    errors.push('Password must be of type string');
+    return ['Password must be of type string'];
   } else {
-    validators.forEach((validator) => {
-      if (!validator.check(password)) {
-        errors.push(validator.name);
-      }
-    });
+    return validators.filter(validator => !validator.check(password)).map(validator.name)a;
   }
-
-  return errors;
 }
 
 @Injectable()
