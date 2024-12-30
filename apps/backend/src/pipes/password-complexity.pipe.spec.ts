@@ -1,5 +1,5 @@
 import {validators} from '@heimdall/password-complexity';
-import {ArgumentMetadata, BadRequestException} from '@nestjs/common';
+import {BadRequestException} from '@nestjs/common';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD,
@@ -132,7 +132,9 @@ describe('PasswordComplexityPipe', () => {
 
     it('should return UpdateUserDto if password fields are null', () => {
       expect(
-        passwordComplexityPipe.transform(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS)
+        passwordComplexityPipe.transform(
+          UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS
+        )
       ).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
     });
   });
@@ -142,10 +144,14 @@ describe('PasswordComplexityPipe', () => {
   describe('Test Invalid Password', () => {
     it('should throw a BadRequestException for CreateUserDto with missing password', () => {
       expect(() =>
-        passwordComplexityPipe.transform(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)
+        passwordComplexityPipe.transform(
+          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
+        )
       ).toThrowError(BadRequestException);
       expect(() =>
-        passwordComplexityPipe.transform(CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD)
+        passwordComplexityPipe.transform(
+          CREATE_USER_DTO_TEST_OBJ_WITH_MISSING_PASSWORD_FIELD
+        )
       ).toThrowError('Password must be of type string');
     });
 
