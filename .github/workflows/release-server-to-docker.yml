@@ -63,7 +63,7 @@ jobs:
           sed -i s/HEIMDALL_VERSION=\.\*/HEIMDALL_VERSION=${{ steps.format-tag.outputs.replaced }}/ Dockerfile
           git diff
           git add hardening_manifest.yaml Dockerfile
-          git -c "user.name=Automated Heimdall Release" -c "user.email=amann@mitre.org" commit -s -m "Updating Heimdall to ${{ steps.format-tag.outputs.replaced }}" # TODO: wonder if it's possible to grab the email address of the person who is actually doing the release instead of hardcoding it - for mainline, does dependabot have an associated email address?
+          git -c "user.name=Automated Heimdall Release" -c "user.email=saf@groups.mitre.org" commit -s -m "Updating Heimdall to ${{ steps.format-tag.outputs.replaced }}"
       - name: Create issue, branch, and merge request for Iron Bank repo
         working-directory: ../ironbank_heimdall
         run: |
