@@ -1,5 +1,4 @@
 import {
-  ArgumentMetadata,
   BadRequestException,
   Injectable,
   PipeTransform
@@ -14,7 +13,6 @@ export class PasswordChangePipe implements PipeTransform {
       password: string | undefined;
       passwordConfirmation: string | undefined;
     },
-    _metadata: ArgumentMetadata
   ): Record<string, unknown> {
     if (
       (!value.password && !value.passwordConfirmation) ||

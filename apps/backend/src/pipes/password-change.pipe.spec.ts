@@ -1,4 +1,4 @@
-import {ArgumentMetadata, BadRequestException} from '@nestjs/common';
+import {BadRequestException} from '@nestjs/common';
 import {
   UPDATE_USER_DTO_TEST_OBJ,
   UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
@@ -9,7 +9,6 @@ import {PasswordChangePipe} from './password-change.pipe';
 
 describe('PasswordChangePipe', () => {
   let passwordChangePipe: PasswordChangePipe;
-  let metaData: ArgumentMetadata;
 
   beforeEach(() => {
     passwordChangePipe = new PasswordChangePipe();
@@ -94,19 +93,13 @@ describe('PasswordChangePipe', () => {
     });
     it('should return the same UpdateUserDto', () => {
       expect(
-        passwordChangePipe.transform(
-          UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD,
-          metaData
-        )
+        passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD)
       ).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD);
     });
 
     it('should return UpdateUserDto if password fields are null', () => {
       expect(
-        passwordChangePipe.transform(
-          UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
-          metaData
-        )
+        passwordChangePipe.transform(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS)
       ).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
     });
 
@@ -117,10 +110,7 @@ describe('PasswordChangePipe', () => {
      */
     it('should should pass when the currentPassword is not provided and a valid new password is provided', () => {
       expect(
-        passwordChangePipe.transform(
-          UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD,
-          metaData
-        )
+        passwordChangePipe.transform(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD)
       ).toEqual(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD);
     });
   });
@@ -130,10 +120,10 @@ describe('PasswordChangePipe', () => {
   describe('Test Invalid Password Changes', () => {
     it('should throw a BadRequestException', () => {
       expect(() =>
-        passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)
+        passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ)
       ).toThrowError(BadRequestException);
       expect(() =>
-        passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)
+        passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ)
       ).toThrowError(
         'A minimum of four character classes must be changed when updating a password.' +
           ' A minimum of eight of the total number of characters must be changed when updating a password.'

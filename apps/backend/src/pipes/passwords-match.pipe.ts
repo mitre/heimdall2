@@ -1,5 +1,4 @@
 import {
-  ArgumentMetadata,
   BadRequestException,
   Injectable,
   PipeTransform
@@ -12,8 +11,7 @@ export class PasswordsMatchPipe implements PipeTransform {
       currentPassword?: string;
       password: string | undefined;
       passwordConfirmation: string | undefined;
-    },
-    _metadata: ArgumentMetadata
+    }
   ): Record<string, unknown> {
     if (
       value.currentPassword != null &&
