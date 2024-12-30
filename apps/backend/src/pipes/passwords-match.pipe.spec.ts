@@ -22,15 +22,15 @@ describe('PasswordsMatchPipe', () => {
    the same CreateUserDto obj that is passed to the pipeline, is returned */
   describe('Test Matching Passwords', () => {
     it('should return the same CreateUserDto', () => {
-      expect(
-        passwordsMatchPipe.transform(CREATE_USER_DTO_TEST_OBJ)
-      ).toEqual(CREATE_USER_DTO_TEST_OBJ);
+      expect(passwordsMatchPipe.transform(CREATE_USER_DTO_TEST_OBJ)).toEqual(
+        CREATE_USER_DTO_TEST_OBJ
+      );
     });
 
     it('should return the same UpdateUserDto', () => {
-      expect(
-        passwordsMatchPipe.transform(UPDATE_USER_DTO_TEST_OBJ)
-      ).toEqual(UPDATE_USER_DTO_TEST_OBJ);
+      expect(passwordsMatchPipe.transform(UPDATE_USER_DTO_TEST_OBJ)).toEqual(
+        UPDATE_USER_DTO_TEST_OBJ
+      );
     });
 
     it('should return UpdateUserDto if password fields are null', () => {
@@ -45,10 +45,14 @@ describe('PasswordsMatchPipe', () => {
   describe('Test Mismatching Passwords', () => {
     it('should throw a Bad Request Exception', () => {
       expect(() =>
-        passwordsMatchPipe.transform(CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS)
+        passwordsMatchPipe.transform(
+          CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
+        )
       ).toThrowError(BadRequestException);
       expect(() =>
-        passwordsMatchPipe.transform(CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS)
+        passwordsMatchPipe.transform(
+          CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
+        )
       ).toThrowError('Passwords do not match');
     });
   });

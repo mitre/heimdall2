@@ -93,7 +93,9 @@ describe('PasswordChangePipe', () => {
     });
     it('should return the same UpdateUserDto', () => {
       expect(
-        passwordChangePipe.transform(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD)
+        passwordChangePipe.transform(
+          UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD
+        )
       ).toEqual(UPDATE_USER_DTO_TEST_OBJ_WITH_UPDATED_PASSWORD);
     });
 
@@ -110,7 +112,9 @@ describe('PasswordChangePipe', () => {
      */
     it('should should pass when the currentPassword is not provided and a valid new password is provided', () => {
       expect(
-        passwordChangePipe.transform(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD)
+        passwordChangePipe.transform(
+          UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD
+        )
       ).toEqual(UPDATE_USER_DTO_WITH_INVALID_CURRENT_PASSWORD);
     });
   });
