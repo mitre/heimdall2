@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.29"
+    "release": "2.10.20"
   },
-  "version": "2.6.29",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -304,7 +304,8 @@
         {
           "tags": {
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "nist": [
               "SI-10"
@@ -331,7 +332,8 @@
         {
           "tags": {
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "nist": [
               "SI-10"
@@ -385,7 +387,8 @@
         {
           "tags": {
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "nist": [
               "SI-10"
@@ -449,7 +452,8 @@
         {
           "tags": {
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "nist": [
               "SI-10"
@@ -501,7 +505,7 @@
           ]
         }
       ],
-      "sha256": "d48acb1f3b5c1e913aa662b8a6291b7e4b3ad53db79cd93859ebc2448ada8e5e"
+      "sha256": "82eaefa3ad19ffc240aa4e7e4f61140fd36225ae355e20a5cfa7f1d53f3c5e9a"
     }
   ],
   "passthrough": {

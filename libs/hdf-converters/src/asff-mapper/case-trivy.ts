@@ -1,7 +1,7 @@
 import {encode} from 'html-entities';
 import {ExecJSON} from 'inspecjs';
 import * as _ from 'lodash';
-import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from '../utils/global';
+import {DEFAULT_UPDATE_REMEDIATION_NIST_TAGS} from '../mappings/CciNistMappingData';
 
 function findingId(finding: unknown): string {
   const generatorId = _.get(finding, 'GeneratorId');

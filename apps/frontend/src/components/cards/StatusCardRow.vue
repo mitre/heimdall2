@@ -10,7 +10,7 @@
       <v-card
         height="100%"
         :color="getCardColor(card)"
-        @click="toggleFilter(card.title)"
+        @click="toggleFilter(card.value)"
       >
         <v-card-title>
           <v-icon large left>mdi-{{ card.icon }}</v-icon>
@@ -86,15 +86,17 @@
 </template>
 
 <script lang="ts">
-import {ExtendedControlStatus, Filter} from '@/store/data_filters';
+import {ExtendedControlStatus, ControlsFilter} from '@/store/data_filters';
 import {StatusCountModule} from '@/store/status_counts';
 import Vue from 'vue';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {LowercasedControlStatus} from 'inspecjs';
 
 interface CardProps {
   icon: string;
   title: ExtendedControlStatus;
+  value: LowercasedControlStatus | 'waived';
   number: number;
   subtitle: string;
   color: string;
@@ -102,10 +104,11 @@ interface CardProps {
 
 @Component
 export default class StatusCardRow extends Vue {
-  @Prop({type: Object, required: true}) readonly filter!: Filter;
-  @Prop({type: Array, required: false}) readonly currentStatusFilter!: Filter;
+  @Prop({type: Object, required: true}) readonly filter!: ControlsFilter;
+  @Prop({type: Array, required: false})
+  readonly currentStatusFilter!: ControlsFilter;
 
-  get overlayRemovedFilter(): Filter {
+  get overlayRemovedFilter(): ControlsFilter {
     return {
       fromFile: this.filter.fromFile,
       omit_overlayed_controls: this.filter.omit_overlayed_controls
@@ -118,6 +121,7 @@ export default class StatusCardRow extends Vue {
       {
         icon: 'check-circle',
         title: 'Passed',
+        value: 'passed',
         subtitle: `${StatusCountModule.countOf(
           this.overlayRemovedFilter,
           'PassedTests'
@@ -128,6 +132,7 @@ export default class StatusCardRow extends Vue {
       {
         icon: 'close-circle',
         title: 'Failed',
+        value: 'failed',
         subtitle: `${StatusCountModule.countOf(
           this.overlayRemovedFilter,
           'PassingTestsFailedControl'
@@ -147,6 +152,7 @@ export default class StatusCardRow extends Vue {
       {
         icon: 'minus-circle',
         title: 'Not Applicable',
+        value: 'not applicable',
         subtitle: `System exception or absent component`,
         color: 'statusNotApplicable',
         number: StatusCountModule.countOf(
@@ -157,6 +163,7 @@ export default class StatusCardRow extends Vue {
       {
         icon: 'alert-circle',
         title: 'Not Reviewed',
+        value: 'not reviewed',
         subtitle: `Can only be tested manually at this time`,
         color: 'statusNotReviewed',
         number: StatusCountModule.countOf(
@@ -176,6 +183,7 @@ export default class StatusCardRow extends Vue {
     return {
       icon: 'alert',
       title: 'Profile Error',
+      value: 'profile error',
       subtitle: `Errors running test - check profile run privileges or check with the author of profile.`,
       color: 'statusProfileError',
       number: StatusCountModule.countOf(filter, 'Profile Error')
@@ -186,6 +194,7 @@ export default class StatusCardRow extends Vue {
     return {
       icon: 'alert-circle',
       title: 'Waived',
+      value: 'waived',
       subtitle: `Consider using an overlay or manual attestation to properly address this control.`,
       color: 'statusNotApplicable',
       number: StatusCountModule.countOf(
@@ -195,21 +204,47 @@ export default class StatusCardRow extends Vue {
     };
   }
 
+  get negatedStatuses(): string[] {
+    if (this.filter.status !== undefined) {
+      let negatedStatuses: string[] = [];
+      this.filter.status?.forEach((status) => {
+        if (status.negated) {
+          negatedStatuses.push(status.value);
+        }
+      });
+      return negatedStatuses;
+    }
+    return [];
+  }
+
   getCardColor(card: CardProps): string {
     if (
       this.filter.status?.length === 0 ||
       this.filter.status?.some(
         (statusFilter) =>
-          statusFilter.toLowerCase() === card.title.toLowerCase()
-      )
+          statusFilter.value.toLowerCase() == card.value &&
+          statusFilter.negated === false
+      ) ||
+      (!this.negatedStatuses.some(
+        (statusFilter) => statusFilter === card.value
+      ) &&
+        this.filter.status?.some(
+          (statusFilter) =>
+            statusFilter.value.toLowerCase() !== card.value &&
+            statusFilter.negated === true
+        ))
     ) {
       return card.color;
     }
     return '';
   }
 
-  toggleFilter(filter: ExtendedControlStatus) {
-    if (this.filter.status?.includes(filter)) {
+  toggleFilter(filter: LowercasedControlStatus | 'waived') {
+    if (
+      this.filter.status?.find((obj) => {
+        return obj.value.toLowerCase() === filter;
+      }) !== undefined
+    ) {
       this.$emit('remove-filter', filter);
     } else {
       this.$emit('add-filter', filter);
