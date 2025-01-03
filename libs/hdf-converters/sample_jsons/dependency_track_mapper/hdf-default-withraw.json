@@ -4,7 +4,7 @@
     "release": "1.1 4.5.0",
     "target_id": "http://dtrack.example.org"
   },
-  "version": "2.10.3",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -29,7 +29,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "b815b581-fec1-4374-a871-68862a8f8d52",
             "componentName": "timespan",
@@ -99,7 +100,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "componentUuid": "979f87f5-eaf5-4095-9d38-cde17bf9228e",
             "componentName": "uglify-js",
@@ -158,7 +160,7 @@
           ]
         }
       ],
-      "sha256": "5bbda4b1d386b05957e95e2701d9cf675ecec96aa07ca3e043edd565794c8277"
+      "sha256": "1c786e89f8a8de2ced82fd8431960525e4669e1e470bbc15ff772ebeafa86413"
     }
   ],
   "passthrough": {

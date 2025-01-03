@@ -1,10 +1,10 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.29",
+    "release": "2.10.20",
     "target_id": "registry.io/test:1a7a431a105aa04632f5f5fbe8f753bd245add0a"
   },
-  "version": "2.6.29",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {

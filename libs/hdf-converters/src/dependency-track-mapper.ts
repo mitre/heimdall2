@@ -8,10 +8,8 @@ import {
   MappedTransform
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
-import {
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  getCCIsForNISTTags
-} from './utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './mappings/CciNistMappingData';
+import {NIST2CCI} from './mappings/CciNistMapping';
 
 interface ICweEntry {
   cweId: number;
@@ -98,7 +96,7 @@ export class DependencyTrackMapper extends BaseConverter {
               cci: {
                 path: 'vulnerability.cwes',
                 transformer: (cwes: ICweEntry[]) =>
-                  getCCIsForNISTTags(nistTags(getCweIds(cwes)))
+                  NIST2CCI(nistTags(getCweIds(cwes)))
               },
               componentUuid: {path: 'component.uuid'},
               componentName: {path: 'component.name'},

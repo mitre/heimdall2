@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.8"
+    "release": "2.10.20"
   },
-  "version": "2.10.8",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
