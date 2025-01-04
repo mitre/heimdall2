@@ -295,9 +295,9 @@
     tslib "^2.6.2"
 
 "@aws-sdk/client-s3@^3.425.0":
-  version "3.721.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.721.0.tgz#b745a54d1bd5853c2278ee6e3de9f524211fe19d"
-  integrity sha512-uCZC8elYhUFF21yq1yB5TrE/VYz8A4/VnttUHc65/jqnHReTDvEC0XAc756tJnjfrReyM1ws12FzBLHoW/NDjg==
+  version "3.722.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-s3/-/client-s3-3.722.0.tgz#193706f205dd69526ee7e23b0e73908b0f15ad82"
+  integrity sha512-FttdkB39TKjqEITfZJcs6Ihh6alICsNEne0ouLvh8re+gAuTK96zWcfX22mP5ap1QEsATaOGRNsMnyfsDSM0zw==
   dependencies:
     "@aws-crypto/sha1-browser" "5.2.0"
     "@aws-crypto/sha256-browser" "5.2.0"
