@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.9.4"
+    "release": "2.10.20"
   },
-  "version": "2.9.4",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -209,7 +209,8 @@
             ],
             "cweid": "CWE-20: Improper Input Validation\nCWE-116: Improper Encoding or Escaping of Output",
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "confidence": "Certain"
           },
@@ -427,8 +428,25 @@
             ],
             "cweid": "CWE-295: Improper Certificate Validation\nCWE-326: Inadequate Encryption Strength\nCWE-327: Use of a Broken or Risky Cryptographic Algorithm",
             "cci": [
+              "CCI-001137",
+              "CCI-001138",
+              "CCI-002428",
+              "CCI-002429",
+              "CCI-002430",
+              "CCI-002431",
+              "CCI-002432",
+              "CCI-002433",
+              "CCI-002434",
+              "CCI-002435",
+              "CCI-002436",
+              "CCI-002437",
               "CCI-002438",
-              "CCI-002450"
+              "CCI-002439",
+              "CCI-002440",
+              "CCI-002441",
+              "CCI-002442",
+              "CCI-001144",
+              "CCI-002449"
             ],
             "confidence": "Certain"
           },
@@ -540,6 +558,7 @@
             ],
             "cweid": "CWE-200: Information Exposure",
             "cci": [
+              "CCI-001127",
               "CCI-002418"
             ],
             "confidence": "Certain"
@@ -619,6 +638,7 @@
             ],
             "cweid": "CWE-200: Information Exposure",
             "cci": [
+              "CCI-001127",
               "CCI-002418"
             ],
             "confidence": "Certain"
@@ -704,6 +724,7 @@
             ],
             "cweid": "CWE-200: Information Exposure\nCWE-388: Error Handling",
             "cci": [
+              "CCI-001127",
               "CCI-002418",
               "CCI-001312"
             ],
@@ -741,7 +762,23 @@
             ],
             "cweid": "CWE-326: Inadequate Encryption Strength",
             "cci": [
-              "CCI-002438"
+              "CCI-001137",
+              "CCI-001138",
+              "CCI-002428",
+              "CCI-002429",
+              "CCI-002430",
+              "CCI-002431",
+              "CCI-002432",
+              "CCI-002433",
+              "CCI-002434",
+              "CCI-002435",
+              "CCI-002436",
+              "CCI-002437",
+              "CCI-002438",
+              "CCI-002439",
+              "CCI-002440",
+              "CCI-002441",
+              "CCI-002442"
             ],
             "confidence": "Certain"
           },
@@ -771,7 +808,7 @@
           ]
         }
       ],
-      "sha256": "a1cd7af5e46b87a9384c3893c9ffcc4520ae69bf79212548caa7b61a0e18977e"
+      "sha256": "842a0c0a6a1b623c7f00b2811dd01892bd852030d6f02b772fcb49cc1c3a857d"
     }
   ],
   "passthrough": {

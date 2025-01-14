@@ -9,11 +9,8 @@ import {
   parseHtml,
   parseXml
 } from './base-converter';
-import {CciNistMapping} from './mappings/CciNistMapping';
-import {
-  conditionallyProvideAttribute,
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS
-} from './utils/global';
+import {conditionallyProvideAttribute} from './utils/global';
+import {CCI2NIST, NIST2CCI} from './mappings/CciNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['critical', 0.9],
@@ -22,7 +19,14 @@ const IMPACT_MAPPING: Map<string, number> = new Map([
   ['low', 0.3]
 ]);
 
-const CCI_NIST_MAPPING = new CciNistMapping();
+const DEFAULT_CCI_TAGS = [
+  'CCI-000707',
+  'CCI-000710',
+  'CCI-000711',
+  'CCI-000366'
+];
+
+const DEFAULT_NIST_TAGS = CCI2NIST(DEFAULT_CCI_TAGS, []).map(({nist}) => nist);
 
 function asArray<T>(arg: T | T[]): T[] {
   if (Array.isArray(arg)) {
@@ -150,22 +154,51 @@ function extractCci(input: IIdent | IIdent[]): string[] {
   return output;
 }
 
-function nistTag(input: IIdent | IIdent[]): string[] {
-  return _.uniq(
-    CCI_NIST_MAPPING.nistFilter(
-      extractCci(input),
-      DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-      false
-    ).concat(
-      asArray(input)
-        .filter((x) => !!x)
-        .map((x) => x.text)
-        .map(parse_nist)
-        .filter((x) => !!x)
-        .filter(is_control)
-        .map((x) => x.canonize())
+function extractNist(input: IIdent | IIdent[]): string[] {
+  const inputArray = asArray(input);
+  return inputArray
+    .map((element) =>
+      _.get(
+        element,
+        'text',
+        '' // Rules may not always contain references.
+      )
     )
-  );
+    .map(parse_nist)
+    .filter(is_control)
+    .flatMap((c) => c.canonize() || []);
+}
+
+function cciAndNistTags(input: IIdent | IIdent[]): {
+  cci: string[];
+  nist: string[];
+} {
+  const output: {
+    cci: string[];
+    nist: string[];
+  } = {cci: [], nist: []};
+  // The XCCDF results input file might already contain NIST and CCI tags.
+  const existingCcis = extractCci(input);
+  const existingNists = extractNist(input);
+
+  if (existingCcis.length > 0) {
+    const nistsFromMappedCcis = CCI2NIST(existingCcis, []).map(
+      ({nist}) => nist
+    );
+    output.nist.push(...nistsFromMappedCcis);
+    output.cci.push(...existingCcis);
+    return output;
+  }
+  if (existingNists.length > 0) {
+    const ccisFromMappedNists = NIST2CCI(existingNists);
+    output.nist.push(...existingNists);
+    output.cci.push(...ccisFromMappedNists);
+    return output;
+  }
+
+  output.nist.push(...DEFAULT_NIST_TAGS);
+  output.cci.push(...DEFAULT_CCI_TAGS);
+  return output;
 }
 
 /**
@@ -320,14 +353,6 @@ export class XCCDFResultsMapper extends BaseConverter {
             pathTransform: getRulesInBenchmark,
             key: 'id',
             tags: {
-              cci: {
-                path: ['ident', 'reference'],
-                transformer: extractCci
-              },
-              nist: {
-                path: ['ident', 'reference'],
-                transformer: nistTag
-              },
               severity: {path: 'severity'},
               description: {
                 path: ['description.text', 'description'],
@@ -424,6 +449,11 @@ export class XCCDFResultsMapper extends BaseConverter {
                   'version',
                   _.get(data, 'version.text'),
                   _.has(data, 'version.text')
+                ),
+                ...cciAndNistTags(
+                  ['ident', 'reference'].flatMap(
+                    (path) => _.get(data, path, []) as IIdent[]
+                  )
                 )
               })
             },

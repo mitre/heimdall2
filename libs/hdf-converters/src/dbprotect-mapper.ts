@@ -8,10 +8,8 @@ import {
   MappedTransform,
   parseXml
 } from './base-converter';
-import {
-  DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-  getCCIsForNISTTags
-} from './utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './mappings/CciNistMappingData';
+import {NIST2CCI} from './mappings/CciNistMapping';
 
 const IMPACT_MAPPING: Map<string, number> = new Map([
   ['high', 0.7],
@@ -130,7 +128,7 @@ export class DBProtectMapper extends BaseConverter {
             key: 'id',
             tags: {
               nist: DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS,
-              cci: getCCIsForNISTTags(DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS)
+              cci: NIST2CCI(DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS)
             },
             refs: [],
             source_location: {},

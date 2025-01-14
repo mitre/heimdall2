@@ -9,7 +9,7 @@ import {
 } from './base-converter';
 import {CweNistMapping} from './mappings/CweNistMapping';
 import {OwaspNistMapping} from './mappings/OwaspNistMapping';
-import {getCCIsForNISTTags} from './utils/global';
+import {NIST2CCI} from './mappings/CciNistMapping';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export type Issue = {
@@ -252,8 +252,7 @@ function createSonarqubeMappings(
             code: null,
             tags: {
               cci: {
-                transformer: (issue: Issue) =>
-                  getCCIsForNISTTags(parseNistTags(issue))
+                transformer: (issue: Issue) => NIST2CCI(parseNistTags(issue))
               },
               nist: {transformer: parseNistTags}
             },

@@ -1,4 +1,4 @@
-import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from '../utils/global';
+import {DEFAULT_STATIC_CODE_ANALYSIS_NIST_TAGS} from './CciNistMappingData';
 import {data} from './ScoutsuiteNistMappingData';
 import {ScoutsuiteNistMappingItem} from './ScoutsuiteNistMappingItem';
 

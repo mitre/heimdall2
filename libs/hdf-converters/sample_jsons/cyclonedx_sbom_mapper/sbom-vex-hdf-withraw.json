@@ -1,9 +1,9 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.10.15"
+    "release": "2.10.20"
   },
-  "version": "2.10.15",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -20,7 +20,8 @@
               "SI-10"
             ],
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "cwe": [
               "CWE-611"
@@ -96,7 +97,7 @@
           ]
         }
       ],
-      "sha256": "11edd9546478812825f507e52fd640da19bd27f7370f43bfb90b455dbbe03fed"
+      "sha256": "1ad57ac6b8e6c78ca72d172136d7f70454be7ff270e133f737e5a16be9e5467c"
     }
   ],
   "passthrough": {

@@ -19,11 +19,13 @@ export const ALL_NIST_FAMILIES: Readonly<string[]> = [
   'PL',
   'PM',
   'PS',
+  'PT',
   'RA',
   'SA',
   'SC',
   'SE',
   'SI',
+  'SR',
   'TR',
   'UL',
   'UM' // We added this - it is not official

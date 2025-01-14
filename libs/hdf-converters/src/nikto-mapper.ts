@@ -3,7 +3,7 @@ import * as _ from 'lodash';
 import {version as HeimdallToolsVersion} from '../package.json';
 import {BaseConverter, ILookupPath, MappedTransform} from './base-converter';
 import {NiktoNistMapping} from './mappings/NiktoNistMapping';
-import {getCCIsForNISTTags} from './utils/global';
+import {NIST2CCI} from './mappings/CciNistMapping';
 
 const NIKTO_NIST_MAPPING = new NiktoNistMapping();
 
@@ -59,9 +59,9 @@ export class NiktoMapper extends BaseConverter {
               nist: {path: 'id', transformer: nistTag},
               cci: {
                 path: 'id',
-                transformer: (id: string) => getCCIsForNISTTags(nistTag(id))
+                transformer: (id: string) => NIST2CCI(nistTag(id))
               },
-              ösvdb: {path: 'OSVDB'}
+              osvdb: {path: 'OSVDB'}
             },
             refs: [],
             source_location: {},

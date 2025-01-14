@@ -142,9 +142,12 @@
 <script lang="ts">
 import ResponsiveRowSwitch from '@/components/cards/controltable/ResponsiveRowSwitch.vue';
 import HtmlSanitizeMixin from '@/mixins/HtmlSanitizeMixin';
-import {CCI_DESCRIPTIONS} from '@/utilities/cci_util';
 import {getControlRunTime} from '@/utilities/delta_util';
 import {nistCanonConfig, NIST_DESCRIPTIONS} from '@/utilities/nist_util';
+import {
+  CCI_TO_DEFINITION,
+  CCI_TO_NIST
+} from '@mitre/hdf-converters/src/mappings/CciNistMappingData';
 import {ContextualizedControl, is_control, parse_nist} from 'inspecjs';
 import * as _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
@@ -224,8 +227,11 @@ export default class ControlRowHeader extends mixins(HtmlSanitizeMixin) {
       if (found) {
         return found;
       }
-    } else if (CCI_DESCRIPTIONS[tag.toUpperCase()]) {
-      return CCI_DESCRIPTIONS[tag.toUpperCase()].def;
+    } else if (
+      CCI_TO_NIST[tag.toUpperCase()] &&
+      CCI_TO_DEFINITION[tag.toUpperCase()]
+    ) {
+      return CCI_TO_DEFINITION[tag.toUpperCase()];
     }
     return 'Unrecognized Tag';
   }

@@ -9,8 +9,8 @@ import {
   parseHtml,
   parseXml
 } from './base-converter';
-import {CciNistMapping} from './mappings/CciNistMapping';
 import {NessusPluginsNistMapping} from './mappings/NessusPluginsNistMapping';
+import {CCI2NIST} from './mappings/CciNistMapping';
 
 // Constants
 const IMPACT_MAPPING: Map<string, number> = new Map([
@@ -31,7 +31,6 @@ const COMPLIANCE_RESULT = 'compliance-result';
 const COMPLIANCE_ACTUAL_VALUE = 'compliance-actual-value';
 const NA_PLUGIN_OUTPUT = 'This Nessus Plugin does not provide output message.';
 const NESSUS_PLUGINS_NIST_MAPPING = new NessusPluginsNistMapping();
-const CCI_NIST_MAPPING = new CciNistMapping();
 const DEFAULT_NIST_TAG: string[] = [];
 
 let policyName: string;
@@ -82,7 +81,7 @@ function pluginNistTag(item: unknown): string[] {
 }
 function cciNistTag(input: string): string[] {
   const identifiers: string[] = parseRef(input, 'CCI');
-  return CCI_NIST_MAPPING.nistFilter(identifiers, DEFAULT_NIST_TAG, false);
+  return CCI2NIST(identifiers, DEFAULT_NIST_TAG).map(({nist}) => nist);
 }
 
 function parseRef(input: string, key: string): string[] {

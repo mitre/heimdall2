@@ -1,7 +1,7 @@
 {
   "platform": {
     "name": "Heimdall Tools",
-    "release": "2.6.42"
+    "release": "2.10.20"
   },
   "passthrough": {
     "components": [
@@ -4100,7 +4100,7 @@
       }
     ]
   },
-  "version": "2.6.42",
+  "version": "2.10.20",
   "statistics": {},
   "profiles": [
     {
@@ -4128,7 +4128,8 @@
             "cweid": "CWE-78: Improper Neutralization of Special Elements used in an OS Command &#x28;'OS Command Injection'&#x29;owasp: 1347\nsans: 864\ncertc: 1165\ncertjava: 1134\n",
             "cweDescription": "CWE-78: Improper Neutralization of Special Elements used in an OS Command &#x28;'OS Command Injection'&#x29; Description: This call contains a command injection flaw.  The argument to the function is constructed using untrusted input.  If an attacker is allowed to specify all or part of the command, it may be possible to execute commands on the server with the privileges of the executing process.  The level of exposure depends on the effectiveness of input validation routines, if any.; ",
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "nist": [
               "SI-10"
@@ -4168,7 +4169,8 @@
             "cweid": "CWE-89: Improper Neutralization of Special Elements used in an SQL Command &#x28;'SQL Injection'&#x29;owasp: 1347\nsans: 864\n",
             "cweDescription": "CWE-89: Improper Neutralization of Special Elements used in an SQL Command &#x28;'SQL Injection'&#x29; Description: This database query contains a SQL injection flaw.  The function call constructs a dynamic SQL query using a variable derived from untrusted input.  An attacker could exploit this flaw to execute arbitrary SQL queries against the database.; ",
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "nist": [
               "SI-10"
@@ -4280,7 +4282,8 @@
             "cweid": "CWE-93: Improper Neutralization of CRLF Sequences &#x28;'CRLF Injection'&#x29;owasp: 1347\n\nCWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers &#x28;'HTTP Response Splitting'&#x29;owasp: 1347\n\nCWE-117: Improper Output Neutralization for Logsowasp: 1355\ncertjava: 1134\n",
             "cweDescription": "CWE-93: Improper Neutralization of CRLF Sequences &#x28;'CRLF Injection'&#x29; Description: A function call contains a CRLF Injection flaw.  Writing untrusted input to an interface or external application that treats the CRLF &#x28;carriage return line feed&#x29; sequence as a delimiter to separate lines or records can result in that data being misinterpreted.  FTP and SMTP are examples of protocols that treat CRLF as a delimiter when parsing commands.; \nCWE-113: Improper Neutralization of CRLF Sequences in HTTP Headers &#x28;'HTTP Response Splitting'&#x29; Description: A function call contains an HTTP response splitting flaw.  Writing untrusted input into an HTTP header allows an attacker to manipulate the HTTP response rendered by the browser, leading to cache poisoning and cross-site scripting attacks.; \nCWE-117: Improper Output Neutralization for Logs Description: A function call could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker's tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible.; ",
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "nist": [
               "SI-10"
@@ -4836,7 +4839,8 @@
             "cweid": "CWE-331: Insufficient Entropyowasp: 1346\nsans: 327\ncertc: 1170\n\nCWE-327: Use of a Broken or Risky Cryptographic Algorithmowasp: 1346\nsans: 866\ncertc: 1170\ncertjava: 1152\n",
             "cweDescription": "CWE-331: Insufficient Entropy Description: Standard random number generators do not provide a sufficient amount of entropy when used for security purposes. Attackers can brute force the output of pseudorandom number generators such as rand&#x28;&#x29;.; \nCWE-327: Use of a Broken or Risky Cryptographic Algorithm Description: The use of a broken or risky cryptographic algorithm is an unnecessary risk that may result in the disclosure of sensitive information.; ",
             "cci": [
-              "CCI-002450"
+              "CCI-001144",
+              "CCI-002449"
             ],
             "nist": [
               "SC-13"
@@ -4918,7 +4922,8 @@
             "cweid": "CWE-73: External Control of File Name or Pathowasp: 1348\nsans: 22\n",
             "cweDescription": "CWE-73: External Control of File Name or Path Description: This call contains a path manipulation flaw.  The argument to the function is a filename constructed using untrusted input.  If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users.  The level of exposure depends on the effectiveness of input validation routines, if any.; ",
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "nist": [
               "SI-10"
@@ -4976,7 +4981,8 @@
             "cweid": "CWE-502: Deserialization of Untrusted Dataowasp: 1354\ncertjava: 1148\n",
             "cweDescription": "CWE-502: Deserialization of Untrusted Data Description: The application deserializes untrusted data without sufficiently verifying that the resulting data will be valid.; ",
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "nist": [
               "SI-10"
@@ -5010,7 +5016,8 @@
             "cweid": "CWE-601: URL Redirection to Untrusted Site &#x28;'Open Redirect'&#x29;owasp: 1345\nsans: 864\n\nCWE-470: Use of Externally-Controlled Input to Select Classes or Code &#x28;'Unsafe Reflection'&#x29;owasp: 1347\n",
             "cweDescription": "CWE-601: URL Redirection to Untrusted Site &#x28;'Open Redirect'&#x29; Description: A web application accepts a untrusted input that specifies a link to an external site, and uses that link to generate a redirect.  This enables phishing attacks.; \nCWE-470: Use of Externally-Controlled Input to Select Classes or Code &#x28;'Unsafe Reflection'&#x29; Description: A call uses reflection in an unsafe manner.  An attacker can specify the class name to be instantiated, which may create unexpected control flow paths through the application.  Depending on how reflection is being used, the attack vector may allow the attacker to bypass security checks or otherwise cause the application to behave in an unexpected manner.  Even if the object does not implement the specified interface and a ClassCastException is thrown, the constructor of the untrusted class name will have already executed.; ",
             "cci": [
-              "CCI-001310"
+              "CCI-001310",
+              "CCI-002744"
             ],
             "nist": [
               "SI-10"
@@ -5188,6 +5195,7 @@
             "cweid": "CWE-614: Sensitive Cookie in HTTPS Session Without 'Secure' Attributeowasp: 1349\nsans: 311\n",
             "cweDescription": "CWE-614: Sensitive Cookie in HTTPS Session Without 'Secure' Attribute Description: Setting the Secure attribute on an HTTP cookie instructs the web browser to send it only over a secure channel, such as a TLS connection.  Issuing a cookie without the Secure attribute allows the browser to transmit it over unencrypted connections, which are susceptible to eavesdropping.  It is particularly important to set the Secure attribute on any cookies containing sensitive data, such as authentication information &#x28;e.g. \"remember me\" style functionality&#x29;.; ",
             "cci": [
+              "CCI-001127",
               "CCI-002418"
             ],
             "nist": [
@@ -6615,7 +6623,7 @@
           ]
         }
       ],
-      "sha256": "3217f9bbf662aad247ce7e6dd8d5546b80bd162d65923810a9e48c0b62e2a094"
+      "sha256": "08cfb7a11be9206c311fd7a398118b9eae7f13ceba8af0b6dcfae030234bd0e2"
     }
   ]
 }
