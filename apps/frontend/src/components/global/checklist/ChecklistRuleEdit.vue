@@ -32,7 +32,7 @@
             solo
             outlined
             dense
-            auto-grow
+            no-resize
           />
         </v-col>
       </v-row>
@@ -44,7 +44,7 @@
             solo
             outlined
             dense
-            auto-grow
+            no-resize
           />
         </v-col>
       </v-row>
