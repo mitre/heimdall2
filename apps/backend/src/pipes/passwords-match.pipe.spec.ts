@@ -1,4 +1,4 @@
-import {ArgumentMetadata, BadRequestException} from '@nestjs/common';
+import {BadRequestException} from '@nestjs/common';
 import {
   CREATE_USER_DTO_TEST_OBJ,
   CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
@@ -9,7 +9,6 @@ import {PasswordsMatchPipe} from './passwords-match.pipe';
 
 describe('PasswordsMatchPipe', () => {
   let passwordsMatchPipe: PasswordsMatchPipe;
-  let metaData: ArgumentMetadata;
 
   beforeEach(() => {
     passwordsMatchPipe = new PasswordsMatchPipe();
@@ -23,23 +22,20 @@ describe('PasswordsMatchPipe', () => {
    the same CreateUserDto obj that is passed to the pipeline, is returned */
   describe('Test Matching Passwords', () => {
     it('should return the same CreateUserDto', () => {
-      expect(
-        passwordsMatchPipe.transform(CREATE_USER_DTO_TEST_OBJ, metaData)
-      ).toEqual(CREATE_USER_DTO_TEST_OBJ);
+      expect(passwordsMatchPipe.transform(CREATE_USER_DTO_TEST_OBJ)).toEqual(
+        CREATE_USER_DTO_TEST_OBJ
+      );
     });
 
     it('should return the same UpdateUserDto', () => {
-      expect(
-        passwordsMatchPipe.transform(UPDATE_USER_DTO_TEST_OBJ, metaData)
-      ).toEqual(UPDATE_USER_DTO_TEST_OBJ);
+      expect(passwordsMatchPipe.transform(UPDATE_USER_DTO_TEST_OBJ)).toEqual(
+        UPDATE_USER_DTO_TEST_OBJ
+      );
     });
 
     it('should return UpdateUserDto if password fields are null', () => {
       expect(
-        passwordsMatchPipe.transform(
-          UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS,
-          metaData
-        )
+        passwordsMatchPipe.transform(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS)
       ).toEqual(UPDATE_USER_DTO_WITHOUT_PASSWORD_FIELDS);
     });
   });
@@ -50,14 +46,12 @@ describe('PasswordsMatchPipe', () => {
     it('should throw a Bad Request Exception', () => {
       expect(() =>
         passwordsMatchPipe.transform(
-          CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
-          metaData
+          CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
         )
       ).toThrowError(BadRequestException);
       expect(() =>
         passwordsMatchPipe.transform(
-          CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS,
-          metaData
+          CREATE_USER_DTO_TEST_OBJ_WITH_UNMATCHING_PASSWORDS
         )
       ).toThrowError('Passwords do not match');
     });

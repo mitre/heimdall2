@@ -26,7 +26,7 @@
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.9.0",
-    "eslint-config-prettier": "^9.0.0",
+    "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.0.0",
     "lerna": "^8.1.2",
     "prettier": "^3.2.4",
@@ -34,10 +34,10 @@
     "typescript": "^4.9.3"
   },
   "devDependencies": {
-    "dotenv-cli": "^7.0.0"
+    "dotenv-cli": "^8.0.0"
   },
   "engines": {
-    "node": "^18.19.0"
+    "node": ">=22"
   },
   "version": "0.0.0"
 }

@@ -1,7 +1,7 @@
 {
   "name": "@mitre/heimdall-lite",
-  "version": "2.10.20",
-  "description": "Heimdall-Lite 2 is a JavaScript based security results viewer and review tool supporting multiple security results formats, such as: InSpec, SonarQube, OWASP-Zap and Fortify which you can load locally or from S3 and other data sources.",
+  "version": "2.11.1",
+  "description": "Heimdall-Lite 2 is a JavaScript based security results viewer and review tool supporting multiple security results formats, such as: InSpec, SonarQube, OWASP-Zap, and Fortify which you can load locally or from S3 and other data sources.",
   "repository": {
     "type": "git",
     "url": "https://github.com/mitre/heimdall2"
@@ -38,7 +38,6 @@
     "@types/chroma-js": "^2.1.0",
     "@types/concat-stream": "^2.0.0",
     "@types/d3": "^7.0.0",
-    "@types/diff": "^5.0.0",
     "@types/file-saver": "^2.0.1",
     "@types/lodash": "^4.14.161",
     "@types/lru-cache": "^7.10.10",
@@ -69,23 +68,21 @@
     "csv-stringify": "^6.4.1",
     "d3": "^7.2.0",
     "date-fns": "^4.0.0",
-    "diff": "^7.0.0",
-    "diff2html": "^3.1.7",
     "eslint-plugin-vue": "^9.15.0",
     "express": "^4.17.1",
     "file-saver": "^2.0.2",
     "highlight.js": "^11.0.0",
     "html-loader": "^5.0.0",
-    "inspecjs": "^2.10.16",
+    "inspecjs": "^2.11.0",
     "lodash": "4.17.21",
-    "lru-cache": "^10.1.0",
+    "lru-cache": "^11.0.2",
     "luxon": "^3.0.1",
     "mustache": "^4.2.0",
     "node-polyfill-webpack-plugin": "^2.0.1",
     "prismjs": "^1.29.0",
     "rimraf": "^5.0.0",
     "roboto-fontface": "*",
-    "sanitize-html": "~2.13.0",
+    "sanitize-html": "~2.14.0",
     "sass": "~1.32.6",
     "sass-loader": "^16.0.0",
     "search-query-parser": "^1.5.5",
@@ -134,7 +131,7 @@
     "prismjs": "1.29.0"
   },
   "engines": {
-    "node": "^18.19.0"
+    "node": ">=22"
   },
   "branch": "/blob/master/",
   "changelog": "/releases",
