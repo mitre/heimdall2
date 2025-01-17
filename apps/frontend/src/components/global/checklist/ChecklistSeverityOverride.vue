@@ -12,8 +12,8 @@
       solo
       outlined
       dense
-      auto-grow
-      rows="3"
+      no-resize
+      rows="6"
     />
     <v-row justify="center" class="mx-auto pb-5">
       <v-btn class="mr-5" color="#616161" dark @click="cancelSeverityOverride"
