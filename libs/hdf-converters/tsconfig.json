@@ -3,9 +3,11 @@
   "include": [
     "*.ts",
     "**/*.ts",
-    "types/*.d.ts"
+    "types/*.d.ts",
   ],
-  "exclude": ["lib"],
+  "exclude": [
+    "lib"
+  ],
   "compilerOptions": {
     "outDir": "./lib",
     "strict": true,
