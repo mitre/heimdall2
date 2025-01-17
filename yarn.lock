@@ -3229,10 +3229,10 @@
   dependencies:
     path-to-regexp "0.2.5"
 
-"@nestjs/testing@^10.2.1":
-  version "10.4.15"
-  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-10.4.15.tgz#4c9fe17bf026c0142040cbe3db464c526f89d36a"
-  integrity sha512-eGlWESkACMKti+iZk1hs6FUY/UqObmMaa8HAN9JLnaYkoLf1Jeh+EuHlGnfqo/Rq77oznNLIyaA3PFjrFDlNUg==
+"@nestjs/testing@^11.0.1":
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/testing/-/testing-11.0.1.tgz#3bc55ed6f213c04fe9221aa2144167f5a618732c"
+  integrity sha512-s1hQAC46W/qp2JJqCeqhG/uT8IBtvgIoAHklUPl7sTYSJCs745q6X2+rrOPtAewVW8CuYNhQS7/0g94QR1IHXw==
   dependencies:
     tslib "2.8.1"
 
