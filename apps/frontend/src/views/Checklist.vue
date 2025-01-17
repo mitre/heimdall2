@@ -35,42 +35,34 @@
           <!-- Left Panel -->
           <v-col cols="12" md="6">
             <!-- Data Table -->
-            <v-row dense>
-              <ChecklistRulesTable
-                :all-filter="allFilter"
-                :file-filter="fileFilter"
-                :short-id-enabled="shortIdEnabled"
-                :rules="filteredRules"
-                :num-total-rules="allRules.length"
-                @toggle-short-id="shortIdEnabled = !shortIdEnabled"
-              />
-            </v-row>
+            <ChecklistRulesTable
+              :all-filter="allFilter"
+              :file-filter="fileFilter"
+              :short-id-enabled="shortIdEnabled"
+              :rules="filteredRules"
+              :num-total-rules="allRules.length"
+              @toggle-short-id="shortIdEnabled = !shortIdEnabled"
+            />
           </v-col>
           <!-- Right Panel (Rule Data) -->
           <v-col id="right-panel" ref="rightPanel" cols="12" md="6">
             <!-- Rule Header Info -->
-            <v-row dense>
-              <ChecklistRuleInfoHeader
-                :selected-rule="selectedRule"
-                :short-id-enabled="shortIdEnabled"
-              />
-            </v-row>
+            <ChecklistRuleInfoHeader
+              :selected-rule="selectedRule"
+              :short-id-enabled="shortIdEnabled"
+            />
             <!-- Rule Body Info -->
-            <v-row dense>
-              <ChecklistRuleInfoBody
-                :selected-rule="selectedRule"
-                @enable-sheet="sheet = true"
-              />
-            </v-row>
+            <ChecklistRuleInfoBody
+              :selected-rule="selectedRule"
+              @enable-sheet="sheet = true"
+            />
             <!-- Rule Info Edit -->
-            <v-row dense>
-              <ChecklistRuleEdit
-                :selected-rule="selectedRule"
-                :sheet="sheet"
-                @enable-sheet="sheet = true"
-                @update-override="setSeverityOverrideSelection"
-              />
-            </v-row>
+            <ChecklistRuleEdit
+              :selected-rule="selectedRule"
+              :sheet="sheet"
+              @enable-sheet="sheet = true"
+              @update-override="setSeverityOverrideSelection"
+            />
           </v-col>
         </v-row>
         <div class="text-center">
