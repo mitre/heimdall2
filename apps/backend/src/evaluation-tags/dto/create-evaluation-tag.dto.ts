@@ -1,4 +1,4 @@
-import {ICreateEvaluationTag} from '@heimdall/interfaces';
+import {ICreateEvaluationTag} from '@heimdall/common/interfaces';
 import {IsNotEmpty, IsString} from 'class-validator';
 
 export class CreateEvaluationTagDto implements ICreateEvaluationTag {

@@ -91,7 +91,7 @@ import {FileID} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {EvaluationModule} from '@/store/evaluations';
 import {SpinnerModule} from '@/store/spinner';
-import {IEvalPaginationParams, IEvaluation} from '@heimdall/interfaces';
+import {IEvalPaginationParams, IEvaluation} from '@heimdall/common/interfaces';
 import {Prop, Watch} from 'vue-property-decorator';
 import Component, {mixins} from 'vue-class-component';
 

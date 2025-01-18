@@ -1,4 +1,4 @@
-import {IStartupSettings} from '@heimdall/interfaces';
+import {IStartupSettings} from '@heimdall/common/interfaces';
 
 export class StartupSettingsDto implements IStartupSettings {
   readonly apiKeysEnabled: boolean;

@@ -1,4 +1,4 @@
-import {IApiKey} from '@heimdall/interfaces';
+import {IApiKey} from '@heimdall/common/interfaces';
 import {ApiKey} from '../apikey.model';
 
 export class APIKeyDto implements IApiKey {
