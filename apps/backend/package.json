@@ -47,7 +47,7 @@
     "@casl/ability": "^6.0.0",
     "@heimdall/interfaces": "^2.10.16",
     "@heimdall/password-complexity": "^2.6.6",
-    "@nestjs/cli": "^10.1.14",
+    "@nestjs/cli": "^11.0.0",
     "@nestjs/common": "^10.2.1",
     "@nestjs/core": "^10.2.1",
     "@nestjs/jwt": "^11.0.0",
