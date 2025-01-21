@@ -3176,10 +3176,10 @@
     "@types/jsonwebtoken" "9.0.7"
     jsonwebtoken "9.0.2"
 
-"@nestjs/passport@^10.0.1":
-  version "10.0.3"
-  resolved "https://registry.npmjs.org/@nestjs/passport/-/passport-10.0.3.tgz#26ec5b2167d364e04962c115fcef80d10e185367"
-  integrity sha512-znJ9Y4S8ZDVY+j4doWAJ8EuuVO7SkQN3yOBmzxbGaXbvcSwFDAdGJ+OMCg52NdzIO4tQoN4pYKx8W6M0ArfFRQ==
+"@nestjs/passport@^11.0.4":
+  version "11.0.4"
+  resolved "https://registry.yarnpkg.com/@nestjs/passport/-/passport-11.0.4.tgz#90970a9b3f4ba5dfe69ea968d8ed4d1d8605193f"
+  integrity sha512-XpqLKPlo6yt0tFSAKgh1Q2j442UWhaL8qPh6GoMVTi5MsvK/uYD2aaMr3wrwyFIpH0/hjOqKC7TI5+Dw9e7/ng==
 
 "@nestjs/platform-express@^10.2.1":
   version "10.4.15"
