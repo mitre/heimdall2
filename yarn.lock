@@ -3123,9 +3123,9 @@
     "@tybys/wasm-util" "^0.9.0"
 
 "@nestjs/cli@^11.0.0":
-  version "11.0.0"
-  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-11.0.0.tgz#55b8a8e948e3a14470ac3bbb8e54bfabd3decd88"
-  integrity sha512-53Hparhbz4nNQNttf6EFfYNeFxSLdshqnvaiWy3MBnZxgAuqtAZP3xsiNHPId5dYtzGCjdK60FN4Vcspx3Y+aw==
+  version "11.0.1"
+  resolved "https://registry.yarnpkg.com/@nestjs/cli/-/cli-11.0.1.tgz#e4848f03b27b0312e4cb6e6fafb1e03950c2a838"
+  integrity sha512-W1pS3mKBb5L2T0Sk9/bAFTS3XctcaAn9q1veXCIKSaGwGk7pjqEa1AwzX8/Lq10NJgjJno/Lhw1kZrX32VImFA==
   dependencies:
     "@angular-devkit/core" "19.1.2"
     "@angular-devkit/schematics" "19.1.2"
