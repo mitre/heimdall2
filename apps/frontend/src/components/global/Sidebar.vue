@@ -133,6 +133,7 @@ import {AppInfoModule, views} from '@/store/app_info';
 import QuickFilters from './sidebaritems/QuickFilters.vue';
 import DropdownFilters from './sidebaritems/DropdownFilters.vue';
 import SelectedFilterTable from './sidebaritems/SelectedFilterTable.vue';
+import {Prop} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -145,6 +146,8 @@ import SelectedFilterTable from './sidebaritems/SelectedFilterTable.vue';
   }
 })
 export default class Sidebar extends mixins(RouteMixin) {
+  @Prop({required: true}) readonly value!: boolean;
+
   /** Category list for in-file filtering dropdown */
   readonly inFileFilterProps = [
     'Keywords',
@@ -166,7 +169,7 @@ export default class Sidebar extends mixins(RouteMixin) {
   readonly fileMetadataFilterProps = ['File Name', 'Group', 'Tag'];
 
   // Used for toggling the side nav drawer
-  isUtilityDrawerShown = false;
+  isUtilityDrawerShown = this.value;
   setUtilityDrawerBoolean() {
     this.isUtilityDrawerShown = !this.isUtilityDrawerShown;
   }
