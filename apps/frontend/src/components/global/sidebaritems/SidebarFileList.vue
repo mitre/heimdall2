@@ -58,7 +58,7 @@ import {
   ProfileFile
 } from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
-import {ICreateEvaluation, IEvaluation} from '@heimdall/interfaces';
+import {ICreateEvaluation, IEvaluation} from '@heimdall/common/interfaces';
 import axios from 'axios';
 import _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
