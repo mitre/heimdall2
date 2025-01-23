@@ -1,8 +1,8 @@
 {
-  "name": "@heimdall/interfaces",
-  "version": "2.10.16",
+  "name": "@heimdall/common",
+  "version": "2.11.1",
   "private": true,
-  "description": "",
+  "description": "Common utilities and interfaces between the front and backends of Heimdall",
   "main": "index.ts",
   "scripts": {
     "lint": "eslint \"**/*.ts\" --fix",

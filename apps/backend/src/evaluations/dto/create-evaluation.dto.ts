@@ -1,4 +1,4 @@
-import {ICreateEvaluation} from '@heimdall/interfaces';
+import {ICreateEvaluation} from '@heimdall/common/interfaces';
 import {
   IsArray,
   IsBoolean,

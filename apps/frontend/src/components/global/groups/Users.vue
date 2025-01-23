@@ -61,7 +61,7 @@
 
 <script lang="ts">
 import ActionDialog from '@/components/generic/ActionDialog.vue';
-import {ISlimUser} from '@heimdall/interfaces';
+import {ISlimUser} from '@heimdall/common/interfaces';
 import Component from 'vue-class-component';
 import {Emit, Prop, VModel} from 'vue-property-decorator';
 import {ServerModule} from '@/store/server';
