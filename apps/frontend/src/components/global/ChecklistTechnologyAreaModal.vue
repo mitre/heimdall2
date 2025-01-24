@@ -11,9 +11,7 @@
           justify="center"
           label="Select a Technology Area (optional)"
         />
-        <v-btn @click="clearSelection()">
-          <span class="d-none d-md-inline pr-2"> Clear Selection </span>
-        </v-btn>
+        <v-btn @click="clearSelection()">Clear Selection</v-btn>
       </div>
       <v-divider />
       <v-card-actions>
