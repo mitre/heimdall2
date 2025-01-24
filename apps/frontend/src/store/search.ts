@@ -1,7 +1,6 @@
 import Store from '@/store/store';
 import {controlStatuses, Severity} from 'inspecjs';
 import _ from 'lodash';
-import {parse} from 'search-string';
 import {
   Action,
   getModule,
@@ -30,6 +29,8 @@ import {
   VulIdSearchTerm
 } from './search_filter_sync';
 
+import SearchString from 'search-string';
+
 /** Type used to represent a parsed value and negated pair from query string  */
 export type SearchEntry<T> = {
   value: T; // ex: string, ExtendedControlStatus, Severity, etc.
@@ -55,7 +56,7 @@ class Search extends VuexModule {
    * { keyword: 'status', value: 'Failed', negated: true },
    * { keyword: 'severity', value: 'low', negated: true } ]
    */
-  parsedSearchResult = parse('');
+  parsedSearchResult = SearchString.parse(this.searchTerm);
 
   inFileSearchTerms: {
     controlId: SearchEntry<ControlIdSearchTerm>[];
@@ -148,19 +149,22 @@ class Search extends VuexModule {
     value: string;
     negated: boolean;
   }) {
-    if (this.parsedSearchResult == undefined) {
+    if (!this.parsedSearchResult) {
       return;
     }
     // If coming from a category filter, else a quick filter
-    if (!this.categoryToFilterMapping.get(searchPayload.field)) {
+    const categoryFilter = this.categoryToFilterMapping.get(
+      searchPayload.field
+    );
+    if (categoryFilter !== undefined) {
       this.parsedSearchResult.addEntry(
-        searchPayload.field,
+        categoryFilter,
         searchPayload.value,
         searchPayload.negated
       );
     } else {
       this.parsedSearchResult.addEntry(
-        this.categoryToFilterMapping.get(searchPayload.field),
+        searchPayload.field,
         searchPayload.value,
         searchPayload.negated
       );
@@ -178,7 +182,7 @@ class Search extends VuexModule {
     value: T;
     negated: boolean;
   }) {
-    if (this.parsedSearchResult == undefined) {
+    if (!this.parsedSearchResult) {
       return;
     }
 
@@ -706,7 +710,7 @@ class Search extends VuexModule {
 
   /** Set the parsed search result */
   @Mutation
-  setParsedSearchResult(parsedSearchResult: Record<string, unknown>) {
+  setParsedSearchResult(parsedSearchResult: SearchString) {
     this.parsedSearchResult = parsedSearchResult;
   }
 
@@ -718,7 +722,9 @@ class Search extends VuexModule {
       key: 'keywords',
       value: text
     });
-    const parsedSearchResult = parse(this.searchTerm, [freeTextTransformer]);
+    const parsedSearchResult = SearchString.parse(this.searchTerm, [
+      freeTextTransformer
+    ]);
     this.setParsedSearchResult(parsedSearchResult);
     for (const prop of parsedSearchResult.getConditionArray()) {
       const include = {
