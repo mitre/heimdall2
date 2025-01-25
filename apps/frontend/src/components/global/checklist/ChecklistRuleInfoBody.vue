@@ -145,7 +145,7 @@ export default class ChecklistRuleInfoBody extends Vue {
     const isAlphabetical = (anchor: string) => /[a-z]/.test(anchor);
     const isNumerical = (anchor: string) => /[0-9]/.test(anchor);
 
-    const hash = control.subSpecifiers[2];
+    const hash = control.subSpecifiers[2] || '';
 
     // Control Statement
     if (isAlphabetical(hash)) {
