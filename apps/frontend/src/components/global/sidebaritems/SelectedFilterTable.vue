@@ -8,7 +8,7 @@
         dense
         show-select
         :headers="filterHeaders"
-        :items="convertFilterData(currentFilters.conditionArray)"
+        :items="convertFilterData(currentFilters.getConditionArray())"
         item-key="value"
         class="elevation-1 mb-3 testing"
       />

@@ -29,7 +29,7 @@ import {
   VulIdSearchTerm
 } from './search_filter_sync';
 
-import SearchString from 'search-string';
+import SearchString, {Condition} from 'search-string';
 
 /** Type used to represent a parsed value and negated pair from query string  */
 export type SearchEntry<T> = {
@@ -133,6 +133,7 @@ class Search extends VuexModule {
     ['IA Control', 'iaControl'],
     ['Group Name', 'groupname'],
     ['CCIs', 'cci'],
+
     ['File Name', 'filename'],
     ['Group', 'group'],
     ['Tag', 'tag']
@@ -152,17 +153,40 @@ class Search extends VuexModule {
     if (!this.parsedSearchResult) {
       return;
     }
+
     // If coming from a category filter, else a quick filter
     const categoryFilter = this.categoryToFilterMapping.get(
       searchPayload.field
     );
-    if (categoryFilter !== undefined) {
+    const usingCategoryFilter = !!categoryFilter;
+    const isDuplicateCategoryFilter = this.parsedSearchResult
+      .getConditionArray()
+      .find(
+        (value) =>
+          value.keyword === categoryFilter &&
+          value.value === searchPayload.value &&
+          value.negated === searchPayload.negated
+      );
+
+    if (usingCategoryFilter && !isDuplicateCategoryFilter) {
       this.parsedSearchResult.addEntry(
         categoryFilter,
         searchPayload.value,
         searchPayload.negated
       );
-    } else {
+    }
+
+    const usingQuickFilter = !categoryFilter;
+    const isDuplicateQuickFilter = this.parsedSearchResult
+      .getConditionArray()
+      .find(
+        (value) =>
+          value.keyword === searchPayload.field &&
+          value.value === searchPayload.value &&
+          value.negated === searchPayload.negated
+      );
+
+    if (usingQuickFilter && !isDuplicateQuickFilter) {
       this.parsedSearchResult.addEntry(
         searchPayload.field,
         searchPayload.value,
