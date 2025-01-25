@@ -155,17 +155,16 @@ class Search extends VuexModule {
     }
 
     // If coming from a category filter, else a quick filter
-    const categoryFilter = this.categoryToFilterMapping.get(
-      searchPayload.field
-    );
+    const searchPayloadField =
+      searchPayload.field === '' ? 'keywords' : searchPayload.field;
+    const categoryFilter = this.categoryToFilterMapping.get(searchPayloadField);
     const usingCategoryFilter = !!categoryFilter;
     const isDuplicateCategoryFilter = this.parsedSearchResult
       .getConditionArray()
       .find(
         (value) =>
           value.keyword === categoryFilter &&
-          value.value === searchPayload.value &&
-          value.negated === searchPayload.negated
+          value.value === searchPayload.value
       );
 
     if (usingCategoryFilter && !isDuplicateCategoryFilter) {
@@ -181,14 +180,13 @@ class Search extends VuexModule {
       .getConditionArray()
       .find(
         (value) =>
-          value.keyword === searchPayload.field &&
-          value.value === searchPayload.value &&
-          value.negated === searchPayload.negated
+          value.keyword === searchPayloadField &&
+          value.value === searchPayload.value
       );
 
     if (usingQuickFilter && !isDuplicateQuickFilter) {
       this.parsedSearchResult.addEntry(
-        searchPayload.field,
+        searchPayloadField,
         searchPayload.value,
         searchPayload.negated
       );
