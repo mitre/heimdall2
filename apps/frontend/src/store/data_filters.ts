@@ -67,8 +67,6 @@ export declare type ExtendedControlStatus = ControlStatus | 'Waived';
 
 export type GenericSearchEntryValue = string | ExtendedControlStatus | Severity;
 
-export type SearchBarEntry = string;
-
 export type FilterRecord =
   | boolean
   | SearchEntry<GenericSearchEntryValue>[]
@@ -328,7 +326,7 @@ export class FilteredData extends VuexModule {
   selectedChecklistId: FileID = '';
 
   /** Filter state for the checklist view */
-  checklistFilterState: SearchBarEntry = '';
+  checklistFilterState: string = '';
 
   /** Sets the current checklist state */
   @Mutation
@@ -343,7 +341,7 @@ export class FilteredData extends VuexModule {
   }
 
   /** Filter state for the results view */
-  resultsFilterState: SearchBarEntry = '';
+  resultsFilterState: string = '';
 
   /** Sets the current results state */
   @Mutation
@@ -358,7 +356,7 @@ export class FilteredData extends VuexModule {
   }
 
   /** Filter state for the profiles view */
-  profilesFilterState: SearchBarEntry = '';
+  profilesFilterState: string = '';
 
   /** Sets the current results state */
   @Mutation
@@ -670,7 +668,7 @@ export class FilteredData extends VuexModule {
   /**
    * Parameterized getter.
    * Get all controls from all profiles from the specified file id.
-   * Utlizes the profiles getter to accelerate the file filter.
+   * Utilizes the profiles getter to accelerate the file filter.
    *
    * @param filter - Filters to apply
    * @returns Controls from all profiles from the specified file id
@@ -934,12 +932,8 @@ export function filterRulesByKeywords(
   if (keywords && Array.isArray(keywords)) {
     for (const filter of keywords) {
       result = !filter.negated
-        ? (result = rules.filter((rule) => {
-            return ruleContainsTerm(rule, filter);
-          }))
-        : (result = rules.filter((rule) => {
-            return !ruleContainsTerm(rule, filter);
-          }));
+        ? result.filter((rule) => ruleContainsTerm(rule, filter))
+        : result.filter((rule) => !ruleContainsTerm(rule, filter));
     }
   }
   return result;

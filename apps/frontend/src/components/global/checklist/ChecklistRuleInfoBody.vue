@@ -143,7 +143,7 @@ export default class ChecklistRuleInfoBody extends Vue {
 
   urlAnchor(control: NistControl): string {
     const isAlphabetical = (anchor: string) => /[a-z]/.test(anchor);
-    const isNumerical = (anchor: string) => /[0-9]/.test(anchor);
+    const isNumerical = (anchor: string) => /\d/.test(anchor);
 
     const hash = control.subSpecifiers[2] || '';
 
