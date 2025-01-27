@@ -150,14 +150,10 @@ class Search extends VuexModule {
     value: string;
     negated: boolean;
   }) {
-    if (!this.parsedSearchResult) {
-      return;
-    }
-
-    // If coming from a category filter, else a quick filter
-    const searchPayloadField =
-      searchPayload.field === '' ? 'keywords' : searchPayload.field;
-    const categoryFilter = this.categoryToFilterMapping.get(searchPayloadField);
+    // Category or file filter type filter
+    const categoryFilter = this.categoryToFilterMapping.get(
+      searchPayload.field
+    );
     const usingCategoryFilter = !!categoryFilter;
     const isDuplicateCategoryFilter = this.parsedSearchResult
       .getConditionArray()
@@ -175,18 +171,19 @@ class Search extends VuexModule {
       );
     }
 
+    // Quick filter
     const usingQuickFilter = !categoryFilter;
     const isDuplicateQuickFilter = this.parsedSearchResult
       .getConditionArray()
       .find(
         (value) =>
-          value.keyword === searchPayloadField &&
+          value.keyword === searchPayload.field &&
           value.value === searchPayload.value
       );
 
     if (usingQuickFilter && !isDuplicateQuickFilter) {
       this.parsedSearchResult.addEntry(
-        searchPayloadField,
+        searchPayload.field,
         searchPayload.value,
         searchPayload.negated
       );

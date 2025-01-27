@@ -21,6 +21,7 @@
             currentFreeTextFilterInput
           )
         "
+        :disabled="isButtonDisabled()"
       >
         <span>Add</span>
       </v-btn>
@@ -50,6 +51,13 @@ export default class DropdownFilters extends Vue {
 
   /** Whether category filter is inclusive or exclusive (default: inclusive)*/
   selectedRadioButton: FilterType = 'inclusive';
+
+  isButtonDisabled() {
+    // Only add the filter if a property was ever selected and there is a filter keyword
+    return (
+      !this.currentFreeTextFilterCategory || !this.currentFreeTextFilterInput
+    );
+  }
 
   addCategoryFilter(field: string, value: string) {
     let negated = false;
