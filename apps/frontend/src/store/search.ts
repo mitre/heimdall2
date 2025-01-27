@@ -29,7 +29,7 @@ import {
   VulIdSearchTerm
 } from './search_filter_sync';
 
-import SearchString, {Condition} from 'search-string';
+import SearchString from 'search-string';
 
 /** Type used to represent a parsed value and negated pair from query string  */
 export type SearchEntry<T> = {
