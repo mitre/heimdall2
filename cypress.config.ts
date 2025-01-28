@@ -4,6 +4,7 @@ export default defineConfig({
   fixturesFolder: false,
   screenshotsFolder: 'test/screenshots',
   videosFolder: 'test/videos',
+  video: true,
   chromeWebSecurity: false,
   e2e: {
     setupNodeEvents(on, config) {},
