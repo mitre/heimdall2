@@ -1,8 +1,11 @@
 /// <reference types="cypress" />
 
+import installLogsCollector from 'cypress-terminal-report/src/installLogsCollector';
 import 'cypress-wait-until';
 import RegistrationPage from '../support/pages/RegistrationPage';
 import DatabaseHelper from './helpers/DatabaseHelper';
+
+installLogsCollector();
 
 const databaseHelper = new DatabaseHelper();
 
