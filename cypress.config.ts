@@ -7,7 +7,9 @@ export default defineConfig({
   video: true,
   chromeWebSecurity: false,
   e2e: {
-    setupNodeEvents(on, config) {},
+    setupNodeEvents(on, config) {
+      require('cypress-terminal-report/src/installLogsPrinter')(on)
+    },
     baseUrl: 'http://127.0.0.1:3000',
     supportFile: 'test/support/index.ts',
     specPattern: 'test/integration/**/*.cy.{js,jsx,ts,tsx}'
