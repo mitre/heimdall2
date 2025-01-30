@@ -5,7 +5,15 @@
     @click.stop="select_file_exclusive"
   >
     <v-list-item-action @click.stop="select_file">
-      <v-checkbox :input-value="selected" color="blue" />
+      <v-checkbox
+        v-if="!inChecklistView"
+        :input-value="selected"
+        color="blue"
+      />
+
+      <v-radio-group v-else :value="selected_checklist">
+        <v-radio :value="file.uniqueId" color="blue" />
+      </v-radio-group>
     </v-list-item-action>
 
     <v-list-item-avatar>
@@ -19,6 +27,12 @@
     <v-list-item-action v-if="serverMode" @click.stop="save_file">
       <v-btn data-cy="saveFile" icon small :disabled="disable_saving">
         <v-icon title="Save entry to the database"> mdi-content-save </v-icon>
+      </v-btn>
+    </v-list-item-action>
+
+    <v-list-item-action v-if="inChecklistView" @click.stop="save_to_hdf">
+      <v-btn data-cy="saveToHdf" icon small>
+        <v-icon color="pink lighten-3"> mdi-google-downasaur </v-icon>
       </v-btn>
     </v-list-item-action>
 
@@ -38,13 +52,19 @@ import ServerMixin from '@/mixins/ServerMixin';
 import {FilteredDataModule} from '@/store/data_filters';
 import {InspecDataModule} from '@/store/data_store';
 import {EvaluationModule} from '@/store/evaluations';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {
+  EvaluationFile,
+  InspecIntakeModule,
+  ProfileFile
+} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {ICreateEvaluation, IEvaluation} from '@heimdall/common/interfaces';
 import axios from 'axios';
-import * as _ from 'lodash';
+import _ from 'lodash';
 import Component, {mixins} from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
+import {AppInfoModule, views} from '@/store/app_info';
+import {ChecklistMapper, ChecklistObject} from '@mitre/hdf-converters';
 
 @Component
 export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
@@ -53,24 +73,46 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   saving = false;
 
   select_file() {
-    if (this.file.hasOwnProperty('evaluation')) {
-      FilteredDataModule.toggle_evaluation(this.file.uniqueId);
+    if (this.inChecklistView && this.containsChecklist(this.file)) {
+      FilteredDataModule.select_exclusive_checklist(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.toggle_profile(this.file.uniqueId);
+    } else if (this.file.hasOwnProperty('evaluation')) {
+      FilteredDataModule.toggle_evaluation(this.file.uniqueId);
     }
   }
 
   select_file_exclusive() {
-    if (this.file.hasOwnProperty('evaluation')) {
-      FilteredDataModule.select_exclusive_evaluation(this.file.uniqueId);
+    if (this.inChecklistView && this.containsChecklist(this.file)) {
+      FilteredDataModule.select_exclusive_checklist(this.file.uniqueId);
     } else if (this.file.hasOwnProperty('profile')) {
       FilteredDataModule.select_exclusive_profile(this.file.uniqueId);
+    } else if (this.file.hasOwnProperty('evaluation')) {
+      FilteredDataModule.select_exclusive_evaluation(this.file.uniqueId);
     }
   }
 
-  //checks if file is selected
+  /** Current application view */
+  get currentView() {
+    return AppInfoModule.currentView;
+  }
+
+  get inChecklistView() {
+    return this.currentView === views.Checklist;
+  }
+
+  /** Checks if file is selected */
   get selected(): boolean {
     return FilteredDataModule.selected_file_ids.includes(this.file.uniqueId);
+  }
+
+  get selected_checklist(): string {
+    return FilteredDataModule.selected_checklist;
+  }
+
+  containsChecklist(file: EvaluationFile | ProfileFile): boolean {
+    // The 'passthrough.checklist' field is from the checklist mapper's output.
+    return _.has(file, 'evaluation.data.passthrough.checklist');
   }
 
   //removes uploaded file from the currently observed files
@@ -80,7 +122,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     // Remove any database files that may have been in the URL
     // by calling the router and causing it to write the appropriate
     // route to the URL bar
-    this.navigateWithNoErrors(`/${this.current_route}`);
+    this.navigateWithNoErrors(`/${this.currentRoute}`);
   }
 
   //saves file to database
@@ -92,12 +134,27 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
     }
   }
 
-  //determines if the use can save the file
+  // takes current intermediate checklist file and maps to hdf
+  save_to_hdf() {
+    const checklistObject: ChecklistObject = _.get(
+      this.file,
+      'evaluation.data.passthrough.checklist'
+    ) as unknown as ChecklistObject;
+    const newHdf = new ChecklistMapper(checklistObject).toHdf();
+    const filename = this.file.filename;
+    const payload = {filename, data: newHdf};
+    InspecIntakeModule.loadExecJson(payload);
+    InspecDataModule.REMOVE_RESULT(this.file.uniqueId);
+    //this.navigateWithNoErrors(`/results/`);
+  }
+
+  //determines if the user can save the file
   get disable_saving() {
     return typeof this.file?.database_id !== 'undefined' || this.saving;
   }
 
   save_to_database(file: EvaluationFile | ProfileFile) {
+    // TODO: handle the case of a checklist file
     this.saving = true;
 
     const createEvaluationDto: ICreateEvaluation = {
@@ -138,9 +195,7 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
         file.database_id = parseInt(response.data.id);
         EvaluationModule.loadEvaluation(response.data.id);
         const loadedDatabaseIds = InspecDataModule.loadedDatabaseIds.join(',');
-        this.navigateWithNoErrors(
-          `/${this.current_route}/${loadedDatabaseIds}`
-        );
+        this.navigateWithNoErrors(`/${this.currentRoute}/${loadedDatabaseIds}`);
       })
       .catch((error) => {
         SnackbarModule.failure(error.response.data.message);
@@ -160,3 +215,8 @@ export default class SidebarFileList extends mixins(ServerMixin, RouteMixin) {
   }
 }
 </script>
+<style>
+.strikethrough {
+  text-decoration: line-through;
+}
+</style>
