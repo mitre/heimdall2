@@ -4,8 +4,8 @@
       v-model="logoffSnackbar"
       :color="logoffFailure ? 'red' : 'success'"
     >
-      {{ logoffMessage }}</v-snackbar
-    >
+      {{ logoffMessage }}
+    </v-snackbar>
     <v-main>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
