@@ -344,7 +344,7 @@ export default class ExportCSVModal extends Vue {
       return null;
     });
     Promise.all(fileConvertPromises)
-      .then(() => saveSingleOrMultipleFiles(this.files, 'csv'))
+      .then(() => saveSingleOrMultipleFiles(this.files, 'csv', true))
       .finally(() => {
         this.closeModal();
       });
