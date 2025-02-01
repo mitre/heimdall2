@@ -283,8 +283,8 @@
 <script lang="ts">
 import LinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
 import {ChecklistFilter, ControlsFilter} from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
-import {EvaluationFile, ProfileFile} from '@/store/report_intake';
+import {ChecklistFile, InspecDataModule} from '@/store/data_store';
+import {EvaluationFile, FileID, ProfileFile} from '@/store/report_intake';
 import {SnackbarModule} from '@/store/snackbar';
 import {
   cleanUpFilename,
@@ -356,6 +356,8 @@ export default class ExportCKLModal extends Vue {
   @Prop({type: Object, required: true}) readonly filter!:
     | ControlsFilter
     | ChecklistFilter;
+  @Prop({type: Object, required: true})
+  readonly currentFileAndFileId!: {file: ChecklistFile; id: FileID};
 
   showingModal = false;
   formatProfileTitle = false;
@@ -363,8 +365,9 @@ export default class ExportCKLModal extends Vue {
   roles = Object.values(Role);
   types = Object.values(Assettype);
   techareas = Object.values(Techarea);
-  files: ExtendedEvaluationFile[] = this.evaluations(this.filter.fromFile);
-
+  files: ExtendedEvaluationFile[] = this.evaluations(
+    this.currentFileAndFileId.id
+  );
   @Watch('showingModal')
   onModalChange(newState: boolean) {
     if (newState === false) {
@@ -372,9 +375,9 @@ export default class ExportCKLModal extends Vue {
     }
   }
 
-  @Watch('filter')
-  onFilterChange(newFilter: ControlsFilter | ChecklistFilter) {
-    this.files = this.evaluations(newFilter.fromFile);
+  @Watch('currentFileAndFileId', {deep: true})
+  onFileChange(newCurrentFileAndFileId: {file: ChecklistFile; id: FileID}) {
+    this.files = this.evaluations(newCurrentFileAndFileId.id);
   }
 
   selected: ExtendedEvaluationFile[] = [];
@@ -408,7 +411,6 @@ export default class ExportCKLModal extends Vue {
     this.files[fileIndex].profiles[profileIndex].showCalendar = false;
   }
 
-  // Get our evaluation info for our export table
   evaluations(fileIds: string | string[]): ExtendedEvaluationFile[] {
     const files: ExtendedEvaluationFile[] = [];
     const ids = Array.isArray(fileIds) ? fileIds : [fileIds];

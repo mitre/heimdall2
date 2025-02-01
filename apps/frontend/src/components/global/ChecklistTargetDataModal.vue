@@ -1,5 +1,5 @@
 <template>
-  <Modal :visible="visible" @close-modal="$emit('close-modal')">
+  <Modal :visible="visible" @close-modal="handleClose">
     <v-card>
       <h2 class="modal-title">Add/Update Target Data</h2>
       <div class="input-section">
@@ -79,9 +79,7 @@
       </div>
       <v-divider />
       <v-card-actions>
-        <v-btn color="primary" text @click="$emit('close-modal')"
-          >Close Window</v-btn
-        >
+        <v-btn color="primary" text @click="handleClose">Close Window</v-btn>
       </v-card-actions>
     </v-card>
   </Modal>
@@ -124,6 +122,12 @@ export default class ChecklistTargetDataModal extends Vue {
     } else {
       return FilteredDataModule.emptyAsset;
     }
+  }
+
+  handleClose() {
+    const asset = this.selectedChecklistAsset;
+    InspecDataModule.updateChecklistAsset({file: this.file_filter, asset});
+    this.$emit('close-modal');
   }
 }
 </script>

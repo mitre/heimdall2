@@ -10,7 +10,7 @@ import {
   SourcedContextualizedProfile
 } from '@/store/report_intake';
 import Store from '@/store/store';
-import {ChecklistObject} from '@mitre/hdf-converters';
+import {ChecklistAsset, ChecklistObject} from '@mitre/hdf-converters';
 import _ from 'lodash';
 import {
   Action,
@@ -94,6 +94,25 @@ export class InspecData extends VuexModule {
         filename: checklistFile?.filename ?? 'Default Checklist Filename'
       };
     };
+  }
+
+  @Mutation
+  UPDATE_CHECKLIST_ASSET({file, asset}: {file: FileID; asset: ChecklistAsset}) {
+    const checklistFile = this.executionFiles.find(
+      (cf) => cf.uniqueId === file
+    );
+    if (checklistFile && _.has(checklistFile.evaluation, 'data')) {
+      _.set(
+        checklistFile?.evaluation,
+        'data.passthrough.checklist.asset',
+        asset
+      );
+    }
+  }
+
+  @Action
+  updateChecklistAsset({file, asset}: {file: FileID; asset: ChecklistAsset}) {
+    this.context.commit('UPDATE_CHECKLIST_ASSET', {file, asset});
   }
 
   /**

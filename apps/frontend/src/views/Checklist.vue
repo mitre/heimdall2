@@ -22,7 +22,10 @@
           <ExportASFFModal :filter="allFilter" />
         </v-list-item>
         <v-list-item class="px-0">
-          <ExportCKLModal :filter="allFilter" />
+          <ExportCKLModal
+            :filter="allFilter"
+            :currentFileAndFileId="checklistFileWithFileId"
+          />
         </v-list-item>
         <v-list-item class="px-0">
           <ExportCSVModal :filter="allFilter" />
@@ -130,7 +133,7 @@ import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import {ChecklistVuln, Severity} from '@mitre/hdf-converters';
-import {InspecDataModule} from '@/store/data_store';
+import {ChecklistFile, InspecDataModule} from '@/store/data_store';
 import _ from 'lodash';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
@@ -239,11 +242,18 @@ export default class Checklist extends RouteMixin {
    * Returns true if no checklist files are loaded
    */
   get noFiles(): boolean {
-    return InspecDataModule.allChecklistFiles.length == 0;
+    return InspecDataModule.allChecklistFiles.length === 0;
+  }
+
+  get checklistFileWithFileId(): {file: ChecklistFile; id: FileID} {
+    return {
+      file: InspecDataModule.getChecklist(this.fileFilter),
+      id: this.fileFilter
+    };
   }
 
   /**
-   * Subset of all filter terms specific for Results
+   * Subset of all filter terms specific for Checklist
    */
   get allFilter(): ChecklistFilter {
     return {
