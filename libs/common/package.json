@@ -1,6 +1,6 @@
 {
   "name": "@heimdall/common",
-  "version": "2.11.1",
+  "version": "2.11.2",
   "private": true,
   "description": "Common utilities and interfaces between the front and backends of Heimdall",
   "main": "index.ts",

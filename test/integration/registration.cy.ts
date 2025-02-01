@@ -28,7 +28,7 @@ context('Registration', () => {
       );
     });
 
-    it('rejects emails that already exist', async () => {
+    it('rejects emails that already exist', () => {
       registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
       registrationPage.register(CREATE_USER_DTO_TEST_OBJ);
       toastVerifier.toastTextContains('Email must be unique');

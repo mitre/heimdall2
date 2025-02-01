@@ -1,6 +1,6 @@
 {
   "name": "@heimdall/cypress-tests",
-  "version": "2.11.0",
+  "version": "2.11.2",
   "private": true,
   "description": "",
   "scripts": {
@@ -13,6 +13,7 @@
     "cypress": "14.0.1"
   },
   "dependencies": {
+    "cypress-terminal-report": "^7.1.0",
     "cypress-wait-until": "^3.0.2",
     "eslint-plugin-cypress": "^3.0.0",
     "json-server": "^0.17.0",
