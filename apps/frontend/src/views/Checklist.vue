@@ -22,10 +22,7 @@
           <ExportASFFModal :filter="allFilter" />
         </v-list-item>
         <v-list-item class="px-0">
-          <ExportCKLModal
-            :filter="allFilter"
-            :currentFileAndFileId="checklistFileWithFileId"
-          />
+          <ExportCKLModal :filter="allFilter" />
         </v-list-item>
         <v-list-item class="px-0">
           <ExportCSVModal :filter="allFilter" />
@@ -243,13 +240,6 @@ export default class Checklist extends RouteMixin {
    */
   get noFiles(): boolean {
     return InspecDataModule.allChecklistFiles.length === 0;
-  }
-
-  get checklistFileWithFileId(): {file: ChecklistFile; id: FileID} {
-    return {
-      file: InspecDataModule.getChecklist(this.fileFilter),
-      id: this.fileFilter
-    };
   }
 
   /**

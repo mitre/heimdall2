@@ -356,8 +356,6 @@ export default class ExportCKLModal extends Vue {
   @Prop({type: Object, required: true}) readonly filter!:
     | ControlsFilter
     | ChecklistFilter;
-  @Prop({type: Object, required: true})
-  readonly currentFileAndFileId!: {file: ChecklistFile; id: FileID};
 
   showingModal = false;
   formatProfileTitle = false;
@@ -365,19 +363,15 @@ export default class ExportCKLModal extends Vue {
   roles = Object.values(Role);
   types = Object.values(Assettype);
   techareas = Object.values(Techarea);
-  files: ExtendedEvaluationFile[] = this.evaluations(
-    this.currentFileAndFileId.id
-  );
+  files: ExtendedEvaluationFile[] = this.evaluations(this.filter.fromFile);
+
   @Watch('showingModal')
   onModalChange(newState: boolean) {
     if (newState === false) {
       this.closeModal();
+    } else {
+      this.files = this.evaluations(this.filter.fromFile);
     }
-  }
-
-  @Watch('currentFileAndFileId', {deep: true})
-  onFileChange(newCurrentFileAndFileId: {file: ChecklistFile; id: FileID}) {
-    this.files = this.evaluations(newCurrentFileAndFileId.id);
   }
 
   selected: ExtendedEvaluationFile[] = [];
