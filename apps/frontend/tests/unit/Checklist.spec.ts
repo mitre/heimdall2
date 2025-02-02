@@ -28,24 +28,10 @@ const wrapper: Wrapper<Vue> = shallowMount(Checklist, {
   propsData: {}
 });
 
-// loadSample('Clean RHEL 8 Checklist')
-
 describe('Datatable', () => {
   it('displays correct number of rules with loaded checklist', async () => {
     await loadChecklistFile('Clean RHEL 8 Checklist');
 
-    // const total_count: number = 0;
-    // Get example checklist file and count
-    // const countFilename = `tests/hdf_data/counts/Red_Hat_7_STIG_Baseline_Checklist.ckl.info.counts`;
-    // const countFileContent = readFileSync(countFilename, 'utf-8');
-    // const counts: Record<string, {total: number}> =
-    //   JSON.parse(countFileContent);
-
-    // total_count += counts.failed.total;
-    // total_count += counts.passed.total;
-    // total_count += counts.skipped.total;
-    // total_count += counts.no_impact.total;
-    // total_count += counts.error.total;
     const expected =
       expectedCount('passed') +
       expectedCount('failed') +
