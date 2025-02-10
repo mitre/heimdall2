@@ -203,7 +203,11 @@ function attestationCanBeAdded(
   control: ExecJSON.Control
 ) {
   if (attestation.control_id.toLowerCase() === control.id.toLowerCase()) {
-    if (control.results[0].status === 'skipped') {
+    if (control.results.length === 0) {
+      // There are no results for this control. It may be part of an overlay file.
+      return false;
+    }
+    else if (control.results[0].status === 'skipped') {
       return true;
     } else {
       console.error(
