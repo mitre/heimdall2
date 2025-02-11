@@ -202,21 +202,25 @@ function attestationCanBeAdded(
   attestation: Attestation,
   control: ExecJSON.Control
 ) {
-  if (attestation.control_id.toLowerCase() === control.id.toLowerCase()) {
-    if (control.results.length === 0) {
-      // There are no results for this control. It may be part of an overlay file.
-      return false;
-    } else if (control.results[0].status === 'skipped') {
-      return true;
-    } else {
-      console.error(
-        'Invalid control selected: Control must have "skipped" status to be attested'
-      );
-      return false;
-    }
-  } else {
+  if (attestation.control_id.toLowerCase() !== control.id.toLowerCase()) {
+    // Cannot be added if it's not the same control.
     return false;
   }
+
+  if (control.results.length === 0) {
+    // There are no results for this control. It may be part of an overlay file.
+    return false;
+  }
+
+  if (control.results[0].status === 'skipped') {
+    // Can be added if it's a control that's marked as 'skipped', which means it needs Manual Review.
+    return true;
+  }
+
+  console.error(
+    'Invalid control selected: Control must have "skipped" status to be attested'
+  );
+  return false;
 }
 
 function getFirstPath(
