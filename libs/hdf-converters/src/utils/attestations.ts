@@ -206,8 +206,7 @@ function attestationCanBeAdded(
     if (control.results.length === 0) {
       // There are no results for this control. It may be part of an overlay file.
       return false;
-    }
-    else if (control.results[0].status === 'skipped') {
+    } else if (control.results[0].status === 'skipped') {
       return true;
     } else {
       console.error(
