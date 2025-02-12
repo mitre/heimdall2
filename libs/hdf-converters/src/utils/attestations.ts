@@ -203,7 +203,7 @@ function attestationCanBeAdded(
   control: ExecJSON.Control
 ) {
   if (attestation.control_id.toLowerCase() !== control.id.toLowerCase()) {
-    // Cannot be added if it's not the same control.
+    // An attestation cannot be added if it's not the same control.
     return false;
   }
 
@@ -213,12 +213,12 @@ function attestationCanBeAdded(
   }
 
   if (control.results[0].status === 'skipped') {
-    // Can be added if it's a control that's marked as 'skipped', which means it needs Manual Review.
+    // The attestation can be added if the control results show 'skipped', meaning it needs Manual Review.
     return true;
   }
 
   console.error(
-    'Invalid control selected: Control must have "skipped" status to be attested'
+    'Invalid control selected: The control must have "skipped" status to be attested'
   );
   return false;
 }
