@@ -85,7 +85,7 @@ function parseNistTags(issue: Issue): string[] {
     }
   });
   // CWE IDs are embedded inside of the HTML summary
-  issue.summary.match(/CWE-\d\d\d?\d?\d?\d?\d/gi)?.forEach((match) => {
+  issue?.summary?.match(/CWE-\d\d\d?\d?\d?\d?\d/gi)?.forEach((match) => {
     tags.push(...CWE_NIST_MAPPING.nistFilter(match.split('-')[1]));
   });
   return tags;
