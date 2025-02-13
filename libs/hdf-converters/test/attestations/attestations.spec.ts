@@ -418,23 +418,12 @@ describe('addAttestationToHDF', () => {
 });
 
 describe('addAttestationToHDF - Overlay Empty Results Case', () => {
-  let inputDataWithEmptyResults: ExecJSON.Execution;
-  const consoleOriginal = console.error;
-
-  beforeEach(() => {
-    inputDataWithEmptyResults = JSON.parse(
-      fs.readFileSync(
-        'sample_jsons/attestations/triple_overlay_profile_sample.json',
-        'utf-8'
-      )
-    ) as ExecJSON.Execution;
-
-    console.error = jest.fn();
-  });
-
-  afterEach(() => {
-    console.error = consoleOriginal;
-  });
+  const inputDataWithEmptyResults = JSON.parse(
+    fs.readFileSync(
+      'sample_jsons/attestations/triple_overlay_profile_sample.json',
+      'utf-8'
+    )
+  ) as ExecJSON.Execution;
 
   it('Should add a valid attestation to a skipped control', () => {
     const output = addAttestationToHDF(
@@ -450,6 +439,15 @@ describe('addAttestationToHDF - Overlay Empty Results Case', () => {
     // Check that the attestation data added to the control is the attestation passed into the function
     expect(output.profiles[2].controls[0].attestation_data).toEqual(
       attestations_for_overlay[0]
+    );
+
+    // Check the second attestation
+    expect(output.profiles[2].controls[1].results.length).toEqual(2);
+    // Check that the status of the new result is passing
+    expect(output.profiles[2].controls[1].results[1].status).toEqual('passed');
+    // Check that the attestation data added to the control is the attestation passed into the function
+    expect(output.profiles[2].controls[1].attestation_data).toEqual(
+      attestations_for_overlay[1]
     );
   });
 });
