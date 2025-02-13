@@ -10,9 +10,11 @@ export class TrufflehogResults {
     let parsedData = {};
     try {
       parsedData = JSON.parse(trufflehogJson.trim());
-    }
-    catch (e) {
-      parsedData = trufflehogJson.trim().split("\n").map((line) => JSON.parse(line.trim()));
+    } catch (e) {
+      parsedData = trufflehogJson
+        .trim()
+        .split('\n')
+        .map((line) => JSON.parse(line.trim()));
     }
     this.withRaw = withRaw;
     if (_.isArray(parsedData)) {
