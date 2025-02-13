@@ -132,20 +132,22 @@ const attestations_yaml: Attestation[] = [
 
 const attestations_for_overlay: Attestation[] = [
   {
-    "control_id": "V-61409",
-    "explanation": "Audit logs are automatically backed up and preserved as necessary",
-    "frequency": "monthly",
-    "status": "passed",
-    "updated": "2099-05-02",
-    "updated_by": "Yamilia Smith, Security"
+    control_id: 'V-61409',
+    explanation:
+      'Audit logs are automatically backed up and preserved as necessary',
+    frequency: 'monthly',
+    status: 'passed',
+    updated: '2099-05-02',
+    updated_by: 'Yamilia Smith, Security'
   },
   {
-    "control_id": "V-61449",
-    "explanation": "Database Jobs are reviewed before they are put into production",
-    "frequency": "daily",
-    "status": "passed",
-    "updated": "2026-01-02",
-    "updated_by": "Alec Hardison, Security"
+    control_id: 'V-61449',
+    explanation:
+      'Database Jobs are reviewed before they are put into production',
+    frequency: 'daily',
+    status: 'passed',
+    updated: '2026-01-02',
+    updated_by: 'Alec Hardison, Security'
   }
 ];
 
@@ -361,7 +363,7 @@ describe('addAttestationToHDF', () => {
       'Invalid control selected: The control must have "skipped" status to be attested'
     );
     expect(console.error).toHaveBeenCalledWith(
-      'Control SV-230221 not found in HDF. Skipping attestation.'
+      'Attestation cannot be added for control SV-230221. Skipping attestation.'
     );
   });
 
@@ -377,7 +379,7 @@ describe('addAttestationToHDF', () => {
       'Invalid control selected: The control must have "skipped" status to be attested'
     );
     expect(console.error).toHaveBeenCalledWith(
-      'Control SV-230222 not found in HDF. Skipping attestation.'
+      'Attestation cannot be added for control SV-230222. Skipping attestation.'
     );
   });
 
@@ -410,7 +412,7 @@ describe('addAttestationToHDF', () => {
     expect(output.profiles[0].controls[3].attestation_data).toBeUndefined();
 
     expect(console.error).toHaveBeenCalledWith(
-      'Control SV-111111 not found in HDF. Skipping attestation.'
+      'Attestation cannot be added for control SV-111111. Skipping attestation.'
     );
   });
 });
@@ -439,7 +441,7 @@ describe('addAttestationToHDF - Overlay Empty Results Case', () => {
       inputDataWithEmptyResults,
       attestations_for_overlay
     );
-    
+
     // The baseline profile is the third of the three profile entries in the HDF file
     // Check that the results array for the baseline profile has one additional entry
     expect(output.profiles[2].controls[0].results.length).toEqual(2);

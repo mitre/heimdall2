@@ -160,7 +160,7 @@ export function addAttestationToHDF(
     }
     if (!found_control) {
       console.error(
-        `Control ${attestation.control_id} not found in HDF. Skipping attestation.`
+        `Attestation cannot be added for control ${attestation.control_id}. Skipping attestation.`
       );
     }
   }
