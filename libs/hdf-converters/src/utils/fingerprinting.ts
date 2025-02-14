@@ -167,6 +167,13 @@ export function fingerprint(guessOptions: {
     ) {
       return INPUT_TYPES.PRISMA;
     } else if (
+      splitLines[0].includes('SourceName') &&
+      splitLines[0].includes('DetectorType') &&
+      splitLines[0].includes('DetectorName') &&
+      splitLines[0].includes('DecoderName')
+    ) {
+      return INPUT_TYPES.TRUFFLEHOG;
+    } else if (
       guessOptions.data.indexOf('veracode') !== -1 &&
       guessOptions.data.indexOf('detailedreport') !== -1
     ) {

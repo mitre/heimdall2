@@ -238,3 +238,33 @@ describe('trufflehog_example_mapper', () => {
     );
   });
 });
+
+describe('trufflehog_dup_ndjson', () => {
+  it('Successfully converts trufflehog in ndjson format with duplicate findings', () => {
+    const mapper = new TrufflehogResults(
+      fs.readFileSync(
+        'sample_jsons/trufflehog_mapper/sample_input_report/trufflehog_dup.ndjson',
+        {encoding: 'utf-8'}
+      ),
+      false
+    );
+
+    // fs.writeFileSync(
+    //   'sample_jsons/trufflehog_mapper/trufflehog-ndjson-dup-hdf.json',
+    //   JSON.stringify(mapper.toHdf(), null, 2)
+    // );
+
+    expect(omitVersions(mapper.toHdf())).toEqual(
+      omitVersions(
+        JSON.parse(
+          fs.readFileSync(
+            'sample_jsons/trufflehog_mapper/trufflehog-ndjson-dup-hdf.json',
+            {
+              encoding: 'utf-8'
+            }
+          )
+        )
+      )
+    );
+  });
+});
