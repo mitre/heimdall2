@@ -7130,10 +7130,15 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
-bcryptjs@^2.4.0, bcryptjs@^2.4.3:
+bcryptjs@^2.4.0:
   version "2.4.3"
   resolved "https://registry.npmjs.org/bcryptjs/-/bcryptjs-2.4.3.tgz#9ab5627b93e60621ff7cdac5da9733027df1d0cb"
   integrity sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==
+
+bcryptjs@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/bcryptjs/-/bcryptjs-3.0.0.tgz#90b3ddba08c5dbe1a9e15ac900afdc8fb4772965"
+  integrity sha512-Q2vVGpGC7B7m9wggpcA5lq4OYR5OS1nrXoUpnH9MmogXU8HpxzKg63uxtCrLebY5v/y3o0r7JcGCpR/vTGGn7A==
 
 before-after-hook@^2.2.0:
   version "2.2.3"
