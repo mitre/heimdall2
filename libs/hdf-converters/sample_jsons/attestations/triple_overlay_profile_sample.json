@@ -1,0 +1,1247 @@
+{
+    "platform": {
+        "name": "centos",
+        "release": "7.7.1908"
+    },
+    "profiles": [
+        {
+            "name": "cms-ars-3.1-moderate-aws-rds-oracle-database-12c-stig-overlay",
+            "version": "0.1.0",
+            "sha256": "3fe40f9476a23b5b4dd6c0da2bb8dbe8ca5a4a8b6bfb27ffbf9f1797160c0f91",
+            "title": ".",
+            "maintainer": "CMS InSpec Dev Team",
+            "summary": ".",
+            "license": "Apache-2.0",
+            "copyright": ".",
+            "supports": [],
+            "attributes": [
+                {
+                    "name": "user",
+                    "options": {
+                        "value": "admin1"
+                    }
+                },
+                {
+                    "name": "password",
+                    "options": {
+                        "value": ""
+                    }
+                },
+                {
+                    "name": "host",
+                    "options": {
+                        "value": "oracle.host"
+                    }
+                },
+                {
+                    "name": "service",
+                    "options": {
+                        "value": "ORCL"
+                    }
+                },
+                {
+                    "name": "sqlplus_bin",
+                    "options": {
+                        "value": "/usr/bin/sqlplus"
+                    }
+                },
+                {
+                    "name": "standard_auditing_used",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "unified_auditing_used",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "allowed_db_links",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_dbadmin_users",
+                    "options": {
+                        "value": []
+                    }
+                },
+                {
+                    "name": "users_allowed_access_to_public",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_users_dba_role",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_users_system_tablespace",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_application_owners",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_unlocked_oracledb_accounts",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "users_allowed_access_to_dictionary_table",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_users_with_admin_privs",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_audit_users",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_dbaobject_owners",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_oracledb_components",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_oracledb_components_integrated_into_dbms",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "oracle_dbas",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "emergency_profile_list",
+                    "options": {
+                        "type": "Array",
+                        "value": [
+                            "RDSADMIN"
+                        ]
+                    }
+                }
+            ],
+            "depends": [
+                {
+                    "name": "aws-rds-oracle-database-12c-stig-baseline",
+                    "path": "../aws-rds-oracle-database-12c-stig-baseline",
+                    "status": "loaded"
+                }
+            ],
+            "groups": [
+                {
+                    "id": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61409.rb",
+                    "controls": [
+                        "V-61409"
+                    ]
+                },
+                {
+                    "id": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61449.rb",
+                    "controls": [
+                        "V-61449"
+                    ]
+                },
+                {
+                    "id": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61867.rb",
+                    "controls": [
+                        "V-61867"
+                    ]
+                },
+                {
+                    "id": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61635.rb",
+                    "controls": [
+                        "V-61635"
+                    ]
+                },
+                {
+                    "id": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61677.rb",
+                    "controls": [
+                        "V-61677"
+                    ]
+                }
+            ],
+            "controls": [
+                {
+                    "id": "V-61409",
+                    "title": "Audit trail data must be retained online for ninety (90) days and archived \n    for old records for one (1) year.",
+                    "desc": "Review and verify the implementation of an audit trail retention policy.\n    \n    Verify that audit data is maintained online for ninety (90) days and archived for \n    old records for one (1) year to provide support for after-the-fact investigations \n    of security incidents.\n\n    If not, this is a finding.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Review and verify the implementation of an audit trail retention policy.\n    \n    Verify that audit data is maintained online for ninety (90) days and archived for \n    old records for one (1) year to provide support for after-the-fact investigations \n    of security incidents.\n\n    If not, this is a finding."
+                        },
+                        {
+                            "label": "check",
+                            "data": "Develop, document and implement an audit retention policy and \n    procedures.\n\n    It is recommended that the most recent ninety days of audit logs remain \n    available online.\n\n    After thirty ninety days, the audit logs may be maintained off-line.\n\n    Online maintenance provides for a more timely capability and inclination to         \n    investigate suspicious activity."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [
+                        {
+                            "ref": []
+                        }
+                    ],
+                    "tags": {
+                        "gtitle": "SRG-APP-000516-DB-999900",
+                        "gid": "V-61409",
+                        "rid": "SV-75899r1_rule",
+                        "stig_id": "O121-BP-021100",
+                        "fix_id": "F-67325r1_fix",
+                        "cci": [
+                            "CCI-000366"
+                        ],
+                        "nist": [
+                            "CM-6 b",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "Review and verify the implementation of an audit trail\n  retention policy.\n\n  Verify that audit data is maintained for a minimum of one year.\n\n  If audit data is not maintained for a minimum of one year, this is a finding.",
+                        "fix": "Develop, document and implement an audit retention policy and\n  procedures.\n\n  It is recommended that the most recent thirty days of audit logs remain\n  available online.\n\n  After thirty days, the audit logs may be maintained off-line.\n\n  Online maintenance provides for a more timely capability and inclination to\n  investigate suspicious activity."
+                    },
+                    "code": "  control 'V-61409' do\n    title 'Audit trail data must be retained online for ninety (90) days and archived \n    for old records for one (1) year.'\n    desc 'Review and verify the implementation of an audit trail retention policy.\n    \n    Verify that audit data is maintained online for ninety (90) days and archived for \n    old records for one (1) year to provide support for after-the-fact investigations \n    of security incidents.\n\n    If not, this is a finding.'\n    desc 'check', 'Develop, document and implement an audit retention policy and \n    procedures.\n\n    It is recommended that the most recent ninety days of audit logs remain \n    available online.\n\n    After thirty ninety days, the audit logs may be maintained off-line.\n\n    Online maintenance provides for a more timely capability and inclination to         \n    investigate suspicious activity.'\n  end\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61409.rb"
+                    },
+                    "waiver_data": {},
+                    "results": []
+                },
+                {
+                    "id": "V-61449",
+                    "title": "Database job/batch queues must be reviewed regularly to detect\n  unauthorized database job submissions.",
+                    "desc": "Unauthorized users may bypass security mechanisms by submitting jobs\n  to job queues managed by the database to be run under a more privileged\n  security context of the database or host system. These queues must be monitored\n  regularly to detect any such unauthorized job submissions.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Unauthorized users may bypass security mechanisms by submitting jobs\n  to job queues managed by the database to be run under a more privileged\n  security context of the database or host system. These queues must be monitored\n  regularly to detect any such unauthorized job submissions."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "gtitle": "SRG-APP-000516-DB-999900",
+                        "gid": "V-61449",
+                        "rid": "SV-75939r3_rule",
+                        "stig_id": "O121-BP-023100",
+                        "fix_id": "F-67365r2_fix",
+                        "cci": [
+                            "CCI-000366"
+                        ],
+                        "nist": [
+                            "CM-6 b",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "The DBMS_JOB PL/SQL package has been replaced by DBMS_SCHEDULER\n  in Oracle versions 10.1 and higher, though it continues to be supported for\n  backward compatibility.\n\n  Run this query:\n    select value from v$parameter where name = 'job_queue_processes';\n\n  Run this query:\n    select value from all_scheduler_global_attribute\n    where ATTRIBUTE_NAME = 'MAX_JOB_SLAVE_PROCESSES';\n\n  To understand the relationship between these settings, review:\n  https://docs.oracle.com/database/121/ADMIN/appendix_a.htm#ADMIN11002\n\n  Review documented and implemented procedures for monitoring the Oracle DBMS\n  job/batch queues for unauthorized submissions. If procedures for job queue\n  review are not defined, documented or evidence of implementation does not\n  exist, this is a finding.\n\n  Job queue information is available from the DBA_JOBS view. The following\n  command lists jobs submitted to the queue. DBMS_JOB does not generate a\n  'history' of previous job executions.\n\n  Run this query:\n    select job, next_date, next_sec, failures, broken from dba_jobs;\n\n  Scheduler queue information is available from the DBA_SCHEDULER_JOBS view. The\n  following command lists jobs submitted to the queue.\n\n  Run this query:\n  select owner, job_name, state, job_class, job_type, job_action\n  from dba_scheduler_jobs;",
+                        "fix": "Develop, document and implement procedures to monitor the\n  database job queues for unauthorized job submissions.\n\n  Develop, document and implement a formal migration plan to convert jobs using\n  DBMS_JOB to use DBMS_SCHEDULER instead for Oracle versions 10.1 and higher.\n  (This does not apply to DBMS_JOB jobs generated by Oracle itself, such as those\n  for refreshing materialized views.)\n\n  Set the value of the job_queue_processes parameter to a low value to restrict\n  concurrent DBMS_JOB executions.\n\n  Use auditing to capture use of the DBMS_JOB package in the audit trail. Review\n  the audit trail for unauthorized use of the DBMS_JOB package."
+                    },
+                    "code": "control 'V-61449' do\n  title \"Database job/batch queues must be reviewed regularly to detect\n  unauthorized database job submissions.\"\n  desc \"Unauthorized users may bypass security mechanisms by submitting jobs\n  to job queues managed by the database to be run under a more privileged\n  security context of the database or host system. These queues must be monitored\n  regularly to detect any such unauthorized job submissions.\"\n  impact 0.5\n  tag \"gtitle\": 'SRG-APP-000516-DB-999900'\n  tag \"gid\": 'V-61449'\n  tag \"rid\": 'SV-75939r3_rule'\n  tag \"stig_id\": 'O121-BP-023100'\n  tag \"fix_id\": 'F-67365r2_fix'\n  tag \"cci\": ['CCI-000366']\n  tag \"nist\": ['CM-6 b', 'Rev_4']\n  tag \"false_negatives\": nil\n  tag \"false_positives\": nil\n  tag \"documentable\": false\n  tag \"mitigations\": nil\n  tag \"severity_override_guidance\": false\n  tag \"potential_impacts\": nil\n  tag \"third_party_tools\": nil\n  tag \"mitigation_controls\": nil\n  tag \"responsibility\": nil\n  tag \"ia_controls\": nil\n  tag \"check\": \"The DBMS_JOB PL/SQL package has been replaced by DBMS_SCHEDULER\n  in Oracle versions 10.1 and higher, though it continues to be supported for\n  backward compatibility.\n\n  Run this query:\n    select value from v$parameter where name = 'job_queue_processes';\n\n  Run this query:\n    select value from all_scheduler_global_attribute\n    where ATTRIBUTE_NAME = 'MAX_JOB_SLAVE_PROCESSES';\n\n  To understand the relationship between these settings, review:\n  https://docs.oracle.com/database/121/ADMIN/appendix_a.htm#ADMIN11002\n\n  Review documented and implemented procedures for monitoring the Oracle DBMS\n  job/batch queues for unauthorized submissions. If procedures for job queue\n  review are not defined, documented or evidence of implementation does not\n  exist, this is a finding.\n\n  Job queue information is available from the DBA_JOBS view. The following\n  command lists jobs submitted to the queue. DBMS_JOB does not generate a\n  'history' of previous job executions.\n\n  Run this query:\n    select job, next_date, next_sec, failures, broken from dba_jobs;\n\n  Scheduler queue information is available from the DBA_SCHEDULER_JOBS view. The\n  following command lists jobs submitted to the queue.\n\n  Run this query:\n  select owner, job_name, state, job_class, job_type, job_action\n  from dba_scheduler_jobs;\"\n  tag \"fix\": \"Develop, document and implement procedures to monitor the\n  database job queues for unauthorized job submissions.\n\n  Develop, document and implement a formal migration plan to convert jobs using\n  DBMS_JOB to use DBMS_SCHEDULER instead for Oracle versions 10.1 and higher.\n  (This does not apply to DBMS_JOB jobs generated by Oracle itself, such as those\n  for refreshing materialized views.)\n\n  Set the value of the job_queue_processes parameter to a low value to restrict\n  concurrent DBMS_JOB executions.\n\n  Use auditing to capture use of the DBMS_JOB package in the audit trail. Review\n  the audit trail for unauthorized use of the DBMS_JOB package.\"\n\n  sql = oracledb_session(user: input('user'), password: input('password'), host: input('host'), service: input('service'), sqlplus_bin: input('sqlplus_bin'))\n\n  database_jobs = sql.query(\"select owner, job_name, state, job_class, job_type, job_action\n  from dba_scheduler_jobs;\").column('job_name')\n\n  describe \"You must manually review the database jobs to detect unauthorized database job submissions. The jobs to review are: #{database_jobs}\" do\n    skip \"You must manually review the database jobs to detect unauthorized database job submissions. The jobs to review are: #{database_jobs}\"\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61449.rb"
+                    },
+                    "waiver_data": {},
+                    "results": []
+                },
+                {
+                    "id": "V-61635",
+                    "title": "The DBMS must produce audit records containing sufficient information\n  to establish the sources (origins) of the events.",
+                    "desc": "Information system auditing capability is critical for accurate\n  forensic analysis. Audit record content that may be necessary to satisfy the\n  requirement of this control, includes, but is not limited to:  timestamps,\n  source and destination IP addresses, user/process identifiers, event\n  descriptions, application specific events, success/fail indications, file names\n  involved, access control or flow control rules invoked.\n\n      Without information establishing the source of activity, the value of audit\n  records from a forensics perspective is questionable.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Information system auditing capability is critical for accurate\n  forensic analysis. Audit record content that may be necessary to satisfy the\n  requirement of this control, includes, but is not limited to:  timestamps,\n  source and destination IP addresses, user/process identifiers, event\n  descriptions, application specific events, success/fail indications, file names\n  involved, access control or flow control rules invoked.\n\n      Without information establishing the source of activity, the value of audit\n  records from a forensics perspective is questionable."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "gtitle": "SRG-APP-000098-DB-000042",
+                        "gid": "V-61635",
+                        "rid": "SV-76125r1_rule",
+                        "stig_id": "O121-C2-007700",
+                        "fix_id": "F-67547r1_fix",
+                        "cci": [
+                            "CCI-000133"
+                        ],
+                        "nist": [
+                            "AU-3",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "Verify, using vendor and system documentation if necessary,\n  that the DBMS is configured to use Oracle's auditing features, or that a\n  third-party product or custom code is deployed and configured to satisfy this\n  requirement.\n\n  If a third-party product or custom code is used, compare its current\n  configuration with the audit requirements. If any of the requirements is not\n  covered by the configuration, this is a finding.\n\n  The remainder of this Check is applicable specifically where Oracle auditing is\n  in use.\n\n  If Standard Auditing is used:\n  To see if Oracle is configured to capture audit data, enter the following\n  SQL*Plus command:\n\n  SHOW PARAMETER AUDIT_TRAIL\n\n  or the following SQL query:\n\n  SELECT * FROM SYS.V$PARAMETER WHERE NAME = 'audit_trail';\n\n  If Oracle returns the value 'NONE', this is a finding.\n\n  To confirm that Oracle audit is capturing sufficient information to establish\n  the source of events, perform a successful auditable action and an auditable\n  action that results in an SQL error, and then view the results in the SYS.AUD$\n  table or the audit file, whichever is in use.\n\n  If correct values for User ID, User Host, and Terminal are not returned when\n  applicable, this is a finding.\n\n  If Unified Auditing is used:\n  To see if Oracle is configured to capture audit data, enter the following\n  SQL*Plus command:\n\n  SELECT * FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';\n\n  If Oracle returns the value \"TRUE\", this is not a finding.\n\n  To confirm that Oracle audit is capturing sufficient information to establish\n  the source of events, perform a successful auditable action and an auditable\n  action that results in an SQL error, and then view the results in the\n  SYS.UNIFIED_AUDIT_TRAIL view.\n\n  If correct values for User ID, User Host, and Terminal are not returned when\n  applicable, this is a finding.",
+                        "fix": "Configure the DBMS's auditing to audit standard and\n  organization-defined auditable events, the audit record to include the source\n  of the event. If preferred, use a third-party or custom tool.\n\n  If using a third-party product, proceed in accordance with the product\n  documentation. If using Oracle's capabilities, proceed as follows.\n\n  If Standard Auditing is used:\n  Use this process to ensure auditable events are captured:\n\n  ALTER SYSTEM SET AUDIT_TRAIL=<audit trail type> SCOPE=SPFILE;\n\n  Audit trail type can be 'OS', 'DB', 'DB,EXTENDED', 'XML' or 'XML,EXTENDED'.\n  After executing this statement, it may be necessary to shut down and restart\n  the Oracle database.\n\n  If Unified Auditing is used:\n  To ensure auditable events are captured:\n  Link the oracle binary with uniaud_on, and then restart the database.\n\n\n\n  Oracle Database Upgrade Guide describes how to enable unified auditing.\n\n  For more information on the configuration of auditing, refer to the following\n  documents:\n  \"Auditing Database Activity\" in the Oracle Database 2 Day + Security Guide:\n  http://docs.oracle.com/database/121/TDPSG/tdpsg_auditing.htm#TDPSG50000\n  \"Monitoring Database Activity with Auditing\" in the Oracle Database Security\n  Guide:\n  http://docs.oracle.com/database/121/DBSEG/part_6.htm#CCHEHCGI\n  \"DBMS_AUDIT_MGMT\" in the Oracle Database PL/SQL Packages and Types Reference:\n  http://docs.oracle.com/database/121/ARPLS/d_audit_mgmt.htm#ARPLS241\n  Oracle Database Upgrade Guide:\n  http://docs.oracle.com/database/121/UPGRD/afterup.htm#UPGRD52810"
+                    },
+                    "code": "control 'V-61635' do\n  title \"The DBMS must produce audit records containing sufficient information\n  to establish the sources (origins) of the events.\"\n  desc \"Information system auditing capability is critical for accurate\n  forensic analysis. Audit record content that may be necessary to satisfy the\n  requirement of this control, includes, but is not limited to:  timestamps,\n  source and destination IP addresses, user/process identifiers, event\n  descriptions, application specific events, success/fail indications, file names\n  involved, access control or flow control rules invoked.\n\n      Without information establishing the source of activity, the value of audit\n  records from a forensics perspective is questionable.\n  \"\n  impact 0.5\n  tag \"gtitle\": 'SRG-APP-000098-DB-000042'\n  tag \"gid\": 'V-61635'\n  tag \"rid\": 'SV-76125r1_rule'\n  tag \"stig_id\": 'O121-C2-007700'\n  tag \"fix_id\": 'F-67547r1_fix'\n  tag \"cci\": ['CCI-000133']\n  tag \"nist\": ['AU-3', 'Rev_4']\n  tag \"false_negatives\": nil\n  tag \"false_positives\": nil\n  tag \"documentable\": false\n  tag \"mitigations\": nil\n  tag \"severity_override_guidance\": false\n  tag \"potential_impacts\": nil\n  tag \"third_party_tools\": nil\n  tag \"mitigation_controls\": nil\n  tag \"responsibility\": nil\n  tag \"ia_controls\": nil\n  tag \"check\": \"Verify, using vendor and system documentation if necessary,\n  that the DBMS is configured to use Oracle's auditing features, or that a\n  third-party product or custom code is deployed and configured to satisfy this\n  requirement.\n\n  If a third-party product or custom code is used, compare its current\n  configuration with the audit requirements. If any of the requirements is not\n  covered by the configuration, this is a finding.\n\n  The remainder of this Check is applicable specifically where Oracle auditing is\n  in use.\n\n  If Standard Auditing is used:\n  To see if Oracle is configured to capture audit data, enter the following\n  SQL*Plus command:\n\n  SHOW PARAMETER AUDIT_TRAIL\n\n  or the following SQL query:\n\n  SELECT * FROM SYS.V$PARAMETER WHERE NAME = 'audit_trail';\n\n  If Oracle returns the value 'NONE', this is a finding.\n\n  To confirm that Oracle audit is capturing sufficient information to establish\n  the source of events, perform a successful auditable action and an auditable\n  action that results in an SQL error, and then view the results in the SYS.AUD$\n  table or the audit file, whichever is in use.\n\n  If correct values for User ID, User Host, and Terminal are not returned when\n  applicable, this is a finding.\n\n  If Unified Auditing is used:\n  To see if Oracle is configured to capture audit data, enter the following\n  SQL*Plus command:\n\n  SELECT * FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';\n\n  If Oracle returns the value \\\"TRUE\\\", this is not a finding.\n\n  To confirm that Oracle audit is capturing sufficient information to establish\n  the source of events, perform a successful auditable action and an auditable\n  action that results in an SQL error, and then view the results in the\n  SYS.UNIFIED_AUDIT_TRAIL view.\n\n  If correct values for User ID, User Host, and Terminal are not returned when\n  applicable, this is a finding.\"\n  tag \"fix\": \"Configure the DBMS's auditing to audit standard and\n  organization-defined auditable events, the audit record to include the source\n  of the event. If preferred, use a third-party or custom tool.\n\n  If using a third-party product, proceed in accordance with the product\n  documentation. If using Oracle's capabilities, proceed as follows.\n\n  If Standard Auditing is used:\n  Use this process to ensure auditable events are captured:\n\n  ALTER SYSTEM SET AUDIT_TRAIL=<audit trail type> SCOPE=SPFILE;\n\n  Audit trail type can be 'OS', 'DB', 'DB,EXTENDED', 'XML' or 'XML,EXTENDED'.\n  After executing this statement, it may be necessary to shut down and restart\n  the Oracle database.\n\n  If Unified Auditing is used:\n  To ensure auditable events are captured:\n  Link the oracle binary with uniaud_on, and then restart the database.\n\n\n\n  Oracle Database Upgrade Guide describes how to enable unified auditing.\n\n  For more information on the configuration of auditing, refer to the following\n  documents:\n  \\\"Auditing Database Activity\\\" in the Oracle Database 2 Day + Security Guide:\n  http://docs.oracle.com/database/121/TDPSG/tdpsg_auditing.htm#TDPSG50000\n  \\\"Monitoring Database Activity with Auditing\\\" in the Oracle Database Security\n  Guide:\n  http://docs.oracle.com/database/121/DBSEG/part_6.htm#CCHEHCGI\n  \\\"DBMS_AUDIT_MGMT\\\" in the Oracle Database PL/SQL Packages and Types Reference:\n  http://docs.oracle.com/database/121/ARPLS/d_audit_mgmt.htm#ARPLS241\n  Oracle Database Upgrade Guide:\n  http://docs.oracle.com/database/121/UPGRD/afterup.htm#UPGRD52810\"\n\n  sql = oracledb_session(user: input('user'), password: input('password'), host: input('host'), service: input('service'), sqlplus_bin: input('sqlplus_bin'))\n\n  standard_auditing_used = input('standard_auditing_used')\n  unified_auditing_used = input('unified_auditing_used')\n\n  describe.one do\n    describe 'Standard auditing is in use for audit purposes' do\n      subject { standard_auditing_used }\n      it { should be true }\n    end\n\n    describe 'Unified auditing is in use for audit purposes' do\n      subject { unified_auditing_used }\n      it { should be true }\n    end\n  end\n\n  audit_trail = sql.query(\"select value from v$parameter where name = 'audit_trail';\").column('value')\n  audit_info_captured = sql.query('SELECT * FROM UNIFIED_AUDIT_TRAIL;').column('EVENT_TIMESTAMP')\n\n  if standard_auditing_used\n    describe 'The oracle database audit_trail parameter' do\n      subject { audit_trail }\n      it { should_not cmp 'NONE' }\n    end\n  end\n\n  unified_auditing = sql.query(\"SELECT value FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';\").column('value')\n\n  if unified_auditing_used\n    describe 'The oracle database unified auditing parameter' do\n      subject { unified_auditing }\n      it { should_not cmp 'FALSE' }\n    end\n\n    describe 'The oracle database unified auditing events captured' do\n      subject { audit_info_captured }\n      it { should_not be_empty }\n    end\n\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61635.rb"
+                    },
+                    "waiver_data": {},
+                    "results": []
+                },
+                {
+                    "id": "V-61867",
+                    "title": "Database software, applications, and configuration files must be\n  monitored to discover unauthorized changes.",
+                    "desc": "Any changes to the hardware, software, and/or firmware components of\n  the information system and/or application can potentially have significant\n  effects on the overall security of the system.\n\n      If the system were to allow any user to make changes to software libraries,\n  then those changes might be implemented without undergoing the appropriate\n  testing and approvals that are part of a robust change management process.\n\n      Accordingly, only qualified and authorized individuals shall be allowed to\n  obtain access to information system components for purposes of initiating\n  changes, including upgrades and modifications.\n\n      Unmanaged changes that occur to the database software libraries or\n  configuration can lead to unauthorized or compromised installations.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Any changes to the hardware, software, and/or firmware components of\n  the information system and/or application can potentially have significant\n  effects on the overall security of the system.\n\n      If the system were to allow any user to make changes to software libraries,\n  then those changes might be implemented without undergoing the appropriate\n  testing and approvals that are part of a robust change management process.\n\n      Accordingly, only qualified and authorized individuals shall be allowed to\n  obtain access to information system components for purposes of initiating\n  changes, including upgrades and modifications.\n\n      Unmanaged changes that occur to the database software libraries or\n  configuration can lead to unauthorized or compromised installations."
+                        }
+                    ],
+                    "impact": 0.0,
+                    "refs": [
+                        {
+                            "ref": []
+                        }
+                    ],
+                    "tags": {
+                        "gtitle": "SRG-APP-000133-DB-000179",
+                        "gid": "V-61867",
+                        "rid": "SV-76357r2_rule",
+                        "stig_id": "O121-OS-010700",
+                        "fix_id": "F-67783r2_fix",
+                        "cci": [
+                            "CCI-001499"
+                        ],
+                        "nist": [
+                            "CM-5 (6)",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "Review monitoring procedures and implementation evidence to\n  verify that monitoring of changes to database software libraries, related\n  applications, and configuration files is done.\n\n  Verify that the list of files and directories being monitored is complete. If\n  monitoring does not occur or is not complete, this is a finding.",
+                        "fix": "Implement procedures to monitor for unauthorized changes to DBMS\n  software libraries, related software application libraries, and configuration\n  files. If a third-party automated tool is not employed, an automated job that\n  reports file information on the directories and files of interest and compares\n  them to the baseline report for the same will meet the requirement.\n\n  File hashes or checksums should be used for comparisons since file dates may be\n  manipulated by malicious users."
+                    },
+                    "code": "control 'V-61867' do\n  title \"Database software, applications, and configuration files must be\n  monitored to discover unauthorized changes.\"\n  desc \"Any changes to the hardware, software, and/or firmware components of\n  the information system and/or application can potentially have significant\n  effects on the overall security of the system.\n\n      If the system were to allow any user to make changes to software libraries,\n  then those changes might be implemented without undergoing the appropriate\n  testing and approvals that are part of a robust change management process.\n\n      Accordingly, only qualified and authorized individuals shall be allowed to\n  obtain access to information system components for purposes of initiating\n  changes, including upgrades and modifications.\n\n      Unmanaged changes that occur to the database software libraries or\n  configuration can lead to unauthorized or compromised installations.\n  \"\n  impact 0.5\n  tag \"gtitle\": 'SRG-APP-000133-DB-000179'\n  tag \"gid\": 'V-61867'\n  tag \"rid\": 'SV-76357r2_rule'\n  tag \"stig_id\": 'O121-OS-010700'\n  tag \"fix_id\": 'F-67783r2_fix'\n  tag \"cci\": ['CCI-001499']\n  tag \"nist\": ['CM-5 (6)', 'Rev_4']\n  tag \"false_negatives\": nil\n  tag \"false_positives\": nil\n  tag \"documentable\": false\n  tag \"mitigations\": nil\n  tag \"severity_override_guidance\": false\n  tag \"potential_impacts\": nil\n  tag \"third_party_tools\": nil\n  tag \"mitigation_controls\": nil\n  tag \"responsibility\": nil\n  tag \"ia_controls\": nil\n  tag \"check\": \"Review monitoring procedures and implementation evidence to\n  verify that monitoring of changes to database software libraries, related\n  applications, and configuration files is done.\n\n  Verify that the list of files and directories being monitored is complete. If\n  monitoring does not occur or is not complete, this is a finding.\"\n  tag \"fix\": \"Implement procedures to monitor for unauthorized changes to DBMS\n  software libraries, related software application libraries, and configuration\n  files. If a third-party automated tool is not employed, an automated job that\n  reports file information on the directories and files of interest and compares\n  them to the baseline report for the same will meet the requirement.\n\n  File hashes or checksums should be used for comparisons since file dates may be\n  manipulated by malicious users.\"\n  describe command('grep aide /etc/crontab /etc/cron.*/*') do\n    its('stdout.strip') { should_not be_empty }\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61867.rb"
+                    },
+                    "waiver_data": {},
+                    "results": []
+                },
+                {
+                    "id": "V-61677",
+                    "title": "Default demonstration and sample databases, database objects, and\n  applications must be removed.",
+                    "desc": "Information systems are capable of providing a wide variety of\n  functions and services. Some of the functions and services, provided by\n  default, may not be necessary to support essential organizational operations\n  (e.g., key missions, functions).\n\n      It is detrimental for applications to provide, or install by default,\n  functionality exceeding requirements or mission objectives. Examples include,\n  but are not limited to, installing advertising software, demonstrations, or\n  browser plugins not related to requirements or providing a wide array of\n  functionality not required for the mission.\n\n      Applications must adhere to the principles of least functionality by\n  providing only essential capabilities.\n\n      Demonstration and sample database objects and applications present publicly\n  known attack points for malicious users. These demonstration and sample objects\n  are meant to provide simple examples of coding specific functions and are not\n  developed to prevent vulnerabilities from being introduced to the DBMS and host\n  system.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Information systems are capable of providing a wide variety of\n  functions and services. Some of the functions and services, provided by\n  default, may not be necessary to support essential organizational operations\n  (e.g., key missions, functions).\n\n      It is detrimental for applications to provide, or install by default,\n  functionality exceeding requirements or mission objectives. Examples include,\n  but are not limited to, installing advertising software, demonstrations, or\n  browser plugins not related to requirements or providing a wide array of\n  functionality not required for the mission.\n\n      Applications must adhere to the principles of least functionality by\n  providing only essential capabilities.\n\n      Demonstration and sample database objects and applications present publicly\n  known attack points for malicious users. These demonstration and sample objects\n  are meant to provide simple examples of coding specific functions and are not\n  developed to prevent vulnerabilities from being introduced to the DBMS and host\n  system."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "gtitle": "SRG-APP-000141-DB-000090",
+                        "gid": "V-61677",
+                        "rid": "SV-76167r3_rule",
+                        "stig_id": "O121-C2-011500",
+                        "fix_id": "F-67591r1_fix",
+                        "cci": [
+                            "CCI-000381"
+                        ],
+                        "nist": [
+                            "CM-7 a",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "If Oracle is hosted on a server that does not support\n  production systems, and is designated for the deployment of samples and\n  demonstrations, this is not applicable (NA).\n\n  Review documentation and websites from Oracle and any other relevant vendors\n  for vendor-provided demonstration or sample databases, database applications,\n  schemas, objects, and files.\n\n  Review the Oracle DBMS to determine if any of the demonstration and sample\n  databases, schemas, database applications, or files are installed in the\n  database or are included with the DBMS application. If any are present in the\n  database or are included with the DBMS application, this is a finding.\n\n  The Oracle Default Sample Schema User Accounts are:\n\n  BI\n  Owns the Business Intelligence schema included in the Oracle Sample Schemas.\n\n  HR\n  Manages the Human Resources schema. Schema stores information about the\n  employees and the facilities of the company.\n\n  OE\n  Manages the Order Entry schema. Schema stores product inventories and sales of\n  the company's products through various channels.\n\n  PM\n  Manages the Product Media schema. Schema contains descriptions and detailed\n  information about each product sold by the company.\n\n  IX\n  Manages the Information Exchange schema. Schema manages shipping through\n  business-to-business (B2B) applications database.\n\n  SH\n  Manages the Sales schema. Schema stores statistics to facilitate business\n  decisions.\n\n  SCOTT\n  A demonstration account with a simple schema.\n\n  Connect to Oracle as SYSDBA; run the following SQL to check for presence of\n  Oracle Default Sample Schema User Accounts:\n  select distinct(username) from dba_users where username in\n  ('BI','HR','OE','PM','IX','SH','SCOTT');\n\n  If any of the users listed above is returned it means that there are demo\n  programs installed, so this is a finding.\n  ",
+                        "fix": "Remove any demonstration and sample databases, database\n  applications, objects, and files from the DBMS.\n\n  To remove an account and all objects owned by that account (using BI as an\n  example):\n  DROP USER BI CASCADE;\n\n  To remove objects without removing their owner, use the appropriate DROP\n  statement (DROP TABLE, DROP VIEW, etc.)."
+                    },
+                    "code": "control 'V-61677' do\n  title \"Default demonstration and sample databases, database objects, and\n  applications must be removed.\"\n  desc \"Information systems are capable of providing a wide variety of\n  functions and services. Some of the functions and services, provided by\n  default, may not be necessary to support essential organizational operations\n  (e.g., key missions, functions).\n\n      It is detrimental for applications to provide, or install by default,\n  functionality exceeding requirements or mission objectives. Examples include,\n  but are not limited to, installing advertising software, demonstrations, or\n  browser plugins not related to requirements or providing a wide array of\n  functionality not required for the mission.\n\n      Applications must adhere to the principles of least functionality by\n  providing only essential capabilities.\n\n      Demonstration and sample database objects and applications present publicly\n  known attack points for malicious users. These demonstration and sample objects\n  are meant to provide simple examples of coding specific functions and are not\n  developed to prevent vulnerabilities from being introduced to the DBMS and host\n  system.\n  \"\n  impact 0.5\n  tag \"gtitle\": 'SRG-APP-000141-DB-000090'\n  tag \"gid\": 'V-61677'\n  tag \"rid\": 'SV-76167r3_rule'\n  tag \"stig_id\": 'O121-C2-011500'\n  tag \"fix_id\": 'F-67591r1_fix'\n  tag \"cci\": ['CCI-000381']\n  tag \"nist\": ['CM-7 a', 'Rev_4']\n  tag \"false_negatives\": nil\n  tag \"false_positives\": nil\n  tag \"documentable\": false\n  tag \"mitigations\": nil\n  tag \"severity_override_guidance\": false\n  tag \"potential_impacts\": nil\n  tag \"third_party_tools\": nil\n  tag \"mitigation_controls\": nil\n  tag \"responsibility\": nil\n  tag \"ia_controls\": nil\n  tag \"check\": \"If Oracle is hosted on a server that does not support\n  production systems, and is designated for the deployment of samples and\n  demonstrations, this is not applicable (NA).\n\n  Review documentation and websites from Oracle and any other relevant vendors\n  for vendor-provided demonstration or sample databases, database applications,\n  schemas, objects, and files.\n\n  Review the Oracle DBMS to determine if any of the demonstration and sample\n  databases, schemas, database applications, or files are installed in the\n  database or are included with the DBMS application. If any are present in the\n  database or are included with the DBMS application, this is a finding.\n\n  The Oracle Default Sample Schema User Accounts are:\n\n  BI\n  Owns the Business Intelligence schema included in the Oracle Sample Schemas.\n\n  HR\n  Manages the Human Resources schema. Schema stores information about the\n  employees and the facilities of the company.\n\n  OE\n  Manages the Order Entry schema. Schema stores product inventories and sales of\n  the company's products through various channels.\n\n  PM\n  Manages the Product Media schema. Schema contains descriptions and detailed\n  information about each product sold by the company.\n\n  IX\n  Manages the Information Exchange schema. Schema manages shipping through\n  business-to-business (B2B) applications database.\n\n  SH\n  Manages the Sales schema. Schema stores statistics to facilitate business\n  decisions.\n\n  SCOTT\n  A demonstration account with a simple schema.\n\n  Connect to Oracle as SYSDBA; run the following SQL to check for presence of\n  Oracle Default Sample Schema User Accounts:\n  select distinct(username) from dba_users where username in\n  ('BI','HR','OE','PM','IX','SH','SCOTT');\n\n  If any of the users listed above is returned it means that there are demo\n  programs installed, so this is a finding.\n  \"\n  tag \"fix\": \"Remove any demonstration and sample databases, database\n  applications, objects, and files from the DBMS.\n\n  To remove an account and all objects owned by that account (using BI as an\n  example):\n  DROP USER BI CASCADE;\n\n  To remove objects without removing their owner, use the appropriate DROP\n  statement (DROP TABLE, DROP VIEW, etc.).\"\n\n  sql = oracledb_session(user: input('user'), password: input('password'), host: input('host'), service: input('service'), sqlplus_bin: input('sqlplus_bin'))\n\n  sample_schema_user_accounts = sql.query(\"select distinct(username) from dba_users where username in\n  ('BI','HR','OE','PM','IX','SH','SCOTT');\").column('username')\n\n  describe 'The list of oracle default sample schema user accounts' do\n    subject { sample_schema_user_accounts }\n    it { should be_empty }\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61677.rb"
+                    },
+                    "waiver_data": {},
+                    "results": []
+                }
+            ],
+            "status": "loaded"
+        },
+        {
+            "name": "aws-rds-oracle-database-12c-stig-baseline",
+            "version": "0.1.0",
+            "sha256": "a34d4b2bb6d5675173abdb1df727cc552807b5c80c1d5de027b85c640f8a0fee",
+            "title": "InSpec Profile",
+            "maintainer": "The Authors",
+            "summary": "An InSpec Compliance Profile",
+            "license": "Apache-2.0",
+            "copyright": "The Authors",
+            "copyright_email": "you@example.com",
+            "supports": [],
+            "attributes": [
+                {
+                    "name": "user",
+                    "options": {
+                        "value": "admin1"
+                    }
+                },
+                {
+                    "name": "password",
+                    "options": {
+                        "value": "1qaz!QAZ1qaz!QAZ"
+                    }
+                },
+                {
+                    "name": "host",
+                    "options": {
+                        "value": "orcl.ctp9kse964go.us-east-1.rds.amazonaws.com"
+                    }
+                },
+                {
+                    "name": "service",
+                    "options": {
+                        "value": "ORCL"
+                    }
+                },
+                {
+                    "name": "sqlplus_bin",
+                    "options": {
+                        "value": "/usr/bin/sqlplus"
+                    }
+                },
+                {
+                    "name": "standard_auditing_used",
+                    "options": {
+                        "type": "Boolean",
+                        "value": true
+                    }
+                },
+                {
+                    "name": "unified_auditing_used",
+                    "options": {
+                        "type": "Boolean",
+                        "value": false
+                    }
+                },
+                {
+                    "name": "allowed_db_links",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_dbadmin_users",
+                    "options": {
+                        "value": []
+                    }
+                },
+                {
+                    "name": "users_allowed_access_to_public",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_users_dba_role",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_users_system_tablespace",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_application_owners",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_unlocked_oracledb_accounts",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "users_allowed_access_to_dictionary_table",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_users_with_admin_privs",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_audit_users",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_dbaobject_owners",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_oracledb_components",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "allowed_oracledb_components_integrated_into_dbms",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "oracle_dbas",
+                    "options": {
+                        "type": "Array",
+                        "value": []
+                    }
+                },
+                {
+                    "name": "emergency_profile_list",
+                    "options": {
+                        "value": [
+                            "RDSADMIN"
+                        ]
+                    }
+                }
+            ],
+            "parent_profile": "cms-ars-3.1-moderate-aws-rds-oracle-database-12c-stig-overlay",
+            "depends": [
+                {
+                    "name": "oracle-database-12c-stig-baseline",
+                    "git": "https://github.com/mitre/oracle-database-12c-stig-baseline",
+                    "branch": "issue-1112",
+                    "status": "loaded"
+                }
+            ],
+            "groups": [
+                {
+                    "id": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61409.rb",
+                    "controls": [
+                        "V-61409"
+                    ]
+                },
+                {
+                    "id": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61449.rb",
+                    "controls": [
+                        "V-61449"
+                    ]
+                },
+                {
+                    "id": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61867.rb",
+                    "controls": [
+                        "V-61867"
+                    ]
+                },
+                {
+                    "id": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61635.rb",
+                    "controls": [
+                        "V-61635"
+                    ]
+                },
+                {
+                    "id": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61677.rb",
+                    "controls": [
+                        "V-61677"
+                    ]
+                }
+            ],
+            "controls": [
+                {
+                    "id": "V-61409",
+                    "title": "Audit trail data must be retained online for ninety (90) days and archived \n    for old records for one (1) year.",
+                    "desc": "Review and verify the implementation of an audit trail retention policy.\n    \n    Verify that audit data is maintained online for ninety (90) days and archived for \n    old records for one (1) year to provide support for after-the-fact investigations \n    of security incidents.\n\n    If not, this is a finding.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Review and verify the implementation of an audit trail retention policy.\n    \n    Verify that audit data is maintained online for ninety (90) days and archived for \n    old records for one (1) year to provide support for after-the-fact investigations \n    of security incidents.\n\n    If not, this is a finding."
+                        },
+                        {
+                            "label": "check",
+                            "data": "Develop, document and implement an audit retention policy and \n    procedures.\n\n    It is recommended that the most recent ninety days of audit logs remain \n    available online.\n\n    After thirty ninety days, the audit logs may be maintained off-line.\n\n    Online maintenance provides for a more timely capability and inclination to         \n    investigate suspicious activity."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [
+                        {
+                            "ref": []
+                        }
+                    ],
+                    "tags": {
+                        "gtitle": "SRG-APP-000516-DB-999900",
+                        "gid": "V-61409",
+                        "rid": "SV-75899r1_rule",
+                        "stig_id": "O121-BP-021100",
+                        "fix_id": "F-67325r1_fix",
+                        "cci": [
+                            "CCI-000366"
+                        ],
+                        "nist": [
+                            "CM-6 b",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "Review and verify the implementation of an audit trail\n  retention policy.\n\n  Verify that audit data is maintained for a minimum of one year.\n\n  If audit data is not maintained for a minimum of one year, this is a finding.",
+                        "fix": "Develop, document and implement an audit retention policy and\n  procedures.\n\n  It is recommended that the most recent thirty days of audit logs remain\n  available online.\n\n  After thirty days, the audit logs may be maintained off-line.\n\n  Online maintenance provides for a more timely capability and inclination to\n  investigate suspicious activity."
+                    },
+                    "code": "",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61409.rb"
+                    },
+                    "waiver_data": {},
+                    "results": []
+                },
+                {
+                    "id": "V-61449",
+                    "title": "Database job/batch queues must be reviewed regularly to detect\n  unauthorized database job submissions.",
+                    "desc": "Unauthorized users may bypass security mechanisms by submitting jobs\n  to job queues managed by the database to be run under a more privileged\n  security context of the database or host system. These queues must be monitored\n  regularly to detect any such unauthorized job submissions.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Unauthorized users may bypass security mechanisms by submitting jobs\n  to job queues managed by the database to be run under a more privileged\n  security context of the database or host system. These queues must be monitored\n  regularly to detect any such unauthorized job submissions."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "gtitle": "SRG-APP-000516-DB-999900",
+                        "gid": "V-61449",
+                        "rid": "SV-75939r3_rule",
+                        "stig_id": "O121-BP-023100",
+                        "fix_id": "F-67365r2_fix",
+                        "cci": [
+                            "CCI-000366"
+                        ],
+                        "nist": [
+                            "CM-6 b",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "The DBMS_JOB PL/SQL package has been replaced by DBMS_SCHEDULER\n  in Oracle versions 10.1 and higher, though it continues to be supported for\n  backward compatibility.\n\n  Run this query:\n    select value from v$parameter where name = 'job_queue_processes';\n\n  Run this query:\n    select value from all_scheduler_global_attribute\n    where ATTRIBUTE_NAME = 'MAX_JOB_SLAVE_PROCESSES';\n\n  To understand the relationship between these settings, review:\n  https://docs.oracle.com/database/121/ADMIN/appendix_a.htm#ADMIN11002\n\n  Review documented and implemented procedures for monitoring the Oracle DBMS\n  job/batch queues for unauthorized submissions. If procedures for job queue\n  review are not defined, documented or evidence of implementation does not\n  exist, this is a finding.\n\n  Job queue information is available from the DBA_JOBS view. The following\n  command lists jobs submitted to the queue. DBMS_JOB does not generate a\n  'history' of previous job executions.\n\n  Run this query:\n    select job, next_date, next_sec, failures, broken from dba_jobs;\n\n  Scheduler queue information is available from the DBA_SCHEDULER_JOBS view. The\n  following command lists jobs submitted to the queue.\n\n  Run this query:\n  select owner, job_name, state, job_class, job_type, job_action\n  from dba_scheduler_jobs;",
+                        "fix": "Develop, document and implement procedures to monitor the\n  database job queues for unauthorized job submissions.\n\n  Develop, document and implement a formal migration plan to convert jobs using\n  DBMS_JOB to use DBMS_SCHEDULER instead for Oracle versions 10.1 and higher.\n  (This does not apply to DBMS_JOB jobs generated by Oracle itself, such as those\n  for refreshing materialized views.)\n\n  Set the value of the job_queue_processes parameter to a low value to restrict\n  concurrent DBMS_JOB executions.\n\n  Use auditing to capture use of the DBMS_JOB package in the audit trail. Review\n  the audit trail for unauthorized use of the DBMS_JOB package."
+                    },
+                    "code": "",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61449.rb"
+                    },
+                    "waiver_data": {},
+                    "results": []
+                },
+                {
+                    "id": "V-61867",
+                    "title": "Database software, applications, and configuration files must be\n  monitored to discover unauthorized changes.",
+                    "desc": "Any changes to the hardware, software, and/or firmware components of\n  the information system and/or application can potentially have significant\n  effects on the overall security of the system.\n\n      If the system were to allow any user to make changes to software libraries,\n  then those changes might be implemented without undergoing the appropriate\n  testing and approvals that are part of a robust change management process.\n\n      Accordingly, only qualified and authorized individuals shall be allowed to\n  obtain access to information system components for purposes of initiating\n  changes, including upgrades and modifications.\n\n      Unmanaged changes that occur to the database software libraries or\n  configuration can lead to unauthorized or compromised installations.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Any changes to the hardware, software, and/or firmware components of\n  the information system and/or application can potentially have significant\n  effects on the overall security of the system.\n\n      If the system were to allow any user to make changes to software libraries,\n  then those changes might be implemented without undergoing the appropriate\n  testing and approvals that are part of a robust change management process.\n\n      Accordingly, only qualified and authorized individuals shall be allowed to\n  obtain access to information system components for purposes of initiating\n  changes, including upgrades and modifications.\n\n      Unmanaged changes that occur to the database software libraries or\n  configuration can lead to unauthorized or compromised installations."
+                        }
+                    ],
+                    "impact": 0.0,
+                    "refs": [
+                        {
+                            "ref": []
+                        }
+                    ],
+                    "tags": {
+                        "gtitle": "SRG-APP-000133-DB-000179",
+                        "gid": "V-61867",
+                        "rid": "SV-76357r2_rule",
+                        "stig_id": "O121-OS-010700",
+                        "fix_id": "F-67783r2_fix",
+                        "cci": [
+                            "CCI-001499"
+                        ],
+                        "nist": [
+                            "CM-5 (6)",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "Review monitoring procedures and implementation evidence to\n  verify that monitoring of changes to database software libraries, related\n  applications, and configuration files is done.\n\n  Verify that the list of files and directories being monitored is complete. If\n  monitoring does not occur or is not complete, this is a finding.",
+                        "fix": "Implement procedures to monitor for unauthorized changes to DBMS\n  software libraries, related software application libraries, and configuration\n  files. If a third-party automated tool is not employed, an automated job that\n  reports file information on the directories and files of interest and compares\n  them to the baseline report for the same will meet the requirement.\n\n  File hashes or checksums should be used for comparisons since file dates may be\n  manipulated by malicious users."
+                    },
+                    "code": "    control 'V-61867' do\n      impact 0.0\n      describe 'This control is not applicable on oracle within aws rds, as aws manages the operating system in which the oracle database is running on' do\n          skip 'This control is not applicable on oracle within aws rds, as aws manages the operating system in which the oracle database is running on'\n      end\n    end\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61867.rb"
+                    },
+                    "waiver_data": {},
+                    "results": []
+                },
+                {
+                    "id": "V-61635",
+                    "title": "The DBMS must produce audit records containing sufficient information\n  to establish the sources (origins) of the events.",
+                    "desc": "Information system auditing capability is critical for accurate\n  forensic analysis. Audit record content that may be necessary to satisfy the\n  requirement of this control, includes, but is not limited to:  timestamps,\n  source and destination IP addresses, user/process identifiers, event\n  descriptions, application specific events, success/fail indications, file names\n  involved, access control or flow control rules invoked.\n\n      Without information establishing the source of activity, the value of audit\n  records from a forensics perspective is questionable.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Information system auditing capability is critical for accurate\n  forensic analysis. Audit record content that may be necessary to satisfy the\n  requirement of this control, includes, but is not limited to:  timestamps,\n  source and destination IP addresses, user/process identifiers, event\n  descriptions, application specific events, success/fail indications, file names\n  involved, access control or flow control rules invoked.\n\n      Without information establishing the source of activity, the value of audit\n  records from a forensics perspective is questionable."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "gtitle": "SRG-APP-000098-DB-000042",
+                        "gid": "V-61635",
+                        "rid": "SV-76125r1_rule",
+                        "stig_id": "O121-C2-007700",
+                        "fix_id": "F-67547r1_fix",
+                        "cci": [
+                            "CCI-000133"
+                        ],
+                        "nist": [
+                            "AU-3",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "Verify, using vendor and system documentation if necessary,\n  that the DBMS is configured to use Oracle's auditing features, or that a\n  third-party product or custom code is deployed and configured to satisfy this\n  requirement.\n\n  If a third-party product or custom code is used, compare its current\n  configuration with the audit requirements. If any of the requirements is not\n  covered by the configuration, this is a finding.\n\n  The remainder of this Check is applicable specifically where Oracle auditing is\n  in use.\n\n  If Standard Auditing is used:\n  To see if Oracle is configured to capture audit data, enter the following\n  SQL*Plus command:\n\n  SHOW PARAMETER AUDIT_TRAIL\n\n  or the following SQL query:\n\n  SELECT * FROM SYS.V$PARAMETER WHERE NAME = 'audit_trail';\n\n  If Oracle returns the value 'NONE', this is a finding.\n\n  To confirm that Oracle audit is capturing sufficient information to establish\n  the source of events, perform a successful auditable action and an auditable\n  action that results in an SQL error, and then view the results in the SYS.AUD$\n  table or the audit file, whichever is in use.\n\n  If correct values for User ID, User Host, and Terminal are not returned when\n  applicable, this is a finding.\n\n  If Unified Auditing is used:\n  To see if Oracle is configured to capture audit data, enter the following\n  SQL*Plus command:\n\n  SELECT * FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';\n\n  If Oracle returns the value \"TRUE\", this is not a finding.\n\n  To confirm that Oracle audit is capturing sufficient information to establish\n  the source of events, perform a successful auditable action and an auditable\n  action that results in an SQL error, and then view the results in the\n  SYS.UNIFIED_AUDIT_TRAIL view.\n\n  If correct values for User ID, User Host, and Terminal are not returned when\n  applicable, this is a finding.",
+                        "fix": "Configure the DBMS's auditing to audit standard and\n  organization-defined auditable events, the audit record to include the source\n  of the event. If preferred, use a third-party or custom tool.\n\n  If using a third-party product, proceed in accordance with the product\n  documentation. If using Oracle's capabilities, proceed as follows.\n\n  If Standard Auditing is used:\n  Use this process to ensure auditable events are captured:\n\n  ALTER SYSTEM SET AUDIT_TRAIL=<audit trail type> SCOPE=SPFILE;\n\n  Audit trail type can be 'OS', 'DB', 'DB,EXTENDED', 'XML' or 'XML,EXTENDED'.\n  After executing this statement, it may be necessary to shut down and restart\n  the Oracle database.\n\n  If Unified Auditing is used:\n  To ensure auditable events are captured:\n  Link the oracle binary with uniaud_on, and then restart the database.\n\n\n\n  Oracle Database Upgrade Guide describes how to enable unified auditing.\n\n  For more information on the configuration of auditing, refer to the following\n  documents:\n  \"Auditing Database Activity\" in the Oracle Database 2 Day + Security Guide:\n  http://docs.oracle.com/database/121/TDPSG/tdpsg_auditing.htm#TDPSG50000\n  \"Monitoring Database Activity with Auditing\" in the Oracle Database Security\n  Guide:\n  http://docs.oracle.com/database/121/DBSEG/part_6.htm#CCHEHCGI\n  \"DBMS_AUDIT_MGMT\" in the Oracle Database PL/SQL Packages and Types Reference:\n  http://docs.oracle.com/database/121/ARPLS/d_audit_mgmt.htm#ARPLS241\n  Oracle Database Upgrade Guide:\n  http://docs.oracle.com/database/121/UPGRD/afterup.htm#UPGRD52810"
+                    },
+                    "code": "",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61635.rb"
+                    },
+                    "waiver_data": {},
+                    "results": []
+                },
+                {
+                    "id": "V-61677",
+                    "title": "Default demonstration and sample databases, database objects, and\n  applications must be removed.",
+                    "desc": "Information systems are capable of providing a wide variety of\n  functions and services. Some of the functions and services, provided by\n  default, may not be necessary to support essential organizational operations\n  (e.g., key missions, functions).\n\n      It is detrimental for applications to provide, or install by default,\n  functionality exceeding requirements or mission objectives. Examples include,\n  but are not limited to, installing advertising software, demonstrations, or\n  browser plugins not related to requirements or providing a wide array of\n  functionality not required for the mission.\n\n      Applications must adhere to the principles of least functionality by\n  providing only essential capabilities.\n\n      Demonstration and sample database objects and applications present publicly\n  known attack points for malicious users. These demonstration and sample objects\n  are meant to provide simple examples of coding specific functions and are not\n  developed to prevent vulnerabilities from being introduced to the DBMS and host\n  system.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Information systems are capable of providing a wide variety of\n  functions and services. Some of the functions and services, provided by\n  default, may not be necessary to support essential organizational operations\n  (e.g., key missions, functions).\n\n      It is detrimental for applications to provide, or install by default,\n  functionality exceeding requirements or mission objectives. Examples include,\n  but are not limited to, installing advertising software, demonstrations, or\n  browser plugins not related to requirements or providing a wide array of\n  functionality not required for the mission.\n\n      Applications must adhere to the principles of least functionality by\n  providing only essential capabilities.\n\n      Demonstration and sample database objects and applications present publicly\n  known attack points for malicious users. These demonstration and sample objects\n  are meant to provide simple examples of coding specific functions and are not\n  developed to prevent vulnerabilities from being introduced to the DBMS and host\n  system."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "gtitle": "SRG-APP-000141-DB-000090",
+                        "gid": "V-61677",
+                        "rid": "SV-76167r3_rule",
+                        "stig_id": "O121-C2-011500",
+                        "fix_id": "F-67591r1_fix",
+                        "cci": [
+                            "CCI-000381"
+                        ],
+                        "nist": [
+                            "CM-7 a",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "If Oracle is hosted on a server that does not support\n  production systems, and is designated for the deployment of samples and\n  demonstrations, this is not applicable (NA).\n\n  Review documentation and websites from Oracle and any other relevant vendors\n  for vendor-provided demonstration or sample databases, database applications,\n  schemas, objects, and files.\n\n  Review the Oracle DBMS to determine if any of the demonstration and sample\n  databases, schemas, database applications, or files are installed in the\n  database or are included with the DBMS application. If any are present in the\n  database or are included with the DBMS application, this is a finding.\n\n  The Oracle Default Sample Schema User Accounts are:\n\n  BI\n  Owns the Business Intelligence schema included in the Oracle Sample Schemas.\n\n  HR\n  Manages the Human Resources schema. Schema stores information about the\n  employees and the facilities of the company.\n\n  OE\n  Manages the Order Entry schema. Schema stores product inventories and sales of\n  the company's products through various channels.\n\n  PM\n  Manages the Product Media schema. Schema contains descriptions and detailed\n  information about each product sold by the company.\n\n  IX\n  Manages the Information Exchange schema. Schema manages shipping through\n  business-to-business (B2B) applications database.\n\n  SH\n  Manages the Sales schema. Schema stores statistics to facilitate business\n  decisions.\n\n  SCOTT\n  A demonstration account with a simple schema.\n\n  Connect to Oracle as SYSDBA; run the following SQL to check for presence of\n  Oracle Default Sample Schema User Accounts:\n  select distinct(username) from dba_users where username in\n  ('BI','HR','OE','PM','IX','SH','SCOTT');\n\n  If any of the users listed above is returned it means that there are demo\n  programs installed, so this is a finding.\n  ",
+                        "fix": "Remove any demonstration and sample databases, database\n  applications, objects, and files from the DBMS.\n\n  To remove an account and all objects owned by that account (using BI as an\n  example):\n  DROP USER BI CASCADE;\n\n  To remove objects without removing their owner, use the appropriate DROP\n  statement (DROP TABLE, DROP VIEW, etc.)."
+                    },
+                    "code": "",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61677.rb"
+                    },
+                    "waiver_data": {},
+                    "results": []
+                }
+            ],
+            "status": "loaded"
+        },
+        {
+            "name": "Oracle Database 12c Security Technical Implementation Guide",
+            "version": "0.1.0",
+            "sha256": "1c5163a13ada389df3dc6c58f91b4e9b79df44e2c37fadfd67904c94012aee22",
+            "title": "Oracle Database 12c Security Technical Implementation Guide",
+            "maintainer": "The Authors",
+            "summary": "This Security Technical Implementation Guide is published as a tool to improve the security of Department of Defense (DoD) information systems. The requirements are derived from the National Institute of Standards and Technology (NIST) 800-53 and related documents. Comments or proposed revisions to this document should be sent via e-mail to the following address: disa.stig_spt@mail.mil.",
+            "license": "Apache-2.0",
+            "copyright": "The Authors",
+            "copyright_email": "you@example.com",
+            "supports": [],
+            "attributes": [],
+            "parent_profile": "aws-rds-oracle-database-12c-stig-baseline",
+            "groups": [
+                {
+                    "id": "controls/V-61409.rb",
+                    "controls": [
+                        "V-61409"
+                    ]
+                },
+                {
+                    "id": "controls/V-61449.rb",
+                    "controls": [
+                        "V-61449"
+                    ]
+                },
+                {
+                    "id": "controls/V-61867.rb",
+                    "controls": [
+                        "V-61867"
+                    ]
+                },
+                {
+                    "id": "controls/V-61635.rb",
+                    "controls": [
+                        "V-61635"
+                    ]
+                },
+                {
+                    "id": "controls/V-61677.rb",
+                    "controls": [
+                        "V-61677"
+                    ]
+                }
+            ],
+            "controls": [
+                {
+                    "id": "V-61409",
+                    "title": "Audit trail data must be retained online for ninety (90) days and archived \n    for old records for one (1) year.",
+                    "desc": "Review and verify the implementation of an audit trail retention policy.\n    \n    Verify that audit data is maintained online for ninety (90) days and archived for \n    old records for one (1) year to provide support for after-the-fact investigations \n    of security incidents.\n\n    If not, this is a finding.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Review and verify the implementation of an audit trail retention policy.\n    \n    Verify that audit data is maintained online for ninety (90) days and archived for \n    old records for one (1) year to provide support for after-the-fact investigations \n    of security incidents.\n\n    If not, this is a finding."
+                        },
+                        {
+                            "label": "check",
+                            "data": "Develop, document and implement an audit retention policy and \n    procedures.\n\n    It is recommended that the most recent ninety days of audit logs remain \n    available online.\n\n    After thirty ninety days, the audit logs may be maintained off-line.\n\n    Online maintenance provides for a more timely capability and inclination to         \n    investigate suspicious activity."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [
+                        {
+                            "ref": []
+                        }
+                    ],
+                    "tags": {
+                        "gtitle": "SRG-APP-000516-DB-999900",
+                        "gid": "V-61409",
+                        "rid": "SV-75899r1_rule",
+                        "stig_id": "O121-BP-021100",
+                        "fix_id": "F-67325r1_fix",
+                        "cci": [
+                            "CCI-000366"
+                        ],
+                        "nist": [
+                            "CM-6 b",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "Review and verify the implementation of an audit trail\n  retention policy.\n\n  Verify that audit data is maintained for a minimum of one year.\n\n  If audit data is not maintained for a minimum of one year, this is a finding.",
+                        "fix": "Develop, document and implement an audit retention policy and\n  procedures.\n\n  It is recommended that the most recent thirty days of audit logs remain\n  available online.\n\n  After thirty days, the audit logs may be maintained off-line.\n\n  Online maintenance provides for a more timely capability and inclination to\n  investigate suspicious activity."
+                    },
+                    "code": "control 'V-61409' do\n  title 'Audit trail data must be retained for at least one year.'\n  desc  \"Without preservation, a complete discovery of an attack or suspicious\n  activity may not be determined.  DBMS audit data also contributes to the\n  complete investigation of unauthorized activity and needs to be included in\n  audit retention plans and procedures.\"\n  impact 0.5\n  tag \"gtitle\": 'SRG-APP-000516-DB-999900'\n  tag \"gid\": 'V-61409'\n  tag \"rid\": 'SV-75899r1_rule'\n  tag \"stig_id\": 'O121-BP-021100'\n  tag \"fix_id\": 'F-67325r1_fix'\n  tag \"cci\": ['CCI-000366']\n  tag \"nist\": ['CM-6 b', 'Rev_4']\n  tag \"false_negatives\": nil\n  tag \"false_positives\": nil\n  tag \"documentable\": false\n  tag \"mitigations\": nil\n  tag \"severity_override_guidance\": false\n  tag \"potential_impacts\": nil\n  tag \"third_party_tools\": nil\n  tag \"mitigation_controls\": nil\n  tag \"responsibility\": nil\n  tag \"ia_controls\": nil\n  tag \"check\": \"Review and verify the implementation of an audit trail\n  retention policy.\n\n  Verify that audit data is maintained for a minimum of one year.\n\n  If audit data is not maintained for a minimum of one year, this is a finding.\"\n  tag \"fix\": \"Develop, document and implement an audit retention policy and\n  procedures.\n\n  It is recommended that the most recent thirty days of audit logs remain\n  available online.\n\n  After thirty days, the audit logs may be maintained off-line.\n\n  Online maintenance provides for a more timely capability and inclination to\n  investigate suspicious activity.\"\n  describe 'A manual review is required to ensure audit trail data is retained for at least one year' do\n    skip 'A manual review is required to ensure audit trail data is retained for at least one year'\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61409.rb"
+                    },
+                    "waiver_data": {},
+                    "results": [
+                        {
+                            "status": "skipped",
+                            "code_desc": "A manual review is required to ensure audit trail data is retained for at least one year",
+                            "run_time": 8.916e-06,
+                            "start_time": "2020-06-01T18:50:31+00:00",
+                            "resource": "",
+                            "skip_message": "A manual review is required to ensure audit trail data is retained for at least one year"
+                        }
+                    ]
+                },
+                {
+                    "id": "V-61449",
+                    "title": "Database job/batch queues must be reviewed regularly to detect\n  unauthorized database job submissions.",
+                    "desc": "Unauthorized users may bypass security mechanisms by submitting jobs\n  to job queues managed by the database to be run under a more privileged\n  security context of the database or host system. These queues must be monitored\n  regularly to detect any such unauthorized job submissions.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Unauthorized users may bypass security mechanisms by submitting jobs\n  to job queues managed by the database to be run under a more privileged\n  security context of the database or host system. These queues must be monitored\n  regularly to detect any such unauthorized job submissions."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "gtitle": "SRG-APP-000516-DB-999900",
+                        "gid": "V-61449",
+                        "rid": "SV-75939r3_rule",
+                        "stig_id": "O121-BP-023100",
+                        "fix_id": "F-67365r2_fix",
+                        "cci": [
+                            "CCI-000366"
+                        ],
+                        "nist": [
+                            "CM-6 b",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "The DBMS_JOB PL/SQL package has been replaced by DBMS_SCHEDULER\n  in Oracle versions 10.1 and higher, though it continues to be supported for\n  backward compatibility.\n\n  Run this query:\n    select value from v$parameter where name = 'job_queue_processes';\n\n  Run this query:\n    select value from all_scheduler_global_attribute\n    where ATTRIBUTE_NAME = 'MAX_JOB_SLAVE_PROCESSES';\n\n  To understand the relationship between these settings, review:\n  https://docs.oracle.com/database/121/ADMIN/appendix_a.htm#ADMIN11002\n\n  Review documented and implemented procedures for monitoring the Oracle DBMS\n  job/batch queues for unauthorized submissions. If procedures for job queue\n  review are not defined, documented or evidence of implementation does not\n  exist, this is a finding.\n\n  Job queue information is available from the DBA_JOBS view. The following\n  command lists jobs submitted to the queue. DBMS_JOB does not generate a\n  'history' of previous job executions.\n\n  Run this query:\n    select job, next_date, next_sec, failures, broken from dba_jobs;\n\n  Scheduler queue information is available from the DBA_SCHEDULER_JOBS view. The\n  following command lists jobs submitted to the queue.\n\n  Run this query:\n  select owner, job_name, state, job_class, job_type, job_action\n  from dba_scheduler_jobs;",
+                        "fix": "Develop, document and implement procedures to monitor the\n  database job queues for unauthorized job submissions.\n\n  Develop, document and implement a formal migration plan to convert jobs using\n  DBMS_JOB to use DBMS_SCHEDULER instead for Oracle versions 10.1 and higher.\n  (This does not apply to DBMS_JOB jobs generated by Oracle itself, such as those\n  for refreshing materialized views.)\n\n  Set the value of the job_queue_processes parameter to a low value to restrict\n  concurrent DBMS_JOB executions.\n\n  Use auditing to capture use of the DBMS_JOB package in the audit trail. Review\n  the audit trail for unauthorized use of the DBMS_JOB package."
+                    },
+                    "code": "control 'V-61449' do\n  title \"Database job/batch queues must be reviewed regularly to detect\n  unauthorized database job submissions.\"\n  desc \"Unauthorized users may bypass security mechanisms by submitting jobs\n  to job queues managed by the database to be run under a more privileged\n  security context of the database or host system. These queues must be monitored\n  regularly to detect any such unauthorized job submissions.\"\n  impact 0.5\n  tag \"gtitle\": 'SRG-APP-000516-DB-999900'\n  tag \"gid\": 'V-61449'\n  tag \"rid\": 'SV-75939r3_rule'\n  tag \"stig_id\": 'O121-BP-023100'\n  tag \"fix_id\": 'F-67365r2_fix'\n  tag \"cci\": ['CCI-000366']\n  tag \"nist\": ['CM-6 b', 'Rev_4']\n  tag \"false_negatives\": nil\n  tag \"false_positives\": nil\n  tag \"documentable\": false\n  tag \"mitigations\": nil\n  tag \"severity_override_guidance\": false\n  tag \"potential_impacts\": nil\n  tag \"third_party_tools\": nil\n  tag \"mitigation_controls\": nil\n  tag \"responsibility\": nil\n  tag \"ia_controls\": nil\n  tag \"check\": \"The DBMS_JOB PL/SQL package has been replaced by DBMS_SCHEDULER\n  in Oracle versions 10.1 and higher, though it continues to be supported for\n  backward compatibility.\n\n  Run this query:\n    select value from v$parameter where name = 'job_queue_processes';\n\n  Run this query:\n    select value from all_scheduler_global_attribute\n    where ATTRIBUTE_NAME = 'MAX_JOB_SLAVE_PROCESSES';\n\n  To understand the relationship between these settings, review:\n  https://docs.oracle.com/database/121/ADMIN/appendix_a.htm#ADMIN11002\n\n  Review documented and implemented procedures for monitoring the Oracle DBMS\n  job/batch queues for unauthorized submissions. If procedures for job queue\n  review are not defined, documented or evidence of implementation does not\n  exist, this is a finding.\n\n  Job queue information is available from the DBA_JOBS view. The following\n  command lists jobs submitted to the queue. DBMS_JOB does not generate a\n  'history' of previous job executions.\n\n  Run this query:\n    select job, next_date, next_sec, failures, broken from dba_jobs;\n\n  Scheduler queue information is available from the DBA_SCHEDULER_JOBS view. The\n  following command lists jobs submitted to the queue.\n\n  Run this query:\n  select owner, job_name, state, job_class, job_type, job_action\n  from dba_scheduler_jobs;\"\n  tag \"fix\": \"Develop, document and implement procedures to monitor the\n  database job queues for unauthorized job submissions.\n\n  Develop, document and implement a formal migration plan to convert jobs using\n  DBMS_JOB to use DBMS_SCHEDULER instead for Oracle versions 10.1 and higher.\n  (This does not apply to DBMS_JOB jobs generated by Oracle itself, such as those\n  for refreshing materialized views.)\n\n  Set the value of the job_queue_processes parameter to a low value to restrict\n  concurrent DBMS_JOB executions.\n\n  Use auditing to capture use of the DBMS_JOB package in the audit trail. Review\n  the audit trail for unauthorized use of the DBMS_JOB package.\"\n\n  sql = oracledb_session(user: input('user'), password: input('password'), host: input('host'), service: input('service'), sqlplus_bin: input('sqlplus_bin'))\n\n  database_jobs = sql.query(\"select owner, job_name, state, job_class, job_type, job_action\n  from dba_scheduler_jobs;\").column('job_name')\n\n  describe \"You must manually review the database jobs to detect unauthorized database job submissions. The jobs to review are: #{database_jobs}\" do\n    skip \"You must manually review the database jobs to detect unauthorized database job submissions. The jobs to review are: #{database_jobs}\"\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61449.rb"
+                    },
+                    "waiver_data": {},
+                    "results": [
+                        {
+                            "status": "skipped",
+                            "code_desc": "You must manually review the database jobs to detect unauthorized database job submissions. The jobs to review are: [\"XMLDB_NFS_CLEANUP_JOB\", \"LOAD_OPATCH_INVENTORY\", \"SM$CLEAN_AUTO_SPLIT_MERGE\", \"RSE$CLEAN_RECOVERABLE_SCRIPT\", \"FGR$AUTOPURGE_JOB\", \"BSLN_MAINTAIN_STATS_JOB\", \"DRA_REEVALUATE_OPEN_FAILURES\", \"HM_CREATE_OFFLINE_DICTIONARY\", \"ORA$AUTOTASK_CLEAN\", \"FILE_SIZE_UPD\", \"CLEANUP_ONLINE_PMO\", \"CLEANUP_TRANSIENT_PKG\", \"CLEANUP_TRANSIENT_TYPE\", \"CLEANUP_TAB_IOT_PMO\", \"CLEANUP_ONLINE_IND_BUILD\", \"CLEANUP_NON_EXIST_OBJ\", \"PMO_DEFERRED_GIDX_MAINT_JOB\", \"FILE_WATCHER\", \"PURGE_LOG\"]",
+                            "run_time": 4.062e-06,
+                            "start_time": "2020-06-01T18:50:31+00:00",
+                            "resource": "",
+                            "skip_message": "You must manually review the database jobs to detect unauthorized database job submissions. The jobs to review are: [\"XMLDB_NFS_CLEANUP_JOB\", \"LOAD_OPATCH_INVENTORY\", \"SM$CLEAN_AUTO_SPLIT_MERGE\", \"RSE$CLEAN_RECOVERABLE_SCRIPT\", \"FGR$AUTOPURGE_JOB\", \"BSLN_MAINTAIN_STATS_JOB\", \"DRA_REEVALUATE_OPEN_FAILURES\", \"HM_CREATE_OFFLINE_DICTIONARY\", \"ORA$AUTOTASK_CLEAN\", \"FILE_SIZE_UPD\", \"CLEANUP_ONLINE_PMO\", \"CLEANUP_TRANSIENT_PKG\", \"CLEANUP_TRANSIENT_TYPE\", \"CLEANUP_TAB_IOT_PMO\", \"CLEANUP_ONLINE_IND_BUILD\", \"CLEANUP_NON_EXIST_OBJ\", \"PMO_DEFERRED_GIDX_MAINT_JOB\", \"FILE_WATCHER\", \"PURGE_LOG\"]"
+                        }
+                    ]
+                },
+                {
+                    "id": "V-61867",
+                    "title": "Database software, applications, and configuration files must be\n  monitored to discover unauthorized changes.",
+                    "desc": "Any changes to the hardware, software, and/or firmware components of\n  the information system and/or application can potentially have significant\n  effects on the overall security of the system.\n\n      If the system were to allow any user to make changes to software libraries,\n  then those changes might be implemented without undergoing the appropriate\n  testing and approvals that are part of a robust change management process.\n\n      Accordingly, only qualified and authorized individuals shall be allowed to\n  obtain access to information system components for purposes of initiating\n  changes, including upgrades and modifications.\n\n      Unmanaged changes that occur to the database software libraries or\n  configuration can lead to unauthorized or compromised installations.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Any changes to the hardware, software, and/or firmware components of\n  the information system and/or application can potentially have significant\n  effects on the overall security of the system.\n\n      If the system were to allow any user to make changes to software libraries,\n  then those changes might be implemented without undergoing the appropriate\n  testing and approvals that are part of a robust change management process.\n\n      Accordingly, only qualified and authorized individuals shall be allowed to\n  obtain access to information system components for purposes of initiating\n  changes, including upgrades and modifications.\n\n      Unmanaged changes that occur to the database software libraries or\n  configuration can lead to unauthorized or compromised installations."
+                        }
+                    ],
+                    "impact": 0.0,
+                    "refs": [
+                        {
+                            "ref": []
+                        }
+                    ],
+                    "tags": {
+                        "gtitle": "SRG-APP-000133-DB-000179",
+                        "gid": "V-61867",
+                        "rid": "SV-76357r2_rule",
+                        "stig_id": "O121-OS-010700",
+                        "fix_id": "F-67783r2_fix",
+                        "cci": [
+                            "CCI-001499"
+                        ],
+                        "nist": [
+                            "CM-5 (6)",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "Review monitoring procedures and implementation evidence to\n  verify that monitoring of changes to database software libraries, related\n  applications, and configuration files is done.\n\n  Verify that the list of files and directories being monitored is complete. If\n  monitoring does not occur or is not complete, this is a finding.",
+                        "fix": "Implement procedures to monitor for unauthorized changes to DBMS\n  software libraries, related software application libraries, and configuration\n  files. If a third-party automated tool is not employed, an automated job that\n  reports file information on the directories and files of interest and compares\n  them to the baseline report for the same will meet the requirement.\n\n  File hashes or checksums should be used for comparisons since file dates may be\n  manipulated by malicious users."
+                    },
+                    "code": "control 'V-61867' do\n  title \"Database software, applications, and configuration files must be\n  monitored to discover unauthorized changes.\"\n  desc \"Any changes to the hardware, software, and/or firmware components of\n  the information system and/or application can potentially have significant\n  effects on the overall security of the system.\n\n      If the system were to allow any user to make changes to software libraries,\n  then those changes might be implemented without undergoing the appropriate\n  testing and approvals that are part of a robust change management process.\n\n      Accordingly, only qualified and authorized individuals shall be allowed to\n  obtain access to information system components for purposes of initiating\n  changes, including upgrades and modifications.\n\n      Unmanaged changes that occur to the database software libraries or\n  configuration can lead to unauthorized or compromised installations.\n  \"\n  impact 0.5\n  tag \"gtitle\": 'SRG-APP-000133-DB-000179'\n  tag \"gid\": 'V-61867'\n  tag \"rid\": 'SV-76357r2_rule'\n  tag \"stig_id\": 'O121-OS-010700'\n  tag \"fix_id\": 'F-67783r2_fix'\n  tag \"cci\": ['CCI-001499']\n  tag \"nist\": ['CM-5 (6)', 'Rev_4']\n  tag \"false_negatives\": nil\n  tag \"false_positives\": nil\n  tag \"documentable\": false\n  tag \"mitigations\": nil\n  tag \"severity_override_guidance\": false\n  tag \"potential_impacts\": nil\n  tag \"third_party_tools\": nil\n  tag \"mitigation_controls\": nil\n  tag \"responsibility\": nil\n  tag \"ia_controls\": nil\n  tag \"check\": \"Review monitoring procedures and implementation evidence to\n  verify that monitoring of changes to database software libraries, related\n  applications, and configuration files is done.\n\n  Verify that the list of files and directories being monitored is complete. If\n  monitoring does not occur or is not complete, this is a finding.\"\n  tag \"fix\": \"Implement procedures to monitor for unauthorized changes to DBMS\n  software libraries, related software application libraries, and configuration\n  files. If a third-party automated tool is not employed, an automated job that\n  reports file information on the directories and files of interest and compares\n  them to the baseline report for the same will meet the requirement.\n\n  File hashes or checksums should be used for comparisons since file dates may be\n  manipulated by malicious users.\"\n  describe command('grep aide /etc/crontab /etc/cron.*/*') do\n    its('stdout.strip') { should_not be_empty }\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61867.rb"
+                    },
+                    "waiver_data": {},
+                    "results": [
+                        {
+                            "status": "skipped",
+                            "code_desc": "This control is not applicable on oracle within aws rds, as aws manages the operating system in which the oracle database is running on",
+                            "run_time": 7.239e-06,
+                            "start_time": "2020-06-01T18:50:31+00:00",
+                            "resource": "",
+                            "skip_message": "This control is not applicable on oracle within aws rds, as aws manages the operating system in which the oracle database is running on"
+                        }
+                    ]
+                },
+                {
+                    "id": "V-61635",
+                    "title": "The DBMS must produce audit records containing sufficient information\n  to establish the sources (origins) of the events.",
+                    "desc": "Information system auditing capability is critical for accurate\n  forensic analysis. Audit record content that may be necessary to satisfy the\n  requirement of this control, includes, but is not limited to:  timestamps,\n  source and destination IP addresses, user/process identifiers, event\n  descriptions, application specific events, success/fail indications, file names\n  involved, access control or flow control rules invoked.\n\n      Without information establishing the source of activity, the value of audit\n  records from a forensics perspective is questionable.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Information system auditing capability is critical for accurate\n  forensic analysis. Audit record content that may be necessary to satisfy the\n  requirement of this control, includes, but is not limited to:  timestamps,\n  source and destination IP addresses, user/process identifiers, event\n  descriptions, application specific events, success/fail indications, file names\n  involved, access control or flow control rules invoked.\n\n      Without information establishing the source of activity, the value of audit\n  records from a forensics perspective is questionable."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "gtitle": "SRG-APP-000098-DB-000042",
+                        "gid": "V-61635",
+                        "rid": "SV-76125r1_rule",
+                        "stig_id": "O121-C2-007700",
+                        "fix_id": "F-67547r1_fix",
+                        "cci": [
+                            "CCI-000133"
+                        ],
+                        "nist": [
+                            "AU-3",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "Verify, using vendor and system documentation if necessary,\n  that the DBMS is configured to use Oracle's auditing features, or that a\n  third-party product or custom code is deployed and configured to satisfy this\n  requirement.\n\n  If a third-party product or custom code is used, compare its current\n  configuration with the audit requirements. If any of the requirements is not\n  covered by the configuration, this is a finding.\n\n  The remainder of this Check is applicable specifically where Oracle auditing is\n  in use.\n\n  If Standard Auditing is used:\n  To see if Oracle is configured to capture audit data, enter the following\n  SQL*Plus command:\n\n  SHOW PARAMETER AUDIT_TRAIL\n\n  or the following SQL query:\n\n  SELECT * FROM SYS.V$PARAMETER WHERE NAME = 'audit_trail';\n\n  If Oracle returns the value 'NONE', this is a finding.\n\n  To confirm that Oracle audit is capturing sufficient information to establish\n  the source of events, perform a successful auditable action and an auditable\n  action that results in an SQL error, and then view the results in the SYS.AUD$\n  table or the audit file, whichever is in use.\n\n  If correct values for User ID, User Host, and Terminal are not returned when\n  applicable, this is a finding.\n\n  If Unified Auditing is used:\n  To see if Oracle is configured to capture audit data, enter the following\n  SQL*Plus command:\n\n  SELECT * FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';\n\n  If Oracle returns the value \"TRUE\", this is not a finding.\n\n  To confirm that Oracle audit is capturing sufficient information to establish\n  the source of events, perform a successful auditable action and an auditable\n  action that results in an SQL error, and then view the results in the\n  SYS.UNIFIED_AUDIT_TRAIL view.\n\n  If correct values for User ID, User Host, and Terminal are not returned when\n  applicable, this is a finding.",
+                        "fix": "Configure the DBMS's auditing to audit standard and\n  organization-defined auditable events, the audit record to include the source\n  of the event. If preferred, use a third-party or custom tool.\n\n  If using a third-party product, proceed in accordance with the product\n  documentation. If using Oracle's capabilities, proceed as follows.\n\n  If Standard Auditing is used:\n  Use this process to ensure auditable events are captured:\n\n  ALTER SYSTEM SET AUDIT_TRAIL=<audit trail type> SCOPE=SPFILE;\n\n  Audit trail type can be 'OS', 'DB', 'DB,EXTENDED', 'XML' or 'XML,EXTENDED'.\n  After executing this statement, it may be necessary to shut down and restart\n  the Oracle database.\n\n  If Unified Auditing is used:\n  To ensure auditable events are captured:\n  Link the oracle binary with uniaud_on, and then restart the database.\n\n\n\n  Oracle Database Upgrade Guide describes how to enable unified auditing.\n\n  For more information on the configuration of auditing, refer to the following\n  documents:\n  \"Auditing Database Activity\" in the Oracle Database 2 Day + Security Guide:\n  http://docs.oracle.com/database/121/TDPSG/tdpsg_auditing.htm#TDPSG50000\n  \"Monitoring Database Activity with Auditing\" in the Oracle Database Security\n  Guide:\n  http://docs.oracle.com/database/121/DBSEG/part_6.htm#CCHEHCGI\n  \"DBMS_AUDIT_MGMT\" in the Oracle Database PL/SQL Packages and Types Reference:\n  http://docs.oracle.com/database/121/ARPLS/d_audit_mgmt.htm#ARPLS241\n  Oracle Database Upgrade Guide:\n  http://docs.oracle.com/database/121/UPGRD/afterup.htm#UPGRD52810"
+                    },
+                    "code": "control 'V-61635' do\n  title \"The DBMS must produce audit records containing sufficient information\n  to establish the sources (origins) of the events.\"\n  desc \"Information system auditing capability is critical for accurate\n  forensic analysis. Audit record content that may be necessary to satisfy the\n  requirement of this control, includes, but is not limited to:  timestamps,\n  source and destination IP addresses, user/process identifiers, event\n  descriptions, application specific events, success/fail indications, file names\n  involved, access control or flow control rules invoked.\n\n      Without information establishing the source of activity, the value of audit\n  records from a forensics perspective is questionable.\n  \"\n  impact 0.5\n  tag \"gtitle\": 'SRG-APP-000098-DB-000042'\n  tag \"gid\": 'V-61635'\n  tag \"rid\": 'SV-76125r1_rule'\n  tag \"stig_id\": 'O121-C2-007700'\n  tag \"fix_id\": 'F-67547r1_fix'\n  tag \"cci\": ['CCI-000133']\n  tag \"nist\": ['AU-3', 'Rev_4']\n  tag \"false_negatives\": nil\n  tag \"false_positives\": nil\n  tag \"documentable\": false\n  tag \"mitigations\": nil\n  tag \"severity_override_guidance\": false\n  tag \"potential_impacts\": nil\n  tag \"third_party_tools\": nil\n  tag \"mitigation_controls\": nil\n  tag \"responsibility\": nil\n  tag \"ia_controls\": nil\n  tag \"check\": \"Verify, using vendor and system documentation if necessary,\n  that the DBMS is configured to use Oracle's auditing features, or that a\n  third-party product or custom code is deployed and configured to satisfy this\n  requirement.\n\n  If a third-party product or custom code is used, compare its current\n  configuration with the audit requirements. If any of the requirements is not\n  covered by the configuration, this is a finding.\n\n  The remainder of this Check is applicable specifically where Oracle auditing is\n  in use.\n\n  If Standard Auditing is used:\n  To see if Oracle is configured to capture audit data, enter the following\n  SQL*Plus command:\n\n  SHOW PARAMETER AUDIT_TRAIL\n\n  or the following SQL query:\n\n  SELECT * FROM SYS.V$PARAMETER WHERE NAME = 'audit_trail';\n\n  If Oracle returns the value 'NONE', this is a finding.\n\n  To confirm that Oracle audit is capturing sufficient information to establish\n  the source of events, perform a successful auditable action and an auditable\n  action that results in an SQL error, and then view the results in the SYS.AUD$\n  table or the audit file, whichever is in use.\n\n  If correct values for User ID, User Host, and Terminal are not returned when\n  applicable, this is a finding.\n\n  If Unified Auditing is used:\n  To see if Oracle is configured to capture audit data, enter the following\n  SQL*Plus command:\n\n  SELECT * FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';\n\n  If Oracle returns the value \\\"TRUE\\\", this is not a finding.\n\n  To confirm that Oracle audit is capturing sufficient information to establish\n  the source of events, perform a successful auditable action and an auditable\n  action that results in an SQL error, and then view the results in the\n  SYS.UNIFIED_AUDIT_TRAIL view.\n\n  If correct values for User ID, User Host, and Terminal are not returned when\n  applicable, this is a finding.\"\n  tag \"fix\": \"Configure the DBMS's auditing to audit standard and\n  organization-defined auditable events, the audit record to include the source\n  of the event. If preferred, use a third-party or custom tool.\n\n  If using a third-party product, proceed in accordance with the product\n  documentation. If using Oracle's capabilities, proceed as follows.\n\n  If Standard Auditing is used:\n  Use this process to ensure auditable events are captured:\n\n  ALTER SYSTEM SET AUDIT_TRAIL=<audit trail type> SCOPE=SPFILE;\n\n  Audit trail type can be 'OS', 'DB', 'DB,EXTENDED', 'XML' or 'XML,EXTENDED'.\n  After executing this statement, it may be necessary to shut down and restart\n  the Oracle database.\n\n  If Unified Auditing is used:\n  To ensure auditable events are captured:\n  Link the oracle binary with uniaud_on, and then restart the database.\n\n\n\n  Oracle Database Upgrade Guide describes how to enable unified auditing.\n\n  For more information on the configuration of auditing, refer to the following\n  documents:\n  \\\"Auditing Database Activity\\\" in the Oracle Database 2 Day + Security Guide:\n  http://docs.oracle.com/database/121/TDPSG/tdpsg_auditing.htm#TDPSG50000\n  \\\"Monitoring Database Activity with Auditing\\\" in the Oracle Database Security\n  Guide:\n  http://docs.oracle.com/database/121/DBSEG/part_6.htm#CCHEHCGI\n  \\\"DBMS_AUDIT_MGMT\\\" in the Oracle Database PL/SQL Packages and Types Reference:\n  http://docs.oracle.com/database/121/ARPLS/d_audit_mgmt.htm#ARPLS241\n  Oracle Database Upgrade Guide:\n  http://docs.oracle.com/database/121/UPGRD/afterup.htm#UPGRD52810\"\n\n  sql = oracledb_session(user: input('user'), password: input('password'), host: input('host'), service: input('service'), sqlplus_bin: input('sqlplus_bin'))\n\n  standard_auditing_used = input('standard_auditing_used')\n  unified_auditing_used = input('unified_auditing_used')\n\n  describe.one do\n    describe 'Standard auditing is in use for audit purposes' do\n      subject { standard_auditing_used }\n      it { should be true }\n    end\n\n    describe 'Unified auditing is in use for audit purposes' do\n      subject { unified_auditing_used }\n      it { should be true }\n    end\n  end\n\n  audit_trail = sql.query(\"select value from v$parameter where name = 'audit_trail';\").column('value')\n  audit_info_captured = sql.query('SELECT * FROM UNIFIED_AUDIT_TRAIL;').column('EVENT_TIMESTAMP')\n\n  if standard_auditing_used\n    describe 'The oracle database audit_trail parameter' do\n      subject { audit_trail }\n      it { should_not cmp 'NONE' }\n    end\n  end\n\n  unified_auditing = sql.query(\"SELECT value FROM V$OPTION WHERE PARAMETER = 'Unified Auditing';\").column('value')\n\n  if unified_auditing_used\n    describe 'The oracle database unified auditing parameter' do\n      subject { unified_auditing }\n      it { should_not cmp 'FALSE' }\n    end\n\n    describe 'The oracle database unified auditing events captured' do\n      subject { audit_info_captured }\n      it { should_not be_empty }\n    end\n\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61635.rb"
+                    },
+                    "waiver_data": {},
+                    "results": [
+                        {
+                            "status": "passed",
+                            "code_desc": "Standard auditing is in use for audit purposes is expected to equal true",
+                            "run_time": 6.8198e-05,
+                            "start_time": "2020-06-01T18:50:31+00:00"
+                        },
+                        {
+                            "status": "failed",
+                            "code_desc": "The oracle database audit_trail parameter is expected not to cmp == \"NONE\"",
+                            "run_time": 0.000259495,
+                            "start_time": "2020-06-01T18:50:31+00:00",
+                            "message": "\nexpected: NONE\n     got: [\"NONE\"]\n\n(compared using `cmp` matcher)\n"
+                        }
+                    ]
+                },
+                {
+                    "id": "V-61677",
+                    "title": "Default demonstration and sample databases, database objects, and\n  applications must be removed.",
+                    "desc": "Information systems are capable of providing a wide variety of\n  functions and services. Some of the functions and services, provided by\n  default, may not be necessary to support essential organizational operations\n  (e.g., key missions, functions).\n\n      It is detrimental for applications to provide, or install by default,\n  functionality exceeding requirements or mission objectives. Examples include,\n  but are not limited to, installing advertising software, demonstrations, or\n  browser plugins not related to requirements or providing a wide array of\n  functionality not required for the mission.\n\n      Applications must adhere to the principles of least functionality by\n  providing only essential capabilities.\n\n      Demonstration and sample database objects and applications present publicly\n  known attack points for malicious users. These demonstration and sample objects\n  are meant to provide simple examples of coding specific functions and are not\n  developed to prevent vulnerabilities from being introduced to the DBMS and host\n  system.",
+                    "descriptions": [
+                        {
+                            "label": "default",
+                            "data": "Information systems are capable of providing a wide variety of\n  functions and services. Some of the functions and services, provided by\n  default, may not be necessary to support essential organizational operations\n  (e.g., key missions, functions).\n\n      It is detrimental for applications to provide, or install by default,\n  functionality exceeding requirements or mission objectives. Examples include,\n  but are not limited to, installing advertising software, demonstrations, or\n  browser plugins not related to requirements or providing a wide array of\n  functionality not required for the mission.\n\n      Applications must adhere to the principles of least functionality by\n  providing only essential capabilities.\n\n      Demonstration and sample database objects and applications present publicly\n  known attack points for malicious users. These demonstration and sample objects\n  are meant to provide simple examples of coding specific functions and are not\n  developed to prevent vulnerabilities from being introduced to the DBMS and host\n  system."
+                        }
+                    ],
+                    "impact": 0.5,
+                    "refs": [],
+                    "tags": {
+                        "gtitle": "SRG-APP-000141-DB-000090",
+                        "gid": "V-61677",
+                        "rid": "SV-76167r3_rule",
+                        "stig_id": "O121-C2-011500",
+                        "fix_id": "F-67591r1_fix",
+                        "cci": [
+                            "CCI-000381"
+                        ],
+                        "nist": [
+                            "CM-7 a",
+                            "Rev_4"
+                        ],
+                        "false_negatives": null,
+                        "false_positives": null,
+                        "documentable": false,
+                        "mitigations": null,
+                        "severity_override_guidance": false,
+                        "potential_impacts": null,
+                        "third_party_tools": null,
+                        "mitigation_controls": null,
+                        "responsibility": null,
+                        "ia_controls": null,
+                        "check": "If Oracle is hosted on a server that does not support\n  production systems, and is designated for the deployment of samples and\n  demonstrations, this is not applicable (NA).\n\n  Review documentation and websites from Oracle and any other relevant vendors\n  for vendor-provided demonstration or sample databases, database applications,\n  schemas, objects, and files.\n\n  Review the Oracle DBMS to determine if any of the demonstration and sample\n  databases, schemas, database applications, or files are installed in the\n  database or are included with the DBMS application. If any are present in the\n  database or are included with the DBMS application, this is a finding.\n\n  The Oracle Default Sample Schema User Accounts are:\n\n  BI\n  Owns the Business Intelligence schema included in the Oracle Sample Schemas.\n\n  HR\n  Manages the Human Resources schema. Schema stores information about the\n  employees and the facilities of the company.\n\n  OE\n  Manages the Order Entry schema. Schema stores product inventories and sales of\n  the company's products through various channels.\n\n  PM\n  Manages the Product Media schema. Schema contains descriptions and detailed\n  information about each product sold by the company.\n\n  IX\n  Manages the Information Exchange schema. Schema manages shipping through\n  business-to-business (B2B) applications database.\n\n  SH\n  Manages the Sales schema. Schema stores statistics to facilitate business\n  decisions.\n\n  SCOTT\n  A demonstration account with a simple schema.\n\n  Connect to Oracle as SYSDBA; run the following SQL to check for presence of\n  Oracle Default Sample Schema User Accounts:\n  select distinct(username) from dba_users where username in\n  ('BI','HR','OE','PM','IX','SH','SCOTT');\n\n  If any of the users listed above is returned it means that there are demo\n  programs installed, so this is a finding.\n  ",
+                        "fix": "Remove any demonstration and sample databases, database\n  applications, objects, and files from the DBMS.\n\n  To remove an account and all objects owned by that account (using BI as an\n  example):\n  DROP USER BI CASCADE;\n\n  To remove objects without removing their owner, use the appropriate DROP\n  statement (DROP TABLE, DROP VIEW, etc.)."
+                    },
+                    "code": "control 'V-61677' do\n  title \"Default demonstration and sample databases, database objects, and\n  applications must be removed.\"\n  desc \"Information systems are capable of providing a wide variety of\n  functions and services. Some of the functions and services, provided by\n  default, may not be necessary to support essential organizational operations\n  (e.g., key missions, functions).\n\n      It is detrimental for applications to provide, or install by default,\n  functionality exceeding requirements or mission objectives. Examples include,\n  but are not limited to, installing advertising software, demonstrations, or\n  browser plugins not related to requirements or providing a wide array of\n  functionality not required for the mission.\n\n      Applications must adhere to the principles of least functionality by\n  providing only essential capabilities.\n\n      Demonstration and sample database objects and applications present publicly\n  known attack points for malicious users. These demonstration and sample objects\n  are meant to provide simple examples of coding specific functions and are not\n  developed to prevent vulnerabilities from being introduced to the DBMS and host\n  system.\n  \"\n  impact 0.5\n  tag \"gtitle\": 'SRG-APP-000141-DB-000090'\n  tag \"gid\": 'V-61677'\n  tag \"rid\": 'SV-76167r3_rule'\n  tag \"stig_id\": 'O121-C2-011500'\n  tag \"fix_id\": 'F-67591r1_fix'\n  tag \"cci\": ['CCI-000381']\n  tag \"nist\": ['CM-7 a', 'Rev_4']\n  tag \"false_negatives\": nil\n  tag \"false_positives\": nil\n  tag \"documentable\": false\n  tag \"mitigations\": nil\n  tag \"severity_override_guidance\": false\n  tag \"potential_impacts\": nil\n  tag \"third_party_tools\": nil\n  tag \"mitigation_controls\": nil\n  tag \"responsibility\": nil\n  tag \"ia_controls\": nil\n  tag \"check\": \"If Oracle is hosted on a server that does not support\n  production systems, and is designated for the deployment of samples and\n  demonstrations, this is not applicable (NA).\n\n  Review documentation and websites from Oracle and any other relevant vendors\n  for vendor-provided demonstration or sample databases, database applications,\n  schemas, objects, and files.\n\n  Review the Oracle DBMS to determine if any of the demonstration and sample\n  databases, schemas, database applications, or files are installed in the\n  database or are included with the DBMS application. If any are present in the\n  database or are included with the DBMS application, this is a finding.\n\n  The Oracle Default Sample Schema User Accounts are:\n\n  BI\n  Owns the Business Intelligence schema included in the Oracle Sample Schemas.\n\n  HR\n  Manages the Human Resources schema. Schema stores information about the\n  employees and the facilities of the company.\n\n  OE\n  Manages the Order Entry schema. Schema stores product inventories and sales of\n  the company's products through various channels.\n\n  PM\n  Manages the Product Media schema. Schema contains descriptions and detailed\n  information about each product sold by the company.\n\n  IX\n  Manages the Information Exchange schema. Schema manages shipping through\n  business-to-business (B2B) applications database.\n\n  SH\n  Manages the Sales schema. Schema stores statistics to facilitate business\n  decisions.\n\n  SCOTT\n  A demonstration account with a simple schema.\n\n  Connect to Oracle as SYSDBA; run the following SQL to check for presence of\n  Oracle Default Sample Schema User Accounts:\n  select distinct(username) from dba_users where username in\n  ('BI','HR','OE','PM','IX','SH','SCOTT');\n\n  If any of the users listed above is returned it means that there are demo\n  programs installed, so this is a finding.\n  \"\n  tag \"fix\": \"Remove any demonstration and sample databases, database\n  applications, objects, and files from the DBMS.\n\n  To remove an account and all objects owned by that account (using BI as an\n  example):\n  DROP USER BI CASCADE;\n\n  To remove objects without removing their owner, use the appropriate DROP\n  statement (DROP TABLE, DROP VIEW, etc.).\"\n\n  sql = oracledb_session(user: input('user'), password: input('password'), host: input('host'), service: input('service'), sqlplus_bin: input('sqlplus_bin'))\n\n  sample_schema_user_accounts = sql.query(\"select distinct(username) from dba_users where username in\n  ('BI','HR','OE','PM','IX','SH','SCOTT');\").column('username')\n\n  describe 'The list of oracle default sample schema user accounts' do\n    subject { sample_schema_user_accounts }\n    it { should be_empty }\n  end\nend\n",
+                    "source_location": {
+                        "line": 1,
+                        "ref": "/home/vagrant/.inspec/cache/03cb641d7ad530bd0bd23a784f1bd73c2dc8b899/controls/V-61677.rb"
+                    },
+                    "waiver_data": {},
+                    "results": [
+                        {
+                            "status": "passed",
+                            "code_desc": "The list of oracle default sample schema user accounts is expected to be empty",
+                            "run_time": 0.01266834,
+                            "start_time": "2020-06-01T18:50:31+00:00"
+                        }
+                    ]
+                }
+            ],
+            "status": "loaded"
+        }
+    ],
+    "statistics": {
+        "duration": 0.353633098
+    },
+    "version": "4.18.100"
+}
