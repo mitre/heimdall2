@@ -7,12 +7,20 @@ export class TrufflehogResults {
   data: Record<string, unknown>;
   withRaw: boolean;
   constructor(trufflehogJson: string, withRaw = false) {
-    this.data = JSON.parse(trufflehogJson);
+    let parsedData = {};
+    try {
+      parsedData = JSON.parse(trufflehogJson.trim());
+    } catch (e) {
+      parsedData = trufflehogJson
+        .trim()
+        .split('\n')
+        .map((line) => JSON.parse(line.trim()));
+    }
     this.withRaw = withRaw;
-    if (_.isArray(this.data)) {
-      this.data = {wrapper: this.data};
+    if (_.isArray(parsedData)) {
+      this.data = {wrapper: parsedData};
     } else {
-      this.data = {wrapper: [this.data]};
+      this.data = {wrapper: [parsedData]};
     }
   }
 
