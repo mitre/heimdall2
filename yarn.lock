@@ -10936,10 +10936,10 @@ fast-xml-parser@4.4.1:
   dependencies:
     strnum "^1.0.5"
 
-fast-xml-parser@^4.2.0:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-4.5.1.tgz#a7e665ff79b7919100a5202f23984b6150f9b31e"
-  integrity sha512-y655CeyUQ+jj7KBbYMc4FG01V8ZQqjN+gDYGJ50RtfsUB8iG9AmwmwoAgeKLJdmueKKMrH1RJ7yXHTSoczdv5w==
+fast-xml-parser@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/fast-xml-parser/-/fast-xml-parser-5.0.2.tgz#de048fc4ff8434fe590ced719803996c2d23a771"
+  integrity sha512-6jV5fRIEpLdoNbKqwFn5wFeKGgke5Gpsss6YQ1/I5HlKS9U5odEPUmrqSZaiIS7JUFqlEPVR5WogQIkr9PdUWQ==
   dependencies:
     strnum "^1.0.5"
 
