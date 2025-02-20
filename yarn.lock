@@ -19774,10 +19774,15 @@ tailwindcss@3.3.0:
     resolve "^1.22.1"
     sucrase "^3.29.0"
 
-tailwindcss@4.0.6, tailwindcss@^4.0.0, tailwindcss@^4.0.6:
+tailwindcss@4.0.6:
   version "4.0.6"
   resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-4.0.6.tgz#c033bfba94d6e3bf70650a2f9fe949f39d3bb191"
   integrity sha512-mysewHYJKaXgNOW6pp5xon/emCsfAMnO8WMaGKZZ35fomnR/T5gYnRg2/yRTTrtXiEl1tiVkeRt0eMO6HxEZqw==
+
+tailwindcss@^4.0.0, tailwindcss@^4.0.6:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/tailwindcss/-/tailwindcss-4.0.7.tgz#b3e26a5dda77651808a873f1b535cc8c39fcb0ae"
+  integrity sha512-yH5bPPyapavo7L+547h3c4jcBXcrKwybQRjwdEIVAd9iXRvy/3T1CC6XSQEgZtRySjKfqvo3Cc0ZF1DTheuIdA==
 
 tapable@^1.0.0:
   version "1.1.3"
