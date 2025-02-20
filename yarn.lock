@@ -7169,9 +7169,9 @@ bcryptjs@^2.4.0:
   integrity sha512-V/Hy/X9Vt7f3BbPJEi8BdVFMByHi+jNXrYkW3huaybV/kQ0KJg0Y6PkEMbn+zeT+i+SiKZ/HMqJGIIt4LZDqNQ==
 
 bcryptjs@^3.0.0:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/bcryptjs/-/bcryptjs-3.0.1.tgz#870705ef5c5148de29395a0695ca2e7766cf6c2e"
-  integrity sha512-iY+rRoR0bToRe8LTJkVX2gawo8gmgDQbiFsaKy8fVuG3WXekEQrjasfmWIbJxJHttEKPa+xPxbw3GROnJSmu0A==
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/bcryptjs/-/bcryptjs-3.0.2.tgz#caadcca1afefe372ed6e20f86db8e8546361c1ca"
+  integrity sha512-k38b3XOZKv60C4E2hVsXTolJWfkGRMbILBIe2IBITXciy5bOsTKot5kDrf3ZfufQtQOUN5mXceUEpU1rTl9Uog==
 
 before-after-hook@^2.2.0:
   version "2.2.3"
