@@ -296,10 +296,28 @@ function getHdfSpecificDataAttribute(
 }
 
 /**
- * ChecklistResults is a wrapper for ChecklistMapper using the intakeType
- *  default returns a single hdf object without any modifications
- *  split returns multiple hdf object based on number of iSTIG objects in checklist
- *  wrapper returns a single hdf object with an additional profile created using file name as profile name and adds parent_profile key to each mapped profile
+ * The `ChecklistResults` class extends the `ChecklistJsonixConverter` and is responsible for converting
+ * checklist data between different formats (XML CKL, HDF JSON).
+ *
+ * @extends ChecklistJsonixConverter
+ *
+ * @property {string | ExecJSON.Execution} data - The input data, which can be a string of XML data or an HDF JSON execution object.
+ * @property {Checklist} jsonixData - The JSON representation of the checklist data.
+ * @property {ChecklistObject} checklistObject - The intermediate object representation of the checklist data.
+ * @property {boolean} withRaw - A flag indicating whether to include raw data in the output.
+ *
+ * @constructor
+ * @param {string | ExecJSON.Execution} data - The input data, which can be a string of XML data or an HDF JSON execution object.
+ * @param {boolean} [withRaw=false] - Optional flag indicating whether to include raw data in the output.
+ *
+ * @method getJsonix
+ * @returns {Checklist} - Returns the JSON representation of the checklist data.
+ *
+ * @method toCkl
+ * @returns {string} - Converts the checklist data to CKL (Checklist) XML format.
+ *
+ * @method toHdf
+ * @returns {ExecJSON.Execution} - Converts the checklist data to HDF (Heimdall Data Format).
  */
 export class ChecklistResults extends ChecklistJsonixConverter {
   data: string | ExecJSON.Execution;
@@ -308,8 +326,12 @@ export class ChecklistResults extends ChecklistJsonixConverter {
   withRaw: boolean;
 
   /**
-   * Creates instance of ChecklistResult object because ChecklistMapper uses the intermediate ChecklistObject to create HDF mapping
-   * @param checklistXml - string of xml data
+   * @param {string | ExecJSON.Execution} data - The input data, which can be either an HDF JSON object
+   * or an XML CKL string, depending on the direction of the conversion.
+   * @param {boolean} [withRaw=false] - A flag indicating whether to include raw data in the output.
+   * Defaults to false.
+   *
+   * @throws Will throw an error if the asset metadata is invalid.
    */
   constructor(data: string | ExecJSON.Execution, withRaw = false) {
     super(jsonixMapping);
