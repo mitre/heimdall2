@@ -12,13 +12,14 @@
 <script lang="ts">
 import {ColorHackModule} from '@/store/color_hack';
 import {ApexOptions} from 'apexcharts';
+import {ControlStatus, Severity} from 'inspecjs';
 import Vue from 'vue';
 import VueApexCharts from 'vue-apexcharts';
 import Component from 'vue-class-component';
 import {Prop} from 'vue-property-decorator';
 
 // Represents a slice of the pie.
-export interface Category<C extends string> {
+export interface Category<C extends Severity | ControlStatus> {
   label: string;
   value: C;
   color: string;
@@ -47,7 +48,10 @@ type ApexTotalType = {
   }
 })
 export default class ApexPieChart extends Vue {
-  @Prop({required: true, type: Array}) readonly categories!: Category<string>[];
+  @Prop({required: true, type: Array}) readonly categories!: Category<
+    Severity | ControlStatus
+  >[];
+
   @Prop({required: true, type: Array}) readonly series!: number[];
   @Prop({required: false, type: String}) readonly centerValue!: string;
 
@@ -105,10 +109,17 @@ export default class ApexPieChart extends Vue {
         },
         events: {
           dataPointSelection: (_event, _chartContext, config) => {
-            this.$emit(
-              'category-selected',
-              this.categories[config.dataPointIndex]
-            );
+            if (_event !== null) {
+              this.$emit(
+                'slice-selected',
+                this.categories[config.dataPointIndex]
+              );
+            } else {
+              this.$emit(
+                'legend-selected',
+                this.categories[config.dataPointIndex]
+              );
+            }
           },
           dataPointMouseEnter: (_event) => {
             document.body.style.cursor = 'pointer';
