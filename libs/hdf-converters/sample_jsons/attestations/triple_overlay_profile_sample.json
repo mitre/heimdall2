@@ -1081,6 +1081,7 @@
                         }
                     ],
                     "tags": {
+                        "severity": "medium",
                         "gtitle": "SRG-APP-000133-DB-000179",
                         "gid": "V-61867",
                         "rid": "SV-76357r2_rule",
