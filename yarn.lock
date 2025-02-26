@@ -3078,12 +3078,12 @@
   integrity sha512-1fcPVrB/NkbNcGNfCy+Cgnvwxt6/sbIEEFgZHFBJ670zYLegENYJF8qMo7x3LqBjWX2/Eneq5BVVRCLTmlJN+g==
 
 "@mitre/jsonix@^3.0.7":
-  version "3.0.7"
-  resolved "https://registry.npmjs.org/@mitre/jsonix/-/jsonix-3.0.7.tgz#f1e33599c1cddb9b865618a04a6a99c343c14764"
-  integrity sha512-8aDNL2v0b2BqaOi+3Hf9/EuNkUMVzFPYOusLx9MY/Ky9LLz2D5BxgGL8+h5mnYpTiHyFknGm4Wr/MFmz7oHLYw==
+  version "3.0.9"
+  resolved "https://registry.yarnpkg.com/@mitre/jsonix/-/jsonix-3.0.9.tgz#4c755b7a552f97f36c2a616a2d97c55adac3a40a"
+  integrity sha512-2WawetgXqqSg2tw85v5jMMbyEdXgaqSOsn889iKTP26UDW/p1MdrtIoo5tzYsxp5q00qupEZz4OC/cqH9dQTiA==
   dependencies:
-    "@xmldom/xmldom" "^0.8.2"
-    amdefine "^0.0.4"
+    "@xmldom/xmldom" "^0.9.7"
+    amdefine "^1.0.1"
     xmlhttprequest "^1.8.0"
 
 "@napi-rs/wasm-runtime@0.2.4":
@@ -6154,10 +6154,10 @@
     "@webassemblyjs/ast" "1.14.1"
     "@xtuc/long" "4.2.2"
 
-"@xmldom/xmldom@^0.8.2":
-  version "0.8.10"
-  resolved "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.10.tgz#a1337ca426aa61cef9fe15b5b28e340a72f6fa99"
-  integrity sha512-2WALfTl4xo2SkGCYRt6rDTFfk9R1czmBvUQy12gK2KuRKIpWEhcbbzy8EZXtz/jkRqHX8bFEc6FC1HjX4TUWYw==
+"@xmldom/xmldom@^0.9.7":
+  version "0.9.7"
+  resolved "https://registry.yarnpkg.com/@xmldom/xmldom/-/xmldom-0.9.7.tgz#f21bebdcde4af682a810062b14585c89bb7fab07"
+  integrity sha512-syvR8iIJjpTZ/stv7l89UAViwGFh6lbheeOaqSxkYx9YNmIVvPTRH+CT/fpykFtUx5N+8eSMDRvggF9J8GEPzQ==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -6363,10 +6363,10 @@ ajv@^8.0.0, ajv@^8.9.0:
     require-from-string "^2.0.2"
     uri-js "^4.2.2"
 
-amdefine@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.npmjs.org/amdefine/-/amdefine-0.0.4.tgz#510e24a0f231314e1105b9c747e79aaed694a0e9"
-  integrity sha512-+9uNlaqm8kZ0bYDuhFt1mqNoLM2I4AsSeB+6dddNiSfmRlJRq38IUuNtUD4+xOzOoPltOHzSvnlSgscMfpnDDg==
+amdefine@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
+  integrity sha512-S2Hw0TtNkMJhIabBwIojKL9YHO5T0n5eNqWJ7Lrlel/zDbftQpxpapi8tZs3X1HWa+u+QeydGmzzNU0m09+Rcg==
 
 ansi-align@^3.0.0:
   version "3.0.1"
