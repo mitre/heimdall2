@@ -15,9 +15,9 @@ describe('checklist_mapper_severity_mapping', () => {
     });
 });
 /**
- * Load and parse the HDF file.
- * @param filePath Path to the HDF file.
- * @returns Parsed HDF data.
+ * Load and parse the file.
+ * @param filePath Path to the file.
+ * @returns Parsed data.
  */
 function loadFile(filePath: string): any {
     return JSON.parse(fs.readFileSync(filePath, { encoding: 'utf-8' }));
