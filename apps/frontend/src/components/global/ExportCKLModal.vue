@@ -74,13 +74,12 @@
                       v-model="file.hostmac"
                       label="Host MAC"
                       :error-messages="
-                        validateFormat(
+                        validateHostmac(
                           $v.files.$each[index].hostmac,
                           'XX:XX:XX:XX:XX:XX'
                         )
                       "
-                      hint="XX:XX:XX:XX:XX:XX"
-                      class="pr-2"
+                      hint="XX:XX:XX:XX:XX:XX (for multiple: XX:XX:XX:XX:XX:XX, XX:XX:XX:XX:XX:XX)"
                     />
                     <v-text-field
                       v-model="file.hostfqdn"
@@ -596,6 +595,36 @@ export default class ExportCKLModal extends Vue {
     }
     return [];
   }
+
+  // validateHostmac(index: number): string[] {
+  //   const macAddresses = this.files[index].hostmac.split(/[\s,]+/).map((addr: string) => addr.trim());
+  //   const macRegex = /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/;
+
+  //   const invalidMacs = macAddresses.filter((addr: string) => !macRegex.test(addr));
+  //   if (invalidMacs.length > 0) {
+  //     return [`Invalid MAC address(es): ${invalidMacs.join(', ')}`];
+  //   }
+  //   return [];
+  // }
+
+  validateHostmac(field: typeof ValidationProperties, hint: string): string[] {
+    const value = _.get(field, '$model', '');
+
+    // Allow empty input to be valid
+    if (value === '') {
+      return [];
+    }
+
+    const macAddresses = (value as string).split(/[\s,]+/).map(addr => addr.trim());
+    const macRegex = /^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/;
+
+    const invalidMacs = macAddresses.filter(addr => !macRegex.test(addr));
+    if (invalidMacs.length > 0) {
+      return [hint];
+    }
+    return [];
+  }
+
 
   setProperName(name: string, fileIndex: number, profileIndex: number): string {
     let newName = name;
