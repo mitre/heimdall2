@@ -3,180 +3,100 @@ import {ChecklistResults} from '../../../src/ckl-mapper/checklist-mapper';
 import {omitVersions} from '../../utils';
 import {InvalidChecklistMetadataException} from '../../../src/ckl-mapper/checklist-metadata-utils';
 
-describe('checklist_mapper_single_stig', () => {
-  it('Successfully converts Checklists', () => {
-    const mapper = new ChecklistResults(
-      fs.readFileSync(
-        'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl',
-        {encoding: 'utf-8'}
-      )
-    );
+// To write the output to a file for visual inspection, follow the example below:
+// fs.writeFileSync(
+//   'sample_jsons/checklist_mapper/FILENAME.json',
+//   JSON.stringify(mapper.toHdf(), null, 2)
+// );
 
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
+const readFile = (path: fs.PathOrFileDescriptor) =>
+  fs.readFileSync(path, {encoding: 'utf-8'});
+const parseJsonFile = (path: fs.PathOrFileDescriptor) =>
+  JSON.parse(readFile(path));
 
-    expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
-    );
+const testCases = [
+  {
+    description: 'checklist_mapper_single_stig',
+    inputFile:
+      'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl',
+    expectedFile: 'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf.json',
+    options: {}
+  },
+  {
+    description: 'checklist_mapper_single_stig_with_raw',
+    inputFile:
+      'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl',
+    expectedFile:
+      'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf-with-raw.json',
+    options: {includeRaw: true}
+  },
+  {
+    description: 'checklist_mapper_with_severity_overrides',
+    inputFile:
+      'sample_jsons/checklist_mapper/sample_input_report/small_ckl_overrides.ckl',
+    expectedFile: 'sample_jsons/checklist_mapper/small_overrides_hdf.json',
+    options: {includeRaw: true}
+  },
+  {
+    description: 'checklist_mapper_multi_stig_wrapper',
+    inputFile:
+      'sample_jsons/checklist_mapper/sample_input_report/three_stig_checklist.ckl',
+    expectedFile: 'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
+    options: {}
+  },
+  {
+    description: 'checklist_with_multiple_host_mac_addresses',
+    inputFile:
+      'sample_jsons/checklist_mapper/sample_input_report/multiple_mac_addresses_metadata.ckl',
+    expectedFile: 'sample_jsons/checklist_mapper/multiple_mac_addresses_metadata.json',
+    options: {includeRaw: false}
+  }
+];
+
+describe('Checklist Mapper Tests', () => {
+  testCases.forEach(({description, inputFile, expectedFile, options}) => {
+    it(`Successfully converts Checklists for ${description}`, () => {
+      const mapper = new ChecklistResults(
+        readFile(inputFile),
+        options.includeRaw
+      );
+      const results = mapper.toHdf();
+      expect(omitVersions(results)).toEqual(
+        omitVersions(parseJsonFile(expectedFile))
+      );
+    });
   });
-});
 
-describe('checklist_mapper_single_stig_with_raw', () => {
-  it('Successfully converts Checklists with raw', () => {
-    const mapper = new ChecklistResults(
-      fs.readFileSync(
-        'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl',
-        {encoding: 'utf-8'}
-      ),
-      true
-    );
-
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf-with-raw.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
-
-    expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/checklist_mapper/checklist-RHEL8V1R3-hdf-with-raw.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
-    );
-  });
-});
-
-describe('checklist_mapper_with_severity_overrides', () => {
-  it('Successfully converts Checklists with severity overrides', () => {
-    const mapper = new ChecklistResults(
-      fs.readFileSync(
-        'sample_jsons/checklist_mapper/sample_input_report/small_ckl_overrides.ckl',
-        {encoding: 'utf-8'}
-      ),
-      true
-    );
-
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/small_overrides_hdf.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
-
-    expect(omitVersions(mapper.toHdf())).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/checklist_mapper/small_overrides_hdf.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
-    );
-  });
-});
-
-describe('checklist_mapper_multi_stig_wrapper', () => {
-  it('Successfully converts Checklists', () => {
-    const mapper = new ChecklistResults(
-      fs.readFileSync(
-        'sample_jsons/checklist_mapper/sample_input_report/three_stig_checklist.ckl',
-        {encoding: 'utf-8'}
-      )
-    );
-
-    const results = mapper.toHdf();
-
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
-    //   JSON.stringify(mapper.toHdf(), null, 2)
-    // );
-
-    expect(omitVersions(results)).toEqual(
-      omitVersions(
-        JSON.parse(
-          fs.readFileSync(
-            'sample_jsons/checklist_mapper/three_stig_checklist-hdf.json',
-            {encoding: 'utf-8'}
-          )
-        )
-      )
-    );
-  });
-});
-
-describe('checklist_jsonix', () => {
   it('Successfully creates jsonix object', () => {
     const mapper = new ChecklistResults(
-      fs.readFileSync(
-        'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl',
-        {encoding: 'utf-8'}
+      readFile(
+        'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl'
       )
     );
-
     const results = mapper.getJsonix();
-
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/checklist_jsonix_data.json',
-    //   JSON.stringify(mapper.getJsonix(), null, 2)
-    // );
-
     expect(results).toEqual(
-      JSON.parse(
-        fs.readFileSync(
-          'sample_jsons/checklist_mapper/checklist_jsonix_data.json',
-          {encoding: 'utf-8'}
-        )
-      )
+      parseJsonFile('sample_jsons/checklist_mapper/checklist_jsonix_data.json')
     );
   });
-});
 
-describe('checklist_intermediate_object', () => {
   it('Successfully creates intermediate checklist object', () => {
     const mapper = new ChecklistResults(
-      fs.readFileSync(
-        'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl',
-        {encoding: 'utf-8'}
+      readFile(
+        'sample_jsons/checklist_mapper/sample_input_report/RHEL8V1R3.ckl'
       )
     );
-
     const jsonixData = mapper.getJsonix();
-
     const results = mapper.toIntermediateObject(jsonixData);
-
-    // fs.writeFileSync(
-    //   'sample_jsons/checklist_mapper/checklist_intermediate_object.json',
-    //   JSON.stringify(mapper.toIntermediateObject(jsonixData), null, 2)
-    // );
-
     expect(results).toEqual(
-      JSON.parse(
-        fs.readFileSync(
-          'sample_jsons/checklist_mapper/checklist_intermediate_object.json',
-          {encoding: 'utf-8'}
-        )
+      parseJsonFile(
+        'sample_jsons/checklist_mapper/checklist_intermediate_object.json'
       )
     );
   });
-});
 
-describe('checklist_with_invalid_metadata', () => {
-  // ensures that checklist metadata is being validated
   it('Throws InvalidChecklistFormatException when trying to convert checklist with invalid metadata', () => {
-    const fileContents = fs.readFileSync(
-      'sample_jsons/checklist_mapper/sample_input_report/invalid_metadata.ckl',
-      {encoding: 'utf-8'}
+    const fileContents = readFile(
+      'sample_jsons/checklist_mapper/sample_input_report/invalid_metadata.ckl'
     );
     expect(() => new ChecklistResults(fileContents)).toThrowError(
       InvalidChecklistMetadataException

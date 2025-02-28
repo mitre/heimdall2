@@ -22,8 +22,14 @@ const assetMetadataSchema: Revalidator.JSONSchema<Asset> = {
     },
     hostmac: {
       type: 'string',
-      conform: (mac: string) => !mac || isMACAddress(mac),
-      message: 'Host MAC'
+      conform: (mac: string) => {
+        if (!mac) return true; // Allow empty input
+        // Split the input string by newline, space, or comma
+        const macAddresses = mac.split(/[\s,]+/);
+        // Check each MAC address using the isMACAddress function
+        return macAddresses.every((address) => isMACAddress(address));
+      },
+      message: 'Host MAC addresses must be valid and separated by newline, space, or comma.'
     },
     role: {
       type: 'string',
