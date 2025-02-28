@@ -48,7 +48,8 @@ const testCases = [
     description: 'checklist_with_multiple_host_mac_addresses',
     inputFile:
       'sample_jsons/checklist_mapper/sample_input_report/multiple_mac_addresses_metadata.ckl',
-    expectedFile: 'sample_jsons/checklist_mapper/multiple_mac_addresses_metadata.json',
+    expectedFile:
+      'sample_jsons/checklist_mapper/multiple_mac_addresses_metadata.json',
     options: {includeRaw: false}
   }
 ];
