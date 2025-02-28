@@ -113,6 +113,11 @@ export default class ChecklistTargetDataModal extends Vue {
   clearTextInputs() {
     this.selectedChecklistAsset.webdbsite = '';
     this.selectedChecklistAsset.webdbinstance = '';
+
+    // Force an update so when the checkbox is true, the adjacent fields become enabled.
+    const asset = this.selectedChecklistAsset;
+    InspecDataModule.updateChecklistAsset({file: this.file_filter, asset});
+    this.$forceUpdate();
   }
 
   get selectedChecklistAsset() {
