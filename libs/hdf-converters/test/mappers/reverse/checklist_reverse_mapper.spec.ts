@@ -142,12 +142,3 @@ function extractStatus(
   const status = vuln?.status;
   return status;
 }
-/**
- * Save the CKL output to a file.
- * @param mapper ChecklistResults instance.
- * @param outputPath Path to save the CKL output.
- */
-function saveCklOutput(mapper: ChecklistResults, outputPath: string): void {
-  const cklOutput = mapper.toCkl();
-  fs.writeFileSync(outputPath, cklOutput);
-}
