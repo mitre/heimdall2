@@ -1,5 +1,6 @@
+<!-- eslint-disable prettier/prettier -->
 <template>
-  <Modal :visible="visible" @close-modal="handleClose">
+  <Modal :visible="visible" @close-modal="updateCheckList()">
     <v-card>
       <h2 class="modal-title">Add/Update Target Data</h2>
       <div class="input-section">
@@ -44,7 +45,7 @@
           dense
           label="Target Comments"
         />
-        <br />
+
         <strong>Role</strong>
         <v-radio-group v-model="selectedChecklistAsset.role">
           <v-radio label="None" value="None" />
@@ -56,7 +57,7 @@
           <v-checkbox
             v-model="selectedChecklistAsset.webordatabase"
             class="mr-5"
-            label="Website or Database STIG"
+            label="Website (checked) or Database STIG"
             hide-details
             @change="clearTextInputs()"
           />
@@ -79,7 +80,9 @@
       </div>
       <v-divider />
       <v-card-actions>
-        <v-btn color="primary" text @click="handleClose">Close Window</v-btn>
+        <v-btn color="primary" text @click="updateCheckList()"
+          >Close Window</v-btn
+        >
       </v-card-actions>
     </v-card>
   </Modal>
@@ -88,11 +91,11 @@
 <script lang="ts">
 import Modal from '@/components/global/Modal.vue';
 import {FilteredDataModule} from '@/store/data_filters';
-import {InspecDataModule} from '@/store/data_store';
+import {ChecklistFile, InspecDataModule} from '@/store/data_store';
 import {FileID} from '@/store/report_intake';
 import Vue from 'vue';
 import Component from 'vue-class-component';
-import {Prop} from 'vue-property-decorator';
+import {Prop, Watch} from 'vue-property-decorator';
 
 @Component({
   components: {
@@ -102,6 +105,16 @@ import {Prop} from 'vue-property-decorator';
 export default class ChecklistTargetDataModal extends Vue {
   @Prop({default: true}) readonly visible!: boolean;
 
+  @Watch('selectedChecklist.asset.webdbsite')
+  onWebDbSiteChange(newValue: string) {
+    if (newValue) this.webdbsite = newValue;
+  }
+
+  @Watch('selectedChecklist.asset.webdbinstance')
+  onWebDbInstanceChange(newValue: string) {
+    if (newValue) this.webdbinstance = newValue;
+  }
+
   /**
    * The currently selected file, if one exists.
    * Controlled by router.
@@ -110,24 +123,37 @@ export default class ChecklistTargetDataModal extends Vue {
     return FilteredDataModule.selectedChecklistId;
   }
 
-  clearTextInputs() {
-    this.selectedChecklistAsset.webdbsite = '';
-    this.selectedChecklistAsset.webdbinstance = '';
+  selectedChecklist: ChecklistFile = InspecDataModule.getChecklist(
+    this.file_filter
+  );
+
+  webdbsite: string = this.selectedChecklist.asset.webdbsite ?? '';
+  webdbinstance: string = this.selectedChecklist.asset.webdbinstance ?? '';
+
+  updateCheckList() {
+    InspecDataModule.updateExecution({
+      fileId: this.file_filter,
+      asset: this.selectedChecklist.asset
+    });
+    this.$emit('close-modal');
   }
 
-  get selectedChecklistAsset() {
-    const selectedChecklist = InspecDataModule.getChecklist(this.file_filter);
-    if (selectedChecklist) {
-      return selectedChecklist.asset;
+  clearTextInputs() {
+    if (this.selectedChecklistAsset.webordatabase) {
+      this.selectedChecklist.asset.webdbsite = this.webdbsite;
+      this.selectedChecklist.asset.webdbinstance = this.webdbinstance;
     } else {
-      return FilteredDataModule.emptyAsset;
+      this.selectedChecklistAsset.webdbsite = '';
+      this.selectedChecklistAsset.webdbinstance = '';
     }
   }
 
-  handleClose() {
-    const asset = this.selectedChecklistAsset;
-    InspecDataModule.updateChecklistAsset({file: this.file_filter, asset});
-    this.$emit('close-modal');
+  get selectedChecklistAsset() {
+    if (this.selectedChecklist) {
+      return this.selectedChecklist.asset;
+    } else {
+      return FilteredDataModule.emptyAsset;
+    }
   }
 }
 </script>
