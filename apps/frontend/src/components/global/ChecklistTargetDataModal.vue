@@ -1,6 +1,5 @@
-<!-- eslint-disable prettier/prettier -->
 <template>
-  <Modal :visible="visible" @close-modal="updateCheckList()">
+  <Modal :visible="visible" @close-modal="handleClose()">
     <v-card>
       <h2 class="modal-title">Add/Update Target Data</h2>
       <div class="input-section">
@@ -80,9 +79,7 @@
       </div>
       <v-divider />
       <v-card-actions>
-        <v-btn color="primary" text @click="updateCheckList()"
-          >Close Window</v-btn
-        >
+        <v-btn color="primary" text @click="handleClose()">Close Window</v-btn>
       </v-card-actions>
     </v-card>
   </Modal>
@@ -127,21 +124,21 @@ export default class ChecklistTargetDataModal extends Vue {
     this.file_filter
   );
 
-  webdbsite: string = this.selectedChecklist.asset.webdbsite ?? '';
-  webdbinstance: string = this.selectedChecklist.asset.webdbinstance ?? '';
+  webdbsite: string = this.selectedChecklistAsset.webdbsite ?? '';
+  webdbinstance: string = this.selectedChecklistAsset.webdbinstance ?? '';
 
-  updateCheckList() {
-    InspecDataModule.updateExecution({
-      fileId: this.file_filter,
-      asset: this.selectedChecklist.asset
+  handleClose() {
+    InspecDataModule.updateChecklistAsset({
+      file: this.file_filter,
+      asset: this.selectedChecklistAsset
     });
     this.$emit('close-modal');
   }
 
   clearTextInputs() {
     if (this.selectedChecklistAsset.webordatabase) {
-      this.selectedChecklist.asset.webdbsite = this.webdbsite;
-      this.selectedChecklist.asset.webdbinstance = this.webdbinstance;
+      this.selectedChecklistAsset.webdbsite = this.webdbsite;
+      this.selectedChecklistAsset.webdbinstance = this.webdbinstance;
     } else {
       this.selectedChecklistAsset.webdbsite = '';
       this.selectedChecklistAsset.webdbinstance = '';

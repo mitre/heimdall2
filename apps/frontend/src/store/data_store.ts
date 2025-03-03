@@ -96,14 +96,19 @@ export class InspecData extends VuexModule {
     };
   }
 
-  @Mutation
+  /**
+   * Updates the execution file with the provided asset.
+   *
+   * @param {Object} params - The parameters for the update.
+   * @param {FileID} params.fileId - The unique identifier of the file to update.
+   * @param {Asset} params.asset - The asset to update in the execution file.
+   */ @Mutation
   UPDATE_CHECKLIST_ASSET({file, asset}: {file: FileID; asset: ChecklistAsset}) {
-    const checklistFile = this.executionFiles.find(
-      (cf) => cf.uniqueId === file
-    );
-    if (checklistFile && _.has(checklistFile.evaluation, 'data')) {
+    const index = this.executionFiles.findIndex((f) => f.uniqueId === file);
+    if (index > -1) {
+      // Update the execution file logic here
       _.set(
-        checklistFile?.evaluation,
+        this.executionFiles[index].evaluation,
         'data.passthrough.checklist.asset',
         asset
       );
@@ -245,26 +250,6 @@ export class InspecData extends VuexModule {
     this.profileFiles = [];
     this.executionFiles = [];
     this.checklistFiles = [];
-  }
-
-  /**
-   * Updates the execution file with the provided asset.
-   *
-   * @param {Object} params - The parameters for the update.
-   * @param {FileID} params.fileId - The unique identifier of the file to update.
-   * @param {Asset} params.asset - The asset to update in the execution file.
-   */
-  @Mutation
-  updateExecution({fileId, asset}: {fileId: FileID; asset: Asset}) {
-    const index = this.executionFiles.findIndex((f) => f.uniqueId === fileId);
-    if (index > -1) {
-      // Update the execution file logic here
-      _.set(
-        this.executionFiles[index].evaluation,
-        'data.passthrough.checklist.asset',
-        asset
-      );
-    }
   }
 }
 
