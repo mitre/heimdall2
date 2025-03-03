@@ -302,22 +302,9 @@ function getHdfSpecificDataAttribute(
  * @extends ChecklistJsonixConverter
  *
  * @property {string | ExecJSON.Execution} data - The input data, which can be a string of XML data or an HDF JSON execution object.
- * @property {Checklist} jsonixData - The JSON representation of the checklist data.
+ * @property {Checklist} jsonixData - The JSON representation of the checklist data using the jsonix library.
  * @property {ChecklistObject} checklistObject - The intermediate object representation of the checklist data.
  * @property {boolean} withRaw - A flag indicating whether to include raw data in the output.
- *
- * @constructor
- * @param {string | ExecJSON.Execution} data - The input data, which can be a string of XML data or an HDF JSON execution object.
- * @param {boolean} [withRaw=false] - Optional flag indicating whether to include raw data in the output.
- *
- * @method getJsonix
- * @returns {Checklist} - Returns the JSON representation of the checklist data.
- *
- * @method toCkl
- * @returns {string} - Converts the checklist data to CKL (Checklist) XML format.
- *
- * @method toHdf
- * @returns {ExecJSON.Execution} - Converts the checklist data to HDF (Heimdall Data Format).
  */
 export class ChecklistResults extends ChecklistJsonixConverter {
   data: string | ExecJSON.Execution;
@@ -354,10 +341,18 @@ export class ChecklistResults extends ChecklistJsonixConverter {
     this.withRaw = withRaw;
   }
 
+  /**
+   * @method getJsonix
+   * @returns {Checklist} - Returns the JSON representation of the checklist data.
+   */
   getJsonix(): Checklist {
     return this.jsonixData;
   }
 
+  /**
+   * @method toCkl
+   * @returns {string} - Converts JSON data in jsonix format to CKL (Checklist) XML format.
+   */
   toCkl(): string {
     return xmlFormat(
       `<?xml version="1.0" encoding="UTF-8"?><!--Heimdall Version :: ${HeimdallToolsVersion}-->${super.fromJsonix(
@@ -367,6 +362,10 @@ export class ChecklistResults extends ChecklistJsonixConverter {
     );
   }
 
+  /**
+   * @method toHdf
+   * @returns {ExecJSON.Execution} - Converts JSON data in intermediate format to HDF (Heimdall Data Format).
+   */
   toHdf(): ExecJSON.Execution {
     const numberOfStigs = this.checklistObject.stigs.length;
     if (numberOfStigs === 1) {

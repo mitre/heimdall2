@@ -840,7 +840,7 @@ export class ChecklistJsonixConverter extends JsonixIntermediateConverter<
    * Converts an HDF (Heimdall Data Format) execution object to a ChecklistObject.
    * This function assumes the HDF does not have a 'passthrough.checklist' object,
    * and therefore would also not have checklist-specific control.tags
-   * 
+   *
    * @param hdf - The HDF execution object to convert.
    * @returns {ChecklistObject} The converted ChecklistObject.
    */
