@@ -42,6 +42,7 @@
       temporary
       width="600px"
       @input="$emit('input', $event)"
+      data-cy="utilityDrawer"
     >
       <div v-if="isUtilityDrawerShown">
         <v-expansion-panels v-model="active_path" default>

@@ -14,4 +14,16 @@ export default class Sidebar {
     cy.get(`[title="${name}"] [data-cy=closeFile]`).click();
     this.openClose();
   }
+
+  unloadFile(name: string): void {
+    this.close(name);
+  }
+
+  saveToHdf(name: string): void {
+    cy.get(`[title="${name}"]`).get('[data-cy=saveToHdf]').click();
+  }
+
+  saveToDatabase(name: string): void {
+    this.save(name);
+  }
 }
