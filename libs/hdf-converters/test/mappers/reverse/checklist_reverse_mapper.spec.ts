@@ -88,6 +88,19 @@ describe('hdf_profile_with_invalid_metadata', () => {
   });
 });
 
+describe('hdf_profile_with_multiple_mac_host_addresses', () => {
+  it('can correctly provide multiple mac host addresses for the checklist file', () => {
+    const hdfData = loadJsonFile(
+      'sample_jsons/checklist_mapper/multiple_mac_addresses_metadata.json'
+    );
+    const mapper = new ChecklistResults(hdfData);
+    const jsonixData = mapper.getJsonix();
+    const hostmac = (jsonixData?.value as Stigdata).asset?.hostmac;
+    const expectedHostMac = "02:B9:78:82:FE:DE\nEE:EE:EE:EE:EE:EE\n6E:8D:55:AB:10:5F"
+    expect(hostmac).toEqual(expectedHostMac);
+  });
+});
+
 describe('checklist_mapper_severity_mapping', () => {
   it('Maps control V-61867 to correct severity category', () => {
     const hdfData = loadJsonFile(
