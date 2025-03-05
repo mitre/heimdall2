@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip top>
+  <v-tooltip top data-cy="exportJson">
     <template #activator="{on}">
       <IconLinkItem
         key="export_json"
