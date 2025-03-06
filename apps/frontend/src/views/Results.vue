@@ -11,51 +11,41 @@
         <v-icon>mdi-filter-remove</v-icon>
       </v-btn>
       <UploadButton />
-      <div class="text-center">
-        <v-menu>
-          <template #activator="{on, attrs}">
-            <v-btn v-bind="attrs" class="mr-2" v-on="on">
-              <span class="d-none d-md-inline mr-2"> Export </span>
-              <v-icon> mdi-file-export </v-icon>
-            </v-btn>
-          </template>
-          <v-list class="py-0">
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportCaat :filter="allFilter" />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportNist :filter="allFilter" />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportASFFModal :filter="allFilter" />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportCKLModal :filter="allFilter" />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportCSVModal :filter="allFilter" />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportHTMLModal
-                :filter="allFilter"
-                :file-type="current_route_name"
-              />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportSplunkModal />
-            </v-list-item>
-            <v-list-item class="px-0">
-              <ExportJson />
-            </v-list-item>
-            <v-list-item v-if="isResultView" class="px-0">
-              <ExportXCCDFResults
-                :filter="allFilter"
-                :is-result-view="isResultView"
-              />
-            </v-list-item>
-          </v-list>
-        </v-menu>
-      </div>
+      <ExportButton>
+        <v-list-item v-if="isResultView" class="px-0">
+          <ExportCaat :filter="allFilter" />
+        </v-list-item>
+        <v-list-item v-if="isResultView" class="px-0">
+          <ExportNist :filter="allFilter" />
+        </v-list-item>
+        <v-list-item v-if="isResultView" class="px-0">
+          <ExportASFFModal :filter="allFilter" />
+        </v-list-item>
+        <v-list-item v-if="isResultView" class="px-0">
+          <ExportCKLModal :filter="allFilter" />
+        </v-list-item>
+        <v-list-item v-if="isResultView" class="px-0">
+          <ExportCSVModal :filter="allFilter" />
+        </v-list-item>
+        <v-list-item v-if="isResultView" class="px-0">
+          <ExportHTMLModal
+            :filter="allFilter"
+            :file-type="current_route_name"
+          />
+        </v-list-item>
+        <v-list-item v-if="isResultView" class="px-0">
+          <ExportSplunkModal />
+        </v-list-item>
+        <v-list-item class="px-0">
+          <ExportJson />
+        </v-list-item>
+        <v-list-item v-if="isResultView" class="px-0">
+          <ExportXCCDFResults
+            :filter="allFilter"
+            :is-result-view="isResultView"
+          />
+        </v-list-item>
+      </ExportButton>
       <PrintButton />
     </template>
 
@@ -248,6 +238,7 @@ import ServerMixin from '../mixins/ServerMixin';
 import {EvaluationModule} from '../store/evaluations';
 import {StatusCountModule} from '../store/status_counts';
 import {compare_times} from '../utilities/delta_util';
+import ExportButton from '@/components/generic/ExportButton.vue';
 
 @Component({
   components: {
@@ -271,7 +262,8 @@ import {compare_times} from '../utilities/delta_util';
     EvaluationInfo,
     ExportSplunkModal,
     ProfileData,
-    UploadButton
+    UploadButton,
+    ExportButton
   }
 })
 export default class Results extends mixins(RouteMixin, ServerMixin) {
