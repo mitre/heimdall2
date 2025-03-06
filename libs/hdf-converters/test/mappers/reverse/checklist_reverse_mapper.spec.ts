@@ -98,7 +98,10 @@ describe('hdf_profile_with_multiple_mac_host_addresses', () => {
     const hostmac = (jsonixData?.value as Stigdata).asset?.hostmac;
     const expectedHostMac =
       '02:B9:78:82:FE:DE\nEE:EE:EE:EE:EE:EE\n6E:8D:55:AB:10:5F';
-    expect(hostmac).toEqual(expectedHostMac);
+    // Replacing newlines to avoid issues with different newline characters on different systems
+    expect(hostmac?.replace(/\n/g, '')).toEqual(
+      expectedHostMac.replace(/\n/g, '')
+    );
   });
 });
 
