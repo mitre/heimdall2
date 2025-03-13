@@ -27,6 +27,9 @@
         <v-list-item class="px-0">
           <ExportCSVModal :filter="allFilter" />
         </v-list-item>
+        <v-list-item class="px-0">
+          <ExportJson />
+        </v-list-item>
       </ExportButton>
     </template>
     <template #main-content>
@@ -130,7 +133,7 @@ import ExportCSVModal from '@/components/global/ExportCSVModal.vue';
 import ExportNist from '@/components/global/ExportNist.vue';
 import UploadButton from '@/components/generic/UploadButton.vue';
 import {ChecklistVuln, Severity} from '@mitre/hdf-converters';
-import {ChecklistFile, InspecDataModule} from '@/store/data_store';
+import {InspecDataModule} from '@/store/data_store';
 import _ from 'lodash';
 import {saveSingleOrMultipleFiles} from '@/utilities/export_util';
 import IconLinkItem from '@/components/global/sidebaritems/IconLinkItem.vue';
@@ -141,6 +144,7 @@ import ChecklistRuleInfoBody from '@/components/global/checklist/ChecklistRuleIn
 import ChecklistRuleEdit from '@/components/global/checklist/ChecklistRuleEdit.vue';
 import ChecklistSeverityOverride from '@/components/global/checklist/ChecklistSeverityOverride.vue';
 import ExportButton from '@/components/generic/ExportButton.vue';
+import ExportJson from '@/components/global/ExportJson.vue';
 
 @Component({
   components: {
@@ -157,7 +161,8 @@ import ExportButton from '@/components/generic/ExportButton.vue';
     ChecklistRuleInfoBody,
     ChecklistRuleEdit,
     ChecklistSeverityOverride,
-    ExportButton
+    ExportButton,
+    ExportJson
   }
 })
 export default class Checklist extends RouteMixin {

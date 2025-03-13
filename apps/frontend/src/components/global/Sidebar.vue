@@ -26,6 +26,7 @@
         fluid
         class="clickable"
         @click="isUtilityDrawerShown = !isUtilityDrawerShown"
+        data-cy="openSidebar"
       >
         <v-row align="center" justify="center">
           <v-col>

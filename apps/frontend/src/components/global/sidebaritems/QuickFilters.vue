@@ -1,6 +1,6 @@
 <template>
   <v-card>
-    <v-container>
+    <v-container data-cy="commonFilters">
       <h4>Common Filter Options:</h4>
       <p>For all types of scans (Results, Profiles, and Checklists)</p>
 

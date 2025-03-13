@@ -3,7 +3,7 @@
     <v-card-title class="pt-2">
       <div class="card-title">
         <div>
-          <strong>
+          <strong data-cy="numberOfShownAndHiddenRules">
             Rules ({{ rules.length }} shown,
             {{ numTotalRules - rules.length }} hidden)
           </strong>

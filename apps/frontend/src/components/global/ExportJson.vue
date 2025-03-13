@@ -1,5 +1,5 @@
 <template>
-  <v-tooltip top data-cy="exportJson">
+  <v-tooltip top>
     <template #activator="{on}">
       <IconLinkItem
         key="export_json"
@@ -7,6 +7,7 @@
         icon="mdi-code-json"
         @click="export_json()"
         v-on="on"
+        data-cy="exportJson"
       />
     </template>
     <span>JSON Download</span>
