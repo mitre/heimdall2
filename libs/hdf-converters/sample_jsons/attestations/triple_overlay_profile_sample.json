@@ -967,6 +967,7 @@
                         }
                     ],
                     "tags": {
+                        "severity": "medium",
                         "gtitle": "SRG-APP-000516-DB-999900",
                         "gid": "V-61409",
                         "rid": "SV-75899r1_rule",
@@ -1022,6 +1023,7 @@
                     "impact": 0.5,
                     "refs": [],
                     "tags": {
+                        "severity": "medium",
                         "gtitle": "SRG-APP-000516-DB-999900",
                         "gid": "V-61449",
                         "rid": "SV-75939r3_rule",
@@ -1081,6 +1083,7 @@
                         }
                     ],
                     "tags": {
+                        "severity": "medium",
                         "gtitle": "SRG-APP-000133-DB-000179",
                         "gid": "V-61867",
                         "rid": "SV-76357r2_rule",
@@ -1136,6 +1139,7 @@
                     "impact": 0.5,
                     "refs": [],
                     "tags": {
+                        "severity": "medium",
                         "gtitle": "SRG-APP-000098-DB-000042",
                         "gid": "V-61635",
                         "rid": "SV-76125r1_rule",
@@ -1196,6 +1200,7 @@
                     "impact": 0.5,
                     "refs": [],
                     "tags": {
+                        "severity": "medium",
                         "gtitle": "SRG-APP-000141-DB-000090",
                         "gid": "V-61677",
                         "rid": "SV-76167r3_rule",
